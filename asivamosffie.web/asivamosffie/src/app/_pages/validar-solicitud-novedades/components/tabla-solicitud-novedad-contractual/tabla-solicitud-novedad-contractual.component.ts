@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { DialogRechazarSolicitudInterventorComponent } from '../dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component'
 import { DialogDevolverSolicitudInterventorComponent } from '../dialog-devolver-solicitud-interventor/dialog-devolver-solicitud-interventor.component'
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { DialogRechazarSolicitudComponent } from '../dialog-rechazar-solicitud/dialog-rechazar-solicitud.component';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 export interface VerificacionDiaria {
   id: string;
@@ -85,18 +87,32 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     }
   }
 
-  rechazarSolicitud(id: string) {
+  rechazarSolicitud(id: number, numeroSolicitud, tipoNovedad) {
     const dialogCargarProgramacion = this.dialog.open(DialogRechazarSolicitudInterventorComponent, {
       width: '75em',
-      // data: { }
+       data: { numeroSolicitud, tipoNovedad }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe(response => {
+
         if (response) {
-          console.log(response);
-        };
+          let novedad : NovedadContractual = {
+            novedadContractualId: id,
+            causaRechazo: response.causaRechazo
+          };
+  
+           this.contractualNoveltyService.rechazarPorSupervisor( novedad )
+              .subscribe( respuesta => {
+               this.openDialog('', `<b>${respuesta.message}</b>`);
+               if ( respuesta.code === '200' )
+                 this.ngAfterViewInit();
+              });
+        }
+        
       })
   }
+
+  
 
   devolverSolicitud(id: string) {
     const dialogCargarProgramacion = this.dialog.open(DialogDevolverSolicitudInterventorComponent, {

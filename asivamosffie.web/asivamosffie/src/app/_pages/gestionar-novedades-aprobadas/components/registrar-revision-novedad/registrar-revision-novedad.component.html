@@ -39,8 +39,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required formControlName="estadoProcesoCodigo">
-                  <mat-option *ngFor="let instancia of estadoDelProcesoArray" [value]="instancia.value">
-                    {{ instancia.name }}
+                  <mat-option *ngFor="let instancia of estadoDelProcesoArray" [value]="instancia.codigo">
+                    {{ instancia.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -86,8 +86,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="abogadoRevisionId">
-                    <mat-option *ngFor="let instancia of nombreAbogadoPresentoSolicitudArray" [value]="instancia.value">
-                      {{ instancia.name }}
+                    <mat-option *ngFor="let instancia of nombreAbogadoPresentoSolicitudArray" [value]="instancia.codigo">
+                      {{ instancia.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

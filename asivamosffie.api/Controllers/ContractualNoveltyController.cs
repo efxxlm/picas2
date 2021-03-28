@@ -209,6 +209,22 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
+        [Route("RechazarPorSupervisor")]
+        public async Task<IActionResult> RechazarPorSupervisor([FromBody] NovedadContractual pNovedaContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.RechazarPorSupervisor(pNovedaContractual, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPut]
         [Route("DevolverSolicitud")]
         public async Task<IActionResult> DevolverSolicitud([FromQuery] int pNovedaContractual)
         {

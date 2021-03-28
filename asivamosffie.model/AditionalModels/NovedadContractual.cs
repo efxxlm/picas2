@@ -51,6 +51,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public NovedadContractualObservaciones ObservacionDevolucionTramite { get; set; }
 
+        [NotMapped]
+        public bool? RegistroCompletoRevisionJuridica { get; set; }
+
     }
 
 }

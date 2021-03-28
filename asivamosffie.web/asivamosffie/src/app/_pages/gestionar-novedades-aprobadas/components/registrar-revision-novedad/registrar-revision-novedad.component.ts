@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractual, NovedadContractualObservaciones } from 'src/app/_interfaces/novedadContractual';
 @Component({
@@ -19,20 +20,8 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
 
   estaEditando = false;
 
-  estadoDelProcesoArray = [
-    { name: 'Aprobada', value: '1' },
-    { name: 'En revisión de gestión contractual', value: '2' }
-  ];
-  nombreAbogadoPresentoSolicitudArray = [
-    { name: 'Laura Andrea Osorio Martínez', value: '1' },
-    { name: 'Laura Andrea Osorio Martínez 2', value: '2' }
-  ];
-  nombreAbogadorealizoRevisionArray = [
-    { name: 'Laura Andrea Osorio Martínez', value: '1' },
-    { name: 'Laura Andrea Osorio Martínez 2', value: '2' }
-  ];
-
-
+  estadoDelProcesoArray = [];
+  nombreAbogadoPresentoSolicitudArray = [];
 
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -46,13 +35,25 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-  ) { }
+    private commonService: CommonService,
+
+  ) {
+    commonService.listaEstadoProcesoNovedades()
+      .subscribe( respuesta => {
+        this.estadoDelProcesoArray = respuesta;
+      });
+
+    commonService.listaAbogadoRevisionNovedades()
+      .subscribe( respuesta => {
+        this.nombreAbogadoPresentoSolicitudArray = respuesta;
+      });
+   }
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes.novedad ){
       this.addressForm.get('fechaEnvioGestionContractual').setValue( this.novedad.fechaEnvioGestionContractual )
       this.addressForm.get('estadoProcesoCodigo').setValue( this.novedad.estadoProcesoCodigo )
       this.addressForm.get('fechaAprobacionGestionContractual').setValue( this.novedad.fechaAprobacionGestionContractual )
-      this.addressForm.get('abogadoRevisionId').setValue( this.novedad.abogadoRevisionId )
+      this.addressForm.get('abogadoRevisionId').setValue( this.novedad.abogadoRevisionId.toString() )
     }
   }
 

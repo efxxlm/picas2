@@ -67,9 +67,9 @@
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
-          'sin-diligenciar':true,
-          'en-proceso':false,
-          'completo':false,
+          'sin-diligenciar':novedad.registroCompletoRevisionJuridica === undefined,
+          'en-proceso':novedad.registroCompletoRevisionJuridica === false,
+          'completo':novedad.registroCompletoRevisionJuridica ,
           'en-alerta':false
         }">
         Registrar revisión jurídica de la novedad

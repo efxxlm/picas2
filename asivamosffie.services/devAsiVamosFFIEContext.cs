@@ -3574,7 +3574,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractual>(entity =>
             {
-                entity.Property(e => e.CausaRechazoInterventor).IsUnicode(false);
+                entity.Property(e => e.CausaRechazo).IsUnicode(false);
 
                 entity.Property(e => e.EsAplicadaAcontrato).HasColumnName("EsAplicadaAContrato");
 

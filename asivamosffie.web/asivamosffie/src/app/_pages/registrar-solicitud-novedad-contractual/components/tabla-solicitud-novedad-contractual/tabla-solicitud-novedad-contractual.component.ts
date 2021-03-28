@@ -98,7 +98,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
         if (response) {
           let novedad : NovedadContractual = {
             novedadContractualId: id,
-            causaRechazoInterventor: response.causaRechazo
+            causaRechazo: response.causaRechazo
           };
   
           this.contractualNoveltyService.rechazarPorInterventor( novedad )

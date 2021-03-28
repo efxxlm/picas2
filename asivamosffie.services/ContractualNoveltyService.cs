@@ -267,6 +267,8 @@ namespace asivamosffie.services
             novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
             novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
 
+            novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
+
             return novedadContractual;
         }
 
@@ -1125,7 +1127,64 @@ namespace asivamosffie.services
                     novedadContractual.FechaModificacion = DateTime.Now;
                     novedadContractual.UsuarioModificacion = pUsuario;
                     novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor;
-                    novedadContractual.CausaRechazoInterventor = pNovedadContractual.CausaRechazoInterventor;
+                    novedadContractual.CausaRechazo = pNovedadContractual.CausaRechazo;
+                    _context.NovedadContractual.Update(novedadContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> RechazarPorSupervisor(NovedadContractual pNovedadContractual, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RechazarNovedadPorInterventor, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
+
+            try
+            {
+
+                if (novedadContractual != null)
+                {
+                    strCrearEditar = "RECHAZAR NOVEDAD POR SUPERVISOR";
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_supervisor;
+                    novedadContractual.CausaRechazo = pNovedadContractual.CausaRechazo;
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();
@@ -1435,6 +1494,41 @@ namespace asivamosffie.services
             return novedadContractualObservaciones;
         }
 
+        private bool RegistrocompletoRevisionJuridica(NovedadContractual pNovedadContractual)
+        {
+            bool esCompleto = true;
+
+            if (
+                    pNovedadContractual.FechaEnvioGestionContractual == null ||
+                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
+                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.FechaAprobacionGestionContractual == null) ||
+                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.AbogadoRevisionId == null)
+                )
+            {
+                esCompleto = false;
+            }
+
+
+            return esCompleto;
+        }
+
+        private bool RegistrocompletoFirmas(NovedadContractual pNovedadContractual)
+        {
+            bool esCompleto = true;
+
+            if (
+                    pNovedadContractual.FechaEnvioGestionContractual == null ||
+                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
+                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.FechaAprobacionGestionContractual == null) ||
+                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.AbogadoRevisionId == null)
+                )
+            {
+                esCompleto = false;
+            }
+
+
+            return esCompleto;
+        }
 
         private bool Registrocompleto(NovedadContractual pNovedadContractual)
         {
@@ -1529,11 +1623,9 @@ namespace asivamosffie.services
         {
             bool esCompleto = true;
 
+            esCompleto = RegistrocompletoRevisionJuridica(pNovedadContractual);
+
             if (
-                    pNovedadContractual.FechaEnvioGestionContractual == null ||
-                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
-                    pNovedadContractual.FechaAprobacionGestionContractual == null ||
-                    pNovedadContractual.AbogadoRevisionId == null ||
                     pNovedadContractual.DeseaContinuar == null ||
                     (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaContratistaObra == null) ||
                     (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaActaContratistaObra == null) ||

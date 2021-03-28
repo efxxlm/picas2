@@ -26,5 +26,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditNovedadContractualTramite(NovedadContractual novedadContractual);
         Task<Respuesta> EnviarAComite(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> RechazarPorInterventor(NovedadContractual pNovedadContractual, string pUsuario);
+        Task<Respuesta> RechazarPorSupervisor(NovedadContractual pNovedadContractual, string pUsuario);
     }
 }

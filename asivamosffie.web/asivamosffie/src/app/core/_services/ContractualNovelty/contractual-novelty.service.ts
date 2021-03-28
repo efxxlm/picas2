@@ -86,4 +86,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorInterventor`, novedad ); 
   }
 
+  rechazarPorSupervisor( novedad ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorSupervisor`, novedad ); 
+  }
+
 }

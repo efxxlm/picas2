@@ -57,7 +57,7 @@
         </a>
 
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-        (click)="this.rechazarSolicitud( element.novedadContractualId)"
+        (click)="this.rechazarSolicitud( element.novedadContractualId, element.numeroSolicitud, element.novedadesSeleccionadas)"
           *ngIf=" element.estadoCodigo === '5' && 
                   element.registroCompletoValidacion === true && 
                   element.tieneObservacionesSupervisor === true">
