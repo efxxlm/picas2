@@ -93,7 +93,7 @@ namespace asivamosffie.services
                 pOrdenGiroObservacion.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroObservacion.FechaCreacion = DateTime.Now;
                 pOrdenGiroObservacion.Eliminado = false;
-                pOrdenGiroObservacion.RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion);
+                pOrdenGiroObservacion.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion);
                 _context.OrdenGiroObservacion.Add(pOrdenGiroObservacion);
             }
             else
@@ -104,18 +104,14 @@ namespace asivamosffie.services
                         {
                             UsuarioModificacion = pUsuarioCreacion,
                             FechaModificacion = DateTime.Now,
-                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion),
+                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion),
                             Observacion = pOrdenGiroObservacion.Observacion
                         });
             }
         }
 
-        private async Task<int> CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        private async Task CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
         {
-            int? OrdenGiroDetalleEstrategiaPagoId = null;
-            int? OrdenGiroDetalleDescuentoTecnicaId = null;
-            int? OrdenGiroDetalleTerceroCausacionId = null;
-
             if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
                 CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
 
@@ -125,15 +121,15 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
                 CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago != null)
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() > 0)
                 CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion != null)
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
                 CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault(), pUsuarioCreacion);
 
 
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
             {
                 pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroDetalle.FechaCreacion = DateTime.Now;
@@ -152,10 +148,7 @@ namespace asivamosffie.services
                                                                                                                                 UsuarioModificacion = pUsuarioCreacion,
                                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
                                                                                                                             });
-            }
-
-
-            return pOrdenGiroDetalle.OrdenGiroDetalleId;
+            } 
         }
 
         private void CreateEditOrdenGiroSoporte(OrdenGiroSoporte ordenGiroSoporte, string pUsuarioCreacion)
@@ -165,7 +158,7 @@ namespace asivamosffie.services
                 ordenGiroSoporte.UsuarioCreacion = pUsuarioCreacion;
                 ordenGiroSoporte.Eliminado = false;
                 ordenGiroSoporte.FechaCreacion = DateTime.Now;
-                ordenGiroSoporte.RegistroCompleto = string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte);
+                ordenGiroSoporte.RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte);
                 _context.OrdenGiroSoporte.Add(ordenGiroSoporte);
             }
             else
@@ -176,7 +169,7 @@ namespace asivamosffie.services
                         {
                             UsuarioModificacion = pUsuarioCreacion,
                             FechaModificacion = DateTime.Now,
-                            RegistroCompleto = string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte),
+                            RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte),
                             UrlSoporte = ordenGiroSoporte.UrlSoporte
                         });
             }
@@ -264,12 +257,12 @@ namespace asivamosffie.services
 
         private void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
         {
-            if (pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId == 0)
+            if (pOrdenGiroDetalleEstrategiaPago?.OrdenGiroDetalleEstrategiaPagoId == 0)
             {
                 pOrdenGiroDetalleEstrategiaPago.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroDetalleEstrategiaPago.FechaCreacion = DateTime.Now;
                 pOrdenGiroDetalleEstrategiaPago.Eliminado = false;
-                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo);
+                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo);
 
                 _context.OrdenGiroDetalleEstrategiaPago.Add(pOrdenGiroDetalleEstrategiaPago);
             }
