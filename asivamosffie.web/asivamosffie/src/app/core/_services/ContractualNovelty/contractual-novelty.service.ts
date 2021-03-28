@@ -82,4 +82,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/enviarAComite?pNovedaContractual=${ id }`, null ); 
   }
 
+  rechazarPorInterventor( novedad ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorInterventor`, novedad ); 
+  }
+
 }

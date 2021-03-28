@@ -22,8 +22,11 @@ export class DialogRechazarSolicitudInterventorComponent implements OnInit {
   };
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog
-    ) {
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public matDialogRef: MatDialogRef<DialogRechazarSolicitudInterventorComponent>
+  ) 
+  {
     this.crearFormulario();
   }
 
@@ -84,13 +87,12 @@ export class DialogRechazarSolicitudInterventorComponent implements OnInit {
   }
 
   onClose(): void {
-    this.dialog.closeAll();
+    this.matDialogRef.close(this.formObservacion.value);
   }
 
   guardar() {
     console.log(this.formObservacion.value);
     this.onClose();
-    this.openDialogGuardar('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
 }

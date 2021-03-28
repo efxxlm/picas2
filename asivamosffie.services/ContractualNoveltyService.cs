@@ -104,26 +104,40 @@ namespace asivamosffie.services
         /// <returns></returns>
         public async Task<List<Contrato>> GetListContract(int userID)
         {
-            var contratos = _context.Contrato
+            List<Contrato> listaContratos = new List<Contrato>();
+
+            List<Contrato> contratos = _context.Contrato
                                         .Where(x =>/*x.UsuarioInterventoria==userID*/ !(bool)x.Eliminado)
                                         .Include(x => x.Contratacion)
+                                            .ThenInclude(x => x.DisponibilidadPresupuestal)
+                                        .Include(x => x.Contratacion)
                                             .ThenInclude(x => x.Contratista)
+                                        .Include(r => r.ContratoPoliza)
                                         .ToList();
+
+            List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual.ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
 
             foreach (var contrato in contratos)
             {
-
-                if (contrato?.Contratacion?.Contratista != null)
+                if ( 
+                        contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
+                        contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
+                        listaNovedadesActivas
+                                    .Where( x => x.ContratoId == contrato.ContratoId && 
+                                                 x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente )
+                                    .Count() == 0
+                    )
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
-                    contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                    contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                    listaContratos.Add(contrato);
                 }
 
             }
-            return contratos;
+            return listaContratos;
         }
 
         public async Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId)
@@ -1055,6 +1069,63 @@ namespace asivamosffie.services
                     novedadContractual.FechaModificacion = DateTime.Now;
                     novedadContractual.UsuarioModificacion = pUsuario;
                     novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_validar;
+                    _context.NovedadContractual.Update(novedadContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> RechazarPorInterventor(NovedadContractual pNovedadContractual, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RechazarNovedadPorInterventor, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
+
+            try
+            {
+
+                if (novedadContractual != null)
+                {
+                    strCrearEditar = "RECHAZAR NOVEDAD POR INTERVENTOR";
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor;
+                    novedadContractual.CausaRechazoInterventor = pNovedadContractual.CausaRechazoInterventor;
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();

@@ -68,7 +68,9 @@
                           class="btn-table" 
                           type="button"
                           (click)="verificarSolicitud(element.novedadContractualId)"
-                          *ngIf="element.estadoCodigo === '3' && element.registroCompleto === true"
+                          *ngIf="element.estadoCodigo === '3' && 
+                                 element.registroCompleto === true && 
+                                 (element.cantidadDescripcion === element.cantidadSoporteSuficienteNovedad)"
                           >
         Enviar al supervisor
         </button>
@@ -79,8 +81,10 @@
                           color="accent" 
                           class="btn-table" 
                           type="button"
-                          (click)="rechazarSolicitud(element.novedadContractualId)"
-                          *ngIf="element.estadoCodigo === '3' && element.registroCompleto === true"
+                          (click)="rechazarSolicitud(element.novedadContractualId, element.numeroSolicitud, element.novedadesSeleccionadas)"
+                          *ngIf="element.estadoCodigo === '3' && 
+                                 element.registroCompleto === true && 
+                                 (element.cantidadDescripcion !== element.cantidadSoporteSuficienteNovedad)"
                           >
           Rechazar solicitud
         </button>

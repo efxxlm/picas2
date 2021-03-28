@@ -23,7 +23,7 @@ export interface NovedadContractual{
         fechaValidacion?: Date,
         registroCompletoVerificacion?: boolean,
         estadoCodigo?: string,
-        causaRechazo?: string,
+        causaRechazoInterventor?: string,
         registroCompletoTramiteNovedades?: boolean,
         fechaEnvioGestionContractual?: Date,
         fechaAprobacionGestionContractual?: Date,

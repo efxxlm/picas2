@@ -215,6 +215,29 @@
 
     </mat-expansion-panel>
   </mat-accordion>
+
+  <!-- cuando fue rechazado por interventor -->
+  <mat-card class="shipping-card var-main-gris" *ngIf="novedad.estadoCodigo === '9'">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Causa del rechazo
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          {{ novedad['fechaModificacion'] | date: 'dd/MM/yyyy' }}
+        </strong>
+      </p>
+      <div>
+          <section 
+            [innerHTML]="novedad.causaRechazoInterventor"
+            style="margin-left: 2em"
+            
+    ></section>
+      </div>
+    </mat-card-content>
+  </mat-card>
   
 
   <mat-card class="shipping-card var-main-gris" *ngIf="novedad.observacionApoyo !== undefined">

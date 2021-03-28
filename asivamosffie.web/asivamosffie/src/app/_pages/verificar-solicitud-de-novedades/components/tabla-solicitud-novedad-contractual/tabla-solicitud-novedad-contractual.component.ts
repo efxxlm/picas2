@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { map } from 'rxjs/operators';
+import { DialogRechazarSolicitudInterventorComponent } from 'src/app/_pages/validar-solicitud-novedades/components/dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 export interface VerificacionDiaria {
   id: string;
@@ -95,8 +97,29 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     console.log(`Aprobar solicitud ${id}`);
   }
 
-  rechazarSolicitud(id: string) {
-    console.log(`Aprobar solicitud ${id}`);
+  rechazarSolicitud(id: number, numeroSolicitud, tipoNovedad) {
+    const dialogCargarProgramacion = this.dialog.open(DialogRechazarSolicitudInterventorComponent, {
+      width: '75em',
+       data: { numeroSolicitud, tipoNovedad }
+    });
+    dialogCargarProgramacion.afterClosed()
+      .subscribe(response => {
+
+        if (response) {
+          let novedad : NovedadContractual = {
+            novedadContractualId: id,
+            causaRechazoInterventor: response.causaRechazo
+          };
+  
+          this.contractualNoveltyService.rechazarPorInterventor( novedad )
+             .subscribe( respuesta => {
+              this.openDialog('', `<b>${respuesta.message}</b>`);
+              if ( respuesta.code === '200' )
+                this.ngAfterViewInit();
+             });
+        }
+        
+      })
   }
 
   openDialog(modalTitle: string, modalText: string) {

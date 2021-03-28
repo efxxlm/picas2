@@ -34,7 +34,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaValidacion { get; set; }
         public bool? RegistroCompletoVerificacion { get; set; }
         public string EstadoCodigo { get; set; }
-        public string CausaRechazo { get; set; }
+        public string CausaRechazoInterventor { get; set; }
         public bool? RegistroCompletoTramiteNovedades { get; set; }
         public DateTime? FechaEnvioGestionContractual { get; set; }
         public string EstadoProcesoCodigo { get; set; }
