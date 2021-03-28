@@ -37,23 +37,18 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-                int? OrdenGiroTerceroId = null;
-                int? OrdenGiroDetalleId = null;
-
-                if (pOrdenGiro.OrdenGiroTercero != null)
-                    OrdenGiroTerceroId = await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+            { 
+                if (pOrdenGiro.OrdenGiroTercero.Count() > 0)
+                     await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
                 if (pOrdenGiro.OrdenGiroDetalle != null)
-                    OrdenGiroDetalleId = await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
+                      await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
 
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
-                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro); 
-                    pOrdenGiro.OrdenGiroDetalleId = OrdenGiroDetalleId;
-
+                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);  
                     _context.OrdenGiro.Add(pOrdenGiro);
 
                     await _context.Set<SolicitudPago>()
@@ -66,20 +61,7 @@ namespace asivamosffie.services
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
-                else
-                {
-                    await _context.Set<OrdenGiro>()
-                                                    .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
-                                                                                                        .UpdateAsync(r => new OrdenGiro()
-                                                                                                        {
-                                                                                                            FechaModificacion = DateTime.Now,
-                                                                                                            UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
-                                                                                                            RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
-                                                                                                             
-                                                                                                            OrdenGiroDetalleId = OrdenGiroDetalleId
-                                                                                                        });
-                }
-
+              
                 return
                      new Respuesta
                      {
