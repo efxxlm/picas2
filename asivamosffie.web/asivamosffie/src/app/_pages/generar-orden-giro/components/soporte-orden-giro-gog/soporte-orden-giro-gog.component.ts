@@ -37,7 +37,7 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
             if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
                 if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
                     this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
-                    this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
+                    this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
     
                     if ( this.ordenGiroDetalle.ordenGiroSoporte !== undefined ) {
                         if ( this.ordenGiroDetalle.ordenGiroSoporte.length > 0 ) {
