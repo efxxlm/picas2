@@ -46,7 +46,7 @@ namespace asivamosffie.services
                 });
             });
             return ListDynamics;
-        } 
+        }
         //1# Traer criterio de pago por Forma de pago
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
         {
@@ -238,7 +238,7 @@ namespace asivamosffie.services
                         .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
                         .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t=> t.NombreAportante)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
@@ -390,7 +390,7 @@ namespace asivamosffie.services
                     .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                     .Sum(c => c.SaldoPresupuestal));
 
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar ;
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
 
                 string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
 
@@ -408,7 +408,7 @@ namespace asivamosffie.services
                         MontoMaximo -= ValorPendientePorPagar;
 
                         if (MontoMaximo < 0)
-                            MontoMaximo  = ValorTotalPorFase ;
+                            MontoMaximo = ValorTotalPorFase;
 
                         if (MontoMaximo < ValorPendientePorPagar)
                             break;
@@ -1138,9 +1138,13 @@ namespace asivamosffie.services
                 {
                     if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
                     {
-                        SolicitudPagoFaseCriterioConceptoPago SolicitudPagoFaseCriterioConceptoPagoOld = _context.SolicitudPagoFaseCriterioConceptoPago.Find(SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId);
-                        SolicitudPagoFaseCriterioConceptoPagoOld.SolicitudPagoFaseCriterio = SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterio;
-                        SolicitudPagoFaseCriterioConceptoPagoOld.ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto;
+                        _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
+                                .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
+                                .Update(s => new SolicitudPagoFaseCriterioConceptoPago
+                                {
+                                    SolicitudPagoFaseCriterio = SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterio,
+                                    ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
+                                }); 
                     }
                     else
                     {
