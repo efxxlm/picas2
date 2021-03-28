@@ -44,14 +44,17 @@ export class FormEstrategPagosGogComponent implements OnInit {
                 this.ordenGiroDetalleId = ordenGiroDetalle.ordenGiroDetalleId;
                 
                 if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
-                    const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago;
+                    if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago.length > 0 ) {
+                        const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago;
 
-                    // this.addressForm.setValue(
-                    //     {
-                    //         ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
-                    //         estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
-                    //     }
-                    // );
+                        this.addressForm.setValue(
+                            {
+                                ordenGiroDetalleId: this.ordenGiroDetalleId,
+                                ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                                estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
+                            }
+                        );
+                    }
                 }
             }
         }
@@ -59,7 +62,8 @@ export class FormEstrategPagosGogComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
-        ordenGiroDetalleEstrategiaPagoId: [ null ],
+        ordenGiroDetalleId: [ 0 ],
+        ordenGiroDetalleEstrategiaPagoId: [ 0 ],
         estrategiaPagoCodigo: [ null, Validators.required ]
       })
     }
@@ -77,10 +81,13 @@ export class FormEstrategPagosGogComponent implements OnInit {
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
-            ordenGiroDetalle: {
-                ordenGiroDetalleId: this.ordenGiroDetalleId,
-                ordenGiroDetalleEstrategiaPago: this.addressForm.value
-            }
+            ordenGiroDetalle: [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    ordenGiroDetalleId: this.ordenGiroDetalleId,
+                    ordenGiroDetalleEstrategiaPago: [ this.addressForm.value ]
+                }
+            ]
         }
 
         this.ordenPagoSvc.createEditOrdenGiro( pOrdenGiro )
