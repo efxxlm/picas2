@@ -44,15 +44,6 @@ namespace asivamosffie.services
                 if (pOrdenGiro?.OrdenGiroDetalle != null)
                     await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
-                if (pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
-                    CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
-                if (pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroObservacion?.Count() > 0)
-                    CreateEditOrdenGiroDetalleObservacion(pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroObservacion.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
-
-
-
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
@@ -71,7 +62,6 @@ namespace asivamosffie.services
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
-
                 return
                      new Respuesta
                      {
@@ -103,9 +93,8 @@ namespace asivamosffie.services
                 pOrdenGiroObservacion.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroObservacion.FechaCreacion = DateTime.Now;
                 pOrdenGiroObservacion.Eliminado = false;
-                pOrdenGiroObservacion.RegistroCompleto = ValidarRegistroCompletoDetalleObservacion(pOrdenGiroObservacion);
+                pOrdenGiroObservacion.RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion);
                 _context.OrdenGiroObservacion.Add(pOrdenGiroObservacion);
-
             }
             else
             {
@@ -115,20 +104,10 @@ namespace asivamosffie.services
                         {
                             UsuarioModificacion = pUsuarioCreacion,
                             FechaModificacion = DateTime.Now,
-                            RegistroCompleto = ValidarRegistroCompletoDetalleObservacion(pOrdenGiroObservacion),
-                            Observacion = pOrdenGiroObservacion.Observacion 
+                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion),
+                            Observacion = pOrdenGiroObservacion.Observacion
                         });
-
-
             }
-        }
-
-        private bool? ValidarRegistroCompletoDetalleObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
-                return false;
-
-            return true;
         }
 
         private async Task<int> CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
@@ -137,14 +116,22 @@ namespace asivamosffie.services
             int? OrdenGiroDetalleDescuentoTecnicaId = null;
             int? OrdenGiroDetalleTerceroCausacionId = null;
 
-            //if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
-            //    OrdenGiroDetalleEstrategiaPagoId = await CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
+                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
 
-            //if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
-            //    OrdenGiroDetalleDescuentoTecnicaId = await CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.FirstOrDefault(), pUsuarioCreacion);
+            if (pOrdenGiroDetalle?.OrdenGiroObservacion?.Count() > 0)
+                CreateEditOrdenGiroDetalleObservacion(pOrdenGiroDetalle.OrdenGiroObservacion.FirstOrDefault(), pUsuarioCreacion);
 
-            //if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
-            //    OrdenGiroDetalleTerceroCausacionId = await CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.FirstOrDefault(), pUsuarioCreacion);
+            if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
+                CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago != null)
+                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion != null)
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault(), pUsuarioCreacion);
+
+
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
             {
@@ -171,7 +158,31 @@ namespace asivamosffie.services
             return pOrdenGiroDetalle.OrdenGiroDetalleId;
         }
 
-        private async Task<int> CreateEditOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroSoporte(OrdenGiroSoporte ordenGiroSoporte, string pUsuarioCreacion)
+        {
+            if (ordenGiroSoporte.OrdenGiroSoporteId == 0)
+            {
+                ordenGiroSoporte.UsuarioCreacion = pUsuarioCreacion;
+                ordenGiroSoporte.Eliminado = false;
+                ordenGiroSoporte.FechaCreacion = DateTime.Now;
+                ordenGiroSoporte.RegistroCompleto = string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte);
+                _context.OrdenGiroSoporte.Add(ordenGiroSoporte);
+            }
+            else
+            {
+                _context.Set<OrdenGiroSoporte>()
+                        .Where(o => o.OrdenGiroSoporteId == ordenGiroSoporte.OrdenGiroSoporteId)
+                        .Update(o => new OrdenGiroSoporte
+                        {
+                            UsuarioModificacion = pUsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                            RegistroCompleto = string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte),
+                            UrlSoporte = ordenGiroSoporte.UrlSoporte
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
             {
@@ -184,19 +195,18 @@ namespace asivamosffie.services
             }
             else
             {
-                await _context.Set<OrdenGiroDetalleTerceroCausacion>()
-                                                    .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
-                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalleTerceroCausacion()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
-                                                                                                                            });
+                _context.Set<OrdenGiroDetalleTerceroCausacion>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
+                        .Update(r => new OrdenGiroDetalleTerceroCausacion()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
+                        });
             }
-            return pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId;
         }
 
-        private async Task<int> CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId == 0)
             {
@@ -209,19 +219,17 @@ namespace asivamosffie.services
             }
             else
             {
-                await _context.Set<OrdenGiroDetalleDescuentoTecnica>()
-                                                    .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
-                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalleDescuentoTecnica()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
-                                                                                                                            });
+                _context.Set<OrdenGiroDetalleDescuentoTecnica>()
+                             .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
+                             .Update(r => new OrdenGiroDetalleDescuentoTecnica()
+                             {
+                                 FechaModificacion = DateTime.Now,
+                                 UsuarioModificacion = pUsuarioCreacion,
+                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
+                             });
             }
-
             CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante, pUsuarioCreacion);
 
-            return pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId;
         }
 
         private async void CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> pOrdenGiroDetalleDescuentoTecnicaAportanteList, string pUsuarioCreacion)
@@ -261,22 +269,21 @@ namespace asivamosffie.services
                 pOrdenGiroDetalleEstrategiaPago.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroDetalleEstrategiaPago.FechaCreacion = DateTime.Now;
                 pOrdenGiroDetalleEstrategiaPago.Eliminado = false;
-                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago);
+                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo);
 
                 _context.OrdenGiroDetalleEstrategiaPago.Add(pOrdenGiroDetalleEstrategiaPago);
             }
             else
             {
                 _context.Set<OrdenGiroDetalleEstrategiaPago>()
-                                                   .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
-                                                                                                                           .Update(r => new OrdenGiroDetalleEstrategiaPago()
-                                                                                                                           {
-                                                                                                                               FechaModificacion = DateTime.Now,
-                                                                                                                               UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                               RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago),
-
-                                                                                                                               EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
-                                                                                                                           });
+                        .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
+                        .Update(r => new OrdenGiroDetalleEstrategiaPago()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
+                            EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
+                        });
             }
         }
 
@@ -375,7 +382,7 @@ namespace asivamosffie.services
         #region validate 
         private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
         {
-            throw new NotImplementedException();
+            return false;
         }
         private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
         {
@@ -407,10 +414,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        private bool ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
-        {
-            return false;
-        }
+
 
         private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
         {
@@ -510,8 +514,10 @@ namespace asivamosffie.services
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroObservacion)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
                             .Include(d => d.SolicitudPago)
-                        .FirstOrDefault();
+                        .AsNoTracking().FirstOrDefault();
                 }
             }
             catch (Exception ex)
