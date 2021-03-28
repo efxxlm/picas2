@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class OrdenGiroObservacion
     {
         public int OrdenGiroObservacionId { get; set; }
-        public int OrdenGiroId { get; set; }
+        public int OrdenGiroDetalleId { get; set; }
         public string Observacion { get; set; }
         public string TipoObservacionCodigo { get; set; }
         public int? MenuId { get; set; }
@@ -21,6 +21,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
 
         public virtual Menu Menu { get; set; }
-        public virtual OrdenGiro OrdenGiro { get; set; }
+        public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
     }
 }

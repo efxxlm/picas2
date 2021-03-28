@@ -3995,9 +3995,9 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_OrdenGiroObservacion_Menu");
 
-                entity.HasOne(d => d.OrdenGiro)
+                entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroObservacion)
-                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrdenGiroObservacion_OrdenGiro");
             });
@@ -4018,9 +4018,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.OrdenGiro)
+                entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroSoporte)
-                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
                     .HasConstraintName("FK_OrdenGiroSoporte_OrdenGiro");
             });
 

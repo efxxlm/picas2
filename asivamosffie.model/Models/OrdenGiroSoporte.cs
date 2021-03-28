@@ -13,8 +13,8 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
-        public int? OrdenGiroId { get; set; }
+        public int? OrdenGiroDetalleId { get; set; }
 
-        public virtual OrdenGiro OrdenGiro { get; set; }
+        public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
     }
 }
