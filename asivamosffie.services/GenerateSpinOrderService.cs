@@ -42,7 +42,7 @@ namespace asivamosffie.services
                 int? OrdenGiroDetalleId = null;
 
                 if (pOrdenGiro.OrdenGiroTercero != null)
-                    OrdenGiroTerceroId = await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
+                    OrdenGiroTerceroId = await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
                 if (pOrdenGiro.OrdenGiroDetalle != null)
                     OrdenGiroDetalleId = await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
 
@@ -51,8 +51,7 @@ namespace asivamosffie.services
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
-                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
-                    pOrdenGiro.OrdenGiroTerceroId = OrdenGiroTerceroId;
+                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro); 
                     pOrdenGiro.OrdenGiroDetalleId = OrdenGiroDetalleId;
 
                     _context.OrdenGiro.Add(pOrdenGiro);
