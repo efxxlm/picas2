@@ -259,6 +259,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3853,25 +3854,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnica)
-                    .WithMany(p => p.OrdenGiroDetalle)
-                    .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaId)
-                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroDetalleDescuentoTecnica");
-
-                entity.HasOne(d => d.OrdenGiroDetalleEstrategiaPago)
-                    .WithMany(p => p.OrdenGiroDetalle)
-                    .HasForeignKey(d => d.OrdenGiroDetalleEstrategiaPagoId)
-                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroDetalleEstrategiaPago");
-
-                entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
-                    .WithMany(p => p.OrdenGiroDetalle)
-                    .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionId)
-                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroDetalleTerceroCausacion");
-
-                entity.HasOne(d => d.OrdenGiroSoporte)
-                    .WithMany(p => p.OrdenGiroDetalle)
-                    .HasForeignKey(d => d.OrdenGiroSoporteId)
-                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroSoporte");
+                entity.HasOne(d => d.OrdenGiroNavigation)
+                    .WithMany(p => p.OrdenGiroDetalleNavigation)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiro");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleDescuentoTecnica>(entity =>
@@ -3931,6 +3917,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiroDetalle)
+                    .WithMany(p => p.OrdenGiroDetalleEstrategiaPago)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
+                    .HasConstraintName("FK_OrdenGiroDetalleEstrategiaPago_OrdenGiroDetalle");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacion>(entity =>
@@ -3948,6 +3939,11 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.OrdenGiroDetalle)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacion)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacion_OrdenGiroDetalle");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionDescuento>(entity =>

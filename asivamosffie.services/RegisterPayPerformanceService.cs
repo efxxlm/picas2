@@ -468,7 +468,7 @@ namespace asivamosffie.services
                      .Include(solicitud => solicitud.OrdenGiro)
                      .ThenInclude(detalle => detalle.OrdenGiroDetalle)
                      .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion).AsNoTracking().FirstOrDefaultAsync();
-                var valorNeto = solicitud?.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.ValorNetoGiro;
+                var valorNeto = solicitud?.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
 
                 if (solicitud == null || valorNeto == null)
                 {
@@ -504,7 +504,7 @@ namespace asivamosffie.services
             }
             else if (solicitud != null)
             {
-                var valorNeto = solicitud.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.ValorNetoGiro;
+                var valorNeto = solicitud.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
                 if (!valorNeto.HasValue || valorNeto.Value != respValNetoNumber)
                 {
                     hasError = true;
@@ -947,7 +947,7 @@ namespace asivamosffie.services
                     .AsNoTracking().FirstOrDefaultAsync();
 
                     var terceroCausacionDescuento = solicitud?.OrdenGiro?.OrdenGiroDetalle?.
-                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.FirstOrDefault();
+                        OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionDescuento.FirstOrDefault();
                     var gestionFuenteFinanciacionId = terceroCausacionDescuento.GestionFuenteFinanciacionId;
 
 

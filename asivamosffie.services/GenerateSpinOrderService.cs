@@ -75,8 +75,7 @@ namespace asivamosffie.services
                                                                                                             FechaModificacion = DateTime.Now,
                                                                                                             UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
                                                                                                             RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
-
-                                                                                                            OrdenGiroTerceroId = OrdenGiroTerceroId,
+                                                                                                             
                                                                                                             OrdenGiroDetalleId = OrdenGiroDetalleId
                                                                                                         });
                 }
@@ -111,14 +110,14 @@ namespace asivamosffie.services
             int? OrdenGiroDetalleDescuentoTecnicaId = null;
             int? OrdenGiroDetalleTerceroCausacionId = null;
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
-                OrdenGiroDetalleEstrategiaPagoId = await CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
+            //if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
+            //    OrdenGiroDetalleEstrategiaPagoId = await CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
-                OrdenGiroDetalleDescuentoTecnicaId = await CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
+            //if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
+            //    OrdenGiroDetalleDescuentoTecnicaId = await CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.FirstOrDefault(), pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
-                OrdenGiroDetalleTerceroCausacionId = await CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion, pUsuarioCreacion);
+            //if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
+            //    OrdenGiroDetalleTerceroCausacionId = await CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.FirstOrDefault(), pUsuarioCreacion);
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
             {
@@ -488,7 +487,7 @@ namespace asivamosffie.services
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
                             .Include(d => d.SolicitudPago)
                         .FirstOrDefault();
                 }

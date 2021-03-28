@@ -7,7 +7,6 @@ namespace asivamosffie.model.Models
     {
         public OrdenGiroDetalleTerceroCausacion()
         {
-            OrdenGiroDetalle = new HashSet<OrdenGiroDetalle>();
             OrdenGiroDetalleTerceroCausacionDescuento = new HashSet<OrdenGiroDetalleTerceroCausacionDescuento>();
         }
 
@@ -19,8 +18,9 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
         public decimal? ValorNetoGiro { get; set; }
+        public int? OrdenGiroDetalleId { get; set; }
 
-        public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
+        public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
     }
 }
