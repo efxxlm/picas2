@@ -46,12 +46,12 @@ export class FormEstrategPagosGogComponent implements OnInit {
                 if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
                     const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago;
 
-                    this.addressForm.setValue(
-                        {
-                            ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
-                            estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
-                        }
-                    );
+                    // this.addressForm.setValue(
+                    //     {
+                    //         ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                    //         estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
+                    //     }
+                    // );
                 }
             }
         }

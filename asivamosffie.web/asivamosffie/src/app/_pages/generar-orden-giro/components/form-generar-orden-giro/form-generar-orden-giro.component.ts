@@ -12,6 +12,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
 
     solicitudPago: any;
     contrato: any;
+    ordenGiroTercero: any;
+    semaforoInfoGeneral = 'sin-diligenciar';
     modalidadContratoArray: Dominio[] = [];
 
     constructor(
@@ -28,6 +30,41 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                         this.solicitudPago = response;
                         this.contrato = response[ 'contratoSon' ];
                         console.log( this.solicitudPago );
+
+                        // Get semaforo informacion general
+                        if ( this.solicitudPago.ordenGiro !== undefined ) {
+                            if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
+                                if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
+                                    this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
+                
+                                    if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica !== undefined ) {
+                                        if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica.length > 0 ) {
+                                            const ordenGiroTerceroTransferenciaElectronica = this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica[0];
+                
+                                            if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === false ) {
+                                                this.semaforoInfoGeneral = 'en-proceso';
+                                            }
+                                            if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === true ) {
+                                                this.semaforoInfoGeneral = 'completo';
+                                            }
+                                        }
+                                    }
+                
+                                    if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
+                                        if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
+                                            const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
+                
+                                            if ( ordenGiroTerceroChequeGerencia.registroCompleto === false ) {
+                                                this.semaforoInfoGeneral = 'en-proceso';
+                                            }
+                                            if ( ordenGiroTerceroChequeGerencia.registroCompleto === true ) {
+                                                this.semaforoInfoGeneral = 'completo';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 );
         } );
