@@ -47,11 +47,21 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
             
             if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
-                this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle;
-                this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
-
-                if ( this.ordenGiroDetalle.ordenGiroObservacion !== undefined ) {
-                    this.ordenGiroObservacionId = this.ordenGiroDetalle.ordenGiroObservacion.ordenGiroObservacionId;
+                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+                    this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
+    
+                    if ( this.ordenGiroDetalle.ordenGiroObservacion !== undefined ) {
+                        if ( this.ordenGiroDetalle.ordenGiroObservacion.length > 0 ) {
+                            this.ordenGiroObservacionId = this.ordenGiroDetalle.ordenGiroObservacion[0].ordenGiroObservacionId;
+    
+                            this.addressForm.setValue(
+                                {
+                                    observaciones: this.ordenGiroDetalle.ordenGiroObservacion[0].observacion !== undefined ? this.ordenGiroDetalle.ordenGiroObservacion[0].observacion : null
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -90,13 +100,19 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
-            ordenGiroDetalle: {
-                ordenGiroDetalleId: this.ordenGiroDetalleId,
-                ordenGiroObservacion: {
-                    ordenGiroObservacionId: this.ordenGiroObservacionId,
-                    observacion: this.addressForm.get( 'observaciones' ).value
+            ordenGiroDetalle: [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    ordenGiroDetalleId: this.ordenGiroDetalleId,
+                    ordenGiroObservacion: [
+                        {
+                            ordenGiroDetalleId: this.ordenGiroDetalleId,
+                            ordenGiroObservacionId: this.ordenGiroObservacionId,
+                            observacion: this.addressForm.get( 'observaciones' ).value
+                        }
+                    ]
                 }
-            }
+            ]
         }
 
         this.ordenPagoSvc.createEditOrdenGiro( pOrdenGiro )

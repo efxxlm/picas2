@@ -40,20 +40,22 @@ export class FormEstrategPagosGogComponent implements OnInit {
             this.ordenGiroId = this.ordenGiro.ordenGiroId;
 
             if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
-                const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle;
-                this.ordenGiroDetalleId = ordenGiroDetalle.ordenGiroDetalleId;
-                
-                if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
-                    if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago.length > 0 ) {
-                        const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago;
-
-                        this.addressForm.setValue(
-                            {
-                                ordenGiroDetalleId: this.ordenGiroDetalleId,
-                                ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
-                                estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
-                            }
-                        );
+                if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
+                    this.ordenGiroDetalleId = ordenGiroDetalle.ordenGiroDetalleId;
+                    
+                    if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago.length > 0 ) {
+                            const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago[0];
+    
+                            this.addressForm.setValue(
+                                {
+                                    ordenGiroDetalleId: this.ordenGiroDetalleId,
+                                    ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                                    estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
+                                }
+                            );
+                        }
                     }
                 }
             }

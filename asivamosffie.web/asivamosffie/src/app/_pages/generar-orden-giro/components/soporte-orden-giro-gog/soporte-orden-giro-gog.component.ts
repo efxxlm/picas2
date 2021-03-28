@@ -35,11 +35,17 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
             
             if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
-                this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle;
-                this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
-
-                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroSoporte !== undefined ) {
-                    this.ordenGiroSoporteId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroSoporte.ordenGiroSoporteId;
+                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+                    this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
+    
+                    if ( this.ordenGiroDetalle.ordenGiroSoporte !== undefined ) {
+                        if ( this.ordenGiroDetalle.ordenGiroSoporte.length > 0 ) {
+                            this.ordenGiroSoporteId = this.ordenGiroDetalle.ordenGiroSoporte[0].ordenGiroSoporteId;
+    
+                            this.addressForm.setValue( { urlSoporte: this.ordenGiroDetalle.ordenGiroSoporte[0].urlSoporte !== undefined ? this.ordenGiroDetalle.ordenGiroSoporte[0].urlSoporte : null } )
+                        }
+                    }
                 }
             }
         }
@@ -47,7 +53,7 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
-        urlSoporte:[null, Validators.required]
+        urlSoporte:[ null, Validators.required ]
       })
     }
 
@@ -64,13 +70,19 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
-            ordenGiroDetalle: {
-                ordenGiroDetalleId: this.ordenGiroDetalleId,
-                ordenGiroSoporte: {
-                    ordenGiroSoporteId: this.ordenGiroSoporteId,
-                    urlSoporte: this.addressForm.get( 'urlSoporte' ).value
+            ordenGiroDetalle: [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    ordenGiroDetalleId: this.ordenGiroDetalleId,
+                    ordenGiroSoporte: [
+                        {
+                            ordenGiroDetalleId: this.ordenGiroDetalleId,
+                            ordenGiroSoporteId: this.ordenGiroSoporteId,
+                            urlSoporte: this.addressForm.get( 'urlSoporte' ).value
+                        }
+                    ]
                 }
-            }
+            ]
         }
 
         this.ordenPagoSvc.createEditOrdenGiro( pOrdenGiro )
