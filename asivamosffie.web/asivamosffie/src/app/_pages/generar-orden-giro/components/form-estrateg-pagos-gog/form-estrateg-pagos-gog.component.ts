@@ -87,7 +87,13 @@ export class FormEstrategPagosGogComponent implements OnInit {
                 {
                     ordenGiroId: this.ordenGiroId,
                     ordenGiroDetalleId: this.ordenGiroDetalleId,
-                    ordenGiroDetalleEstrategiaPago: [ this.addressForm.value ]
+                    ordenGiroDetalleEstrategiaPago: [
+                        {
+                            ordenGiroDetalleId: this.ordenGiroDetalleId,
+                            ordenGiroDetalleEstrategiaPagoId: this.addressForm.get( 'ordenGiroDetalleEstrategiaPagoId' ).value,
+                            estrategiaPagoCodigo: this.addressForm.get( 'estrategiaPagoCodigo' ).value
+                        }
+                    ]
                 }
             ]
         }
