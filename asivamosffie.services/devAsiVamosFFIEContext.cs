@@ -3833,11 +3833,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.OrdenGiroDetalle)
-                    .WithMany(p => p.OrdenGiro)
-                    .HasForeignKey(d => d.OrdenGiroDetalleId)
-                    .HasConstraintName("FK_OrdenGiro_OrdenGiroDetalle");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>
@@ -3854,8 +3849,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.OrdenGiroNavigation)
-                    .WithMany(p => p.OrdenGiroDetalleNavigation)
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.OrdenGiroDetalle)
                     .HasForeignKey(d => d.OrdenGiroId)
                     .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiro");
             });
@@ -4022,6 +4017,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.OrdenGiroSoporte)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("FK_OrdenGiroSoporte_OrdenGiro");
             });
 
             modelBuilder.Entity<OrdenGiroTercero>(entity =>
@@ -4039,7 +4039,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(20)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiro)

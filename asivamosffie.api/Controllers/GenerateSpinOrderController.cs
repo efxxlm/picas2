@@ -45,8 +45,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<dynamic> GetListOrdenGiro([FromQuery] int pMenuId)
         {
-            var result = await _generateSpinOrderService.GetListOrdenGiro(pMenuId);
-            return result;
+            return await _generateSpinOrderService.GetListOrdenGiro(pMenuId); 
         }
          
         [HttpPost]
@@ -56,7 +55,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             { 
-                pOrdenGiro.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pOrdenGiro.UsuarioCreacion = User.Identity.Name;
                 respuesta = await _generateSpinOrderService.CreateEditOrdenGiro(pOrdenGiro);
                 return Ok(respuesta);
             }

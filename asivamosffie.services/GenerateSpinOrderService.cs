@@ -37,20 +37,25 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
-                if (pOrdenGiro.OrdenGiroTercero.Count() > 0)
-                     await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-                if (pOrdenGiro.OrdenGiroDetalle != null)
-                      await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
+            {
+                if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
+                    await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+            
+                if (pOrdenGiro?.OrdenGiroDetalle != null)
+                    await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+                
+                if (pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
+                    CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
 
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
-                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);  
+                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
                     _context.OrdenGiro.Add(pOrdenGiro);
-
+                    _context.SaveChanges();
                     await _context.Set<SolicitudPago>()
                                     .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
                                                                                         .UpdateAsync(r => new SolicitudPago()
@@ -61,7 +66,7 @@ namespace asivamosffie.services
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
-              
+
                 return
                      new Respuesta
                      {
@@ -209,7 +214,7 @@ namespace asivamosffie.services
 
         }
 
-        private async Task<int> CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId == 0)
             {
@@ -222,9 +227,9 @@ namespace asivamosffie.services
             }
             else
             {
-                await _context.Set<OrdenGiroDetalleEstrategiaPago>()
+                 _context.Set<OrdenGiroDetalleEstrategiaPago>()
                                                     .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
-                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalleEstrategiaPago()
+                                                                                                                            .Update(r => new OrdenGiroDetalleEstrategiaPago()
                                                                                                                             {
                                                                                                                                 FechaModificacion = DateTime.Now,
                                                                                                                                 UsuarioModificacion = pUsuarioCreacion,
@@ -233,11 +238,9 @@ namespace asivamosffie.services
                                                                                                                                 EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
                                                                                                                             });
             }
-            _context.SaveChanges();
-            return pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId;
         }
 
-        private async Task<int> CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
+        private async Task  CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
         {
             if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
             {
@@ -263,13 +266,10 @@ namespace asivamosffie.services
             }
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
-                 CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
+                await CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
-                 CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion);
-
-
-            return pOrdenGiroTercero.OrdenGiroTerceroId;
+                await CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion); 
         }
 
         private async Task CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
@@ -296,7 +296,7 @@ namespace asivamosffie.services
                                                                                                                           NombreBeneficiario = pOrdenGiroTerceroChequeGerencia.NombreBeneficiario,
                                                                                                                           NumeroIdentificacionBeneficiario = pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario,
                                                                                                                       });
-            } 
+            }
         }
 
         private async Task CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
@@ -326,7 +326,7 @@ namespace asivamosffie.services
                                                                                                                 BancoCodigo = pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo,
                                                                                                                 EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
                                                                                                             });
-            } 
+            }
         }
 
 
