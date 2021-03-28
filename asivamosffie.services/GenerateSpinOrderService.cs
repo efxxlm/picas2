@@ -40,12 +40,17 @@ namespace asivamosffie.services
             {
                 if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
                     await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-            
+
                 if (pOrdenGiro?.OrdenGiroDetalle != null)
                     await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-                
+
                 if (pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
                     CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+                if (pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroObservacion?.Count() > 0)
+                    CreateEditOrdenGiroDetalleObservacion(pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroObservacion.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+
 
 
                 if (pOrdenGiro.OrdenGiroId == 0)
@@ -89,6 +94,41 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
                     };
             }
+        }
+
+        private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroObservacion pOrdenGiroObservacion, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroObservacion.OrdenGiroObservacionId == 0)
+            {
+                pOrdenGiroObservacion.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroObservacion.FechaCreacion = DateTime.Now;
+                pOrdenGiroObservacion.Eliminado = false;
+                pOrdenGiroObservacion.RegistroCompleto = ValidarRegistroCompletoDetalleObservacion(pOrdenGiroObservacion);
+                _context.OrdenGiroObservacion.Add(pOrdenGiroObservacion);
+
+            }
+            else
+            {
+                _context.Set<OrdenGiroObservacion>()
+                        .Where(o => o.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
+                        .Update(o => new OrdenGiroObservacion
+                        {
+                            UsuarioModificacion = pUsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                            RegistroCompleto = ValidarRegistroCompletoDetalleObservacion(pOrdenGiroObservacion),
+                            Observacion = pOrdenGiroObservacion.Observacion 
+                        });
+
+
+            }
+        }
+
+        private bool? ValidarRegistroCompletoDetalleObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
+                return false;
+
+            return true;
         }
 
         private async Task<int> CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
@@ -227,20 +267,20 @@ namespace asivamosffie.services
             }
             else
             {
-                 _context.Set<OrdenGiroDetalleEstrategiaPago>()
-                                                    .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
-                                                                                                                            .Update(r => new OrdenGiroDetalleEstrategiaPago()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago),
+                _context.Set<OrdenGiroDetalleEstrategiaPago>()
+                                                   .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
+                                                                                                                           .Update(r => new OrdenGiroDetalleEstrategiaPago()
+                                                                                                                           {
+                                                                                                                               FechaModificacion = DateTime.Now,
+                                                                                                                               UsuarioModificacion = pUsuarioCreacion,
+                                                                                                                               RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago),
 
-                                                                                                                                EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
-                                                                                                                            });
+                                                                                                                               EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
+                                                                                                                           });
             }
         }
 
-        private async Task  CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
+        private async Task CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
         {
             if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
             {
@@ -269,7 +309,7 @@ namespace asivamosffie.services
                 await CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
-                await CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion); 
+                await CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion);
         }
 
         private async Task CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
