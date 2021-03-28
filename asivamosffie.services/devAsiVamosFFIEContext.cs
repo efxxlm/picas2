@@ -259,7 +259,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -4052,15 +4051,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.OrdenGiroTerceroChequeGerencia)
-                    .WithMany(p => p.OrdenGiroTercero)
-                    .HasForeignKey(d => d.OrdenGiroTerceroChequeGerenciaId)
-                    .HasConstraintName("FK_OrdenGiroTercero_OrdenGiroTerceroChequeGerencia");
-
-                entity.HasOne(d => d.OrdenGiroTerceroTransferenciaElectronica)
-                    .WithMany(p => p.OrdenGiroTercero)
-                    .HasForeignKey(d => d.OrdenGiroTerceroTransferenciaElectronicaId)
-                    .HasConstraintName("FK_OrdenGiroTercero_OrdenGiroTerceroTransferenciaElectronica");
+                entity.HasOne(d => d.OrdenGiroNavigation)
+                    .WithMany(p => p.OrdenGiroTerceroNavigation)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("OrdenGiroTercero_OrdenGiro");
             });
 
             modelBuilder.Entity<OrdenGiroTerceroChequeGerencia>(entity =>
@@ -4080,6 +4074,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiroTercero)
+                    .WithMany(p => p.OrdenGiroTerceroChequeGerencia)
+                    .HasForeignKey(d => d.OrdenGiroTerceroId)
+                    .HasConstraintName("FK_OrdenGiroTerceroChequeGerencia_OrdenGiroTercero");
             });
 
             modelBuilder.Entity<OrdenGiroTerceroTransferenciaElectronica>(entity =>
@@ -4111,6 +4110,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiroTercero)
+                    .WithMany(p => p.OrdenGiroTerceroTransferenciaElectronica)
+                    .HasForeignKey(d => d.OrdenGiroTerceroId)
+                    .HasConstraintName("FK_OrdenGiroTerceroTransferenciaElectronica_OrdenGiroTercero");
             });
 
             modelBuilder.Entity<Perfil>(entity =>

@@ -8,6 +8,8 @@ namespace asivamosffie.model.Models
         public OrdenGiroTercero()
         {
             OrdenGiro = new HashSet<OrdenGiro>();
+            OrdenGiroTerceroChequeGerencia = new HashSet<OrdenGiroTerceroChequeGerencia>();
+            OrdenGiroTerceroTransferenciaElectronica = new HashSet<OrdenGiroTerceroTransferenciaElectronica>();
         }
 
         public int OrdenGiroTerceroId { get; set; }
@@ -18,11 +20,11 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
-        public int? OrdenGiroTerceroTransferenciaElectronicaId { get; set; }
-        public int? OrdenGiroTerceroChequeGerenciaId { get; set; }
+        public int? OrdenGiroId { get; set; }
 
-        public virtual OrdenGiroTerceroChequeGerencia OrdenGiroTerceroChequeGerencia { get; set; }
-        public virtual OrdenGiroTerceroTransferenciaElectronica OrdenGiroTerceroTransferenciaElectronica { get; set; }
+        public virtual OrdenGiro OrdenGiroNavigation { get; set; }
         public virtual ICollection<OrdenGiro> OrdenGiro { get; set; }
+        public virtual ICollection<OrdenGiroTerceroChequeGerencia> OrdenGiroTerceroChequeGerencia { get; set; }
+        public virtual ICollection<OrdenGiroTerceroTransferenciaElectronica> OrdenGiroTerceroTransferenciaElectronica { get; set; }
     }
 }

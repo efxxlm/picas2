@@ -283,16 +283,16 @@ namespace asivamosffie.services
             }
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
-                CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica, pUsuarioCreacion);
+                 CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
-                CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia, pUsuarioCreacion);
+                 CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion);
 
 
             return pOrdenGiroTercero.OrdenGiroTerceroId;
         }
 
-        private async Task<int> CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
+        private async Task CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
         {
             if (pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId == 0)
             {
@@ -316,11 +316,10 @@ namespace asivamosffie.services
                                                                                                                           NombreBeneficiario = pOrdenGiroTerceroChequeGerencia.NombreBeneficiario,
                                                                                                                           NumeroIdentificacionBeneficiario = pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario,
                                                                                                                       });
-            }
-            return pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId;
+            } 
         }
 
-        private async Task<int> CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
+        private async Task CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
         {
             if (pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId == 0)
             {
@@ -347,9 +346,7 @@ namespace asivamosffie.services
                                                                                                                 BancoCodigo = pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo,
                                                                                                                 EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
                                                                                                             });
-            }
-
-            return pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId;
+            } 
         }
 
 
