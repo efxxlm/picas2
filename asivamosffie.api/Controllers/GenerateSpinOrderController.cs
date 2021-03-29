@@ -48,6 +48,20 @@ namespace asivamosffie.api.Controllers
             return await _generateSpinOrderService.GetListOrdenGiro(pMenuId); 
         }
          
+        [Route("GetValorConceptoByAportanteId")]
+        [HttpGet]
+        public async Task<dynamic> GetValorConceptoByAportanteId([FromQuery] int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
+        {
+            return await _generateSpinOrderService.GetValorConceptoByAportanteId(pAportanteId, pSolicitudPagoId, pConceptoPago); 
+        }
+  
+        [Route("GetFuentesDeRecursosPorAportanteId")]
+        [HttpGet]
+        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId([FromQuery] int pAportanteId )
+        {
+            return await _generateSpinOrderService.GetFuentesDeRecursosPorAportanteId(pAportanteId ); 
+        }
+         
         [HttpPost]
         [Route("CreateEditOrdenGiro")]
         public async Task<IActionResult> CreateEditOrdenGiro([FromBody] OrdenGiro pOrdenGiro)

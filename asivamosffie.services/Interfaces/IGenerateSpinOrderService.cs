@@ -9,6 +9,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IGenerateSpinOrderService
     {
+        Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId);
+
+        Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago);
+
         Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int pOrdenGiroId);
 
         Task<dynamic> GetListOrdenGiro(int pMenuId);

@@ -148,7 +148,7 @@ namespace asivamosffie.services
                                                                                                                                 UsuarioModificacion = pUsuarioCreacion,
                                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
                                                                                                                             });
-            } 
+            }
         }
 
         private void CreateEditOrdenGiroSoporte(OrdenGiroSoporte ordenGiroSoporte, string pUsuarioCreacion)
@@ -520,6 +520,33 @@ namespace asivamosffie.services
         }
         #endregion
 
+        public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
+        {
+            return _context.VValorUsoXcontratoAportante
+                           .Where(v => v.AportanteId == pAportanteId
+                               && v.ConceptoPagoCodigo == pConceptoPago
+                               && v.SolicitudPagoId == pSolicitudPagoId
+                               ).Select(v => v.ValorUso);
+        }
+
+
+        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+
+            List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
+
+            ListFuenteFinanciacion.ForEach(ff =>
+            {
+                ListDynamics.Add(new
+                {
+                    Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
+                    Codidgo = ff.FuenteRecursosCodigo
+                });
+            }); 
+            return ListFuenteFinanciacion;
+        }
 
     }
 }
