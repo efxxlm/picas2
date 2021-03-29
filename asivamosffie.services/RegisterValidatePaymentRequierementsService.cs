@@ -405,7 +405,7 @@ namespace asivamosffie.services
                     {
                         MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
                         MontoMaximo /= 100;
-                        MontoMaximo -= ValorPendientePorPagar;
+                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
 
                         if (MontoMaximo < 0)
                             MontoMaximo = ValorTotalPorFase;
