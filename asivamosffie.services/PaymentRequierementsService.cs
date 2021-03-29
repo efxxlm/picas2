@@ -317,7 +317,7 @@ namespace asivamosffie.services
         private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
         {
             //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
-            int intCantidadDependenciasSolicitudPago = 3;
+            int intCantidadDependenciasSolicitudPago = 2;
 
             foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
             {
