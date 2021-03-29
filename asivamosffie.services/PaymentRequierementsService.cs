@@ -87,7 +87,7 @@ namespace asivamosffie.services
 
             return result.Select(r => new
             {
-                
+
                 r.TieneObservacion,
                 r.TieneSubsanacion,
                 r.RegistroCompletoAutorizar,
@@ -723,7 +723,7 @@ namespace asivamosffie.services
         }
 
 
-        ///4.3.2 Aprobar
+        ///4.3.2 Aprobar *
         private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Aprobar_4_3_2));
@@ -732,12 +732,12 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Validacion_Financiera
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        ///4.3.1 Aprobar
+        ///4.3.1 Aprobar *
         private async Task<bool> SendEmailAprovedVerificar(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Validacion_4_3_1));
@@ -746,12 +746,12 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Validacion_Financiera
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        ///4.3.1  y 4.3.2 envian subsanacion
+        ///4.3.1  y 4.3.2 envian subsanacion *
         private async Task<bool> SendEmailRejectedCorrect(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Subsanacion_4_3_1_Y_4_3_));
@@ -761,11 +761,13 @@ namespace asivamosffie.services
                 new List<EnumeratorPerfil>
                                           {
                                                 EnumeratorPerfil.Supervisor,
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Apoyo,
+                                                EnumeratorPerfil.Apoyo_Supervisor
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-        ///4.3.1  y 4.3.2 envian subsanacion
+
+        ///4.3.1  y 4.3.2 envian subsanacion *
         private async Task<bool> SendEmailRejectedCorrectALL(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Subsanacion_TODOS_4_3_1_Y_4_3_));
@@ -774,11 +776,12 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Equipo_Facturacion
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-        ///4.3.1 Rechaza
+   
+        ///4.3.1 Rechaza *
         private async Task<bool> SendEmailRejectAutorizar(int pSolicitudPagoId, bool esVerificar)
         {
             Template template = new Template();
@@ -792,14 +795,16 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
+                                                EnumeratorPerfil.Equipo_Facturacion,
                                                 EnumeratorPerfil.Supervisor,
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Apoyo,
+                                                EnumeratorPerfil.Apoyo_Supervisor,
                                           };
 
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        /// 4.1.9 devuelve 
+        /// 4.1.9 devuelve *
         private async Task<bool> SendEmailToDeclineValidate(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Devolver_4_1_9));
@@ -808,12 +813,12 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.Interventor
+                                                EnumeratorPerfil.Equipo_Facturacion
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        /// 4.1.9 aprueba 
+        /// 4.1.9 aprueba *
         private async Task<bool> SendEmailToAprovedValidate(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarTramiteFinanciera_4_1_9));
@@ -822,12 +827,12 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Verificacion_Financiera
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        /// 4.1.9 aprueba 
+        /// 4.1.9 aprueba *
         private async Task<bool> SendEmailToAprovedValidateAll(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarTramiteFinanciera_4_1_9_TODOS));
@@ -835,44 +840,17 @@ namespace asivamosffie.services
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
-                                          {
+                                          {    EnumeratorPerfil.Apoyo_Supervisor,
                                                 EnumeratorPerfil.Apoyo,
-                                                EnumeratorPerfil.Interventor
+                                                EnumeratorPerfil.Equipo_Facturacion
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        /// 4.1.8 Aprueba
+        /// 4.1.8 Aprueba *
         private async Task<bool> SendEmailToAprovedVerify(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_para_autorizar_solicitud_4_1_8));
-            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
-
-            List<EnumeratorPerfil> perfilsEnviarCorreo =
-                new List<EnumeratorPerfil>
-                                          {
-                                                EnumeratorPerfil.CordinadorFinanciera
-                                          };
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
-        }
-        /// 4.1.8 devuelve 
-        private async Task<bool> SendEmailToDeclineVerify(int pSolicitudPagoId)
-        {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_para_autorizar_solicitud_4_1_8));
-            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
-
-            List<EnumeratorPerfil> perfilsEnviarCorreo =
-                new List<EnumeratorPerfil>
-                                          {
-                                                EnumeratorPerfil.Apoyo
-                                          };
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
-        }
-
-        /// 4.1.7 Aprueba
-        private async Task<bool> SendEmailToAproved(int pSolicitudPagoId)
-        {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_a_aprobacion4_1_7));
             string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
@@ -882,7 +860,37 @@ namespace asivamosffie.services
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-        /// 4.1.7 devuelve
+      
+        /// 4.1.8 devuelve *
+        private async Task<bool> SendEmailToDeclineVerify(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_para_autorizar_solicitud_4_1_8));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Equipo_Facturacion
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        /// 4.1.7 Aprueba *
+        private async Task<bool> SendEmailToAproved(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_a_aprobacion4_1_7));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Apoyo,
+                                                EnumeratorPerfil.Apoyo_Supervisor
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+      
+        /// 4.1.7 devuelve *
         private async Task<bool> SendEmailToDecline(int pSolicitudPagoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DevolverSolicititud4_1_7));
@@ -891,7 +899,8 @@ namespace asivamosffie.services
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.CordinadorFinanciera
+                                                EnumeratorPerfil.Equipo_Facturacion,
+                                                EnumeratorPerfil.Supervisor
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
@@ -918,7 +927,7 @@ namespace asivamosffie.services
         }
 
         ///Tareas programadas  
-        ///4.1.8
+        ///4.1.8 *
         public async Task<bool> SolicitudPagoPendienteVerificacion()
         {
             DateTime MaxDate = await _commonService.CalculardiasLaborales(2, DateTime.Now);
@@ -939,10 +948,9 @@ namespace asivamosffie.services
                 List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                         {
-                                            EnumeratorPerfil.Apoyo,
-                                            EnumeratorPerfil.Tecnica,
-                                            EnumeratorPerfil.Supervisor,
-                                            EnumeratorPerfil.CordinadorFinanciera
+                                            EnumeratorPerfil.Equipo_Facturacion,
+                                            EnumeratorPerfil.Apoyo_Supervisor,
+                                            EnumeratorPerfil.Apoyo
                                         };
 
                 if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))
@@ -952,7 +960,7 @@ namespace asivamosffie.services
             return SedndIsSuccessfull;
         }
 
-        ///4.1.9
+        ///4.1.9 *
         public async Task<bool> SolicitudPagoPendienteAutorizacion()
         {
             DateTime MaxDate = await _commonService.CalculardiasLaborales(2, DateTime.Now);
@@ -973,10 +981,9 @@ namespace asivamosffie.services
                 List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                         {
-                                            EnumeratorPerfil.Apoyo,
-                                            EnumeratorPerfil.Tecnica,
+                                            EnumeratorPerfil.Equipo_Facturacion,
                                             EnumeratorPerfil.Supervisor,
-                                            EnumeratorPerfil.CordinadorFinanciera
+                                            EnumeratorPerfil.Apoyo
                                         };
 
                 if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))

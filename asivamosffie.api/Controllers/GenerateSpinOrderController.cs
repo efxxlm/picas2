@@ -26,51 +26,68 @@ namespace asivamosffie.api.Controllers
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
         }
-         
+
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)
-        { 
+        {
             try
             {
-                return  await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId);
+                return await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
- 
+
         [Route("GetListOrdenGiro")]
         [HttpGet]
         public async Task<dynamic> GetListOrdenGiro([FromQuery] int pMenuId)
         {
-            return await _generateSpinOrderService.GetListOrdenGiro(pMenuId); 
+            return await _generateSpinOrderService.GetListOrdenGiro(pMenuId);
         }
-         
+
         [Route("GetValorConceptoByAportanteId")]
         [HttpGet]
         public async Task<dynamic> GetValorConceptoByAportanteId([FromQuery] int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
         {
-            return await _generateSpinOrderService.GetValorConceptoByAportanteId(pAportanteId, pSolicitudPagoId, pConceptoPago); 
+            return await _generateSpinOrderService.GetValorConceptoByAportanteId(pAportanteId, pSolicitudPagoId, pConceptoPago);
         }
-  
+
         [Route("GetFuentesDeRecursosPorAportanteId")]
         [HttpGet]
-        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId([FromQuery] int pAportanteId )
+        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId([FromQuery] int pAportanteId)
         {
-            return await _generateSpinOrderService.GetFuentesDeRecursosPorAportanteId(pAportanteId ); 
+            return await _generateSpinOrderService.GetFuentesDeRecursosPorAportanteId(pAportanteId);
         }
-         
+
         [HttpPost]
         [Route("CreateEditOrdenGiro")]
         public async Task<IActionResult> CreateEditOrdenGiro([FromBody] OrdenGiro pOrdenGiro)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pOrdenGiro.UsuarioCreacion = User.Identity.Name;
                 respuesta = await _generateSpinOrderService.CreateEditOrdenGiro(pOrdenGiro);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteOrdenGiroDetalleDescuentoTecnicaAportante")]
+        public async Task<IActionResult> DeleteOrdenGiroDetalleDescuentoTecnicaAportante([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaAportanteId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportanteId, User.Identity.Name);
                 return Ok(respuesta);
             }
             catch (Exception ex)

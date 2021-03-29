@@ -18,435 +18,17 @@ namespace asivamosffie.services
 {
     public class GenerateSpinOrderService : IGenerateSpinOrderService
     {
+        #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePayment;
 
-        public GenerateSpinOrderService(IDocumentService documentService, IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
+        public GenerateSpinOrderService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
-            _documentService = documentService;
             _commonService = commonService;
             _context = context;
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
-
-        #region create 
-        public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
-                    await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
-                if (pOrdenGiro?.OrdenGiroDetalle != null)
-                    await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
-                if (pOrdenGiro.OrdenGiroId == 0)
-                {
-                    pOrdenGiro.FechaCreacion = DateTime.Now;
-                    pOrdenGiro.Eliminado = false;
-                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
-                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
-                    _context.OrdenGiro.Add(pOrdenGiro);
-                    _context.SaveChanges();
-                    await _context.Set<SolicitudPago>()
-                                    .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
-                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                        {
-                                                                                            FechaModificacion = DateTime.Now,
-                                                                                            UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
-
-                                                                                            OrdenGiroId = pOrdenGiro.OrdenGiroId
-                                                                                        });
-                }
-                return
-                     new Respuesta
-                     {
-                         IsSuccessful = true,
-                         IsException = false,
-                         IsValidation = false,
-                         Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.OperacionExitosa, idAccion, "", "CREAR ORDEN GIRO")
-                     };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroDetalleObservacion pOrdenGiroDetalleObservacion, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroDetalleObservacion.OrdenGiroObservacionId == 0)
-            {
-                pOrdenGiroDetalleObservacion.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroDetalleObservacion.FechaCreacion = DateTime.Now;
-                pOrdenGiroDetalleObservacion.Eliminado = false;
-                pOrdenGiroDetalleObservacion.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion);
-                _context.OrdenGiroDetalleObservacion.Add(pOrdenGiroDetalleObservacion);
-            }
-            else
-            {
-                _context.Set<OrdenGiroDetalleObservacion>()
-                        .Where(o => o.OrdenGiroObservacionId == pOrdenGiroDetalleObservacion.OrdenGiroObservacionId)
-                        .Update(o => new OrdenGiroDetalleObservacion
-                        {
-                            UsuarioModificacion = pUsuarioCreacion,
-                            FechaModificacion = DateTime.Now,
-                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion),
-                            Observacion = pOrdenGiroDetalleObservacion.Observacion
-                        });
-            }
-        }
-
-        private async Task CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
-                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleObservacion?.Count() > 0)
-                CreateEditOrdenGiroDetalleObservacion(pOrdenGiroDetalle.OrdenGiroDetalleObservacion.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
-                CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() > 0)
-                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
-                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
-               // CreateEditOrdenGiroDetalleDescuentoTecnica
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
-            {
-                pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroDetalle.FechaCreacion = DateTime.Now;
-                pOrdenGiroDetalle.Eliminado = false;
-                pOrdenGiroDetalle.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle);
-
-                _context.OrdenGiroDetalle.Add(pOrdenGiroDetalle);
-            }
-            else
-            {
-                await _context.Set<OrdenGiroDetalle>()
-                                                    .Where(o => o.OrdenGiroDetalleId == pOrdenGiroDetalle.OrdenGiroDetalleId)
-                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalle()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
-                                                                                                                            });
-            }
-        }
-
-        private void CreateEditOrdenGiroSoporte(OrdenGiroSoporte ordenGiroSoporte, string pUsuarioCreacion)
-        {
-            if (ordenGiroSoporte.OrdenGiroSoporteId == 0)
-            {
-                ordenGiroSoporte.UsuarioCreacion = pUsuarioCreacion;
-                ordenGiroSoporte.Eliminado = false;
-                ordenGiroSoporte.FechaCreacion = DateTime.Now;
-                ordenGiroSoporte.RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte);
-                _context.OrdenGiroSoporte.Add(ordenGiroSoporte);
-            }
-            else
-            {
-                _context.Set<OrdenGiroSoporte>()
-                        .Where(o => o.OrdenGiroSoporteId == ordenGiroSoporte.OrdenGiroSoporteId)
-                        .Update(o => new OrdenGiroSoporte
-                        {
-                            UsuarioModificacion = pUsuarioCreacion,
-                            FechaModificacion = DateTime.Now,
-                            RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte),
-                            UrlSoporte = ordenGiroSoporte.UrlSoporte
-                        });
-            }
-        }
-
-        private void CreateEditOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
-            {
-                pOrdenGiroDetalleTerceroCausacion.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroDetalleTerceroCausacion.FechaCreacion = DateTime.Now;
-                pOrdenGiroDetalleTerceroCausacion.Eliminado = false;
-                pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion);
-
-                _context.OrdenGiroDetalleTerceroCausacion.Add(pOrdenGiroDetalleTerceroCausacion);
-            }
-            else
-            {
-                _context.Set<OrdenGiroDetalleTerceroCausacion>()
-                        .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
-                        .Update(r => new OrdenGiroDetalleTerceroCausacion()
-                        {
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioCreacion,
-                            RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
-                        });
-            }
-        }
-
-        private void CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId == 0)
-            {
-                pOrdenGiroDetalleDescuentoTecnica.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroDetalleDescuentoTecnica.FechaCreacion = DateTime.Now;
-                pOrdenGiroDetalleDescuentoTecnica.Eliminado = false;
-
-                pOrdenGiroDetalleDescuentoTecnica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica);
-
-                _context.OrdenGiroDetalleDescuentoTecnica.Add(pOrdenGiroDetalleDescuentoTecnica);
-            }
-            else
-            {
-                _context.Set<OrdenGiroDetalleDescuentoTecnica>()
-                             .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
-                             .Update(r => new OrdenGiroDetalleDescuentoTecnica()
-                             {
-                                 SolicitudPagoFaseFacturaDescuentoId = pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId,
-                                 TipoPagoCodigo = pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo,
-                                 FechaModificacion = DateTime.Now,
-                                 UsuarioModificacion = pUsuarioCreacion,
-                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
-                             });
-            }
-            CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante, pUsuarioCreacion);
-
-        }
-
-        private async void CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> pOrdenGiroDetalleDescuentoTecnicaAportanteList, string pUsuarioCreacion)
-        {
-            foreach (var pOrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnicaAportanteList)
-            {
-                if (pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId == 0)
-                {
-                    pOrdenGiroDetalleDescuentoTecnicaAportante.UsuarioCreacion = pUsuarioCreacion;
-                    pOrdenGiroDetalleDescuentoTecnicaAportante.FechaCreacion = DateTime.Now;
-                    pOrdenGiroDetalleDescuentoTecnicaAportante.Eliminado = false;
-                    pOrdenGiroDetalleDescuentoTecnicaAportante.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante);
-
-                    _context.OrdenGiroDetalleDescuentoTecnicaAportante.Add(pOrdenGiroDetalleDescuentoTecnicaAportante);
-                }
-                else
-                {
-                    await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
-                                  .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
-                                  .UpdateAsync(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
-                                  {
-                                      FechaModificacion = DateTime.Now,
-                                      UsuarioModificacion = pUsuarioCreacion,
-                                      RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
-                                      AportanteId = pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId,
-                                      ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
-                                      ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
-                                      RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
-                                      FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo
-                                  });
-                }
-            }
-
-        }
-
-        private void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroDetalleEstrategiaPago?.OrdenGiroDetalleEstrategiaPagoId == 0)
-            {
-                pOrdenGiroDetalleEstrategiaPago.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroDetalleEstrategiaPago.FechaCreacion = DateTime.Now;
-                pOrdenGiroDetalleEstrategiaPago.Eliminado = false;
-                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo);
-
-                _context.OrdenGiroDetalleEstrategiaPago.Add(pOrdenGiroDetalleEstrategiaPago);
-            }
-            else
-            {
-                _context.Set<OrdenGiroDetalleEstrategiaPago>()
-                        .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
-                        .Update(r => new OrdenGiroDetalleEstrategiaPago()
-                        {
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioCreacion,
-                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
-                            EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
-                        });
-            }
-        }
-
-        private async Task CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
-            {
-                pOrdenGiroTercero.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroTercero.FechaCreacion = DateTime.Now;
-                pOrdenGiroTercero.Eliminado = false;
-                pOrdenGiroTercero.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero);
-
-                _context.OrdenGiroTercero.Add(pOrdenGiroTercero);
-                _context.SaveChanges();
-            }
-            else
-            {
-                await _context.Set<OrdenGiroTercero>()
-                                                    .Where(o => o.OrdenGiroTerceroId == pOrdenGiroTercero.OrdenGiroTerceroId)
-                                                                                                                            .UpdateAsync(r => new OrdenGiroTercero()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero),
-                                                                                                                                MedioPagoGiroCodigo = pOrdenGiroTercero.MedioPagoGiroCodigo,
-                                                                                                                            });
-            }
-
-            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
-                await CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
-                await CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion);
-        }
-
-        private async Task CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId == 0)
-            {
-                pOrdenGiroTerceroChequeGerencia.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroTerceroChequeGerencia.FechaCreacion = DateTime.Now;
-                pOrdenGiroTerceroChequeGerencia.Eliminado = false;
-                pOrdenGiroTerceroChequeGerencia.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTerceroChequeGerencia);
-
-                _context.OrdenGiroTerceroChequeGerencia.Add(pOrdenGiroTerceroChequeGerencia);
-            }
-            else
-            {
-                await _context.Set<OrdenGiroTerceroChequeGerencia>()
-                                              .Where(o => o.OrdenGiroTerceroChequeGerenciaId == pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId)
-                                                                                                                      .UpdateAsync(r => new OrdenGiroTerceroChequeGerencia()
-                                                                                                                      {
-                                                                                                                          FechaModificacion = DateTime.Now,
-                                                                                                                          UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                          RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTerceroChequeGerencia),
-
-                                                                                                                          NombreBeneficiario = pOrdenGiroTerceroChequeGerencia.NombreBeneficiario,
-                                                                                                                          NumeroIdentificacionBeneficiario = pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario,
-                                                                                                                      });
-            }
-        }
-
-        private async Task CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
-        {
-            if (pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId == 0)
-            {
-                pOrdenGiroTerceroTransferenciaElectronica.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroTerceroTransferenciaElectronica.FechaCreacion = DateTime.Now;
-                pOrdenGiroTerceroTransferenciaElectronica.Eliminado = false;
-                pOrdenGiroTerceroTransferenciaElectronica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica);
-
-                _context.OrdenGiroTerceroTransferenciaElectronica.Add(pOrdenGiroTerceroTransferenciaElectronica);
-            }
-            else
-            {
-                await _context.Set<OrdenGiroTerceroTransferenciaElectronica>()
-                                    .Where(o => o.OrdenGiroTerceroTransferenciaElectronicaId == pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId)
-                                                                                                            .UpdateAsync(r => new OrdenGiroTerceroTransferenciaElectronica()
-                                                                                                            {
-                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica),
-
-                                                                                                                TitularCuenta = pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta,
-                                                                                                                TitularNumeroIdentificacion = pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion,
-                                                                                                                NumeroCuenta = pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta,
-                                                                                                                BancoCodigo = pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo,
-                                                                                                                EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
-                                                                                                            });
-            }
-        }
-
-
-        #endregion
-
-        #region validate 
-        private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
-        {
-            return false;
-        }
-        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
-                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
-                )
-                return false;
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
-        {
-            if (pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
-               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
-        {
-
-            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
-                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
-                return false;
-
-            return true;
-        }
-
-
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
-        {
-            return false;
-        }
-
-
         #endregion
 
         #region get
@@ -455,6 +37,32 @@ namespace asivamosffie.services
         /// </summary>
         /// <returns></returns>
         /// 
+        public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
+        {
+            return _context.VValorUsoXcontratoAportante
+                           .Where(v => v.AportanteId == pAportanteId
+                               && v.ConceptoPagoCodigo == pConceptoPago
+                               && v.SolicitudPagoId == pSolicitudPagoId
+                               ).Select(v => v.ValorUso);
+        }
+
+        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+
+            List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
+
+            ListFuenteFinanciacion.ForEach(ff =>
+            {
+                ListDynamics.Add(new
+                {
+                    Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
+                    Codidgo = ff.FuenteRecursosCodigo
+                });
+            });
+            return ListFuenteFinanciacion;
+        }
 
         public async Task<dynamic> GetListOrdenGiro(int pMenuId)
         {
@@ -552,33 +160,617 @@ namespace asivamosffie.services
         }
         #endregion
 
-        public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
+        #region create 
+        public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
-            return _context.VValorUsoXcontratoAportante
-                           .Where(v => v.AportanteId == pAportanteId
-                               && v.ConceptoPagoCodigo == pConceptoPago
-                               && v.SolicitudPagoId == pSolicitudPagoId
-                               ).Select(v => v.ValorUso);
-        }
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
-
-        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
-
-            List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
-
-            ListFuenteFinanciacion.ForEach(ff =>
+            try
             {
-                ListDynamics.Add(new
+                if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
+                    CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+                if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
+                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+                if (pOrdenGiro.OrdenGiroId == 0)
                 {
-                    Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
-                    Codidgo = ff.FuenteRecursosCodigo
-                });
-            });
-            return ListFuenteFinanciacion;
+                    pOrdenGiro.FechaCreacion = DateTime.Now;
+                    pOrdenGiro.Eliminado = false;
+                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
+                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
+                    _context.OrdenGiro.Add(pOrdenGiro);
+                    _context.SaveChanges();
+                    await _context.Set<SolicitudPago>()
+                                    .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
+                                                                                        .UpdateAsync(r => new SolicitudPago()
+                                                                                        {
+                                                                                            FechaModificacion = DateTime.Now,
+                                                                                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
+
+                                                                                            OrdenGiroId = pOrdenGiro.OrdenGiroId
+                                                                                        });
+                }
+                else
+                {
+                    _context.Set<OrdenGiro>()
+                            .Where(og => og.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                            .Update(og => new OrdenGiro
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
+                                EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString()
+                            });
+                }
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                             (int)enumeratorMenu.Generar_Orden_de_giro,
+                             GeneralCodes.OperacionExitosa,
+                             idAccion,
+                             pOrdenGiro.UsuarioCreacion,
+                             ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiro.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
         }
 
+        private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroDetalleObservacion pOrdenGiroDetalleObservacion, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalleObservacion.OrdenGiroObservacionId == 0)
+            {
+                pOrdenGiroDetalleObservacion.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalleObservacion.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalleObservacion.Eliminado = false;
+                pOrdenGiroDetalleObservacion.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion);
+                _context.OrdenGiroDetalleObservacion.Add(pOrdenGiroDetalleObservacion);
+            }
+            else
+            {
+                _context.Set<OrdenGiroDetalleObservacion>()
+                        .Where(o => o.OrdenGiroObservacionId == pOrdenGiroDetalleObservacion.OrdenGiroObservacionId)
+                        .Update(o => new OrdenGiroDetalleObservacion
+                        {
+                            UsuarioModificacion = pUsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion),
+                            Observacion = pOrdenGiroDetalleObservacion.Observacion
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
+                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleObservacion?.Count() > 0)
+                CreateEditOrdenGiroDetalleObservacion(pOrdenGiroDetalle.OrdenGiroDetalleObservacion.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
+                CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() > 0)
+                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica.Count() > 0)
+                CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion);
+             
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
+            {
+                pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalle.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalle.Eliminado = false;
+                pOrdenGiroDetalle.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle);
+
+                _context.OrdenGiroDetalle.Add(pOrdenGiroDetalle);
+            }
+
+            else if (pOrdenGiroDetalle?.OrdenGiroDetalleId > 0)
+            {
+                _context.Set<OrdenGiroDetalle>()
+                        .Where(o => o.OrdenGiroDetalleId == pOrdenGiroDetalle.OrdenGiroDetalleId)
+                        .Update(r => new OrdenGiroDetalle()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroSoporte(OrdenGiroSoporte ordenGiroSoporte, string pUsuarioCreacion)
+        {
+            if (ordenGiroSoporte.OrdenGiroSoporteId == 0)
+            {
+                ordenGiroSoporte.UsuarioCreacion = pUsuarioCreacion;
+                ordenGiroSoporte.Eliminado = false;
+                ordenGiroSoporte.FechaCreacion = DateTime.Now;
+                ordenGiroSoporte.RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte);
+                _context.OrdenGiroSoporte.Add(ordenGiroSoporte);
+            }
+            else
+            {
+                _context.Set<OrdenGiroSoporte>()
+                        .Where(o => o.OrdenGiroSoporteId == ordenGiroSoporte.OrdenGiroSoporteId)
+                        .Update(o => new OrdenGiroSoporte
+                        {
+                            UsuarioModificacion = pUsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                            RegistroCompleto = !string.IsNullOrEmpty(ordenGiroSoporte.UrlSoporte),
+                            UrlSoporte = ordenGiroSoporte.UrlSoporte
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
+            {
+                if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
+                {
+                    pOrdenGiroDetalleTerceroCausacion.UsuarioCreacion = pUsuarioCreacion;
+                    pOrdenGiroDetalleTerceroCausacion.FechaCreacion = DateTime.Now;
+                    pOrdenGiroDetalleTerceroCausacion.Eliminado = false;
+                    pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion);
+
+                    _context.OrdenGiroDetalleTerceroCausacion.Add(pOrdenGiroDetalleTerceroCausacion);
+                }
+                else
+                {
+                    _context.Set<OrdenGiroDetalleTerceroCausacion>()
+                            .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
+                            .Update(r => new OrdenGiroDetalleTerceroCausacion()
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pUsuarioCreacion,
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
+                            });
+                }
+                CreateEditOrdenGiroDetalleTerceroCausacionDescuento(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento, pUsuarioCreacion);
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacionDescuento(ICollection<OrdenGiroDetalleTerceroCausacionDescuento> pListOrdenGiroDetalleTerceroCausacionDescuento, string pUsuarioCreacion)
+        {
+            foreach (var OrdenGiroDetalleTerceroCausacionDescuento in pListOrdenGiroDetalleTerceroCausacionDescuento)
+            {
+                if (OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId == 0)
+                {
+                    OrdenGiroDetalleTerceroCausacionDescuento.UsuarioCreacion = pUsuarioCreacion;
+                    OrdenGiroDetalleTerceroCausacionDescuento.FechaCreacion = DateTime.Now;
+                    OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
+                    OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
+                }
+                else
+                {
+                    _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
+                            .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId)
+                            .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
+                            {
+                                GestionFuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.GestionFuenteFinanciacionId,
+                                TipoDescuentoCodigo = OrdenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo,
+                                ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
+                                AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId,
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
+
+                            }); ;
+
+
+
+                }
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleDescuentoTecnica(List<OrdenGiroDetalleDescuentoTecnica> pListOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleDescuentoTecnica in pListOrdenGiroDetalleDescuentoTecnica)
+            {
+                if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId == 0)
+                {
+                    pOrdenGiroDetalleDescuentoTecnica.UsuarioCreacion = pUsuarioCreacion;
+                    pOrdenGiroDetalleDescuentoTecnica.FechaCreacion = DateTime.Now;
+                    pOrdenGiroDetalleDescuentoTecnica.Eliminado = false;
+                    pOrdenGiroDetalleDescuentoTecnica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica);
+                    _context.OrdenGiroDetalleDescuentoTecnica.Add(pOrdenGiroDetalleDescuentoTecnica);
+                }
+                else
+                {
+                    _context.Set<OrdenGiroDetalleDescuentoTecnica>()
+                                 .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
+                                 .Update(r => new OrdenGiroDetalleDescuentoTecnica()
+                                 {
+                                     SolicitudPagoFaseFacturaDescuentoId = pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId,
+                                     TipoPagoCodigo = pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo,
+                                     FechaModificacion = DateTime.Now,
+                                     UsuarioModificacion = pUsuarioCreacion,
+                                     RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
+                                 });
+                }
+                CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante, pUsuarioCreacion);
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> pOrdenGiroDetalleDescuentoTecnicaAportanteList, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnicaAportanteList)
+            {
+                if (pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId == 0)
+                {
+                    pOrdenGiroDetalleDescuentoTecnicaAportante.UsuarioCreacion = pUsuarioCreacion;
+                    pOrdenGiroDetalleDescuentoTecnicaAportante.FechaCreacion = DateTime.Now;
+                    pOrdenGiroDetalleDescuentoTecnicaAportante.Eliminado = false;
+                    pOrdenGiroDetalleDescuentoTecnicaAportante.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante);
+
+                    _context.OrdenGiroDetalleDescuentoTecnicaAportante.Add(pOrdenGiroDetalleDescuentoTecnicaAportante);
+                }
+                else
+                {
+                    _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                                 .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
+                                 .Update(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
+                                 {
+                                     FechaModificacion = DateTime.Now,
+                                     UsuarioModificacion = pUsuarioCreacion,
+                                     RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
+                                     AportanteId = pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId,
+                                     ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
+                                     ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
+                                     RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
+                                     FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo
+                                 });
+                }
+            }
+
+        }
+
+        private void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalleEstrategiaPago?.OrdenGiroDetalleEstrategiaPagoId == 0)
+            {
+                pOrdenGiroDetalleEstrategiaPago.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalleEstrategiaPago.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalleEstrategiaPago.Eliminado = false;
+                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo);
+
+                _context.OrdenGiroDetalleEstrategiaPago.Add(pOrdenGiroDetalleEstrategiaPago);
+            }
+            else
+            {
+                _context.Set<OrdenGiroDetalleEstrategiaPago>()
+                        .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
+                        .Update(r => new OrdenGiroDetalleEstrategiaPago()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
+                            EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
+            {
+                pOrdenGiroTercero.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroTercero.FechaCreacion = DateTime.Now;
+                pOrdenGiroTercero.Eliminado = false;
+                pOrdenGiroTercero.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero);
+
+                _context.OrdenGiroTercero.Add(pOrdenGiroTercero);
+                _context.SaveChanges();
+            }
+            else
+            {
+                _context.Set<OrdenGiroTercero>()
+                       .Where(o => o.OrdenGiroTerceroId == pOrdenGiroTercero.OrdenGiroTerceroId)
+                       .Update(o => new OrdenGiroTercero
+                       {
+                           RegistroCompleto  = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero),
+                           MedioPagoGiroCodigo = pOrdenGiroTercero.MedioPagoGiroCodigo,
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioCreacion 
+                       });  
+            }
+            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
+                CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
+
+            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
+                CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault(), pUsuarioCreacion);
+        }
+
+        private void CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId == 0)
+            {
+                pOrdenGiroTerceroChequeGerencia.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroTerceroChequeGerencia.FechaCreacion = DateTime.Now;
+                pOrdenGiroTerceroChequeGerencia.Eliminado = false;
+                pOrdenGiroTerceroChequeGerencia.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTerceroChequeGerencia);
+
+                _context.OrdenGiroTerceroChequeGerencia.Add(pOrdenGiroTerceroChequeGerencia);
+            }
+            else
+            {
+                _context.Set<OrdenGiroTerceroChequeGerencia>()
+                             .Where(o => o.OrdenGiroTerceroChequeGerenciaId == pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId)
+                             .Update(r => new OrdenGiroTerceroChequeGerencia()
+                             {
+                                 FechaModificacion = DateTime.Now,
+                                 UsuarioModificacion = pUsuarioCreacion,
+                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTerceroChequeGerencia),
+
+                                 NombreBeneficiario = pOrdenGiroTerceroChequeGerencia.NombreBeneficiario,
+                                 NumeroIdentificacionBeneficiario = pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario,
+                             });
+            }
+        }
+
+        private void CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId == 0)
+            {
+                pOrdenGiroTerceroTransferenciaElectronica.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroTerceroTransferenciaElectronica.FechaCreacion = DateTime.Now;
+                pOrdenGiroTerceroTransferenciaElectronica.Eliminado = false;
+                pOrdenGiroTerceroTransferenciaElectronica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica);
+
+                _context.OrdenGiroTerceroTransferenciaElectronica.Add(pOrdenGiroTerceroTransferenciaElectronica);
+            }
+            else
+            {
+                _context.Set<OrdenGiroTerceroTransferenciaElectronica>()
+                        .Where(o => o.OrdenGiroTerceroTransferenciaElectronicaId == pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId)
+                        .Update(r => new OrdenGiroTerceroTransferenciaElectronica()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica),
+
+                            TitularCuenta = pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta,
+                            TitularNumeroIdentificacion = pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion,
+                            NumeroCuenta = pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta,
+                            BancoCodigo = pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo,
+                            EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
+                        });
+            }
+        }
+
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportanteId)
+                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
+                          {
+                              Eliminado = true,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pAuthor
+                          });
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = GeneralCodes.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.OperacionExitosa, idAccion, pAuthor, ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO)
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
+                     };
+            }
+            return new Respuesta();
+        }
+        #endregion
+
+        #region validate 
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
+        {
+            if (ordenGiroDetalleTerceroCausacionDescuento.GestionFuenteFinanciacionId == 0
+               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+               || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
+                ) return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+        {
+            if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
+                ) return false;
+
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
+                return false;
+
+            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
+                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
+                )
+                return false;
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+                )
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTercero.MedioPagoGiroCodigo))
+                return false;
+
+            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
+            {
+                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() > 0)
+                    return false;
+                if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
+                    return false;
+            }
+            else
+            {
+                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() > 0)
+                    return false;
+                if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            if (
+                   pOrdenGiro.OrdenGiroDetalle == null
+                || pOrdenGiro.OrdenGiroTercero == null
+                ) return false;
+
+            foreach (var item in pOrdenGiro.OrdenGiroDetalle)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalle(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiro.OrdenGiroTercero)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroTercero(item))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
+        {
+            if (
+                  pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
+               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
+                )
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
+                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
+                return false;
+
+            if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
+                return false;
+
+            foreach (var OrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+        {
+            if (
+                   pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
+                || pOrdenGiroDetalle?.OrdenGiroSoporte == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
+                ) return false;
+
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
+            {
+                if (string.IsNullOrEmpty(item.Observacion))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
+            {
+                if (string.IsNullOrEmpty(item.UrlSoporte))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
+            {
+                if (string.IsNullOrEmpty(item.EstrategiaPagoCodigo))
+                    return false;
+            }
+
+            return true;
+        }
+
+        #endregion 
     }
 }

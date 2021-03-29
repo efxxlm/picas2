@@ -19,6 +19,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public decimal? ValorNetoGiro { get; set; }
         public int? OrdenGiroDetalleId { get; set; }
+        public string ConceptoPagoCriterio { get; set; }
+        public string TipoPagoCodigo { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }

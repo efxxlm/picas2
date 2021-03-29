@@ -262,6 +262,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3964,9 +3965,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacion>(entity =>
             {
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)

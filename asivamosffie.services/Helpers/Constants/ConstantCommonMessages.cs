@@ -27,8 +27,7 @@ namespace asivamosffie.services.Helpers.Constant
             public const string NOTIFICAR_SOLICITUD_APROBACION = "NOTIFICAR SOLICITUD APROBACION";
 
         }
-
-
+         
         #region Mensajes Acciones ManagementCommitteeReportService
         //
         public const string REGISTRAR_AVANCE_COMPROMISOS = "REGISTRAR AVANCE COMPROMISOS";
@@ -39,9 +38,14 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CAMBIAR_ESTADO_SOLICITUD_COMPROMISO = "CAMBIAR ESTADO SOLICITUD COMPROMISO";
 
         #endregion
-
-
+         
         public const string CREAR_EDITAR_DDP_ESPECIAL = "CREAR EDITAR DDP ESPECIAL";
+
+        internal static class SpinOrder {
+            public const string REGISTRAR_ORDENES_GIRO = "REGISTRAR ORDENES DE GIRO";
+            public const string ELIMINAR_APORTANTE_ORDENES_GIRO = "ELIMINAR APORTANTE ORDEN GIRO";
+
+        }
 
     }
 
