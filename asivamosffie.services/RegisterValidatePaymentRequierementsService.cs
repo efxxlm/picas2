@@ -130,13 +130,14 @@ namespace asivamosffie.services
         {
             return await
                 _context.VProyectosXcontrato
-                                            .Where(r => r.LlaveMen.Contains(pLlaveMen)
-                                            && r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada)
-                                                                                                                                .Select(s => new
-                                                                                                                                {
-                                                                                                                                    s.LlaveMen,
-                                                                                                                                    s.ContratacionProyectoId
-                                                                                                                                }).ToListAsync();
+                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) && r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada)
+                                            .Select
+                                                (s => new
+                                                        {
+                                                            s.LlaveMen,
+                                                            s.ContratacionProyectoId
+                                                        }
+                                                ).ToListAsync();
         }
 
         public async Task<dynamic> GetListSolicitudPago()
@@ -1144,7 +1145,7 @@ namespace asivamosffie.services
                                 {
                                     ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
                                     ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
-                                }); 
+                                });
                     }
                     else
                     {
