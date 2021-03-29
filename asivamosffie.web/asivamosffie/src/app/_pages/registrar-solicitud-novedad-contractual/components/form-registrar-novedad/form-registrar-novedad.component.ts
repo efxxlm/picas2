@@ -142,21 +142,18 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
           let listaDescripcion: NovedadContractualDescripcion[] = [];
 
+          if ( this.novedad.novedadContractualDescripcion){
+            this.novedad.novedadContractualDescripcion.forEach(n => {
 
-          this.novedad.novedadContractualDescripcion.forEach(n => {
-
-            
-
-            let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
-            this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
-            this.tipoNovedadArray.push( n );
-            listaDescripcion.push( n );
-            
-          });
-
+              let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
+              this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
+              this.tipoNovedadArray.push( n );
+              listaDescripcion.push( n );
+              
+            });
+          }
+          
           this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
-
-        
       });
 
 

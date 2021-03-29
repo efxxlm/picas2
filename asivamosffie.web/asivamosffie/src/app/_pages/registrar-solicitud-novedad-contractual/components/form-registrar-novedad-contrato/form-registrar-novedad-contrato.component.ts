@@ -13,9 +13,9 @@ import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContr
 })
 export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges {
   @Input() tiposNovedadModificacionContractual;
-  @Input() novedadDescripcion:NovedadContractualDescripcion;
+  @Input() novedadDescripcion: NovedadContractualDescripcion;
 
-  @Output() guardar= new EventEmitter();
+  @Output() guardar = new EventEmitter();
 
   nombreTiposolicitud: string;
 
@@ -27,7 +27,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
     presupuestoAdicional: [],
-    plazoAdicionalDias:[],
+    plazoAdicionalDias: [],
     plazoAdicionalMeses: [],
     resumenJustificacionNovedad: [null, Validators.required],
     documentacion: [null, Validators.required],
@@ -59,7 +59,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
-  motivosNovedadArray:Dominio[] = [];
+  motivosNovedadArray: Dominio[] = [];
 
   // minDate: Date;
   editorStyle = {
@@ -103,51 +103,57 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   ngOnChanges(changes: SimpleChanges): void {
 
     this.commonServices.listaMotivosNovedadContractual()
-            .subscribe( respuesta => {
-              this.motivosNovedadArray = respuesta; 
+      .subscribe(respuesta => {
+        this.motivosNovedadArray = respuesta;
 
-              let motivosSeleccionados = [];
-              if ( this.novedadDescripcion.novedadContractualDescripcionMotivo ){
-                this.novedadDescripcion.novedadContractualDescripcionMotivo.forEach( m => {
-                  let motivo = this.motivosNovedadArray.find( r => r.codigo === m.motivoNovedadCodigo )?.codigo;
-                  
-                  if ( motivo ){
-                    motivosSeleccionados.push( motivo );
-                  }
-                });
-                this.addressForm.get('motivosNovedad').setValue( motivosSeleccionados );
-              }
+        let motivosSeleccionados = [];
+        if (this.novedadDescripcion.novedadContractualDescripcionMotivo) {
+          this.novedadDescripcion.novedadContractualDescripcionMotivo.forEach(m => {
+            let motivo = this.motivosNovedadArray.find(r => r.codigo === m.motivoNovedadCodigo)?.codigo;
 
-            });
+            if (motivo) {
+              motivosSeleccionados.push(motivo);
+            }
+          });
+          this.addressForm.get('motivosNovedad').setValue(motivosSeleccionados);
+        }
 
-    if ( changes.novedadDescripcion ){
-      
-    this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
-    this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
-    this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
-    this.addressForm.get('conceptoTecnico').setValue(this.novedadDescripcion.conceptoTecnico);
-    this.addressForm.get('fechaConceptoTecnico').setValue(this.novedadDescripcion.fechaConcepto);
-    this.addressForm.get('numeroRadicadoSolicitud').setValue(this.novedadDescripcion.numeroRadicado);
+      });
 
-    this.addressForm.get('presupuestoAdicional').setValue(this.novedadDescripcion.presupuestoAdicionalSolicitado);
-    this.addressForm.get('plazoAdicionalDias').setValue(this.novedadDescripcion.plazoAdicionalDias);
-    this.addressForm.get('plazoAdicionalMeses').setValue(this.novedadDescripcion.plazoAdicionalMeses);
-    this.addressForm.get('fechaInicio').setValue(this.novedadDescripcion.fechaInicioSuspension);
-    this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
+    if (changes.novedadDescripcion) {
 
-    this.clausulaField.clear();
+      this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
+      this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
+      this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
+      this.addressForm.get('conceptoTecnico').setValue(this.novedadDescripcion.conceptoTecnico);
+      this.addressForm.get('fechaConceptoTecnico').setValue(this.novedadDescripcion.fechaConcepto);
+      this.addressForm.get('numeroRadicadoSolicitud').setValue(this.novedadDescripcion.numeroRadicado);
 
-    this.novedadDescripcion.novedadContractualClausula.forEach( c => {
-      let grupo = this.crearClausula();
-      grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );
-      grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
-      grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
-      grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
+      this.addressForm.get('presupuestoAdicional').setValue(this.novedadDescripcion.presupuestoAdicionalSolicitado);
+      this.addressForm.get('plazoAdicionalDias').setValue(this.novedadDescripcion.plazoAdicionalDias);
+      this.addressForm.get('plazoAdicionalMeses').setValue(this.novedadDescripcion.plazoAdicionalMeses);
+      this.addressForm.get('fechaInicio').setValue(this.novedadDescripcion.fechaInicioSuspension);
+      this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
 
-      this.clausulaField.push( grupo );
+      this.clausulaField.clear();
 
-    });
-
+      if ( this.novedadDescripcion.tipoNovedadCodigo === '5' ){
+        if (this.novedadDescripcion.novedadContractualClausula) {
+          this.novedadDescripcion.novedadContractualClausula.forEach(c => {
+            let grupo = this.crearClausula();
+            grupo.get('novedadContractualDescripcionId').setValue(c.novedadContractualDescripcionId);
+            grupo.get('novedadContractualClausulaId').setValue(c.novedadContractualClausulaId);
+            grupo.get('clausulaModificar').setValue(c.clausulaAmodificar);
+            grupo.get('ajusteSolicitadoClausula').setValue(c.ajusteSolicitadoAclausula);
+  
+            this.clausulaField.push(grupo);
+  
+          });
+        }else{
+          let grupo = this.crearClausula();
+          this.clausulaField.push(grupo);
+        }
+      }
     }
   }
 
@@ -156,14 +162,14 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
       .subscribe(value => {
 
       });
-      this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response=>{
-        this.instanciaPresentoSolicitudArray=response;
-      });
-      this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response=>{
-        this.tipoNovedadArray=response;
-      });
+    this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response => {
+      this.instanciaPresentoSolicitudArray = response;
+    });
+    this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
+      this.tipoNovedadArray = response;
+    });
   }
- 
+
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -186,8 +192,8 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
   private crearClausula() {
     return this.fb.group({
-      novedadContractualDescripcionId:[],
-      novedadContractualClausulaId:[],
+      novedadContractualDescripcionId: [],
+      novedadContractualClausulaId: [],
       clausulaModificar: [null, Validators.required],
       ajusteSolicitadoClausula: [null, Validators.required]
     });
@@ -230,29 +236,29 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     let listaClausulas: NovedadContractualClausula[] = [];
     let listaMotivos: NovedadContractualDescripcionMotivo[] = [];
 
-    this.clausulaField.controls.forEach( control => {
-      let clausula:NovedadContractualClausula = {
+    this.clausulaField.controls.forEach(control => {
+      let clausula: NovedadContractualClausula = {
         novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
         novedadContractualClausulaId: control.value.novedadContractualClausulaId,
         ajusteSolicitadoAclausula: control.value.ajusteSolicitadoClausula,
         clausulaAmodificar: control.value.clausulaModificar,
-        
+
       }
-      listaClausulas.push( clausula );
+      listaClausulas.push(clausula);
     });
 
-    if ( this.addressForm.get('motivosNovedad').value ){
-      this.addressForm.get('motivosNovedad').value.forEach( m => {
-        let motivo:NovedadContractualDescripcionMotivo = {
+    if (this.addressForm.get('motivosNovedad').value) {
+      this.addressForm.get('motivosNovedad').value.forEach(m => {
+        let motivo: NovedadContractualDescripcionMotivo = {
           novedadContractualDescripcionMotivoId: m.novedadContractualDescripcionMotivoId,
           novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
           motivoNovedadCodigo: m,
-          
+
         }
-        listaMotivos.push( motivo );
+        listaMotivos.push(motivo);
       });
     }
-    
+
     this.novedadDescripcion.resumenJustificacion = this.addressForm.get('resumenJustificacionNovedad').value;
     this.novedadDescripcion.esDocumentacionSoporte = this.addressForm.get('documentacionSuficiente').value;
     this.novedadDescripcion.conceptoTecnico = this.addressForm.get('conceptoTecnico').value;
@@ -266,11 +272,11 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
     this.novedadDescripcion.novedadContractualClausula = listaClausulas;
     this.novedadDescripcion.novedadContractualDescripcionMotivo = listaMotivos;
-    this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value ;
+    this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value;
 
     this.estaEditando = true;
 
-    this.guardar.emit( true );
+    this.guardar.emit(true);
 
   }
 
