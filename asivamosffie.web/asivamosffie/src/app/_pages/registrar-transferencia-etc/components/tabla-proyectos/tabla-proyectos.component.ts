@@ -23,6 +23,8 @@ export interface RegistrarInterface {
   styleUrls: ['./tabla-proyectos.component.scss']
 })
 export class TablaProyectosComponent implements OnInit, AfterViewInit {
+  datosTabla = [];
+
   ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
     'fechaSuscripcion',
@@ -50,7 +52,20 @@ export class TablaProyectosComponent implements OnInit, AfterViewInit {
   getListInformeFinal(){
     this.registerProjectETCService.getListInformeFinal()
     .subscribe(report => {
-      this.dataSource.data = report as RegistrarInterface[];
+      report.forEach(element => {
+        this.datosTabla.push({
+          fechaSuscripcion : element.fechaSuscripcion.split('T')[0].split('-').reverse().join('/'),
+          llaveMen: element.proyecto.llaveMen,
+          tipoIntervencionString: element.proyecto.tipoIntervencionString,
+          institucionEducativa: element.proyecto.institucionEducativa.nombre,
+          sede: element.proyecto.sede.nombre,
+          estadoEntregaEtc: element.estadoEntregaEtc,
+          estadoEntregaETCString: element.estadoEntregaETCString,
+          registroCompletoEntregaEtc: element.registroCompletoEntregaEtc ? 'Completo' : 'Incompleto',
+          informeFinalId: element.informeFinalId
+        });
+      })
+      this.dataSource.data = this.datosTabla;
     });
   }
 
@@ -91,7 +106,6 @@ export class TablaProyectosComponent implements OnInit, AfterViewInit {
   }
 
   enviarProyectoAEtc(informeFinalId: number) {
-    console.log(informeFinalId);
     this.registerProjectETCService.sendProjectToEtc(informeFinalId)
       .subscribe(respuesta => {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');

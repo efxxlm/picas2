@@ -7,14 +7,14 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service';
 
 export interface RegistrarInterface {
-  fechaCreacion: Date,
-  llaveMen: string,
-  tipoIntervencion: string,
-  institucionEducativa: string,
-  sedeEducativa: string,
-  proyectoId: number,
-  registroCompletoValidacion: boolean,
-  estadoValidacion: string,
+  fechaCreacion: Date;
+  llaveMen: string;
+  tipoIntervencion: string;
+  institucionEducativa: string;
+  sedeEducativa: string;
+  proyectoId: number;
+  registroCompletoValidacion: boolean;
+  estadoValidacion: string;
   estadoValidacionString: string;
 }
 
@@ -24,8 +24,7 @@ export interface RegistrarInterface {
   styleUrls: ['./tabla-informe-final.component.scss']
 })
 export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
-
-  ELEMENT_DATA : RegistrarInterface[] = [];
+  ELEMENT_DATA: RegistrarInterface[] = [];
   displayedColumns: string[] = [
     'fechaCreacion',
     'llaveMen',
@@ -40,21 +39,30 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(
-    private verificarInformeFinalProyectoService: VerificarInformeFinalService,
-    public dialog: MatDialog
-
-    ) { 
-  }
+  datosTabla = [];
+  constructor(private verificarInformeFinalProyectoService: VerificarInformeFinalService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getListInformeFinal();
   }
 
-  getListInformeFinal(){
-    this.verificarInformeFinalProyectoService.getListInformeFinal()
-    .subscribe(report => {
-      this.dataSource.data = report as RegistrarInterface[];
+  getListInformeFinal() {
+    this.verificarInformeFinalProyectoService.getListInformeFinal().subscribe(report => {
+      report.forEach(element => {
+        this.datosTabla.push({
+          fechaCreacion: element.fechaCreacion.split('T')[0].split('-').reverse().join('/'),
+          llaveMen: element.proyecto.llaveMen,
+          tipoIntervencionString: element.proyecto.tipoIntervencionString,
+          institucionEducativa: element.proyecto.institucionEducativa.nombre,
+          sede: element.proyecto.sede.nombre,
+          estadoInformeCod: element.estadoInformeCod,
+          estadoValidacion: element.estadoValidacion,
+          estadoValidacionString: element.estadoValidacionString,
+          registroCompletoValidacion: element.registroCompletoValidacion ? 'Completo' : 'Incompleto',
+          proyectoId: element.proyectoId
+        });
+      })
+      this.dataSource.data = this.datosTabla;
     });
   }
 
@@ -77,9 +85,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
@@ -94,12 +100,10 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     }
   }
   enviarRegistroFinal(pProyectoId: number) {
-    console.log("Antes: ",pProyectoId);
-    this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
-      .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
-        this.ngOnInit();
-      });
+    // console.log("Antes: ",pProyectoId);
+    this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
+      this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+      this.ngOnInit();
+    });
   }
-
 }

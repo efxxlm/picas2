@@ -2,7 +2,7 @@
     border-radius: 2em !important;
     // border: solid 1px var(--mainColor);
     padding: 0 1em !important;
-    box-shadow: 0 0 0 1.2em #fff, 0 0 0 calc(1.2em + 1px) $mainColor !important;
+    box-shadow: 0 0 0 1.2em #fff, 0 0 0 1.25em $mainColor !important;
     box-shadow: 0 0 0 1.2em #fff, 0 0 0 calc(1.2em + 1px) var(--mainColor) !important;
     overflow: auto;
     --thumb-color: var(--mainColor);

@@ -68,6 +68,7 @@ export class FormRecorridoObraComponent implements OnInit {
           }
         }
       );
+      this.addressForm.markAllAsTouched();
       this.estaEditando = true;
     }
   }

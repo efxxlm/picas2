@@ -14,7 +14,7 @@ export class ValidarInformeFinalService {
     final_report = 'ValidateFinalReport';
   
     getListInformeFinal(){
-      return this.http.get(`${environment.apiUrl}/${this.final_report}/GetListInformeFinal`);
+      return this.http.get<any[]>(`${environment.apiUrl}/${this.final_report}/GetListInformeFinal`);
     }
 
     getInformeFinalByProyecto( pProyectoId: string ){

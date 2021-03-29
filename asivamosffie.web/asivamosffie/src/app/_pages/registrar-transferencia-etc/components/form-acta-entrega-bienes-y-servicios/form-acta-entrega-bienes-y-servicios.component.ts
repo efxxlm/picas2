@@ -47,6 +47,7 @@ export class FormActaEntregaBienesYServiciosComponent implements OnInit {
           }
         }
       );
+      this.addressForm.markAllAsTouched();
       this.estaEditando = true;
     }
 

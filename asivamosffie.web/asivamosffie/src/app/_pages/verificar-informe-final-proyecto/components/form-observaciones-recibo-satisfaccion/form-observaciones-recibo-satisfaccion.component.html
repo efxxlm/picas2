@@ -3,14 +3,30 @@
     <div class="col-md-12">
       <div class="row justify-content-center align-items-center" style="width: 100%">
         <div class="pr-1">
-          <label class="label-left" for="tieneObservacionesValidacion"> ¿Tiene observaciones al recibo a satisfacción? </label>
+          <label
+            class="label-left"
+            for="tieneObservacionesValidacion"
+            [class.color-secondaryColor]="
+              (observaciones.get('tieneObservacionesValidacion').invalid &&
+                observaciones.get('tieneObservacionesValidacion').touched) ||
+              (observaciones.get('tieneObservacionesValidacion').invalid && estaEditando)
+            "
+          >
+            ¿Tiene observaciones al recibo a satisfacción?
+          </label>
         </div>
         <div>
           <mat-radio-group class="radioInput" formControlName="tieneObservacionesValidacion">
-            <mat-radio-button [value]="true" [checked]="observaciones.get('tieneObservacionesValidacion').value === true">
+            <mat-radio-button
+              [value]="true"
+              [checked]="observaciones.get('tieneObservacionesValidacion').value === true"
+            >
               Sí
             </mat-radio-button>
-            <mat-radio-button [value]="false" [checked]="observaciones.get('tieneObservacionesValidacion').value === false">
+            <mat-radio-button
+              [value]="false"
+              [checked]="observaciones.get('tieneObservacionesValidacion').value === false"
+            >
               No
             </mat-radio-button>
           </mat-radio-group>
@@ -25,7 +41,8 @@
             matTooltip="Debe ingresar la información en el campo para continuar"
             matTooltipClass="info-tooltip"
             *ngIf="
-              (observaciones.get('tieneObservacionesValidacion').invalid && observaciones.get('tieneObservacionesValidacion').touched) ||
+              (observaciones.get('tieneObservacionesValidacion').invalid &&
+                observaciones.get('tieneObservacionesValidacion').touched) ||
               (observaciones.get('tieneObservacionesValidacion').invalid && estaEditando)
             "
           />

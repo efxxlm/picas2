@@ -47,6 +47,7 @@ export class FormRemisionComponent implements OnInit {
           }
         }
       );
+      this.addressForm.markAllAsTouched();
       this.estaEditando = true;
     }
   }
