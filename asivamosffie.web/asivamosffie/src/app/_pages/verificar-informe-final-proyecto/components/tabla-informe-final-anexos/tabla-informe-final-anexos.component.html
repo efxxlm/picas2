@@ -8,12 +8,18 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title 
-          {{estadoValidacion == '0' || estadoValidacion == null || semaforo ? 
-            'sin-diligenciar' : estadoValidacion == '1' && registroCompletoValidacion == false || estadoValidacion == '6' ? 
-                  'en-proceso' : 'completo' }}">
-                  Informe final y anexos
-          </mat-panel-title>
+        <mat-panel-title
+          class="expansion-style--title 
+          {{
+            estadoValidacion == '0' || estadoValidacion == null || semaforo
+              ? 'sin-diligenciar'
+              : (estadoValidacion == '1' && registroCompletoValidacion == false) || estadoValidacion == '6'
+              ? 'en-proceso'
+              : 'completo'
+          }}"
+        >
+          Informe final y anexos
+        </mat-panel-title>
       </mat-expansion-panel-header>
       <section class="text-center">
         <div class="d-flex align-items-center info-text en-alertaLibre">
@@ -82,7 +88,14 @@
                     </span>
                     <!--Digital-->
                     <span *ngIf="element.informeFinalAnexo.tipoAnexo === '2'">
-                      {{ element.informeFinalAnexo.urlSoporte }}
+                      <a
+                        [href]="element.informeFinalAnexo.urlSoporte"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="ruta-url"
+                      >
+                        {{ element.informeFinalAnexo.urlSoporte }}
+                      </a>
                     </span>
                   </div>
                 </td>
@@ -92,15 +105,38 @@
               <ng-container matColumnDef="validacionCodigo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Verificación</th>
                 <td mat-cell *matCellDef="let element">
-                  <section class="slect-table-contain mt-1em" *ngIf="(element.estadoValidacion !== '6' && element.estadoValidacion !== '9' && element.informeFinal.estadoAprobacion !== '6') 
-                                                                || (element.aprobacionCodigo === '2' && (element.estadoValidacion === '6' || element.estadoValidacion === '9') && element.tieneObservacionSupervisor)
-                                                                || (element.estadoValidacion !== '6' && element.estadoValidacion !== '9' && element.informeFinal.estadoAprobacion === '6' && element.aprobacionCodigo === '2') 
-                                                                ">
+                  <section
+                    class="slect-table-contain mt-1em"
+                    *ngIf="
+                      (element.estadoValidacion !== '6' &&
+                        element.estadoValidacion !== '9' &&
+                        element.informeFinal.estadoAprobacion !== '6') ||
+                      (element.aprobacionCodigo === '2' &&
+                        (element.estadoValidacion === '6' || element.estadoValidacion === '9') &&
+                        element.tieneObservacionSupervisor) ||
+                      (element.estadoValidacion !== '6' &&
+                        element.estadoValidacion !== '9' &&
+                        element.informeFinal.estadoAprobacion === '6' &&
+                        element.aprobacionCodigo === '2')
+                    "
+                  >
                     <mat-form-field class="select-width">
                       <mat-label>
-                      <span *ngIf="(element.estadoValidacion !== '6' && element.validacionCodigo != null) || (element.estadoValidacion === '6' && element.tieneModificacionApoyo && element.aprobacionCodigo === '2')">{{ element.validacionCodigoString }}</span>
-                    </mat-label> 
-                      <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="changeState(element)" required>
+                        <span
+                          *ngIf="
+                            (element.estadoValidacion !== '6' && element.validacionCodigo != null) ||
+                            (element.estadoValidacion === '6' &&
+                              element.tieneModificacionApoyo &&
+                              element.aprobacionCodigo === '2')
+                          "
+                          >{{ element.validacionCodigoString }}</span
+                        >
+                      </mat-label>
+                      <mat-select
+                        [(ngModel)]="element.validacionCodigo"
+                        (selectionChange)="changeState(element)"
+                        required
+                      >
                         <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                           {{ estado.name }}
                         </mat-option>
@@ -118,11 +154,17 @@
                       />
                     </span>
                   </section>
-                  <span *ngIf="((element.estadoValidacion === '6' || element.estadoValidacion === '9') && !(element.aprobacionCodigo === '2' && element.tieneObservacionSupervisor))
-                                || (element.estadoValidacion !== '6' && element.estadoValidacion !== '9' && element.informeFinal.estadoAprobacion === '6' && !(element.aprobacionCodigo === '2' && element.tieneObservacionSupervisor)) 
-
-                            ">
-                      {{ element.validacionCodigoString }}
+                  <span
+                    *ngIf="
+                      ((element.estadoValidacion === '6' || element.estadoValidacion === '9') &&
+                        !(element.aprobacionCodigo === '2' && element.tieneObservacionSupervisor)) ||
+                      (element.estadoValidacion !== '6' &&
+                        element.estadoValidacion !== '9' &&
+                        element.informeFinal.estadoAprobacion === '6' &&
+                        !(element.aprobacionCodigo === '2' && element.tieneObservacionSupervisor))
+                    "
+                  >
+                    {{ element.validacionCodigoString }}
                   </span>
                 </td>
               </ng-container>
@@ -132,7 +174,11 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestionar</th>
                 <td mat-cell *matCellDef="let element">
                   <button
-                    *ngIf="element.estadoValidacion !== '6' && element.estadoValidacion !== '9' && element.validacionCodigo == '2'"
+                    *ngIf="
+                      element.estadoValidacion !== '6' &&
+                      element.estadoValidacion !== '9' &&
+                      element.validacionCodigo == '2'
+                    "
                     mat-button
                     color="warn"
                     mat-raised-button
@@ -143,30 +189,33 @@
                     type="button"
                     (click)="openDialogObservaciones(element)"
                   >
-                    <span>
-                      Observaciones
-                    </span>
+                    <span> Observaciones </span>
                   </button>
                   <!--Observaciones 2d vuelta-->
                   <button
-                  *ngIf="(element.estadoValidacion === '6' || element.estadoValidacion === '9') && element.validacionCodigo == '2'"
-                  mat-button
-                  color="warn"
-                  mat-raised-button
-                  color="accent"
-                  class="btn-table animatedOpacity info-button min-w-11em"
-                  [class.completo]="element.tieneObservacionSupervisor 
-                                    && (element.archivado == null || !element.archivado) 
-                                    && element.tieneObservacionNoCumple
-                                  "
-                  [class.sin-diligenciar]="(element.tieneObservacionSupervisor && element.archivado && element.tieneObservacionNoCumple) || !element.tieneObservacionNoCumple"
-                  type="button"
-                  (click)="openDialogObservaciones(element,true)"
-                >
-                  <span>
-                    Observaciones
-                  </span>
-                </button>
+                    *ngIf="
+                      (element.estadoValidacion === '6' || element.estadoValidacion === '9') &&
+                      element.validacionCodigo == '2'
+                    "
+                    mat-button
+                    color="warn"
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table animatedOpacity info-button min-w-11em"
+                    [class.completo]="
+                      element.tieneObservacionSupervisor &&
+                      (element.archivado == null || !element.archivado) &&
+                      element.tieneObservacionNoCumple
+                    "
+                    [class.sin-diligenciar]="
+                      (element.tieneObservacionSupervisor && element.archivado && element.tieneObservacionNoCumple) ||
+                      !element.tieneObservacionNoCumple
+                    "
+                    type="button"
+                    (click)="openDialogObservaciones(element, true)"
+                  >
+                    <span> Observaciones </span>
+                  </button>
                 </td>
               </ng-container>
 
