@@ -59,6 +59,8 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
   {
     this.defensaService.finalizarActuacion(id).subscribe(response =>{
       this.openDialog("",response.message);
+      this.ngOnInit();
+      return;
     });
 
   }

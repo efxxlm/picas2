@@ -3973,15 +3973,16 @@ namespace asivamosffie.services
                 if (controversiaActuacion3dias.Count() > 0)
                 {
                     Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+                    Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
 
                     string strContenido = TemplateRecoveryPassword.Contenido
                                  .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
                                  .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
                                  .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
                                  .Replace("[DIAS]", "tres (3) días")
-                                 .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                 .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
-                                 .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+                                 .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.ControversiaContractual.FechaCreacion).ToString("yyyy-MM-dd"))
+                                 .Replace("[NUMERO_SOLICITUD]", controversia.ControversiaContractual.NumeroSolicitud)
+                                 .Replace("[TIPO_CONTROVERSIA]", TipoControversia != null ? TipoControversia.Nombre : String.Empty);
 
 
                     _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
@@ -3995,15 +3996,16 @@ namespace asivamosffie.services
                 if (controversiaActuacion3dias.Count() > 0)
                 {
                     Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+                    Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
 
                     string strContenido = TemplateRecoveryPassword.Contenido
-                                  .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
-                                  .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
-                                  .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                  .Replace("[DIAS]", "dos (2) días")
-                                  .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                  .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
-                                  .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+                                    .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                    .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                    .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                    .Replace("[DIAS]", "dos (2) días")
+                                    .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.ControversiaContractual.FechaCreacion).ToString("yyyy-MM-dd"))
+                                    .Replace("[NUMERO_SOLICITUD]", controversia.ControversiaContractual.NumeroSolicitud)
+                                    .Replace("[TIPO_CONTROVERSIA]", TipoControversia != null ? TipoControversia.Nombre : String.Empty);
 
 
                     _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
@@ -4017,15 +4019,16 @@ namespace asivamosffie.services
                 if (controversiaActuacion3dias.Count() > 0)
                 {
                     Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+                    Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
 
                     string strContenido = TemplateRecoveryPassword.Contenido
-                                  .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
-                                  .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
-                                  .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                  .Replace("[DIAS]", "(1) día")
-                                  .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                  .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
-                                  .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+                                    .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                    .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                    .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                    .Replace("[DIAS]", "(1) día")
+                                    .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.ControversiaContractual.FechaCreacion).ToString("yyyy-MM-dd"))
+                                    .Replace("[NUMERO_SOLICITUD]", controversia.ControversiaContractual.NumeroSolicitud)
+                                    .Replace("[TIPO_CONTROVERSIA]", TipoControversia != null ? TipoControversia.Nombre : String.Empty);
 
 
                     _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
@@ -4054,6 +4057,7 @@ namespace asivamosffie.services
             if (controversia != null)
             {
                 Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+                Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
 
                 if ((bool)controversia.EsRequiereContratista)
                 {
@@ -4071,9 +4075,10 @@ namespace asivamosffie.services
                                         .Replace("_LinkF_", pDominioFront)
                                         .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
                                         .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
-                                        .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                        .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
-                                        .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+                                        .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.ControversiaContractual.FechaCreacion).ToString("yyyy-MM-dd"))
+                                        .Replace("[NUMERO_SOLICITUD]", controversia.ControversiaContractual.NumeroSolicitud)
+                                        .Replace("[TIPO_CONTROVERSIA]", TipoControversia != null ? TipoControversia.Nombre : String.Empty);
+
 
                         if (user != null && user.UsuarioId > 0)
                         {
@@ -4100,9 +4105,9 @@ namespace asivamosffie.services
                     string strContenido = template.Contenido
                                     .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
                                     .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
-                                    .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
-                                    .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
-                                    .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+                                    .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.ControversiaContractual.FechaCreacion).ToString("yyyy-MM-dd"))
+                                    .Replace("[NUMERO_SOLICITUD]", controversia.ControversiaContractual.NumeroSolicitud)
+                                    .Replace("[TIPO_CONTROVERSIA]", TipoControversia != null ? TipoControversia.Nombre : String.Empty);
 
                     return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
                 }
