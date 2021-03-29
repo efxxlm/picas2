@@ -152,7 +152,7 @@ namespace asivamosffie.services
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e=> e.OrdenGiroDetalleDescuentoTecnicaAportante)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e=> e.OrdenGiroDetalleDescuentoTecnicaAportante).ThenInclude(e=> e.CuentaBancaria)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
