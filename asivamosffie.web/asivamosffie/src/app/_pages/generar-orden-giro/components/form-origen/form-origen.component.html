@@ -1,0 +1,64 @@
+<mat-card class="shipping-card var-main-gris">
+    <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
+        <mat-card-content align="left">
+            <mat-card-title class="header-card--text sub-text" style="margin-left: .5em;">
+                Aportante 1
+            </mat-card-title>
+            <div class="mt-1em">
+                <div style="margin-left: .5em;">
+                    <p><strong>Tipo de aportante: </strong>Entidad Territorial</p>
+                    <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                    <p><strong>Fuente: </strong>Contingencias</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label  class="label-left"
+                                        for="nombreCuenta"
+                                        [ngClass]="{ 'color-secondaryColor': (formOrigen.get('nombreCuenta').invalid && formOrigen.get('nombreCuenta').touched) || (formOrigen.get('nombreCuenta').invalid ) }">
+                                        Nombre de la Cuenta
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width w-75">
+                                    <mat-select formControlName="nombreCuenta" required>
+                                        <mat-option *ngFor="let cuenta of listaNombreCuenta" [value]="cuenta.codigo">
+                                            {{ cuenta.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="(formOrigen.get('nombreCuenta').invalid && formOrigen.get('nombreCuenta').touched) || (formOrigen.get('nombreCuenta').invalid )">
+                              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="animatedDown" *ngIf="formOrigen.get( 'nombreCuenta' ).value !== null" style="margin-left: .5em;">
+                    <p><strong>Nombre de la Cuenta: </strong>Alcaldía de Susacón</p>
+                    <p><strong>Número de Cuenta: </strong>778969876543257</p>
+                    <p><strong>Banco: </strong>Davivienda</p>
+                    <p><strong>Tipo de Cuenta: </strong>Corriente</p>
+                    <p><strong>Código SIFI: </strong>357314</p>
+                </div>
+            </div>
+        </mat-card-content>
+        <div class="text-center mb-2em">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="formOrigen.dirty === false">
+                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+</mat-card>

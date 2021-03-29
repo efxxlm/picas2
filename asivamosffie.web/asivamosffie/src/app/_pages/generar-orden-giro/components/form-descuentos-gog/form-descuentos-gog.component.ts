@@ -1,3 +1,4 @@
+import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,31 +17,16 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     @Input() solicitudPagoFaseCriterio: any[];
     @Input() solicitudPagoFaseFacturaDescuento: any[];
     @Input() listaCriterios: Dominio[] = [];
+    @Input() solicitudPago: any;
     @Input() descuento: any;
     @Input() valorNetoGiro: number;
     estaEditando = false;
     recibeListaCriterios = false;
+    cantidadAportantes: number;
     criteriosArray: Dominio[] = [];
     tiposDescuentoArray: Dominio[] = [];
     listaConceptoPago: Dominio[] = [];
-    tipoAportantesArray: Dominio[] = [
-      {
-        nombre: 'ET',
-        codigo: '1'
-      }
-    ];
-    nombreAportantesArray: Dominio[] = [
-      {
-        nombre: 'Alcaldía de Susacón',
-        codigo: '1'
-      }
-    ];
-    fuenteRecursosArray: Dominio[] = [
-      {
-        nombre: 'Contingencias',
-        codigo: '1'
-      }
-    ];
+    listaFuenteTipoFinanciacion: Dominio[] = [];
     addressForm = this.fb.group(
         {
             descuentos: this.fb.array( [] )
@@ -67,8 +53,11 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private ordenGiroSvc: OrdenPagoService,
         private fb: FormBuilder )
     {
+        this.commonSvc.listaFuenteTipoFinanciacion()
+            .subscribe( listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion );
         this.commonSvc.tiposDescuento()
             .subscribe(response => this.tiposDescuentoArray = response);
     }
@@ -169,13 +158,6 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
             const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
 
-            conceptosDePago.push(
-                {
-                    codigo: '1',
-                    nombre: 'test concepto'
-                }
-            )
-
             if ( criterio !== undefined ) {
                 this.getCriterios( index ).push( this.fb.group(
                     {
@@ -220,25 +202,49 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             const concepto = conceptosDePago.find( concepto => concepto.codigo === codigo );
 
             if ( concepto !== undefined ) {
-                this.getConceptos( index, jIndex ).push( this.fb.group(
-                    {
-                        nombre: [ concepto.nombre ],
-                        conceptoCodigo: [ concepto.codigo ],
-                        aportantes: this.fb.array( [
-                            this.fb.group(
-                                {
-                                    tipoAportante: [ null, Validators.required ],
-                                    nombreAportante: [ null, Validators.required ],
-                                    fuenteRecursos: [ null, Validators.required ],
-                                    valorDescuento: [ null, Validators.required ]
-                                }
-                            )
-                        ] )
-                    }
-                ) );
+                this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+                    // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
+                    this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
+
+                    this.getConceptos( index, jIndex ).push( this.fb.group(
+                        {
+                            nombre: [ concepto.nombre ],
+                            conceptoCodigo: [ concepto.codigo ],
+                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                            aportantes: this.fb.array( [
+                                this.fb.group(
+                                    {
+                                        tipoAportante: [ null, Validators.required ],
+                                        listaNombreAportantes: [ null ],
+                                        nombreAportante: [ null, Validators.required ],
+                                        fuenteDeRecursos: [ null ],
+                                        fuenteRecursos: [ null, Validators.required ],
+                                        valorDescuento: [ null, Validators.required ]
+                                    }
+                                )
+                            ] )
+                        }
+                    ) );
+                } );
             }
         }
-        //console.log( listaConceptos );
+    }
+
+    valuePendingTipoAportante( aportanteSeleccionado: Dominio, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        const listaAportantes: Dominio[] = this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).value;
+        const aportanteIndex = listaAportantes.findIndex( aportante => aportante.codigo === aportanteSeleccionado.codigo );
+        const listaNombreAportantes: any[] = this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'nombreDeAportantes' ).value;
+        const filterAportantesDominioId = listaNombreAportantes.filter( aportante => aportante.tipoAportanteId === aportanteSeleccionado.dominioId );
+
+        if ( aportanteIndex !== -1 ) {
+            listaAportantes.splice( aportanteIndex, 1 );
+
+            this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).setValue( listaAportantes );
+        }
+        if ( filterAportantesDominioId.length > 0 ) {
+            this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'listaNombreAportantes' ).setValue( filterAportantesDominioId );
+        }
     }
 
     deleteAportante( index: number, jIndex: number, kIndex: number, lIndex: number ) {
@@ -246,6 +252,11 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             .subscribe(
                 value => {
                     if ( value === true ) {
+                        const aportanteSeleccionado = this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'tipoAportante' ).value;
+                        const listaTipoAportantes = this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).value;
+                        listaTipoAportantes.push( aportanteSeleccionado );
+                        this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
+
                         this.getAportantes( index, jIndex, kIndex ).removeAt( lIndex );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                     }
@@ -289,14 +300,14 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
     addAportante( index: number, jIndex: number, kIndex: number ) {
 
-        const totalAportantes = 3;
-
-        if ( this.getAportantes( index, jIndex, kIndex ).length < totalAportantes ) {
+        if ( this.getAportantes( index, jIndex, kIndex ).length < this.cantidadAportantes ) {
             this.getAportantes( index, jIndex, kIndex ).push(
                 this.fb.group(
                     {
                         tipoAportante: [ null, Validators.required ],
+                        listaNombreAportantes: [ null ],
                         nombreAportante: [ null, Validators.required ],
+                        fuenteDeRecursos: [ null ],
                         fuenteRecursos: [ null, Validators.required ],
                         valorDescuento: [ null, Validators.required ]
                     }
@@ -307,8 +318,23 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         }
     }
 
+    getListaFuenteRecursos( nombreAportante: any, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
+            .subscribe( fuenteRecursos => {
+                fuenteRecursos.forEach( fuente => {
+                    const getFuente = this.listaFuenteTipoFinanciacion.find( tipoFuente => tipoFuente.codigo === fuente.fuenteRecursosCodigo )
+
+                    if ( getFuente !== undefined ) {
+                        fuente.nombre = getFuente.nombre;
+                    }
+                } );
+
+                this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'fuenteDeRecursos' ).setValue( fuenteRecursos );
+            } );
+    }
+
     openDialog(modalTitle: string, modalText: string) {
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText }
         });
@@ -316,7 +342,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
     openDialogTrueFalse(modalTitle: string, modalText: string) {
 
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText, siNoBoton: true }
         });

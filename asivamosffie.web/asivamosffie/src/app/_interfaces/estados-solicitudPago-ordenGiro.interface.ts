@@ -101,3 +101,15 @@ export enum MediosPagoCodigo {
     transferenciaElectronica = '1',
     chequeGerencia = '2'
 }
+
+export interface TipoAportanteDominio {
+    ffie: number;
+    et: number;
+    tercero: number;
+}
+
+export enum TipoAportanteCodigo {
+    ffie = 6,
+    et = 9,
+    tercero
+}

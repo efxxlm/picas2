@@ -13,6 +13,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDescuentosDireccionTecnica: 'sin-diligenciar',
         semaforoTerceroCausacion: 'sin-diligenciar',
+        semaforoOrigen: 'sin-diligenciar',
         semaforoObservacion: 'sin-diligenciar',
         semaforoSoporteUrl: 'sin-diligenciar'
     };

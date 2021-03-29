@@ -82,11 +82,11 @@
                                     </div>
                                     <div *ngIf="getConceptos( i, j ).length > 0">
                                         <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
-                                            <h2 class="card-subTitle"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
+                                            <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
                 
                                             <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
                                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
-                                                    <mat-card-title class="header-card--text"> Aportante {{ l + 1 }} </mat-card-title>
+                                                    <mat-card-title class="header-card--text mt-1em"> Aportante {{ l + 1 }} </mat-card-title>
                                                     <div class="row">
                                                         <div class="col-md-9" [formGroup]="aportante">
                                                             <div class="row">
@@ -101,11 +101,20 @@
                                                                         </div>
                                                                         <div class="col">
                                                                             <mat-form-field class="select-width">
-                                                                                <mat-select formControlName="tipoAportante" required>
-                                                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray" [value]="tipoAportante">
-                                                                                        {{ tipoAportante.nombre }}
-                                                                                    </mat-option>
-                                                                                </mat-select>
+                                                                                <ng-container *ngIf=" aportante.get( 'tipoAportante' ).value !== null; else elseTemplate">
+                                                                                    <mat-select formControlName="tipoAportante" required>
+                                                                                        <mat-option [value]="aportante.get( 'tipoAportante' ).value">
+                                                                                            {{ aportante.get( 'tipoAportante' ).value.nombre }}
+                                                                                        </mat-option>
+                                                                                    </mat-select>
+                                                                                </ng-container>
+                                                                                <ng-template #elseTemplate>
+                                                                                    <mat-select formControlName="tipoAportante" required (ngModelChange)="valuePendingTipoAportante( $event, i, j, k, l )">
+                                                                                        <mat-option *ngFor="let aportante of concepto.get( 'tipoDeAportantes' ).value" [value]="aportante">
+                                                                                            {{ aportante.nombre }}
+                                                                                        </mat-option>
+                                                                                    </mat-select>
+                                                                                </ng-template>
                                                                             </mat-form-field>
                                                                         </div>
                                                                         <span class="icon-incompleto">
@@ -132,9 +141,9 @@
                                                                         </div>
                                                                         <div class="col">
                                                                             <mat-form-field class="select-width">
-                                                                                <mat-select formControlName="nombreAportante" required>
-                                                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray" [value]="nombreAportante">
-                                                                                        {{ nombreAportante.nombre }}
+                                                                                <mat-select formControlName="nombreAportante" required (ngModelChange)="getListaFuenteRecursos( $event, i, j, k, l )">
+                                                                                    <mat-option *ngFor="let aportante of aportante.get( 'listaNombreAportantes' ).value" [value]="aportante">
+                                                                                        {{ aportante.nombreAportante }}
                                                                                     </mat-option>
                                                                                 </mat-select>
                                                                             </mat-form-field>
@@ -164,8 +173,8 @@
                                                                         <div class="col">
                                                                             <mat-form-field class="select-width">
                                                                                 <mat-select formControlName="fuenteRecursos" required>
-                                                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray" [value]="fuenteRecursos">
-                                                                                        {{ fuenteRecursos.nombre }}
+                                                                                    <mat-option *ngFor="let fuente of aportante.get( 'fuenteDeRecursos' ).value" [value]="fuente.fuenteRecursosCodigo">
+                                                                                        {{ fuente.nombre }}
                                                                                     </mat-option>
                                                                                 </mat-select>
                                                                             </mat-form-field>

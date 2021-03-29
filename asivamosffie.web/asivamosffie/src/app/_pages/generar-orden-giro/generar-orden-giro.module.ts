@@ -30,11 +30,12 @@ import { DetalleOrdenGiroGogComponent } from './components/detalle-orden-giro-go
 import { DetalleDescDirTecnicaGogComponent } from './components/detalle-desc-dir-tecnica-gog/detalle-desc-dir-tecnica-gog.component';
 import { DetalleTerceroCausacionGogComponent } from './components/detalle-tercero-causacion-gog/detalle-tercero-causacion-gog.component';
 import { FormDescuentosGogComponent } from './components/form-descuentos-gog/form-descuentos-gog.component';
+import { FormOrigenComponent } from './components/form-origen/form-origen.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent, VerDetalleEditOrdenGiroGogComponent, DialogDevolverSolPagoGogComponent, DetalleOrdenGiroGogComponent, DetalleDescDirTecnicaGogComponent, DetalleTerceroCausacionGogComponent, FormDescuentosGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent, VerDetalleEditOrdenGiroGogComponent, DialogDevolverSolPagoGogComponent, DetalleOrdenGiroGogComponent, DetalleDescDirTecnicaGogComponent, DetalleTerceroCausacionGogComponent, FormDescuentosGogComponent, FormOrigenComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
