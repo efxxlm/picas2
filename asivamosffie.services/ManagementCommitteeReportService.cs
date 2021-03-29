@@ -27,10 +27,14 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
+        private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
         private bool ReturnValue { get; set; }
 
-        public ManagementCommitteeReportService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public ManagementCommitteeReportService(IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
+            _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _context = context;
             _commonService = commonService;
         }
@@ -173,7 +177,7 @@ namespace asivamosffie.services
             List<dynamic> ListDynamic = new List<dynamic>();
             ListDynamic.AddRange(_context.VListCompromisosComiteTecnico.Where(r => r.UsuarioId == pUserId));
             ListDynamic.AddRange(_context.VListCompromisosTemas.Where(r => r.UsuarioId == pUserId));
-             
+
             return ListDynamic;
         }
 
@@ -635,6 +639,8 @@ namespace asivamosffie.services
                     await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                      .Include(r => r.SesionParticipante)
                      .Include(sc => sc.SesionComentario)
+                     .Include(sc => sc.SesionComiteSolicitudComiteTecnico)
+                     .Include(sc => sc.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .FirstOrDefaultAsync();
 
                 SesionComentario sesionComentario = new SesionComentario
@@ -659,6 +665,17 @@ namespace asivamosffie.services
                     //Cambiar estado Comite Con acta aprobada
                     if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
                     {
+                        if (comiteTecnico.EsComiteFiduciario == true)
+                        {
+                         // _committeeSessionFiduciarioService.CambiarEstadoSolicitudes();
+
+                        }
+                        else
+                        {
+                         /// _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes();
+
+                        }
+
                         comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
                         await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                         await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);

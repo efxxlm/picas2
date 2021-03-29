@@ -262,6 +262,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3906,6 +3907,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnica)
+                    .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
+                    .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaId)
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_OrdenGiroDetalleDescuentoTecnica");
 
                 entity.HasOne(d => d.SolicitudPagoFaseFacturaDescuento)
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
