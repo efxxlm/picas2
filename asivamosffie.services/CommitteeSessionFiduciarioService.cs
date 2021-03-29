@@ -2713,6 +2713,336 @@ namespace asivamosffie.services
             return estaCompleto;
         }
 
+        public void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo, string pUsuario )
+        {
+            #region Contratacion
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion)
+            {
+                Contratacion contratacion = _context.Contratacion.Find(SolicitudId);
+
+                if (contratacion != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
+                    }
+                }
+
+            }
+
+            #endregion Contratacion
+
+            #region Inicio Proceso Seleccion
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion ||
+                TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
+            {
+                ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(SolicitudId);
+                if (procesoSeleccion != null)
+                {
+                    if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteTecnico)
+                    {
+                        switch (EstadoCodigo)
+                        {
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaAperturaPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaAperturaPorComiteFiduciario;
+                                break;
+                        }
+                    }
+                    else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico)
+                    {
+                        switch (EstadoCodigo)
+                        {
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario;
+                                break;
+                        }
+                    }
+                    else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico)
+                    {
+                        switch (EstadoCodigo)
+                        {
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltoPorComiteFiduciario;
+                                break;
+                            case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
+                                procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadoPorComiteFiduciario;
+                                break;
+                        }
+                    }
+
+
+                }
+
+            }
+
+            #endregion Inicio Proceo Seleccion
+
+            #region Actualizacion Cronograma
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+            {
+                ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(SolicitudId);
+
+                if (procesoSeleccionMonitoreo != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.AprobadoPorComiteFiduciario;
+
+                        List<ProcesoSeleccionCronogramaMonitoreo> listaCronograma = _context.ProcesoSeleccionCronogramaMonitoreo
+                                                                                    .Where(r => r.ProcesoSeleccionMonitoreoId == procesoSeleccionMonitoreo.ProcesoSeleccionMonitoreoId)
+                                                                                    .ToList();
+
+
+                        listaCronograma.ForEach(crono =>
+                        {
+                            if (crono.ProcesoSeleccionCronogramaId > 0)
+                            {
+                                ProcesoSeleccionCronograma cronograma = _context.ProcesoSeleccionCronograma.Find(crono.ProcesoSeleccionCronogramaId);
+                                if (cronograma != null)
+                                {
+                                    cronograma.UsuarioModificacion = pUsuario;
+                                    cronograma.FechaModificacion = DateTime.Now;
+
+                                    cronograma.NumeroActividad = crono.NumeroActividad;
+                                    cronograma.Descripcion = crono.Descripcion;
+                                    cronograma.FechaMaxima = crono.FechaMaxima;
+                                    cronograma.EstadoActividadCodigo = crono.EstadoActividadCodigo;
+                                    cronograma.Eliminado = crono.Eliminado;
+                                }
+                            }
+                            else
+                            {
+                                ProcesoSeleccionCronograma cronograma = new ProcesoSeleccionCronograma()
+                                {
+
+                                    UsuarioCreacion = pUsuario,
+                                    FechaCreacion = DateTime.Now,
+
+                                    ProcesoSeleccionId = procesoSeleccionMonitoreo.ProcesoSeleccionId,
+                                    Eliminado = false,
+                                    NumeroActividad = crono.NumeroActividad,
+                                    Descripcion = crono.Descripcion,
+                                    FechaMaxima = crono.FechaMaxima,
+                                    EstadoActividadCodigo = crono.EstadoActividadCodigo,
+                                };
+
+                                _context.ProcesoSeleccionCronograma.Add(cronograma);
+                            }
+                        });
+
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.RechazadoPorComiteFiduciario;
+                        procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteFiduciario;
+                        procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
+                    }
+
+
+
+
+
+                }
+
+            }
+
+            #endregion
+
+            #region Controversia contractual
+
+
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+            {
+                ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(SolicitudId);
+
+                if (controversiaContractual != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion
+
+            #region Actuaciones Controversia contractual
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+            {
+                ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(SolicitudId);
+
+                if (controversiaActuacion != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion
+
+            #region Actuaciones Controversia Reclamación
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones)
+            {
+                ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(SolicitudId);
+
+                if (controversiaActuacion != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Aprobado_en_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Rechazado_por_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Devuelto_por_comite_fiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion Actuaciones Controversia Reclamación
+
+            #region Defensa Judicial
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Defensa_judicial)
+            {
+                DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(SolicitudId);
+
+                if (defensaJudicial != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion Defensa Judicial
+
+            #region Defensa Judicial Seguimiento
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial)
+            {
+                DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Find(SolicitudId);
+
+                if (defensaJudicialSeguimiento != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion Defensa Judicial Seguimiento
+
+            #region novedad contractual
+
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Novedad_Contractual)
+            {
+                NovedadContractual novedadContractual = _context.NovedadContractual.Find(SolicitudId);
+
+                if (novedadContractual != null)
+                {
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                    {
+                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                    {
+                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.rechazado_por_comite_fiduciario;
+                    }
+                    if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                    {
+                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.devuelto_por_comite_fiduciario;
+                    }
+
+                }
+
+            }
+
+            #endregion novedad contractual
+        }
+
         public async Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Sesion_Solicitud_Compromisos_ACTAS, (int)EnumeratorTipoDominio.Acciones);
@@ -2769,328 +3099,9 @@ namespace asivamosffie.services
 
                     }
 
-                    Contratacion contratacion = _context.Contratacion.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (contratacion != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.AprobadoComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
-                        }
-                    }
-
                 }
 
                 #endregion Contratacion
-
-                #region Inicio Proceso Seleccion
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion ||
-                    pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
-                {
-                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
-                    if (procesoSeleccion != null)
-                    {
-                        if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteTecnico)
-                        {
-                            switch (sesionComiteSolicitudOld.EstadoCodigo)
-                            {
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaAperturaPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaAperturaPorComiteFiduciario;
-                                    break;
-                            }
-                        }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteTecnico)
-                        {
-                            switch (sesionComiteSolicitudOld.EstadoCodigo)
-                            {
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario;
-                                    break;
-                            }
-                        }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteTecnico)
-                        {
-                            switch (sesionComiteSolicitudOld.EstadoCodigo)
-                            {
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.AprobadoPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.DevueltoPorComiteFiduciario;
-                                    break;
-                                case ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario:
-                                    procesoSeleccion.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.RechazadoPorComiteFiduciario;
-                                    break;
-                            }
-                        }
-
-
-                    }
-
-                }
-
-                #endregion Inicio Proceo Seleccion
-
-                #region Actualizacion Cronograma
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
-                {
-                    ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (procesoSeleccionMonitoreo != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.AprobadoPorComiteFiduciario;
-
-                            List<ProcesoSeleccionCronogramaMonitoreo> listaCronograma = _context.ProcesoSeleccionCronogramaMonitoreo
-                                                                                        .Where(r => r.ProcesoSeleccionMonitoreoId == procesoSeleccionMonitoreo.ProcesoSeleccionMonitoreoId)
-                                                                                        .ToList();
-
-
-                            listaCronograma.ForEach(crono =>
-                                {
-                                    if (crono.ProcesoSeleccionCronogramaId > 0)
-                                    {
-                                        ProcesoSeleccionCronograma cronograma = _context.ProcesoSeleccionCronograma.Find(crono.ProcesoSeleccionCronogramaId);
-                                        if (cronograma != null)
-                                        {
-                                            cronograma.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                                            cronograma.FechaModificacion = DateTime.Now;
-
-                                            cronograma.NumeroActividad = crono.NumeroActividad;
-                                            cronograma.Descripcion = crono.Descripcion;
-                                            cronograma.FechaMaxima = crono.FechaMaxima;
-                                            cronograma.EstadoActividadCodigo = crono.EstadoActividadCodigo;
-                                            cronograma.Eliminado = crono.Eliminado;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ProcesoSeleccionCronograma cronograma = new ProcesoSeleccionCronograma()
-                                        {
-
-                                            UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion,
-                                            FechaCreacion = DateTime.Now,
-
-                                            ProcesoSeleccionId = procesoSeleccionMonitoreo.ProcesoSeleccionId,
-                                            Eliminado = false,
-                                            NumeroActividad = crono.NumeroActividad,
-                                            Descripcion = crono.Descripcion,
-                                            FechaMaxima = crono.FechaMaxima,
-                                            EstadoActividadCodigo = crono.EstadoActividadCodigo,
-                                        };
-
-                                        _context.ProcesoSeleccionCronograma.Add(cronograma);
-                                    }
-                                });
-
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.RechazadoPorComiteFiduciario;
-                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteFiduciario;
-                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
-                        }
-
-
-
-
-
-                    }
-
-                }
-
-                #endregion
-
-                #region Controversia contractual
-
-
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.ControversiasContractuales)
-                {
-                    ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (controversiaContractual != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion
-
-                #region Actuaciones Controversia contractual
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
-                {
-                    ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (controversiaActuacion != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion
-
-                #region Actuaciones Controversia Reclamación
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones)
-                {
-                    ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (controversiaActuacion != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Aprobado_en_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Rechazado_por_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Devuelto_por_comite_fiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion Actuaciones Controversia Reclamación
-
-                #region Defensa Judicial
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Defensa_judicial)
-                {
-                    DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (defensaJudicial != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion Defensa Judicial
-
-                #region Defensa Judicial Seguimiento
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial)
-                {
-                    DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (defensaJudicialSeguimiento != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion Defensa Judicial Seguimiento
-
-                #region novedad contractual
-
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Novedad_Contractual)
-                {
-                    NovedadContractual novedadContractual = _context.NovedadContractual.Find(sesionComiteSolicitudOld.SolicitudId);
-
-                    if (novedadContractual != null)
-                    {
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
-                        {
-                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
-                        {
-                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.rechazado_por_comite_fiduciario;
-                        }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        {
-                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.devuelto_por_comite_fiduciario;
-                        }
-
-                    }
-
-                }
-
-                #endregion novedad contractual
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
