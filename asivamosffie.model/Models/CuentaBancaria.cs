@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public CuentaBancaria()
         {
             ControlRecurso = new HashSet<ControlRecurso>();
+            OrdenGiroDetalleDescuentoTecnicaAportante = new HashSet<OrdenGiroDetalleDescuentoTecnicaAportante>();
         }
 
         public int CuentaBancariaId { get; set; }
@@ -26,5 +27,6 @@ namespace asivamosffie.model.Models
 
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
+        public virtual ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
     }
 }

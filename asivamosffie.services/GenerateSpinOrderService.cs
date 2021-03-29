@@ -442,7 +442,9 @@ namespace asivamosffie.services
                                      ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
                                      ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
                                      RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
-                                     FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo
+                                     FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo,
+                                     CuentaBancariaId = pOrdenGiroDetalleDescuentoTecnicaAportante.CuentaBancariaId
+
                                  });
                 }
             }

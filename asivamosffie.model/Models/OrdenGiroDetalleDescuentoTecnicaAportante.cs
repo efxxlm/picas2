@@ -19,7 +19,9 @@ namespace asivamosffie.model.Models
         public bool? RequiereDescuento { get; set; }
         public string FuenteRecursosCodigo { get; set; }
         public int? OrdenGiroDetalleDescuentoTecnicaId { get; set; }
+        public int? CuentaBancariaId { get; set; }
 
+        public virtual CuentaBancaria CuentaBancaria { get; set; }
         public virtual OrdenGiroDetalleDescuentoTecnica OrdenGiroDetalleDescuentoTecnica { get; set; }
         public virtual SolicitudPagoFaseFacturaDescuento SolicitudPagoFaseFacturaDescuento { get; set; }
     }
