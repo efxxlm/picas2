@@ -127,7 +127,8 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
                 CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault(), pUsuarioCreacion);
 
-
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
+               // CreateEditOrdenGiroDetalleDescuentoTecnica
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
             {
@@ -206,6 +207,7 @@ namespace asivamosffie.services
                 pOrdenGiroDetalleDescuentoTecnica.UsuarioCreacion = pUsuarioCreacion;
                 pOrdenGiroDetalleDescuentoTecnica.FechaCreacion = DateTime.Now;
                 pOrdenGiroDetalleDescuentoTecnica.Eliminado = false;
+
                 pOrdenGiroDetalleDescuentoTecnica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica);
 
                 _context.OrdenGiroDetalleDescuentoTecnica.Add(pOrdenGiroDetalleDescuentoTecnica);
@@ -216,6 +218,8 @@ namespace asivamosffie.services
                              .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
                              .Update(r => new OrdenGiroDetalleDescuentoTecnica()
                              {
+                                 SolicitudPagoFaseFacturaDescuentoId = pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId,
+                                 TipoPagoCodigo = pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo,
                                  FechaModificacion = DateTime.Now,
                                  UsuarioModificacion = pUsuarioCreacion,
                                  RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
@@ -241,15 +245,18 @@ namespace asivamosffie.services
                 else
                 {
                     await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
-                                                        .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
-                                                                                                                                .UpdateAsync(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
-                                                                                                                                {
-                                                                                                                                    FechaModificacion = DateTime.Now,
-                                                                                                                                    UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
-
-                                                                                                                                    ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento
-                                                                                                                                });
+                                  .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
+                                  .UpdateAsync(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
+                                  {
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pUsuarioCreacion,
+                                      RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
+                                      AportanteId = pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId,
+                                      ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
+                                      ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
+                                      RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
+                                      FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo
+                                  });
                 }
             }
 
@@ -379,12 +386,25 @@ namespace asivamosffie.services
         }
         private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
         {
-            return false;
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
+                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
+                )
+                return false;
+            return true;
         }
 
         private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
         {
-            return false;
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+                )
+                return false;
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
@@ -399,12 +419,24 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
         {
-            return false;
+            if (pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
+               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
+                )
+                return false;
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
         {
-            return false;
+
+            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
+                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
+                return false;
+
+            return true;
         }
 
 
@@ -544,7 +576,7 @@ namespace asivamosffie.services
                     Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
                     Codidgo = ff.FuenteRecursosCodigo
                 });
-            }); 
+            });
             return ListFuenteFinanciacion;
         }
 

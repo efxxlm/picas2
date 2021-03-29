@@ -3863,6 +3863,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -3870,6 +3874,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OrdenGiroDetalle)
+                    .WithMany(p => p.OrdenGiroDetalleDescuentoTecnica)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnica_OrdenGiroDetalle");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleDescuentoTecnicaAportante>(entity =>
@@ -3881,6 +3890,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)

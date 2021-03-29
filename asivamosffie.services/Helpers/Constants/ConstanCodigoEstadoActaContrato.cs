@@ -15,9 +15,13 @@
     public static class ConstanCodigoEstadoActaInicioObra // TipoDominio 85
     {
         public const string Con_acta_suscrita_y_cargada = "20";
-       
-    }
 
+    }
+    public static class ConstanCodigoEstadoActaInicioInterventoria // TipoDominio 86
+    {
+        public const string Con_acta_suscrita_y_cargada = "7";
+
+    }
 
 
 

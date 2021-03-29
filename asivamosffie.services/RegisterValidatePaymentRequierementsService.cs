@@ -130,13 +130,20 @@ namespace asivamosffie.services
         {
             return await
                 _context.VProyectosXcontrato
-                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) && r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada)
+                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
+                                            (
+                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                                            (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                            )
+                                            )
                                             .Select
                                                 (s => new
-                                                        {
-                                                            s.LlaveMen,
-                                                            s.ContratacionProyectoId
-                                                        }
+                                                {
+                                                    s.LlaveMen,
+                                                    s.ContratacionProyectoId
+                                                }
                                                 ).ToListAsync();
         }
 
@@ -192,13 +199,27 @@ namespace asivamosffie.services
             {
                 if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
                 {
-                    List<Contrato> ListContratos = await _context.Contrato
-                                    .Include(c => c.Contratacion)
-                                             .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                      && c.ModalidadCodigo == pModalidadContrato
-                                                      && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                      && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                                   ).ToListAsync();
+                    List<Contrato> ListContratos = new List<Contrato>();
+                    if (pTipoSolicitud == ConstanCodigoTipoContrato.Obra)
+                    {
+                        ListContratos = await _context.Contrato
+                                        .Include(c => c.Contratacion)
+                                                 .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                          && c.ModalidadCodigo == pModalidadContrato
+                                                          && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                          && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                       ).ToListAsync();
+                    }
+                    else
+                    {
+                        ListContratos = await _context.Contrato
+                                      .Include(c => c.Contratacion)
+                                               .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                        && c.ModalidadCodigo == pModalidadContrato
+                                                        && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                        && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                     ).ToListAsync();
+                    }
                     return ListContratos
                         .Select(r => new
                         {
@@ -211,8 +232,15 @@ namespace asivamosffie.services
                     List<Contrato> ListContratos = await _context.Contrato
                                     .Include(c => c.Contratacion)
                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                      && c.EstadoActaFase2 == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                                   ).ToListAsync();
+                                                         && (
+                                                             (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                                                            (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                                            )
+
+
+                                                      ).ToListAsync();
                     return ListContratos
                                         .Select(r => new
                                         {

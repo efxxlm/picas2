@@ -17,7 +17,11 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? SolicitudPagoFaseFacturaDescuentoId { get; set; }
+        public string TipoPagoCodigo { get; set; }
+        public int? OrdenGiroDetalleId { get; set; }
 
+        public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
     }
 }
