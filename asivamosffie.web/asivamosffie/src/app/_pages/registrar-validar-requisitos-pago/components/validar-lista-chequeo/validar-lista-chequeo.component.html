@@ -40,15 +40,15 @@
             <div class="table-responsive">
                 <table mat-table [dataSource]="getMatTable( solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta )" matSort class="mat-elevation-z8">
                     <ng-container matColumnDef="item">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-2"> Item </th>
                         <td mat-cell *matCellDef="let element; index as j" align="center"> <b>{{ j + 1 }}</b> </td>
                     </ng-container>
                     <ng-container matColumnDef="documento">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-60"> Documento </th>
                         <td mat-cell *matCellDef="let element" align="left" > <span class="supportBlack">{{ element.listaChequeoItem.nombre }}</span> </td>
                     </ng-container>
                     <ng-container matColumnDef="revTecnica">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Revisión técnica </th>
                         <td mat-cell *matCellDef="let element" align="center">
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -62,21 +62,22 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="observaciones">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Observaciones </th>
                         <td mat-cell *matCellDef="let element; index as j" align="center">
-                            <button mat-raised-button
+                            <!--A ese primer boton verificar si se pone esto [class.sin-diligenciar]="element.item==1" (dbenitez)-->
+                            <button mat-button color="warn"
+                                    mat-raised-button
                                     color="accent"
-                                    class="btn-table "
-                                    [class.sin-diligenciar]="element.item==1"
+                                    class="btn-table info-button sin-diligenciar"
                                     *ngIf="element.respuestaCodigo === noCumpleCodigo"
                                     (click)="getObservacion( element, i, j )">
                                     Observaciones
                             </button>
-    
-                            <button mat-raised-button
+                            <!--A ese segundo boton verificar si se pone esto [class.sin-diligenciar]="element.item==2" (dbenitez)-->
+                            <button mat-button color="warn"
+                                    mat-raised-button
                                     color="accent"
-                                    class="btn-table "
-                                    [class.sin-diligenciar]="element.item==2"
+                                    class="btn-table info-button sin-diligenciar"
                                     *ngIf="element.tieneSubsanacion === true"
                                     (click)="observacionSubsanacion( element, j )">
                                     Observaciones
