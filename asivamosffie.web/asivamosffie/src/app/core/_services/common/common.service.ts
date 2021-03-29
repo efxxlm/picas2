@@ -371,6 +371,11 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=174`);
   }
 
+  listaDescuentosOrdenGiro() {
+    // Lista del campo tipo de descuentos "Terceros de causacion" CU 4.3.3
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=175`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

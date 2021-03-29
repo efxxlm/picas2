@@ -1,32 +1,169 @@
-<div align="left">
-    <mat-card class="shipping-card mainGris">
-        <mat-card-content>
-            <p><b>Número de identificación del contratista:</b> 900.879.765-2</p>
-            <p><b>Nombre de contratista:</b> Interventores S.A.</p>
-            <p><b>Número de factura:</b> FAC00456</p>
-        </mat-card-content>
-    </mat-card>
-</div>
-<div align="center" class="mb-1em">
-    <b>Valor neto de giro:</b> $ 15.000.000
-</div>
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion-black">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Costo variable
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-form-costo-variable-terc-gog></app-form-costo-variable-terc-gog>
-    </mat-expansion-panel> 
-</mat-accordion>
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion-black">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Tipo de pago 3
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-form-tipopago3-terc-gog></app-form-tipopago3-terc-gog>
-    </mat-expansion-panel>
-</mat-accordion>
+<section *ngIf="solicitudPago !== undefined">
+    <div align="left">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-content>
+                <p><b>Número de identificación del contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </p>
+                <p><b>Nombre de contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </p>
+                <p><b>Número de factura:</b> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div align="center" class="mb-1em">
+        <b>Valor neto de giro:</b> {{ valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}
+    </div>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Costo variable
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+    
+                    <mat-card class="shipping-card">
+                        <mat-card-header class="header-card header-card--margin">
+                            <mat-card-title class="header-card--text">
+                                Demolición
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content style="text-align: left;">
+                            <p><strong>Valor facturado por concepto: </strong>$ 8.000.000</p>
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante
+                            </mat-card-title>
+                            <p><strong>Tipo de aportante: </strong>Entidad territorial</p>
+                            <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                            <p><strong>Fuente de recursos: </strong>Contingencias</p>
+                            <p><strong>Valor facturado por el concepto para el aportante después del descuento: </strong>$ 7.970.000</p>
+                            <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+                            <!--
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="aplicarDescuentos" [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('aplicarDescuentos').invalid && addressForm.get('aplicarDescuentos').touched) ||
+                                                  (addressForm.get('aplicarDescuentos').invalid && estaEditando)
+                                              }">¿Se requieren aplicar descuentos sobre el
+                                                concepto de pago?</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-radio-group class="radioInput" formControlName="aplicarDescuentos" required>
+                                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                            <span class="required-form-group" style="margin-left: 1px;">*</span>
+                                        </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('aplicarDescuentos').invalid && addressForm.get('aplicarDescuentos').touched) ||
+                                                  (addressForm.get('aplicarDescuentos').invalid && estaEditando)
+                                              " />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-1em animatedDown" *ngIf="addressForm.get('aplicarDescuentos').value==true">
+                                <label class="mr-label" class="label-left"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroDescuentos').invalid && addressForm.get('numeroDescuentos').touched) ||
+                                      (addressForm.get('numeroDescuentos').invalid && estaEditando)
+                                  }"><b>¿Cuántos descuentos se aplican sobre el concepto de
+                                        pago?</b></label>
+                                <div class="col d-flex">
+                                    <mat-form-field class="w-25">
+                                        <input matInput type="text" maxlength="2" formControlName="numeroDescuentos" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{2 - addressForm.get( 'numeroDescuentos' ).value.length}}</span>
+                                </div>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="
+                                        (addressForm.get('numeroDescuentos').invalid && addressForm.get('numeroDescuentos').touched) ||
+                                        (addressForm.get('numeroDescuentos').invalid && estaEditando)
+                                      "
+                                    />
+                                  </span>
+                            </div>
+                            <div class="animatedDown" formArrayName="descuentos" *ngIf="addressForm.get( 'numeroDescuentos' ).value !== null">
+                                <div *ngFor="let descuento of descuentos.controls; index as i">
+                                    <mat-card-title class="header-card--text sub-text">
+                                        Descuento {{ i + 1 }}
+                                    </mat-card-title>
+                                    <div [formGroup]="descuento">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="pr-1">
+                                                        <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                                                    </div>
+                                                    <div class="col">
+                                                        <mat-form-field class="select-width w-75">
+                                                            <mat-select formControlName="tipoDescuento" required>
+                                                                <mat-option *ngFor="let descuento of tipoDescuentoArray" [value]="descuento.codigo">
+                                                                    {{ descuento.nombre }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="pr-1">
+                                                        <label class="label-left" for="valorDescuento">
+                                                            Valor del descuento
+                                                        </label>
+                                                    </div>
+                                                    <div class="col d-flex">
+                                                        <mat-form-field class="full-width w-75">
+                                                            <input matInput #valorDescuento currencyMask maxlength="20" required
+                                                                formControlName="valorDescuento"
+                                                                (keypress)="validateNumberKeypress($event)"
+                                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                                        </mat-form-field>
+                                                        <span class="contador" [matTooltipPosition]="'above'"
+                                                            matTooltip="Valor en ($) Pesos colombianos"
+                                                            matTooltipClass="info-tooltip">{{20 -
+                                                            valorDescuento.value.length}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right" *ngIf="descuentos.controls.length > 1">
+                                            <button mat-button color="warn" type="button" class="btn-eliminar"
+                                                (click)="eliminarDescuento( i )">
+                                                <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                                                Eliminar descuento
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            -->
+                        </mat-card-content>
+                    </mat-card>
+                    <div class="text-center mb-2em">
+                        <button mat-button color="warn" class="btn-guardar" type="submit">
+                            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                        </button>
+                    </div>
+            </mat-expansion-panel> 
+        </mat-accordion>
+    </form>
+</section>

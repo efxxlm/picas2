@@ -6,6 +6,7 @@
                     Porcentajes de participación
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
     </mat-accordion>
@@ -16,6 +17,7 @@
                     Información fuente de recursos
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-tabla-info-fuenterec-gog></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
     </mat-accordion>
@@ -26,6 +28,7 @@
                     Estrategia de pagos
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
@@ -36,6 +39,7 @@
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago"></app-desc-dir-tecnica-gog>
         </mat-expansion-panel>
     </mat-accordion>
@@ -46,7 +50,8 @@
                     Tercero de causación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tercero-causacion-gog></app-tercero-causacion-gog>
+
+            <app-tercero-causacion-gog [solicitudPago]="solicitudPago"></app-tercero-causacion-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -98,6 +103,7 @@
                     Observaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago"></app-observaciones-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
@@ -108,6 +114,7 @@
                     Soporte de orden de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
             <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago"></app-soporte-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
