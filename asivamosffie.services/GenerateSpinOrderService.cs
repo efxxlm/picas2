@@ -171,12 +171,6 @@ namespace asivamosffie.services
 
             try
             {
-                if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
-                    CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
-                if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
-                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
-
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
@@ -185,6 +179,8 @@ namespace asivamosffie.services
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
+
+
                     await _context.Set<SolicitudPago>()
                                     .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
                                                                                         .UpdateAsync(r => new SolicitudPago()
@@ -207,6 +203,14 @@ namespace asivamosffie.services
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString()
                             });
                 }
+
+                if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
+                    CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+                if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
+                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+              
                 return
                      new Respuesta
                      {
