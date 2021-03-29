@@ -42,9 +42,9 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                         }
                     }
                     // Get semaforo observaciones
-                    if ( ordenGiroDetalle.ordenGiroObservacion !== undefined ) {
-                        if ( ordenGiroDetalle.ordenGiroObservacion.length > 0 ) {
-                            const ordenGiroObservacion = ordenGiroDetalle.ordenGiroObservacion[0];
+                    if ( ordenGiroDetalle.ordenGiroDetalleObservacion !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleObservacion.length > 0 ) {
+                            const ordenGiroObservacion = ordenGiroDetalle.ordenGiroDetalleObservacion[0];
 
                             if ( ordenGiroObservacion.registroCompleto === false ) {
                                 this.listaSemaforos.semaforoObservacion = 'en-proceso';

@@ -51,13 +51,13 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
                     this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
                     this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
     
-                    if ( this.ordenGiroDetalle.ordenGiroObservacion !== undefined ) {
-                        if ( this.ordenGiroDetalle.ordenGiroObservacion.length > 0 ) {
-                            this.ordenGiroObservacionId = this.ordenGiroDetalle.ordenGiroObservacion[0].ordenGiroObservacionId;
-    
+                    if ( this.ordenGiroDetalle.ordenGiroDetalleObservacion !== undefined ) {
+                        if ( this.ordenGiroDetalle.ordenGiroDetalleObservacion.length > 0 ) {
+                            this.ordenGiroObservacionId = this.ordenGiroDetalle.ordenGiroDetalleObservacion[0].ordenGiroObservacionId;
+
                             this.addressForm.setValue(
                                 {
-                                    observaciones: this.ordenGiroDetalle.ordenGiroObservacion[0].observacion !== undefined ? this.ordenGiroDetalle.ordenGiroObservacion[0].observacion : null
+                                    observaciones: this.ordenGiroDetalle.ordenGiroDetalleObservacion[0].observacion !== undefined ? this.ordenGiroDetalle.ordenGiroDetalleObservacion[0].observacion : null
                                 }
                             )
                         }

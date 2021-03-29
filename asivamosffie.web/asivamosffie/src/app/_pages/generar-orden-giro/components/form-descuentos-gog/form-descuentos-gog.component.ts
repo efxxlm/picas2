@@ -169,6 +169,13 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
             const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
 
+            conceptosDePago.push(
+                {
+                    codigo: '1',
+                    nombre: 'test concepto'
+                }
+            )
+
             if ( criterio !== undefined ) {
                 this.getCriterios( index ).push( this.fb.group(
                     {

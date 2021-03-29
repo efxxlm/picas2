@@ -116,7 +116,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 // Get data de los conceptos diligenciados en el CU 4.1.7
                                 for ( const conceptoValue of criterioValue.solicitudPagoFaseCriterioConceptoPago ) {
                                     // Valor temporal por temas de integracion
-                                    //conceptoValue.conceptoPagoCriterio = '37';
+                                    conceptoValue.conceptoPagoCriterio = '37';
                                     const conceptoFind = conceptosDePago.find( value => value.codigo === conceptoValue.conceptoPagoCriterio );
                                     if ( conceptoFind !== undefined ) {
                                         listConceptos.push( { ...conceptoFind, valorFacturadoConcepto: conceptoValue.valorFacturadoConcepto } );
@@ -133,7 +133,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 );
                             }
                         }
-                        
+                        console.log( listCriterios );
                         for ( const criterio of listCriterios ) {
                             this.criterios.push( this.fb.group(
                                 {
