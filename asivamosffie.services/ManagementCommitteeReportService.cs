@@ -662,63 +662,69 @@ namespace asivamosffie.services
                 {
                     comiteTecnico.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnico);
 
-                    //Cambiar estado Comite Con acta aprobada
+                    //Cambiar estado Comite Con acta aprobada y Solicitudes 
                     if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
                     {
                         if (comiteTecnico.EsComiteFiduciario == true)
                         {
-                         // _committeeSessionFiduciarioService.CambiarEstadoSolicitudes();
-
+                            foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+                            {
+                                _committeeSessionFiduciarioService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitud, item.EstadoCodigo, pUser.Email);
+                            }
                         }
+
                         else
                         {
-                         /// _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes();
-
+                            foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                            {
+                                _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitud, item.EstadoCodigo);
+                            }
                         }
 
-                        comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
-                        await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                        await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    }
-                    foreach (var SesionComentarios in comiteTecnico.SesionComentario)
-                    {
-                        SesionComentarios.ValidacionVoto = true;
                     }
 
-                    //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
-                    if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
+                    comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
+                    await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                }
+                foreach (var SesionComentarios in comiteTecnico.SesionComentario)
+                {
+                    SesionComentarios.ValidacionVoto = true;
+                }
+
+                //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
+                if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
+                {
+                    var pSesionComite = _context.SesionComiteSolicitud.Where(x => x.ComiteTecnicoFiduciarioId == comiteTecnico.ComiteTecnicoId).ToList();
+                    foreach (var pses in pSesionComite)
                     {
-                        var pSesionComite = _context.SesionComiteSolicitud.Where(x => x.ComiteTecnicoFiduciarioId == comiteTecnico.ComiteTecnicoId).ToList();
-                        foreach (var pses in pSesionComite)
+                        if (pses.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
                         {
-                            if (pses.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                            //obtengo el proponente y lo convierto en contratista
+                            var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
+                            //solo si no es invitación cerrada
+                            if (proponentes?.FirstOrDefault()?.ProcesoSeleccion?.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
                             {
-                                //obtengo el proponente y lo convierto en contratista
-                                var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
-                                //solo si no es invitación cerrada
-                                if (proponentes?.FirstOrDefault()?.ProcesoSeleccion?.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+                                foreach (var p in proponentes)
                                 {
-                                    foreach (var p in proponentes)
+                                    Contratista contratista = new Contratista();
+                                    //verifico que no exista
+                                    var existecotraticsta = _context.Contratista.Where(x => x.NumeroIdentificacion == p.NumeroIdentificacion).FirstOrDefault();
+                                    if (existecotraticsta == null)
                                     {
-                                        Contratista contratista = new Contratista();
-                                        //verifico que no exista
-                                        var existecotraticsta = _context.Contratista.Where(x => x.NumeroIdentificacion == p.NumeroIdentificacion).FirstOrDefault();
-                                        if (existecotraticsta == null)
-                                        {
-                                            contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
-                                            contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
-                                            contratista.Nombre = p.NombreProponente;
-                                            contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
-                                            contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
-                                            contratista.NumeroInvitacion = p.ProcesoSeleccion.NumeroProceso;
-                                            contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
-                                            contratista.Activo = true;
-                                            contratista.FechaCreacion = DateTime.Now;
-                                            contratista.UsuarioCreacion = pUser.Email.ToUpper();
-                                            contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
+                                        contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
+                                        contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
+                                        contratista.Nombre = p.NombreProponente;
+                                        contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                                        contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
+                                        contratista.NumeroInvitacion = p.ProcesoSeleccion.NumeroProceso;
+                                        contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
+                                        contratista.Activo = true;
+                                        contratista.FechaCreacion = DateTime.Now;
+                                        contratista.UsuarioCreacion = pUser.Email.ToUpper();
+                                        contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
 
-                                            _context.Contratista.Add(contratista);
-                                        }
+                                        _context.Contratista.Add(contratista);
                                     }
                                 }
                             }
@@ -726,6 +732,7 @@ namespace asivamosffie.services
                     }
                 }
                 _context.SaveChanges();
+
                 return new Respuesta
                 {
 
@@ -735,7 +742,7 @@ namespace asivamosffie.services
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pUser.Email, strCrearEditar)
                 };
-            }
+               } 
             catch (Exception ex)
             {
                 return new Respuesta

@@ -100,7 +100,7 @@ namespace asivamosffie.services
                                                    .Include(u => u.Usuario)
                                                    .Select(e => e.Usuario.Email)
                                                    .ToList();
-
+                 
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
 
