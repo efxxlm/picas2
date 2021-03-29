@@ -1104,9 +1104,9 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
                 {
                     int consecutivo = _context.ControversiaActuacion
-                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo.Equals(ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora))
+                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && r.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                                     .Count();
-                    actuacionSeguimientoOld.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
+                    actuacionSeguimientoOld.NumeroActuacionReclamacion = "REC " + (consecutivo).ToString("000");
                 }
                 //actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
 
@@ -1539,7 +1539,7 @@ namespace asivamosffie.services
                         actuacionSeguimiento.RegistroCompleto = ValidarRegistroCompletoControversiaActuacionSeguimiento(actuacionSeguimiento);
                         actuacionSeguimiento.Eliminado = false;
 
-                        actuacionSeguimiento.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
+                        actuacionSeguimiento.NumeroActuacionReclamacion = "ACT REC " + (consecutivo + 1).ToString("000");
 
                         _context.ActuacionSeguimiento.Add(actuacionSeguimiento);
                         await _context.SaveChangesAsync();
