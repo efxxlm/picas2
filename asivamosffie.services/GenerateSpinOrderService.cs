@@ -61,7 +61,7 @@ namespace asivamosffie.services
                     Codidgo = ff.FuenteRecursosCodigo
                 });
             });
-            return ListFuenteFinanciacion;
+            return ListDynamics;
         }
 
         public async Task<dynamic> GetListOrdenGiro(int pMenuId)
