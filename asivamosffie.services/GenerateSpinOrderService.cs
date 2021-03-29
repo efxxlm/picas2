@@ -152,6 +152,7 @@ namespace asivamosffie.services
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e=> e.OrdenGiroDetalleDescuentoTecnicaAportante)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
@@ -405,6 +406,7 @@ namespace asivamosffie.services
                                  {
                                      SolicitudPagoFaseFacturaDescuentoId = pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId,
                                      TipoPagoCodigo = pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo,
+                                     CriterioCodigo = pOrdenGiroDetalleDescuentoTecnica.CriterioCodigo,
                                      FechaModificacion = DateTime.Now,
                                      UsuarioModificacion = pUsuarioCreacion,
                                      RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)

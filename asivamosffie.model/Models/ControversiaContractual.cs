@@ -26,7 +26,7 @@ namespace asivamosffie.model.Models
         public string MotivoJustificacionRechazo { get; set; }
         public bool? EsRequiereComite { get; set; }
         public string RutaSoporte { get; set; }
-        public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
