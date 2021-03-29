@@ -73,7 +73,10 @@ namespace asivamosffie.services
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
 
-                _ => new { },
+                _ => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
             };
         }
 
@@ -160,7 +163,7 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region create 
+        #region Create 
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -559,7 +562,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {

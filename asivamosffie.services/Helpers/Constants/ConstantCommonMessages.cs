@@ -44,7 +44,7 @@ namespace asivamosffie.services.Helpers.Constant
         internal static class SpinOrder {
             public const string REGISTRAR_ORDENES_GIRO = "REGISTRAR ORDENES DE GIRO";
             public const string ELIMINAR_APORTANTE_ORDENES_GIRO = "ELIMINAR APORTANTE ORDEN GIRO";
-
+            public const string CAMBIAR_ESTADO_ORDEN_GIRO = "CAMBIAR ESTADO ORDEN GIRO";
         }
 
     }

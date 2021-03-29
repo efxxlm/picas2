@@ -8,7 +8,9 @@ using asivamosffie.model.APIModels;
 namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidateSpinOrderService
-    {
-     Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion);
+    { 
+        Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro);
+
+        Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion);
     }
 }

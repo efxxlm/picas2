@@ -19,16 +19,63 @@ namespace asivamosffie.services
     public class RegisterValidateSpinOrderService : IRegisterValidateSpinOrderService
     {
         private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
+        private readonly ICommonService _commonService; 
 
-        public RegisterValidateSpinOrderService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        {
-            _documentService = documentService;
+        public RegisterValidateSpinOrderService( devAsiVamosFFIEContext context, ICommonService commonService)
+        { 
             _commonService = commonService;
             _context = context;
         }
 
+        public async Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+
+                _context.Set<OrdenGiro>()
+                       .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                       .Update(o => new OrdenGiro
+                       {
+                           EstadoCodigo = pOrdenGiro.EstadoCodigo,
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                       });
+
+
+
+
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                              (int)enumeratorMenu.Generar_Orden_de_giro,
+                                              GeneralCodes.OperacionExitosa,
+                                              idAccion,
+                                              pOrdenGiro.UsuarioCreacion,
+                                              ConstantCommonMessages.SpinOrder.CAMBIAR_ESTADO_ORDEN_GIRO)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiro.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
 
         public async Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion)
         {
@@ -39,18 +86,18 @@ namespace asivamosffie.services
             }
             else
             {
-              await  _context.Set<OrdenGiroObservacion>()
-                        .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
-                        .UpdateAsync(og => new OrdenGiroObservacion
-                        {
-                            Observacion = pOrdenGiroObservacion.Observacion,
-                            TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
-                            TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
-                            FechaModificacion = DateTime.Now,
-                            IdPadre = pOrdenGiroObservacion.IdPadre,
-                            RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion)
-                        }); 
-            } 
+                await _context.Set<OrdenGiroObservacion>()
+                          .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
+                          .UpdateAsync(og => new OrdenGiroObservacion
+                          {
+                              Observacion = pOrdenGiroObservacion.Observacion,
+                              TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
+                              TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
+                              FechaModificacion = DateTime.Now,
+                              IdPadre = pOrdenGiroObservacion.IdPadre,
+                              RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion)
+                          });
+            }
             return new Respuesta();
         }
 
@@ -60,8 +107,8 @@ namespace asivamosffie.services
                 return false;
             else
                 if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
-                    return false;
-             
+                return false;
+
             return true;
         }
     }

@@ -335,5 +335,7 @@
         public const string Eliminar_Representante_Etc = "240";
         public const string RechazarNovedadPorInterventor = "241";
 
+        public const string Eliminar_Aportante_Orden_Giro = "242";
+        public const string Cambiar_Estado_Orden_Giro = "243";
     }
 }

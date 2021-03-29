@@ -19,23 +19,37 @@ namespace asivamosffie.api.Controllers
     [ApiController]
 
     public class RegisterValidateSpinOrderController : Controller
-    {
-
-        private readonly IOptions<AppSettings> _settings;
+    { 
         private readonly IRegisterValidateSpinOrderService _registerValidateSpinOrderService;
 
-        public RegisterValidateSpinOrderController(IOptions<AppSettings> settings, IRegisterValidateSpinOrderService registerValidateSpinOrderService)
+        public RegisterValidateSpinOrderController(  IRegisterValidateSpinOrderService registerValidateSpinOrderService)
         {
-            _registerValidateSpinOrderService = registerValidateSpinOrderService;
-            _settings = settings;
+            _registerValidateSpinOrderService = registerValidateSpinOrderService; 
         }
 
+        [Route("ChangueStatusOrdenGiro")]
+        [HttpPost]
+        public async Task<IActionResult> ChangueStatusOrdenGiro([FromBody] OrdenGiro pOrdenGiro)
+        {
+            try
+            {
+                pOrdenGiro.UsuarioCreacion = User.Identity.Name;
+                var result = await _registerValidateSpinOrderService.ChangueStatusOrdenGiro(pOrdenGiro);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+         
         [Route("CreateEditSpinOrderObservations")]
         [HttpPost]
         public async Task<IActionResult> CreateEditSpinOrderObservations([FromBody] OrdenGiroObservacion pOrdenGiroObservacion)
         {
             try
             {
+                pOrdenGiroObservacion.UsuarioCreacion = User.Identity.Name;
                 var result = await _registerValidateSpinOrderService.CreateEditSpinOrderObservations(pOrdenGiroObservacion);
                 return Ok(result);
             }
