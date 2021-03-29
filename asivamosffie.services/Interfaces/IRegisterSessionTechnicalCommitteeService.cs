@@ -82,5 +82,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarCompromisoTema(int pCompromisoTemaId, string pUsuarioModificacion);
 
         byte[] ConvertirPDF(Plantilla plantilla);
+
+        void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo);
     }
 }

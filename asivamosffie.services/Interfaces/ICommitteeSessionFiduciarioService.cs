@@ -36,6 +36,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
         Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico);
         Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId );
+        void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo, string pUsuario);
 
         #endregion
 
