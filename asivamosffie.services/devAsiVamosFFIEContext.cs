@@ -114,6 +114,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<OrdenGiroDetalleDescuentoTecnica> OrdenGiroDetalleDescuentoTecnica { get; set; }
         public virtual DbSet<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
         public virtual DbSet<OrdenGiroDetalleEstrategiaPago> OrdenGiroDetalleEstrategiaPago { get; set; }
+        public virtual DbSet<OrdenGiroDetalleObservacion> OrdenGiroDetalleObservacion { get; set; }
         public virtual DbSet<OrdenGiroDetalleTerceroCausacion> OrdenGiroDetalleTerceroCausacion { get; set; }
         public virtual DbSet<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
         public virtual DbSet<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
@@ -259,7 +260,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -3921,6 +3921,34 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_OrdenGiroDetalleEstrategiaPago_OrdenGiroDetalle");
             });
 
+            modelBuilder.Entity<OrdenGiroDetalleObservacion>(entity =>
+            {
+                entity.HasKey(e => e.OrdenGiroObservacionId)
+                    .HasName("PK__OrdenGir__C509FDB53812CE75");
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
+
+                entity.HasOne(d => d.OrdenGiroDetalle)
+                    .WithMany(p => p.OrdenGiroDetalleObservacion)
+                    .HasForeignKey(d => d.OrdenGiroDetalleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrdenGiroDetalleObservacion_OrdenGiro");
+            });
+
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacion>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -3997,9 +4025,9 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_OrdenGiroObservacion_Menu");
 
-                entity.HasOne(d => d.OrdenGiroDetalle)
+                entity.HasOne(d => d.OrdenGiro)
                     .WithMany(p => p.OrdenGiroObservacion)
-                    .HasForeignKey(d => d.OrdenGiroDetalleId)
+                    .HasForeignKey(d => d.OrdenGiroId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrdenGiroObservacion_OrdenGiro");
             });

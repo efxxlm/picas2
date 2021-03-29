@@ -8,8 +8,8 @@ namespace asivamosffie.model.Models
         public OrdenGiroDetalle()
         {
             OrdenGiroDetalleEstrategiaPago = new HashSet<OrdenGiroDetalleEstrategiaPago>();
+            OrdenGiroDetalleObservacion = new HashSet<OrdenGiroDetalleObservacion>();
             OrdenGiroDetalleTerceroCausacion = new HashSet<OrdenGiroDetalleTerceroCausacion>();
-            OrdenGiroObservacion = new HashSet<OrdenGiroObservacion>();
             OrdenGiroSoporte = new HashSet<OrdenGiroSoporte>();
         }
 
@@ -27,8 +27,8 @@ namespace asivamosffie.model.Models
 
         public virtual OrdenGiro OrdenGiro { get; set; }
         public virtual ICollection<OrdenGiroDetalleEstrategiaPago> OrdenGiroDetalleEstrategiaPago { get; set; }
+        public virtual ICollection<OrdenGiroDetalleObservacion> OrdenGiroDetalleObservacion { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacion> OrdenGiroDetalleTerceroCausacion { get; set; }
-        public virtual ICollection<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
         public virtual ICollection<OrdenGiroSoporte> OrdenGiroSoporte { get; set; }
     }
 }

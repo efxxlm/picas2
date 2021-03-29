@@ -223,7 +223,7 @@ namespace asivamosffie.services
                 //es igual a la cantidad de observaciones de esa Solicitud pago 
                 bool blRegistroCompleto = false;
                 DateTime? FechaRegistroCompleto = null;
-                if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
+                if (intCantidadObservacionesSolicitudPago >= intCantidadDependenciasSolicitudPago)
                 {
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;

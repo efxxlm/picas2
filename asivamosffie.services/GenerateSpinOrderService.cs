@@ -86,26 +86,26 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroObservacion pOrdenGiroObservacion, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroDetalleObservacion pOrdenGiroDetalleObservacion, string pUsuarioCreacion)
         {
-            if (pOrdenGiroObservacion.OrdenGiroObservacionId == 0)
+            if (pOrdenGiroDetalleObservacion.OrdenGiroObservacionId == 0)
             {
-                pOrdenGiroObservacion.UsuarioCreacion = pUsuarioCreacion;
-                pOrdenGiroObservacion.FechaCreacion = DateTime.Now;
-                pOrdenGiroObservacion.Eliminado = false;
-                pOrdenGiroObservacion.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion);
-                _context.OrdenGiroObservacion.Add(pOrdenGiroObservacion);
+                pOrdenGiroDetalleObservacion.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalleObservacion.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalleObservacion.Eliminado = false;
+                pOrdenGiroDetalleObservacion.RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion);
+                _context.OrdenGiroDetalleObservacion.Add(pOrdenGiroDetalleObservacion);
             }
             else
             {
-                _context.Set<OrdenGiroObservacion>()
-                        .Where(o => o.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
-                        .Update(o => new OrdenGiroObservacion
+                _context.Set<OrdenGiroDetalleObservacion>()
+                        .Where(o => o.OrdenGiroObservacionId == pOrdenGiroDetalleObservacion.OrdenGiroObservacionId)
+                        .Update(o => new OrdenGiroDetalleObservacion
                         {
                             UsuarioModificacion = pUsuarioCreacion,
                             FechaModificacion = DateTime.Now,
-                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion),
-                            Observacion = pOrdenGiroObservacion.Observacion
+                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleObservacion.Observacion),
+                            Observacion = pOrdenGiroDetalleObservacion.Observacion
                         });
             }
         }
@@ -115,8 +115,8 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
                 CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle?.OrdenGiroObservacion?.Count() > 0)
-                CreateEditOrdenGiroDetalleObservacion(pOrdenGiroDetalle.OrdenGiroObservacion.FirstOrDefault(), pUsuarioCreacion);
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleObservacion?.Count() > 0)
+                CreateEditOrdenGiroDetalleObservacion(pOrdenGiroDetalle.OrdenGiroDetalleObservacion.FirstOrDefault(), pUsuarioCreacion);
 
             if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
                 CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
@@ -507,7 +507,7 @@ namespace asivamosffie.services
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroObservacion)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
