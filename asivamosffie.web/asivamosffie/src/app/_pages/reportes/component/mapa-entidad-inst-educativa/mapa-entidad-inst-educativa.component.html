@@ -41,10 +41,10 @@
                                 </label>
                             </div>
                             <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="departamento" multiple>
-                                        <mat-option *ngFor="let departamento of departamentoArray" [value]="departamento.value">
-                                            {{ departamento.name }}
+                                <mat-form-field class="select-width capitalize">
+                                    <mat-select formControlName="departamento" multiple (selectionChange)="getMunicipios($event)">
+                                        <mat-option *ngFor="let departamento of departamentoArray" [value]="departamento" class="capitalize">
+                                            {{ departamento.descripcion }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -62,10 +62,10 @@
                                 </label>
                             </div>
                             <div class="col">
-                                <mat-form-field class="select-width">
+                                <mat-form-field class="select-width capitalize">
                                     <mat-select formControlName="municipio" multiple>
-                                        <mat-option *ngFor="let municipio of municipioArray" [value]="municipio.value">
-                                            {{ municipio.name }}
+                                        <mat-option *ngFor="let municipio of municipioArray" [value]="municipio" class="capitalize">
+                                            {{ municipio.descripcion }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
