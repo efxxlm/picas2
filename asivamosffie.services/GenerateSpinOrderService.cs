@@ -58,7 +58,7 @@ namespace asivamosffie.services
                 ListDynamics.Add(new
                 {
                     Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
-                    Codidgo = ff.FuenteRecursosCodigo
+                    Codigo = ff.FuenteRecursosCodigo
                 });
             });
             return ListDynamics;
