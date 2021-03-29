@@ -1142,7 +1142,7 @@ namespace asivamosffie.services
                                 .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
                                 .Update(s => new SolicitudPagoFaseCriterioConceptoPago
                                 {
-                                    SolicitudPagoFaseCriterio = SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterio,
+                                    ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
                                     ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
                                 }); 
                     }
