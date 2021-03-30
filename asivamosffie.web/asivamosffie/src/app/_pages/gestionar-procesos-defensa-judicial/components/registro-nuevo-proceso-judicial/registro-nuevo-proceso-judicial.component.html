@@ -150,7 +150,7 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
-                [ngClass]="{'sin-diligenciar':demandado_class_pasiva===0,'en-proceso':demandado_class_pasiva===1,'completo':demandado_class_pasiva===2}">
+                    [ngClass]="{'sin-diligenciar':demandado_class_pasiva===0,'en-proceso':demandado_class_pasiva===1,'completo':demandado_class_pasiva===2}">
                     Demandados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -159,11 +159,12 @@
                 [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-demandados-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==true" class="animatedDown">
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==true"
+        class="animatedDown">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
-                [ngClass]="{'sin-diligenciar':convocado_class_pasiva===0,'en-proceso':convocado_class_pasiva===1,'completo':convocado_class_pasiva===2}">
+                    [ngClass]="{'sin-diligenciar':convocado_class_pasiva===0,'en-proceso':convocado_class_pasiva===1,'completo':convocado_class_pasiva===2}">
                     Convocados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -205,5 +206,17 @@
             Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección
             <strong><em>“Ficha de estudio”</em></strong> para continuar el proceso
         </div>
+    </div>
+    <div *ngIf="this.textCabecera!='Registrar nuevo proceso de defensa judicial'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p>En el acordeón Convocados</p>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>

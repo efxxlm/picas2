@@ -5,8 +5,7 @@
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="departamentoInicio"
-                            [ngClass]="{
+                            <label class="label-left" for="departamentoInicio" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('departamentoInicio').invalid && addressForm.get('departamentoInicio').touched) ||
                                   (addressForm.get('departamentoInicio').invalid && estaEditando)
@@ -15,8 +14,10 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width capitalize">
-                                <mat-select formControlName="departamentoInicio" (selectionChange)="getMunicipio($event)" required>
-                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId" class="capitalize">
+                                <mat-select formControlName="departamentoInicio"
+                                    (selectionChange)="getMunicipio($event)" required>
+                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId"
+                                        class="capitalize">
                                         {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>
@@ -38,8 +39,7 @@
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="municipioInicio"
-                            [ngClass]="{
+                            <label class="label-left" for="municipioInicio" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('municipioInicio').invalid && addressForm.get('municipioInicio').touched) ||
                                   (addressForm.get('municipioInicio').invalid && estaEditando)
@@ -48,7 +48,8 @@
                         <div class="col">
                             <mat-form-field class="select-width capitalize">
                                 <mat-select formControlName="municipioInicio" required>
-                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId" class="capitalize">
+                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId"
+                                        class="capitalize">
                                         {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>
@@ -147,9 +148,8 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="pretensiones" #pretensiones
-                                    [class.invalid]="
+                                    required (onContentChanged)="maxLength($event, 1000)" formControlName="pretensiones"
+                                    #pretensiones [class.invalid]="
                                     (addressForm.get('pretensiones').invalid && addressForm.get('pretensiones').touched) ||
                                     (addressForm.get('pretensiones').invalid && estaEditando)
                                   ">
@@ -191,7 +191,7 @@
                                 <input matInput #cuantiaPerjuicios currencyMask maxlength="20"
                                     formControlName="cuantiaPerjuicios" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                             </mat-form-field>
                             <span class="contador">{{20 - cuantiaPerjuicios.value.length}}</span>
@@ -219,7 +219,8 @@
                               }">¿Requiere la participación o insumo del supervisor del contrato?</label>
                         </div>
                         <div class="col">
-                            <mat-radio-group class="radioInput" formControlName="requeridoParticipacionSupervisor" required>
+                            <mat-radio-group class="radioInput" formControlName="requeridoParticipacionSupervisor"
+                                required>
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
