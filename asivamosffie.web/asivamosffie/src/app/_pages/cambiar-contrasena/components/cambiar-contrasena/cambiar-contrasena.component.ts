@@ -3,20 +3,15 @@ import { Validators, FormGroup, FormBuilder, ValidationErrors, ValidatorFn } fro
 import { Usuario, AutenticacionService, Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { first } from 'rxjs/operators';
-import  sha1 from 'sha1';
+import sha1 from 'sha1';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
+export const validateConfirmPassword: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
+  const password = control.get('newPassword').value;
+  const confirmarPassword = control.get('confirmPassword').value;
 
-export const validateConfirmPassword: ValidatorFn = (
-  control: FormGroup
-): ValidationErrors | null => {
-  const password = control.get('newPassword');
-  const confirmarPassword = control.get('confirmPassword');
-
-  return password.value === confirmarPassword.value
-    ? null
-    : { noSonIguales: true };
+  return password === confirmarPassword ? null : { noSonIguales: true };
 };
 
 @Component({
@@ -25,7 +20,6 @@ export const validateConfirmPassword: ValidatorFn = (
   styleUrls: ['./cambiar-contrasena.component.scss']
 })
 export class CambiarContrasenaComponent implements OnInit {
-
   verAyuda = false;
 
   verClaveActual = true;
@@ -42,16 +36,12 @@ export class CambiarContrasenaComponent implements OnInit {
     private autenticacionService: AutenticacionService,
     private router: Router,
     public dialog: MatDialog
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
-    
-    if(localStorage.getItem("codeRecover")!=null)
-    {
-      this.passwordRecovered=atob(localStorage.getItem("codeRecover"));
-    }    
+    if (localStorage.getItem('codeRecover') != null) {
+      this.passwordRecovered = atob(localStorage.getItem('codeRecover'));
+    }
     this.autenticacionService.actualUser$.subscribe(user => {
       this.currentUser = user;
     });
@@ -71,83 +61,89 @@ export class CambiarContrasenaComponent implements OnInit {
 
   //   if (this.formChangePassword.value.currentPassword == this.formChangePassword.value.newPassword)
   //     this.openDialog('', 'la contrasena nueva')
-  //     return 
+  //     return
 
   //   return esIgual;
-    
+
   // }
 
   cambiarContrasena(event: Event) {
     event.preventDefault();
     //if (this.formChangePassword.valid) {
-      this.autenticacionService.changePass(sha1(this.formChangePassword.value.currentPassword),sha1(this.formChangePassword.value.newPassword)).pipe(first()).subscribe( respuesta => {
-        
-        if(respuesta.code=="101")
-        {
-          this.errorCurrentPassword=respuesta.message;
-        }
-        else{          
-          if(respuesta.code=="200")
-          {
-            localStorage.removeItem("codeRecover");
-            let userupdated=respuesta.data;
-            userupdated.token=this.currentUser.token;
-            this.autenticacionService.setCurrentUserValue(userupdated);
-            this.openDialog('', `<b>${respuesta.message}</b>`);            
-            this.router.navigate(['/home']);
+    this.autenticacionService
+      .changePass(sha1(this.formChangePassword.value.currentPassword), sha1(this.formChangePassword.value.newPassword))
+      .pipe(first())
+      .subscribe(
+        respuesta => {
+          if (respuesta.code == '101') {
+            this.errorCurrentPassword = respuesta.message;
+          } else {
+            if (respuesta.code == '200') {
+              localStorage.removeItem('codeRecover');
+              let userupdated = respuesta.data;
+              userupdated.token = this.currentUser.token;
+              this.autenticacionService.setCurrentUserValue(userupdated);
+              this.openDialog('', `<b>${respuesta.message}</b>`);
+              this.router.navigate(['/home']);
+            } else {
+              this.openDialog('', `<b>${respuesta.message}</b>`);
+            }
           }
-          else{
-            this.openDialog('', `<b>${respuesta.message}</b>`);
-          }
-        }
-        
-        
-       },
-       err => {
+        },
+        err => {
           let mensaje: string;
           //console.log(err)
-          if (err.error.message){
+          if (err.error.message) {
             mensaje = err.error.message;
-          }else {
+          } else {
             mensaje = err.message;
           }
           this.openDialog('Error', mensaje);
-       },
-       () => {
-        //console.log('terminó');
-       });
-    //} else {
+        },
+        () => {
+          //console.log('terminó');
+        }
+      );
+    // } else {
     //  console.log();
-    //}
+    // }
   }
 
   private buildForm() {
     this.formChangePassword = this.formBuilder.group(
       {
-        currentPassword: [this.passwordRecovered, [Validators.required]],
-        newPassword: ['', [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(15),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/)
-        ]],
-        confirmPassword: ['', [Validators.required]],
+        currentPassword: [this.passwordRecovered, Validators.required],
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(15),
+            Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/)
+          ]
+        ],
+        confirmPassword: ['', [Validators.required]]
       },
       {
-        validators: validateConfirmPassword,
+        validators: validateConfirmPassword
       }
     );
   }
 
-  validarSiSonIguales(): boolean  {
-    return this.formChangePassword.hasError('noSonIguales')  &&
+  validarSiSonIguales(): boolean {
+    return (
+      this.formChangePassword.hasError('noSonIguales') &&
       this.formChangePassword.get('newPassword').dirty &&
-      this.formChangePassword.get('confirmPassword').dirty;
+      this.formChangePassword.get('confirmPassword').dirty
+    );
   }
 
   disabledBtn() {
-    if ( this.formChangePassword.get('newPassword').value.length > 0 && this.formChangePassword.get('confirmPassword').value.length > 0 ) {
-      if ( this.formChangePassword.get('newPassword').value === this.formChangePassword.get('confirmPassword').value ) {
+    if (
+      this.formChangePassword.get('newPassword').value.length > 0 &&
+      this.formChangePassword.get('confirmPassword').value.length > 0
+    ) {
+      if (this.formChangePassword.get('newPassword').value === this.formChangePassword.get('confirmPassword').value) {
         return false;
       } else {
         return true;
@@ -157,27 +153,27 @@ export class CambiarContrasenaComponent implements OnInit {
     }
   }
 
-  validatePass()
-  {
+  validatePass() {
     event.preventDefault();
-    this.autenticacionService.ValdiatePass(sha1(this.formChangePassword.value.currentPassword)).pipe(first()).subscribe( respuesta => {
-      console.log( respuesta );
-      if(respuesta.code=="101")
-      {
-        this.errorCurrentPassword=respuesta.message;
-      }
-      else{
-        this.errorCurrentPassword="";
-      }
-      },
-      err => {
-        let mensaje: string;
-        console.log(err)        
-      },
-      () => {
-      //console.log('terminó');
-      });
-   
+    this.autenticacionService
+      .ValdiatePass(sha1(this.formChangePassword.value.currentPassword))
+      .pipe(first())
+      .subscribe(
+        respuesta => {
+          // console.log(respuesta);
+          if (respuesta.code == '101') {
+            this.errorCurrentPassword = respuesta.message;
+          } else {
+            this.errorCurrentPassword = '';
+          }
+        },
+        err => {
+          let mensaje: string;
+          // console.log(err);
+        },
+        () => {
+          //console.log('terminó');
+        }
+      );
   }
-
 }
