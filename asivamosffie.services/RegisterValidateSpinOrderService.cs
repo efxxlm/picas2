@@ -152,7 +152,7 @@ namespace asivamosffie.services
             foreach (var item in ListOrdenGiroIds)
             {
                 RegistrosOrdenGiro += PlantillaRegistros.Contenido;
-                RegistrosOrdenGiro += ReplaceVariablesOrdenGiro(RegistrosOrdenGiro, item);
+                RegistrosOrdenGiro  = ReplaceVariablesOrdenGiro(RegistrosOrdenGiro, item);
             }
 
             Plantilla.Contenido = Plantilla.Contenido.Replace("[REGISTROS]", RegistrosOrdenGiro);
@@ -173,16 +173,15 @@ namespace asivamosffie.services
             decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
             string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
             List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
-
-
+             
             try
             {
                 pContenido = pContenido
-                       .Replace("[FECHA_ORDEN_GIRO]", ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy"))
+                       .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") :" ")
                        .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
-                       .Replace("[MODALIDAD_CONTRATO]", ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre)
-                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato)
-                       .Replace("[VALOR_ORDEN_GIRO]", ValorOrdenGiro != null ? String.Format("{0:n0}", ValorOrdenGiro) : " ")
+                       .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " " )
+                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato : " ")
+                       .Replace("[VALOR_ORDEN_GIRO]", + ValorOrdenGiro != null ? "$ "+ String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }
             catch (Exception e )

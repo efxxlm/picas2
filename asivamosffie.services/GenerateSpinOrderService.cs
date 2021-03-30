@@ -187,6 +187,7 @@ namespace asivamosffie.services
             {
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
+                    pOrdenGiro.NumeroSolicitud =await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
@@ -207,10 +208,14 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    string strNumeroSolicitud = pOrdenGiro.NumeroSolicitud;
+                    strNumeroSolicitud = await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
+
                     _context.Set<OrdenGiro>()
                             .Where(og => og.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(og => new OrdenGiro
                             {
+                                NumeroSolicitud  = strNumeroSolicitud,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),

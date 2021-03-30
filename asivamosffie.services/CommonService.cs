@@ -16,6 +16,7 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using asivamosffie.services.Helpers.Constant;
 
 namespace asivamosffie.services
 {
@@ -33,7 +34,7 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
             _mailSettings = mailSettings.Value;
             _context = context;
-        } 
+        }
         //Solicitudes de comite tecnico
         public async Task<dynamic> GetRequestSP(string pNameSP)
         {
@@ -55,11 +56,11 @@ namespace asivamosffie.services
                     return response;
                 }
             }
-        } 
+        }
 
         public dynamic MapToValue(SqlDataReader reader)
         {
-            return new 
+            return new
             {
                 ContratacionId = (int)reader["ContratacionId"],
                 DisponibilidadPresupuestalId = (int)reader["DisponibilidadPresupuestalId"],
@@ -69,7 +70,7 @@ namespace asivamosffie.services
                 NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
                 OpcionContratar = reader["OpcionContratar"].ToString(),
                 ValorSolicitud = (decimal)reader["ValorSolicitud"],
-                FechaComite = (DateTime)reader["FechaComite"], 
+                FechaComite = (DateTime)reader["FechaComite"],
             };
         }
 
@@ -100,7 +101,7 @@ namespace asivamosffie.services
                                                    .Include(u => u.Usuario)
                                                    .Select(e => e.Usuario.Email)
                                                    .ToList();
-                 
+
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
 
@@ -119,7 +120,7 @@ namespace asivamosffie.services
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
-                 
+
             }
             catch (Exception e)
             {
@@ -128,11 +129,11 @@ namespace asivamosffie.services
             return true;
         }
 
-        public bool EnviarCorreo(List<string> pListCorreo, string pContenido , string pAsunto)
+        public bool EnviarCorreo(List<string> pListCorreo, string pContenido, string pAsunto)
         {
             try
             {
-                pContenido = pContenido 
+                pContenido = pContenido
                     .Replace("_LinkF_", _mailSettings.DominioFront)
                     .Replace("[URL]", _mailSettings.DominioFront);
 
@@ -154,7 +155,7 @@ namespace asivamosffie.services
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
-                  
+
             }
             catch (Exception e)
             {
@@ -162,7 +163,7 @@ namespace asivamosffie.services
             }
             return true;
         }
-         
+
         public async Task<dynamic> GetListMenu()
         {
             return await _context.Menu.Select(m => new
@@ -191,6 +192,28 @@ namespace asivamosffie.services
                                 );
             }
             return ListaUsuario;
+        }
+
+        public async Task<string> EnumeradorOrdenGiro(int SolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago.Where(s=> s.SolicitudPagoId == SolicitudPagoId)
+                                 .Include(c=> c.Contrato) 
+                                 .ThenInclude(c => c.Contratacion)
+                                 .FirstOrDefault();
+
+
+            int cantidadDeResgistros = _context.OrdenGiro.Where(r=> !string.IsNullOrEmpty(r.NumeroSolicitud)).Count();
+            string Nomeclatura = "ODG_";
+
+            if (solicitudPago.Contrato.Contratacion.TipoContratacionCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
+                Nomeclatura = "Obr";
+            else
+                Nomeclatura = "Int";
+
+            Nomeclatura += solicitudPago.Contrato.NumeroContrato;
+
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
         }
 
         public async Task<string> EnumeradorSolicitudPagoExpensasAndOtros()
