@@ -118,7 +118,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
             listaSeleccionados.push(motivoAuxS);
           });
           this.addressForm.get('motivosSolicitud').setValue(listaSeleccionados);
-          console.log(listaSeleccionados);
           for (let n = 0; n < listaSeleccionados.length; n++) {
             switch (listaSeleccionados[n].codigo) {
               case '4':
@@ -168,7 +167,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     else {
       //this.loadtipoControversias();
     }
-    console.log(this.arrayMotivosLoaded);
   }
   loadtipoControversias() {
 
@@ -181,12 +179,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.estadoSemaforo.emit('sin-diligenciar');
     switch (this.addressForm.value.tipoControversia.codigo) {
       case '1':
-        console.log(this.addressForm.value.tipoControversia.codigo);
-        console.log(this.addressForm.value.fechaSolicitud);
-        console.log(this.addressForm.value.motivosSolicitud);
-        console.log(this.obj1);
-        console.log(this.addressForm.value.cualOtroMotivo);
-        if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null
           && (((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.motivosRechazo == null && this.addressForm.value.requeridoComite == null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null && this.addressForm.value.requeridoComite == null))
           || ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite != null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite == null)))) {
@@ -199,7 +192,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '2':
-        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -210,7 +203,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '3':
-        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -221,7 +214,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '4':
-        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -232,7 +225,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '5':
-        if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -243,7 +236,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '6':
-        if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -254,7 +247,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '7':
-        if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
+        if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud.length > 0 && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud.length > 0 && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -310,7 +303,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
@@ -353,8 +345,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       }
     const controversiaContractual = [] as ControversiaContractual;
     controversiaContractual.controversiaMotivo = [];
-    console.log(motivosDeSolicitud);
-    console.log(this.arrayMotivosLoaded);
     motivosDeSolicitud.forEach(newMotivos => {
       let controversiaMotivoId = 0;
       this.arrayMotivosLoaded.forEach(k => {
@@ -370,7 +360,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       };
       controversiaContractual.controversiaMotivo.push(controversiaMotivo);
     });
-    console.log( controversiaContractual.controversiaMotivo);
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
@@ -412,7 +401,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "ControversiaMotivo": controversiaContractual.controversiaMotivo
         };
       }
-      console.log(formArrayTai);
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe((resp_0: any) => {
         if (resp_0.isSuccessful == true) {
           this.services.CambiarEstadoControversiaContractual(resp_0.data.controversiaContractualId, estadoControversia).subscribe(c => {
