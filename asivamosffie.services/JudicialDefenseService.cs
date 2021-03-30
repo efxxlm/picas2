@@ -1247,6 +1247,7 @@ namespace asivamosffie.services
                 try
                 {
                     string TipoAccionNombre = "";
+                    DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId).FirstOrDefault();
 
 
                     Dominio TipoAccion;
@@ -1259,7 +1260,6 @@ namespace asivamosffie.services
                     bool bRegistroCompleto = false;
                     string strRegistroCompleto = "Incompleto";
                     strRegistroCompleto = (bool)defensaJudicial.EsCompleto ? "Completo" : "Incompleto";
-
 
 
                     GrillaProcesoDefensaJudicial defensaJudicialGrilla = new GrillaProcesoDefensaJudicial
@@ -1278,7 +1278,8 @@ namespace asivamosffie.services
                         TipoProcesoCodigo = defensaJudicial.TipoProcesoCodigo,
                         VaAProcesoJudicial = defensaJudicial.FichaEstudio.Count() == 0 ? false : defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite,
                         FechaCreacion = defensaJudicial.FechaCreacion,
-                        CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios
+                        CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios,
+                        EsprocesoResultadoDefinitivo = defensaJudicialSeguimiento.EsprocesoResultadoDefinitivo,
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
@@ -1359,7 +1360,7 @@ namespace asivamosffie.services
 
         public async Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId)
         {
-            return _context.DefensaJudicialSeguimiento.Where(x => x.DefensaJudicialId == pDefensaJudicialId && x.EstadoProcesoCodigo != "3").ToList();//diferente a finalizado
+            return _context.DefensaJudicialSeguimiento.Where(x => x.DefensaJudicialId == pDefensaJudicialId).ToList();//diferente a finalizado
         }
 
         public async Task<Respuesta> EnviarAComite(int pDefensaJudicialId, string pUsuarioModifico)
@@ -1484,15 +1485,6 @@ namespace asivamosffie.services
                     defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada;//cambiar
                     _context.DefensaJudicialSeguimiento.Update(defensaJudicialSeguimiento);
 
-                    if (defensaJudicialSeguimiento.EsprocesoResultadoDefinitivo == true)
-                    {
-                        DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(defensaJudicialSeguimiento.DefensaJudicialId);
-                        if (defensaJudicial != null)
-                        {
-                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.En_desarrollo;
-                        }
-                    }
-                    
                     _context.SaveChanges();
 
                     //enviar correo

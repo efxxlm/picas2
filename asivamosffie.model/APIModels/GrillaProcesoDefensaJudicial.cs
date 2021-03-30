@@ -6,8 +6,7 @@ namespace asivamosffie.model.APIModels
 {
    public class GrillaProcesoDefensaJudicial
     {
-        public bool? VaAProcesoJudicial { get; set; }
-
+        public bool? VaAProcesoJudicial { get; set; } 
         public int DefensaJudicialId { get; set; }
         public string FechaRegistro { get; set; }
         public string LegitimacionPasivaActiva { get; set; }
@@ -23,6 +22,6 @@ namespace asivamosffie.model.APIModels
 
         public DateTime FechaCreacion { get; set; }
         public decimal? CuantiaPerjuicios { get; set; }
-
+        public bool? EsprocesoResultadoDefinitivo { get; set; }
     }
 }
