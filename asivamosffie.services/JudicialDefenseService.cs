@@ -1279,7 +1279,7 @@ namespace asivamosffie.services
                         VaAProcesoJudicial = defensaJudicial.FichaEstudio.Count() == 0 ? false : defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite,
                         FechaCreacion = defensaJudicial.FechaCreacion,
                         CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios,
-                        EsprocesoResultadoDefinitivo = defensaJudicialSeguimiento.EsprocesoResultadoDefinitivo,
+                        EsprocesoResultadoDefinitivo = defensaJudicialSeguimiento != null ? defensaJudicialSeguimiento.EsprocesoResultadoDefinitivo : false,
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
