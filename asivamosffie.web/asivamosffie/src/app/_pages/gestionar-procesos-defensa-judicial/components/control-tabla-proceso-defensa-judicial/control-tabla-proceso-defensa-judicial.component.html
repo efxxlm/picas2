@@ -58,7 +58,7 @@
                     Eliminar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="cerrarProceso(element.defensaJudicialId)" *ngIf="element.estadoProcesoCodigo === '9'">
+                    (click)="cerrarProceso(element.defensaJudicialId)" *ngIf="element.estadoProcesoCodigo === '9' && element.esprocesoResultadoDefinitivo==true">
                     Cerrar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
