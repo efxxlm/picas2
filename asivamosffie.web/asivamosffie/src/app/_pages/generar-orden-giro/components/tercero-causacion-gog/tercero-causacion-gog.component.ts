@@ -240,6 +240,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 setTimeout(() => {
                                     this.criterios.push( this.fb.group(
                                         {
+                                            estadoSemaforo: [ terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso' ],
                                             ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                             tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                             nombre: [ criterio.nombre ],
@@ -286,6 +287,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 // Set formulario criterios
                                 this.criterios.push( this.fb.group(
                                     {
+                                        estadoSemaforo: [ 'sin-diligenciar' ],
                                         ordenGiroDetalleTerceroCausacionId: [ 0 ],
                                         tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                         nombre: [ criterio.nombre ],

@@ -15,7 +15,7 @@
         <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
             <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="criterio.get( 'estadoSemaforo' ).value">
                         {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>

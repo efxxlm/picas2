@@ -226,6 +226,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         } else {
                             estadoSemaforo = 'en.proceso';
                         }
+                        if ( totalRegistroCompleto === 0 ) {
+                            estadoSemaforo = 'en-proceso';
+                        }
                         setTimeout(() => {
                             // Set formulario de los descuentos
                             detalleDescuentoTecnica.forEach( descuentoValue => {

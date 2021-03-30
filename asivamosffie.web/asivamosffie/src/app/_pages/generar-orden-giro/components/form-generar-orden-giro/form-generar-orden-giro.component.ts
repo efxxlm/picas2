@@ -14,6 +14,7 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
     contrato: any;
     ordenGiroTercero: any;
     semaforoInfoGeneral = 'sin-diligenciar';
+    semaforoDetalle = 'sin-diligenciar';
     modalidadContratoArray: Dominio[] = [];
 
     constructor(

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-accordion-detalle-giro-gog',
@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AccordionDetalleGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     ordenGiro: any;
     tieneDescuentosDireccionTecnica = true;
     listaSemaforos = {
@@ -50,6 +51,50 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                             }
                         }
                     }
+                    // Get semaforo descuentos direccion tecnica
+                    if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                            let registroCompleto = 0;
+
+                            ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnica => {
+                                if ( descuentoTecnica.registroCompleto === true ) {
+                                    registroCompleto++;
+                                }
+                            } )
+
+                            if ( registroCompleto === 0 ) {
+                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso';
+                            }
+                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso';
+                            }
+                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'completo';
+                            }
+                        }
+                    }
+                    // Get semaforo tercero de causacion
+                    if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                            let registroCompleto = 0;
+
+                            ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
+                                if ( terceroCausacion.registroCompleto === true ) {
+                                    registroCompleto++;
+                                }
+                            } )
+
+                            if ( registroCompleto === 0 ) {
+                                this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
+                            }
+                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                                this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
+                            }
+                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                                this.listaSemaforos.semaforoTerceroCausacion = 'completo';
+                            }
+                        }
+                    }
                     // Get semaforo observaciones
                     if ( ordenGiroDetalle.ordenGiroDetalleObservacion !== undefined ) {
                         if ( ordenGiroDetalle.ordenGiroDetalleObservacion.length > 0 ) {
@@ -78,6 +123,20 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                     }
                 }
             }
+        }
+        // Check semaforo principal
+        const tieneSinDiligenciar = Object.values( this.listaSemaforos ).includes( 'sin-diligenciar' );
+        const tieneEnProceso = Object.values( this.listaSemaforos ).includes( 'en-proceso' );
+        const tieneCompleto = Object.values( this.listaSemaforos ).includes( 'completo' );
+
+        if ( tieneEnProceso === true ) {
+            this.estadoSemaforo.emit( 'en-proceso' );
+        }
+        if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
+            this.estadoSemaforo.emit( 'en-proceso' );
+        }
+        if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
+            this.estadoSemaforo.emit( 'completo' );
         }
     }
 

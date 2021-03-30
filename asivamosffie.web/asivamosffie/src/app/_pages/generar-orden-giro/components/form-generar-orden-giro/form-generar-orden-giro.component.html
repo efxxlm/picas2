@@ -36,11 +36,11 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoDetalle">
                     Detalle del giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago"></app-accordion-detalle-giro-gog>
+            <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago" (estadoSemaforo)="semaforoDetalle = $event"></app-accordion-detalle-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
