@@ -316,7 +316,7 @@ namespace asivamosffie.services
         public async Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id)
         {
 
-            return await _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == id).ToListAsync();
+            return await _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == id && (r.Eliminado == null || r.Eliminado == false)).ToListAsync();
         }
 
         //public async Task<List<Contrato>> GetListContratos(/*int id*/)
@@ -1442,6 +1442,12 @@ namespace asivamosffie.services
                 return false;
             }
 
+            int cm = _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId && (r.Eliminado == false || r.Eliminado == null)).Count();
+            if (cm <= 0)
+            {
+                return false;
+            }
+
             switch (controversiaContractual.TipoControversiaCodigo)
             {
                 case "1": // TAI
@@ -1647,11 +1653,18 @@ namespace asivamosffie.services
                                 prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
                         }
 
+                        foreach (ControversiaMotivo controversia in controversiaContractual.ControversiaMotivo)
+                        {
+                            controversia.UsuarioCreacion = controversiaContractual.UsuarioCreacion;
+                            controversia.FechaCreacion = DateTime.Now;
+                        }
+
                         controversiaContractual.NumeroSolicitud = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
                         await _context.SaveChangesAsync();
                         controversiaContractual.NumeroSolicitud = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+ 
                         await _context.SaveChangesAsync();
                         //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
 
@@ -1688,7 +1701,22 @@ namespace asivamosffie.services
                         controversiaeditar.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaeditar);
                         //_context.ContratoPoliza.Add(contratoPoliza);
                         _context.ControversiaContractual.Update(controversiaeditar);
+
                         await _context.SaveChangesAsync();
+                    }
+
+                    await _context.Set<ControversiaMotivo>().Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId)
+                        .UpdateAsync(r => new ControversiaMotivo()
+                        {
+                            Eliminado = true
+                        });
+
+                    foreach (ControversiaMotivo controversia in controversiaContractual.ControversiaMotivo)
+                    {
+                        controversia.ControversiaContractualId = controversiaContractual.ControversiaContractualId;
+                        controversia.UsuarioCreacion = !String.IsNullOrEmpty(controversiaContractual.UsuarioCreacion) ? controversiaContractual.UsuarioCreacion : controversiaContractual.UsuarioModificacion;
+                        controversia.Eliminado = false;
+                        await this.InsertEditControversiaMotivo(controversia);
                     }
 
                     return
@@ -2297,10 +2325,11 @@ namespace asivamosffie.services
                         controversiaMotivoBD = await _context.ControversiaMotivo.Where(d => d.ControversiaMotivoId == controversiaMotivo.ControversiaMotivoId).FirstOrDefaultAsync();
 
                         controversiaMotivoBD.FechaModificacion = DateTime.Now;
-                        strUsuario = controversiaMotivo.UsuarioModificacion;
+                        strUsuario = controversiaMotivo.UsuarioCreacion;
 
                         controversiaMotivoBD.MotivoSolicitudCodigo = controversiaMotivo.MotivoSolicitudCodigo;
-
+                        controversiaMotivoBD.Eliminado = controversiaMotivo.Eliminado;
+                        controversiaMotivoBD.UsuarioModificacion = controversiaMotivo.UsuarioCreacion;
                         _context.ControversiaMotivo.Update(controversiaMotivoBD);
 
                         //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
