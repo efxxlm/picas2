@@ -120,7 +120,12 @@
                         element.aprobacionCodigo === '2')
                     "
                   >
-                    <mat-form-field class="select-width">
+                    <mat-form-field
+                      class="select-width"
+                      [class.mat-form-field-invalid]="
+                        element.validacionCodigo === '' && estaEditando
+                      "
+                    >
                       <mat-label>
                         <span
                           *ngIf="
@@ -129,12 +134,16 @@
                               element.tieneModificacionApoyo &&
                               element.aprobacionCodigo === '2')
                           "
-                          >{{ element.validacionCodigoString }}</span
                         >
+                          {{ element.validacionCodigoString }}
+                        </span>
                       </mat-label>
                       <mat-select
                         [(ngModel)]="element.validacionCodigo"
                         (selectionChange)="changeState(element)"
+                        [class.mat-select-invalid]="
+                          element.validacionCodigo === '' && estaEditando
+                        "
                         required
                       >
                         <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">

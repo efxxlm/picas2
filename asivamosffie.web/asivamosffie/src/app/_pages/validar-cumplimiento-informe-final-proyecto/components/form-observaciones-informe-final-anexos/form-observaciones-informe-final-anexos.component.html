@@ -3,7 +3,15 @@
     <div class="col-md-12">
       <div class="row justify-content-center align-items-center" style="width: 100%">
         <div class="pr-1">
-          <label class="label-left" for="tieneObservacionesInterventoria">
+          <label
+            class="label-left"
+            for="tieneObservacionesInterventoria"
+            [class.color-secondaryColor]="
+              (observaciones.get('tieneObservacionesInterventoria').invalid &&
+                observaciones.get('tieneObservacionesInterventoria').touched) ||
+              (observaciones.get('tieneObservacionesInterventoria').invalid && estaEditando)
+            "
+          >
             ¿Desde el grupo de novedades y liquidaciones tiene observaciones al informe final y anexos?
           </label>
         </div>
@@ -85,7 +93,10 @@
     </span>
   </div>
 
-  <app-tabla-historial-observaciones *ngIf="existe_historial && report" [data]="report"></app-tabla-historial-observaciones>
+  <app-tabla-historial-observaciones
+    *ngIf="existe_historial && report"
+    [data]="report"
+  ></app-tabla-historial-observaciones>
 
   <div class="text-center mb-2em">
     <button
@@ -96,7 +107,8 @@
       [disabled]="
         observaciones.get('tieneObservacionesInterventoria').value === null ||
         observaciones.get('tieneObservacionesInterventoria').value === undefined ||
-        (observaciones.get('tieneObservacionesInterventoria').value === true && observaciones.get('observaciones').invalid)
+        (observaciones.get('tieneObservacionesInterventoria').value === true &&
+          observaciones.get('observaciones').invalid)
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />

@@ -8,7 +8,7 @@
     <mat-card-content>
       <p>
         <strong>
-          {{anexos.observacionVigenteInformeFinalObservacionesInterventoria.fechaCreacion | date:'dd/MM/yyyy' }}
+          {{ anexos.observacionVigenteInformeFinalObservacionesInterventoria.fechaCreacion | date: 'dd/MM/yyyy' }}
         </strong>
       </p>
       <p>
@@ -18,8 +18,10 @@
         <span *ngIf="anexos.tieneObservacionesInterventoria"> Si</span>
         <span *ngIf="!anexos.tieneObservacionesInterventoria"> No</span>
       </p>
-      <p *ngIf="anexos.tieneObservacionesInterventoria" [innerHTML]="anexos.observacionVigenteInformeFinalObservacionesInterventoria.observaciones">
-      </p>
+      <p
+        *ngIf="anexos.tieneObservacionesInterventoria"
+        [innerHTML]="anexos.observacionVigenteInformeFinalObservacionesInterventoria.observaciones"
+      ></p>
     </mat-card-content>
   </mat-card>
 </div>
@@ -33,19 +35,49 @@
     <mat-card-content>
       <p>
         <strong>
-          {{anexos.historialInformeFinalObservacionesInterventoria.fechaCreacion | date:'dd/MM/yyyy' }}
+          {{ anexos.historialInformeFinalObservacionesInterventoria.fechaCreacion | date: 'dd/MM/yyyy' }}
         </strong>
       </p>
       <p>
         <strong>
           ¿Desde el grupo de novedades y liquidaciones tiene observaciones adicionales al informe final y anexos?:
         </strong>
-        <span *ngIf="anexos.tieneObservacionesInterventoria || (anexos.estadoCumplimiento === '4' && !anexos.tieneObservacionesInterventoria && anexos.historialInformeFinalObservacionesInterventoria.length > 0)"> Si</span>
-        <span *ngIf="(!anexos.tieneObservacionesInterventoria && anexos.estadoCumplimiento !== '4') || (anexos.estadoCumplimiento === '4' && !anexos.tieneObservacionesInterventoria && anexos.historialInformeFinalObservacionesInterventoria.length < 0)"> No</span>    
+        <span
+          *ngIf="
+            anexos.tieneObservacionesInterventoria ||
+            (anexos.estadoCumplimiento === '4' &&
+              !anexos.tieneObservacionesInterventoria &&
+              anexos.historialInformeFinalObservacionesInterventoria.length > 0)
+          "
+        >
+          Si
+        </span>
+        <span
+          *ngIf="
+            (!anexos.tieneObservacionesInterventoria && anexos.estadoCumplimiento !== '4') ||
+            (anexos.estadoCumplimiento === '4' &&
+              !anexos.tieneObservacionesInterventoria &&
+              anexos.historialInformeFinalObservacionesInterventoria.length < 0)
+          "
+        >
+          No
+        </span>
       </p>
-      <p *ngIf="anexos.tieneObservacionesInterventoria" [innerHTML]="anexos.historialInformeFinalObservacionesInterventoria.observaciones">
-      <p *ngIf="anexos.tieneObservacionesInterventoria || (anexos.estadoCumplimiento === '4' && !anexos.tieneObservacionesInterventoria && anexos.historialInformeFinalObservacionesInterventoria.length > 0)" [innerHTML]="anexos.historialInformeFinalObservacionesInterventoria[0].observaciones">
-      </p>
+      <p
+        class="text-justify"
+        *ngIf="anexos.tieneObservacionesInterventoria"
+        [innerHTML]="anexos.historialInformeFinalObservacionesInterventoria.observaciones"
+      ></p>
+      <p
+        class="text-justify"
+        *ngIf="
+          anexos.tieneObservacionesInterventoria ||
+          (anexos.estadoCumplimiento === '4' &&
+            !anexos.tieneObservacionesInterventoria &&
+            anexos.historialInformeFinalObservacionesInterventoria.length > 0)
+        "
+        [innerHTML]="anexos.historialInformeFinalObservacionesInterventoria[0].observaciones"
+      ></p>
     </mat-card-content>
   </mat-card>
 </div>

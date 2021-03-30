@@ -3,7 +3,15 @@
     <div class="col-md-12">
       <div class="row justify-content-center align-items-center" style="width: 100%">
         <div class="pr-1">
-          <label class="label-left" for="tieneObservacionesCumplimiento">
+          <label
+            class="label-left"
+            for="tieneObservacionesCumplimiento"
+            [class.color-secondaryColor]="
+              (observaciones.get('tieneObservacionesCumplimiento').invalid &&
+                observaciones.get('tieneObservacionesCumplimiento').touched) ||
+              (observaciones.get('tieneObservacionesCumplimiento').invalid && estaEditando)
+            "
+          >
             ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción?
           </label>
         </div>
@@ -93,7 +101,8 @@
       [disabled]="
         observaciones.get('tieneObservacionesCumplimiento').value === null ||
         observaciones.get('tieneObservacionesCumplimiento').value === undefined ||
-        (observaciones.get('tieneObservacionesCumplimiento').value === true && observaciones.get('observaciones').invalid)
+        (observaciones.get('tieneObservacionesCumplimiento').value === true &&
+          observaciones.get('observaciones').invalid)
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Regresar" />

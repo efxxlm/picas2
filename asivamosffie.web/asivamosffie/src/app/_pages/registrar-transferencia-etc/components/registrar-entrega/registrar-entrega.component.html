@@ -6,16 +6,31 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1" *ngIf="proyectoEntregaEtc">
-      <span *ngIf="proyectoEntregaEtc.informeFinal.estadoEntregaEtc === '0' || proyectoEntregaEtc.informeFinal.estadoEntregaEtc === null ">Registrar entrega</span>
-      <span *ngIf="proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== '0' && proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== null">Ver detalle/Editar registro de entrega</span>
-      {{ llaveMen }}</h1>
-    <h1 class="title-menu--h1"  *ngIf="!proyectoEntregaEtc"> Registrar entrega {{ llaveMen }}</h1>
+      <span
+        *ngIf="
+          proyectoEntregaEtc.informeFinal.estadoEntregaEtc === '0' ||
+          proyectoEntregaEtc.informeFinal.estadoEntregaEtc === null
+        "
+      >
+        Registrar entrega
+      </span>
+      <span
+        *ngIf="
+          proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== '0' &&
+          proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== null
+        "
+      >
+        Ver detalle/Editar registro de entrega
+      </span>
+      {{ llaveMen }}
+    </h1>
+    <h1 class="title-menu--h1" *ngIf="!proyectoEntregaEtc">Registrar entrega {{ llaveMen }}</h1>
     <p class="colorMainColor mt-05em">
       Número de contrato Obra:
       <b> {{ numeroContratoObra }} </b>
     </p>
     <p class="colorMainColor mt-05em">
-      Número de contrato Interventoria: 
+      Número de contrato Interventoria:
       <b> {{ numeroContratoInterventoria }} </b>
     </p>
   </div>
@@ -30,22 +45,15 @@
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title
-            class="expansion-style--title"
-            [ngClass]="semaforoRecorrido"
-          >
+          <mat-panel-title class="expansion-style--title" [ngClass]="semaforoRecorrido">
             Recorrido de la obra
           </mat-panel-title>
         </mat-expansion-panel-header>
         <app-form-recorrido-obra [id]="id" (callOnInitParent)="ngOnInit()"></app-form-recorrido-obra>
-
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title
-            class="expansion-style--title"
-            [ngClass]="semaforoRemision"
-          >
+          <mat-panel-title class="expansion-style--title" [ngClass]="semaforoRemision">
             Remisión a ETC de documentos técnicos a la ETC
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -53,15 +61,15 @@
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title
-            class="expansion-style--title"
-            [ngClass]="semaforoActaBienesServicios"
-          >
+          <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActaBienesServicios">
             Acta de entrega de bienes y servicios
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-form-acta-entrega-bienes-y-servicios [id]="id" (callOnInitParent)="ngOnInit()"></app-form-acta-entrega-bienes-y-servicios>
+        <app-form-acta-entrega-bienes-y-servicios
+          [id]="id"
+          (callOnInitParent)="ngOnInit()"
+        ></app-form-acta-entrega-bienes-y-servicios>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

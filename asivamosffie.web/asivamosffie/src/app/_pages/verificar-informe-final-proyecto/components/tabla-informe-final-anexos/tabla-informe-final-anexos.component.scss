@@ -3,15 +3,18 @@
 }
 
 .slect-table-contain {
-  width: 9em;
+  width: 16em;
+  margin: auto;
+
+  .select-width {
+    width: 9em;
+  }
+
+  .icon-incompleto {
+    float: right;
+  }
 }
 
-.ruta-url {
-  max-width: 20em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  color: #174193;
-  text-decoration: underline;
+table {
+  margin-bottom: 0.2em;
 }

@@ -89,8 +89,9 @@
                           ((element.estadoInformeFinal === '4' || element.estadoInformeFinal === '8') &&
                             element.tieneModificacionInterventor)
                         "
-                        >{{ element.calificacionCodigoString }}</span
                       >
+                        {{ element.calificacionCodigoString }}
+                      </span>
                     </mat-label>
                     <mat-select
                       [(ngModel)]="element.calificacionCodigo"
@@ -100,8 +101,6 @@
                       "
                       required
                     >
-                      mat-select ng-tns-c129-9 ng-tns-c82-8 mat-select-required mat-select-empty ng-pristine ng-invalid
-                      ng-star-inserted mat-select-invalid ng-touched
                       <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                         {{ estado.name }}
                       </mat-option>

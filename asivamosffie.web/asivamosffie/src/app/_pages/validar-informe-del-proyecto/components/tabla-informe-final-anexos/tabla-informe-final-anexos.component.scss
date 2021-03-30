@@ -1,7 +1,28 @@
-td .select-width {
-  width: 7em;
+// td .select-width {
+//   width: 7em;
+// }
+
+.btn-table.min-w-11em {
+  min-width: 11em;
 }
 
 .btn-table.min-w-11em {
   min-width: 11em;
+}
+
+.slect-table-contain {
+  width: 12.5em;
+  margin: auto;
+
+  .select-width {
+    width: 7em;
+  }
+
+  .icon-incompleto {
+    float: right;
+  }
+}
+
+table {
+  margin-bottom: 0.2em;
 }

@@ -4,7 +4,14 @@
       <div class="col-md-12">
         <div class="row justify-content-center align-items-center" style="width: 100%">
           <div class="pr-1">
-            <label class="label-left" for="tieneObservaciones">
+            <label
+              class="label-left"
+              for="tieneObservaciones"
+              [class.color-secondaryColor]="
+                (observaciones.get('tieneObservaciones').invalid && observaciones.get('tieneObservaciones').touched) ||
+                (observaciones.get('tieneObservaciones').invalid && estaEditando)
+              "
+            >
               ¿Tiene observaciones frente a el balance que deban ser tenidas en cuenta en la liquidación?
             </label>
           </div>
@@ -81,7 +88,7 @@
         />
       </span>
     </div>
-  
+
     <div class="text-center mb-2em">
       <button
         mat-button

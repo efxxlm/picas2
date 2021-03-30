@@ -8,7 +8,7 @@
             Fecha de revisión
           </th>
           <td mat-cell *matCellDef="let element">
-            <b>{{ element.fechaCreacion | date:'dd/MM/yyyy' }}</b>
+            <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b>
           </td>
         </ng-container>
 
@@ -28,7 +28,7 @@
             Historial de observaciones
           </th>
           <td mat-cell *matCellDef="let element">
-            <p [innerHTML]="element.observaciones">
+            <p class="text-justify" [innerHTML]="element.observaciones"></p>
           </td>
         </ng-container>
 

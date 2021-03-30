@@ -159,8 +159,7 @@ a[target='_blank'] {
     display: flex;
     align-items: center;
     border: solid 1px;
-    border-color: #174193;
-    border-color: var(--mainColor);
+    border-color: $mainColor;
     border-radius: 1.5em;
     margin-left: 2.2em;
     background-color: #fff;
@@ -182,11 +181,24 @@ a[target='_blank'] {
   &--span {
     text-align: center;
     font-weight: 500;
-    color: #174193;
-    color: var(--mainColor);
+    color: $mainColor;
     font-size: 1.5em;
     margin-left: -1.45em;
     padding: 0 0.5em;
     width: 100%;
+  }
+}
+
+.ruta-url[target='_blank'] {
+  max-width: 20em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  color: $mainColor;
+  text-decoration: underline;
+
+  .tabla-gris &  {
+    color: $fontColor;
   }
 }

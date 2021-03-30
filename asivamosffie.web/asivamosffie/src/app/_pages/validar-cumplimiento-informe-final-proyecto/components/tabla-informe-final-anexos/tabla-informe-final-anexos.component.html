@@ -66,7 +66,14 @@
                     </span>
                     <!--Digital-->
                     <span *ngIf="element.informeFinalAnexo.tipoAnexo === '2'">
-                      {{ element.informeFinalAnexo.urlSoporte }}
+                      <a
+                        [href]="element.informeFinalAnexo.urlSoporte"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="ruta-url"
+                      >
+                        {{ element.informeFinalAnexo.urlSoporte }}
+                      </a>
                     </span>
                   </div>
                 </td>

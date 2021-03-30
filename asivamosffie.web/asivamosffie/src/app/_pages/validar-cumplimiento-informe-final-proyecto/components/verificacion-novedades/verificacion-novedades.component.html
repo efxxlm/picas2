@@ -7,17 +7,18 @@
   <mat-card-content>
     <p>
       <strong>
-        <span>{{ anexos.fechaCreacion | date:'dd/MM/yyyy' }} </span>
+        <span>{{ anexos.fechaCreacion | date: 'dd/MM/yyyy' }} </span>
       </strong>
     </p>
     <p>
-      <strong>
-        ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción:
-      </strong>
-      <span *ngIf="anexos.observaciones != null && anexos.observaciones != ''"> Si</span>
-      <span *ngIf="anexos.observaciones == null || anexos.observaciones == ''"> No</span>
+      <strong> ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción: </strong>
+      <span *ngIf="anexos.observaciones != null && anexos.observaciones != ''"> Si </span>
+      <span *ngIf="anexos.observaciones == null || anexos.observaciones == ''"> No </span>
     </p>
-    <p *ngIf="anexos.observaciones != null && anexos.observaciones != ''" [innerHTML]="anexos.observaciones">
-    </p>
+    <p
+      class="text-justify"
+      *ngIf="anexos.observaciones != null && anexos.observaciones != ''"
+      [innerHTML]="anexos.observaciones"
+    ></p>
   </mat-card-content>
 </mat-card>

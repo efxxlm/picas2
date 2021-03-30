@@ -75,6 +75,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         this.semaforo = listChequeo[0].semaforo;
       }
       this.dataSource.data = listChequeo as ListaChequeo[];
+      console.log(listChequeo);
+      
       this.listChequeo = listChequeo;
     });
   }
