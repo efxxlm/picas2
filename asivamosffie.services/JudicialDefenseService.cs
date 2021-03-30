@@ -558,7 +558,7 @@ namespace asivamosffie.services
                     {
 
                         SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                                                                                .Where(r => r.SolicitudId == defensaJudicial.DefensaJudicialId)
+                                                                                .Where(r => r.SolicitudId == defensaJudicial.DefensaJudicialId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial)
                                                                                 .FirstOrDefault();
 
                         TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
