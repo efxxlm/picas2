@@ -35,7 +35,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoDescuentosDireccionTecnica">
+                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : ''">
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -57,7 +57,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoOrigen">
+                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoOrigen !== undefined ? listaSemaforos.semaforoOrigen : ''">
                     Origen
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -65,7 +65,7 @@
                 <b>Consecutivo FFIE: 001</b>    
             </div>
 
-            <app-form-origen [solicitudPago]="solicitudPago"></app-form-origen>
+            <app-form-origen [solicitudPago]="solicitudPago" (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"></app-form-origen>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

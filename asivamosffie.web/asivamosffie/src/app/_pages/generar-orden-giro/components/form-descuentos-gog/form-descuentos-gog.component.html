@@ -173,7 +173,7 @@
                                                                         <div class="col">
                                                                             <mat-form-field class="select-width">
                                                                                 <mat-select formControlName="fuenteRecursos" required>
-                                                                                    <mat-option *ngFor="let fuente of aportante.get( 'fuenteDeRecursos' ).value" [value]="fuente.fuenteRecursosCodigo">
+                                                                                    <mat-option *ngFor="let fuente of aportante.get( 'fuenteDeRecursos' ).value" [value]="fuente.codigo">
                                                                                         {{ fuente.nombre }}
                                                                                     </mat-option>
                                                                                 </mat-select>

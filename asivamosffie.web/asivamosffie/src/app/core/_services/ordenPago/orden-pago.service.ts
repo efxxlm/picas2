@@ -34,6 +34,13 @@ export class OrdenPagoService {
         return this.http.get<any[]>( `${ this.urlApi }/GetFuentesDeRecursosPorAportanteId?pAportanteId=${ pAportanteId }` );
     }
 
+    asyncGetFuentesDeRecursosPorAportanteId( pAportanteId: number ) {
+        return new Promise<any[]>( resolve => {
+            this.http.get<any[]>( `${ this.urlApi }/GetFuentesDeRecursosPorAportanteId?pAportanteId=${ pAportanteId }` )
+                .subscribe( fuenteRecursos => resolve( fuenteRecursos ) );
+        } )
+    }
+
     getAportantes( solicitudPago: any, cb: { ( dataAportantes: { listaTipoAportante: Dominio[], listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] } ): void } ) {
         if ( solicitudPago !== undefined ) {
             // constantes y variables

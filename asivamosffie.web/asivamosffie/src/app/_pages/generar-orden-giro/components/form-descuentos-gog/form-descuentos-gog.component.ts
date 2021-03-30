@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
@@ -23,6 +24,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     estaEditando = false;
     recibeListaCriterios = false;
     cantidadAportantes: number;
+    ordenGiroDetalle: any;
+    ordenGiroId = 0;
+    ordenGiroDetalleId = 0;
     criteriosArray: Dominio[] = [];
     tiposDescuentoArray: Dominio[] = [];
     listaConceptoPago: Dominio[] = [];
@@ -54,6 +58,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private ordenGiroSvc: OrdenPagoService,
+        private routes: Router,
         private fb: FormBuilder )
     {
         this.commonSvc.listaFuenteTipoFinanciacion()
@@ -63,25 +68,198 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges( changes: SimpleChanges ): void {
-        if ( changes.listaCriterios.currentValue.length > 0 ) {
-            this.criteriosArray = this.listaCriterios;
+        if ( changes.listaCriterios.currentValue.length > 0 || changes.listaCriterios.currentValue !== undefined ) {
+            this.criteriosArray = [ ...changes.listaCriterios.currentValue ];
+
+            if ( this.solicitudPago !== undefined ) {
+                const solicitudPagoFaseCriterio = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio;
+
+                this.criteriosArray.forEach( ( criterio, indexCriterio ) => {
+                    const criterioFind = solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterio.codigo );
+
+                    if ( criterioFind === undefined ) {
+                        this.criteriosArray.splice( indexCriterio, 1 );
+                    }
+                } );
+            }
         }
     }
 
     ngOnInit(): void {
-        this.getDescuentos();
+        if ( this.criteriosArray.length > 0 ) {
+            this.getDescuentos();
+        }
     }
 
-    getDescuentos() {
-        this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
-            this.descuentos.controls.push( this.fb.group(
-                {
-                    tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
-                    criterio: [ null, Validators.required ],
-                    criterios: this.fb.array( [] )
+    async getDescuentos() {
+        // Get IDs
+        if ( this.solicitudPago.ordenGiro !== undefined ) {
+            this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+
+            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
+                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+                    this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
                 }
-            ) );
-        } );
+            }
+        }
+        // Set data Formulario
+        if ( this.ordenGiroDetalle !== undefined ) {
+            const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
+
+            if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
+                    const formArrayCriterios = [];
+                    const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId );
+
+                    if ( detalleDescuentoTecnica.length > 0 ) {
+                        // Get forArray de los criterios
+                        const listaCriterios = [];
+                        detalleDescuentoTecnica.forEach( descuentoValue => listaCriterios.push( descuentoValue.criterioCodigo ) );
+
+                        if ( listaCriterios.length > 0 ) {
+                            for ( const codigo of listaCriterios ) {
+                                const criterio = this.solicitudPagoFaseCriterio.find( criterio => criterio.tipoCriterioCodigo === codigo );
+
+                                if ( criterio !== undefined ) {
+                                    const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( codigo );
+                                    const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
+                                    const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+                                    // Get data del formulario de los conceptos seleccionados
+                                    const listaConceptos = [];
+                                    const formArrayConceptos = [];
+                                    const ordenGiroDetalleDescuentoTecnicaAportante = [];
+
+                                    detalleDescuentoTecnica.forEach( descuentoValue => {
+                                        descuentoValue.ordenGiroDetalleDescuentoTecnicaAportante.forEach( value => {
+                                            ordenGiroDetalleDescuentoTecnicaAportante.push( value );
+                                            if ( listaConceptos.length > 0 ) {
+                                                const tieneConceptoCodigo = listaConceptos.includes( value.conceptoPagoCodigo );
+
+                                                if ( tieneConceptoCodigo === false ) {
+                                                    listaConceptos.push( value.conceptoPagoCodigo );    
+                                                }
+                                            } else {
+                                                listaConceptos.push( value.conceptoPagoCodigo )
+                                            }
+                                        } );
+                                    } )
+                                    for ( const codigo of listaConceptos ) {
+                                        const concepto = conceptosDePago.find( concepto => concepto.codigo === codigo );
+                            
+                                        if ( concepto !== undefined ) {
+                                            this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+                                                const formArrayAportantes = [];
+                                                // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
+                                                this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
+
+                                                if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
+                                                    for ( const aportante of ordenGiroDetalleDescuentoTecnicaAportante ) {
+                                                        const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+                                                        const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                                        let listaFuenteRecursos: any[];
+                                                        this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
+                                                            .subscribe( fuenteRecursos => {
+                                                                listaFuenteRecursos = fuenteRecursos;
+
+                                                                formArrayAportantes.push(
+                                                                    this.fb.group(
+                                                                        {
+                                                                            ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId ],
+                                                                            tipoAportante: [ tipoAportante, Validators.required ],
+                                                                            listaNombreAportantes: [ [ nombreAportante ] ],
+                                                                            nombreAportante: [ nombreAportante, Validators.required ],
+                                                                            fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                                            fuenteRecursos: [ aportante.fuenteRecursosCodigo, Validators.required ],
+                                                                            valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                                        }
+                                                                    )
+                                                                )
+                                                            } );
+                                                    }
+                                                }
+
+                                                setTimeout(() => {
+                                                    formArrayConceptos.push( this.fb.group(
+                                                        {
+                                                            nombre: [ concepto.nombre ],
+                                                            conceptoCodigo: [ concepto.codigo ],
+                                                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                                            aportantes: this.fb.array( formArrayAportantes )
+                                                        }
+                                                    ) );
+                                                }, 800);
+                                            } );
+                                        }
+                                    }
+
+                                    setTimeout(() => {
+                                        // Set formulario de los criterios
+                                        formArrayCriterios.push(
+                                            this.fb.group(
+                                                {
+                                                    nombre: [ this.criteriosArray.find( criterio => criterio.codigo === codigo ).nombre ],
+                                                    criterioCodigo: [ this.criteriosArray.find( criterio => criterio.codigo === codigo ).codigo ],
+                                                    tipoPagoNombre: [ tipoPago.nombre ],
+                                                    tipoPagoCodigo: [ tipoPago.codigo ],
+                                                    conceptosDePago: [ conceptosDePago ],
+                                                    concepto: [ listaConceptos, Validators.required ],
+                                                    conceptos: this.fb.array( formArrayConceptos )
+                                                }
+                                            )
+                                        )
+                                    }, 1200);
+                                }
+                            }
+                        }
+
+                        setTimeout(() => {
+                            // Set formulario de los descuentos
+                            detalleDescuentoTecnica.forEach( descuentoValue => {
+                                this.descuentos.controls.push( this.fb.group(
+                                    {
+                                        ordenGiroDetalleDescuentoTecnicaId: [ descuentoValue.ordenGiroDetalleDescuentoTecnicaId ],
+                                        solicitudPagoFaseFacturaDescuentoId: [ descuentoValue.solicitudPagoFaseFacturaDescuentoId ],
+                                        tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                                        criterio: [ listaCriterios, Validators.required ],
+                                        criterios: this.fb.array( formArrayCriterios )
+                                    }
+                                ) );
+                            } )
+                        }, 1500);
+                    }
+                }
+            } else {
+                this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
+
+                    this.descuentos.controls.push( this.fb.group(
+                        {
+                            ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
+                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                            criterio: [ null, Validators.required ],
+                            criterios: this.fb.array( [] )
+                        }
+                    ) );
+    
+                } );
+            }
+        } else {
+            this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
+
+                this.descuentos.controls.push( this.fb.group(
+                    {
+                        ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
+                        solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                        tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                        criterio: [ null, Validators.required ],
+                        criterios: this.fb.array( [] )
+                    }
+                ) );
+
+            } );
+        }
     }
 
     firstLetterUpperCase( texto:string ) {
@@ -154,16 +332,18 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
         for ( const codigo of listaCriterios ) {
             const criterio = this.solicitudPagoFaseCriterio.find( criterio => criterio.tipoCriterioCodigo === codigo );
-            const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( codigo );
-            const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
-            const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
 
             if ( criterio !== undefined ) {
+                const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( codigo );
+                const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
+                const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+
                 this.getCriterios( index ).push( this.fb.group(
                     {
                         nombre: [ this.criteriosArray.find( criterio => criterio.codigo === codigo ).nombre ],
                         criterioCodigo: [ this.criteriosArray.find( criterio => criterio.codigo === codigo ).codigo ],
                         tipoPagoNombre: [ tipoPago.nombre ],
+                        tipoPagoCodigo: [ tipoPago.codigo ],
                         conceptosDePago: [ conceptosDePago ],
                         concepto: [ null, Validators.required ],
                         conceptos: this.fb.array( [] )
@@ -215,6 +395,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             aportantes: this.fb.array( [
                                 this.fb.group(
                                     {
+                                        ordenGiroDetalleDescuentoTecnicaAportanteId: [ 0 ],
                                         tipoAportante: [ null, Validators.required ],
                                         listaNombreAportantes: [ null ],
                                         nombreAportante: [ null, Validators.required ],
@@ -304,6 +485,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             this.getAportantes( index, jIndex, kIndex ).push(
                 this.fb.group(
                     {
+                        ordenGiroDetalleDescuentoTecnicaAportanteId: [ 0 ],
                         tipoAportante: [ null, Validators.required ],
                         listaNombreAportantes: [ null ],
                         nombreAportante: [ null, Validators.required ],
@@ -320,17 +502,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
     getListaFuenteRecursos( nombreAportante: any, index: number, jIndex: number, kIndex: number, lIndex: number ) {
         this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-            .subscribe( fuenteRecursos => {
-                fuenteRecursos.forEach( fuente => {
-                    const getFuente = this.listaFuenteTipoFinanciacion.find( tipoFuente => tipoFuente.codigo === fuente.fuenteRecursosCodigo )
-
-                    if ( getFuente !== undefined ) {
-                        fuente.nombre = getFuente.nombre;
-                    }
-                } );
-
-                this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'fuenteDeRecursos' ).setValue( fuenteRecursos );
-            } );
+            .subscribe( fuenteRecursos => this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'fuenteDeRecursos' ).setValue( fuenteRecursos ) );
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -351,9 +523,81 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     }
 
     onSubmit() {
-      this.estaEditando = true;
-      this.addressForm.markAllAsTouched();
-      console.log( this.addressForm )
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+
+        const getOrdenGiroDetalleDescuentoTecnica = ( ) => {
+            const listaDescuentosTecnica = [];
+
+            this.descuentos.controls.forEach( ( descuentoControl, indexDescuento ) => {
+                let ordenGiroDetalleDescuentoTecnica: any;
+    
+                this.getCriterios( indexDescuento ).controls.forEach( ( criterioControl, indexCriterio ) => {
+                    ordenGiroDetalleDescuentoTecnica = {
+                        ordenGiroDetalleId: this.ordenGiroDetalleId,
+                        ordenGiroDetalleDescuentoTecnicaId: descuentoControl.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
+                        solicitudPagoFaseFacturaDescuentoId: descuentoControl.get( 'solicitudPagoFaseFacturaDescuentoId' ).value,
+                        tipoPagoCodigo: criterioControl.get( 'tipoPagoCodigo' ).value,
+                        criterioCodigo: criterioControl.get( 'criterioCodigo' ).value,
+                        ordenGiroDetalleDescuentoTecnicaAportante: []
+                    };
+    
+                    this.getConceptos( indexDescuento, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+    
+                        this.getAportantes( indexDescuento, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
+    
+                            ordenGiroDetalleDescuentoTecnica.ordenGiroDetalleDescuentoTecnicaAportante.push(
+                                {
+                                    ordenGiroDetalleDescuentoTecnicaAportanteId: aportanteControl.get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value,
+                                    ordenGiroDetalleDescuentoTecnicaId: descuentoControl.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
+                                    solicitudPagoFaseFacturaDescuentoId: descuentoControl.get( 'solicitudPagoFaseFacturaDescuentoId' ).value,
+                                    aportanteId: aportanteControl.get( 'nombreAportante' ).value.cofinanciacionAportanteId,
+                                    valorDescuento: aportanteControl.get( 'valorDescuento' ).value,
+                                    conceptoPagoCodigo: conceptoControl.get( 'conceptoCodigo' ).value,
+                                    fuenteRecursosCodigo: aportanteControl.get( 'fuenteRecursos' ).value
+                                }
+                            )
+    
+                        } );
+                    } );
+                } )
+
+                if ( ordenGiroDetalleDescuentoTecnica !== undefined ) {
+                    listaDescuentosTecnica.push( ordenGiroDetalleDescuentoTecnica );
+                }
+            } )
+
+            return listaDescuentosTecnica.length > 0 ? listaDescuentosTecnica : null;
+        }
+
+        const pOrdenGiro = {
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            ordenGiroId: this.ordenGiroId,
+            ordenGiroDetalle: [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    ordenGiroDetalleId: this.ordenGiroDetalleId,
+                    ordenGiroDetalleDescuentoTecnica: getOrdenGiroDetalleDescuentoTecnica()
+                }
+            ]
+        }
+
+        console.log( getOrdenGiroDetalleDescuentoTecnica() );
+
+        this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/generarOrdenDeGiro/generacionOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -9,6 +9,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     ordenGiro: any;
+    tieneDescuentosDireccionTecnica = true;
     listaSemaforos = {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDescuentosDireccionTecnica: 'sin-diligenciar',
@@ -21,6 +22,13 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+        // Verificar si se diligenciaron descuentos desde la direccion tecnica en CU 4.1.7
+        const solicitudPagoFaseFactura = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0];
+        if ( solicitudPagoFaseFactura.tieneDescuento === false && solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length === 0 ) {
+            this.tieneDescuentosDireccionTecnica = false;
+            // Delete propiedad del semaforo "semaforoDescuentosDireccionTecnica" por que no tiene descuentos de direccion tecnica
+            delete this.listaSemaforos.semaforoDescuentosDireccionTecnica;
+        }
         // Get semaforo acordeones
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiro = this.solicitudPago.ordenGiro;
@@ -70,6 +78,12 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                     }
                 }
             }
+        }
+    }
+
+    checkSemaforoOrigen( value: boolean ) {
+        if ( value === false ) {
+            delete this.listaSemaforos.semaforoOrigen;
         }
     }
 

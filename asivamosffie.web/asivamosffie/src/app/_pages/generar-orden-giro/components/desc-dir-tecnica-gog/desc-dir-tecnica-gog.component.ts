@@ -62,15 +62,8 @@ export class DescDirTecnicaGogComponent implements OnInit {
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
         */
-        if ( this.solicitudPagoFase.esPreconstruccion === false ) {
-            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo )
-                .subscribe( getCriterioByFormaPagoCodigo => this.listaCriterios = getCriterioByFormaPagoCodigo );
-        }
-
-        if ( this.solicitudPagoFase.esPreconstruccion === false ) {
-            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo )
-                .subscribe( getCriterioByFormaPagoCodigo => this.listaCriterios = getCriterioByFormaPagoCodigo );
-        }
+        this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo )
+            .subscribe( getCriterioByFormaPagoCodigo => this.listaCriterios = getCriterioByFormaPagoCodigo );
         // Get data de la tabla descuentos
         this.solicitudPagoFaseCriterio.forEach( criterio => this.listData.valorNetoGiro += criterio.valorFacturado );
         this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => {

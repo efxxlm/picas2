@@ -48,7 +48,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
                                 if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                     this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
-                                    this.ordenGiroTerceroId = this.ordenGiroTercero.ordenGiroTerceroId
+                                    this.ordenGiroTerceroId = this.ordenGiroTercero.ordenGiroTerceroId;
 
                                     const medioPago = this.medioPagoArray.find( medio => medio.codigo === this.ordenGiroTercero.medioPagoGiroCodigo );
 
@@ -77,7 +77,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
                                     if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
                                         if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
                                             const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
-
+                                            
                                             this.addressForm.get( 'chequeGerencia' ).setValue(
                                                 {
                                                     ordenGiroTerceroId: this.ordenGiroTerceroId,
@@ -141,11 +141,28 @@ export class FormTerceroGiroGogComponent implements OnInit {
         this.addressForm.markAllAsTouched();
         const ordenGiroTerceroDiligenciado = () => {
             if (this.listaMediosPagoCodigo.transferenciaElectronica === this.addressForm.get( 'medioPagoGiroContrato' ).value ) {
-                return [ this.addressForm.get( 'transferenciaElectronica' ).value ];
+                return [
+                    {
+                        ordenGiroTerceroId: this.ordenGiroTerceroId,
+                        ordenGiroTerceroTransferenciaElectronicaId: this.addressForm.get( 'transferenciaElectronica' ).get( 'ordenGiroTerceroTransferenciaElectronicaId' ).value,
+                        titularCuenta: this.addressForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value,
+                        titularNumeroIdentificacion: this.addressForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value,
+                        numeroCuenta: this.addressForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value,
+                        bancoCodigo: this.addressForm.get( 'transferenciaElectronica' ).get( 'bancoCodigo' ).value,
+                        esCuentaAhorros: this.addressForm.get( 'transferenciaElectronica' ).get( 'esCuentaAhorros' ).value
+                    }
+                ];
             }
 
             if ( this.listaMediosPagoCodigo.chequeGerencia === this.addressForm.get( 'medioPagoGiroContrato' ).value ) {
-                return [ this.addressForm.get( 'chequeGerencia' ).value ];
+                return [
+                    {
+                        ordenGiroTerceroId: this.ordenGiroTerceroId,
+                        ordenGiroTerceroChequeGerenciaId: this.addressForm.get( 'chequeGerencia' ).get( 'ordenGiroTerceroChequeGerenciaId' ).value,
+                        nombreBeneficiario: this.addressForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value,
+                        numeroIdentificacionBeneficiario: this.addressForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value
+                    }
+                ];
             }
         }
 
