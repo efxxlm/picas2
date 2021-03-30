@@ -141,11 +141,12 @@
             </mat-expansion-panel-header>
             <app-form-demandantes-convocantes-dj #demandantes
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
-                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial">
+                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial"
+                (tieneDemanda)="this.numAcordTieneDemanda=$event">
             </app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
+    <mat-accordion *ngIf="this.numAcordTieneDemanda=='1'">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
@@ -158,7 +159,7 @@
                 [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-demandados-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
+    <mat-accordion *ngIf="this.numAcordTieneDemanda=='2'">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "

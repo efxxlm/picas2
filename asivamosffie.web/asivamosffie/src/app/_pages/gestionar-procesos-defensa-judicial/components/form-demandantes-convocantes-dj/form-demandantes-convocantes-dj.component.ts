@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-demandantes-convocantes-dj.component.scss']
 })
 export class FormDemandantesConvocantesDjComponent implements OnInit {
+  @Output() tieneDemanda = new EventEmitter();
   addressForm = this.fb.group({
     demandaContraFFIE: [null, Validators.required]
   });
@@ -35,7 +36,6 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   demandado_class: number = 0;
   convocado_class: number = 0;
   estaEditando = false;
-
 
   constructor(private fb: FormBuilder, public commonService: CommonService,
     public defensaService: DefensaJudicialService,
@@ -70,9 +70,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     if (this.defensaJudicial.esDemandaFfie == false) {
       this.textoConvocantes = "convocante";
       this.textoConvocantesCapital = "Convocante";
+      this.tieneDemanda.emit('2');
     }
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
-    this.defensaService.tieneDemanda.next(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i = 0;
     this.demandado_class = this.estaIncompletoDemandado(this.defensaJudicial);
@@ -292,9 +292,14 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   }
 
   cambioTipoTexto() {
-    this.defensaService.tieneDemanda.next(this.addressForm.value.demandaContraFFIE ? false : true);
     this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
     this.textoConvocantesCapital = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
+    if(this.addressForm.value.demandaContraFFIE==true){
+      this.tieneDemanda.emit('2');
+    }
+    if(this.addressForm.value.demandaContraFFIE==false){
+      this.tieneDemanda.emit('1');
+    }
   }
 
   estaIncompletoDemandado(defensaJudicial: DefensaJudicial): number {

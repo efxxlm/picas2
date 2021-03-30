@@ -32,7 +32,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   estaEditando = false;
   //tieneDemanda:boolean;
   tieneDemanda: Subscription;
-  numAcordTieneDemanda: any;
+  numAcordTieneDemanda:any;
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -41,9 +41,6 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     async editMode(){
       this.estaEditando = true;
       this.addressForm.markAllAsTouched();
-      this.tieneDemanda = this.judicialServices.tieneDemanda.subscribe((loadDataItems: any) => {
-        this.tieneDemanda = loadDataItems;
-      });
       this.cargarRegistro().then(() => 
       { 
   
