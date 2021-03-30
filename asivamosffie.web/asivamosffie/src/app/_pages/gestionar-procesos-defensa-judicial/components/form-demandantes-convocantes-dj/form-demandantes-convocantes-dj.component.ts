@@ -12,7 +12,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-demandantes-convocantes-dj.component.scss']
 })
 export class FormDemandantesConvocantesDjComponent implements OnInit {
-  @Output() tieneDemanda = new EventEmitter<boolean>();
   addressForm = this.fb.group({
     demandaContraFFIE: [null, Validators.required]
   });
@@ -53,26 +52,27 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   cargarRegistro() {
 
 
-/*      let defContraProyecto:DemandanteConvocante[]=[];
-    for(let perfil of this.perfiles.controls){
-      defContraProyecto.push({
-        nombre:perfil.get("nomConvocado").value,
-        tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
-        numeroIdentificacion:perfil.get("numIdentificacion").value,
-        direccion:perfil.get("direccion").value,
-        email:perfil.get("correo").value,
-        esConvocante:false
-      });
-    };
-*/    this.estaEditando = true;
+    /*      let defContraProyecto:DemandanteConvocante[]=[];
+        for(let perfil of this.perfiles.controls){
+          defContraProyecto.push({
+            nombre:perfil.get("nomConvocado").value,
+            tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
+            numeroIdentificacion:perfil.get("numIdentificacion").value,
+            direccion:perfil.get("direccion").value,
+            email:perfil.get("correo").value,
+            esConvocante:false
+          });
+        };
+    */
+    this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     this.formContratista.markAllAsTouched();
-    if(this.defensaJudicial.esDemandaFfie==false){
+    if (this.defensaJudicial.esDemandaFfie == false) {
       this.textoConvocantes = "convocante";
       this.textoConvocantesCapital = "Convocante";
     }
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
-    this.tieneDemanda.emit(this.defensaJudicial.esDemandaFfie);
+    this.defensaService.tieneDemanda.next(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i = 0;
     this.demandado_class = this.estaIncompletoDemandado(this.defensaJudicial);
@@ -233,7 +233,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
         tipoProcesoCodigo: this.tipoProceso,
         esLegitimacionActiva: this.legitimacion,
       };
-    }else{
+    } else {
       this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
       this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
@@ -241,17 +241,17 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     defensaJudicial.numeroDemandantes = this.formContratista.get("numeroContratos").value;
 
     defensaJudicial.demandanteConvocante = defContraProyecto;
-    if(this.tipoProceso==null || this.legitimacion==null){
+    if (this.tipoProceso == null || this.legitimacion == null) {
       this.openDialog('', '<b>Falta registrar información.</b>');
     }
-    else{
+    else {
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial)
-      .subscribe((response: Respuesta) => {
-        this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
-      },
-      err => {
-        this.openDialog('', err.message);
-      });
+        .subscribe((response: Respuesta) => {
+          this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
+        },
+          err => {
+            this.openDialog('', err.message);
+          });
     }
   }
 
@@ -263,26 +263,26 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
         if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
-          this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () =>   this.router.navigate(
-                        [
-                            '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
-                            id
-                        ]
-                    )
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(
+              [
+                '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                id
+              ]
+            )
           );
         }
         else {
-          if(this.defensaJudicial.defensaJudicialId == id){
-            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
-              () =>   this.router.navigate(
-                          [
-                              '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
-                              id
-                          ]
-                      )
+          if (this.defensaJudicial.defensaJudicialId == id) {
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(
+                [
+                  '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                  id
+                ]
+              )
             );
-          }else{
+          } else {
             this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
           }
         }
@@ -292,14 +292,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   }
 
   cambioTipoTexto() {
-    /*
-    if(this.addressForm.value.demandaContraFFIE==false){
-      this.tieneDemanda.emit(false);
-    }
-    else{
-      this.tieneDemanda.emit(true);
-    }
-    */
+    this.defensaService.tieneDemanda.next(this.addressForm.value.demandaContraFFIE ? false : true);
     this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
     this.textoConvocantesCapital = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
   }

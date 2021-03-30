@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
@@ -29,7 +30,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   ficha_class:number=3;
   textCabecera: string;
   estaEditando = false;
-  tieneDemanda:boolean;
+  //tieneDemanda:boolean;
+  tieneDemanda: Subscription;
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -38,7 +40,9 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     async editMode(){
       this.estaEditando = true;
       this.addressForm.markAllAsTouched();
-    
+      this.tieneDemanda = this.judicialServices.tieneDemanda.subscribe((loadDataItems: any) => {
+        this.tieneDemanda = loadDataItems;
+      });
       this.cargarRegistro().then(() => 
       { 
   

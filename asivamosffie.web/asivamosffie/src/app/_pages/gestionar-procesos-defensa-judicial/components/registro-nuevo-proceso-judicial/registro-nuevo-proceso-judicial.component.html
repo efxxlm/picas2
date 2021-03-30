@@ -141,12 +141,11 @@
             </mat-expansion-panel-header>
             <app-form-demandantes-convocantes-dj #demandantes
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
-                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial"
-                (tieneDemanda)="tieneDemanda=$event">
+                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial">
             </app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==false">
+    <mat-accordion *ngIf="this.tieneDemanda==true">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
@@ -159,8 +158,7 @@
                 [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-demandados-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==true"
-        class="animatedDown">
+    <mat-accordion *ngIf="this.tieneDemanda==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
