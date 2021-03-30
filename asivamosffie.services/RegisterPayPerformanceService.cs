@@ -737,14 +737,14 @@ namespace asivamosffie.services
                 .AsNoTracking().ToListAsync();
 
             decimal? performances = 0;
-            if(performancesIncorporated.Count > 0)
+            if (performancesIncorporated.Count > 0)
             {
                 performances = performancesIncorporated.Sum(x => x.Incorporados);
             }
 
             // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
             // Consistente , or save month or orders process ?
-            
+
 
             foreach (var accountOrder in performanceOrders)
             {
@@ -752,9 +752,9 @@ namespace asivamosffie.services
 
                 var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
 
-                var visitas  = accountPayments.Sum(v => v.ValorNetoGiro);
+                var visitas = accountPayments.Sum(v => v.ValorNetoGiro);
                 var account = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountOrder.AccountNumber).FirstOrDefault();
-        
+
 
                 if (account == null)
                 {
@@ -809,7 +809,7 @@ namespace asivamosffie.services
                 };
                 _context.RendimientosIncorporados.Add(performanceEntity);
             }
-            
+
             var tramite = JsonConvert.SerializeObject(performanceOrders);
             try
             {
@@ -943,24 +943,23 @@ namespace asivamosffie.services
                     .Include(solicitud => solicitud.OrdenGiro)
                     .ThenInclude(detalle => detalle.OrdenGiroDetalle)
                     .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion)
-                    .ThenInclude(detalle => detalle.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .ThenInclude(detalle => detalle.OrdenGiroDetalleTerceroCausacionAportante)
                     .AsNoTracking().FirstOrDefaultAsync();
 
-                    var terceroCausacionDescuento = solicitud?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.
-                        OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionDescuento.FirstOrDefault();
-                    var gestionFuenteFinanciacionId = terceroCausacionDescuento.GestionFuenteFinanciacionId;
+                    var OrdenGiroDetalleTerceroCausacionAportante = solicitud?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.
+                        OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante.FirstOrDefault();
+                    var gestionFuenteFinanciacionId =  (int)OrdenGiroDetalleTerceroCausacionAportante.FuenteFinanciacionId;
+                     
+                    //J Martinez Te lo comente Pero igual la relacion ya esta directa con el aportante y la fuente de financiación
+                    //var gestionFuentesFinanciacion = _context.GestionFuenteFinanciacion
+                    //        .Where(x => x.GestionFuenteFinanciacionId == gestionFuenteFinanciacionId).FirstOrDefault();
 
-
-                    var gestionFuentesFinanciacion = _context.GestionFuenteFinanciacion
-                            .Where(x => x.GestionFuenteFinanciacionId == gestionFuenteFinanciacionId).FirstOrDefault();
-
-                    if (gestionFuentesFinanciacion == null)
-                    {
-                        return false;
-                    }
+                    //if (gestionFuentesFinanciacion == null) 
+                    //    return false;
+                   
                     var valorSolicitado = pagoRendimiento["Valor neto girado"];
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
-                    pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuentesFinanciacion.FuenteFinanciacionId;
+                    pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
                     pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
                     pDisponibilidadPresObservacion.UsuarioCreacion = author;
                     var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);

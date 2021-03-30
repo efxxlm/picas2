@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public OrdenGiroDetalleTerceroCausacion()
         {
+            OrdenGiroDetalleTerceroCausacionAportante = new HashSet<OrdenGiroDetalleTerceroCausacionAportante>();
             OrdenGiroDetalleTerceroCausacionDescuento = new HashSet<OrdenGiroDetalleTerceroCausacionDescuento>();
         }
 
@@ -24,6 +25,7 @@ namespace asivamosffie.model.Models
         public bool? TieneDescuento { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
+        public virtual ICollection<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
     }
 }

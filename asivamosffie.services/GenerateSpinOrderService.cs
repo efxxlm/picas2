@@ -58,7 +58,8 @@ namespace asivamosffie.services
                 ListDynamics.Add(new
                 {
                     Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
-                    Codigo = ff.FuenteRecursosCodigo
+                    Codigo = ff.FuenteRecursosCodigo,
+                    FuenteFinanciacionId = ff.FuenteFinanciacionId
                 });
             });
             return ListDynamics;
@@ -373,7 +374,40 @@ namespace asivamosffie.services
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
                             });
                 }
-                CreateEditOrdenGiroDetalleTerceroCausacionDescuento(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento, pUsuarioCreacion);
+
+                if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
+                    CreateEditOrdenGiroDetalleTerceroCausacionDescuento(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento, pUsuarioCreacion);
+
+                if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                    CreateEditOrdenGiroDetalleTerceroCausacionAportante(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante, pUsuarioCreacion);
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacionAportante(ICollection<OrdenGiroDetalleTerceroCausacionAportante> pOrdenGiroDetalleTerceroCausacionAportante, string pUsuarioCreacion)
+        {
+            foreach (var TerceroCausacionAportante in pOrdenGiroDetalleTerceroCausacionAportante)
+            {
+                if (TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId == 0)
+                {
+                    TerceroCausacionAportante.UsuarioCreacion = pUsuarioCreacion;
+                    TerceroCausacionAportante.Eliminado = false;
+                    TerceroCausacionAportante.FechaCreacion = DateTime.Now;
+
+                    _context.OrdenGiroDetalleTerceroCausacionAportante.Add(TerceroCausacionAportante);
+                }
+                else
+                {
+                    _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                            .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
+                            .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
+                            {
+                                FuenteRecursoCodigo  = TerceroCausacionAportante.FuenteRecursoCodigo,
+                                AportanteId = TerceroCausacionAportante.AportanteId,
+                                ConceptoPagoCodigo = TerceroCausacionAportante.ConceptoPagoCodigo,
+                                ValorDescuento = TerceroCausacionAportante.ValorDescuento,
+                                FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId 
+                            }); 
+                }
             }
         }
 
@@ -394,10 +428,8 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId)
                             .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
                             {
-                                GestionFuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.GestionFuenteFinanciacionId,
                                 TipoDescuentoCodigo = OrdenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo,
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
-                                AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
 
                             }); ;
@@ -631,10 +663,9 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
         {
-            if (ordenGiroDetalleTerceroCausacionDescuento.GestionFuenteFinanciacionId == 0
-               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+            if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
-               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
+
                 ) return false;
 
             return true;

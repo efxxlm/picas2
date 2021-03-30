@@ -116,6 +116,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<OrdenGiroDetalleEstrategiaPago> OrdenGiroDetalleEstrategiaPago { get; set; }
         public virtual DbSet<OrdenGiroDetalleObservacion> OrdenGiroDetalleObservacion { get; set; }
         public virtual DbSet<OrdenGiroDetalleTerceroCausacion> OrdenGiroDetalleTerceroCausacion { get; set; }
+        public virtual DbSet<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
         public virtual DbSet<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
         public virtual DbSet<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
         public virtual DbSet<OrdenGiroSoporte> OrdenGiroSoporte { get; set; }
@@ -260,7 +261,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -4023,6 +4023,46 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacion_OrdenGiroDetalle");
             });
 
+            modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionAportante>(entity =>
+            {
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FuenteRecursoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+
+                entity.HasOne(d => d.Aportante)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
+                    .HasForeignKey(d => d.AportanteId)
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionAportante_Aportante");
+
+                entity.HasOne(d => d.FuenteFinanciacion)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
+                    .HasForeignKey(d => d.FuenteFinanciacionId)
+                    .HasConstraintName("FK_FK_OrdenGiroDetalleTerceroCausacionAportanteFuenteFinanciacion");
+
+                entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
+                    .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionId)
+                    .HasConstraintName("FK__OrdenGiro__Orden__2C938683");
+            });
+
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionDescuento>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -4042,11 +4082,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 0)");
-
-                entity.HasOne(d => d.GestionFuenteFinanciacion)
-                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
-                    .HasForeignKey(d => d.GestionFuenteFinanciacionId)
-                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionDescuento_GestionFuenteFinanciacion");
 
                 entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)

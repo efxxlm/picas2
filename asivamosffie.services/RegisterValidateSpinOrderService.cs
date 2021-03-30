@@ -19,10 +19,10 @@ namespace asivamosffie.services
     public class RegisterValidateSpinOrderService : IRegisterValidateSpinOrderService
     {
         private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService; 
+        private readonly ICommonService _commonService;
 
-        public RegisterValidateSpinOrderService( devAsiVamosFFIEContext context, ICommonService commonService)
-        { 
+        public RegisterValidateSpinOrderService(devAsiVamosFFIEContext context, ICommonService commonService)
+        {
             _commonService = commonService;
             _context = context;
         }
@@ -110,6 +110,24 @@ namespace asivamosffie.services
                 return false;
 
             return true;
+        }
+         
+        private async Task<string> ReplaceVariablesOrdenGiro(string pContenido , int pOrdenGiroId)
+        {
+            //OrdenGiro ordenGiro  = _context.OrdenGiro
+            //    .Where(o=> o.OrdenGiroId == pOrdenGiroId)
+            //    .Include(s=> s.SolicitudPago)
+
+
+            //pContenido = pContenido
+            //    .Replace("FECHA_ORDEN_GIRO", "")
+            //    .Replace("NUMERO_ORDEN_GIRO", "")
+            //    .Replace("MODALIDAD_CONTRATO", "")
+            //    .Replace("NUMERO_CONTRATO", "")
+            //    .Replace("VALOR_ORDEN_GIRO", "")
+            //    .Replace("URL", " ");
+             
+            return pContenido; 
         }
     }
 }

@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             ControlRecurso = new HashSet<ControlRecurso>();
             CuentaBancaria = new HashSet<CuentaBancaria>();
             GestionFuenteFinanciacion = new HashSet<GestionFuenteFinanciacion>();
+            OrdenGiroDetalleTerceroCausacionAportante = new HashSet<OrdenGiroDetalleTerceroCausacionAportante>();
             ProyectoFuentes = new HashSet<ProyectoFuentes>();
             VigenciaAporte = new HashSet<VigenciaAporte>();
         }
@@ -34,6 +35,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual ICollection<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
+        public virtual ICollection<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
         public virtual ICollection<ProyectoFuentes> ProyectoFuentes { get; set; }
         public virtual ICollection<VigenciaAporte> VigenciaAporte { get; set; }
     }
