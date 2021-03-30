@@ -669,7 +669,7 @@ namespace asivamosffie.services
                         {
                             foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
                             {
-                                _committeeSessionFiduciarioService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitud, item.EstadoCodigo, pUser.Email);
+                                _committeeSessionFiduciarioService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitudCodigo, item.EstadoCodigo, pUser.Email);
                             }
                         }
 
@@ -677,7 +677,7 @@ namespace asivamosffie.services
                         {
                             foreach (var item in comiteTecnico.SesionComiteSolicitudComiteTecnico)
                             {
-                                _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitud, item.EstadoCodigo);
+                                _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitudCodigo, item.EstadoCodigo);
                             }
                         }
 

@@ -309,7 +309,7 @@ namespace asivamosffie.services
 
         public async Task<Template> GetTemplateById(int pId)
         {
-            return await _context.Template.Where(r => r.TemplateId == pId && (bool)r.Activo).FirstOrDefaultAsync();
+            return await _context.Template.Where(r => r.TemplateId == pId && r.Activo == true).FirstOrDefaultAsync();
         }
 
         public async Task<Template> GetTemplateByTipo(string ptipo)

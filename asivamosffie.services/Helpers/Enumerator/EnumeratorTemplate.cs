@@ -119,5 +119,12 @@ namespace asivamosffie.services.Helpers.Enumerator
         Fecha_vencimiento_terminos_proxima_actuacion_requerida_4_2_2 = 117,
         //5.1.5
         Alerta_30_dias_No_acta_bienes_servicios = 118,
+        EnviarSeguimientoDiarioAApoyo = 119,
+        EnviarSeguimientoDiarioASupervisor = 120,
+        SeguimientoDiarioValidado = 121,
+        SeguimientoDiarioDevuelto = 122,
+
+
+
     }
 }

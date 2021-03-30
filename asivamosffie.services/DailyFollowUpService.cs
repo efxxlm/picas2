@@ -47,7 +47,7 @@ namespace asivamosffie.services
 
                 if (listaSeguimientoDiario.Count() > 0)
                 {
-                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.FirstOrDefault();
+                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.OrderBy(x => x.FechaSeguimiento).FirstOrDefault();
 
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
@@ -821,6 +821,8 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
+                EnviarNotificacionAApoyo(seguimientoDiario);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -856,6 +858,8 @@ namespace asivamosffie.services
                 seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnviadoAsupervisor;
 
                 _context.SaveChanges();
+
+                EnviarNotificacionASupervisor(seguimientoDiario);
 
                 return new Respuesta
                 {
@@ -895,6 +899,8 @@ namespace asivamosffie.services
                 seguimientoDiario.ObservacionSupervisorId = null;
 
                 _context.SaveChanges();
+
+                EnviarNotificacionSeguimientoValidado(seguimientoDiario);
 
                 return new Respuesta
                 {
@@ -964,6 +970,8 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
+                EnviarNotificacionSeguimientoDevuelto(seguimientoDiario);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -986,6 +994,123 @@ namespace asivamosffie.services
             }
         }
 
+        private async void EnviarNotificacionAApoyo( SeguimientoDiario seguimientoDiario )
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
 
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == proyecto.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarSeguimientoDiarioAApoyo && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido.Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+                                                      .Replace("[SEDE]", proyecto.Sede)
+                                                      .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+                                                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
+;
+            //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
+            List<string> listaMails = new List<string> { contrato?.Apoyo?.Email };
+            _commonService.EnviarCorreo(listaMails ,  template, "Seguimiento Diario Enviado");
+
+            
+        }
+
+        private async void EnviarNotificacionASupervisor(SeguimientoDiario seguimientoDiario)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == proyecto.ContratoId)
+                                            .Include(x => x.Supervisor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarSeguimientoDiarioASupervisor && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido.Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+                                                      .Replace("[SEDE]", proyecto.Sede)
+                                                      .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+                                                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
+            ;
+            //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
+            List<string> listaMails = new List<string> { contrato?.Supervisor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Enviado");
+
+
+        }
+
+        private async void EnviarNotificacionSeguimientoValidado(SeguimientoDiario seguimientoDiario)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == proyecto.ContratoId)
+                                            .Include(x => x.Interventor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.SeguimientoDiarioValidado && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido.Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+                                                      .Replace("[SEDE]", proyecto.Sede)
+                                                      .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+                                                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
+            
+            List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Validado");
+
+
+        }
+
+        private async void EnviarNotificacionSeguimientoDevuelto(SeguimientoDiario seguimientoDiario)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == proyecto.ContratoId)
+                                            .Include(x => x.Interventor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.SeguimientoDiarioDevuelto && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido.Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+                                                      .Replace("[SEDE]", proyecto.Sede)
+                                                      .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+                                                      .Replace("[FECHA_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
+            
+
+            List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Devuelto");
+
+
+        }
     }
 }
