@@ -58,6 +58,12 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+         
+        [HttpGet]
+        [Route("GetListOrdenGiro")]
+        public async Task<FileResult> GetListOrdenGiro([FromQuery] bool pBlRegistrosAprobados)
+        {
+            return File(await _registerValidateSpinOrderService.GetListOrdenGiro(pBlRegistrosAprobados), "application/pdf");
+        }
     }
 }

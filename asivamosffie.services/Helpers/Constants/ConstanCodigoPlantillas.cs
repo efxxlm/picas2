@@ -80,5 +80,8 @@
         Persona_Juridica_Proceso_Seleccion = 70,
         Union_Temporal_Proceso_Seleccion = 71,
         Participantes_Union_Temporal_Proceso_Seleccion = 72,
+
+        Tabla_Orden_Giro_Para_Tramitar = 73,
+        Registros_Orden_Giro_Para_Tramitar = 74
     }
 }

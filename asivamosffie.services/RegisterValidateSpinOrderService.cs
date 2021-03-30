@@ -20,9 +20,11 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
 
-        public RegisterValidateSpinOrderService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterValidateSpinOrderService(ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _commonService = commonService;
             _context = context;
         }
@@ -112,24 +114,81 @@ namespace asivamosffie.services
             return true;
         }
 
-        private async Task<string> ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
+        public async Task<byte[]> GetListOrdenGiro(bool pBlRegistrosAprobados)
         {
-            OrdenGiro ordenGiro = _context.OrdenGiro
-                .Where(o => o.OrdenGiroId == pOrdenGiroId)
-                .Include(s => s.SolicitudPago)
-                .ThenInclude(s => s.Contrato)
-                .FirstOrDefault();
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Tabla_Orden_Giro_Para_Tramitar).ToString();
 
-            List<Dominio> ListModalidadContrato = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Modalidad_Contrato);
+            Plantilla Plantilla =
+                _context.Plantilla
+                .Where(r => r.Codigo == TipoPlantilla).
+                Include(r => r.Encabezado).
+                Include(r => r.PieDePagina)
+                .AsNoTracking().FirstOrDefault();
 
-            pContenido = pContenido
-                .Replace("FECHA_ORDEN_GIRO", ((DateTime)ordenGiro.FechaCreacion).ToString("dd/MM/yyy"))
-                .Replace("NUMERO_ORDEN_GIRO", ordenGiro.NumeroSolicitud)
-                .Replace("MODALIDAD_CONTRATO", ListModalidadContrato.Where(r=> r.Codigo == ordenGiro.SolicitudPago.FirstOrDefault().Contrato.ModalidadCodigo).FirstOrDefault().Nombre)
-                .Replace("NUMERO_CONTRATO", ordenGiro.SolicitudPago.FirstOrDefault().Contrato.NumeroContrato)
-                .Replace("VALOR_ORDEN_GIRO", "")
-                .Replace("URL", " ");
+            TipoPlantilla = ((int)ConstanCodigoPlantillas.Registros_Orden_Giro_Para_Tramitar).ToString();
 
+            Plantilla PlantillaRegistros =
+                _context.Plantilla
+                .Where(r => r.Codigo == TipoPlantilla)
+                .AsNoTracking().FirstOrDefault();
+
+            List<int> ListOrdenGiroIds = new List<int>();
+
+            if (pBlRegistrosAprobados)
+            {
+                ListOrdenGiroIds = _context.OrdenGiro
+                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue && !r.FechaRegistroCompletoTramitar.HasValue)
+                    .Select(r => r.OrdenGiroId).ToList();
+            }
+            else
+            {
+                ListOrdenGiroIds = _context.OrdenGiro
+                        .Where(r => r.FechaRegistroCompletoTramitar.HasValue)
+                        .Select(r => r.OrdenGiroId).ToList();
+            }
+
+            string RegistrosOrdenGiro = string.Empty;
+
+            foreach (var item in ListOrdenGiroIds)
+            {
+                RegistrosOrdenGiro += PlantillaRegistros.Contenido;
+                RegistrosOrdenGiro += ReplaceVariablesOrdenGiro(RegistrosOrdenGiro, item);
+            }
+
+            Plantilla.Contenido = Plantilla.Contenido.Replace("[REGISTROS]", RegistrosOrdenGiro);
+
+            return _committeeSessionFiduciarioService.ConvertirPDF(Plantilla);
+        }
+         
+        private string ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro =
+                _context.OrdenGiro
+                                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                 .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
+                                .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
+                                .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
+                                .FirstOrDefault();
+
+            decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
+            string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
+            List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
+
+
+            try
+            {
+                pContenido = pContenido
+                       .Replace("[FECHA_ORDEN_GIRO]", ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy"))
+                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
+                       .Replace("[MODALIDAD_CONTRATO]", ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre)
+                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato)
+                       .Replace("[VALOR_ORDEN_GIRO]", ValorOrdenGiro != null ? String.Format("{0:n0}", ValorOrdenGiro) : " ")
+                       .Replace("[URL]", UrlSoporte);
+            }
+            catch (Exception e )
+            {
+                 
+            } 
             return pContenido;
         }
     }

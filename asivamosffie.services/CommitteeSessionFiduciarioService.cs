@@ -1595,7 +1595,7 @@ namespace asivamosffie.services
             return pPlantilla;
         }
 
-        private byte[] ConvertirPDF(Plantilla pPlantilla)
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
         {
             string strEncabezado = "";
             if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
@@ -2713,7 +2713,7 @@ namespace asivamosffie.services
             return estaCompleto;
         }
 
-        public void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo, string pUsuario )
+        public void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo, string pUsuario)
         {
             #region Contratacion
 
