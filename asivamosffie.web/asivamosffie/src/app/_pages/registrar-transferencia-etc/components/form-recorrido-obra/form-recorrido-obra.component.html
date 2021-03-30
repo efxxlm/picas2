@@ -205,4 +205,4 @@
     </button>
   </div>
 </form>
-<app-form-representante [numRepresentantesRecorrido] = "addressForm.get('numRepresentantesRecorrido').value" (numRepresentantesRecorridoChange)="changeValueRepresentantes($event)" [proyectoEntregaEtcId]= "addressForm.get('proyectoEntregaEtcid').value" [representanteEtcrecorrido] = "representanteEtcrecorrido" (callOnSubmitParent)="onSubmit()" (callOnInitParent)="ngOnInit()"></app-form-representante>
+<app-form-representante [numRepresentantesRecorrido] = "addressForm.get('numRepresentantesRecorrido').value" (numRepresentantesRecorridoChange)="changeValueRepresentantes($event)" [proyectoEntregaEtcId]= "addressForm.get('proyectoEntregaEtcid').value" [representanteEtcrecorrido] = "representanteEtcrecorrido" (callOnSubmitParent)="onSubmit()" (callOnInitParent)="updateFromChild()"></app-form-representante>

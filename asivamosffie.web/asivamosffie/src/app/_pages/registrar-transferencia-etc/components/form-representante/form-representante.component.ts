@@ -307,6 +307,7 @@ export class FormRepresentanteComponent implements OnInit {
             .deleteRepresentanteEtcRecorrido(representanteEtcid, this.representantes.length)
             .subscribe(
               (response: Respuesta) => {
+                this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
                 this.callOnInitParent.emit();
                 return;
               },

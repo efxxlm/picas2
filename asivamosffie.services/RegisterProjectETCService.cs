@@ -539,6 +539,8 @@ namespace asivamosffie.services
 
                 await _context.SaveChangesAsync();
 
+                await registroCompletoRecorridoObra(representanteEtcrecorridoOld.ProyectoEntregaEtcid);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,

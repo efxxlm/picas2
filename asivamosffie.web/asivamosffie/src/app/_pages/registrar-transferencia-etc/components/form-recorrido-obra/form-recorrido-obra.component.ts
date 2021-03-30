@@ -73,6 +73,11 @@ export class FormRecorridoObraComponent implements OnInit {
     }
   }
 
+  updateFromChild(){
+    this.callOnInitParent.emit();
+    this.ngOnInit();
+    return;
+  }
 
   arrayOne(n: number): any[] {
     return Array(n);
