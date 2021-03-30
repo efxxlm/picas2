@@ -1266,6 +1266,7 @@ namespace asivamosffie.services
                         TipoProcesoCodigo = defensaJudicial.TipoProcesoCodigo,
                         VaAProcesoJudicial = defensaJudicial.FichaEstudio.Count() == 0 ? false : defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite,
                         FechaCreacion = defensaJudicial.FechaCreacion,
+                        CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)

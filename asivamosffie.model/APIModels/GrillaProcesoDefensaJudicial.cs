@@ -22,6 +22,7 @@ namespace asivamosffie.model.APIModels
         public string TipoProcesoCodigo { get; set; }
 
         public DateTime FechaCreacion { get; set; }
+        public decimal? CuantiaPerjuicios { get; set; }
 
     }
 }
