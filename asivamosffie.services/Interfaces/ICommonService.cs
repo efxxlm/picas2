@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<string> EnumeradorOrigenOrdenGiro();
+
         Task<string> EnumeradorOrdenGiro(int ContratoId);
 
         Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta); 

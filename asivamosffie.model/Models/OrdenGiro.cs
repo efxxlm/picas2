@@ -31,6 +31,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoTramitar { get; set; }
         public DateTime? FechaRegistroCompletoTramitar { get; set; }
         public bool? TieneObservacion { get; set; }
+        public string ConsecutivoOrigen { get; set; }
 
         public virtual ICollection<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }

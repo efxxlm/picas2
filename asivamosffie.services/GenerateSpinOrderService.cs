@@ -180,6 +180,31 @@ namespace asivamosffie.services
         #endregion
 
         #region Create 
+
+        public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
+        {
+            bool blRegistroCompleto = false;
+            try
+            {
+                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
+                blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+                _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
+                        .Update(o => new OrdenGiro
+                        {
+                            RegistroCompleto = blRegistroCompleto,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pAuthor
+                        });
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return blRegistroCompleto;
+        }
+
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -188,6 +213,7 @@ namespace asivamosffie.services
             {
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
+                    pOrdenGiro.ConsecutivoOrigen = await _commonService.EnumeradorOrigenOrdenGiro();
                     pOrdenGiro.NumeroSolicitud = await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
@@ -207,31 +233,13 @@ namespace asivamosffie.services
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
-                else
-                {
-                    string strNumeroSolicitud = pOrdenGiro.NumeroSolicitud;
-                    strNumeroSolicitud = await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
-
-                    _context.Set<OrdenGiro>()
-                            .Where(og => og.OrdenGiroId == pOrdenGiro.OrdenGiroId)
-                            .Update(og => new OrdenGiro
-                            {
-                                NumeroSolicitud = strNumeroSolicitud,
-                                FechaModificacion = DateTime.Now,
-                                UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
-                                EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString()
-                            });
-                }
-
                 if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
                     CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
                 if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
                     CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
-
-                return
+                Respuesta respuesta =
                      new Respuesta
                      {
                          IsSuccessful = true,
@@ -245,6 +253,10 @@ namespace asivamosffie.services
                              pOrdenGiro.UsuarioCreacion,
                              ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
                      };
+
+                await ValidarRegistroCompleto(pOrdenGiro.SolicitudPagoId, pOrdenGiro.UsuarioCreacion);
+
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -460,6 +472,8 @@ namespace asivamosffie.services
                     OrdenGiroDetalleTerceroCausacionDescuento.FechaCreacion = DateTime.Now;
                     OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
                     OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
+
+                    _context.OrdenGiroDetalleTerceroCausacionDescuento.Add(OrdenGiroDetalleTerceroCausacionDescuento);
                 }
                 else
                 {

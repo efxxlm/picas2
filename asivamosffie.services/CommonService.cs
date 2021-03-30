@@ -193,6 +193,14 @@ namespace asivamosffie.services
             }
             return ListaUsuario;
         }
+      
+        public async Task<string> EnumeradorOrigenOrdenGiro()
+        {
+            int cantidadDeResgistros = _context.ComiteTecnico.Count();
+            string Nomeclatura = "FFIE_";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
 
         public async Task<string> EnumeradorOrdenGiro(int SolicitudPagoId)
         {

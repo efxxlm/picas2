@@ -372,6 +372,7 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoSoporteSolicitud)
                        .Include(r => r.SolicitudPagoListaChequeo)
                          .ThenInclude(r => r.ListaChequeo)
+                         .AsNoTracking()
                          .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -383,6 +384,7 @@ namespace asivamosffie.services
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
                         .Include(r => r.SolicitudPagoListaChequeo)
                          .ThenInclude(r => r.ListaChequeo)
+                                 .AsNoTracking()
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -393,7 +395,8 @@ namespace asivamosffie.services
                      .Include(e => e.SolicitudPagoSoporteSolicitud)
                             .Include(r => r.SolicitudPagoListaChequeo)
                          .ThenInclude(r => r.ListaChequeo)
-                        .FirstOrDefault();
+                            .AsNoTracking()
+                        .FirstOrDefault(); 
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
 

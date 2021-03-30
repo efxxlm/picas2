@@ -263,7 +263,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3814,6 +3813,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiro>(entity =>
             {
+                entity.Property(e => e.ConsecutivoOrigen).HasMaxLength(50);
+
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoCodigo)
@@ -8007,6 +8008,10 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_OrdenGiro");
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoNombre).HasMaxLength(250);
 

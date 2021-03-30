@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
         public int SolicitudPagoId { get; set; }
         public string EstadoNombre { get; set; }
         public string EstadoNombre2 { get; set; }
+        public string EstadoCodigo { get; set; }
         public int? IntEstadoCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
