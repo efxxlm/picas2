@@ -213,12 +213,25 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                 }
                             }
                         }
+                        let estadoSemaforo = 'sin-diligenciar';
+                        let totalRegistroCompleto = 0;
+                        detalleDescuentoTecnica.forEach( descuento => {
+                            if ( descuento.registroCompleto === true ) {
+                                totalRegistroCompleto++;
+                            }
+                        } );
 
+                        if ( totalRegistroCompleto === detalleDescuentoTecnica.length ) {
+                            estadoSemaforo = 'completo';
+                        } else {
+                            estadoSemaforo = 'en.proceso';
+                        }
                         setTimeout(() => {
                             // Set formulario de los descuentos
                             detalleDescuentoTecnica.forEach( descuentoValue => {
                                 this.descuentos.controls.push( this.fb.group(
                                     {
+                                        estadoSemaforo,
                                         ordenGiroDetalleDescuentoTecnicaId: [ descuentoValue.ordenGiroDetalleDescuentoTecnicaId ],
                                         solicitudPagoFaseFacturaDescuentoId: [ descuentoValue.solicitudPagoFaseFacturaDescuentoId ],
                                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
@@ -235,6 +248,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
                     this.descuentos.controls.push( this.fb.group(
                         {
+                            estadoSemaforo: [ 'sin-diligenciar' ],
                             ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
                             solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                             tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
@@ -250,6 +264,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
                 this.descuentos.controls.push( this.fb.group(
                     {
+                        estadoSemaforo: [ 'sin-diligenciar' ],
                         ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
                         solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],

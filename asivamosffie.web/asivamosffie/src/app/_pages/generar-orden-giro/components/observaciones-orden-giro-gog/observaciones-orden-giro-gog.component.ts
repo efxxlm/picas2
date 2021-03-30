@@ -104,7 +104,7 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
                 {
                     ordenGiroId: this.ordenGiroId,
                     ordenGiroDetalleId: this.ordenGiroDetalleId,
-                    ordenGiroObservacion: [
+                    ordenGiroDetalleObservacion: [
                         {
                             ordenGiroDetalleId: this.ordenGiroDetalleId,
                             ordenGiroObservacionId: this.ordenGiroObservacionId,
