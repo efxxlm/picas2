@@ -72,6 +72,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       this.textoConvocantesCapital = "Convocante";
       this.tieneDemanda.emit('2');
     }
+    if (this.defensaJudicial.esDemandaFfie == true) {
+      this.tieneDemanda.emit('1');
+    }
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i = 0;
@@ -294,11 +297,13 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   cambioTipoTexto() {
     this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
     this.textoConvocantesCapital = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
-    if(this.addressForm.value.demandaContraFFIE==true){
-      this.tieneDemanda.emit('2');
-    }
-    if(this.addressForm.value.demandaContraFFIE==false){
-      this.tieneDemanda.emit('1');
+    if(this.estaEditando == true){
+      if(this.addressForm.value.demandaContraFFIE==true){
+        this.tieneDemanda.emit('2');
+      }
+      if(this.addressForm.value.demandaContraFFIE==false){
+        this.tieneDemanda.emit('1');
+      }
     }
   }
 
