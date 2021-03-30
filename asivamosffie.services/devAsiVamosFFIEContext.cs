@@ -263,6 +263,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3924,11 +3925,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.CuentaBancaria)
-                    .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
-                    .HasForeignKey(d => d.CuentaBancariaId)
-                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_CuentaBancaria");
-
                 entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnica)
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaId)
@@ -4052,15 +4048,20 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.AportanteId)
                     .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionAportante_Aportante");
 
+                entity.HasOne(d => d.CuentaBancaria)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
+                    .HasForeignKey(d => d.CuentaBancariaId)
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionAportante_CuentaBancaria");
+
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .HasConstraintName("FK_FK_OrdenGiroDetalleTerceroCausacionAportanteFuenteFinanciacion");
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionAportanteFuenteFinanciacion");
 
                 entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
                     .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionId)
-                    .HasConstraintName("FK__OrdenGiro__Orden__2C938683");
+                    .HasConstraintName("FK__OrdenGiroDetalleTerceroCausacionAportante_OrdenGiroDetalleTerceroCausacion");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionDescuento>(entity =>

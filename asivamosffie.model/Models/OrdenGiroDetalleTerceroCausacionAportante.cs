@@ -18,8 +18,11 @@ namespace asivamosffie.model.Models
         public string ConceptoPagoCodigo { get; set; }
         public decimal? ValorDescuento { get; set; }
         public int? FuenteFinanciacionId { get; set; }
+        public int? CuentaBancariaId { get; set; }
+        public bool? RegistroCompletoOrigen { get; set; }
 
         public virtual CofinanciacionAportante Aportante { get; set; }
+        public virtual CuentaBancaria CuentaBancaria { get; set; }
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
         public virtual OrdenGiroDetalleTerceroCausacion OrdenGiroDetalleTerceroCausacion { get; set; }
     }

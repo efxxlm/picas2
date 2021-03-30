@@ -47,11 +47,11 @@ namespace asivamosffie.services
         }
 
         public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
-        { 
+        {
             List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
 
             List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
-          
+
             List<dynamic> ListDynamics = new List<dynamic>();
 
             ListFuenteFinanciacion.ForEach(ff =>
@@ -164,9 +164,9 @@ namespace asivamosffie.services
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r=> r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria) 
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante).ThenInclude(e => e.CuentaBancaria)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
@@ -187,7 +187,7 @@ namespace asivamosffie.services
             {
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
-                    pOrdenGiro.NumeroSolicitud =await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
+                    pOrdenGiro.NumeroSolicitud = await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
@@ -215,7 +215,7 @@ namespace asivamosffie.services
                             .Where(og => og.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(og => new OrdenGiro
                             {
-                                NumeroSolicitud  = strNumeroSolicitud,
+                                NumeroSolicitud = strNumeroSolicitud,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
@@ -403,25 +403,40 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
-                            .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
-                            .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
-                            {
-                                FechaModificacion = DateTime.Now,
-                                UsuarioModificacion = pUsuarioCreacion,
-
-                                FuenteRecursoCodigo = TerceroCausacionAportante.FuenteRecursoCodigo,
-                                AportanteId = TerceroCausacionAportante.AportanteId,
-                                ConceptoPagoCodigo = TerceroCausacionAportante.ConceptoPagoCodigo,
-                                ValorDescuento = TerceroCausacionAportante.ValorDescuento,
-                                FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante)
-                            });
+                    if (TerceroCausacionAportante.CuentaBancariaId != null)
+                    {
+                        _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                                 .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
+                                 .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
+                                 {
+                                     FechaModificacion = DateTime.Now,
+                                     UsuarioModificacion = pUsuarioCreacion,
+                                     CuentaBancariaId = TerceroCausacionAportante.CuentaBancariaId,
+                                     RegistroCompletoOrigen = TerceroCausacionAportante.CuentaBancariaId > 0
+                                 });
+                    }
+                    else
+                    {
+                        _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                                .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
+                                .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
+                                {
+                                    FechaModificacion = DateTime.Now,
+                                    UsuarioModificacion = pUsuarioCreacion,
+                                    CuentaBancariaId = TerceroCausacionAportante.CuentaBancariaId,
+                                    FuenteRecursoCodigo = TerceroCausacionAportante.FuenteRecursoCodigo,
+                                    AportanteId = TerceroCausacionAportante.AportanteId,
+                                    ConceptoPagoCodigo = TerceroCausacionAportante.ConceptoPagoCodigo,
+                                    ValorDescuento = TerceroCausacionAportante.ValorDescuento,
+                                    FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId,
+                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante)
+                                });
+                    }
                 }
             }
         }
 
-        private bool  ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
         {
             if (
                     string.IsNullOrEmpty(terceroCausacionAportante.FuenteRecursoCodigo)
@@ -520,7 +535,7 @@ namespace asivamosffie.services
                                      ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
                                      RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
                                      FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo,
-                                     CuentaBancariaId = pOrdenGiroDetalleDescuentoTecnicaAportante.CuentaBancariaId
+
 
                                  });
                 }
