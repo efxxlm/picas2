@@ -42,5 +42,11 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public List <int?> ListdefensaJudicialContratacionProyectosId { get; set; }
 
+        [NotMapped]
+        public string ObservacionesComiteTecnico { get; set; }
+
+        [NotMapped]
+        public string ObversacionesComiteFiduciario { get; set; }
+
     }
 }

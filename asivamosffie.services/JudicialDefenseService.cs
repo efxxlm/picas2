@@ -556,6 +556,11 @@ namespace asivamosffie.services
 
                     foreach (var defensaJudicial in ListDefensaJudicial)
                     {
+
+                        SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                                                                .Where(r => r.SolicitudId == defensaJudicial.DefensaJudicialId)
+                                                                                .FirstOrDefault();
+
                         TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
 
                         if (TipoAccionCodigo != null)
@@ -603,6 +608,13 @@ namespace asivamosffie.services
                                     ThenInclude(y => y.Sede).FirstOrDefault();
                             contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
                         }
+
+                        if (sesionComiteSolicitud != null)
+                        {
+                            defensaJudicial.ObservacionesComiteTecnico = sesionComiteSolicitud.Observaciones;
+                            defensaJudicial.ObversacionesComiteFiduciario = sesionComiteSolicitud.ObservacionesFiduciario;
+                        }
+
                         return defensaJudicial;
 
                     }
