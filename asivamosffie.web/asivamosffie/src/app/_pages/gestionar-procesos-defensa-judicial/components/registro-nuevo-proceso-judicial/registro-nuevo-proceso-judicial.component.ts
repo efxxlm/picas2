@@ -32,6 +32,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   estaEditando = false;
   //tieneDemanda:boolean;
   tieneDemanda: Subscription;
+  numAcordTieneDemanda: any;
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
