@@ -58,7 +58,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_parametricas = 80,
 
         Verificar_Financieramente_Solicitud_De_Pago = 82,
-        Validar_Financieramente_Solicitud_De_Pago = 83, 
+        Validar_Financieramente_Solicitud_De_Pago = 83,
+        Tramitar_orden_de_giro = 85
     }
 
     public enum enumeratorAccion

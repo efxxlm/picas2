@@ -23,6 +23,14 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public string EstadoCodigo { get; set; }
         public string NumeroSolicitud { get; set; }
+        public DateTime? FechaRegistroCompleto { get; set; }
+        public bool? RegistroCompletoVerificar { get; set; }
+        public DateTime? FechaRegistroCompletoVerificar { get; set; }
+        public bool? RegistroCompletoAprobar { get; set; }
+        public DateTime? FechaRegistroCompletoAprobar { get; set; }
+        public bool? RegistroCompletoTramitar { get; set; }
+        public DateTime? FechaRegistroCompletoTramitar { get; set; }
+        public bool? TieneObservacion { get; set; }
 
         public virtual ICollection<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }

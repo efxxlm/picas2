@@ -21,6 +21,7 @@ namespace asivamosffie.model.Models
         public int? OrdenGiroDetalleId { get; set; }
         public string ConceptoPagoCriterio { get; set; }
         public string TipoPagoCodigo { get; set; }
+        public bool? TieneDescuento { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }

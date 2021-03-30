@@ -73,10 +73,22 @@ namespace asivamosffie.services
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
 
-                _ => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
+                (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro)
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
+
+                (int)enumeratorMenu.Aprobar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                (int)enumeratorMenu.Tramitar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                _ => new { },
             };
         }
 
@@ -152,7 +164,7 @@ namespace asivamosffie.services
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e=> e.OrdenGiroDetalleDescuentoTecnicaAportante).ThenInclude(e=> e.CuentaBancaria)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante).ThenInclude(e => e.CuentaBancaria)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
@@ -210,7 +222,7 @@ namespace asivamosffie.services
                 if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
                     CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
-              
+
                 return
                      new Respuesta
                      {
@@ -283,7 +295,7 @@ namespace asivamosffie.services
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
                 CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion);
-             
+
             if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
             {
                 pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
@@ -350,6 +362,12 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
                             .Update(r => new OrdenGiroDetalleTerceroCausacion()
                             {
+                                TieneDescuento = pOrdenGiroDetalleTerceroCausacion.TieneDescuento,
+                                ValorNetoGiro = pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro,
+                                OrdenGiroDetalleId = pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleId,
+                                ConceptoPagoCriterio = pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio,
+                                TipoPagoCodigo = pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo,
+
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
@@ -498,11 +516,11 @@ namespace asivamosffie.services
                        .Where(o => o.OrdenGiroTerceroId == pOrdenGiroTercero.OrdenGiroTerceroId)
                        .Update(o => new OrdenGiroTercero
                        {
-                           RegistroCompleto  = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero),
+                           RegistroCompleto = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero),
                            MedioPagoGiroCodigo = pOrdenGiroTercero.MedioPagoGiroCodigo,
                            FechaModificacion = DateTime.Now,
-                           UsuarioModificacion = pUsuarioCreacion 
-                       });  
+                           UsuarioModificacion = pUsuarioCreacion
+                       });
             }
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
                 CreateEditOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault(), pUsuarioCreacion);
@@ -627,6 +645,8 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
+               || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+               || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
                 ) return false;
 
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
