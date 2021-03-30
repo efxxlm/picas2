@@ -3544,6 +3544,12 @@ namespace asivamosffie.services
 
             try
             {
+                ControversiaActuacionMesa controversiaActuacionMesa1 = _context.ControversiaActuacionMesa.Where(r => r.ControversiaActuacionId == controversiaActuacionMesa.ControversiaActuacionMesaId).FirstOrDefault();
+                if (controversiaActuacionMesa1 != null)
+                {
+                    controversiaActuacionMesa.ControversiaActuacionMesaId = controversiaActuacionMesa1.ControversiaActuacionMesaId;
+                }
+
                 bool escompleto = true;
                 if (string.IsNullOrEmpty(controversiaActuacionMesa.ActuacionAdelantada) ||
                     controversiaActuacionMesa.FechaActuacionAdelantada == null ||
@@ -3565,6 +3571,11 @@ namespace asivamosffie.services
                     actuacionold.ProximaActuacionRequerida = controversiaActuacionMesa.ProximaActuacionRequerida;
                     actuacionold.RutaSoporte = controversiaActuacionMesa.RutaSoporte;
                     actuacionold.EsCompleto = controversiaActuacionMesa.EsCompleto;
+                    actuacionold.FechaActuacionAdelantada = controversiaActuacionMesa.FechaActuacionAdelantada;
+                    actuacionold.CantDiasVencimiento = controversiaActuacionMesa.CantDiasVencimiento;
+                    actuacionold.FechaVencimiento = controversiaActuacionMesa.FechaVencimiento;
+                    actuacionold.ResultadoDefinitivo = controversiaActuacionMesa.ResultadoDefinitivo;
+
                     _context.ControversiaActuacionMesaSeguimiento.Update(actuacionold);
                 }
                 else
