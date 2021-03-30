@@ -111,23 +111,26 @@ namespace asivamosffie.services
 
             return true;
         }
-         
-        private async Task<string> ReplaceVariablesOrdenGiro(string pContenido , int pOrdenGiroId)
+
+        private async Task<string> ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
         {
-            //OrdenGiro ordenGiro  = _context.OrdenGiro
-            //    .Where(o=> o.OrdenGiroId == pOrdenGiroId)
-            //    .Include(s=> s.SolicitudPago)
+            OrdenGiro ordenGiro = _context.OrdenGiro
+                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                .Include(s => s.SolicitudPago)
+                .ThenInclude(s => s.Contrato)
+                .FirstOrDefault();
 
+            List<Dominio> ListModalidadContrato = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Modalidad_Contrato);
 
-            //pContenido = pContenido
-            //    .Replace("FECHA_ORDEN_GIRO", "")
-            //    .Replace("NUMERO_ORDEN_GIRO", "")
-            //    .Replace("MODALIDAD_CONTRATO", "")
-            //    .Replace("NUMERO_CONTRATO", "")
-            //    .Replace("VALOR_ORDEN_GIRO", "")
-            //    .Replace("URL", " ");
-             
-            return pContenido; 
+            pContenido = pContenido
+                .Replace("FECHA_ORDEN_GIRO", ((DateTime)ordenGiro.FechaCreacion).ToString("dd/MM/yyy"))
+                .Replace("NUMERO_ORDEN_GIRO", ordenGiro.NumeroSolicitud)
+                .Replace("MODALIDAD_CONTRATO", ListModalidadContrato.Where(r=> r.Codigo == ordenGiro.SolicitudPago.FirstOrDefault().Contrato.ModalidadCodigo).FirstOrDefault().Nombre)
+                .Replace("NUMERO_CONTRATO", ordenGiro.SolicitudPago.FirstOrDefault().Contrato.NumeroContrato)
+                .Replace("VALOR_ORDEN_GIRO", "")
+                .Replace("URL", " ");
+
+            return pContenido;
         }
     }
 }
