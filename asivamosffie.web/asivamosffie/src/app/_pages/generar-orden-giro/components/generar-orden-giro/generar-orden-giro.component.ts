@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { DialogDevolverSolPagoGogComponent } from '../dialog-devolver-sol-pago-gog/dialog-devolver-sol-pago-gog.component';
+import moment from 'moment';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-generar-orden-giro',
@@ -35,12 +37,15 @@ export class GenerarOrdenGiroComponent implements OnInit {
     constructor(
         private routes: Router,
         private dialog: MatDialog,
-        private ordenPagoSvc: OrdenPagoService )
+        private ordenGiroSvc: OrdenPagoService )
     {
-        this.ordenPagoSvc.getListOrdenGiro( this.listaMenu.generarOrdenGiro )
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.generarOrdenGiro )
             .subscribe(
                 response => {
-                  console.log( response );
+                    console.log( response );
+
+                    response.forEach( registro => registro.fechaAprobacionFinanciera = moment( registro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ) );
+
                     this.dataSource = new MatTableDataSource( response );
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
@@ -76,5 +81,27 @@ export class GenerarOrdenGiroComponent implements OnInit {
       //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
       const dialogRef = this.dialog.open(DialogDevolverSolPagoGogComponent, dialogConfig);
       //dialogRef.afterClosed().subscribe(value => {});
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    enviarVerificacion( ordenGiroId: number ) {
+        const pOrdenGiro = { ordenGiroId }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/generarOrdenDeGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 }

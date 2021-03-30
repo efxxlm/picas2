@@ -41,6 +41,10 @@ export class OrdenPagoService {
         } )
     }
 
+    changueStatusOrdenGiro( pOrdenGiro: any ) {
+        return this.http.post<Respuesta>( `${ this.urlApi }/ChangueStatusOrdenGiro`, pOrdenGiro );
+    }
+
     getAportantes( solicitudPago: any, cb: { ( dataAportantes: { listaTipoAportante: Dominio[], listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] } ): void } ) {
         if ( solicitudPago !== undefined ) {
             // constantes y variables

@@ -20,7 +20,7 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaValidacionFinanciera">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;"> Fecha de validación financiera </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaAprobacionFinanciera | date: 'dd/MM/yyyy' }}</b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaAprobacionFinanciera }}</b> </td>
             </ng-container>
             <ng-container matColumnDef="numeroSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Número de solicitud </th>
@@ -50,29 +50,65 @@
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
-                <td mat-cell *matCellDef="let element" align="center"> 
-                    <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'generacionOrdenGiro', element.solicitudPagoId ]">
-                        Generar orden de giro
+                <td mat-cell *matCellDef="let element" align="center">
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            [routerLink]="[ 'generacionOrdenGiro', element.solicitudPagoId ]"
+                            *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enviadaParaOrdenGiro">
+                            Generar orden de giro
+                    </button>
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion && element.registroCompleto === true"
+                            (click)="enviarVerificacion( element.ordenGiroId )">
+                            Enviar para verificación orden de giro
+                    </button>
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            [routerLink]="[ 'generacionOrdenGiro', element.solicitudPagoId ]"
+                            *ngIf=" element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
+                            Ver detalle/Editar
                     </button>
                     <!--
-                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
-                        Enviar para verificación orden de giro
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalleEdit(element.gestion)">
-                        Ver detalle/Editar
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
-                        Devolver solicitud de pago
-                    </button>
-                    Se habilitan los botones ver detalle y descargar orden de giro en estado enviadaVerificacionOrdenGiro === '13'
-                    el Boton descargar orden de giro aparece en CU 4.3.3, 4.3.4 y 4.3.5
-                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.gestion)">
-                        Ver detalle
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.gestion)">
-                        Descargar orden de giro
-                    </button>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table">
+                                Devolver solicitud de pago
+                        </button>
+                        Se habilitan los botones ver detalle y descargar orden de giro en estado enviadaVerificacionOrdenGiro === '13'
+                        el Boton descargar orden de giro aparece en CU 4.3.3, 4.3.4 y 4.3.5
                     -->
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            *ngIf=" element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enviadaParaOrdenGiro
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
+                            Ver detalle
+                    </button>
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            *ngIf=" element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enviadaParaOrdenGiro
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+                                    && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
+                            Descargar orden de giro
+                    </button>
+
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
