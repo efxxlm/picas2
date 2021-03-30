@@ -136,16 +136,24 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
 
     this.clausulaField.clear();
 
-    this.novedadDescripcion.novedadContractualClausula.forEach( c => {
-      let grupo = this.crearClausula();
-      grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );
-      grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
-      grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
-      grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
-
-      this.clausulaField.push( grupo );
-
-    });
+    if ( this.novedadDescripcion.tipoNovedadCodigo === '5' ){
+      if ( this.novedadDescripcion.novedadContractualClausula ){
+        this.novedadDescripcion.novedadContractualClausula.forEach( c => {
+          let grupo = this.crearClausula();
+          grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );
+          grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
+          grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
+          grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
+    
+          this.clausulaField.push( grupo );
+    
+        });
+      }else{
+        let grupo = this.crearClausula();
+        this.clausulaField.push( grupo );
+      }
+      
+    }
 
     }
   }
