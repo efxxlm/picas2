@@ -1,7 +1,7 @@
 <section *ngIf="esVerDetalle !== undefined">
     <mat-card class="shipping-card border">
         <mat-card-content align="left">
-            <p><b> URL con soporte: </b> <i>https://drive.google.com/drive/registrodecontroversiacontractual/soportedeordendegiro</i></p>
+            <p><b> URL con soporte: </b> <i> {{ solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroSoporte[ 0 ].urlSoporte }} </i></p>
         </mat-card-content>
     </mat-card>
 

@@ -42,7 +42,11 @@ export class OrdenPagoService {
     }
 
     changueStatusOrdenGiro( pOrdenGiro: any ) {
-        return this.http.post<Respuesta>( `${ environment.apiUrl }/RegisterValidateSpin/ChangueStatusOrdenGiro`, pOrdenGiro );
+        return this.http.post<Respuesta>( `${ environment.apiUrl }/RegisterValidateSpinOrder/ChangueStatusOrdenGiro`, pOrdenGiro );
+    }
+
+    deleteOrdenGiroDetalleDescuentoTecnicaAportante( pOrdenGiroDetalleDescuentoTecnicaAportanteId: number ) {
+        return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleDescuentoTecnicaAportante?pOrdenGiroDetalleDescuentoTecnicaAportanteId=${ pOrdenGiroDetalleDescuentoTecnicaAportanteId }`, '' );
     }
 
     getAportantes( solicitudPago: any, cb: { ( dataAportantes: { listaTipoAportante: Dominio[], listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] } ): void } ) {

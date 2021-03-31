@@ -84,12 +84,14 @@ export interface ListaMenu {
     generarOrdenGiro: number;
     verificarOrdenGiro: number;
     aprobarOrdenGiro: number;
+    tramitarOrdenGiro: number;
 }
 
 export enum ListaMenuId {
     generarOrdenGiro = 68,
     verificarOrdenGiro = 76,
-    aprobarOrdenGiro
+    aprobarOrdenGiro,
+    tramitarOrdenGiro = 85
 }
 
 export interface ListaMediosPagoCodigo {

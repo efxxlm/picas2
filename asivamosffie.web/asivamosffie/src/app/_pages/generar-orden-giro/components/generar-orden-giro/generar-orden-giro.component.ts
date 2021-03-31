@@ -60,38 +60,29 @@ export class GenerarOrdenGiroComponent implements OnInit {
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
       this.dataSource.filter = filterValue.trim().toLowerCase();
-    };
-
-    generarOrden(id){
-      this.routes.navigate(['/generarOrdenDeGiro/generacionOrdenGiro',id]);
-    }
-
-    verDetalleEdit(id){
-      this.routes.navigate(['/generarOrdenDeGiro/verDetalleEditarOrdenGiro',id]);
-    }
-
-    verDetalle(id){
-      this.routes.navigate(['/generarOrdenDeGiro/verDetalleOrdenGiro',id]);
     }
 
     devolverSolicitud(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '1020px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogDevolverSolPagoGogComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.height = 'auto';
+        dialogConfig.width = '1020px';
+        //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+        const dialogRef = this.dialog.open(DialogDevolverSolPagoGogComponent, dialogConfig);
+        //dialogRef.afterClosed().subscribe(value => {});
     }
 
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open( ModalDialogComponent, {
-          width: '28em',
-          data: { modalTitle, modalText }
+            width: '28em',
+            data: { modalTitle, modalText }
         });
     }
 
     enviarVerificacion( ordenGiroId: number ) {
-        const pOrdenGiro = { ordenGiroId }
+        const pOrdenGiro = { 
+            ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.enviadaVerificacionOrdenGiro
+        }
 
         this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
             .subscribe(

@@ -6,8 +6,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b> 06/03/2021 </b></p>
-            <section class="mt-1em" [innerHTML]="'<p>En la revisión deben tener en cuenta la fecha de actualización del RUT.</p>'"></section>
+            <section *ngIf="solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleObservacion.length > 0" class="mt-1em" [innerHTML]="solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleObservacion[ 0 ].observacion"></section>
         </mat-card-content>
     </mat-card>
 

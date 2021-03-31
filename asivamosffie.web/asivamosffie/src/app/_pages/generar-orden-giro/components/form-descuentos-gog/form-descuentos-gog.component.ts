@@ -190,7 +190,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                                             aportantes: this.fb.array( formArrayAportantes )
                                                         }
                                                     ) );
-                                                }, 800);
+                                                }, 1000);
                                             } );
                                         }
                                     }
@@ -210,7 +210,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                                 }
                                             )
                                         )
-                                    }, 1200);
+                                    }, 1500);
                                 }
                             }
                         }
@@ -244,7 +244,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     }
                                 ) );
                             } )
-                        }, 1500);
+                        }, 2000);
                     }
                 }
             } else {
@@ -487,8 +487,19 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         listaTipoAportantes.push( aportanteSeleccionado );
                         this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
 
-                        this.getAportantes( index, jIndex, kIndex ).removeAt( lIndex );
-                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                        if ( this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value !== 0 ) {
+                            this.ordenGiroSvc.deleteOrdenGiroDetalleDescuentoTecnicaAportante( this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value )
+                                .subscribe(
+                                    response => {
+                                        this.getAportantes( index, jIndex, kIndex ).removeAt( lIndex );
+                                        this.openDialog( '', response.message );
+                                    },
+                                    err => this.openDialog( '', err.message )
+                                )
+                        } else {
+                            this.getAportantes( index, jIndex, kIndex ).removeAt( lIndex );
+                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                        }
                     }
                 }
             )

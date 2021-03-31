@@ -12,12 +12,12 @@
                 <p><b>Coordinación responsable:</b> <i>Andina</i></p>
                 <p><b>Grupo de contrato:</b> <i>Grupo 1</i></p>
                 <p *ngIf="esExpensas === true"><b>Tipo de intervención:</b> <i>Mejoramiento</i></p>
-                <p *ngIf="esExpensas === false"><b>Tipo de contrato:</b> <i>Obra o interventoría</i></p>
-                <p><b>Valor de la factura:</b> <i>$15.000.000</i></p>
+                <p *ngIf="esExpensas === false"><b>Tipo de contrato:</b> <i> {{ getTipoSolicitudContrato( solicitudPago.tipoSolicitudCodigo ) }} </i></p>
+                <p><b>Valor de la factura:</b> <i> {{ valorTotalFactura | currency:'':'symbol-narrow':'.0-0' }} </i></p>
             </mat-card-content>
         </mat-card>
 
-        <app-tabla-datos-solicitud></app-tabla-datos-solicitud>
+        <app-tabla-datos-solicitud [listProyectos]="solicitudPago.contratoSon.listProyectos[1]"></app-tabla-datos-solicitud>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -40,15 +40,15 @@
                 </ng-container>
                 <ng-container matColumnDef="numDrp">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp }} </td>
                 </ng-container>
                 <ng-container matColumnDef="valor">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitudDdp | currency:'':'symbol-narrow':'.0-0' }} </td>
                 </ng-container>
                 <ng-container matColumnDef="saldo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPresupuestal | currency:'':'symbol-narrow':'.0-0' }} </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -67,7 +67,7 @@
 
         <mat-card class="shipping-card border">
             <mat-card-content align="left">
-                <p><b>URL con soporte:</b> <i>https://drive.google.com/drive/registrodecontroversiacontractual/soportedefacturaSolPagoO001-N801801</i></p>
+                <p><b>URL con soporte:</b> <i>{{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }}</i></p>
             </mat-card-content>
         </mat-card>
     </mat-expansion-panel>
@@ -80,18 +80,24 @@
         </mat-expansion-panel-header>
 
         <div class="d-flex justify-content-center mt-1em">
-            <p>Nombre del contratista: <b> Interventores S.A. </b></p>
-            <p style="margin-left: 2em;">Número de identificación: <b>900.879.765-2</b></p>
+            <p>Nombre del contratista: <b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i> </b></p>
+            <p style="margin-left: 2em;">Número de identificación: <b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </i> </b></p>
         </div>
 
-        <mat-card class="shipping-card border">
+        <mat-card class="shipping-card var-main-gris">
             <mat-card-content align="left">
-                <p><b>¿Cuál es el medio de pago para los giros del contrato?:</b> <i>Transferencia electrónica</i></p>
-                <p><b>Titular de la cuenta:</b> <i>Depósito de pinturas SAS</i></p>
-                <p><b>Número de identificación del titular:</b> <i>950.789.897-2</i></p>
-                <p><b>Número de cuenta:</b> <i>4563-9876-2453-3245</i></p>
-                <p><b>Banco:</b> <i>Bancolombia</i></p>
-                <p><b>Tipo de cuenta:</b> <i>Corriente</i></p>
+                <p><strong>¿Cuál es el medio de pago para los giros del contrato?:</strong> {{ getMedioPago( this.addressForm.get( 'medioPagoGiroContrato' ).value ) }} </p>
+                <ng-container *ngIf="this.addressForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica; else esChequeGerencia">
+                    <p><strong>Titular de la cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value }} </p>
+                    <p><strong>Número de identificación del titular:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value }} </p>
+                    <p><strong>Número de cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value }} </p>
+                    <p><strong>Banco:</strong> {{ getBanco( addressForm.get( 'transferenciaElectronica' ).get( 'bancoCodigo' ).value ) }} </p>
+                    <p><strong>Tipo de cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'esCuentaAhorros' ).value === true ? 'Ahorros' : 'Corriente' }} </p>
+                </ng-container>
+                <ng-template #esChequeGerencia>
+                    <p><strong>Nombre del beneficiario:</strong> {{ addressForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value }} </p>
+                    <p><strong>Número de identificación del beneficiario:</strong> {{ addressForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value }} </p>
+                </ng-template>
             </mat-card-content>
         </mat-card>
 

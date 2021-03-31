@@ -42,7 +42,7 @@
                     </ng-container>
                     <ng-container matColumnDef="numDrp">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp }} </td>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp | json }} </td>
                     </ng-container>
                     <ng-container matColumnDef="valor">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>

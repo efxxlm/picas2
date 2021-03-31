@@ -4,6 +4,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { Router } from '@angular/router';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-tabla-verificar-orden-giro',
@@ -12,6 +16,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaVerificarOrdenGiroComponent implements OnInit {
 
+    listaMenu: ListaMenu = ListaMenuId;
+    estadoSolicitudPagoOrdenGiro: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     tablaVerificar = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
@@ -23,45 +29,28 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
       'estadoVerificacion',
       'gestion'
     ];
-    dataTable = [
-        {
-            fechaGeneracion: new Date(),
-            numeroOrden: 'ODG_Obr 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoVerificacion: 'Sin verificación',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaGeneracion: new Date(),
-            numeroOrden: 'ODG_Expensas 001',
-            modalidad: 'No aplica',
-            numeroContrato: 'N326326',
-            estadoVerificacion: 'Sin verificación',
-            esExpensas: true,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaGeneracion: new Date(),
-            numeroOrden: 'ODG_Otros Costos 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoVerificacion: 'Sin verificación',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        }
-    ];
 
     constructor(
-        private dialog: MatDialog )
-    { }
+        private routes: Router,
+        private dialog: MatDialog,
+        private ordenGiroSvc: OrdenPagoService )
+    {
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.verificarOrdenGiro )
+            .subscribe(
+                response => {
+                    console.log( response );
+
+                    response.forEach( registro => registro.fechaAprobacionFinanciera = moment( registro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ) );
+
+                    this.tablaVerificar = new MatTableDataSource( response );
+                    this.tablaVerificar.paginator = this.paginator;
+                    this.tablaVerificar.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        this.tablaVerificar = new MatTableDataSource( this.dataTable );
-        this.tablaVerificar.sort = this.sort;
-        this.tablaVerificar.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter( event: Event ) {
