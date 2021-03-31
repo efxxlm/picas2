@@ -53,7 +53,7 @@
                 <td mat-cell *matCellDef="let element">
                     <!---->
                     <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoActuacionReclamacionCodigo=='5' || 
+                    *ngIf="element.estadoActuacionReclamacionCodigo=='5' ||  element.estadoActuacionReclamacionCodigo=='7' ||
                     (element.estadoActuacionReclamacionCodigo=='2'&& element.registroCompletoReclamacion=='Completo'&& element.esRequiereComiteReclamacion==false)"
                         (click)="this.actualizarReclamacionAseguradora(element.actuacionId,element.numeroReclamacion)">
                         Actualizar reclamación ante la aseguradora
@@ -70,12 +70,14 @@
                         Enviar reclamación a comité técnico
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionReclamacionCodigo=='2' || element.estadoActuacionReclamacionCodigo=='4'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='2' || element.estadoActuacionReclamacionCodigo=='4' || element.estadoActuacionReclamacionCodigo=='8'"
                         (click)="this.verDetalleEditarReclamacion(element.actuacionId,element.descripcionActuacion,element.numeroActuacionReclamacion)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionReclamacionCodigo=='5' || element.estadoActuacionReclamacionCodigo=='3'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='5' || element.estadoActuacionReclamacionCodigo=='3' 
+                        || element.estadoActuacionReclamacionCodigo=='6' || element.estadoActuacionReclamacionCodigo=='7'
+                        || element.estadoActuacionReclamacionCodigo=='9'"
                         (click)="this.verDetalleReclamacion(element.actuacionId,element.descripcionActuacion,element.numeroActuacionReclamacion)">
                         Ver detalle
                     </button>
