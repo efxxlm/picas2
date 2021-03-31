@@ -137,7 +137,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     this.clausulaField.clear();
 
     if ( this.novedadDescripcion.tipoNovedadCodigo === '5' ){
-      if ( this.novedadDescripcion.novedadContractualClausula ){
+      if ( this.novedadDescripcion.novedadContractualClausula && this.novedadDescripcion.novedadContractualClausula.length > 0 ){
         this.novedadDescripcion.novedadContractualClausula.forEach( c => {
           let grupo = this.crearClausula();
           grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );

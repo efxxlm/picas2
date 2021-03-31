@@ -123,6 +123,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarSeguimientoDiarioASupervisor = 120,
         SeguimientoDiarioValidado = 121,
         SeguimientoDiarioDevuelto = 122,
+        NotificacionTresDiasNegativosSeguimientoDiario = 124,
 
 
 

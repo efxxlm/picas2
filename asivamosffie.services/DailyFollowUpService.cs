@@ -47,7 +47,7 @@ namespace asivamosffie.services
 
                 if (listaSeguimientoDiario.Count() > 0)
                 {
-                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.OrderBy(x => x.FechaSeguimiento).FirstOrDefault();
+                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.FirstOrDefault();
 
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
@@ -1109,6 +1109,36 @@ namespace asivamosffie.services
 
             List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
             _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Devuelto");
+
+
+        }
+
+        private async void EnviarNotificacionSeguimientoDiasNegativos(SeguimientoDiario seguimientoDiario)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == proyecto.ContratoId)
+                                            .Include(x => x.Interventor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.NotificacionTresDiasNegativosSeguimientoDiario && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido.Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+                                                      .Replace("[SEDE]", proyecto.Sede)
+                                                      .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+                                                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
+
+
+            List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario - días consecutivos negativos");
 
 
         }
