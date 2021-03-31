@@ -62,7 +62,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div align="center">
-                <b>Consecutivo FFIE: 001</b>    
+                <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
             </div>
 
             <app-form-origen [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"></app-form-origen>

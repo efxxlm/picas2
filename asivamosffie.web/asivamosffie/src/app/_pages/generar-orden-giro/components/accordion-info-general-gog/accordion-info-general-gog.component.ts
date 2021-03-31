@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-accordion-info-general-gog',
@@ -13,6 +14,7 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaTipoSolicitudContrato: Dominio[] = [];
     valorTotalFactura = 0;
     solicitudPagoFase: any;
@@ -39,54 +41,67 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     };
 
     getSolicitudPago() {
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        if ( this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.expensas && this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.otrosCostos ) {
+            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
 
-        this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
-
-        // Get semaforo informacion general
-        if ( this.solicitudPago.ordenGiro !== undefined ) {
-            if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
-                if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
-                    this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
-
-                    if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica !== undefined ) {
-                        if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica.length > 0 ) {
-                            const ordenGiroTerceroTransferenciaElectronica = this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica[0];
-
-                            if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === false ) {
-                                this.semaforoInfoGeneral = 'en-proceso';
-                            }
-                            if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === true ) {
-                                this.semaforoInfoGeneral = 'completo';
+            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
+    
+            // Get semaforo informacion general
+            if ( this.solicitudPago.ordenGiro !== undefined ) {
+                if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
+                    if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
+                        this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
+    
+                        if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica !== undefined ) {
+                            if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica.length > 0 ) {
+                                const ordenGiroTerceroTransferenciaElectronica = this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica[0];
+    
+                                if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === false ) {
+                                    this.semaforoInfoGeneral = 'en-proceso';
+                                }
+                                if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === true ) {
+                                    this.semaforoInfoGeneral = 'completo';
+                                }
                             }
                         }
-                    }
-
-                    if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
-                        if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
-                            const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
-
-                            if ( ordenGiroTerceroChequeGerencia.registroCompleto === false ) {
-                                this.semaforoInfoGeneral = 'en-proceso';
-                            }
-                            if ( ordenGiroTerceroChequeGerencia.registroCompleto === true ) {
-                                this.semaforoInfoGeneral = 'completo';
+    
+                        if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
+                            if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
+                                const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
+    
+                                if ( ordenGiroTerceroChequeGerencia.registroCompleto === false ) {
+                                    this.semaforoInfoGeneral = 'en-proceso';
+                                }
+                                if ( ordenGiroTerceroChequeGerencia.registroCompleto === true ) {
+                                    this.semaforoInfoGeneral = 'completo';
+                                }
                             }
                         }
                     }
                 }
             }
+    
+            this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         }
-
-        this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
     }
 
     getTipoSolicitudContrato( tipoSolicitudCodigo: string ) {
+        if ( tipoSolicitudCodigo === this.listaTipoSolicitud.otrosCostos ) {
+            return 'Otros costos y servicios';
+        }
+
+        if ( tipoSolicitudCodigo === this.listaTipoSolicitud.expensas ) {
+            return 'Expensas';
+        }
+
         if ( this.listaTipoSolicitudContrato.length > 0 ) {
-            const solicitud = this.listaTipoSolicitudContrato.filter( solicitud => solicitud.codigo === tipoSolicitudCodigo );
-            return solicitud[0].nombre;
+            const solicitud = this.listaTipoSolicitudContrato.find( solicitud => solicitud.codigo === tipoSolicitudCodigo );
+            
+            if ( solicitud !== undefined ) {
+                return solicitud.nombre;
+            }
         }
     }
 
