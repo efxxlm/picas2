@@ -16,14 +16,14 @@ using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
-    public class GenerateSpinOrderService : IGenerateSpinOrderService
+    public class ProcessMoneyOrder  
     {
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePayment;
 
-        public GenerateSpinOrderService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
+        public ProcessMoneyOrder(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
