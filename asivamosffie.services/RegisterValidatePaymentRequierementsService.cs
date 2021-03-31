@@ -29,94 +29,6 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region Tablas Relacionadas Para Pagos
-        //0# Traer Forma de Pago por Fase
-        public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion).Select(r => r.FormaPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-        //1# Traer criterio de pago por Forma de pago
-        public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.FormaPagoCriterioPago.Where(r => r.FormaPagoCodigo == pFormaPagoCodigo).Select(r => r.CriterioPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Criterios_Pago);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-        //2# Traer Tipo de pago por Criterio de pago
-        public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-        //3# Traer Concepto de pago por tipo de pago
-        public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-        //4# Traer  Uso Por Concepto de pago
-        public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId)
-        {
-            try
-            {
-                List<dynamic> ListDynamics = new List<dynamic>();
-                List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
-                List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
-
-                return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
-
-            }
-            catch (Exception ex)
-            {
-                return new { };
-            }
-        }
-        #endregion
-
         #region Get
         public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
         {
@@ -396,7 +308,7 @@ namespace asivamosffie.services
                             .Include(r => r.SolicitudPagoListaChequeo)
                          .ThenInclude(r => r.ListaChequeo)
                             .AsNoTracking()
-                        .FirstOrDefault(); 
+                        .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
 
@@ -407,81 +319,91 @@ namespace asivamosffie.services
 
         #endregion
 
-        #region Validate 
-
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        #region Tablas Relacionadas Para Pagos
+        //0# Traer Forma de Pago por Fase
+        public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion)
         {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion).Select(r => r.FormaPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
 
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //1# Traer criterio de pago por Forma de pago
+        public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.FormaPagoCriterioPago.Where(r => r.FormaPagoCodigo == pFormaPagoCodigo).Select(r => r.CriterioPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Criterios_Pago);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //2# Traer Tipo de pago por Criterio de pago
+        public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //3# Traer Concepto de pago por tipo de pago
+        public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //4# Traer  Uso Por Concepto de pago
+        public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId)
+        {
             try
             {
-                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+                List<dynamic> ListDynamics = new List<dynamic>();
+                List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
+                List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
 
-                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+                return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
 
-                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal));
-
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
-
-                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-
-                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                decimal MontoMaximo = 0;
-                //TODO:VALIDAR 
-                foreach (var PorcentajePago in FormasPago)
-                {
-                    if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorPendientePorPagar;
-                    else
-                    {
-                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                        MontoMaximo /= 100;
-                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
-
-                        if (MontoMaximo < 0)
-                            MontoMaximo = ValorTotalPorFase;
-
-                        if (MontoMaximo < ValorPendientePorPagar)
-                            break;
-                    }
-                }
-
-                return new
-                {
-                    MontoMaximo,
-                    ValorPendientePorPagar
-                };
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new
-                {
-                    MontoMaximo = 0,
-                    ValorPendientePorPagar = 0
-                };
+                return new { };
             }
-        }
-
-        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
-        {
-            decimal ValorMaximoProyecto =
-               (decimal)await _context.VValorUsosFasesAportanteProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                      && r.EsPreConstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorUso);
-
-            decimal ValorFacturadoProyecto =
-               (decimal)await _context.VValorFacturadoProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                        && r.EsPreconstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorFacturado);
-
-            return new
-            {
-                ValorMaximoProyecto,
-                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
-            };
         }
         #endregion
 
@@ -1895,7 +1817,83 @@ namespace asivamosffie.services
         #endregion
 
         #endregion
+         
+        #region Validate 
 
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        {
 
+            try
+            {
+                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+
+                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
+                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
+                    .Sum(c => c.SaldoPresupuestal));
+
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+
+                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
+
+                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
+                decimal MontoMaximo = 0;
+                //TODO:VALIDAR 
+                foreach (var PorcentajePago in FormasPago)
+                {
+                    if (Convert.ToUInt32(PorcentajePago) == 100)
+                        MontoMaximo = ValorPendientePorPagar;
+                    else
+                    {
+                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
+                        MontoMaximo /= 100;
+                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
+
+                        if (MontoMaximo < 0)
+                            MontoMaximo = ValorTotalPorFase;
+
+                        if (MontoMaximo < ValorPendientePorPagar)
+                            break;
+                    }
+                }
+
+                return new
+                {
+                    MontoMaximo,
+                    ValorPendientePorPagar
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    MontoMaximo = 0,
+                    ValorPendientePorPagar = 0
+                };
+            }
+        }
+
+        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
+        {
+            decimal ValorMaximoProyecto =
+               (decimal)await _context.VValorUsosFasesAportanteProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                      && r.EsPreConstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorUso);
+
+            decimal ValorFacturadoProyecto =
+               (decimal)await _context.VValorFacturadoProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                        && r.EsPreconstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorFacturado);
+
+            return new
+            {
+                ValorMaximoProyecto,
+                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
+            };
+        }
+        #endregion 
     }
 }

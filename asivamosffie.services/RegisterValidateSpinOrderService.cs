@@ -18,6 +18,7 @@ namespace asivamosffie.services
 {
     public class RegisterValidateSpinOrderService : IRegisterValidateSpinOrderService
     {
+        #region Constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
@@ -29,14 +30,14 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #endregion
+         
         public async Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-
-
+            { 
                 _context.Set<OrdenGiro>()
                        .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                        .Update(o => new OrdenGiro
@@ -45,11 +46,7 @@ namespace asivamosffie.services
                            FechaModificacion = DateTime.Now,
                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion
                        });
-
-
-
-
-
+                 
                 return
                 new Respuesta
                 {
