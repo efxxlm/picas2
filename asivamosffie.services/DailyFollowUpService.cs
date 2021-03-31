@@ -823,6 +823,8 @@ namespace asivamosffie.services
 
                 EnviarNotificacionAApoyo(seguimientoDiario);
 
+                VerificarDiasConsecutivosNegativos(seguimientoDiario);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -1122,7 +1124,8 @@ namespace asivamosffie.services
 
             Contrato contrato = _context.Contrato
                                             .Where(x => x.ContratoId == proyecto.ContratoId)
-                                            .Include(x => x.Interventor)
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Supervisor)
                                             .FirstOrDefault();
 
             Template templateEnviar = _context.Template
@@ -1137,9 +1140,34 @@ namespace asivamosffie.services
                                                       .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
 
 
-            List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
+            List<string> listaMails = new List<string> { contrato?.Apoyo?.Email, contrato?.Supervisor?.Email };
             _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario - días consecutivos negativos");
 
+
+        }
+
+        private async void VerificarDiasConsecutivosNegativos(SeguimientoDiario seguimientoDiario)
+        {
+            List<SeguimientoDiario> seguimientos = _context.SeguimientoDiario
+                                                                .Where(r => r.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                                .ToList();
+            int cantidad = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                SeguimientoDiario seguimiento = seguimientos
+                                                    .Where(r => r.FechaSeguimiento.Date == seguimientoDiario.FechaSeguimiento.AddDays(-i).Date)
+                                                    .FirstOrDefault();
+                if (seguimiento != null && VerificarAlertas(seguimientoDiario))
+                {
+                    cantidad++;
+                }
+            }
+
+            if (cantidad == 3)
+            {
+                EnviarNotificacionSeguimientoDiasNegativos(seguimientoDiario);
+
+            }
 
         }
     }
