@@ -239,12 +239,21 @@ namespace asivamosffie.services
             if (controversiaContractual != null)
                 contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
 
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                                            .FirstOrDefault();
             if (contrato != null)
             {
                 if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
                     prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
                 else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
                     prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+            }
+
+            if (sesionComiteSolicitud != null)
+            {
+                controversiaContractual.ObservacionesComiteTecnico = sesionComiteSolicitud.Observaciones;
+                controversiaContractual.ObversacionesComiteFiduciario = sesionComiteSolicitud.ObservacionesFiduciario;
             }
 
             //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
