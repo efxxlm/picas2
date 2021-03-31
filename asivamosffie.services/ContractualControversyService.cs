@@ -240,7 +240,7 @@ namespace asivamosffie.services
                 contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
 
                 SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
                                             .FirstOrDefault();
             if (contrato != null)
             {
@@ -291,6 +291,9 @@ namespace asivamosffie.services
 
             controversiaActuacion.ObservacionesComites = _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
                   !(bool)x.Eliminado && x.SolicitudId == controversiaActuacion.ControversiaActuacionId).Select(y => y.Observaciones).ToList();
+            controversiaActuacion.ObservacionesFiduciaria = _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
+                  !(bool)x.Eliminado && x.SolicitudId == controversiaActuacion.ControversiaActuacionId).Select(y => y.ObservacionesFiduciario).ToList();
+
             return controversiaActuacion;
         }
 
