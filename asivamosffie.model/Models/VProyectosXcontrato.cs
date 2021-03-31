@@ -21,5 +21,8 @@ namespace asivamosffie.model.Models
         public string EstadoActaFase2 { get; set; }
         public decimal? ValorTotal { get; set; }
         public string TipoSolicitudCodigo { get; set; }
+        public int? InterventorId { get; set; }
+        public int? ApoyoId { get; set; }
+        public int? SupervisorId { get; set; }
     }
 }

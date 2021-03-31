@@ -31,10 +31,14 @@ namespace asivamosffie.services
             _environment = hostingEnvironment;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp(int usuarioId)
         {
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                                                        .Where(
+                                                                                r => r.FechaActaInicioFase2 <= DateTime.Now && 
+                                                                                r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() &&
+                                                                                r.InterventorId == usuarioId
+                                                                              )
                                                                         .ToListAsync();
 
             listaInfoProyectos.ForEach(p =>
@@ -72,12 +76,12 @@ namespace asivamosffie.services
             return listaInfoProyectos;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp(int usuarioId)
         {
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.ApoyoId == usuarioId)
                                                                         .ToListAsync();
 
             List<VProyectosXcontrato> listaSeguimientos = new List<VProyectosXcontrato>();
@@ -167,12 +171,12 @@ namespace asivamosffie.services
             return listaSeguimientos;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp(int usuarioId)
         {
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.SupervisorId == usuarioId)
                                                                         .ToListAsync();
 
             List<VProyectosXcontrato> listaSeguimientos = new List<VProyectosXcontrato>();
