@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AccordionInfoGeneralGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     listaTipoSolicitudContrato: Dominio[] = [];
     valorTotalFactura = 0;
     solicitudPagoFase: any;

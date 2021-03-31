@@ -21,6 +21,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     @Input() solicitudPago: any;
     @Input() descuento: any;
     @Input() valorNetoGiro: number;
+    @Input() esVerDetalle: boolean;
     estaEditando = false;
     recibeListaCriterios = false;
     cantidadAportantes: number;
@@ -320,6 +321,36 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             
             if ( descuento !== undefined ) {
                 return descuento.nombre;
+            }
+        }
+    }
+
+    getValueCriterio( codigo: string ) {
+        if ( this.criteriosArray.length > 0 ) {
+            const criterio = this.criteriosArray.find( criterio => criterio.codigo === codigo );
+
+            if ( criterio !== undefined ) {
+                return criterio.nombre;
+            }
+        }
+    }
+
+    getValueConcepto( codigo: string, listaConceptos: Dominio[] ) {
+        if ( listaConceptos.length > 0 ) {
+            const concepto = listaConceptos.find( concepto => concepto.codigo === codigo );
+
+            if ( concepto !== undefined ) {
+                return concepto.nombre;
+            }
+        }
+    }
+
+    getValueFuente( codigo: string, listaFuentes: Dominio[] ) {
+        if ( listaFuentes.length > 0 ) {
+            const fuente = listaFuentes.find( concepto => concepto.codigo === codigo );
+
+            if ( fuente !== undefined ) {
+                return fuente.nombre;
             }
         }
     }

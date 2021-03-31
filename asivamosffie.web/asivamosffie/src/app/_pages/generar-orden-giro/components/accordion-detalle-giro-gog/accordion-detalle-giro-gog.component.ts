@@ -8,6 +8,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 export class AccordionDetalleGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     ordenGiro: any;
     tieneDescuentosDireccionTecnica = true;

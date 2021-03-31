@@ -71,11 +71,11 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoInfoGeneral">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoInfoGeneral : ''">
                     Tercero de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-tercero-giro-gog [solicitudPago]="solicitudPago"></app-form-tercero-giro-gog>
+            <app-form-tercero-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-form-tercero-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

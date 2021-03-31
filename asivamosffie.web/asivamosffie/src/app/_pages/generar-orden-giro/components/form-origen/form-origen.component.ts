@@ -16,6 +16,7 @@ import humanize from 'humanize-plus';
 export class FormOrigenComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     @Output() seDiligenciaFormulario = new EventEmitter<boolean>();
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
@@ -67,7 +68,13 @@ export class FormOrigenComponent implements OnInit {
 
                                 this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => this.listaAportantes.push( aportante ) );
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
+                                            const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
+
+                                            if ( aportanteFind === undefined ) {
+                                                this.listaAportantes.push( aportante );
+                                            }
+                                        } );
                                     }
                                 } );
 
@@ -99,7 +106,7 @@ export class FormOrigenComponent implements OnInit {
                                             if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
                                                 totalCuenta++;
                                             }
-                                            console.log( cuentaBancaria() );
+
                                             this.aportantes.push(
                                                 this.fb.group(
                                                     {
@@ -156,6 +163,24 @@ export class FormOrigenComponent implements OnInit {
             if ( banco !== undefined ) {
                 return banco.nombre;
             }
+        }
+    }
+
+    checkSaveBtn() {
+        let totalCuentasBancarias = 0;
+
+        if ( this.aportantes.length > 0 ) {
+            this.aportantes.controls.forEach( control => {
+                totalCuentasBancarias += control.get( 'listaCuentaBancaria' ).value.lengthM
+            } )
+
+            if ( totalCuentasBancarias !== this.aportantes.length ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 

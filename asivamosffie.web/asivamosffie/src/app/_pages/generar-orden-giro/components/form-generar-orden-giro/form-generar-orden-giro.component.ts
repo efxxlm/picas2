@@ -1,5 +1,5 @@
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 
@@ -13,6 +13,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
     solicitudPago: any;
     contrato: any;
     ordenGiroTercero: any;
+    esRegistroNuevo: boolean;
+    esVerDetalle = false;
     semaforoInfoGeneral = 'sin-diligenciar';
     semaforoDetalle = 'sin-diligenciar';
     modalidadContratoArray: Dominio[] = [];
@@ -22,6 +24,19 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
         private ordenPagoSvc: OrdenPagoService,
         private commonSvc: CommonService )
     {
+        this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+            if ( urlSegment.path === 'generacionOrdenGiro' ) {
+                this.esRegistroNuevo = true;
+                return;
+            }
+            if ( urlSegment.path === 'verDetalleEditarOrdenGiro' ) {
+                this.esRegistroNuevo = false;
+                return;
+            }
+            if ( urlSegment.path === 'verDetalleOrdenGiro' ) {
+                this.esVerDetalle = true;
+            }
+        } );
         this.commonSvc.modalidadesContrato()
         .subscribe( response => {
             this.modalidadContratoArray = response;

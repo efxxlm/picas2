@@ -1,5 +1,44 @@
 <section *ngIf="aportantes.length > 0">
-    <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-content align="left">
+                    <div formArrayName="aportantes" *ngFor="let aportante of aportantes.controls; index as i">
+                        <mat-card-title class="header-card--text sub-text" style="margin-left: .5em;">
+                            Aportante {{ i + 1 }}
+                        </mat-card-title>
+                        <div class="mt-1em" [formGroup]="aportante">
+                            <div style="margin-left: .5em;">
+                                <p><strong>Tipo de aportante: </strong> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                <p><strong>Nombre del aportante: </strong> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
+                                <p><b>Nombre de la Cuenta: </b> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
+                            </div>
+                            <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
+                                <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                    <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                    <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                    <p><strong>Código SIFI: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
+                                </div>
+                            </ng-container>
+                            <ng-template #elseTemplate>
+                                <p style="margin-left: .5em;"><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
+                                <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                    <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                    <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                    <p><strong>Código SIFI: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </form>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-content align="left">
                     <div formArrayName="aportantes" *ngFor="let aportante of aportantes.controls; index as i">
@@ -19,7 +58,7 @@
                                             <div class="pr-1">
                                                 <label  class="label-left"
                                                         for="cuentaBancariaId"
-                                                        [ngClass]="{ 'color-secondaryColor': (formOrigen.get('cuentaBancariaId').invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId').invalid ) }">
+                                                        [ngClass]="{ 'color-secondaryColor': (formOrigen.get('cuentaBancariaId')?.invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId')?.invalid ) }">
                                                         Nombre de la Cuenta
                                                 </label>
                                             </div>
@@ -40,10 +79,16 @@
                                                   [matTooltipPosition]="'above'"
                                                   matTooltip="Debe ingresar la información en el campo para continuar"
                                                   matTooltipClass="info-tooltip"
-                                                  *ngIf="(formOrigen.get('cuentaBancariaId').invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId').invalid )">
+                                                  *ngIf="(formOrigen.get('cuentaBancariaId')?.invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId')?.invalid )">
                                               </span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                    <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                    <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                    <p><strong>Código SIFI: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
                                 </div>
                             </ng-container>
                             <ng-template #elseTemplate>
@@ -60,7 +105,7 @@
                 </mat-card-content>
             </mat-card>
 
-            <div class="text-center mb-2em" *ngIf="esUnicaCuenta === false">
+            <div class="text-center mb-2em" *ngIf="checkSaveBtn() === true">
                 <button mat-button
                         color="warn"
                         class="btn-guardar"
@@ -69,5 +114,7 @@
                         <img src="assets/img/icon/guardar.svg" alt="Regresar">
                 </button>
             </div>
-    </form>
+        </form>
+    </ng-template>
+    
 </section>

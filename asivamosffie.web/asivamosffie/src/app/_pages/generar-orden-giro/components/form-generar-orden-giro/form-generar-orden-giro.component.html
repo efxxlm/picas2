@@ -4,9 +4,27 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">
-        Generar orden de giro
-    </h1>
+
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <h1 class="title-menu--h1">
+            Ver detalle orden de giro
+        </h1>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <ng-container *ngIf="esRegistroNuevo === true; else elseTemplate">
+            <h1 class="title-menu--h1">
+                Generar orden de giro
+            </h1>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <h1 class="title-menu--h1">
+                Ver detalle/Editar orden de giro
+            </h1>
+        </ng-template>
+        
+    </ng-template>
+    
+
     <p class="info-sub-title">
         <span>Número de contrato <b> {{ contrato.numeroContrato }} </b></span>
     </p>
@@ -28,19 +46,26 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoInfoGeneral">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoInfoGeneral : ''">
                     Información general
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-accordion-info-general-gog [solicitudPago]="solicitudPago"></app-accordion-info-general-gog>
+
+            <app-accordion-info-general-gog [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle">
+            </app-accordion-info-general-gog>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoDetalle">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?semaforoDetalle : ''">
                     Detalle del giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago" (estadoSemaforo)="semaforoDetalle = $event"></app-accordion-detalle-giro-gog>
+
+            <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            (estadoSemaforo)="semaforoDetalle = $event">
+            </app-accordion-detalle-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

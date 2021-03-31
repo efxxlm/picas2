@@ -13,6 +13,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class DescDirTecnicaGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any[];
     solicitudPagoFaseFactura: any;
