@@ -31,6 +31,10 @@ export class VerdetalleTramiteCcComponent implements OnInit {
   motivosRechazo: any;
   soporteSolicitud: any;
   codAux: any;
+  cualOtroMotivo: any;
+  estadoCodigo: any;
+  observacionesTecnico: any;
+  observacionesFiduciaria: any;
   constructor(private activatedRoute: ActivatedRoute,
     private services: ContractualControversyService,
     private polizaService: PolizaGarantiaService) { }
@@ -62,7 +66,11 @@ export class VerdetalleTramiteCcComponent implements OnInit {
   }
   loadDetailsControversy(id){
     this.services.GetControversiaContractualById(id).subscribe((resp: any) => {
+      this.estadoCodigo = resp.estadoCodigo;
+      this.observacionesTecnico = resp.observacionesComiteTecnico;
+      this.observacionesFiduciaria = resp.obversacionesComiteFiduciario;
       this.codAux = resp.tipoControversiaCodigo;
+      this.cualOtroMotivo = resp.cualOtroMotivo;
       switch(resp.tipoControversiaCodigo){
         case '1':
           this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
