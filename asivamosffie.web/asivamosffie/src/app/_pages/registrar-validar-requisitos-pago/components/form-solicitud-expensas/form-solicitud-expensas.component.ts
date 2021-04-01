@@ -86,7 +86,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
     checkValorTotal( value: number ) {
         if ( value !== null ) {
             if ( value > this.saldoPresupuestal ) {
-                this.addressForm.get( 'valorFacturadoConcepto' ).setValue( null );
+                this.addressForm.get( 'valorFacturado' ).setValue( null );
                 this.openDialog( '', '<b>El valor facturado no puede ser mayor al saldo presupuestal disponible.</b>' );
             }
         }
