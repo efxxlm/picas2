@@ -93,7 +93,7 @@ namespace asivamosffie.services
                     await _context.Set<OrdenGiroObservacion>()
                               .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
                               .UpdateAsync(og => new OrdenGiroObservacion
-                              {
+                              { 
                                   Observacion = pOrdenGiroObservacion.Observacion,
                                   TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
                                   TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
