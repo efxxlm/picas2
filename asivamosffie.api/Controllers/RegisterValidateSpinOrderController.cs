@@ -67,7 +67,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListOrdenGiro")]
+        [Route("GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId")]
         public async Task<dynamic> GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pOrdenGiroId, int pPadreId, string pTipoObservacionCodigo)
         {
             return await _registerValidateSpinOrderService.GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId(pMenuId, pOrdenGiroId, pPadreId, pTipoObservacionCodigo);
