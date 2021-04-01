@@ -14,8 +14,9 @@ namespace asivamosffie.model.Models
     public partial class SolicitudPago
     {
         [NotMapped]
-        public Contrato ContratoSon { get; set; }  
-         
+        public Contrato ContratoSon { get; set; }
 
+        [NotMapped]
+        public decimal? SaldoPresupuestal { get; set; }
     }
 }

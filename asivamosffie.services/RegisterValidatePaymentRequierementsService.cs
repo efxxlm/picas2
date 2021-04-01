@@ -318,6 +318,8 @@ namespace asivamosffie.services
                                  .AsNoTracking()
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
+                    solicitudPago.SaldoPresupuestal = _context.VSaldoPresupuestalXproyecto.Where(v => v.ContratacionProyectoId == solicitudPago.ContratacionProyectoId).FirstOrDefault().SaldoPresupuestal;
+                     
                     return solicitudPago;
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
@@ -328,6 +330,9 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.ListaChequeo)
                             .AsNoTracking()
                         .FirstOrDefault();
+
+                    solicitudPago.SaldoPresupuestal = _context.VValorFacturadoContrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestal;
+                     
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
 
