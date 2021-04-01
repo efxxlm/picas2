@@ -140,6 +140,7 @@
                                     <input matInput #valorFacturado currencyMask maxlength="20" required
                                         formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        (ngModelChange)="checkValorTotal( $event )"
                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
