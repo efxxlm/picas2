@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, Input, OnInit } from '@angular/core';
@@ -5,6 +6,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Dominio } from 'src/app/core/_services/common/common.service';
+import { TipoObservaciones, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-detalle-giro',
@@ -13,9 +16,14 @@ import { Dominio } from 'src/app/core/_services/common/common.service';
 })
 export class DetalleGiroComponent implements OnInit {
 
+    @Input() verificarOrdenGiroMenuId: number;
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
+    ordenGiroDetalleEstrategiaPago: any
+    ordenGiroId = 0;
+    ordenGiroObservacionId = 0;
     listaEstrategiaPago: Dominio[] = [];
     dataHistorial: any[] = [];
     dataSource = new MatTableDataSource();
@@ -93,13 +101,24 @@ export class DetalleGiroComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
+        private routes: Router )
     {
         this.commonSvc.listaEstrategiasPago()
             .subscribe( response => this.listaEstrategiaPago = response );
     }
 
     ngOnInit(): void {
+        this.getObservacion()
+        this.dataSource = new MatTableDataSource( this.dataTable );
+        this.dataSourceFuentes = new MatTableDataSource( this.dataTableFuentes );
+    }
+
+    getObservacion() {
+        this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+        this.ordenGiroDetalleEstrategiaPago = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleEstrategiaPago[ 0 ];
+
         this.dataHistorial = [
             {
                 fechaCreacion: new Date(),
@@ -107,8 +126,6 @@ export class DetalleGiroComponent implements OnInit {
                 observacion: '<p>test historial</p>'
             }
         ];
-        this.dataSource = new MatTableDataSource( this.dataTable );
-        this.dataSourceFuentes = new MatTableDataSource( this.dataTableFuentes );
         this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
@@ -147,7 +164,31 @@ export class DetalleGiroComponent implements OnInit {
         if ( this.formObservacion.get( 'tieneObservaciones' ).value === false && this.formObservacion.get( 'observaciones' ).value !== null ) {
             this.formObservacion.get( 'observaciones' ).setValue( '' );
         }
-        console.log( this.formObservacion );
+
+        const pOrdenGiroObservacion = {
+            ordenGiroObservacionId: this.ordenGiroObservacionId,
+            ordenGiroId: this.ordenGiroId,
+            tipoObservacionCodigo: this.tipoObservaciones.estrategiaPago,
+            menuId: this.verificarOrdenGiroMenuId,
+            idPadre: this.ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+            observacion: this.formObservacion.get( 'observaciones' ).value,
+            tieneObservacion: this.formObservacion.get( 'tieneObservaciones' ).value
+        }
+
+        this.obsOrdenGiro.createEditSpinOrderObservations( pOrdenGiroObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarOrdenGiro/verificarOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

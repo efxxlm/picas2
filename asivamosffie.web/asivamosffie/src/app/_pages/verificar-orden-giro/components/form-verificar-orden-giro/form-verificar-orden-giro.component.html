@@ -41,7 +41,8 @@
             <app-informacion-general    [solicitudPago]="solicitudPago"
                                         [esRegistroNuevo]="esRegistroNuevo"
                                         [esVerDetalle]="esVerDetalle"
-                                        [esExpensas]="esExpensas">
+                                        [esExpensas]="esExpensas"
+                                        [verificarOrdenGiroMenuId]="listaMenu.verificarOrdenGiro">
             </app-informacion-general>
         </mat-expansion-panel>
 
@@ -54,7 +55,8 @@
 
             <app-detalle-giro   [esRegistroNuevo]="esRegistroNuevo"
                                 [esVerDetalle]="esVerDetalle"
-                                [solicitudPago]="solicitudPago">
+                                [solicitudPago]="solicitudPago"
+                                [verificarOrdenGiroMenuId]="listaMenu.verificarOrdenGiro">
             </app-detalle-giro>
         </mat-expansion-panel>
     </mat-accordion>

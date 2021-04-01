@@ -1,10 +1,12 @@
+import { Router } from '@angular/router';
+import { ObservacionesOrdenGiroService } from './../../../../core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ListaMediosPagoCodigo, MediosPagoCodigo, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ListaMediosPagoCodigo, MediosPagoCodigo, TipoObservaciones, TipoSolicitud, TipoSolicitudes, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
@@ -14,10 +16,12 @@ import { Dominio } from 'src/app/core/_services/common/common.service';
 })
 export class InformacionGeneralComponent implements OnInit {
 
+    @Input() verificarOrdenGiroMenuId: number;
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Input() esExpensas: boolean;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaTipoSolicitudContrato: Dominio[] = [];
@@ -25,6 +29,7 @@ export class InformacionGeneralComponent implements OnInit {
     listaBancos: Dominio[] = [];
     valorTotalFactura = 0;
     ordenGiroId: 0;
+    ordenGiroObservacionId = 0;
     solicitudPagoFase: any;
     ordenGiroTercero: any;
     ordenGiroTerceroId: 0;
@@ -61,8 +66,10 @@ export class InformacionGeneralComponent implements OnInit {
     };
 
     constructor(
+        private routes: Router,
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
         private commonSvc: CommonService )
     {
         this.commonSvc.listaTipoSolicitudContrato()
@@ -76,15 +83,21 @@ export class InformacionGeneralComponent implements OnInit {
 
             this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
-        this.dataHistorial = [
-            {
-                fechaCreacion: new Date(),
-                responsable: 'Coordinador financiera',
-                observacion: '<p>test historial</p>'
-            }
-        ];
+
         this.getDataTerceroGiro();
+        this.getObservacion();
+
         this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
+    }
+
+    async getObservacion() {
+
+        const listaObservacion = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+            this.verificarOrdenGiroMenuId,
+            this.ordenGiroId,
+            this.ordenGiroTerceroId,
+            this.tipoObservaciones.terceroGiro )
+        console.log( listaObservacion );
         this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
@@ -234,7 +247,31 @@ export class InformacionGeneralComponent implements OnInit {
         if ( this.formObservacion.get( 'tieneObservaciones' ).value === false && this.formObservacion.get( 'observaciones' ).value !== null ) {
             this.formObservacion.get( 'observaciones' ).setValue( '' );
         }
-        console.log( this.formObservacion );
+
+        const pOrdenGiroObservacion = {
+            ordenGiroObservacionId: this.ordenGiroObservacionId,
+            ordenGiroId: this.ordenGiroId,
+            tipoObservacionCodigo: this.tipoObservaciones.terceroGiro,
+            menuId: this.verificarOrdenGiroMenuId,
+            idPadre: this.ordenGiroTerceroId,
+            observacion: this.formObservacion.get( 'observaciones' ).value,
+            tieneObservacion: this.formObservacion.get( 'tieneObservaciones' ).value
+        }
+
+        this.obsOrdenGiro.createEditSpinOrderObservations( pOrdenGiroObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarOrdenGiro/verificarOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

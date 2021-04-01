@@ -2,6 +2,7 @@ import { Dominio, CommonService } from 'src/app/core/_services/common/common.ser
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-form-verificar-orden-giro',
@@ -10,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormVerificarOrdenGiroComponent implements OnInit {
 
+    listaMenu: ListaMenu = ListaMenuId;
     solicitudPago: any;
     contrato: any;
     esRegistroNuevo = false;
