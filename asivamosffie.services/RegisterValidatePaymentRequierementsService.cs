@@ -40,23 +40,36 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
         {
-            return await
-                _context.VProyectosXcontrato
+            List<VProyectosXcontrato> ListProyectos = await _context.VProyectosXcontrato
                                             .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
                                             (
                                              (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
                                              && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                              && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                            )
-                                            )
-                                            .Select
-                                                (s => new
-                                                {
-                                                    s.LlaveMen,
-                                                    s.ContratacionProyectoId
-                                                }
-                                                ).ToListAsync();
+                                            )).ToListAsync();
+
+            List<VSaldoPresupuestalXproyecto> LVSaldoPresupuestalXproyecto = _context.VSaldoPresupuestalXproyecto.ToList();
+
+            List<dynamic> dynamics = new List<dynamic>();
+
+            foreach (var item in ListProyectos)
+            {
+                VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
+
+                if (VSaldoPresupuestalXproyecto != null)
+                {
+                    dynamics.Add(new
+                    {
+                        item.ContratacionProyectoId,
+                        item.LlaveMen,
+                        VSaldoPresupuestalXproyecto.ValorDdp,
+                        VSaldoPresupuestalXproyecto.ValorFacturado,
+                        VSaldoPresupuestalXproyecto.SaldoPresupuestal
+                    });
+                }
+            }
+            return dynamics;
         }
 
         public async Task<dynamic> GetListSolicitudPago()
@@ -109,6 +122,9 @@ namespace asivamosffie.services
         {
             try
             {
+                List<VValorFacturadoContrato> LVValorFacturadoContrato = await _context.VValorFacturadoContrato.ToListAsync();
+                List<dynamic> List = new List<dynamic>();
+
                 if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
                 {
                     List<Contrato> ListContratos = new List<Contrato>();
@@ -131,13 +147,7 @@ namespace asivamosffie.services
                                                         && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
                                                         && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                                      ).ToListAsync();
-                    }
-                    return ListContratos
-                        .Select(r => new
-                        {
-                            r.ContratoId,
-                            r.NumeroContrato
-                        }).ToList();
+                    }   
                 }
                 else
                 {
@@ -150,16 +160,25 @@ namespace asivamosffie.services
                                                             (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                                              && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
                                                             )
-
-
                                                       ).ToListAsync();
-                    return ListContratos
-                                        .Select(r => new
-                                        {
-                                            r.ContratoId,
-                                            r.NumeroContrato
-                                        }).ToList();
+
+                    foreach (var Contrato in ListContratos)
+                    {
+                        VValorFacturadoContrato VValorFacturadoContrato = LVValorFacturadoContrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestal > 0).FirstOrDefault();
+
+                        if (VValorFacturadoContrato != null)
+                        {
+                            List.Add(new
+                            {
+                                VValorFacturadoContrato.ValorSolicitudDdp,
+                                VValorFacturadoContrato.SaldoPresupuestal,
+                                Contrato.ContratoId,
+                                Contrato.NumeroContrato
+                            });
+                        }
+                    }
                 }
+                return List;
             }
             catch (Exception ex)
             {
@@ -1817,7 +1836,7 @@ namespace asivamosffie.services
         #endregion
 
         #endregion
-         
+
         #region Validate 
 
         public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)

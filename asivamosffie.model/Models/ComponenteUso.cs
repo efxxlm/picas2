@@ -16,7 +16,9 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public int? Activo { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
 
         public virtual ComponenteAportante ComponenteAportante { get; set; }
+        public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
     }
 }

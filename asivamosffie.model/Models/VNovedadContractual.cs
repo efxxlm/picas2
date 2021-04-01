@@ -21,5 +21,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoTramiteNovedades { get; set; }
         public int? CantidadSoporteSuficienteNovedad { get; set; }
         public int? CantidadDescripcion { get; set; }
+        public string LlaveMen { get; set; }
+        public int ContratoId { get; set; }
     }
 }

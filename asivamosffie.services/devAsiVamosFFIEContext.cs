@@ -218,6 +218,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoPagoConceptoPagoCriterio> TipoPagoConceptoPagoCriterio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VConfinanciacionReporte> VConfinanciacionReporte { get; set; }
@@ -248,6 +249,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
+        public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
         public virtual DbSet<VSaldosContrato> VSaldosContrato { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
@@ -265,6 +267,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -833,6 +837,11 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ComponenteAportanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ComponenteUso_ComponenteAportante");
+
+                entity.HasOne(d => d.FuenteFinanciacion)
+                    .WithMany(p => p.ComponenteUso)
+                    .HasForeignKey(d => d.FuenteFinanciacionId)
+                    .HasConstraintName("FK_ComponenteUso_FuenteFinanciacion");
             });
 
             modelBuilder.Entity<ComponenteUsoNovedad>(entity =>
@@ -7625,6 +7634,34 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_usuario");
             });
 
+            modelBuilder.Entity<VAjusteProgramacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_AjusteProgramacion");
+
+                entity.Property(e => e.EstadoNombre)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.FechaAprobacionPoliza)
+                    .HasColumnName("fechaAprobacionPoliza")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaSolictud).HasColumnType("datetime");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("llaveMen")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NovedadesSeleccionadas).HasColumnName("novedadesSeleccionadas");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VAportantesXcriterio>(entity =>
             {
                 entity.HasNoKey();
@@ -7997,6 +8034,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.FechaSolictud).HasColumnType("datetime");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NovedadesSeleccionadas).HasColumnName("novedadesSeleccionadas");
 
@@ -8717,6 +8759,21 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VSaldoPresupuestalXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SaldoPresupuestalXProyecto");
+
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorDdp)
+                    .HasColumnName("ValorDDP")
+                    .HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(18, 0)");
+            });
+
             modelBuilder.Entity<VSaldosContrato>(entity =>
             {
                 entity.HasNoKey();
@@ -9068,7 +9125,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ValorFacturadoProyecto");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
             });
 
             modelBuilder.Entity<VValorFacturadoSolicitudPago>(entity =>
