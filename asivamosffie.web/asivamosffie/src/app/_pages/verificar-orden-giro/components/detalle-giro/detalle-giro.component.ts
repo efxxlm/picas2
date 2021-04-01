@@ -42,7 +42,7 @@ export class DetalleGiroComponent implements OnInit {
         semaforoTerceroCausacion: 'sin-diligenciar',
         semaforoObservaciones: 'sin-diligenciar',
         semaforoSoporte: 'sin-diligenciar'
-    }
+    };
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
@@ -261,7 +261,7 @@ export class DetalleGiroComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/verificarOrdenGiro/verificarOrdenGiro', this.solicitudPago.solicitudPagoId
+                                this.esRegistroNuevo === true ? '/verificarOrdenGiro/verificarOrdenGiro' : '/verificarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );

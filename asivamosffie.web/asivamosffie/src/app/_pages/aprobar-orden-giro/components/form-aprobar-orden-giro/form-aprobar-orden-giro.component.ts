@@ -15,6 +15,8 @@ export class FormAprobarOrdenGiroComponent implements OnInit {
     esRegistroNuevo = false;
     esVerDetalle = false;
     esExpensas = false;
+    semaforoInformacionGeneral = 'sin-diligenciar';
+    semaforoDetalleGiro = 'sin-diligenciar';
     listaModalidadContrato: Dominio[] = [];
 
     constructor(

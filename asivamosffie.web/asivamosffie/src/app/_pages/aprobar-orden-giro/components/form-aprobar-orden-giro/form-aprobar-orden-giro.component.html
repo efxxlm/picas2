@@ -33,7 +33,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : semaforoInformacionGeneral">
                     Información general
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -41,20 +41,22 @@
             <app-informacion-general    [solicitudPago]="solicitudPago"
                                         [esRegistroNuevo]="esRegistroNuevo"
                                         [esVerDetalle]="esVerDetalle"
-                                        [esExpensas]="esExpensas">
+                                        [esExpensas]="esExpensas"
+                                        (estadoSemaforo)="semaforoInformacionGeneral = $event">
             </app-informacion-general>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : semaforoDetalleGiro">
                     Detalle del giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <app-detalle-giro   [esRegistroNuevo]="esRegistroNuevo"
                                 [esVerDetalle]="esVerDetalle"
-                                [solicitudPago]="solicitudPago">
+                                [solicitudPago]="solicitudPago"
+                                (estadoSemaforo)="semaforoDetalleGiro = $event">
             </app-detalle-giro>
         </mat-expansion-panel>
     </mat-accordion>

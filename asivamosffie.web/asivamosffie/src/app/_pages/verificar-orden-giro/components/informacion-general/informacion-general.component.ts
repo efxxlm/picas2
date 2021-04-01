@@ -24,6 +24,8 @@ export class InformacionGeneralComponent implements OnInit {
     semaforoTerceroGiro = 'sin-diligenciar';
     listaMenu: ListaMenu = ListaMenuId;
     ordenGiroObservacionId = 0;
+    ordenGiroId: 0;
+    ordenGiroTerceroId: 0;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
@@ -31,11 +33,9 @@ export class InformacionGeneralComponent implements OnInit {
     listaMedioPago: Dominio[] = [];
     listaBancos: Dominio[] = [];
     valorTotalFactura = 0;
-    ordenGiroId: 0;
     solicitudPagoFase: any;
     ordenGiroTercero: any;
-    ordenGiroTerceroId: 0;
-    dataHistorial: any[] = [];
+    historialObservaciones: any[] = [];
     dataSource = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
     addressForm: FormGroup;
@@ -160,16 +160,16 @@ export class InformacionGeneralComponent implements OnInit {
                                 const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
 
                                 if ( obsArchivadasVerificar.length > 0 ) {
-                                    obsArchivadasVerificar.forEach( obs => this.dataHistorial.push( obs ) );
+                                    obsArchivadasVerificar.forEach( obs => this.historialObservaciones.push( obs ) );
                                 }
                                 if ( obsArchivadasAprobar.length > 0 ) {
-                                    obsArchivadasAprobar.forEach( obs => this.dataHistorial.push( obs ) );
+                                    obsArchivadasAprobar.forEach( obs => this.historialObservaciones.push( obs ) );
                                 }
                                 if ( obsArchivadasTramitar.length > 0 ) {
-                                    obsArchivadasTramitar.forEach( obs => this.dataHistorial.push( obs ) );
+                                    obsArchivadasTramitar.forEach( obs => this.historialObservaciones.push( obs ) );
                                 }
 
-                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                this.tablaHistorial = new MatTableDataSource( this.historialObservaciones );
                                 // Get data tercero de giro
                                 const medioPago = this.listaMedioPago.find( medio => medio.codigo === this.ordenGiroTercero.medioPagoGiroCodigo );
 
@@ -318,7 +318,7 @@ export class InformacionGeneralComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/verificarOrdenGiro/verificarOrdenGiro', this.solicitudPago.solicitudPagoId
+                                this.esRegistroNuevo === true ? '/verificarOrdenGiro/verificarOrdenGiro' : '/verificarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );

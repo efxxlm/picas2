@@ -453,7 +453,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/verificarOrdenGiro/verificarOrdenGiro', this.solicitudPago.solicitudPagoId
+                                this.esRegistroNuevo === true ? '/verificarOrdenGiro/verificarOrdenGiro' : '/verificarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );
