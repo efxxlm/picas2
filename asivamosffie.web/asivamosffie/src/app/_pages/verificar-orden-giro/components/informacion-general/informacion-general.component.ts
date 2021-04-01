@@ -2,11 +2,11 @@ import { Router } from '@angular/router';
 import { ObservacionesOrdenGiroService } from './../../../../core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ListaMediosPagoCodigo, MediosPagoCodigo, TipoObservaciones, TipoSolicitud, TipoSolicitudes, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ListaMediosPagoCodigo, MediosPagoCodigo, TipoObservaciones, TipoSolicitud, TipoSolicitudes, TipoObservacionesCodigo, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
@@ -16,11 +16,14 @@ import { Dominio } from 'src/app/core/_services/common/common.service';
 })
 export class InformacionGeneralComponent implements OnInit {
 
-    @Input() verificarOrdenGiroMenuId: number;
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Input() esExpensas: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    semaforoTerceroGiro = 'sin-diligenciar';
+    listaMenu: ListaMenu = ListaMenuId;
+    ordenGiroObservacionId = 0;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
@@ -29,7 +32,6 @@ export class InformacionGeneralComponent implements OnInit {
     listaBancos: Dominio[] = [];
     valorTotalFactura = 0;
     ordenGiroId: 0;
-    ordenGiroObservacionId = 0;
     solicitudPagoFase: any;
     ordenGiroTercero: any;
     ordenGiroTerceroId: 0;
@@ -85,20 +87,8 @@ export class InformacionGeneralComponent implements OnInit {
         }
 
         this.getDataTerceroGiro();
-        this.getObservacion();
 
         this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
-    }
-
-    async getObservacion() {
-
-        const listaObservacion = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-            this.verificarOrdenGiroMenuId,
-            this.ordenGiroId,
-            this.ordenGiroTerceroId,
-            this.tipoObservaciones.terceroGiro )
-        console.log( listaObservacion );
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     getDataTerceroGiro() {
@@ -107,7 +97,7 @@ export class InformacionGeneralComponent implements OnInit {
             this.listaMedioPago = listaMediosPago;
 
             this.commonSvc.listaBancos()
-                .subscribe( listaBancos => {
+                .subscribe( async listaBancos => {
                     this.listaBancos = listaBancos;
 
                     if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -117,7 +107,70 @@ export class InformacionGeneralComponent implements OnInit {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                 this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
                                 this.ordenGiroTerceroId = this.ordenGiroTercero.ordenGiroTerceroId;
+                                // Get observaciones
+                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.verificarOrdenGiro,
+                                    this.ordenGiroId,
+                                    this.ordenGiroTerceroId,
+                                    this.tipoObservaciones.terceroGiro );
+                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.aprobarOrdenGiro,
+                                    this.ordenGiroId,
+                                    this.ordenGiroTerceroId,
+                                    this.tipoObservaciones.terceroGiro );
+                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.tramitarOrdenGiro,
+                                        this.ordenGiroId,
+                                        this.ordenGiroTerceroId,
+                                        this.tipoObservaciones.terceroGiro );
+                                if ( listaObservacionVerificar.length > 0 ) {
+                                    listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                }
+                                if ( listaObservacionAprobar.length > 0 ) {
+                                    listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                }
+                                if ( listaObservacionTramitar.length > 0 ) {
+                                    listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                }
+                                // Get lista de observacion y observacion actual    
+                                const observacion = listaObservacionVerificar.find( obs => obs.archivada === false )
 
+                                if ( observacion !== undefined ) {
+                                    this.ordenGiroObservacionId = observacion.ordenGiroObservacionId;
+                                    
+                                    if ( observacion.registroCompleto === false ) {
+                                        this.semaforoTerceroGiro = 'en-proceso';
+                                        this.estadoSemaforo.emit( 'en-proceso' );
+                                    }
+                                    if ( observacion.registroCompleto === true ) {
+                                        this.semaforoTerceroGiro = 'completo';
+                                        this.estadoSemaforo.emit( 'completo' );
+                                    }
+
+                                    this.formObservacion.setValue(
+                                        {
+                                            tieneObservaciones: observacion.tieneObservacion,
+                                            observaciones: observacion.observacion !== undefined ? ( observacion.observacion.length > 0 ? observacion.observacion : null ) : null,
+                                            fechaCreacion: observacion.fechaCreacion
+                                        }
+                                    )
+                                }
+                                const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true );
+                                const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true );
+                                const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
+
+                                if ( obsArchivadasVerificar.length > 0 ) {
+                                    obsArchivadasVerificar.forEach( obs => this.dataHistorial.push( obs ) );
+                                }
+                                if ( obsArchivadasAprobar.length > 0 ) {
+                                    obsArchivadasAprobar.forEach( obs => this.dataHistorial.push( obs ) );
+                                }
+                                if ( obsArchivadasTramitar.length > 0 ) {
+                                    obsArchivadasTramitar.forEach( obs => this.dataHistorial.push( obs ) );
+                                }
+
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                // Get data tercero de giro
                                 const medioPago = this.listaMedioPago.find( medio => medio.codigo === this.ordenGiroTercero.medioPagoGiroCodigo );
 
                                 if ( medioPago !== undefined ) {
@@ -252,7 +305,7 @@ export class InformacionGeneralComponent implements OnInit {
             ordenGiroObservacionId: this.ordenGiroObservacionId,
             ordenGiroId: this.ordenGiroId,
             tipoObservacionCodigo: this.tipoObservaciones.terceroGiro,
-            menuId: this.verificarOrdenGiroMenuId,
+            menuId: this.listaMenu.verificarOrdenGiro,
             idPadre: this.ordenGiroTerceroId,
             observacion: this.formObservacion.get( 'observaciones' ).value,
             tieneObservacion: this.formObservacion.get( 'tieneObservaciones' ).value

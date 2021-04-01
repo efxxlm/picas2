@@ -39,7 +39,7 @@
         </table>
     </section>
 
-    <form [formGroup]="addressForm" (ngSubmit)="guardar()">
+    <form [formGroup]="addressForm">
         <mat-accordion *ngIf="descuentos.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -105,10 +105,10 @@
                                   </mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>
-                                    <p style="margin-left: 2em;"><b> 06/03/2021 </b></p>
-                                    <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
-                                    <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
-                                    <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+                                    <p style="margin-left: 2em;"><b> {{ descuento.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="descuento.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === true"></section>
                                 </mat-card-content>
                             </mat-card>
                         </ng-container>
@@ -164,13 +164,18 @@
                                   </span>
                             </div>
                             <div class="text-center mt-1em">
-                                <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="descuento.get('tieneObservaciones').value === null">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        (click)="guardar( descuento )"
+                                        type="button"
+                                        [disabled]="descuento.dirty === false">
                                     <img src="assets/img/icon/guardar.svg">
                                 </button>
                             </div>
                 
-                            <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
-                                <table mat-table [dataSource]="tablaHistorial" matSort>
+                            <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="descuento.get( 'historialObservaciones' ).value.length > 0">
+                                <table mat-table [dataSource]="getDataSource( descuento.get( 'historialObservaciones' ).value )" matSort>
                               
                                     <ng-container matColumnDef="fechaRevision">
                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
