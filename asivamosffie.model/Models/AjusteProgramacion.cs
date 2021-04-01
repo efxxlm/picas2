@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
             AjusteProgramacionObra = new HashSet<AjusteProgramacionObra>();
         }
 
-        public int AjusteProgramacion1 { get; set; }
+        public int AjusteProgramacionId { get; set; }
         public int? NovedadContractualId { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public string EstadoCodigo { get; set; }

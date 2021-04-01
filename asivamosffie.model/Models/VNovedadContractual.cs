@@ -23,5 +23,9 @@ namespace asivamosffie.model.Models
         public int? CantidadDescripcion { get; set; }
         public string LlaveMen { get; set; }
         public int ContratoId { get; set; }
+        public int? InterventorId { get; set; }
+        public int? ApoyoId { get; set; }
+        public int? SupervisorId { get; set; }
+        public string NombreContratista { get; set; }
     }
 }

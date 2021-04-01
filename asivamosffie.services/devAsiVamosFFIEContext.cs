@@ -249,6 +249,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
+        public virtual DbSet<VSaldoPresupuestalXcontrato> VSaldoPresupuestalXcontrato { get; set; }
         public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
         public virtual DbSet<VSaldosContrato> VSaldosContrato { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
@@ -348,10 +349,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjusteProgramacion>(entity =>
             {
-                entity.HasKey(e => e.AjusteProgramacion1);
-
-                entity.Property(e => e.AjusteProgramacion1).HasColumnName("AjusteProgramacion");
-
                 entity.Property(e => e.EstadoCodigo).HasMaxLength(10);
             });
 
@@ -6514,6 +6511,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPago>(entity =>
             {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstaRechazada).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -6556,6 +6557,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ObservacionRadicacionSacTecnica).HasMaxLength(2000);
 
+                entity.Property(e => e.TieneObservacion).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -6572,7 +6575,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(28, 0)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.SolicitudPago)
@@ -6647,9 +6650,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorFacturadoConcepto).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorFacturadoConcepto).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoExpensas)
@@ -6803,9 +6806,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorFacturadoConDescuento).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorFacturadoConDescuento).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.SolicitudPagoFase)
                     .WithMany(p => p.SolicitudPagoFaseFactura)
@@ -6831,7 +6834,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 3)");
+                entity.Property(e => e.ValorDescuento).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.SolicitudPagoFaseFactura)
                     .WithMany(p => p.SolicitudPagoFaseFacturaDescuento)
@@ -7642,6 +7645,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_AjusteProgramacion");
 
+                entity.Property(e => e.EstadoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
                 entity.Property(e => e.EstadoNombre)
                     .IsRequired()
                     .HasMaxLength(10);
@@ -7655,6 +7662,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("llaveMen")
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreContratista)
+                    .IsRequired()
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NovedadesSeleccionadas).HasColumnName("novedadesSeleccionadas");
@@ -7785,9 +7797,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 0)");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(38, 2)");
             });
@@ -8040,6 +8052,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreContratista)
+                    .IsRequired()
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NovedadesSeleccionadas).HasColumnName("novedadesSeleccionadas");
@@ -8462,6 +8479,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NombreContratista)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -8761,19 +8783,42 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VSaldoPresupuestalXcontrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SaldoPresupuestalXContrato");
+
+                entity.Property(e => e.SaldoPresupuestalObraInterventoria).HasColumnType("decimal(20, 0)");
+
+                entity.Property(e => e.SaldoPresupuestalOtrosCostos).HasColumnType("decimal(19, 0)");
+
+                entity.Property(e => e.ValorDdpobraInterventoria)
+                    .HasColumnName("ValorDDPObraInterventoria")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ValorDdpotrosCostos)
+                    .HasColumnName("ValorDDPOtrosCostos")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ValorFacturadoObraInterventoria).HasColumnType("decimal(19, 0)");
+
+                entity.Property(e => e.ValorFacturadoOtrosCostos).HasColumnType("decimal(18, 0)");
+            });
+
             modelBuilder.Entity<VSaldoPresupuestalXproyecto>(entity =>
             {
                 entity.HasNoKey();
 
                 entity.ToView("V_SaldoPresupuestalXProyecto");
 
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(21, 2)");
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("decimal(19, 0)");
 
                 entity.Property(e => e.ValorDdp)
                     .HasColumnName("ValorDDP")
-                    .HasColumnType("numeric(18, 2)");
+                    .HasColumnType("decimal(18, 0)");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(18, 0)");
             });
 
             modelBuilder.Entity<VSaldosContrato>(entity =>
@@ -9114,7 +9159,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 0)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")
@@ -9127,7 +9172,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ValorFacturadoProyecto");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VValorFacturadoSolicitudPago>(entity =>

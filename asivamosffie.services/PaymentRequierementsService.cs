@@ -228,9 +228,7 @@ namespace asivamosffie.services
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
                 }
-
-
-                string stringEstadoSolicitud = solicitudPago.EstadoCodigo;
+                 
                 switch (pSolicitudPagoObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_solicitud_de_pago:

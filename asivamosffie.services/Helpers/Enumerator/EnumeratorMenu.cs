@@ -55,8 +55,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Aprobar_orden_de_giro = 77,
         Crear_Roles = 78,
         Gestionar_usuarios = 79,
-        Gestionar_parametricas = 80,
-
+        Gestionar_parametricas = 80, 
         Verificar_Financieramente_Solicitud_De_Pago = 82,
         Validar_Financieramente_Solicitud_De_Pago = 83,
         Tramitar_orden_de_giro = 85

@@ -93,7 +93,7 @@ namespace asivamosffie.services
                     await _context.Set<OrdenGiroObservacion>()
                               .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
                               .UpdateAsync(og => new OrdenGiroObservacion
-                              { 
+                              {
                                   Observacion = pOrdenGiroObservacion.Observacion,
                                   TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
                                   TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
@@ -102,7 +102,7 @@ namespace asivamosffie.services
                                   RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion)
                               });
                 }
-                return
+                Respuesta respuesta =
                 new Respuesta
                 {
                     IsSuccessful = true,
@@ -116,6 +116,11 @@ namespace asivamosffie.services
                                            pOrdenGiroObservacion.UsuarioCreacion,
                                            ConstantCommonMessages.SpinOrder.CREAR_EDITAR_OBSERVACION_ORDEN_GIRO)
                 };
+                if (pOrdenGiroObservacion.Archivada != true)  
+                    await ValidateCompleteObservation(pOrdenGiroObservacion, pOrdenGiroObservacion.UsuarioCreacion);
+              
+              
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -128,13 +133,121 @@ namespace asivamosffie.services
                        Code = GeneralCodes.Error,
                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiroObservacion.UsuarioCreacion, ex.InnerException.ToString())
                    };
-            } 
+            }
         }
 
+        private async Task<bool> ValidateCompleteObservation(OrdenGiroObservacion pOrdenGiroObservacion, string pUsuarioMod)
+        {
+            try
+            {
+
+                int intCantidadDependenciasOrdenGiro = 4;
+
+                OrdenGiro ordenGiro = _context.OrdenGiro
+                    .Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId)
+                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnica)
+                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacion).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+                foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
+                {
+                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r=> r.Eliminado != true).ToList())
+                    {
+                        intCantidadDependenciasOrdenGiro++;
+                    }
+
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+                        intCantidadDependenciasOrdenGiro++;
+
+                    }
+                }
+
+
+                int intCantidadObservaciones = _context.OrdenGiroObservacion.Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
+                                                              && r.MenuId == pOrdenGiroObservacion.MenuId
+                                                              && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
+                                                              && r.Archivada != true).Count();
+
+                bool TieneObservacion =
+                                 _context.OrdenGiroObservacion.Any
+                                                            (r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
+                                                            && r.MenuId == pOrdenGiroObservacion.MenuId
+                                                            && r.Eliminado != true
+                                                            && r.Archivada != true
+                                                            && r.TieneObservacion == true
+                                                            ); 
+
+                //Valida si la cantidad de relaciones  
+                //es igual a la cantidad de observaciones  
+                bool blRegistroCompleto = false;
+
+                DateTime? FechaRegistroCompleto = null;
+                if (intCantidadDependenciasOrdenGiro >= intCantidadObservaciones)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
+                    blRegistroCompleto = true;
+                }
+
+       
+                switch (pOrdenGiroObservacion.MenuId)
+                {
+                    case (int)enumeratorMenu.Verificar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                        .UpdateAsync(r => new OrdenGiro()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_de_Verificacion_Orden_Giro).ToString(),
+                            RegistroCompletoVerificar = blRegistroCompleto,
+                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Aprobar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                        .UpdateAsync(r => new OrdenGiro()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_Aprobacion_Orden_Giro).ToString(),
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            RegistroCompletoAprobar = blRegistroCompleto,
+                            FechaRegistroCompletoAprobar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Tramitar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                       .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                       .UpdateAsync(r => new OrdenGiro()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_tramite_ante_fiduciaria).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoTramitar = blRegistroCompleto,
+                           FechaRegistroCompletoTramitar = FechaRegistroCompleto
+                       });
+                        break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+         
         private bool ValidateCompleteRecordOrdenGiroObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
         {
             if (pOrdenGiroObservacion.TieneObservacion == false)
-                return false;
+                return true;
             else
                 if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
                 return false;

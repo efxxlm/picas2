@@ -122,11 +122,12 @@ namespace asivamosffie.services
         {
             try
             {
-                List<VValorFacturadoContrato> LVValorFacturadoContrato = await _context.VValorFacturadoContrato.ToListAsync();
+                List<VSaldoPresupuestalXcontrato> ListVSaldoPresupuestalXcontrato = await _context.VSaldoPresupuestalXcontrato.ToListAsync();
+
                 List<dynamic> List = new List<dynamic>();
                 List<Contrato> ListContratos = new List<Contrato>();
                 if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
-                { 
+                {
                     if (pTipoSolicitud == ConstanCodigoTipoContrato.Obra)
                     {
                         ListContratos = await _context.Contrato
@@ -147,6 +148,21 @@ namespace asivamosffie.services
                                                         && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                                      ).ToListAsync();
                     }
+                    foreach (var Contrato in ListContratos)
+                    {
+                        VSaldoPresupuestalXcontrato VSaldoPresupuestalXcontrato = ListVSaldoPresupuestalXcontrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestalObraInterventoria > 0).FirstOrDefault();
+
+                        if (VSaldoPresupuestalXcontrato != null)
+                        {
+                            List.Add(new
+                            {
+                                ValorSolicitudDdp = VSaldoPresupuestalXcontrato.ValorDdpobraInterventoria,
+                                SaldoPresupuestal = VSaldoPresupuestalXcontrato.SaldoPresupuestalObraInterventoria,
+                                Contrato.ContratoId,
+                                Contrato.NumeroContrato
+                            });
+                        }
+                    }
                 }
                 else
                 {
@@ -161,23 +177,23 @@ namespace asivamosffie.services
                                                             )
                                                       ).ToListAsync();
 
-          
-                }
-                foreach (var Contrato in ListContratos)
-                {
-                    VValorFacturadoContrato VValorFacturadoContrato = LVValorFacturadoContrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestal > 0).FirstOrDefault();
-
-                    if (VValorFacturadoContrato != null)
+                    foreach (var Contrato in ListContratos)
                     {
-                        List.Add(new
+                        VSaldoPresupuestalXcontrato VSaldoPresupuestalXcontrato = ListVSaldoPresupuestalXcontrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestalOtrosCostos > 0).FirstOrDefault();
+
+                        if (VSaldoPresupuestalXcontrato != null)
                         {
-                            VValorFacturadoContrato.ValorSolicitudDdp,
-                            VValorFacturadoContrato.SaldoPresupuestal,
-                            Contrato.ContratoId,
-                            Contrato.NumeroContrato
-                        });
+                            List.Add(new
+                            {
+                                ValorSolicitudDdp = VSaldoPresupuestalXcontrato.ValorDdpotrosCostos,
+                                SaldoPresupuestal = VSaldoPresupuestalXcontrato.SaldoPresupuestalOtrosCostos,
+                                Contrato.ContratoId,
+                                Contrato.NumeroContrato
+                            });
+                        }
                     }
                 }
+
                 return List;
             }
             catch (Exception ex)
@@ -1548,7 +1564,7 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
-                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado; 
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado;
                 solicitudPagoOld.FechaModificacion = DateTime.Now;
                 solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(pSolicitudPago);
@@ -1728,7 +1744,7 @@ namespace asivamosffie.services
                 if (pSolicitudPago.SolicitudPagoId > 0)
                 {
                     SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
-                    pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoOtrosCostosServicios?.FirstOrDefault().ValorFacturado; 
+                    pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoOtrosCostosServicios?.FirstOrDefault().ValorFacturado;
                     solicitudPagoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 }
