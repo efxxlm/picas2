@@ -17,11 +17,7 @@ export class ObservacionesOrdenGiroService {
   }
 
   getObservacionOrdenGiroByMenuIdAndSolicitudPagoId( pMenuId: number, pOrdenGiroId: number, pPadreId: number, pTipoObservacionCodigo: string ) {
-    try {
-      return this.http.get<any[]>( `${ this.apiUrl }/GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pOrdenGiroId=${ pOrdenGiroId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` ).toPromise();
-    } catch ( err ) {
-      return err;
-    }
+    return this.http.get<any[]>( `${ this.apiUrl }/GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pOrdenGiroId=${ pOrdenGiroId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` ).toPromise();
 
     // return new Promise<any[]>( resolve => {
     //   this.http.get<any[]>( `${ this.apiUrl }/GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pOrdenGiroId=${ pOrdenGiroId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` )
