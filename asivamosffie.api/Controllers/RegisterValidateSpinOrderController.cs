@@ -47,15 +47,17 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEditSpinOrderObservations([FromBody] OrdenGiroObservacion pOrdenGiroObservacion)
         {
+            Respuesta respuesta = new Respuesta();
             try
             {
                 pOrdenGiroObservacion.UsuarioCreacion = User.Identity.Name;
-                var result = await _registerValidateSpinOrderService.CreateEditSpinOrderObservations(pOrdenGiroObservacion);
-                return Ok(result);
+                respuesta = await _registerValidateSpinOrderService.CreateEditSpinOrderObservations(pOrdenGiroObservacion);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
 

@@ -31,13 +31,13 @@ namespace asivamosffie.services
         }
 
         #endregion
-         
+
         public async Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 _context.Set<OrdenGiro>()
                        .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                        .Update(o => new OrdenGiro
@@ -46,7 +46,7 @@ namespace asivamosffie.services
                            FechaModificacion = DateTime.Now,
                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion
                        });
-                 
+
                 return
                 new Respuesta
                 {
@@ -78,26 +78,57 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion)
         {
-            if (pOrdenGiroObservacion.OrdenGiroObservacionId == 0)
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
             {
-                pOrdenGiroObservacion.RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion);
-                await _context.OrdenGiroObservacion.AddAsync(pOrdenGiroObservacion);
+                if (pOrdenGiroObservacion.OrdenGiroObservacionId == 0)
+                {
+                    pOrdenGiroObservacion.Archivada = false;
+                    pOrdenGiroObservacion.RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion);
+                    _context.OrdenGiroObservacion.Add(pOrdenGiroObservacion);
+                }
+                else
+                {
+                    await _context.Set<OrdenGiroObservacion>()
+                              .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
+                              .UpdateAsync(og => new OrdenGiroObservacion
+                              {
+                                  Observacion = pOrdenGiroObservacion.Observacion,
+                                  TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
+                                  TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
+                                  FechaModificacion = DateTime.Now,
+                                  IdPadre = pOrdenGiroObservacion.IdPadre,
+                                  RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion)
+                              });
+                }
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                           (int)enumeratorMenu.Generar_Orden_de_giro,
+                                           GeneralCodes.OperacionExitosa,
+                                           idAccion,
+                                           pOrdenGiroObservacion.UsuarioCreacion,
+                                           ConstantCommonMessages.SpinOrder.CREAR_EDITAR_OBSERVACION_ORDEN_GIRO)
+                };
             }
-            else
+            catch (Exception ex)
             {
-                await _context.Set<OrdenGiroObservacion>()
-                          .Where(og => og.OrdenGiroObservacionId == pOrdenGiroObservacion.OrdenGiroObservacionId)
-                          .UpdateAsync(og => new OrdenGiroObservacion
-                          {
-                              Observacion = pOrdenGiroObservacion.Observacion,
-                              TieneObservacion = pOrdenGiroObservacion.TieneObservacion,
-                              TipoObservacionCodigo = pOrdenGiroObservacion.TipoObservacionCodigo,
-                              FechaModificacion = DateTime.Now,
-                              IdPadre = pOrdenGiroObservacion.IdPadre,
-                              RegistroCompleto = ValidateCompleteRecordOrdenGiroObservacion(pOrdenGiroObservacion)
-                          });
-            }
-            return new Respuesta();
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = GeneralCodes.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiroObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            } 
         }
 
         private bool ValidateCompleteRecordOrdenGiroObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
@@ -149,14 +180,14 @@ namespace asivamosffie.services
             foreach (var item in ListOrdenGiroIds)
             {
                 RegistrosOrdenGiro += PlantillaRegistros.Contenido;
-                RegistrosOrdenGiro  = ReplaceVariablesOrdenGiro(RegistrosOrdenGiro, item);
+                RegistrosOrdenGiro = ReplaceVariablesOrdenGiro(RegistrosOrdenGiro, item);
             }
 
             Plantilla.Contenido = Plantilla.Contenido.Replace("[REGISTROS]", RegistrosOrdenGiro);
 
             return _committeeSessionFiduciarioService.ConvertirPDF(Plantilla);
         }
-         
+
         private string ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
         {
             OrdenGiro ordenGiro =
@@ -170,24 +201,23 @@ namespace asivamosffie.services
             decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
             string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
             List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
-             
+
             try
             {
                 pContenido = pContenido
-                       .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") :" ")
+                       .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
                        .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
-                       .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " " )
+                       .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
                        .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato : " ")
-                       .Replace("[VALOR_ORDEN_GIRO]", + ValorOrdenGiro != null ? "$ "+ String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
+                       .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }
-            catch (Exception e )
+            catch (Exception e)
             {
-                 
-            } 
+
+            }
             return pContenido;
         }
-
 
         public async Task<dynamic> GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId(int pMenuId, int pOrdenGiroId, int pPadreId, string pTipoObservacionCodigo)
         {
