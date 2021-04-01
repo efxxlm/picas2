@@ -19,12 +19,12 @@ namespace asivamosffie.api.Controllers
     [ApiController]
 
     public class RegisterValidateSpinOrderController : Controller
-    { 
+    {
         private readonly IRegisterValidateSpinOrderService _registerValidateSpinOrderService;
 
-        public RegisterValidateSpinOrderController(  IRegisterValidateSpinOrderService registerValidateSpinOrderService)
+        public RegisterValidateSpinOrderController(IRegisterValidateSpinOrderService registerValidateSpinOrderService)
         {
-            _registerValidateSpinOrderService = registerValidateSpinOrderService; 
+            _registerValidateSpinOrderService = registerValidateSpinOrderService;
         }
 
         [Route("ChangueStatusOrdenGiro")]
@@ -42,7 +42,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("CreateEditSpinOrderObservations")]
         [HttpPost]
         public async Task<IActionResult> CreateEditSpinOrderObservations([FromBody] OrdenGiroObservacion pOrdenGiroObservacion)
@@ -58,12 +58,19 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [HttpGet]
         [Route("GetListOrdenGiro")]
         public async Task<FileResult> GetListOrdenGiro([FromQuery] bool pBlRegistrosAprobados)
         {
             return File(await _registerValidateSpinOrderService.GetListOrdenGiro(pBlRegistrosAprobados), "application/pdf");
+        }
+
+        [HttpGet]
+        [Route("GetListOrdenGiro")]
+        public async Task<dynamic> GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pOrdenGiroId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _registerValidateSpinOrderService.GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId(pMenuId, pOrdenGiroId, pPadreId, pTipoObservacionCodigo);
         }
     }
 }

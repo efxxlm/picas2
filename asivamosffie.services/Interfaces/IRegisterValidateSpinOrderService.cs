@@ -14,5 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro);
 
         Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion);
+
+        Task<dynamic> GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId(int pMenuId, int pOrdenGiroId, int pPadreId, string pTipoObservacionCodigo);
     }
 }

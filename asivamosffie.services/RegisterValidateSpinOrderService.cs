@@ -187,5 +187,24 @@ namespace asivamosffie.services
             } 
             return pContenido;
         }
+
+
+        public async Task<dynamic> GetObservacionOrdenGiroByMenuIdAndSolicitudPagoId(int pMenuId, int pOrdenGiroId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _context.OrdenGiroObservacion
+                                           .Where(s => s.MenuId == pMenuId
+                                               && s.OrdenGiroId == pOrdenGiroId
+                                               && s.IdPadre == pPadreId
+                                               && s.TipoObservacionCodigo == pTipoObservacionCodigo)
+                                            .Select(p => new
+                                            {
+                                                p.OrdenGiroObservacionId,
+                                                p.TieneObservacion,
+                                                p.Archivada,
+                                                p.FechaCreacion,
+                                                p.Observacion,
+                                                p.RegistroCompleto
+                                            }).ToListAsync();
+        }
     }
 }
