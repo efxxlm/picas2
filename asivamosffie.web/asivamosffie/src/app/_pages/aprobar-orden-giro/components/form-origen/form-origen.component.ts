@@ -1,10 +1,9 @@
-import { Router } from '@angular/router';
-import { CommonService } from 'src/app/core/_services/common/common.service';
-import { Dominio } from './../../../../core/_services/common/common.service';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import humanize from 'humanize-plus';
 
@@ -16,8 +15,6 @@ import humanize from 'humanize-plus';
 export class FormOrigenComponent implements OnInit {
 
     @Input() solicitudPago: any;
-    @Input() esVerDetalle: boolean;
-    @Output() seDiligenciaFormulario = new EventEmitter<boolean>();
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
     ordenGiroId = 0;
@@ -29,7 +26,6 @@ export class FormOrigenComponent implements OnInit {
     listaTipoAportante: Dominio[] = [];
     bancosArray: Dominio[] = [];
     listaNombreAportante: { tipoAportanteId: number; cofinanciacionAportanteId: number; nombreAportante: string; }[] = [];
-    listaNombreCuenta: Dominio[] = [ { codigo: '1', nombre: 'Alcaldía de Susacón' } ];
 
     get aportantes() {
         return this.formOrigen.get( 'aportantes' ) as FormArray;
@@ -124,13 +120,6 @@ export class FormOrigenComponent implements OnInit {
                                             );
                                         } );
                                 }
-
-                                setTimeout(() => {
-                                    if ( totalCuenta === this.listaAportantes.length ) {
-                                        this.esUnicaCuenta = true;
-                                        this.seDiligenciaFormulario.emit( false );
-                                    }
-                                }, 1000);
                             }
                         }
                     }
@@ -170,63 +159,8 @@ export class FormOrigenComponent implements OnInit {
         }
     }
 
-    checkSaveBtn() {
-        let totalCuentasBancarias = 0;
-
-        if ( this.aportantes.length > 0 ) {
-            this.aportantes.controls.forEach( control => {
-                totalCuentasBancarias += control.get( 'listaCuentaBancaria' ).value.lengthM
-            } )
-
-            if ( totalCuentasBancarias !== this.aportantes.length ) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
     guardar() {
-        
-        this.aportantes.controls.forEach( control => {
-            this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
-                terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
-                    if ( control.get( 'nombreAportante' ).value.cofinanciacionAportanteId === aportante.aportanteId ) {
-                        aportante.cuentaBancariaId = control.get( 'cuentaBancariaId' ).value.cuentaBancariaId;
-                    }
-                } )
-            } )
-        } )
-
-        
-        const pOrdenGiro = {
-            solicitudPagoId: this.solicitudPago.solicitudPagoId,
-            ordenGiroId: this.ordenGiroId,
-            ordenGiroDetalle: [
-                {
-                    ordenGiroId: this.ordenGiroId,
-                    ordenGiroDetalleId: this.ordenGiroDetalleId,
-                    ordenGiroDetalleTerceroCausacion: this.ordenGiroDetalleTerceroCausacion
-                }
-            ]
-        }
-
-        this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/generarOrdenDeGiro/generacionOrdenGiro', this.solicitudPago.solicitudPagoId
-                            ]
-                        )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
+        // Por si mas adelante se le agregan observaciones
     }
 
 }

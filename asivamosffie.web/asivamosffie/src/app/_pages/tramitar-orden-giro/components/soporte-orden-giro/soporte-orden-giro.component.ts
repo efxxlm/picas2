@@ -11,6 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class SoporteOrdenGiroComponent implements OnInit {
 
+    @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     dataHistorial: any[] = [];

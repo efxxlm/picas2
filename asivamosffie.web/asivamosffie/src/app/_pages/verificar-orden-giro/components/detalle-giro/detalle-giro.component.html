@@ -242,35 +242,10 @@
         </mat-expansion-panel-header>
 
         <div class="mt-1em text-center">
-            <p>Consecutivo FFIE: <b> 001 </b></p>
+            <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
         </div>
 
-        <mat-card class="shipping-card border">
-            <mat-card-content align="left">
-                <h2 class="mt-1em"><b> Aportante 1 </b></h2>
-                <div class="mt-1em">
-                    <p><b>Tipo de aportante: </b> <i>Entidad Territorial</i></p>
-                    <p><b>Nombre del aportante: </b> <i>Alcaldía de Susacón</i></p>
-                    <p><b>Fuente: </b>Contingencias</p>
-                    <p><b>Nombre de la Cuenta: </b> <i>Alcaldía de Susacón</i></p>
-                    <p><b>Número de Cuenta: </b> <i>778969876543257</i></p>
-                    <p><b>Banco: </b> <i>Davivienda</i></p>
-                    <p><b>Tipo de Cuenta: </b> <i>Corriente</i></p>
-                    <p><b>Código SIFI: </b> <i>357314</i></p>
-                </div>
-                <h2 class="mt-1em"><b> Aportante 2 </b></h2>
-                <div class="mt-1em">
-                    <p><b>Tipo de aportante: </b> <i>Tercero</i></p>
-                    <p><b>Nombre del aportante: </b> <i>Fundación Pies Descalzos</i></p>
-                    <p><b>Fuente: </b> <i>Recursos propios</i></p>
-                    <p><b>Nombre de la Cuenta: </b> <i>Fundación Pies Descalzos</i></p>
-                    <p><b>Número de Cuenta: </b> <i>6758-9879-98760</i></p>
-                    <p><b>Banco: </b> <i>Bancolombia</i></p>
-                    <p><b>Tipo de Cuenta: </b> <i>Ahorros</i></p>
-                    <p><b>Código SIFI: </b> <i>358765</i></p>
-                </div>
-            </mat-card-content>
-        </mat-card>
+        <app-form-origen [solicitudPago]="solicitudPago"></app-form-origen>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">

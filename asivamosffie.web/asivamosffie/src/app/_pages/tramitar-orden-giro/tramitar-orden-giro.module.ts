@@ -16,10 +16,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { DialogDescargarOrdenGiroComponent } from './components/dialog-descargar-orden-giro/dialog-descargar-orden-giro.component';
+import { FormOrigenComponent } from './components/form-origen/form-origen.component';
 
 
 @NgModule({
-  declarations: [TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, InformacionGeneralComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TramitarOrdenGiroComponent, TablaTramitarOrdenGiroComponent, FormTramitarOrdenGiroComponent, DialogDescargarOrdenGiroComponent],
+  declarations: [TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, InformacionGeneralComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TramitarOrdenGiroComponent, TablaTramitarOrdenGiroComponent, FormTramitarOrdenGiroComponent, DialogDescargarOrdenGiroComponent, FormOrigenComponent],
   imports: [
     CommonModule,
     FormsModule,

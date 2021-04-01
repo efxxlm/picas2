@@ -17,10 +17,11 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { AprobarOrdenGiroComponent } from './components/aprobar-orden-giro/aprobar-orden-giro.component';
 import { TablaAprobarOrdenGiroComponent } from './components/tabla-aprobar-orden-giro/tabla-aprobar-orden-giro.component';
 import { FormAprobarOrdenGiroComponent } from './components/form-aprobar-orden-giro/form-aprobar-orden-giro.component';
+import { FormOrigenComponent } from './components/form-origen/form-origen.component';
 
 
 @NgModule({
-  declarations: [TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent],
+  declarations: [TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent, FormOrigenComponent],
   imports: [
     CommonModule,
     FormsModule,

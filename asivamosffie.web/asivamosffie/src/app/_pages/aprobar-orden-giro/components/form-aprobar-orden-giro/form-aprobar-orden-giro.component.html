@@ -1,4 +1,4 @@
-<section class="container text-center mb-2em">
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
     <div class="text-right">
         <a routerLink="/aprobarOrdenGiro" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -13,20 +13,20 @@
     </ng-template>
 
     <div class="d-flex justify-content-center mt-1em colorMainColor">
-        <p>Número de orden de giro: <b> ODG_Obr 001 </b></p>
+        <p>Número de orden de giro: <b> <i> {{ solicitudPago.ordenGiro.numeroSolicitud }} </i> </b></p>
         <ng-container *ngIf="esExpensas === true; else noEsExpensas">
             <p style="margin-left: 2em;">Llave MEN: <b>STEFA8</b></p>
         </ng-container>
         <ng-template #noEsExpensas>
-            <p style="margin-left: 2em;">Número de contrato: <b>N801801</b></p>
+            <p style="margin-left: 2em;">Número de contrato: <b> <i> {{ contrato.numeroContrato }} </i> </b></p>
         </ng-template>
     </div>
 
     <mat-card class="shipping-card border">
         <mat-card-content align="left">
-            <p><strong>Fecha de generación de orden de giro:</strong> <i>05/10/2020</i></p>
-            <p><strong>Número de solicitud:</strong> <i>Sol Pago O 001</i></p>
-            <p *ngIf="esExpensas === false"><strong>Modalidad de contrato:</strong> <i>Tipo B</i></p>
+            <p><strong>Fecha de generación de orden de giro:</strong> <i> {{ solicitudPago.ordenGiro.fechaCreacion | date:'dd/MM/yyyy' }} </i></p>
+            <p><strong>Número de solicitud:</strong> <i> {{ solicitudPago.numeroSolicitud }} </i></p>
+            <p *ngIf="esExpensas === false"><strong>Modalidad de contrato:</strong> <i> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </i></p>
         </mat-card-content>
     </mat-card>
 
@@ -38,7 +38,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-informacion-general [esRegistroNuevo]="esRegistroNuevo" [esVerDetalle]="esVerDetalle" [esExpensas]="esExpensas"></app-informacion-general>
+            <app-informacion-general    [solicitudPago]="solicitudPago"
+                                        [esRegistroNuevo]="esRegistroNuevo"
+                                        [esVerDetalle]="esVerDetalle"
+                                        [esExpensas]="esExpensas">
+            </app-informacion-general>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
@@ -48,7 +52,10 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-detalle-giro [esRegistroNuevo]="esRegistroNuevo" [esVerDetalle]="esVerDetalle"></app-detalle-giro>
+            <app-detalle-giro   [esRegistroNuevo]="esRegistroNuevo"
+                                [esVerDetalle]="esVerDetalle"
+                                [solicitudPago]="solicitudPago">
+            </app-detalle-giro>
         </mat-expansion-panel>
     </mat-accordion>
 

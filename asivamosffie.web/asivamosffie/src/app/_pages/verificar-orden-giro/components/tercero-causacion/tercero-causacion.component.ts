@@ -35,8 +35,8 @@ export class TerceroCausacionComponent implements OnInit {
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
     dataHistorial: any[] = [];
-    tablaHistorial = new MatTableDataSource();
     addressForm: FormGroup;
+    tablaHistorial = new MatTableDataSource();
     formObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null, Validators.required ],

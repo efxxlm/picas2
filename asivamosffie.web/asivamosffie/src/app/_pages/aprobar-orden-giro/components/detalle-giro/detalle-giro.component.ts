@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-detalle-giro',
@@ -11,8 +12,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DetalleGiroComponent implements OnInit {
 
+    @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    listaEstrategiaPago: Dominio[] = [];
     dataHistorial: any[] = [];
     dataSource = new MatTableDataSource();
     dataSourceFuentes = new MatTableDataSource();
@@ -88,8 +91,12 @@ export class DetalleGiroComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog )
-    { }
+        private dialog: MatDialog,
+        private commonSvc: CommonService )
+    {
+        this.commonSvc.listaEstrategiasPago()
+            .subscribe( response => this.listaEstrategiaPago = response );
+    }
 
     ngOnInit(): void {
         this.dataHistorial = [
@@ -102,6 +109,16 @@ export class DetalleGiroComponent implements OnInit {
         this.dataSource = new MatTableDataSource( this.dataTable );
         this.dataSourceFuentes = new MatTableDataSource( this.dataTableFuentes );
         this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+    }
+
+    getEstrategiaPago( codigo: string ) {
+        if ( this.listaEstrategiaPago.length > 0 ) {
+            const estrategia = this.listaEstrategiaPago.find( estrategia => estrategia.codigo === codigo );
+
+            if ( estrategia !== undefined ) {
+                return estrategia.nombre;
+            }
+        }
     }
 
     maxLength(e: any, n: number) {
