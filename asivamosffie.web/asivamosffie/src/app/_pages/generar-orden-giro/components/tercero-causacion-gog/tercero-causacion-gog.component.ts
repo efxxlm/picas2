@@ -318,6 +318,44 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
 
+    checkTotalValueAportantes( cb: { ( totalValueAportantes: number ): void } ) {
+        let totalAportantes = 0;
+
+        this.criterios.controls.forEach( ( criterioControl, criterioIndex ) => {
+
+            this.getConceptos( criterioIndex ).controls.forEach( ( conceptoControl, conceptoIndex ) => {
+
+                this.getAportantes( criterioIndex, conceptoIndex ).controls.forEach( aportanteControl => totalAportantes += aportanteControl.get( 'valorDescuento' ).value );
+            } )
+        } )
+
+        cb( totalAportantes );
+    }
+    // Check valor del descuento del aportante
+    validateDiscountAportanteValue( value: number, index: number, jIndex: number, kIndex: number ) {
+        if ( value !== null ) {
+            this.checkTotalValueAportantes( totalValueAportante => {
+                if ( totalValueAportante > this.valorNetoGiro ) {
+                    this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                    this.openDialog( '', `<b>El valor del descuento del aportante no puede ser mayor al valor neto de giro.</b>` )
+                }
+            } );
+        }
+    }
+    // Check valor del descuento de los conceptos
+    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number ) {
+        let totalAportantePorConcepto = 0;
+
+        for ( const aportante of this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ).value ) {
+            totalAportantePorConcepto += aportante.valorDescuento;
+        }
+
+        if ( value > totalAportantePorConcepto ) {
+            this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+            this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
+        }
+    }
+
     validateNumberKeypress(event: KeyboardEvent) {
         const alphanumeric = /[0-9]/;
         const inputChar = String.fromCharCode(event.charCode);
@@ -348,7 +386,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                         const aportanteSeleccionado = this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'tipoAportante' ).value;
                         const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
                         listaTipoAportantes.push( aportanteSeleccionado );
-                        // this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
 
                         this.getAportantes( index, jIndex ).removeAt( kIndex );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
@@ -379,18 +416,55 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     getCantidadDescuentos( value: number, index: number, jIndex: number ) {
-        this.getDescuentos( index, jIndex ).clear();
-        if ( value > 0 && value !== null ) {
-            for ( let i = 0; i < value; i++ ) {
-                this.getDescuentos( index, jIndex ).push(
-                    this.fb.group(
-                        {
-                            ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
-                            tipoDescuento: [ null, Validators.required ],
-                            valorDescuento: [ null, Validators.required ]
-                        }
+        if ( value !== null && value > 0 ) {
+            if ( this.getDescuentos( index, jIndex ).dirty === true ) {
+                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+    
+                if ( value < this.getDescuentos( index, jIndex ).length ) {
+                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                    return;
+                }
+    
+                for ( let i = 0; i < nuevosDescuentos; i++ ) {
+    
+                    this.getDescuentos( index, jIndex ).push(
+                        this.fb.group(
+                            {
+                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                tipoDescuento: [ null, Validators.required ],
+                                valorDescuento: [ null, Validators.required ]
+                            }
+                        )
                     )
-                )
+    
+                }
+            }
+            if ( this.getDescuentos( index, jIndex ).dirty === false ) {
+                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+    
+                if ( value < this.getDescuentos( index, jIndex ).length ) {
+                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                    return;
+                }
+    
+    
+                for ( let i = 0; i < nuevosDescuentos; i++ ) {
+    
+                    this.getDescuentos( index, jIndex ).push(
+                        this.fb.group(
+                            {
+                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                tipoDescuento: [ null, Validators.required ],
+                                valorDescuento: [ null, Validators.required ]
+                            }
+                        )
+                    )
+    
+                }
             }
         }
     }

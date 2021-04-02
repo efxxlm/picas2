@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import moment from 'moment';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnviarAprobacionComponent } from '../dialog-enviar-aprobacion/dialog-enviar-aprobacion.component';
 
@@ -58,10 +59,36 @@ export class TablaAprobarOrdenGiroComponent implements OnInit {
         this.tablaAprobar.filter = filterValue.trim().toLowerCase();
     }
 
-    openDialogEnviarAprobacion() {
-        this.dialog.open( DialogEnviarAprobacionComponent, {
-            width: '80em'
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '40em',
+          data : { modalTitle, modalText }
         });
+    }
+
+    openDialogEnviarAprobacion( registro: any ) {
+        this.dialog.open( DialogEnviarAprobacionComponent, {
+            width: '80em',
+            data: registro
+        });
+    }
+
+    devolverOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/aprobarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

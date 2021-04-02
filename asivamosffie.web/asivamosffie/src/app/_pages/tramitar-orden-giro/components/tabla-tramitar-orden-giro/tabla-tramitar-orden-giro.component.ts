@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import moment from 'moment';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
@@ -57,10 +58,47 @@ export class TablaTramitarOrdenGiroComponent implements OnInit {
         this.tablaTramitar.filter = filterValue.trim().toLowerCase();
     }
 
-    openDialogEnviarAprobacion() {
-        // this.dialog.open( DialogEnviarAprobacionComponent, {
-        //   width: '80em'
-        // });
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '40em',
+          data : { modalTitle, modalText }
+        });
+    }
+
+    gestionarOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.conOrdenGiroTramitada
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/tramitarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
+    }
+
+    devolverOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/tramitarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -65,7 +65,11 @@
                 <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
             </div>
 
-            <app-form-origen [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"></app-form-origen>
+            <app-form-origen    [solicitudPago]="solicitudPago"
+                                [esVerDetalle]="esVerDetalle"
+                                (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"
+                                (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
+            </app-form-origen>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

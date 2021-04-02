@@ -271,8 +271,9 @@
                                                                                     <input  matInput
                                                                                             #valorDescuento
                                                                                             maxlength="20"
-                                                                                            type="number"
                                                                                             required
+                                                                                            currencyMask
+                                                                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                                                                             formControlName="valorDescuento"
                                                                                             (ngModelChange)="checkTotalDiscountValues( i, j, k, l );"
                                                                                             onKeyPress="if(this.value.length>=this.maxLength) return false;">

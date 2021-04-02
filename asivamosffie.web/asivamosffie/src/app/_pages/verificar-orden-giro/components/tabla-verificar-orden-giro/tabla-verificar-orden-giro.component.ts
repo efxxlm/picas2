@@ -8,6 +8,7 @@ import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu,
 import { Router } from '@angular/router';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import moment from 'moment';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-verificar-orden-giro',
@@ -58,10 +59,36 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
         this.tablaVerificar.filter = filterValue.trim().toLowerCase();
     }
 
-    openDialogEnviarAprobacion() {
-        this.dialog.open( DialogEnviarAprobacionComponent, {
-          width: '80em'
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '40em',
+          data : { modalTitle, modalText }
         });
+    }
+
+    openDialogEnviarAprobacion( registro: any ) {
+        this.dialog.open( DialogEnviarAprobacionComponent, {
+          width: '80em',
+          data: registro
+        });
+    }
+
+    devolverOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/verificarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -41,8 +41,12 @@
             </mat-card-content>
         </mat-card>
         <div class="text-center mb-2em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    [disabled]="addressForm.dirty === false"
+                    type="submit">
+                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
             </button>
         </div>
     </form>

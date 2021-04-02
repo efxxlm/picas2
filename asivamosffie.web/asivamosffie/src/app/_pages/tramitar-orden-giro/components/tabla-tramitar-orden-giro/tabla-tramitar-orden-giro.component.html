@@ -57,13 +57,13 @@
                         Ver detalle/Editar
                 </button>
 
-                <!--
                 <button mat-raised-button
                         color="accent" 
-                        class="btn-table">
+                        class="btn-table"
+                        (click)="gestionarOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true && element.tieneObservacion === false">
                         Gestionar orden de giro
                 </button>
-                -->
 
                 <button mat-raised-button
                         color="accent" 
@@ -76,7 +76,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true">
+                        (click)="devolverOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true && element.tieneObservacion === true">
                         Devolver orden de giro
                 </button>
             </ng-container>
@@ -84,19 +85,10 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        [routerLink]="[ 'tramitarOrdenGiro', element.solicitudPagoId ]">
-                        Tramitar orden de giro
-                </button>
-                
-                <!--
-                <button mat-raised-button
-                        color="accent" 
-                        class="btn-table"
                         *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enviadaParaTramiteFiduciaria"
                         [routerLink]="[ 'tramitarOrdenGiro', element.solicitudPagoId ]">
                         Tramitar orden de giro
                 </button>
-                -->
 
                 <button mat-raised-button
                         color="accent" 
@@ -105,14 +97,13 @@
                         [routerLink]="[ 'editarOrdenGiro', element.solicitudPagoId ]">
                         Ver detalle/Editar
                 </button>
-
-                <!--
                 <button mat-raised-button
                         color="accent" 
-                        class="btn-table">
+                        class="btn-table"
+                        (click)="gestionarOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true && element.tieneObservacion === false">
                         Gestionar orden de giro
                 </button>
-                -->
 
                 <button mat-raised-button
                         color="accent" 
@@ -125,7 +116,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true">
+                        (click)="devolverOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoTramiteFiduciaria && element.registroCompletoTramitar === true && element.tieneObservacion === true">
                         Devolver orden de giro
                 </button>
             </ng-template>

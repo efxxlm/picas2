@@ -50,7 +50,7 @@
                 </button>
 
                 <button mat-raised-button
-                        color="accent" 
+                        color="accent"
                         class="btn-table"
                         *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro"
                         [routerLink]="[ 'editarOrdenGiroExpensas', element.solicitudPagoId ]">
@@ -60,8 +60,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true"
-                        (click)="openDialogEnviarAprobacion()">
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true && element.tieneObservacion === false"
+                        (click)="openDialogEnviarAprobacion( element )">
                         Enviar para aprobación orden de giro
                 </button>
 
@@ -77,7 +77,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true">
+                        (click)="devolverOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true && element.tieneObservacion === true">
                         Devolver orden de giro
                 </button>
 
@@ -109,8 +110,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true"
-                        (click)="openDialogEnviarAprobacion()">
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true && element.tieneObservacion === false"
+                        (click)="openDialogEnviarAprobacion( element )">
                         Enviar para aprobación orden de giro
                 </button>
 
@@ -126,7 +127,8 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true">
+                        (click)="devolverOrdenGiro( element )"
+                        *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true && element.tieneObservacion === true">
                         Devolver orden de giro
                 </button>
 

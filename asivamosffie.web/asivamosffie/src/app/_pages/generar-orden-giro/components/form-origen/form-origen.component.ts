@@ -18,6 +18,7 @@ export class FormOrigenComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Output() seDiligenciaFormulario = new EventEmitter<boolean>();
+    @Output() estadoSemaforo = new EventEmitter<string>();
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
     ordenGiroId = 0;
@@ -69,6 +70,8 @@ export class FormOrigenComponent implements OnInit {
                             if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
                                 this.ordenGiroDetalleTerceroCausacion = this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion;
                                 let totalCuenta = 0;
+                                let totalEnProceso = 0;
+                                let totalCompleto = 0;
 
                                 this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
@@ -95,8 +98,10 @@ export class FormOrigenComponent implements OnInit {
                                                         const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
                                                         
                                                         if ( cuenta !== undefined ) {
+                                                            totalCompleto++;
                                                             return cuenta;
                                                         } else {
+                                                            totalEnProceso++;
                                                             return null;
                                                         }
                                                     } else {
@@ -126,6 +131,12 @@ export class FormOrigenComponent implements OnInit {
                                 }
 
                                 setTimeout(() => {
+                                    if ( totalEnProceso > 0 && totalEnProceso === this.listaAportantes.length ) {
+                                        this.estadoSemaforo.emit( 'en-proceso' );
+                                    }
+                                    if ( totalCompleto > 0 && totalCompleto === this.listaAportantes.length ) {
+                                        this.estadoSemaforo.emit( 'completo' );
+                                    }
                                     if ( totalCuenta === this.listaAportantes.length ) {
                                         this.esUnicaCuenta = true;
                                         this.seDiligenciaFormulario.emit( false );
