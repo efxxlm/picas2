@@ -73,7 +73,7 @@
                   </span>
             </div>
             <div class="text-center mt-1em">
-                <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.get('tieneObservaciones').value === null">
+                <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.dirty === false">
                     <img src="assets/img/icon/guardar.svg">
                 </button>
             </div>

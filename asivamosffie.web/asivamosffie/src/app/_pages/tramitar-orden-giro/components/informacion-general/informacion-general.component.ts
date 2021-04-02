@@ -1,10 +1,12 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { ListaMediosPagoCodigo, MediosPagoCodigo, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ListaMediosPagoCodigo, ListaMenu, ListaMenuId, MediosPagoCodigo, TipoObservaciones, TipoObservacionesCodigo, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { Router } from '@angular/router';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-informacion-general',
@@ -17,20 +19,25 @@ export class InformacionGeneralComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Input() esExpensas: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    semaforoTerceroGiro = 'sin-diligenciar';
+    listaMenu: ListaMenu = ListaMenuId;
+    ordenGiroObservacionId = 0;
+    ordenGiroId: 0;
+    ordenGiroTerceroId: 0;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaTipoSolicitudContrato: Dominio[] = [];
     listaMedioPago: Dominio[] = [];
     listaBancos: Dominio[] = [];
     valorTotalFactura = 0;
-    ordenGiroId: 0;
     solicitudPagoFase: any;
     ordenGiroTercero: any;
-    ordenGiroTerceroId: 0;
-    addressForm: FormGroup;
-    dataHistorial: any[] = [];
+    historialObservaciones: any[] = [];
     dataSource = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
+    addressForm: FormGroup;
     formObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null, Validators.required ],
@@ -47,18 +54,6 @@ export class InformacionGeneralComponent implements OnInit {
         'valor',
         'saldo'
     ];
-    dataTable: any[] = [
-        {
-          numDrp: 'IP_00090',
-          valor: '$ 100.000.000',
-          saldo: '$ 100.000.000'
-        },
-        {
-          numDrp: 'IP_00123',
-          valor: '$ 5.000.000',
-          saldo: '$ 5.000.000'
-        }
-    ];
     editorStyle = {
         height: '100px'
     };
@@ -72,8 +67,10 @@ export class InformacionGeneralComponent implements OnInit {
     };
 
     constructor(
+        private routes: Router,
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
         private commonSvc: CommonService )
     {
         this.commonSvc.listaTipoSolicitudContrato()
@@ -87,16 +84,10 @@ export class InformacionGeneralComponent implements OnInit {
 
             this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
-        this.dataHistorial = [
-            {
-                fechaCreacion: new Date(),
-                responsable: 'Coordinador financiera',
-                observacion: '<p>test historial</p>'
-            }
-        ];
+
         this.getDataTerceroGiro();
+
         this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     getDataTerceroGiro() {
@@ -105,7 +96,7 @@ export class InformacionGeneralComponent implements OnInit {
             this.listaMedioPago = listaMediosPago;
 
             this.commonSvc.listaBancos()
-                .subscribe( listaBancos => {
+                .subscribe( async listaBancos => {
                     this.listaBancos = listaBancos;
 
                     if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -115,7 +106,70 @@ export class InformacionGeneralComponent implements OnInit {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                 this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
                                 this.ordenGiroTerceroId = this.ordenGiroTercero.ordenGiroTerceroId;
+                                // Get observaciones
+                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.verificarOrdenGiro,
+                                    this.ordenGiroId,
+                                    this.ordenGiroTerceroId,
+                                    this.tipoObservaciones.terceroGiro );
+                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.aprobarOrdenGiro,
+                                    this.ordenGiroId,
+                                    this.ordenGiroTerceroId,
+                                    this.tipoObservaciones.terceroGiro );
+                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.tramitarOrdenGiro,
+                                        this.ordenGiroId,
+                                        this.ordenGiroTerceroId,
+                                        this.tipoObservaciones.terceroGiro );
+                                if ( listaObservacionVerificar.length > 0 ) {
+                                    listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                }
+                                if ( listaObservacionAprobar.length > 0 ) {
+                                    listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                }
+                                if ( listaObservacionTramitar.length > 0 ) {
+                                    listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                }
+                                // Get lista de observacion y observacion actual    
+                                const observacion = listaObservacionTramitar.find( obs => obs.archivada === false )
 
+                                if ( observacion !== undefined ) {
+                                    this.ordenGiroObservacionId = observacion.ordenGiroObservacionId;
+                                    
+                                    if ( observacion.registroCompleto === false ) {
+                                        this.semaforoTerceroGiro = 'en-proceso';
+                                        this.estadoSemaforo.emit( 'en-proceso' );
+                                    }
+                                    if ( observacion.registroCompleto === true ) {
+                                        this.semaforoTerceroGiro = 'completo';
+                                        this.estadoSemaforo.emit( 'completo' );
+                                    }
+
+                                    this.formObservacion.setValue(
+                                        {
+                                            tieneObservaciones: observacion.tieneObservacion,
+                                            observaciones: observacion.observacion !== undefined ? ( observacion.observacion.length > 0 ? observacion.observacion : null ) : null,
+                                            fechaCreacion: observacion.fechaCreacion
+                                        }
+                                    )
+                                }
+                                const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true );
+                                const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true );
+                                const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
+
+                                if ( obsArchivadasVerificar.length > 0 ) {
+                                    obsArchivadasVerificar.forEach( obs => this.historialObservaciones.push( obs ) );
+                                }
+                                if ( obsArchivadasAprobar.length > 0 ) {
+                                    obsArchivadasAprobar.forEach( obs => this.historialObservaciones.push( obs ) );
+                                }
+                                if ( obsArchivadasTramitar.length > 0 ) {
+                                    obsArchivadasTramitar.forEach( obs => this.historialObservaciones.push( obs ) );
+                                }
+
+                                this.tablaHistorial = new MatTableDataSource( this.historialObservaciones );
+                                // Get data tercero de giro
                                 const medioPago = this.listaMedioPago.find( medio => medio.codigo === this.ordenGiroTercero.medioPagoGiroCodigo );
 
                                 if ( medioPago !== undefined ) {
@@ -245,7 +299,31 @@ export class InformacionGeneralComponent implements OnInit {
         if ( this.formObservacion.get( 'tieneObservaciones' ).value === false && this.formObservacion.get( 'observaciones' ).value !== null ) {
             this.formObservacion.get( 'observaciones' ).setValue( '' );
         }
-        console.log( this.formObservacion );
+
+        const pOrdenGiroObservacion = {
+            ordenGiroObservacionId: this.ordenGiroObservacionId,
+            ordenGiroId: this.ordenGiroId,
+            tipoObservacionCodigo: this.tipoObservaciones.terceroGiro,
+            menuId: this.listaMenu.tramitarOrdenGiro,
+            idPadre: this.ordenGiroTerceroId,
+            observacion: this.formObservacion.get( 'observaciones' ).value,
+            tieneObservacion: this.formObservacion.get( 'tieneObservaciones' ).value
+        }
+
+        this.obsOrdenGiro.createEditSpinOrderObservations( pOrdenGiroObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                this.esRegistroNuevo === true ? '/tramitarOrdenGiro/tramitarOrdenGiro' : '/tramitarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

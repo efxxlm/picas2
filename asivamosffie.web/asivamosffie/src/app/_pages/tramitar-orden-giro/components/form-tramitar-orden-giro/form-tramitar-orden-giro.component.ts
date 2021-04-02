@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import { ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-form-tramitar-orden-giro',
@@ -10,11 +11,14 @@ import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.se
 })
 export class FormTramitarOrdenGiroComponent implements OnInit {
 
+    listaMenu: ListaMenu = ListaMenuId;
     solicitudPago: any;
     contrato: any;
     esRegistroNuevo = false;
     esVerDetalle = false;
     esExpensas = false;
+    semaforoInformacionGeneral = 'sin-diligenciar';
+    semaforoDetalleGiro = 'sin-diligenciar';
     listaModalidadContrato: Dominio[] = [];
 
     constructor(

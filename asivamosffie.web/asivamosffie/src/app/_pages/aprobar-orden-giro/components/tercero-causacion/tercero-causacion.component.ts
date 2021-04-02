@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -8,6 +8,8 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import humanize from 'humanize-plus';
+import { ListaMenu, ListaMenuId, TipoObservaciones, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-tercero-causacion',
@@ -19,6 +21,11 @@ export class TerceroCausacionComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
+    totalEnProceso = 0;
+    totalCompleto = 0;
     tipoDescuentoArray: Dominio[] = [];
     listaCriterios: Dominio[] = [];
     listaFuenteTipoFinanciacion: Dominio[] = [];
@@ -34,8 +41,8 @@ export class TerceroCausacionComponent implements OnInit {
     valorNetoGiro = 0;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
-    addressForm: FormGroup;
     dataHistorial: any[] = [];
+    addressForm: FormGroup;
     tablaHistorial = new MatTableDataSource();
     formObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
@@ -81,7 +88,8 @@ export class TerceroCausacionComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
-        private ordenGiroSvc: OrdenPagoService )
+        private ordenGiroSvc: OrdenPagoService,
+        private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
         this.crearFormulario();
     }
@@ -264,13 +272,76 @@ export class TerceroCausacionComponent implements OnInit {
                                 }
 
                                 // Set formulario criterios
-                                setTimeout(() => {
+                                setTimeout( async () => {
+                                    // Get observaciones
+                                    const historialObservaciones = [];
+                                    let estadoSemaforo = 'sin-diligenciar';
+
+                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.verificarOrdenGiro,
+                                        this.ordenGiroId,
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                        this.tipoObservaciones.terceroCausacion );
+                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.aprobarOrdenGiro,
+                                        this.ordenGiroId,
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                        this.tipoObservaciones.terceroCausacion );
+                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.tramitarOrdenGiro,
+                                            this.ordenGiroId,
+                                            terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                            this.tipoObservaciones.terceroCausacion );
+                                    if ( listaObservacionVerificar.length > 0 ) {
+                                        listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                    }
+                                    if ( listaObservacionAprobar.length > 0 ) {
+                                        listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                    }
+                                    if ( listaObservacionTramitar.length > 0 ) {
+                                        listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                    }
+                                    // Get lista observaciones archivadas
+                                    const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true );
+                                    const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true );
+                                    const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
+                                    if ( obsArchivadasVerificar.length > 0 ) {
+                                        obsArchivadasVerificar.forEach( obs => historialObservaciones.push( obs ) );
+                                    }
+                                    if ( obsArchivadasAprobar.length > 0 ) {
+                                        obsArchivadasAprobar.forEach( obs => historialObservaciones.push( obs ) );
+                                    }
+                                    if ( obsArchivadasTramitar.length > 0 ) {
+                                        obsArchivadasTramitar.forEach( obs => historialObservaciones.push( obs ) );
+                                    }
+                                    // Get observacion actual    
+                                    const observacion = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                    const observacionVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                    if ( observacion !== undefined ) {
+                                        if ( observacion.registroCompleto === false ) {
+                                            estadoSemaforo = 'en-proceso';
+                                        }
+                                        if ( observacion.registroCompleto === true ) {
+                                            estadoSemaforo = 'completo';
+                                        }
+                                    }
+                                    // Set contador semaforo observaciones
+                                    if ( estadoSemaforo === 'en-proceso' ) {
+                                        this.totalEnProceso++;
+                                    }
+                                    if ( estadoSemaforo === 'completo' ) {
+                                        this.totalCompleto++;
+                                    }
+
                                     this.criterios.push( this.fb.group(
                                         {
-                                            estadoSemaforo: [ 'completo' ],
-                                            tieneObservaciones: [ null, Validators.required ],
-                                            observaciones: [ null, Validators.required ],
-                                            fechaCreacion: [ null ],
+                                            estadoSemaforo,
+                                            observacionVerificar: [ observacionVerificar !== undefined ? observacionVerificar : null ],
+                                            historialObservaciones: [ historialObservaciones ],
+                                            ordenGiroObservacionId: [ observacion !== undefined ? ( observacion.ordenGiroObservacionId !== undefined ? observacion.ordenGiroObservacionId : 0 ) : 0 ],
+                                            tieneObservaciones: [ observacion !== undefined ? ( observacion.tieneObservacion !== undefined ? observacion.tieneObservacion : null ) : null, Validators.required ],
+                                            observaciones: [ observacion !== undefined ? ( observacion.observacion !== undefined ? ( observacion.observacion.length > 0 ? observacion.observacion : null ) : null ) : null, Validators.required ],
+                                            fechaCreacion: [ observacion !== undefined ? ( observacion.fechaCreacion !== undefined ? observacion.fechaCreacion : null ) : null ],
                                             ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                             tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                             nombre: [ criterio.nombre ],
@@ -281,6 +352,17 @@ export class TerceroCausacionComponent implements OnInit {
                                 }, 1000);
                             }
                         }
+                        setTimeout(() => {
+                            if ( this.totalEnProceso > 0 && this.totalEnProceso === this.criterios.length ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( this.totalCompleto > 0 && this.totalCompleto < this.criterios.length ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( this.totalCompleto > 0 && this.totalCompleto === this.criterios.length ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                        }, 2000);
                     } );
                 } 
             );
@@ -300,6 +382,10 @@ export class TerceroCausacionComponent implements OnInit {
                 return descuento.nombre;
             }
         }
+    }
+
+    getDataSource( historialObservaciones: any[] ) {
+        return new MatTableDataSource( historialObservaciones );
     }
 
     maxLength(e: any, n: number) {
@@ -323,11 +409,35 @@ export class TerceroCausacionComponent implements OnInit {
         });
     }
 
-    guardar() {
-        if ( this.formObservacion.get( 'tieneObservaciones' ).value === false && this.formObservacion.get( 'observaciones' ).value !== null ) {
-            this.formObservacion.get( 'observaciones' ).setValue( '' );
+    guardar( criterio: FormGroup ) {
+        if ( criterio.get( 'tieneObservaciones' ).value === false && criterio.get( 'observaciones' ).value !== null ) {
+            criterio.get( 'observaciones' ).setValue( '' );
         }
-        console.log( this.formObservacion );
+
+        const pOrdenGiroObservacion = {
+            ordenGiroObservacionId: criterio.get( 'ordenGiroObservacionId' ).value,
+            ordenGiroId: this.ordenGiroId,
+            tipoObservacionCodigo: this.tipoObservaciones.terceroCausacion,
+            menuId: this.listaMenu.aprobarOrdenGiro,
+            idPadre: criterio.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+            observacion: criterio.get( 'observaciones' ).value,
+            tieneObservacion: criterio.get( 'tieneObservaciones' ).value
+        }
+
+        this.obsOrdenGiro.createEditSpinOrderObservations( pOrdenGiroObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                this.esRegistroNuevo === true ? '/aprobarOrdenGiro/aprobarOrdenGiro' : '/aprobarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

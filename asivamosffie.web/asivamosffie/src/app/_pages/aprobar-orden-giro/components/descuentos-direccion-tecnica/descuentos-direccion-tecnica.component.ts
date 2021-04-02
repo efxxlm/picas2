@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -7,6 +7,9 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import humanize from 'humanize-plus';
+import { ListaMenu, ListaMenuId, TipoObservaciones, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-descuentos-direccion-tecnica',
@@ -18,7 +21,12 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaTipoDescuento: Dominio[] = [];
+    totalEnProceso = 0;
+    totalCompleto = 0;
     solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any[];
     solicitudPagoFaseFactura: any;
@@ -60,14 +68,6 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
         'valorTotalDescuentos',
         'valorNetoGiro'
     ];
-    dataTable = [
-        {
-            tipoDescuento: '4 x mil',
-            valorDescuento: 60000,
-            valorTotalDescuento: 60000,
-            valorNetoGiro: 14940000
-        }
-    ];
     listData = {
         listaDescuentos: [],
         valorNetoGiro: 0,
@@ -100,22 +100,16 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private ordenGiroSvc: OrdenPagoService,
-        private registrarPagosSvc: RegistrarRequisitosPagoService )
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
+        private routes: Router )
     {
         this.commonSvc.tiposDescuento()
             .subscribe(response => this.listaTipoDescuento = response);
     }
 
     ngOnInit(): void {
-        this.dataHistorial = [
-            {
-                fechaCreacion: new Date(),
-                responsable: 'Coordinador financiera',
-                observacion: '<p>test historial</p>'
-            }
-        ];
         this.getDireccionTecnica();
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     getDireccionTecnica() {
@@ -268,17 +262,77 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                                         }
                                     }
                                 }
-                                let estadoSemaforo = 'sin-diligenciar';
 
-                                setTimeout(() => {
-                                    // Set formulario de los descuentos
-                                    detalleDescuentoTecnica.forEach( descuentoValue => {
+                                setTimeout( async () => {
+                                    for ( const descuentoValue of detalleDescuentoTecnica ) {
+                                        // Get observaciones
+                                        let estadoSemaforo = 'sin-diligenciar';
+                                        const historialObservaciones = [];
+                                        const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.verificarOrdenGiro,
+                                            this.ordenGiroId,
+                                            descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                            this.tipoObservaciones.direccionTecnica );
+                                        const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.aprobarOrdenGiro,
+                                            this.ordenGiroId,
+                                            descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                            this.tipoObservaciones.direccionTecnica );
+                                        const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                                this.listaMenu.tramitarOrdenGiro,
+                                                this.ordenGiroId,
+                                                descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                                this.tipoObservaciones.direccionTecnica );
+                                        if ( listaObservacionVerificar.length > 0 ) {
+                                            listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                        }
+                                        if ( listaObservacionAprobar.length > 0 ) {
+                                            listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                        }
+                                        if ( listaObservacionTramitar.length > 0 ) {
+                                            listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                        }
+                                        // Get lista observaciones archivadas
+                                        const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true );
+                                        const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true );
+                                        const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
+                                        if ( obsArchivadasVerificar.length > 0 ) {
+                                            obsArchivadasVerificar.forEach( obs => historialObservaciones.push( obs ) );
+                                        }
+                                        if ( obsArchivadasAprobar.length > 0 ) {
+                                            obsArchivadasAprobar.forEach( obs => historialObservaciones.push( obs ) );
+                                        }
+                                        if ( obsArchivadasTramitar.length > 0 ) {
+                                            obsArchivadasTramitar.forEach( obs => historialObservaciones.push( obs ) );
+                                        }
+                                        // Get observacion actual    
+                                        const observacion = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                        const observacionVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                        if ( observacion !== undefined ) {
+                                            if ( observacion.registroCompleto === false ) {
+                                                estadoSemaforo = 'en-proceso';
+                                            }
+                                            if ( observacion.registroCompleto === true ) {
+                                                estadoSemaforo = 'completo';
+                                            }
+                                        }
+                                        // Set contador semaforo observaciones
+                                        if ( estadoSemaforo === 'en-proceso' ) {
+                                            this.totalEnProceso++;
+                                        }
+                                        if ( estadoSemaforo === 'completo' ) {
+                                            this.totalCompleto++;
+                                        }
+                                        // Set formulario de los descuentos
                                         this.descuentos.controls.push( this.fb.group(
                                             {
                                                 estadoSemaforo,
-                                                tieneObservaciones: [ null, Validators.required ],
-                                                observaciones: [ null, Validators.required ],
-                                                fechaCreacion: [ null ],
+                                                observacionVerificar: [ observacionVerificar !== undefined ? observacionVerificar : null ],
+                                                historialObservaciones: [ historialObservaciones ],
+                                                ordenGiroObservacionId: [ observacion !== undefined ? ( observacion.ordenGiroObservacionId !== undefined ? observacion.ordenGiroObservacionId : 0 ) : 0 ],
+                                                tieneObservaciones: [ observacion !== undefined ? ( observacion.tieneObservacion !== undefined ? observacion.tieneObservacion : null ) : null, Validators.required ],
+                                                observaciones: [ observacion !== undefined ? ( observacion.observacion !== undefined ? ( observacion.observacion.length > 0 ? observacion.observacion : null ) : null ) : null, Validators.required ],
+                                                fechaCreacion: [ observacion !== undefined ? ( observacion.fechaCreacion !== undefined ? observacion.fechaCreacion : null ) : null ],
                                                 ordenGiroDetalleDescuentoTecnicaId: [ descuentoValue.ordenGiroDetalleDescuentoTecnicaId ],
                                                 solicitudPagoFaseFacturaDescuentoId: [ descuentoValue.solicitudPagoFaseFacturaDescuentoId ],
                                                 tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
@@ -286,10 +340,21 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                                                 criterios: this.fb.array( formArrayCriterios )
                                             }
                                         ) );
-                                    } )
+                                    }
                                 }, 2000);
                             }
                         }
+                        setTimeout(() => {
+                            if ( this.totalEnProceso > 0 && this.totalEnProceso === this.descuentos.length ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( this.totalCompleto > 0 && this.totalCompleto < this.descuentos.length ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( this.totalCompleto > 0 && this.totalCompleto === this.descuentos.length ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                        }, 3000);
                     }
                 }
 
@@ -342,6 +407,10 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
         }
     }
 
+    getDataSource( historialObservaciones: any[] ) {
+        return new MatTableDataSource( historialObservaciones );
+    }
+
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
             e.editor.deleteText(n - 1, e.editor.getLength());
@@ -363,11 +432,35 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
         });
     }
 
-    guardar() {
-        if ( this.formObservacion.get( 'tieneObservaciones' ).value === false && this.formObservacion.get( 'observaciones' ).value !== null ) {
-            this.formObservacion.get( 'observaciones' ).setValue( '' );
+    guardar( descuento: FormGroup ) {
+        if ( descuento.get( 'tieneObservaciones' ).value === false && descuento.get( 'observaciones' ).value !== null ) {
+            descuento.get( 'observaciones' ).setValue( '' );
         }
-        console.log( this.formObservacion );
+
+        const pOrdenGiroObservacion = {
+            ordenGiroObservacionId: descuento.get( 'ordenGiroObservacionId' ).value,
+            ordenGiroId: this.ordenGiroId,
+            tipoObservacionCodigo: this.tipoObservaciones.direccionTecnica,
+            menuId: this.listaMenu.aprobarOrdenGiro,
+            idPadre: descuento.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
+            observacion: descuento.get( 'observaciones' ).value,
+            tieneObservacion: descuento.get( 'tieneObservaciones' ).value
+        }
+
+        this.obsOrdenGiro.createEditSpinOrderObservations( pOrdenGiroObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                this.esRegistroNuevo === true ? '/aprobarOrdenGiro/aprobarOrdenGiro' : '/aprobarOrdenGiro/editarOrdenGiro', this.solicitudPago.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

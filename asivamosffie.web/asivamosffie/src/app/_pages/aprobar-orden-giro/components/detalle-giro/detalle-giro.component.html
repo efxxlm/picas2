@@ -92,7 +92,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoEstrategiaPago">
                 Estrategia de pagos
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -244,27 +244,29 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoDireccionTecnica">
                 Descuentos Dirección Técnica
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-descuentos-direccion-tecnica   [esVerDetalle]="esVerDetalle"
                                             [esRegistroNuevo]="esRegistroNuevo"
-                                            [solicitudPago]="solicitudPago">
+                                            [solicitudPago]="solicitudPago"
+                                            (estadoSemaforo)="listaSemaforos.semaforoDireccionTecnica = $event">
         </app-descuentos-direccion-tecnica>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoTerceroCausacion">
                 Tercero de causación
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-tercero-causacion  [esVerDetalle]="esVerDetalle"
                                 [esRegistroNuevo]="esRegistroNuevo"
-                                [solicitudPago]="solicitudPago">
+                                [solicitudPago]="solicitudPago"
+                                (estadoSemaforo)="listaSemaforos.semaforoTerceroCausacion = $event">
         </app-tercero-causacion>
     </mat-expansion-panel>
 
@@ -284,27 +286,29 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoObservaciones">
                 Observaciones
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-observaciones  [esVerDetalle]="esVerDetalle"
                             [esRegistroNuevo]="esRegistroNuevo"
-                            [solicitudPago]="solicitudPago">
+                            [solicitudPago]="solicitudPago"
+                            (estadoSemaforo)="listaSemaforos.semaforoObservaciones = $event">
         </app-observaciones>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoSoporte">
                 Soporte de orden de giro
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-soporte-orden-giro [esVerDetalle]="esVerDetalle"
                                 [esRegistroNuevo]="esRegistroNuevo"
-                                [solicitudPago]="solicitudPago">
+                                [solicitudPago]="solicitudPago"
+                                (estadoSemaforo)="listaSemaforos.semaforoSoporte = $event">
         </app-soporte-orden-giro>
     </mat-expansion-panel>
 </mat-accordion>
