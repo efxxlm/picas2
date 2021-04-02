@@ -46,6 +46,8 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  @Input() ajusteProgramacionInfo:any;
+
   constructor(
     public dialog: MatDialog
   ) { }
@@ -54,9 +56,10 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
   }
 
   openCargarProgramacion() {
+    console.log( this.ajusteProgramacionInfo )
     const dialogRef = this.dialog.open(CargarProgramacionComponent, {
       width: '75em',
-      // data: { }
+       data: { ajusteProgramacionInfo: this.ajusteProgramacionInfo } 
     });
     dialogRef.afterClosed()
     .subscribe(response => {

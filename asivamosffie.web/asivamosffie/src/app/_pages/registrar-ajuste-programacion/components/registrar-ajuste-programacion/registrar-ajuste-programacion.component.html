@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="ajusteProgramacionInfo">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -6,19 +6,19 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Registrar ajuste a la programación LL03260326
+      Registrar ajuste a la programación {{ ajusteProgramacionInfo.llaveMen }}
     </h1>
     <p class="info-sub-title">
       <span>
         Fecha de aprobacion de póliza:
         <b>
-          C223456789
+          {{ ajusteProgramacionInfo.fechaAprobacionPoliza }}
         </b>
       </span>
       <span>
         Número de contrato:
         <b>
-          C223456789
+          {{ ajusteProgramacionInfo.numeroContrato }}
         </b>
       </span>
     </p>
@@ -30,7 +30,7 @@
         <strong>
           Tipo de modificación:
         </strong>
-        Prorroga
+        {{ ajusteProgramacionInfo.novedadesSeleccionadas }}
       </p>
       <p>
         <strong>
@@ -54,13 +54,13 @@
         <strong>
           Nombre del contratista:
         </strong>
-        Constructora Colpatria
+        {{ ajusteProgramacionInfo.nombreContratista }}
       </p>
       <p>
         <strong>
           Número de identificación (NIT/RUT):
         </strong>
-        900.675.987-4
+        {{ ajusteProgramacionInfo.nombreContratista }}
       </p>
       <p>
         <strong>
@@ -102,6 +102,10 @@
   </mat-card>
 
   <div class="mb-2em">
-    <app-expansion-panel></app-expansion-panel>
+    <app-expansion-panel
+                        [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+    >
+
+    </app-expansion-panel>
   </div>
 </section>

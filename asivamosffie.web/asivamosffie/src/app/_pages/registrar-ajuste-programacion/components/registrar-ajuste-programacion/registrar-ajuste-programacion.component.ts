@@ -9,11 +9,25 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 export class RegistrarAjusteProgramacionComponent implements OnInit {
 
   detalleId: string;
+  ajusteProgramacionInfo: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) 
+  {
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/registratAjusteProgramacion');
+      return;
+    };
+
+    if (this.router.getCurrentNavigation().extras.state){
+      console.log( this.router.getCurrentNavigation().extras.state.ajusteProgramacion )
+      this.ajusteProgramacionInfo = this.router.getCurrentNavigation().extras.state.ajusteProgramacion
+    }
+      
+
+   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {

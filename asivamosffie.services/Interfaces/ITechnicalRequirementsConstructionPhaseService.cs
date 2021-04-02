@@ -42,6 +42,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
         Proyecto CalcularYGuardarFechaInicioContrato(int pContratoConstruccionId, DateTime pFechaInicioObra, int pContratoId, int pProyectoId, string pUsuarioModificacion);
+        Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid();
+        Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
+                                                                                int pContratoId, int pProyectoId);
 
     }
 }

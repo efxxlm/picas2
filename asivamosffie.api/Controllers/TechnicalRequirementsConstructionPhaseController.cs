@@ -112,6 +112,20 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetAjusteProgramacionGrid")]
+        [HttpGet]
+        public async Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid()
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetAjusteProgramacionGrid();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GetContratoByContratoId")]
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -571,6 +585,29 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [Route("UploadFileToValidateAdjustmentProgramming")]
+        [HttpPost]
+        public async Task<IActionResult> UploadFileToValidateAdjustmentProgramming(IFormFile file, [FromQuery] int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
+                                                                                    int pContratoId, int pProyectoId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateAdjustmentProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario,pAjusteProgramacionId,pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId );
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
 

@@ -269,8 +269,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7648,6 +7646,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(10);
+
+                entity.Property(e => e.EstadoCodigoNovedades)
+                    .HasColumnName("estadoCodigoNovedades")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoNombre)
                     .IsRequired()

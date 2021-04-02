@@ -19,6 +19,7 @@ namespace asivamosffie.model.Models
         public int ContratoConstruccionId { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? AjusteProgramacionId { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }

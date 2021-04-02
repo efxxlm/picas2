@@ -140,4 +140,14 @@ export class FaseUnoConstruccionService {
     return this.http.post(`${ this.urlApi }/CalcularYGuardarFechaInicioContrato`,construccion);
   }
 
+  GetAjusteProgramacionGrid ( ) {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
+  };
+
+  uploadFileToValidateAdjustmentProgramming ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
+    const formData = new FormData(); 
+    formData.append('file', documento, documento.name);
+    return this.http.post( `${ this.urlApi }/uploadFileToValidateAdjustmentProgramming?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
+  };
+
 }

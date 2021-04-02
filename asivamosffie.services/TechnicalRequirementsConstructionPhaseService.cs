@@ -235,6 +235,15 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid()
+        {
+            List<VAjusteProgramacion> ajustes = _context.VAjusteProgramacion.ToList();
+
+            return ajustes.OrderBy( x => x.AjusteProgramacionId)
+                            .Where(x => x.EstadoCodigoNovedades == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente)
+                            .ToList() ;
+        }
+
         public async Task<ContratoConstruccion> GetContratoConstruccionById(int pIdContratoConstruccion)
         {
             ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
@@ -3529,6 +3538,367 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
                     };
             }
+
+        }
+
+        public async Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, 
+                                                                                int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
+                                                                                int pContratoId, int pProyectoId)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
+
+            if (pAjusteProgramacionId == 0)
+            {
+                AjusteProgramacion ajusteProgramacion = new AjusteProgramacion();
+
+                //ajusteProgramacion.UsuarioCreacion = pUsuarioCreo;
+                //ajusteProgramacion.FechaCreacion = DateTime.Now;
+
+                ajusteProgramacion.ContratacionProyectoId = pContratacionProyectId;
+                ajusteProgramacion.NovedadContractualId = pNovedadContractualId;
+
+                _context.AjusteProgramacion.Add(ajusteProgramacion);
+                _context.SaveChanges();
+
+                pAjusteProgramacionId = ajusteProgramacion.AjusteProgramacionId;
+            }
+
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cc => cc.ContratoId == pContratoId && cc.ProyectoId == pProyectoId)
+                                                                        .Include(r => r.Contrato)
+                                                                            .ThenInclude(r => r.Contratacion)
+                                                                                .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                                        .Include(r => r.Contrato)
+                                                                            .ThenInclude(r => r.ContratoPoliza)
+                                                                        .Include(r => r.Proyecto)
+                                                                        .FirstOrDefault();
+
+
+            Proyecto proyectoTemp = CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra);
+
+
+            DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
+            DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
+
+            int CantidadRegistrosVacios = 0;
+            int CantidadResgistrosValidos = 0;
+            int CantidadRegistrosInvalidos = 0;
+            int cantidadRutaCritica = 0;
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            DocumentService _documentService = new DocumentService(_context, _commonService);
+
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.AjusteProgramacionObra), pAjusteProgramacionId);
+
+            // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
+            if (archivoCarge != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await pFile.CopyToAsync(stream);
+
+                    using var package = new ExcelPackage(stream);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+                    bool estructuraValidaValidacionGeneral = true;
+                    string mensajeRespuesta = string.Empty;
+
+                    int cantidadActividades = 0;
+                    int posicion = 2;
+                    while (!string.IsNullOrEmpty(worksheet.Cells[posicion++, 1].Text))
+                    {
+                        cantidadActividades++;
+                    }
+
+                    for (int i = 2; i <= cantidadActividades + 1; i++)
+                    {
+                        bool tieneErrores = false;
+                        try
+                        {
+
+                            TempProgramacion temp = new TempProgramacion();
+                            //Auditoria
+                            temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                            temp.EstaValidado = false;
+                            temp.FechaCreacion = DateTime.Now;
+                            temp.UsuarioCreacion = pUsuarioCreo;
+                            temp.AjusteProgramacionId = pAjusteProgramacionId;
+
+                            List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+
+                            if (listaFlujo.Count() > 1)
+                            {
+                                worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
+                                worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                                CantidadResgistrosValidos--;
+                                estructuraValidaValidacionGeneral = false;
+                                mensajeRespuesta = "se debe eliminar una carga de flujo de inversión asociada a este Proyecto";
+                            }
+
+                            #region Tipo Actividad
+                            // #1
+                            //Tipo Actividad
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
+                            {
+                                worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else if (new string[3] { "C", "SC", "I" }.Where(r => r == worksheet.Cells[i, 1].Text).Count() == 0)
+                            {
+                                worksheet.Cells[i, 1].AddComment("Tipo de actividad invalido", "Admin");
+                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.TipoActividadCodigo = worksheet.Cells[i, 1].Text;
+                            }
+
+                            #endregion Tipo Actividad
+
+                            #region Actividad
+
+                            //#2
+                            //Actividad
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
+                            {
+                                temp.Actividad = worksheet.Cells[i, 2].Text;
+                            }
+                            else
+                            {
+                                worksheet.Cells[i, 2].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 2].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+
+                            #endregion Actividad
+
+                            #region Marca de ruta critica
+
+                            //#3
+                            //Marca de ruta critica
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text))
+                            {
+                                temp.EsRutaCritica = false;
+                            }
+                            else
+                            {
+                                if (temp.TipoActividadCodigo == "I" && worksheet.Cells[i, 3].Text == "1")
+                                {
+                                    temp.EsRutaCritica = true;
+                                    cantidadRutaCritica++;
+                                }
+                                else if (temp.TipoActividadCodigo != "I" && worksheet.Cells[i, 3].Text == "1")
+                                {
+                                    worksheet.Cells[i, 3].AddComment("No se puede asignar ruta critica a este tipo de actividad", "Admin");
+                                    worksheet.Cells[i, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    tieneErrores = true;
+                                }
+
+                            }
+
+                            #endregion Marca de ruta critica
+
+                            #region Fecha Inicio
+
+                            //#4
+                            //Fecha Inicio
+                            DateTime fechaTemp;
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text))
+                            {
+                                worksheet.Cells[i, 4].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.FechaInicio = DateTime.TryParse(worksheet.Cells[i, 4].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
+                            }
+
+                            #endregion Fecha Inicio
+
+                            #region Fecha final
+
+                            //#5
+                            //Fecha final
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
+                            {
+                                worksheet.Cells[i, 5].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.FechaFin = DateTime.TryParse(worksheet.Cells[i, 5].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
+                            }
+
+                            #endregion Fecha final
+
+                            #region validacion fechas
+
+                            // validacion fechas
+                            if (temp.FechaInicio.Date > temp.FechaFin.Date)
+                            {
+                                worksheet.Cells[i, 5].AddComment("La fecha no puede ser inferior a la fecha inicial", "Admin");
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+
+                            }
+
+                            // fechas contrato
+                            if (temp.FechaInicio.Date < fechaInicioContrato.Value.Date)
+                            {
+                                worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del contrato", "Admin");
+                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+
+                            if (temp.FechaFin.Date > fechaFinalContrato.Date)
+                            {
+                                worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del contrato", "Admin");
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+
+                            #endregion validacion fechas
+
+                            #region Duracion
+
+                            //#6
+                            //Duracion
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 6].Text))
+                            {
+                                worksheet.Cells[i, 6].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 6].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 6].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.Duracion = Int32.Parse(worksheet.Cells[i, 6].Text);
+                            }
+
+                            #endregion Duracion
+
+
+                            //Guarda Cambios en una tabla temporal
+
+                            if (!tieneErrores)
+                            {
+                                _context.TempProgramacion.Add(temp);
+                                _context.SaveChanges();
+                            }
+
+                            if (temp.TempProgramacionId > 0)
+                            {
+                                CantidadResgistrosValidos++;
+                            }
+                            else
+                            {
+                                CantidadRegistrosInvalidos++;
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+                    }
+
+                    if (cantidadRutaCritica == 0 && worksheet.Cells[1, 1].Comment == null)
+                    {
+                        worksheet.Cells[1, 1].AddComment("Debe existir por lo menos una ruta critica", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        CantidadRegistrosInvalidos++;
+                        CantidadResgistrosValidos--;
+                        estructuraValidaValidacionGeneral = false;
+                        mensajeRespuesta = "Debe existir por lo menos una ruta critica";
+                    }
+
+                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
+
+                    if (estructuraValidaValidacionGeneral == true)
+                    {
+                        archivoCargueRespuesta = new ArchivoCargueRespuesta
+                        {
+                            CantidadDeRegistros = cantidadActividades.ToString(),
+                            CantidadDeRegistrosInvalidos = CantidadRegistrosInvalidos.ToString(),
+                            CantidadDeRegistrosValidos = CantidadResgistrosValidos.ToString(),
+                            LlaveConsulta = archivoCarge.Nombre,
+                            CargaValida = true,
+
+                        };
+                    }
+                    else if (estructuraValidaValidacionGeneral == false)
+                    {
+                        CantidadResgistrosValidos = 0;
+
+                        archivoCargueRespuesta = new ArchivoCargueRespuesta
+                        {
+                            CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
+                            CantidadDeRegistrosInvalidos = "0",
+                            CantidadDeRegistrosValidos = "0",
+                            LlaveConsulta = archivoCarge.Nombre,
+                            CargaValida = false,
+                            Mensaje = mensajeRespuesta,
+
+                        };
+                    }
+
+                    //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
+                    //-2 ya los registros comienzan desde esta fila
+                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
+                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
+                    archivoCarge.CantidadRegistros = cantidadActividades;
+                    _context.ArchivoCargue.Update(archivoCarge);
+
+
+                    byte[] bin = package.GetAsByteArray();
+                    string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+                    File.WriteAllBytes(pathFile, bin);
+
+
+                    return new Respuesta
+                    {
+                        Data = archivoCargueRespuesta,
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                    };
+                }
+
+
+
+
+            }
+            else
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                };
+            }
+
 
         }
 
