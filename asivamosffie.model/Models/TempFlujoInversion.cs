@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int TempFlujoInversionId { get; set; }
         public int ArchivoCargueId { get; set; }
         public bool EstaValidado { get; set; }
-        public int ContratoConstruccionId { get; set; }
+        public int? ContratoConstruccionId { get; set; }
         public string Semana { get; set; }
         public decimal? Valor { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -21,6 +21,7 @@ namespace asivamosffie.model.Models
         public int? Posicion { get; set; }
         public int? PosicionCapitulo { get; set; }
         public int? AjusteProgramacionId { get; set; }
+        public int? AjusteProgramacionObraId { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }

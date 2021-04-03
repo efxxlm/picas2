@@ -556,6 +556,8 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.CargaPagosRendimientosId);
 
+                entity.Property(e => e.Errores).IsUnicode(false);
+
                 entity.Property(e => e.EstadoCargue)
                     .IsRequired()
                     .HasMaxLength(20)
@@ -7163,7 +7165,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.TempFlujoInversion)
                     .HasForeignKey(d => d.ContratoConstruccionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__TempFlujo__Contr__18178C8A");
             });
 
@@ -7325,7 +7326,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.TempProgramacion)
                     .HasForeignKey(d => d.ContratoConstruccionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__TempProgr__Contr__125EB334");
             });
 

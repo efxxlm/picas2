@@ -339,5 +339,8 @@
         public const string Cambiar_Estado_Orden_Giro = "243";
         public const string Crear_Editar_Observacion_Orden_Giro = "243";
         public const string Validar_Excel_Ajuste_Programacion_Obra = "245";
+        public const string Load_Data_Ajuste_Programacion_Obra = "246";
+        public const string Validar_Excel_Ajuste_Flujo_Inversion = "247";
+        public const string Load_Data_Ajuste_Flujo_Inversion = "248";
     }
 }

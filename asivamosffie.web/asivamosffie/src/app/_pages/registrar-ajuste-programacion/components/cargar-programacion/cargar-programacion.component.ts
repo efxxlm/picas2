@@ -54,6 +54,13 @@ export class CargarProgramacionComponent {
   onClose(): void {
     this.dialog.closeAll();
   }
+
+  openDialogResponse (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  };
   
   openDialogConfirmar (modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, { 
@@ -61,41 +68,22 @@ export class CargarProgramacionComponent {
       data : { modalTitle, modalText, siNoBoton:true }
     });
 
-    // confirmarDialog.afterClosed()
-    // .subscribe( response => {
-    //   if ( response === true ) {
-    //     if ( this.esFlujoInversion ) {
-    //       this.faseUnoConstruccionSvc.transferMassiveLoadInvestmentFlow( this.idProject )
-    //         .subscribe(
-    //           response => {
-    //             this.openDialogResponse( '', response.message );
-    //             this.dialogRef.close( { terminoCarga: true } );
-    //           },
-    //           err => this.openDialogResponse( '', err.message )
-    //         )
-    //     } else {
-    //       this.faseUnoConstruccionSvc.transferMassiveLoadProgramming( this.idProject )
-    //       .subscribe(
-    //         response => {
-    //           this.openDialogResponse( '', response.message );
-    //           this.dialogRef.close( { terminoCarga: true } );
-    //         },
-    //         err => this.openDialogResponse( '', err.message )
-    //       )
-    //     }
-    //   }
-    // });
+     confirmarDialog.afterClosed()
+     .subscribe( response => {
+       if ( response === true ) {
+           this.faseUnoConstruccionSvc.transferMassiveLoadAdjustmentProgramming( this.idProject )
+             .subscribe(
+               response => {
+                 this.openDialogResponse( '', response.message );
+                 this.dialogRef.close( { terminoCarga: true } );
+               },
+               err => this.openDialogResponse( '', err.message )
+             )
+         } 
+     });
   }
 
   onSubmit(): void {
-    // // this.boton = "Aguarde un momento, estamos procesando el archivo";
-    // const inputNode: any = document.getElementById('file');
-    // console.log(inputNode);
-    // console.log(inputNode.value);
-    // this.onClose();
-    // this.openObservaciones();
-
-      //console.log( this.formCargarProgramacion );
       const inputNode: any = document.getElementById('file');
       if ( inputNode.files[0] === undefined ) {
         return;
