@@ -61,8 +61,8 @@ export class FaseDosPagosRendimientosService {
   }
 
   downloadManagedPerformances(uploadedOrderId :number, queryConsistentOrders?: boolean){
-    return this.http.get<any>(
-      `${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&queryConsistentOrders=${queryConsistentOrders}`)
+    return this.http.post(
+      `${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&queryConsistentOrders=${queryConsistentOrders}` , {} , {responseType: "blob" })
   }
 
   downloadPerformancesInconsistencies(uploadedOrderId :number){

@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
+import { FileDownloader } from 'src/app/_helpers/file-downloader';
 import { DialogCargarActaFirmadaAirComponent } from '../dialog-cargar-acta-firmada-air/dialog-cargar-acta-firmada-air.component';
 
 
@@ -82,10 +83,11 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
 
   downloadConsistencies(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.downloadManagedPerformances(uploadedOrderId, true)
-    .subscribe((response: Respuesta)=>{
+    .subscribe((content)=>{
       // if(response.isSuccessful){
       //   uploadedOrder.registrosIncorporados = response.data;
       // }
+      FileDownloader.exportExcel("Consistencias.xlsx", content)
     });
   }
 

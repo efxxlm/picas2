@@ -149,8 +149,8 @@ namespace asivamosffie.api.Controllers
 
         #region managedperformances
         [Route("downloadManagedPerformances")]
-        [HttpGet]
-        public async Task<IActionResult> DownloadManagedPerformances(int uploadedOrderId, bool? queryConsistentOrders)
+        [HttpPost]
+        public async Task<IActionResult> DownloadManagedPerformances([FromQuery]int uploadedOrderId, [FromQuery] bool? queryConsistentOrders)
         {
             try
             {
