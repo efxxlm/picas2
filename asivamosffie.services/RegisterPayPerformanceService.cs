@@ -734,7 +734,7 @@ namespace asivamosffie.services
             decimal valorAporteEnCuenta = 0;
             int registrosConsistentes = 0;
 
-            DateTime currentMonthPerformances = DateTime.ParseExact(performanceOrders.First().PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            TryStringToDate(performanceOrders.First().PerformancesDate,  out DateTime currentMonthPerformances);
             DateTime beforeMonth = new DateTime(currentMonthPerformances.Year, currentMonthPerformances.Month, 1);
             DateTime lastDayMonth = beforeMonth.AddDays(-1);
 
@@ -801,11 +801,11 @@ namespace asivamosffie.services
                     accountOrder.IsConsistent = true;
                     registrosConsistentes += 1;
                 }
-
+                TryStringToDate(accountOrder.PerformancesDate, out DateTime performancesDate);
                 var performanceEntity = new RendimientosIncorporados
                 {
                     CarguePagosRendimientosId = uploadedOrderId,
-                    FechaRendimientos = DateTime.ParseExact(accountOrder.PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    FechaRendimientos = performancesDate,
                     CuentaBancaria = accountOrder.AccountNumber,
                     TotalRendimientosGenerados = accountOrder.GeneratedPerformances,
                     Incorporados = (performances.HasValue ? performances.Value : 0),
@@ -1224,7 +1224,11 @@ namespace asivamosffie.services
                     LiablePerformances = uploadedOrder.LiablePerformances,
                     LiableBankCharges = uploadedOrder.LiableBankCharges,
                     LiableDiscountedCharge = uploadedOrder.LiableDiscountedCharge,
-                    GeneratedPerformances = uploadedOrder.GeneratedPerformances
+                    GeneratedPerformances = uploadedOrder.GeneratedPerformances,
+                    FinancialLienProvision = uploadedOrder.FinancialLienProvision,
+                    BankCharges = uploadedOrder.BankCharges,
+                    DiscountedCharge = uploadedOrder.DiscountedCharge,
+                    PerformancesToAdd = uploadedOrder.PerformancesToAdd
                 };
                 managedPerformances.Add(managedPerformanceOrder);
             }

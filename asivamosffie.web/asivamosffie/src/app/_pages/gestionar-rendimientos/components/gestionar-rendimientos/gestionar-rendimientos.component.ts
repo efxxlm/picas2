@@ -114,7 +114,7 @@ export class GestionarRendimientosComponent implements OnInit {
       // if(typeof result  != "string"){
       //   console.log("typeof", typeof result)
       // }
-      FileDownloader.exportExcel("file", content)
+      FileDownloader.exportExcel("Resultados.xlsx", content)
       
     })
   }
@@ -128,7 +128,7 @@ export class GestionarRendimientosComponent implements OnInit {
       // if(typeof result  != "string"){
       //   console.log("typeof", typeof result)
       // }
-      FileDownloader.exportExcel("file", content)
+      FileDownloader.exportExcel("Inconsistencias.xlsx", content)
       
     })
   }
