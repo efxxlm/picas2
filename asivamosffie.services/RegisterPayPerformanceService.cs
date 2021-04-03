@@ -19,6 +19,7 @@ using Microsoft.Extensions.Options;
 using asivamosffie.model.AditionalModels;
 using asivamosffie.services.Helpers.Extensions;
 using DinkToPdf;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace asivamosffie.services
 {
@@ -80,9 +81,8 @@ namespace asivamosffie.services
             return fi;
         }
 
-        private static string WriteCollectionToPath<T>(string fileName, string directory, List<T> list)
+        private static string WriteCollectionToPath<T>(string fileName, string directory, List<T> list, List<ExcelError> errors)
         {
-            string filePath;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var streams = new MemoryStream();
             using (var packages = new ExcelPackage())
@@ -91,17 +91,6 @@ namespace asivamosffie.services
                 var worksheet = packages.Workbook.Worksheets.Add("Hoja 1");
 
                 worksheet.Cells.LoadFromCollection(list, true);
-                //var cellsRange = "A2:A" + (list.Count);
-                //worksheet.Cells[cellsRange].Style.Numberformat.Format = "dd/mm/yyyy";
-                //packages.Save();
-                //////convert the excel package to a byte array
-                //byte[] bin = packages.GetAsByteArray();
-                //Stream stream = new MemoryStream(bin);
-                //////the path of the file
-                //filePath = directory + "/" + fileName + "_rev.xlsx";
-
-                //////write the file to the disk
-                //File.WriteAllBytes(filePath, bin);
 
                 // Add the headers
                 Type listType = typeof(T);
@@ -110,40 +99,21 @@ namespace asivamosffie.services
                 foreach (var property in properties)
                 {
                     var customAtt = (JsonPropertyAttribute)Attribute.GetCustomAttribute(property, typeof(JsonPropertyAttribute));
-                    worksheet.Cells[1, ++index].Value = customAtt.PropertyName;
+                    if (customAtt != null)
+                    {
+                        worksheet.Cells[1, ++index].Value = customAtt.PropertyName;
+                    }
+                }
+                if(errors != null)
+                foreach (var item in errors)
+                {
+                    worksheet.Cells[item.Row, item.Column].AddComment(item.Error, "Admin");
                 }
 
                 var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + listType.Name + ".xlsx");
 
                 // Save the workbook in the output directory
                 packages.SaveAs(xlFile);
-                return xlFile.FullName;
-            }
-
-        }
-
-        private static string WritePaymentToPath(string fileName, string directory, List<PaymentOrder> list)
-        {
-            string filePath;
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var streams = new MemoryStream();
-            using (var packages = new ExcelPackage())
-            {
-                var workSheet = packages.Workbook.Worksheets.Add("Hoja 1");
-                workSheet.Cells.LoadFromCollection(list, true);
-                var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + "01-GettingStarted.xlsx");
-
-                // Save our new workbook in the output directory and we are done!
-                packages.SaveAs(xlFile);
-                // packages.Save();
-                ////convert the excel package to a byte array
-                //byte[] bin = packages.GetAsByteArray();
-                //Stream stream = new MemoryStream(bin);
-                //////the path of the file
-                //filePath = directory + "/" + fileName + "_rev.xlsx";
-
-                //////write the file to the disk
-                //File.WriteAllBytes(filePath, bin);
                 return xlFile.FullName;
             }
 
@@ -312,6 +282,7 @@ namespace asivamosffie.services
             using (var stream = new MemoryStream())
             {
                 List<Dictionary<string, string>> listaCarguePagosRendimientos = new List<Dictionary<string, string>>();
+                List<ExcelError> errors = new List<ExcelError>();
 
                 await pFile.CopyToAsync(stream);
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -339,22 +310,26 @@ namespace asivamosffie.services
                 for (int indexWorkSheetRow = 2; indexWorkSheetRow <= worksheet.Dimension.Rows; indexWorkSheetRow++)
                 {
                     Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
+                    
                     bool tieneError = false;
                     try
                     {
                         if (fileType == CONSTPAGOS)
                         {
-
                             var validatedValues = await ValidatePaymentFile(worksheet, indexWorkSheetRow);
                             carguePagosRendimiento = validatedValues.list;
-                            tieneError = validatedValues.hasError;
+                            if(validatedValues.errors != null)
+                                errors.AddRange(validatedValues.errors);
+                            tieneError = validatedValues.errors.Count >0;
                         }
                         else if (fileType == "Rendimientos")
                         {
                             var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts);
 
                             carguePagosRendimiento = validatedValues.list;
-                            tieneError = validatedValues.hasError;
+                            if (validatedValues.errors != null)
+                                errors.AddRange(validatedValues.errors);
+                            tieneError = validatedValues.errors.Count > 0;
                         }
 
                         if (tieneError)
@@ -391,7 +366,8 @@ namespace asivamosffie.services
                         TipoCargue = fileType,
                         FechaCargue = DateTime.Now,
                         Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos),
-                        UsuarioCreacion = author
+                        UsuarioCreacion = author,
+                        Errores = JsonConvert.SerializeObject(errors),
                     };
 
                     _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
@@ -437,29 +413,29 @@ namespace asivamosffie.services
         }
 
         /// <summary>
-        /// TODO Y validar que la Orden de Giro exista, corresponda con el valor pagado, 
+        /// Validar que la Orden de Giro exista, corresponda con el valor pagado, 
         /// con el valor que se encuentra en el archivo.
         /// </summary>
         /// <param name="worksheet"></param>
-        /// <param name="i"></param>
+        /// <param name="indexWorkSheetRow"></param>
         /// <param name="carguePagosRendimiento"></param>
         /// <returns></returns>
-        private async Task<(Dictionary<string, string> list, bool hasError)> ValidatePaymentFile(ExcelWorksheet worksheet, int i)
+        private async Task<(Dictionary<string, string> list, List<ExcelError> errors)> ValidatePaymentFile(ExcelWorksheet worksheet, int indexWorkSheetRow)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
-            bool hasError = false;
+            List<ExcelError> errors = new List<ExcelError>();
 
-
+            // Validator.Validate(worksheet, indexWorkSheetRow, PaymentValidations.validations);
             // #1
             //Número de orden de giro
-            string cellValue = worksheet.Cells[i, 1].Text;
+            string cellValue = worksheet.Cells[indexWorkSheetRow, 1].Text;
             carguePagosRendimiento.Add("Número de orden de giro", cellValue);
             SolicitudPago solicitud = new SolicitudPago();
 
 
             if (string.IsNullOrEmpty(cellValue) || cellValue.Length > 50)
             {
-                hasError = true;
+                errors.Add(new ExcelError(indexWorkSheetRow, 2, "Longitud inválida"));
             }
             else
             {
@@ -472,52 +448,53 @@ namespace asivamosffie.services
 
                 if (solicitud == null || valorNeto == null)
                 {
-                    hasError = true;
+                    errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, no tiene una Solicitud de Pago válida"));
                 }
             }
 
             // #2
             //Fecha de pago
-            carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[i, 2].Text);
+            carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[indexWorkSheetRow, 2].Text);
             DateTime fecha;
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) || !DateTime.TryParseExact(worksheet.Cells[i, 2].Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out fecha))
+
+            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 2].Text) || !DateTime.TryParseExact(worksheet.Cells[indexWorkSheetRow, 2].Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out fecha))
             {
-                hasError = true;
+                errors.Add(new ExcelError(indexWorkSheetRow, 3, "Por favor ingresa solo fechas en este campo"));
             }
 
             // #3
             //Impuestos
-            carguePagosRendimiento.Add("Impuestos", worksheet.Cells[i, 3].Text);
-            string impuetoClean = worksheet.Cells[i, 3].Text.Replace(".", "").Replace("$", "");
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out decimal respValNumber))
+            carguePagosRendimiento.Add("Impuestos", worksheet.Cells[indexWorkSheetRow, 3].Text);
+            string impuetoClean = worksheet.Cells[indexWorkSheetRow, 3].Text.Replace(".", "").Replace("$", "");
+            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out decimal respValNumber))
             {
-                hasError = true;
+                errors.Add(new ExcelError(indexWorkSheetRow, 4, "Por favor ingresa solo datos numéricos en este campo"));
             }
 
             // #4
             //Valor neto girado
-            carguePagosRendimiento.Add("Valor neto girado", worksheet.Cells[i, 4].Text);
-            string valorNetoClean = worksheet.Cells[i, 4].Text.Replace(".", "").Replace("$", "");
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) || valorNetoClean.Length > 20 || !decimal.TryParse(valorNetoClean, out decimal respValNetoNumber))
+            carguePagosRendimiento.Add("Valor neto girado", worksheet.Cells[indexWorkSheetRow, 4].Text);
+            string valorNetoClean = worksheet.Cells[indexWorkSheetRow, 4].Text.Replace(".", "").Replace("$", "");
+            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 4].Text) || valorNetoClean.Length > 20 || !decimal.TryParse(valorNetoClean, out decimal respValNetoNumber))
             {
-                hasError = true;
+                errors.Add(new ExcelError(indexWorkSheetRow, 5, "Por favor ingresa solo datos numéricos en este campo"));
             }
             else if (solicitud != null)
             {
                 var valorNeto = solicitud.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
                 if (!valorNeto.HasValue || valorNeto.Value != respValNetoNumber)
                 {
-                    hasError = true;
+                    errors.Add(new ExcelError(indexWorkSheetRow, 5, "La orden de giro tiene un valor diferente"));
                 }
             }
 
-            return (carguePagosRendimiento, hasError);
+            return (carguePagosRendimiento, errors);
         }
 
-        private (Dictionary<string, string> list, bool hasError) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
+        private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
-            bool hasError = false;
+            List<ExcelError> errors = new List<ExcelError>();
             Dictionary<string, string> performanceStructure = new Dictionary<string, string>();
             performanceStructure.Add("Fecha de rendimientos", "Date"); //same month
             performanceStructure.Add("Número de Cuenta", "AlphaNum"); // no repeat
@@ -535,7 +512,6 @@ namespace asivamosffie.services
             DateTime.TryParseExact(dateValue, "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime guideDate);
             int month = guideDate.Month;
 
-            //worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
 
             foreach (var rowFormat in performanceStructure)
             {
@@ -546,38 +522,39 @@ namespace asivamosffie.services
                     || (guideDate != DateTime.MinValue && guideDate.Month != fecha.Month)
                     ))
                 {
-                    hasError = true;
+                    errors.Add(new ExcelError(indexRow, indexCell + 1, "Por favor ingresa solo fechas en este campo"));
                 }
                 else if ((rowFormat.Value == "AlphaNum")
                     && (string.IsNullOrWhiteSpace(cellValue) || !cellValue.IsValidSize(50)))
                 {
-                    hasError = true;
-
+                    errors.Add(new ExcelError(indexRow, indexCell + 1, "Por favor ingresa solo datos alfanuméricos en este campo"));
                 }
                 else if ((rowFormat.Value == "Money")
                     && (string.IsNullOrWhiteSpace(cellValue) || !cellValue.IsMoneyValueValidSize(20)))
                 {
-                    hasError = true;
-
+                    errors.Add(new ExcelError(indexRow, indexCell+1, "Por favor ingresa solo datos numéricos en este campo"));
                 }
 
-                if (!hasError && rowFormat.Key == "Número de Cuenta")
+                if (errors.Count  == 0 && rowFormat.Key == "Número de Cuenta")
                 {
                     var activeAccount = bankAccounts.SingleOrDefault(account => account.NumeroCuentaBanco == cellValue);
-                    hasError = activeAccount == null;
+                    var hasError = activeAccount == null;
                     if (activeAccount != null)
                     {
                         hasError = !activeAccount.FuenteFinanciacionId.HasValue ||
                             (activeAccount.Eliminado.HasValue && activeAccount.Eliminado.Value);
+                    }
+
+                    if (hasError)
+                    {
+                        errors.Add(new ExcelError(indexRow, indexCell + 1, $"Por favor ingresa un {rowFormat.Key} válido en este campo"));
                     }
                 }
 
                 indexCell += 1;
             }
 
-            // carguePagosRendimiento.Add("Estado", hasError ?  "Valido" : "Fallido");
-
-            return (carguePagosRendimiento, hasError);
+            return (carguePagosRendimiento, errors);
         }
 
         #endregion
@@ -640,18 +617,24 @@ namespace asivamosffie.services
                             order => new
                             {
                                 Estado = order.CargueValido,
-                                ArchivoJson = order.Json
+                                ArchivoJson = order.Json,
+                                Errores = order.Errores
                             }).FirstOrDefault();
                 jsonString = collection.ArchivoJson;
+
+                List<ExcelError> errors = new List<ExcelError>();
+                if(collection.Errores != null)
+                    errors = JsonConvert.DeserializeObject<List<ExcelError>>(collection.Errores);
+
                 if (fileType == CONSTPAGOS)
                 {
-                    List<PaymentOrder> list = SerializePaymentOrders(fileRequest.ResourceId, collection.ArchivoJson);
-                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list);
+                    List<PaymentOrder> list = SerializePaymentOrders(fileRequest.ResourceId, collection.ArchivoJson);                    
+                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list, errors);
                 }
                 else
                 {
                     List<SerializablePerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
-                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2);
+                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2, errors);
                 }
             }
             catch (Newtonsoft.Json.JsonSerializationException ex)
@@ -749,7 +732,7 @@ namespace asivamosffie.services
             foreach (var accountOrder in performanceOrders)
             {
                 valorAporteEnCuenta = 0;
-
+                // TODO Review Payment concept..
                 var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
 
                 var visitas = accountPayments.Sum(v => v.ValorNetoGiro);
@@ -766,7 +749,9 @@ namespace asivamosffie.services
 
                 foreach (var fundingSource in fundingSources)
                 {
-                    fundingSource.ControlRecurso = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == fundingSource.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
+                    fundingSource.ControlRecurso = _context.ControlRecurso
+                        .Where(x => x.FuenteFinanciacionId == fundingSource
+                        .FuenteFinanciacionId && !(bool)x.Eliminado).AsNoTracking().ToList();
                     foreach (var control in fundingSource.ControlRecurso)
                     {
                         control.FuenteFinanciacion = null; //
@@ -818,6 +803,7 @@ namespace asivamosffie.services
                   .UpdateAsync(o => new CarguePagosRendimientos()
                   {
                       FechaTramite = DateTime.Now,
+                      //TODO Field to remove , will be replace by RendimientosIncorporados table
                       TramiteJson = tramite,
                       RegistrosConsistentes = registrosConsistentes,
                       RegistrosInconsistentes = performanceOrders.Count - registrosConsistentes,
@@ -831,9 +817,13 @@ namespace asivamosffie.services
             {
                 response.IsSuccessful = false;
                 response.Code = GeneralCodes.Error;
+                //response.Message = await SaveAuditAction(fileRequest.Username, actionId,
+                //                    enumeratorMenu.RegistrarPagosRendimientos,
+                //                    GeneralCodes.OperacionExitosa,
+                //                    actionMesage);
             }
 
-
+            // TODO Audit
             response.Message = ""; // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
 
 
@@ -1141,6 +1131,9 @@ namespace asivamosffie.services
                                 ArchivoJson = order.TramiteJson
                             }).FirstOrDefault();
 
+            var incorporatedPerfomances = _context.RendimientosIncorporados.Where(x => x.CarguePagosRendimientosId == uploadedOrderId);
+
+
             if (string.IsNullOrWhiteSpace(collection.ArchivoJson))
             {
                 response.Code = GeneralCodes.EntradaInvalida;
@@ -1150,7 +1143,7 @@ namespace asivamosffie.services
                                         actionMesage);
                 return response;
             }
-
+            // TODO Pass to RendimientosIncorporados or JOIN Calculated data
             List<ManagedPerformancesOrder> list =
                 JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(collection.ArchivoJson);
             if (withConsistentOrders.HasValue)
@@ -1159,8 +1152,13 @@ namespace asivamosffie.services
                 list = list.Where(x => x.Status == statusFilter).ToList();
             }
 
+            foreach (var item in list)
+            {
 
-            WriteCollectionToPath("RendimientosTramitados", directory, list);
+            }
+
+
+            WriteCollectionToPath("RendimientosTramitados", directory, list, null);
             ////the path of the file
             string newfilePath = directory + "/" + "RendimientosTramitados" + "_rev.xlsx";
 

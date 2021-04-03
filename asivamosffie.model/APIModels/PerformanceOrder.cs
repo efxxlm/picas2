@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
+using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace asivamosffie.model.APIModels
 {
@@ -150,7 +147,7 @@ namespace asivamosffie.model.APIModels
 
     }
 
-    public class PaymentOrder { 
+    public class PaymentOrder {
 
         [JsonProperty(PropertyName = "Estado")]
         public string Status { get; set; }
@@ -166,7 +163,6 @@ namespace asivamosffie.model.APIModels
         [JsonProperty(PropertyName = "Valor neto girado")]
         public string NetValue { get; set; }
 
-
         //EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
         //NombreArchivo = pFile.FileName,
         //RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
@@ -174,6 +170,21 @@ namespace asivamosffie.model.APIModels
         //TotalRegistros = cantidadRegistrosTotales,
         //TipoCargue = typeFile,
         //FechaCargue = DateTime.Now,
+    }
+
+    public class ExcelError
+    {
+        public int Row { get; set; }
+        public int Column { get; set; }        
+        public string Error { get; set; }
+
+        public ExcelError(int row, int col, string error)
+        {
+            this.Column = col;
+            this.Row = row;
+            this.Error = error;
+        }
+
     }
 
 
@@ -238,10 +249,15 @@ namespace asivamosffie.model.APIModels
         public new decimal LiableDiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Total de rendimientos generados")]
         public new decimal GeneratedPerformances { get; }
+        [JsonProperty(PropertyName = "Provisión gravamen financiero")]
         public new decimal FinancialLienProvision { get; }
+        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
         public new decimal BankCharges { get; }
+        [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
         public new decimal DiscountedCharge { get; }
+        [JsonProperty(PropertyName = "Rendimiento a incorporar")]
         public new decimal PerformancesToAdd { get; }
+        [JsonIgnore]
         public bool? BuiltIn { get; set; } 
     }
 }
