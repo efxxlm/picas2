@@ -668,5 +668,38 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [Route("EnviarAlSupervisorAjusteProgramacion")]
+        [HttpPost]
+        public async Task<IActionResult> EnviarAlSupervisorAjusteProgramacion([FromQuery] int pAjusteProgramacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisorAjusteProgramacion(pAjusteProgramacionId, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("CreateEditObservacionAjusteProgramacion")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionAjusteProgramacion([FromBody] AjusteProgramacion pAjusteProgramacion, bool esObra )
+        {
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                return await _technicalRequirementsConstructionPhaseService.CreateEditObservacionAjusteProgramacion(pAjusteProgramacion, esObra, usuario);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

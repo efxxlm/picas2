@@ -342,5 +342,7 @@
         public const string Load_Data_Ajuste_Programacion_Obra = "246";
         public const string Validar_Excel_Ajuste_Flujo_Inversion = "247";
         public const string Load_Data_Ajuste_Flujo_Inversion = "248";
+        public const string EnviarAlSupervisorAjusteProgramacion = "249";
+        public const string Crear_Observacion_Ajuste_Programacion = "250";
     }
 }

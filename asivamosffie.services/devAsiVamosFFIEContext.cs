@@ -316,18 +316,13 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjustePragramacionObservacion>(entity =>
             {
-                entity.Property(e => e.AjustePragramacionObservacionId).ValueGeneratedOnAdd();
+                entity.Property(e => e.EsObra).HasColumnName("esObra");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones).IsUnicode(false);
-
-                entity.Property(e => e.TipoObservacionCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -338,10 +333,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.AjustePragramacionObservacionNavigation)
-                    .WithOne(p => p.AjustePragramacionObservacion)
-                    .HasForeignKey<AjustePragramacionObservacion>(d => d.AjustePragramacionObservacionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                entity.HasOne(d => d.AjusteProgramacion)
+                    .WithMany(p => p.AjustePragramacionObservacion)
+                    .HasForeignKey(d => d.AjusteProgramacionId)
                     .HasConstraintName("FK_AjustePragramacionObservacion_AjusteProgramacion");
             });
 
@@ -7654,7 +7648,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoNombre)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.FechaAprobacionPoliza)
                     .HasColumnName("fechaAprobacionPoliza")

@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public AjusteProgramacion()
         {
+            AjustePragramacionObservacion = new HashSet<AjustePragramacionObservacion>();
             AjusteProgramacionFlujo = new HashSet<AjusteProgramacionFlujo>();
             AjusteProgramacionObra = new HashSet<AjusteProgramacionObra>();
         }
@@ -22,8 +23,9 @@ namespace asivamosffie.model.Models
         public int? ObservacionDevolucionIdProgramacionObra { get; set; }
         public int? ObservacionDevolucionFlujoInversion { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
 
-        public virtual AjustePragramacionObservacion AjustePragramacionObservacion { get; set; }
+        public virtual ICollection<AjustePragramacionObservacion> AjustePragramacionObservacion { get; set; }
         public virtual ICollection<AjusteProgramacionFlujo> AjusteProgramacionFlujo { get; set; }
         public virtual ICollection<AjusteProgramacionObra> AjusteProgramacionObra { get; set; }
     }
