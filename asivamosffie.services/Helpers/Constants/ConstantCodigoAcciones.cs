@@ -270,13 +270,13 @@
         public const string Validar_Excel_Registro_Rendimientos = "198";
         public const string Eliminar_Pagos = "199";
         // public const string Tramitar_Pagos = "200";
-        public const string Ver_Detalle_Pagos = "201";
-        public const string Ver_Detalle_Rendimientos = "202";
-        public const string Ver_Inconsistencias = "203";
+        public const string Ver_Detalle_Pagos = "251";
+        public const string Ver_Detalle_Rendimientos = "252";
+        public const string Ver_Inconsistencias = "253";
 
         public const string Tramitar_Rendimientos = "200";
-        public const string Notificar_Inconsistencias = "2001";
-        public const string Notificar_Solicitud_Aprobacion = "2002";
+        public const string Notificar_Inconsistencias = "254";
+        public const string Notificar_Solicitud_Aprobacion = "255";
 
         //Informe final
         public const string Crear_Informe_Final = "192";
