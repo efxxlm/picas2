@@ -226,7 +226,7 @@ namespace asivamosffie.services
             List<dynamic> listaContrats = new List<dynamic>();
 
             List<CarguePagosRendimientos> lista = await _context.CarguePagosRendimientos
-                .Where(order => !order.Eliminado).ToListAsync();
+                .Where(order => !order.Eliminado).AsNoTracking().ToListAsync();
 
             lista.Where(w => w.TipoCargue == typeFile && (string.IsNullOrEmpty(status) || w.EstadoCargue == status))
                 .ToList().ForEach(c =>
@@ -1172,15 +1172,11 @@ namespace asivamosffie.services
             }
 
             var managedPerfomances = MapManagedPerformances(rendimientosIncorporados, collection.Uploaded);
-            // TODO Pass to RendimientosIncorporados or JOIN Calculated data
-            List<ManagedPerformancesOrder> list =
-                JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(collection.ArchivoJson);
+
             if (withConsistentOrders.HasValue)
             {
                 string statusFilter = withConsistentOrders.Value ? "Consistente" : "Inconsistente";
-                list = list.Where(x => x.Status == statusFilter).ToList();
-
-
+                managedPerfomances = managedPerfomances.Where(x => x.Status == statusFilter).ToList();
             }
             string filePath  = WriteCollectionToPath("RendimientosTramitados", directory, managedPerfomances, null);
             ////the path of the file
