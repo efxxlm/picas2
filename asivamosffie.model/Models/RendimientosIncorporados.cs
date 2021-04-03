@@ -17,6 +17,7 @@ namespace asivamosffie.model.Models
         public decimal Visitas { get; set; }
         public decimal RendimientoIncorporar { get; set; }
         public bool? Consistente { get; set; }
+        public int Row { get; set; }
 
         public virtual CarguePagosRendimientos CarguePagosRendimientos { get; set; }
     }

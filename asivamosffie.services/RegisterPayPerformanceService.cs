@@ -108,6 +108,8 @@ namespace asivamosffie.services
                 foreach (var item in errors)
                 {
                     worksheet.Cells[item.Row, item.Column].AddComment(item.Error, "Admin");
+                    worksheet.Cells[item.Row, item.Column].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    worksheet.Cells[item.Row, item.Column].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
 
                 var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + listType.Name + ".xlsx");
@@ -424,7 +426,6 @@ namespace asivamosffie.services
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
             List<ExcelError> errors = new List<ExcelError>();
-
             // Validator.Validate(worksheet, indexWorkSheetRow, PaymentValidations.validations);
             // #1
             //Número de orden de giro
@@ -512,7 +513,7 @@ namespace asivamosffie.services
             DateTime.TryParseExact(dateValue, "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime guideDate);
             int month = guideDate.Month;
 
-
+            carguePagosRendimiento.Add("Row", indexRow.ToString());
             foreach (var rowFormat in performanceStructure)
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
@@ -628,12 +629,12 @@ namespace asivamosffie.services
 
                 if (fileType == CONSTPAGOS)
                 {
-                    List<PaymentOrder> list = SerializePaymentOrders(fileRequest.ResourceId, collection.ArchivoJson);                    
+                    List<EntryPaymentOrder> list = SerializePaymentOrders(fileRequest.ResourceId, collection.ArchivoJson);                    
                     filePath = WriteCollectionToPath(fileRequest.FileName, directory, list, errors);
                 }
                 else
                 {
-                    List<SerializablePerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
+                    List<EntryPerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
                     filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2, errors);
                 }
             }
@@ -660,15 +661,15 @@ namespace asivamosffie.services
             return response;
         }
 
-        private List<SerializablePerformanceOrder> SerializePerformances(int uploadedOrderId, string stringJson)
+        private List<EntryPerformanceOrder> SerializePerformances(int uploadedOrderId, string stringJson)
         {
-            var list = JsonConvert.DeserializeObject<List<SerializablePerformanceOrder>>(stringJson);
+            var list = JsonConvert.DeserializeObject<List<EntryPerformanceOrder>>(stringJson);
             return list;
         }
 
-        private List<PaymentOrder> SerializePaymentOrders(int uploadedOrderId, string stringJson)
+        private List<EntryPaymentOrder> SerializePaymentOrders(int uploadedOrderId, string stringJson)
         {
-            var list = JsonConvert.DeserializeObject<List<PaymentOrder>>(stringJson);
+            var list = JsonConvert.DeserializeObject<List<EntryPaymentOrder>>(stringJson);
             return list;
         }
 
@@ -791,6 +792,7 @@ namespace asivamosffie.services
                     Visitas = (visitas.HasValue ? visitas.Value : 0),
                     RendimientoIncorporar = accountOrder.PerformancesToAdd,
                     Consistente = accountOrder.IsConsistent,
+                    Row = accountOrder.Row
                 };
                 _context.RendimientosIncorporados.Add(performanceEntity);
             }
@@ -1131,7 +1133,8 @@ namespace asivamosffie.services
                                 ArchivoJson = order.TramiteJson
                             }).FirstOrDefault();
 
-            var incorporatedPerfomances = _context.RendimientosIncorporados.Where(x => x.CarguePagosRendimientosId == uploadedOrderId);
+            var rendimientosIncorporados = _context.RendimientosIncorporados.Where(x => 
+                            x.CarguePagosRendimientosId == uploadedOrderId).AsNoTracking();
 
 
             if (string.IsNullOrWhiteSpace(collection.ArchivoJson))
@@ -1143,6 +1146,8 @@ namespace asivamosffie.services
                                         actionMesage);
                 return response;
             }
+
+            var managedPerfomances = MapManagedPerformances(rendimientosIncorporados);
             // TODO Pass to RendimientosIncorporados or JOIN Calculated data
             List<ManagedPerformancesOrder> list =
                 JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(collection.ArchivoJson);
@@ -1150,6 +1155,8 @@ namespace asivamosffie.services
             {
                 string statusFilter = withConsistentOrders.Value ? "Consistente" : "Inconsistente";
                 list = list.Where(x => x.Status == statusFilter).ToList();
+
+
             }
 
             foreach (var item in list)
@@ -1171,6 +1178,33 @@ namespace asivamosffie.services
 
             return response;
 
+        }
+        /// <summary>
+        ///  TODO Save in a unique table, Fallido, Consistente, Inconsistente ????
+        ///  OR Load the same process when manage action?
+        ///  
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public IEnumerable<dynamic> MapManagedPerformances(IEnumerable<RendimientosIncorporados> entities)
+        {
+            List<EntryPerformanceOrder> managedPerformances = new List<EntryPerformanceOrder>();
+            foreach (var item in entities)
+            {
+                //new ManagedPerformancesOrder() { }
+
+                //var perfomance = new EntryPerformanceOrder
+                //{
+                //    Status = item.Consistente.Value ? "Consistente" : "Inconsistente",
+                //    PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                //    AccountNumber = item.CuentaBancaria,
+                //    ExemptPerformances = item.
+                   
+                //}
+            }
+
+            return managedPerformances;
         }
 
         public async Task<IEnumerable<dynamic>> GetRequestedApprovalPerformances()

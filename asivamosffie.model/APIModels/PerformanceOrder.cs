@@ -3,72 +3,12 @@ using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace asivamosffie.model.APIModels
 {
-    public class SerializablePerformanceOrder
-    {
-        [JsonProperty(PropertyName = "Estado")]
-        public string Status { get; set; }
-
-        [JsonProperty(PropertyName = "Fecha de rendimientos")]
-        public string PerformancesDate { get; set; }
-
-        [JsonProperty(PropertyName = "Número de Cuenta")]
-        public string AccountNumber { get; set; }
-
-        /// <summary>
-        /// Acumulado de aportes de recursos exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de aportes de recursos exentos")]
-
-        public decimal ExemptResources { get; set; }
-
-        /// <summary>
-        /// Acumulado de rendimientos exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de rendimientos exentos")]
-        public decimal ExemptPerformances { get; set; }
-
-        /// <summary>
-        /// Acumulado de gastos Bancarios exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
-        public decimal ExemptBankCharges { get; set; }
-
-        /// <summary>
-        /// Acumulado de gravamen financiero descontado exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado exentos")]
-        public decimal ExemptDiscountedCharge { get; set; }
-
-        /// <summary>
-        /// Acumulado de aportes de recursos no exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de aportes de recursos no exentos")]
-        public decimal LiableContributtions { get; set; }
-
-        /// <summary>
-        /// Acumulado de rendimientos no exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de rendimientos no exentos")]
-        public decimal LiablePerformances { get; set; }
-
-        /// <summary>
-        /// Acumulado de gastos Bancarios no exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios no exentos")]
-        public decimal LiableBankCharges { get; set; }
-
-        /// <summary>
-        /// Acumulado de gravamen financiero descontado no exentos
-        /// </summary>
-        [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
-        public decimal LiableDiscountedCharge { get; set; }
-
-    }
     /// <summary>
     /// TODO SAVE JSON AS UPPERCASE
     /// </summary>
-    public class PerformanceOrder: SerializablePerformanceOrder
+    public class PerformanceOrder: EntryPerformanceOrder
     {
+        public int Row { get; set; }
         /// <summary>
         /// Total de rendimientos generados
         /// #2  SUM x => “acumulado de rendimientos de recursos exentos”  
@@ -144,46 +84,6 @@ namespace asivamosffie.model.APIModels
 
 
         // TODO calculate rows here or in other inherited class
-
-    }
-
-    public class PaymentOrder {
-
-        [JsonProperty(PropertyName = "Estado")]
-        public string Status { get; set; }
-
-        [JsonProperty(PropertyName = "Número de orden de giro")]
-        public string NumOrder { get; set; }
-
-        [JsonProperty(PropertyName = "Fecha de pago")]
-        public string PaymentDate { get; set; }
-        [JsonProperty(PropertyName = "Impuestos")]
-        public string Taxes { get; set; }
-
-        [JsonProperty(PropertyName = "Valor neto girado")]
-        public string NetValue { get; set; }
-
-        //EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
-        //NombreArchivo = pFile.FileName,
-        //RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
-        //RegistrosInvalidos = CantidadRegistrosInvalidos,
-        //TotalRegistros = cantidadRegistrosTotales,
-        //TipoCargue = typeFile,
-        //FechaCargue = DateTime.Now,
-    }
-
-    public class ExcelError
-    {
-        public int Row { get; set; }
-        public int Column { get; set; }        
-        public string Error { get; set; }
-
-        public ExcelError(int row, int col, string error)
-        {
-            this.Column = col;
-            this.Row = row;
-            this.Error = error;
-        }
 
     }
 
