@@ -17,8 +17,14 @@
       Programación de obra
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-programacion-de-obra></app-programacion-de-obra>
+    <app-programacion-de-obra
+                              [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+    >
+
+    </app-programacion-de-obra>
   </mat-expansion-panel>
+
+  
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
@@ -30,6 +36,10 @@
       Flujo de inversión de recursos
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-flujo-intervencion-recursos></app-flujo-intervencion-recursos>
+    <app-flujo-intervencion-recursos
+                                    [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+    >
+
+    </app-flujo-intervencion-recursos>
   </mat-expansion-panel>
 </mat-accordion>

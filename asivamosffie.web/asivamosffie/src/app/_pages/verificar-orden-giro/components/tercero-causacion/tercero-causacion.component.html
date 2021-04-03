@@ -1,155 +1,178 @@
 <section *ngIf="esVerDetalle !== undefined">
     <mat-card class="shipping-card border">
         <mat-card-content align="left">
-            <p><b>Número de identificación del contratista:</b> 900.879.765-2</p>
-            <p><b>Nombre de contratista:</b> Interventores S.A.</p>
-            <p><b>Número de factura:</b> FAC00456</p>
+            <p><b>Número de identificación del contratista:</b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </i> </p>
+            <p><b>Nombre de contratista:</b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i> </p>
+            <p><b>Número de factura:</b> <i>{{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }}</i> </p>
         </mat-card-content>
     </mat-card>
     
     <div class="mt-1em text-center">
-        <p>Valor neto de giro: <b> {{ 14490000 | currency: '':'symbol-narrow':'.0-0' }} </b></p>
+        <p>Valor neto de giro: <b> {{ valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }} </b></p>
     </div>
 
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion-black">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
-                    Costo variable
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-card class="shipping-card border">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text card-title-detalle">
-                        Demolición
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content align="left">
-                    <p style="margin-left: 2em;"><b>Valor facturado por concepto: </b> <i>$8.000.000</i></p>
-                    <h2 class="mt-1em" style="margin-left: 2em;"><b> Aportante 1 </b></h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>Tipo de aportante: </b> <i>Entidad Territorial</i></p>
-                        <p style="margin-left: 2em;"><b>Nombre del aportante: </b> <i>Alcaldía de Susacón</i></p>
-                        <p style="margin-left: 2em;"><b>Fuente de recursos: </b> <i>Contingencias</i></p>
-                        <p style="margin-left: 2em;"><b>Valor facturado por el concepto para el aportante después del descuento: </b> <i>$7.970.000</i></p>
-                    </div>
-                    <h2 class="card-subTitle card-subTitle-detalle"> Descuentos Dirección financiera </h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i>Sí</i></p>
-                        <p style="margin-left: 2em;"><b>¿Cuántos descuentos se aplican sobre el concepto de pago?: </b> <i>2</i></p>
-                    </div>
-                    <h2 class="mt-1em" style="margin-left: 2em;"><b> Descuento 1 </b></h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>Tipo de descuento: </b> <i>Retefuente</i></p>
-                        <p style="margin-left: 2em;"><b>Valor de descuento: </b> <i>$50.000</i></p>
-                    </div>
-                    <h2 class="mt-1em" style="margin-left: 2em;"><b> Descuento 2 </b></h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>Tipo de descuento: </b> <i>Rete ICA</i></p>
-                        <p style="margin-left: 2em;"><b>Valor de descuento: </b> <i>$38.000</i></p>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-
-            <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                <mat-card class="shipping-card border" align="left">
-                    <mat-card-header class="header-card">
-                      <mat-card-title class="header-card--text card-title-detalle">
-                        Verificación de la coordinación financiera
-                      </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p style="margin-left: 2em;"><b> 06/03/2021 </b></p>
-                        <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones a costo variable?</b>: Si</p>
-                        <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones a costo variable?</b>: No</p>
-                        <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
-                    </mat-card-content>
-                </mat-card>
-            </ng-container>
-            <ng-template #noEsVerDetalle>
-                <form [formGroup]="formObservacion" novalidate (ngSubmit)="guardar()">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-md-12">
-                            <div class="row justify-content-center align-items-center" style="width: 100%;">
-                                <div class="pr-1">
-                                    <label class="label-left" for="tieneObservaciones">¿Desde la coordinación financiera tiene observaciones a costo variable?</label>
-                                </div>
-                                <div>
-                                    <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                                        <mat-radio-button [value]="true" [checked]="formObservacion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
-                                        <mat-radio-button [value]="false" [checked]="formObservacion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
-                                    </mat-radio-group>
-                                </div>
-                                <span class="required-form-group m-0 margin-required">*</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formObservacion.value.tieneObservaciones == true" align="left">
-                        <div class="text-area-quill"
-                        [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid && esRegistroNuevo === false">
-                            <label  class="text-area-quill--label align-left-label"
-                                    [class.colorMainColor]="!(formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid)">
-                                    Observaciones a costo variable
-                            </label>
-                            <quill-editor   class="quill-editor-style ml-1em"
-                                            [styles]="editorStyle"
-                                            [modules]="config"
-                                            (onContentChanged)="maxLength($event, 1000)"
-                                            formControlName="observaciones"
-                                            #observacion
-                                            required>
-                            </quill-editor>
-                        </div>
-                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
-                          {{1000 - textoLimpio( observacion.quillEditor, 1000 )}}
-                        </span>
-                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
-                          1000
-                        </span>
-                        <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="( formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched ) || ( formObservacion.get('observaciones').invalid && esRegistroNuevo === false )"
-                            />
-                          </span>
-                    </div>
-                    <div class="text-center mt-1em">
-                        <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.get('tieneObservaciones').value === null">
-                            <img src="assets/img/icon/guardar.svg">
-                        </button>
-                    </div>
-                </form>
+    <form [formGroup]="addressForm" (ngSubmit)="guardar()">
+        <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
+            <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? criterio.get( 'estadoSemaforo' ).value : ''">
+                        {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
     
-                <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
-                    <table mat-table [dataSource]="tablaHistorial" matSort>
-                  
-                        <ng-container matColumnDef="fechaRevision">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
-                          <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
-                        </ng-container>
-                  
-                        <ng-container matColumnDef="responsable">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
-                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.responsable }} </td>
-                        </ng-container>
-                  
-                        <ng-container matColumnDef="historial">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
-                          <td mat-cell *matCellDef="let element" align="center" class="color-text">
-                              <section [innerHTML]="element.observacion"></section>
-                          </td>
-                        </ng-container>
-                    
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
-                    </table>
-                </section>
-            </ng-template>
-        </mat-expansion-panel> 
-    </mat-accordion>
+                    <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+                        <mat-card-header class="header-card header-card--margin">
+                            <mat-card-title class="header-card--text">
+                                {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content style="text-align: left;" [formGroup]="concepto">
+                            <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+
+                            <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
+                                <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
+                                <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </p>
+                                <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                            </div>
+
+                            <div>
+
+                                <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+
+                                <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
+                                    <p *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> Si </p>
+                                    <p *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === false"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> No </p>
+
+                                    <div *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true">
+                                        <p><b>¿Cuántos descuentos se aplican sobre el concepto de pago? : </b> {{ getDescuentos( i, j ).length }} </p>
+
+                                        <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentos( i, j ).length > 0">
+                                            <div *ngFor="let discount of getDescuentos( i, j ).controls; index as k">
+                                                <mat-card-title class="header-card--text sub-text">
+                                                    Descuento {{ k + 1 }}
+                                                </mat-card-title>
+                                                <div [formGroup]="discount">
+                                                    <p><b>Tipo de descuento: </b> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </p>
+                                                    <p><b>Valor del descuento: </b> {{ discount.get( 'tipoDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card border" align="left">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text card-title-detalle">
+                                Verificación de la coordinación financiera
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ criterio.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="criterio.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación financiera tiene observaciones a {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="criterio.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación financiera tiene observaciones a {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}?</b>: No</p>
+                                <section [innerHTML]="criterio.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="criterio.get( 'tieneObservaciones' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                    </ng-container>
+                    <ng-template #noEsVerDetalle>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Desde la coordinación financiera tiene observaciones a {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="criterio.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="criterio.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0 margin-required">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="criterio.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="criterio.get('observaciones').invalid && criterio.get('observaciones').touched || criterio.get('observaciones').invalid && esRegistroNuevo === false">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(criterio.get('observaciones').invalid && criterio.get('observaciones').touched || criterio.get('observaciones').invalid)">
+                                            Observaciones a {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #observacion
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="criterio.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( observacion.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="criterio.get('observaciones').value === null">
+                                  1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="( criterio.get('observaciones').invalid && criterio.get('observaciones').touched ) || ( criterio.get('observaciones').invalid && esRegistroNuevo === false )"
+                                    />
+                                  </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn" class="btn-guardar"
+                                        type="button"
+                                        (click)="guardar( criterio )"
+                                        [disabled]="criterio.dirty === false">
+                                    <img src="assets/img/icon/guardar.svg">
+                                </button>
+                            </div>
+            
+                            <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="criterio.get( 'historialObservaciones' ).value.length > 0">
+                                <table mat-table [dataSource]="getDataSource( criterio.get( 'historialObservaciones' ).value )" matSort>
+                              
+                                    <ng-container matColumnDef="fechaRevision">
+                                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                      <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                    </ng-container>
+                              
+                                    <ng-container matColumnDef="responsable">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                        <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                            <div [ngSwitch]="element.menuId">
+                                                <p *ngSwitchCase="listaMenu.verificarOrdenGiro"> Apoyo de la supervisión </p>
+                                                <p *ngSwitchCase="listaMenu.aprobarOrdenGiro"> Supervisor </p>
+                                                <p *ngSwitchCase="listaMenu.tramitarOrdenGiro"> Fiduciaria </p>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                              
+                                    <ng-container matColumnDef="historial">
+                                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                      <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                          <section [innerHTML]="element.observacion"></section>
+                                      </td>
+                                    </ng-container>
+                                
+                                  <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                                  <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                                </table>
+                            </section>
+                    </ng-template>
+            </mat-expansion-panel> 
+        </mat-accordion>
+    </form>
 </section>

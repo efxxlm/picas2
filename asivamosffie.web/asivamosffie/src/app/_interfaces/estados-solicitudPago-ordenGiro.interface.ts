@@ -84,12 +84,14 @@ export interface ListaMenu {
     generarOrdenGiro: number;
     verificarOrdenGiro: number;
     aprobarOrdenGiro: number;
+    tramitarOrdenGiro: number;
 }
 
 export enum ListaMenuId {
     generarOrdenGiro = 68,
     verificarOrdenGiro = 76,
-    aprobarOrdenGiro
+    aprobarOrdenGiro,
+    tramitarOrdenGiro = 85
 }
 
 export interface ListaMediosPagoCodigo {
@@ -112,4 +114,24 @@ export enum TipoAportanteCodigo {
     ffie = 6,
     et = 9,
     tercero
+}
+
+export interface TipoObservaciones {
+    terceroGiro: string;
+    estrategiaPago: string;
+    direccionTecnica: string;
+    terceroCausacion: string;
+    origen: string;
+    observaciones: string;
+    soporteOrdenGiro: string;
+}
+
+export enum TipoObservacionesCodigo {
+    terceroGiro = '1',
+    estrategiaPago = '2',
+    direccionTecnica = '3',
+    terceroCausacion = '4',
+    origen = '5',
+    observaciones = '6',
+    soporteOrdenGiro = '7'
 }

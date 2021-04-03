@@ -140,4 +140,28 @@ export class FaseUnoConstruccionService {
     return this.http.post(`${ this.urlApi }/CalcularYGuardarFechaInicioContrato`,construccion);
   }
 
+  GetAjusteProgramacionGrid ( ) {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
+  };
+
+  uploadFileToValidateAdjustmentProgramming ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
+    const formData = new FormData(); 
+    formData.append('file', documento, documento.name);
+    return this.http.post( `${ this.urlApi }/uploadFileToValidateAdjustmentProgramming?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
+  };
+
+  transferMassiveLoadAdjustmentProgramming ( pIdDocument: string ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/transferMassiveLoadAdjustmentProgramming?pIdDocument=${ pIdDocument }`, '' )
+  };
+
+  UploadFileToValidateAdjustmentInvestmentFlow ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
+    const formData = new FormData(); 
+    formData.append('file', documento, documento.name);
+    return this.http.post( `${ this.urlApi }/UploadFileToValidateAdjustmentInvestmentFlow?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
+  };
+
+  TransferMassiveLoadAdjustmentInvestmentFlow( pIdDocument: string, pProyectoId: number, pContratoId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadAdjustmentInvestmentFlow?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
+  };
+
 }

@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public string ConceptoPagoCriterio { get; set; }
         public string TipoPagoCodigo { get; set; }
         public bool? TieneDescuento { get; set; }
+        public bool? RegistroCompletoOrigen { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }

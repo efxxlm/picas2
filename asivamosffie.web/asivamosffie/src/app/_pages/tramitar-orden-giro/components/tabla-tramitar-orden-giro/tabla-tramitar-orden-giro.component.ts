@@ -3,6 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import moment from 'moment';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-tabla-tramitar-orden-giro',
@@ -11,6 +16,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaTramitarOrdenGiroComponent implements OnInit {
 
+    listaMenu: ListaMenu = ListaMenuId;
+    estadoSolicitudPagoOrdenGiro: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     tablaTramitar = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
@@ -22,45 +29,28 @@ export class TablaTramitarOrdenGiroComponent implements OnInit {
       'estadoTramite',
       'gestion'
     ];
-    dataTable = [
-        {
-            fechaAprobacion: new Date(),
-            numeroOrden: 'ODG_Obr 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoTramite: 'Sin tramitar',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaAprobacion: new Date(),
-            numeroOrden: 'ODG_Expensas 001',
-            modalidad: 'No aplica',
-            numeroContrato: 'N326326',
-            estadoTramite: 'Sin tramitar',
-            esExpensas: true,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaAprobacion: new Date(),
-            numeroOrden: 'ODG_Otros Costos 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoTramite: 'Sin tramitar',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        }
-    ];
 
     constructor(
-        private dialog: MatDialog )
-    { }
+        private routes: Router,
+        private dialog: MatDialog,
+        private ordenGiroSvc: OrdenPagoService )
+    {
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.verificarOrdenGiro )
+            .subscribe(
+                response => {
+                    console.log( response );
+
+                    response.forEach( registro => registro.fechaAprobacionFinanciera = moment( registro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ) );
+
+                    this.tablaTramitar = new MatTableDataSource( response );
+                    this.tablaTramitar.paginator = this.paginator;
+                    this.tablaTramitar.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        this.tablaTramitar = new MatTableDataSource( this.dataTable );
-        this.tablaTramitar.sort = this.sort;
-        this.tablaTramitar.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter( event: Event ) {
@@ -68,10 +58,47 @@ export class TablaTramitarOrdenGiroComponent implements OnInit {
         this.tablaTramitar.filter = filterValue.trim().toLowerCase();
     }
 
-    openDialogEnviarAprobacion() {
-        // this.dialog.open( DialogEnviarAprobacionComponent, {
-        //   width: '80em'
-        // });
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '40em',
+          data : { modalTitle, modalText }
+        });
+    }
+
+    gestionarOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.conOrdenGiroTramitada
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/tramitarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
+    }
+
+    devolverOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/tramitarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

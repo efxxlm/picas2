@@ -5,175 +5,208 @@
     </div>
     
     <section class="d-flex justify-content-center table-responsive tabla-gris mt-1em">
-        <table mat-table [dataSource]="dataSource" matSort style="width: 90%">
-      
+        <table mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="tipoDescuento">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Tipo de descuento </th>
-              <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.tipoDescuento }} </td>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let descuento of element.listaDescuentos">
+                  {{ getTipoDescuento( descuento.tipoDescuentoCodigo ) }}
+                </div>
+              </td>
             </ng-container>
       
             <ng-container matColumnDef="valorDescuento">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor del descuento </th>
-              <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorDescuento }} </td>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let descuento of element.listaDescuentos">
+                  {{ descuento.valorDescuento | currency: '': 'symbol-narrow':'.0-0' }}
+                </div>
+              </td>
             </ng-container>
     
-            <ng-container matColumnDef="valorTotalDescuento">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor total de descuentos </th>
-                <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorTotalDescuento }} </td>
+            <ng-container matColumnDef="valorTotalDescuentos">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor total de descuentos </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorTotalDescuentos | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
     
             <ng-container matColumnDef="valorNetoGiro">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor neto de giro </th>
-                <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorNetoGiro }} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor neto de giro </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
         
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </section>
-    
-    <mat-accordion class="mt-3em">
-        <mat-expansion-panel class="expansion-style sub-expansion-black">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
-                    Descuento 1
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-    
-            <div class="mt-1em text-center">
-                <p>Nombre del descuento: <b>4x1000</b></p>
-            </div>
-    
-            <div class="mb-2em text-center">
-                <p><b>Criterios a los cuales aplica el descuento:</b> <em>Estudios y diseños interventoria hasta 90%.</em></p>
-            </div>
-    
-            <mat-card class="shipping-card border" align="left">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text card-title-detalle">
-                        Estudios y diseños interventoria hasta 90%
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p style="margin-left: 2em;"><b>Tipo de pago: </b> <i>Costo variable</i></p>
-                    <p style="margin-left: 2em;"><b>Conceptos de pago que aplican para el descuento: </b> <i>Demolición, Cimentación.</i></p>
-                    <h2 class="card-subTitle card-subTitle-detalle"> Demolición</h2>
-                    <h2 style="margin-left: 2em;"><b> Aportante 1 </b></h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>Tipo de aportante: </b> <i>Entidad Territorial</i></p>
-                        <p style="margin-left: 2em;"><b>Nombre del aportante: </b> <i>Alcaldía de Susacón</i></p>
-                        <p style="margin-left: 2em;"><b>Fuente de recursos: </b> <i>Contingencias</i></p>
-                        <p style="margin-left: 2em;"><b>Valor del descuento: </b> <i>$15.000</i></p>
+
+    <form [formGroup]="addressForm">
+        <mat-accordion *ngIf="descuentos.length > 0">
+            <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?descuento.get( 'estadoSemaforo' ).value: ''">
+                        Descuento {{ i + 1 }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="d-flex justify-content-center">
+                    <b style="margin-right: .5em;">Criterios a los cuales aplica el descuento: </b>
+
+                    <div class="d-flex" *ngFor="let value of descuento.get( 'criterio' ).value; index as indexCriterio">
+                        {{ firstLetterUpperCase( getValueCriterio( value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexCriterio">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexCriterio"></span>
                     </div>
-                    <h2 class="mt-1em" style="margin-left: 2em;"><b> Aportante 2 </b></h2>
-                    <div class="mt-1em">
-                        <p style="margin-left: 2em;"><b>Tipo de aportante: </b> <i>Tercero</i></p>
-                        <p style="margin-left: 2em;"><b>Nombre del aportante: </b> <i>Fundación Pies Descalzos</i></p>
-                        <p style="margin-left: 2em;"><b>Fuente de recursos: </b> <i>Recursos propios</i></p>
-                        <p style="margin-left: 2em;"><b>Valor del descuento: </b> <i>$15.000</i></p>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-    
-            <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                <mat-card class="shipping-card border" align="left">
-                    <mat-card-header class="header-card">
-                      <mat-card-title class="header-card--text card-title-detalle">
-                        Verificación de la coordinación financiera
-                      </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p style="margin-left: 2em;"><b> 06/03/2021 </b></p>
-                        <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones a descuento 1?</b>: Si</p>
-                        <p style="margin-left: 2em;"><b>¿Desde la coordinación financiera tiene observaciones a descuento 1?</b>: No</p>
-                        <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
-                    </mat-card-content>
-                </mat-card>
-            </ng-container>
-            <ng-template #noEsVerDetalle>
-                <form [formGroup]="formObservacion" novalidate (ngSubmit)="guardar()">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-md-12">
-                            <div class="row justify-content-center align-items-center" style="width: 100%;">
-                                <div class="pr-1">
-                                    <label class="label-left" for="tieneObservaciones">¿Desde la coordinación financiera tiene observaciones a descuento 1?</label>
-                                </div>
-                                <div>
-                                    <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                                        <mat-radio-button [value]="true" [checked]="formObservacion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
-                                        <mat-radio-button [value]="false" [checked]="formObservacion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
-                                    </mat-radio-group>
-                                </div>
-                                <span class="required-form-group m-0 margin-required">*</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formObservacion.value.tieneObservaciones == true" align="left">
-                        <div class="text-area-quill"
-                        [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid && esRegistroNuevo === false">
-                            <label  class="text-area-quill--label align-left-label"
-                                    [class.colorMainColor]="!(formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid)">
-                                    Observaciones a descuento 1
-                            </label>
-                            <quill-editor   class="quill-editor-style ml-1em"
-                                            [styles]="editorStyle"
-                                            [modules]="config"
-                                            (onContentChanged)="maxLength($event, 1000)"
-                                            formControlName="observaciones"
-                                            #observacion
-                                            required>
-                            </quill-editor>
-                        </div>
-                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
-                          {{1000 - textoLimpio( observacion.quillEditor, 1000 )}}
-                        </span>
-                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
-                          1000
-                        </span>
-                        <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="( formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched ) || ( formObservacion.get('observaciones').invalid && esRegistroNuevo === false )"
-                            />
-                          </span>
-                    </div>
-                    <div class="text-center mt-1em">
-                        <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.get('tieneObservaciones').value === null">
-                            <img src="assets/img/icon/guardar.svg">
-                        </button>
-                    </div>
-                </form>
-    
-                <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
-                    <table mat-table [dataSource]="tablaHistorial" matSort>
-                  
-                        <ng-container matColumnDef="fechaRevision">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
-                          <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
-                        </ng-container>
-                  
-                        <ng-container matColumnDef="responsable">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
-                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.responsable }} </td>
-                        </ng-container>
-                  
-                        <ng-container matColumnDef="historial">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
-                          <td mat-cell *matCellDef="let element" align="center" class="color-text">
-                              <section [innerHTML]="element.observacion"></section>
-                          </td>
-                        </ng-container>
+                </div>
+                <p>  </p>
+                <section class="container text-center" [formGroup]="descuento">
+                    <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
+                        
+                        <section *ngIf="getCriterios( i ).length > 0">
+                            <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
+                                <mat-card class="shipping-card">
+                                    <mat-card-header class="header-card header-card--margin">
+                                        <mat-card-title class="header-card--text">
+                                            {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content style="text-align: left;" [formGroup]="criterio">
+                                        <p><b>Tipo de pago: </b> <em> {{ firstLetterUpperCase( criterio.get( 'tipoPagoNombre' ).value ) }} </em></p>
+
+                                        <div class="d-flex">
+                                            <b style="margin-right: .5em;">Conceptos de pago que aplican para el descuento: </b>
+                        
+                                            <div class="d-flex" *ngFor="let value of criterio.get( 'concepto' ).value; index as indexConcepto">
+                                                {{ firstLetterUpperCase( getValueConcepto( value, criterio.get( 'conceptosDePago' ).value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexConcepto">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexConcepto"></span>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="getConceptos( i, j ).length > 0">
+                                            <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
+                                                <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
                     
-                      <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
-                    </table>
+                                                <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
+                                                    <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
+                                                        <mat-card-title class="header-card--text mt-1em"> Aportante {{ l + 1 }} </mat-card-title>
+                                                        <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                                        <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                                        <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( getValueFuente( aportante.get('fuenteRecursos').value, aportante.get( 'fuenteDeRecursos' ).value ) ) }} </p>
+                                                        <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </section>
+                        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                            <mat-card class="shipping-card border" align="left">
+                                <mat-card-header class="header-card">
+                                  <mat-card-title class="header-card--text card-title-detalle">
+                                    Verificación de la coordinación financiera
+                                  </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ descuento.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="descuento.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="descuento.get( 'tieneObservaciones' ).value === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                        </ng-container>
+                        <ng-template #noEsVerDetalle>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="descuento.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="descuento.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0 margin-required">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="descuento.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="descuento.get('observaciones').invalid && descuento.get('observaciones').touched || descuento.get('observaciones').invalid && esRegistroNuevo === false">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(descuento.get('observaciones').invalid && descuento.get('observaciones').touched || descuento.get('observaciones').invalid)">
+                                            Observaciones al descuento {{ i + 1 }}
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #observacion
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="descuento.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( observacion.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="descuento.get('observaciones').value === null">
+                                  1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="( descuento.get('observaciones').invalid && descuento.get('observaciones').touched ) || ( descuento.get('observaciones').invalid && esRegistroNuevo === false )"
+                                    />
+                                  </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        (click)="guardar( descuento )"
+                                        type="button"
+                                        [disabled]="descuento.dirty === false">
+                                    <img src="assets/img/icon/guardar.svg">
+                                </button>
+                            </div>
+                
+                            <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="descuento.get( 'historialObservaciones' ).value.length > 0">
+                                <table mat-table [dataSource]="getDataSource( descuento.get( 'historialObservaciones' ).value )" matSort>
+                              
+                                    <ng-container matColumnDef="fechaRevision">
+                                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                      <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                    </ng-container>
+                              
+                                    <ng-container matColumnDef="responsable">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                        <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                            <div [ngSwitch]="element.menuId">
+                                                <p *ngSwitchCase="listaMenu.verificarOrdenGiro"> Apoyo de la supervisión </p>
+                                                <p *ngSwitchCase="listaMenu.aprobarOrdenGiro"> Supervisor </p>
+                                                <p *ngSwitchCase="listaMenu.tramitarOrdenGiro"> Fiduciaria </p>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                              
+                                    <ng-container matColumnDef="historial">
+                                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                      <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                          <section [innerHTML]="element.observacion"></section>
+                                      </td>
+                                    </ng-container>
+                                
+                                  <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                                  <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                                </table>
+                            </section>
+                        </ng-template>
                 </section>
-            </ng-template>
-        </mat-expansion-panel>
-    </mat-accordion>
+            </mat-expansion-panel> 
+        </mat-accordion>
+    </form>
 </section>

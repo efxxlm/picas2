@@ -71,7 +71,7 @@
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
-                            [routerLink]="[ 'generacionOrdenGiro', element.solicitudPagoId ]"
+                            [routerLink]="[ 'verDetalleEditarOrdenGiro', element.solicitudPagoId ]"
                             *ngIf=" element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
                                     || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
                                     || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
@@ -90,6 +90,7 @@
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
+                            [routerLink]="[ 'verDetalleOrdenGiro', element.solicitudPagoId ]"
                             *ngIf=" element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enviadaParaOrdenGiro
                                     && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
                                     && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion

@@ -4,6 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { Router } from '@angular/router';
 
 export interface VerificacionDiaria {
   id: string;
@@ -43,22 +45,37 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
     'estadoRegistro',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private faseConstruccionServices: FaseUnoConstruccionService,
+    private router: Router,
+
+  ) 
+  {
+    
+
+   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.faseConstruccionServices.GetAjusteProgramacionGrid()
+      .subscribe(respuesta => {
+        this.dataSource = new MatTableDataSource( respuesta );
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
+
+
   }
 
   applyFilter(event: Event) {
@@ -68,6 +85,11 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  RegistrarNuevo( ajusteProgramacion ){
+    console.log('ss')
+    this.router.navigate( [ '/registratAjusteProgramacion/registrarAjusteProgramacion', 0 ], { state: { ajusteProgramacion } } )
   }
 
 }

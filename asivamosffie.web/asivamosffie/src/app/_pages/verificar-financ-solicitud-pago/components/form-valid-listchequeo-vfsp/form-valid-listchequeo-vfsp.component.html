@@ -45,11 +45,11 @@
                 <div class="table-responsive">
                     <table mat-table [dataSource]="getMatTable( i )" matSort class="mat-elevation-z8">
                         <ng-container matColumnDef="item">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Item </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle" style="width: 2%;"> Item </th>
                             <td mat-cell *matCellDef="let element; index as j" align="center" class="detalle"> <b>{{ j + 1 }}</b> </td>
                         </ng-container>
                         <ng-container matColumnDef="documento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Documento </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle" style="width: 44%;"> Documento </th>
                             <td mat-cell *matCellDef="let element" align="left"  class="detalle"> {{ element.get( 'listaChequeoItemNombre' ).value }} </td>
                         </ng-container>
                         <ng-container matColumnDef="revTecnica">
@@ -73,9 +73,10 @@
                         <ng-container matColumnDef="observaciones">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Observaciones </th>
                             <td mat-cell *matCellDef="let element; index as j" align="center" class="detalle">
+                                <!--A ese primer boton verificar si se pone esto [class.sin-diligenciar]="element.item==1" (dbenitez)-->
                                 <button mat-raised-button
                                         color="accent"
-                                        class="btn-table"
+                                        class="btn-table info-button sin-diligenciar"
                                         type="button"
                                         *ngIf="noCumpleCodigo === element.get( 'respuestaRevisionTecnicaCodigo' ).value"
                                         (click)="getSubsanacion( element, i, j )">

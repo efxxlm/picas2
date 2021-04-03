@@ -17,6 +17,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TerceroCausacionGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     addressForm: FormGroup;
     tipoDescuentoArray: Dominio[] = [];
     listaCriterios: Dominio[] = [];
@@ -155,12 +156,13 @@ export class TerceroCausacionGogComponent implements OnInit {
                         if ( dataAportantes.listaTipoAportante.length > 1 ) {
                             this.variosAportantes = true;
                         } else {
+                            
                             this.variosAportantes = false
                         }
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
-                        for ( const criterio of listCriterios ) {                            
+                        for ( const criterio of listCriterios ) {
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
                                 const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo );
                                 const listaDescuentos = [];
@@ -181,38 +183,36 @@ export class TerceroCausacionGogComponent implements OnInit {
                                     } )
                                 }
                                 // Get lista de aportantes
-                                this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
-                                    // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
-                                    this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
+                                // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
+                                this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
 
-                                    if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                        for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
-                                            const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
-                                            const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                            let listaFuenteRecursos: any[];
-                                            this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-                                                .subscribe( fuenteRecursos => {
-                                                    listaFuenteRecursos = fuenteRecursos;
-                                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+                                if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
+                                    for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
+                                        const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+                                        const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                        let listaFuenteRecursos: any[];
+                                        this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
+                                            .subscribe( fuenteRecursos => {
+                                                listaFuenteRecursos = fuenteRecursos;
+                                                const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
 
-                                                    listaAportantes.push(
-                                                        this.fb.group(
-                                                            {
-                                                                ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                                tipoAportante: [ tipoAportante, Validators.required ],
-                                                                listaNombreAportantes: [ [ nombreAportante ] ],
-                                                                nombreAportante: [ nombreAportante, Validators.required ],
-                                                                fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                                fuenteRecursos: [ fuente, Validators.required ],
-                                                                fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
-                                                                valorDescuento: [ aportante.valorDescuento, Validators.required ]
-                                                            }
-                                                        )
+                                                listaAportantes.push(
+                                                    this.fb.group(
+                                                        {
+                                                            ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                            tipoAportante: [ tipoAportante, Validators.required ],
+                                                            listaNombreAportantes: [ [ nombreAportante ] ],
+                                                            nombreAportante: [ nombreAportante, Validators.required ],
+                                                            fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                            fuenteRecursos: [ fuente, Validators.required ],
+                                                            fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
+                                                            valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                        }
                                                     )
-                                                } );
-                                        }
+                                                )
+                                            } );
                                     }
-                                } );
+                                }
 
                                 for ( const concepto of criterio.listConceptos ) {
                                     setTimeout(() => {
@@ -232,8 +232,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 ),
                                                 aportantes: this.fb.array( listaAportantes )
                                             }
-                                        ) )
-                                    }, 500);
+                                        ) ) 
+                                    }, 600);
                                 }
 
                                 // Set formulario criterios
@@ -308,6 +308,54 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
 
+    getDescuento( codigo: string ) {
+        if ( this.tipoDescuentoArray.length > 0 ) {
+            const descuento = this.tipoDescuentoArray.find( descuento => descuento.codigo === codigo );
+
+            if ( descuento !== undefined ) {
+                return descuento.nombre;
+            }
+        }
+    }
+
+    checkTotalValueAportantes( cb: { ( totalValueAportantes: number ): void } ) {
+        let totalAportantes = 0;
+
+        this.criterios.controls.forEach( ( criterioControl, criterioIndex ) => {
+
+            this.getConceptos( criterioIndex ).controls.forEach( ( conceptoControl, conceptoIndex ) => {
+
+                this.getAportantes( criterioIndex, conceptoIndex ).controls.forEach( aportanteControl => totalAportantes += aportanteControl.get( 'valorDescuento' ).value );
+            } )
+        } )
+
+        cb( totalAportantes );
+    }
+    // Check valor del descuento del aportante
+    validateDiscountAportanteValue( value: number, index: number, jIndex: number, kIndex: number ) {
+        if ( value !== null ) {
+            this.checkTotalValueAportantes( totalValueAportante => {
+                if ( totalValueAportante > this.valorNetoGiro ) {
+                    this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                    this.openDialog( '', `<b>El valor del descuento del aportante no puede ser mayor al valor neto de giro.</b>` )
+                }
+            } );
+        }
+    }
+    // Check valor del descuento de los conceptos
+    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number ) {
+        let totalAportantePorConcepto = 0;
+
+        for ( const aportante of this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ).value ) {
+            totalAportantePorConcepto += aportante.valorDescuento;
+        }
+
+        if ( value > totalAportantePorConcepto ) {
+            this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+            this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
+        }
+    }
+
     validateNumberKeypress(event: KeyboardEvent) {
         const alphanumeric = /[0-9]/;
         const inputChar = String.fromCharCode(event.charCode);
@@ -320,11 +368,6 @@ export class TerceroCausacionGogComponent implements OnInit {
         const listaNombreAportantes: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'nombreDeAportantes' ).value;
         const filterAportantesDominioId = listaNombreAportantes.filter( aportante => aportante.tipoAportanteId === aportanteSeleccionado.dominioId );
 
-        if ( aportanteIndex !== -1 ) {
-            listaAportantes.splice( aportanteIndex, 1 );
-
-            this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).setValue( listaAportantes );
-        }
         if ( filterAportantesDominioId.length > 0 ) {
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'listaNombreAportantes' ).setValue( filterAportantesDominioId );
         }
@@ -343,7 +386,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                         const aportanteSeleccionado = this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'tipoAportante' ).value;
                         const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
                         listaTipoAportantes.push( aportanteSeleccionado );
-                        this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
 
                         this.getAportantes( index, jIndex ).removeAt( kIndex );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
@@ -374,18 +416,55 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     getCantidadDescuentos( value: number, index: number, jIndex: number ) {
-        this.getDescuentos( index, jIndex ).clear();
-        if ( value > 0 && value !== null ) {
-            for ( let i = 0; i < value; i++ ) {
-                this.getDescuentos( index, jIndex ).push(
-                    this.fb.group(
-                        {
-                            ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
-                            tipoDescuento: [ null, Validators.required ],
-                            valorDescuento: [ null, Validators.required ]
-                        }
+        if ( value !== null && value > 0 ) {
+            if ( this.getDescuentos( index, jIndex ).dirty === true ) {
+                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+    
+                if ( value < this.getDescuentos( index, jIndex ).length ) {
+                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                    return;
+                }
+    
+                for ( let i = 0; i < nuevosDescuentos; i++ ) {
+    
+                    this.getDescuentos( index, jIndex ).push(
+                        this.fb.group(
+                            {
+                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                tipoDescuento: [ null, Validators.required ],
+                                valorDescuento: [ null, Validators.required ]
+                            }
+                        )
                     )
-                )
+    
+                }
+            }
+            if ( this.getDescuentos( index, jIndex ).dirty === false ) {
+                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+    
+                if ( value < this.getDescuentos( index, jIndex ).length ) {
+                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                    return;
+                }
+    
+    
+                for ( let i = 0; i < nuevosDescuentos; i++ ) {
+    
+                    this.getDescuentos( index, jIndex ).push(
+                        this.fb.group(
+                            {
+                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                tipoDescuento: [ null, Validators.required ],
+                                valorDescuento: [ null, Validators.required ]
+                            }
+                        )
+                    )
+    
+                }
             }
         }
     }

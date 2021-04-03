@@ -17,17 +17,6 @@ namespace asivamosffie.services
 {
     public class RegisterValidatePaymentRequierementsService : IRegisterValidatePaymentRequierementsService
     {
-        #region constructor
-        private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
-        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        {
-            _documentService = documentService;
-            _commonService = commonService;
-            _context = context;
-        }
-        #endregion
 
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
@@ -117,371 +106,15 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region Get
-        public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
+        #region constructor
+        private readonly devAsiVamosFFIEContext _context;
+        private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService;
+        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
-            SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(pSolicitudPagoId);
-
-            return GetSolicitudPagoComplete(solicitudPago);
-
-        }
-
-        public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
-        {
-            return await
-                _context.VProyectosXcontrato
-                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
-                                            (
-                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
-                                            (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
-                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                            )
-                                            )
-                                            .Select
-                                                (s => new
-                                                {
-                                                    s.LlaveMen,
-                                                    s.ContratacionProyectoId
-                                                }
-                                                ).ToListAsync();
-        }
-
-        public async Task<dynamic> GetListSolicitudPago()
-        {
-            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
-                .Include(r => r.Contrato)
-                                         .Select(s => new
-                                         {
-                                             s.TipoSolicitudCodigo,
-                                             s.FechaCreacion,
-                                             s.NumeroSolicitud,
-                                             s.Contrato.ModalidadCodigo,
-                                             s.Contrato.NumeroContrato,
-                                             s.EstadoCodigo,
-                                             s.ContratoId,
-                                             s.SolicitudPagoId,
-                                             s.TieneNoCumpleListaChequeo,
-                                             RegistroCompleto = s.RegistroCompleto ?? false
-                                         }).OrderByDescending(r => r.SolicitudPagoId)
-                                                                                    .ToListAsync();
-
-            List<dynamic> grind = new List<dynamic>();
-            List<Dominio> ListParametricas =
-                _context.Dominio
-                               .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
-                                   || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago)
-                               .ToList();
-
-            result.ForEach(r =>
-            {
-                grind.Add(new
-                {
-                    r.RegistroCompleto,
-                    r.TipoSolicitudCodigo,
-                    r.ContratoId,
-                    r.SolicitudPagoId,
-                    r.FechaCreacion,
-                    r.NumeroSolicitud,
-                    r.TieneNoCumpleListaChequeo,
-                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
-                    r.EstadoCodigo,
-                    Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
-                });
-            });
-            return grind;
-        }
-
-        public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
-                {
-                    List<Contrato> ListContratos = new List<Contrato>();
-                    if (pTipoSolicitud == ConstanCodigoTipoContrato.Obra)
-                    {
-                        ListContratos = await _context.Contrato
-                                        .Include(c => c.Contratacion)
-                                                 .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                          && c.ModalidadCodigo == pModalidadContrato
-                                                          && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                          && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                                       ).ToListAsync();
-                    }
-                    else
-                    {
-                        ListContratos = await _context.Contrato
-                                      .Include(c => c.Contratacion)
-                                               .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                        && c.ModalidadCodigo == pModalidadContrato
-                                                        && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                        && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
-                                                     ).ToListAsync();
-                    }
-                    return ListContratos
-                        .Select(r => new
-                        {
-                            r.ContratoId,
-                            r.NumeroContrato
-                        }).ToList();
-                }
-                else
-                {
-                    List<Contrato> ListContratos = await _context.Contrato
-                                    .Include(c => c.Contratacion)
-                                             .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                         && (
-                                                             (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
-                                                            (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
-                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                                            )
-
-
-                                                      ).ToListAsync();
-                    return ListContratos
-                                        .Select(r => new
-                                        {
-                                            r.ContratoId,
-                                            r.NumeroContrato
-                                        }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
-        {
-            try
-            {
-                Contrato contrato = await _context.Contrato
-                        .Where(c => c.ContratoId == pContratoId)
-                        .Include(c => c.ContratoConstruccion)
-                        .Include(c => c.ContratoPoliza)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                        .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                        .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
-                        .FirstOrDefaultAsync();
-
-                if (contrato.SolicitudPago.Count() > 0)
-                    contrato.SolicitudPago = contrato.SolicitudPago.Where(s => s.Eliminado != true).ToList();
-
-                if (pSolicitudPago > 0)
-                {
-                    SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                    contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
-                }
-                contrato.ValorFacturadoContrato =
-                    _context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == pContratoId)
-                    .ToList();
-
-                contrato.VContratoPagosRealizados =
-                    _context.VContratoPagosRealizados
-                       .Where(v => v.ContratoId == pContratoId)
-                       .ToList();
-
-                return contrato;
-            }
-            catch (Exception ex)
-            {
-                return new Contrato();
-            }
-        }
-
-        private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
-        {
-            foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
-            {
-                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
-                {
-                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                        SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
-
-                    foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
-                    {
-                        if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
-                            SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
-                    }
-
-                    foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
-                    {
-                        if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
-                            SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
-
-                    }
-                }
-            }
-
-            if (solicitudPago.SolicitudPagoListaChequeo.Count() > 0)
-                solicitudPago.SolicitudPagoListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Where(r => r.Eliminado != true).ToList();
-
-            List<SolicitudPagoListaChequeoRespuesta> ListSolicitudPagoListaChequeoRespuesta =
-                _context.SolicitudPagoListaChequeoRespuesta.Include(r => r.ListaChequeoItem).ToList();
-
-            foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
-            {
-                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta =
-                    ListSolicitudPagoListaChequeoRespuesta
-                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
-                    .ToList();
-
-                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
-                {
-                    SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeo = null;
-                }
-            }
-            return solicitudPago;
-        }
-
-        public SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago)
-        {
-            switch (solicitudPago.TipoSolicitudCodigo)
-            {
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
-
-                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r => r.SolicitudPagoCargarFormaPago)
-                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                           .ThenInclude(r => r.SolicitudPagoFase)
-                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
-                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
-                    .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                           .ThenInclude(r => r.SolicitudPagoFase)
-                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
-                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioConceptoPago)
-                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                          .ThenInclude(r => r.SolicitudPagoFase)
-                              .ThenInclude(r => r.SolicitudPagoFaseAmortizacion)
-                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                          .ThenInclude(r => r.SolicitudPagoFase)
-                              .ThenInclude(r => r.SolicitudPagoFaseFactura)
-                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
-                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                       .Include(r => r.SolicitudPagoSoporteSolicitud)
-                       .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                         .AsNoTracking()
-                         .FirstOrDefault();
-                    GetRemoveObjectsDelete(solicitudPago);
-                    return solicitudPago;
-
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
-                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                         .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
-                        .Include(e => e.SolicitudPagoExpensas)
-                        .Include(e => e.SolicitudPagoSoporteSolicitud)
-                        .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                                 .AsNoTracking()
-                        .FirstOrDefault();
-                    GetRemoveObjectsDelete(solicitudPago);
-                    return solicitudPago;
-
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
-                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(e => e.SolicitudPagoOtrosCostosServicios)
-                     .Include(e => e.SolicitudPagoSoporteSolicitud)
-                            .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                            .AsNoTracking()
-                        .FirstOrDefault(); 
-                    GetRemoveObjectsDelete(solicitudPago);
-                    return solicitudPago;
-
-                default: return solicitudPago;
-
-            }
-        }
-
-        #endregion
-
-        #region Validate 
-
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
-        {
-
-            try
-            {
-                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
-
-                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
-
-                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal));
-
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
-
-                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-
-                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                decimal MontoMaximo = 0;
-                //TODO:VALIDAR 
-                foreach (var PorcentajePago in FormasPago)
-                {
-                    if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorPendientePorPagar;
-                    else
-                    {
-                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                        MontoMaximo /= 100;
-                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
-
-                        if (MontoMaximo < 0)
-                            MontoMaximo = ValorTotalPorFase;
-
-                        if (MontoMaximo < ValorPendientePorPagar)
-                            break;
-                    }
-                }
-
-                return new
-                {
-                    MontoMaximo,
-                    ValorPendientePorPagar
-                };
-            }
-            catch (Exception e)
-            {
-                return new
-                {
-                    MontoMaximo = 0,
-                    ValorPendientePorPagar = 0
-                };
-            }
-        }
-
-        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
-        {
-            decimal ValorMaximoProyecto =
-               (decimal)await _context.VValorUsosFasesAportanteProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                      && r.EsPreConstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorUso);
-
-            decimal ValorFacturadoProyecto =
-               (decimal)await _context.VValorFacturadoProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                        && r.EsPreconstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorFacturado);
-
-            return new
-            {
-                ValorMaximoProyecto,
-                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
-            };
+            _documentService = documentService;
+            _commonService = commonService;
+            _context = context;
         }
         #endregion
 
@@ -847,11 +480,14 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
+
                 pSolicitudPago.FechaModificacion = DateTime.Now;
                 pSolicitudPago.TieneObservacion = false;
             }
             else
             {
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
                 pSolicitudPago.TieneObservacion = false;
                 pSolicitudPago.NumeroSolicitud = Int32.Parse(strInterventoriaCodigo) == ConstanCodigoTipoContratacion.Obra ? await _commonService.EnumeradorSolicitudPago(true) : await _commonService.EnumeradorSolicitudPago(false);
                 pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
@@ -1599,7 +1235,7 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
-
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado;
                 solicitudPagoOld.FechaModificacion = DateTime.Now;
                 solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(pSolicitudPago);
@@ -1612,6 +1248,7 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.Contrato).Select
                     (c => c.Contratacion.Contrato.FirstOrDefault().ContratoId).FirstOrDefault();
 
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado;
                 pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                 pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;
@@ -1778,12 +1415,13 @@ namespace asivamosffie.services
                 if (pSolicitudPago.SolicitudPagoId > 0)
                 {
                     SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
-
+                    pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoOtrosCostosServicios?.FirstOrDefault()?.ValorFacturado;
                     solicitudPagoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 }
                 else
                 {
+                    pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoOtrosCostosServicios?.FirstOrDefault()?.ValorFacturado;
                     pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                     pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                     pSolicitudPago.FechaCreacion = DateTime.Now;
@@ -1896,6 +1534,412 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region Get
+        public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(pSolicitudPagoId);
 
+            return GetSolicitudPagoComplete(solicitudPago);
+
+        }
+
+        public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
+        {
+            List<VProyectosXcontrato> ListProyectos = await _context.VProyectosXcontrato
+                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
+                                            (
+                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                                            (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                            )).ToListAsync();
+
+            List<VSaldoPresupuestalXproyecto> LVSaldoPresupuestalXproyecto = _context.VSaldoPresupuestalXproyecto.ToList();
+
+            List<dynamic> dynamics = new List<dynamic>();
+
+            foreach (var item in ListProyectos)
+            {
+                VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
+
+                if (VSaldoPresupuestalXproyecto != null)
+                {
+                    dynamics.Add(new
+                    {
+                        item.ContratacionProyectoId,
+                        item.LlaveMen,
+                        VSaldoPresupuestalXproyecto.ValorDdp,
+                        VSaldoPresupuestalXproyecto.ValorFacturado,
+                        VSaldoPresupuestalXproyecto.SaldoPresupuestal
+                    });
+                }
+            }
+            return dynamics;
+        }
+
+        public async Task<dynamic> GetListSolicitudPago()
+        {
+            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
+                .Include(r => r.Contrato)
+                                         .Select(s => new
+                                         {
+                                             s.TipoSolicitudCodigo,
+                                             s.FechaCreacion,
+                                             s.NumeroSolicitud,
+                                             s.Contrato.ModalidadCodigo,
+                                             s.Contrato.NumeroContrato,
+                                             s.EstadoCodigo,
+                                             s.ContratoId,
+                                             s.SolicitudPagoId,
+                                             s.TieneNoCumpleListaChequeo,
+                                             RegistroCompleto = s.RegistroCompleto ?? false
+                                         }).OrderByDescending(r => r.SolicitudPagoId)
+                                                                                    .ToListAsync();
+
+            List<dynamic> grind = new List<dynamic>();
+            List<Dominio> ListParametricas =
+                _context.Dominio
+                               .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                   || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago)
+                               .ToList();
+
+            result.ForEach(r =>
+            {
+                grind.Add(new
+                {
+                    r.RegistroCompleto,
+                    r.TipoSolicitudCodigo,
+                    r.ContratoId,
+                    r.SolicitudPagoId,
+                    r.FechaCreacion,
+                    r.NumeroSolicitud,
+                    r.TieneNoCumpleListaChequeo,
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    r.EstadoCodigo,
+                    Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
+                });
+            });
+            return grind;
+        }
+
+        public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
+        {
+            try
+            {
+                List<VSaldoPresupuestalXcontrato> ListVSaldoPresupuestalXcontrato = await _context.VSaldoPresupuestalXcontrato.ToListAsync();
+
+                List<dynamic> List = new List<dynamic>();
+                List<Contrato> ListContratos = new List<Contrato>();
+                if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
+                {
+                    if (pTipoSolicitud == ConstanCodigoTipoContrato.Obra)
+                    {
+                        ListContratos = await _context.Contrato
+                                        .Include(c => c.Contratacion)
+                                                 .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                          && c.ModalidadCodigo == pModalidadContrato
+                                                          && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                          && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                       ).ToListAsync();
+                    }
+                    else
+                    {
+                        ListContratos = await _context.Contrato
+                                      .Include(c => c.Contratacion)
+                                               .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                        && c.ModalidadCodigo == pModalidadContrato
+                                                        && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                        && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                     ).ToListAsync();
+                    }
+                    foreach (var Contrato in ListContratos)
+                    {
+                        VSaldoPresupuestalXcontrato VSaldoPresupuestalXcontrato = ListVSaldoPresupuestalXcontrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestalObraInterventoria > 0).FirstOrDefault();
+
+                        if (VSaldoPresupuestalXcontrato != null)
+                        {
+                            List.Add(new
+                            {
+                                ValorSolicitudDdp = VSaldoPresupuestalXcontrato.ValorDdpobraInterventoria,
+                                SaldoPresupuestal = VSaldoPresupuestalXcontrato.SaldoPresupuestalObraInterventoria,
+                                Contrato.ContratoId,
+                                Contrato.NumeroContrato
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    ListContratos = await _context.Contrato
+                                    .Include(c => c.Contratacion)
+                                             .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                         && (
+                                                             (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                                                            (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                             && c.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                                            )
+                                                      ).ToListAsync();
+
+                    foreach (var Contrato in ListContratos)
+                    {
+                        VSaldoPresupuestalXcontrato VSaldoPresupuestalXcontrato = ListVSaldoPresupuestalXcontrato.Where(r => r.ContratoId == Contrato.ContratoId && r.SaldoPresupuestalOtrosCostos > 0).FirstOrDefault();
+
+                        if (VSaldoPresupuestalXcontrato != null)
+                        {
+                            List.Add(new
+                            {
+                                ValorSolicitudDdp = VSaldoPresupuestalXcontrato.ValorDdpotrosCostos,
+                                SaldoPresupuestal = VSaldoPresupuestalXcontrato.SaldoPresupuestalOtrosCostos,
+                                Contrato.ContratoId,
+                                Contrato.NumeroContrato
+                            });
+                        }
+                    }
+                }
+
+                return List;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
+        {
+            try
+            {
+                Contrato contrato = await _context.Contrato
+                        .Where(c => c.ContratoId == pContratoId)
+                        .Include(c => c.ContratoConstruccion)
+                        .Include(c => c.ContratoPoliza)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                        .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                        .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
+                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
+                        .FirstOrDefaultAsync();
+
+                if (contrato.SolicitudPago.Count() > 0)
+                    contrato.SolicitudPago = contrato.SolicitudPago.Where(s => s.Eliminado != true).ToList();
+
+                if (pSolicitudPago > 0)
+                {
+                    SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
+                    contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
+                }
+                contrato.ValorFacturadoContrato =
+                    _context.VValorFacturadoContrato
+                    .Where(v => v.ContratoId == pContratoId)
+                    .ToList();
+
+                contrato.VContratoPagosRealizados =
+                    _context.VContratoPagosRealizados
+                       .Where(v => v.ContratoId == pContratoId)
+                       .ToList();
+
+                return contrato;
+            }
+            catch (Exception ex)
+            {
+                return new Contrato();
+            }
+        }
+
+        private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
+        {
+            foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
+            {
+                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+                {
+                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                        SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
+
+                    foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
+                    {
+                        if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
+                            SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
+                    }
+
+                    foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
+                    {
+                        if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
+                            SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
+
+                    }
+                }
+            }
+
+            if (solicitudPago.SolicitudPagoListaChequeo.Count() > 0)
+                solicitudPago.SolicitudPagoListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Where(r => r.Eliminado != true).ToList();
+
+            List<SolicitudPagoListaChequeoRespuesta> ListSolicitudPagoListaChequeoRespuesta =
+                _context.SolicitudPagoListaChequeoRespuesta.Include(r => r.ListaChequeoItem).ToList();
+
+            foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
+            {
+                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta =
+                    ListSolicitudPagoListaChequeoRespuesta
+                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                    .ToList();
+
+                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                {
+                    SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeo = null;
+                }
+            }
+            return solicitudPago;
+        }
+
+        public SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago)
+        {
+            switch (solicitudPago.TipoSolicitudCodigo)
+            {
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
+
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                        .Include(r => r.SolicitudPagoCargarFormaPago)
+                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                           .ThenInclude(r => r.SolicitudPagoFase)
+                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
+                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
+                    .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                           .ThenInclude(r => r.SolicitudPagoFase)
+                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
+                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioConceptoPago)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFase)
+                              .ThenInclude(r => r.SolicitudPagoFaseAmortizacion)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFase)
+                              .ThenInclude(r => r.SolicitudPagoFaseFactura)
+                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                       .Include(r => r.SolicitudPagoSoporteSolicitud)
+                       .Include(r => r.SolicitudPagoListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo)
+                         .AsNoTracking()
+                         .FirstOrDefault();
+                    GetRemoveObjectsDelete(solicitudPago);
+                    return solicitudPago;
+
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                         .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
+                        .Include(e => e.SolicitudPagoExpensas)
+                        .Include(e => e.SolicitudPagoSoporteSolicitud)
+                        .Include(r => r.SolicitudPagoListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo)
+                                 .AsNoTracking()
+                        .FirstOrDefault();
+                    GetRemoveObjectsDelete(solicitudPago);
+                    solicitudPago.SaldoPresupuestal = _context.VSaldoPresupuestalXproyecto.Where(v => v.ContratacionProyectoId == solicitudPago.ContratacionProyectoId).FirstOrDefault().SaldoPresupuestal;
+
+                    return solicitudPago;
+
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                        .Include(e => e.SolicitudPagoOtrosCostosServicios)
+                     .Include(e => e.SolicitudPagoSoporteSolicitud)
+                            .Include(r => r.SolicitudPagoListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo)
+                            .AsNoTracking()
+                        .FirstOrDefault();
+
+                    solicitudPago.SaldoPresupuestal = _context.VValorFacturadoContrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestal;
+
+                    GetRemoveObjectsDelete(solicitudPago);
+                    return solicitudPago;
+
+                default: return solicitudPago;
+
+            }
+        }
+
+        #endregion
+
+        #region Validate 
+
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        {
+
+            try
+            {
+                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+
+                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
+                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
+                    .Sum(c => c.SaldoPresupuestal));
+
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+
+                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
+
+                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
+                decimal MontoMaximo = 0;
+                //TODO:VALIDAR 
+                foreach (var PorcentajePago in FormasPago)
+                {
+                    if (Convert.ToUInt32(PorcentajePago) == 100)
+                        MontoMaximo = ValorPendientePorPagar;
+                    else
+                    {
+                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
+                        MontoMaximo /= 100;
+                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
+
+                        if (MontoMaximo < 0)
+                            MontoMaximo = ValorTotalPorFase;
+
+                        if (MontoMaximo < ValorPendientePorPagar)
+                            break;
+                    }
+                }
+
+                return new
+                {
+                    MontoMaximo,
+                    ValorPendientePorPagar
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    MontoMaximo = 0,
+                    ValorPendientePorPagar = 0
+                };
+            }
+        }
+
+        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
+        {
+            decimal ValorMaximoProyecto =
+               (decimal)await _context.VValorUsosFasesAportanteProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                      && r.EsPreConstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorUso);
+
+            decimal ValorFacturadoProyecto =
+               (decimal)await _context.VValorFacturadoProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                        && r.EsPreconstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorFacturado);
+
+            return new
+            {
+                ValorMaximoProyecto,
+                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
+            };
+        }
+        #endregion 
     }
 }

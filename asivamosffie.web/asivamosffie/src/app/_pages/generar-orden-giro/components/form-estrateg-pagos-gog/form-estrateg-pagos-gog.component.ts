@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormEstrategPagosGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
     ordenGiro: any;
@@ -68,6 +69,16 @@ export class FormEstrategPagosGogComponent implements OnInit {
         ordenGiroDetalleEstrategiaPagoId: [ 0 ],
         estrategiaPagoCodigo: [ null, Validators.required ]
       })
+    }
+
+    getEstrategiaPago( codigo: string ) {
+        if ( this.estrategiaPagoArray.length > 0 ) {
+            const estrategia = this.estrategiaPagoArray.find( estrategia => estrategia.codigo === codigo );
+
+            if ( estrategia !== undefined ) {
+                return estrategia.nombre;
+            }
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {

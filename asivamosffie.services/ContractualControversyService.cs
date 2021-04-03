@@ -239,12 +239,21 @@ namespace asivamosffie.services
             if (controversiaContractual != null)
                 contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
 
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
+                                            .FirstOrDefault();
             if (contrato != null)
             {
                 if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
                     prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
                 else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
                     prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+            }
+
+            if (sesionComiteSolicitud != null)
+            {
+                controversiaContractual.ObservacionesComiteTecnico = sesionComiteSolicitud.Observaciones;
+                controversiaContractual.ObversacionesComiteFiduciario = sesionComiteSolicitud.ObservacionesFiduciario;
             }
 
             //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
@@ -282,6 +291,9 @@ namespace asivamosffie.services
 
             controversiaActuacion.ObservacionesComites = _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
                   !(bool)x.Eliminado && x.SolicitudId == controversiaActuacion.ControversiaActuacionId).Select(y => y.Observaciones).ToList();
+            controversiaActuacion.ObservacionesFiduciaria = _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
+                  !(bool)x.Eliminado && x.SolicitudId == controversiaActuacion.ControversiaActuacionId).Select(y => y.ObservacionesFiduciario).ToList();
+
             return controversiaActuacion;
         }
 

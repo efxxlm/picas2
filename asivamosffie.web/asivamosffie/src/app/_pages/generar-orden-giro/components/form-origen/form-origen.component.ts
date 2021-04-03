@@ -16,7 +16,9 @@ import humanize from 'humanize-plus';
 export class FormOrigenComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     @Output() seDiligenciaFormulario = new EventEmitter<boolean>();
+    @Output() estadoSemaforo = new EventEmitter<string>();
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
     ordenGiroId = 0;
@@ -49,6 +51,10 @@ export class FormOrigenComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getOrigen();
+    }
+
+    getOrigen() {
         this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
 
             // Get IDs
@@ -64,10 +70,18 @@ export class FormOrigenComponent implements OnInit {
                             if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
                                 this.ordenGiroDetalleTerceroCausacion = this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion;
                                 let totalCuenta = 0;
+                                let totalEnProceso = 0;
+                                let totalCompleto = 0;
 
                                 this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => this.listaAportantes.push( aportante ) );
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
+                                            const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
+
+                                            if ( aportanteFind === undefined ) {
+                                                this.listaAportantes.push( aportante );
+                                            }
+                                        } );
                                     }
                                 } );
 
@@ -84,8 +98,10 @@ export class FormOrigenComponent implements OnInit {
                                                         const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
                                                         
                                                         if ( cuenta !== undefined ) {
+                                                            totalCompleto++;
                                                             return cuenta;
                                                         } else {
+                                                            totalEnProceso++;
                                                             return null;
                                                         }
                                                     } else {
@@ -99,7 +115,7 @@ export class FormOrigenComponent implements OnInit {
                                             if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
                                                 totalCuenta++;
                                             }
-                                            console.log( cuentaBancaria() );
+
                                             this.aportantes.push(
                                                 this.fb.group(
                                                     {
@@ -115,6 +131,12 @@ export class FormOrigenComponent implements OnInit {
                                 }
 
                                 setTimeout(() => {
+                                    if ( totalEnProceso > 0 && totalEnProceso === this.listaAportantes.length ) {
+                                        this.estadoSemaforo.emit( 'en-proceso' );
+                                    }
+                                    if ( totalCompleto > 0 && totalCompleto === this.listaAportantes.length ) {
+                                        this.estadoSemaforo.emit( 'completo' );
+                                    }
                                     if ( totalCuenta === this.listaAportantes.length ) {
                                         this.esUnicaCuenta = true;
                                         this.seDiligenciaFormulario.emit( false );
@@ -156,6 +178,24 @@ export class FormOrigenComponent implements OnInit {
             if ( banco !== undefined ) {
                 return banco.nombre;
             }
+        }
+    }
+
+    checkSaveBtn() {
+        let totalCuentasBancarias = 0;
+
+        if ( this.aportantes.length > 0 ) {
+            this.aportantes.controls.forEach( control => {
+                totalCuentasBancarias += control.get( 'listaCuentaBancaria' ).value.lengthM
+            } )
+
+            if ( totalCuentasBancarias !== this.aportantes.length ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 

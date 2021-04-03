@@ -56,9 +56,9 @@
                                 *ngIf="criteriosProyecto( i ).length > 0">
                                 <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j"
                                     [formGroup]="criterioProyecto">
-                                    <h2>
+                                    <div style="font-size: 16px;">
                                         <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
-                                    </h2>
+                                    </div>
                                     <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{
                                         criterioProyecto.get( 'valorFacturado' ).value | currency:'
                                         ':'symbol-narrow':'.0-0' }} </p>
@@ -93,7 +93,9 @@
                     </div>
                     <br>
                     <div *ngFor="let criterio of solicitudPagoFaseCriterio">
-                        <h1><b> {{ filterCriterios( criterio.tipoCriterioCodigo ) }} </b></h1>
+                        <div style="font-size: 16px;">
+                            <b> {{ filterCriterios( criterio.tipoCriterioCodigo ) }} </b>
+                        </div>
                         <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterio.valorFacturado
                             | currency:' ':'symbol-narrow':'.0-0' }} </p>
                         <br>

@@ -31,10 +31,14 @@ namespace asivamosffie.services
             _environment = hostingEnvironment;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp(int usuarioId)
         {
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                                                        .Where(
+                                                                                r => r.FechaActaInicioFase2 <= DateTime.Now && 
+                                                                                r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() &&
+                                                                                r.InterventorId == usuarioId
+                                                                              )
                                                                         .ToListAsync();
 
             listaInfoProyectos.ForEach(p =>
@@ -72,12 +76,12 @@ namespace asivamosffie.services
             return listaInfoProyectos;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp(int usuarioId)
         {
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.ApoyoId == usuarioId)
                                                                         .ToListAsync();
 
             List<VProyectosXcontrato> listaSeguimientos = new List<VProyectosXcontrato>();
@@ -167,12 +171,12 @@ namespace asivamosffie.services
             return listaSeguimientos;
         }
 
-        public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp(int usuarioId)
         {
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.SupervisorId == usuarioId)
                                                                         .ToListAsync();
 
             List<VProyectosXcontrato> listaSeguimientos = new List<VProyectosXcontrato>();
@@ -823,6 +827,8 @@ namespace asivamosffie.services
 
                 EnviarNotificacionAApoyo(seguimientoDiario);
 
+                VerificarDiasConsecutivosNegativos(seguimientoDiario);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -1122,7 +1128,8 @@ namespace asivamosffie.services
 
             Contrato contrato = _context.Contrato
                                             .Where(x => x.ContratoId == proyecto.ContratoId)
-                                            .Include(x => x.Interventor)
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Supervisor)
                                             .FirstOrDefault();
 
             Template templateEnviar = _context.Template
@@ -1137,9 +1144,34 @@ namespace asivamosffie.services
                                                       .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
 
 
-            List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
+            List<string> listaMails = new List<string> { contrato?.Apoyo?.Email, contrato?.Supervisor?.Email };
             _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario - días consecutivos negativos");
 
+
+        }
+
+        private async void VerificarDiasConsecutivosNegativos(SeguimientoDiario seguimientoDiario)
+        {
+            List<SeguimientoDiario> seguimientos = _context.SeguimientoDiario
+                                                                .Where(r => r.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
+                                                                .ToList();
+            int cantidad = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                SeguimientoDiario seguimiento = seguimientos
+                                                    .Where(r => r.FechaSeguimiento.Date == seguimientoDiario.FechaSeguimiento.AddDays(-i).Date)
+                                                    .FirstOrDefault();
+                if (seguimiento != null && VerificarAlertas(seguimientoDiario))
+                {
+                    cantidad++;
+                }
+            }
+
+            if (cantidad == 3)
+            {
+                EnviarNotificacionSeguimientoDiasNegativos(seguimientoDiario);
+
+            }
 
         }
     }

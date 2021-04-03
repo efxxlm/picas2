@@ -112,6 +112,20 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetAjusteProgramacionGrid")]
+        [HttpGet]
+        public async Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid()
+        {
+            try
+            {
+                return await _technicalRequirementsConstructionPhaseService.GetAjusteProgramacionGrid();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GetContratoByContratoId")]
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -574,5 +588,85 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("UploadFileToValidateAdjustmentProgramming")]
+        [HttpPost]
+        public async Task<IActionResult> UploadFileToValidateAdjustmentProgramming(IFormFile file, [FromQuery] int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
+                                                                                    int pContratoId, int pProyectoId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateAdjustmentProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario,pAjusteProgramacionId,pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId );
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("TransferMassiveLoadAdjustmentProgramming")]
+        [HttpPost]
+        public async Task<IActionResult> TransferMassiveLoadAdjustmentProgramming([FromQuery] string pIdDocument)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadAdjustmentProgramming(pIdDocument, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("UploadFileToValidateAdjustmentInvestmentFlow")]
+        [HttpPost]
+        public async Task<IActionResult> UploadFileToValidateAdjustmentInvestmentFlow(IFormFile file, [FromQuery] int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
+                                                                                    int pContratoId, int pProyectoId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (file.Length > 0 && file.FileName.Contains(".xls"))
+                {
+                    //string strUsuario = "";
+                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateAdjustmentInvestmentFlow(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario, pAjusteProgramacionId, pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+        [Route("TransferMassiveLoadAdjustmentInvestmentFlow")]
+        [HttpPost]
+        public async Task<IActionResult> TransferMassiveLoadAdjustmentInvestmentFlow([FromQuery] string pIdDocument, int pProyectoId, int pContratoId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadAdjustmentInvestmentFlow(pIdDocument, pUsuarioModifico, pProyectoId, pContratoId);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

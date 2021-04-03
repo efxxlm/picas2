@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ObservacionesOrdenGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
     ordenGiroObservacionId = 0;

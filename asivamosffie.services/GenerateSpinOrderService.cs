@@ -31,154 +31,6 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region get
-        /// <summary>
-        /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
-        {
-            return _context.VValorUsoXcontratoAportante
-                           .Where(v => v.AportanteId == pAportanteId
-                               && v.ConceptoPagoCodigo == pConceptoPago
-                               && v.SolicitudPagoId == pSolicitudPagoId
-                               ).Select(v => v.ValorUso);
-        }
-
-        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
-        {
-            List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
-
-            List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
-
-            List<dynamic> ListDynamics = new List<dynamic>();
-
-            ListFuenteFinanciacion.ForEach(ff =>
-            {
-                ListDynamics.Add(new
-                {
-                    Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
-                    Codigo = ff.FuenteRecursosCodigo,
-                    FuenteFinanciacionId = ff.FuenteFinanciacionId
-                });
-            });
-            return ListDynamics;
-        }
-
-        public async Task<dynamic> GetListOrdenGiro(int pMenuId)
-        {
-            return pMenuId switch
-            {
-                (int)enumeratorMenu.Generar_Orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
-
-                (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
-
-                (int)enumeratorMenu.Aprobar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
-
-                (int)enumeratorMenu.Tramitar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
-
-                _ => new { },
-            };
-        }
-
-        public async Task<dynamic> GetListSolicitudPagoOLD()
-        {
-            var result = await _context.SolicitudPago
-                 .Include(r => r.Contrato)
-                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
-                                                                            .Select(s => new
-                                                                            {
-                                                                                s.FechaAprobacionFinanciera,
-                                                                                s.NumeroSolicitud,
-                                                                                s.Contrato.ModalidadCodigo,
-                                                                                s.Contrato.NumeroContrato,
-                                                                                s.EstadoCodigo,
-                                                                                s.ContratoId,
-                                                                                s.SolicitudPagoId,
-                                                                                s.OrdenGiro
-                                                                            }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
-            List<dynamic> grind = new List<dynamic>();
-            List<Dominio> ListParametricas = _context.Dominio.Where(
-                                                                         d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
-                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
-                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
-                                                              ).ToList();
-
-            result.ForEach(r =>
-            {
-                bool RegistroCompleto = false;
-                string EstadoOrdenGiro = string.Empty;
-                if (r.OrdenGiro == null)
-                    EstadoOrdenGiro = ((int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro).ToString();
-                else
-                {
-                    EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
-                    RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
-                }
-                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
-
-                grind.Add(new
-                {
-                    r.FechaAprobacionFinanciera,
-                    r.NumeroSolicitud,
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
-                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
-                    r.OrdenGiro,
-                    EstadoOrdenGiro,
-                    RegistroCompleto,
-                    r.SolicitudPagoId,
-                });
-            });
-            return grind;
-        }
-
-        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
-        {
-            SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
-
-            try
-            {
-                if (SolicitudPago.ContratoId > 0)
-                {
-                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
-                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
-                }
-                if (SolicitudPago.OrdenGiroId != null)
-                {
-                    SolicitudPago.OrdenGiro = _context.OrdenGiro
-                        .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
-                            .Include(d => d.SolicitudPago)
-                        .AsNoTracking().FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return SolicitudPago;
-        }
-        #endregion
-
         #region Create 
 
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
@@ -709,6 +561,155 @@ namespace asivamosffie.services
                      };
             }
             return new Respuesta();
+        }
+        #endregion
+
+        #region get
+        /// <summary>
+        /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
+        {
+            return _context.VValorUsoXcontratoAportante
+                           .Where(v => v.AportanteId == pAportanteId
+                               && v.ConceptoPagoCodigo == pConceptoPago
+                               && v.SolicitudPagoId == pSolicitudPagoId
+                               ).Select(v => v.ValorUso);
+        }
+
+        public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)
+        {
+            List<Dominio> ListNameFuenteFinanciacion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+
+            List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.AportanteId == pAportanteId && r.Eliminado != true).ToList();
+
+            List<dynamic> ListDynamics = new List<dynamic>();
+
+            ListFuenteFinanciacion.ForEach(ff =>
+            {
+                ListDynamics.Add(new
+                {
+                    Nombre = ListNameFuenteFinanciacion.Where(l => l.Codigo == ff.FuenteRecursosCodigo).FirstOrDefault().Nombre,
+                    Codigo = ff.FuenteRecursosCodigo,
+                    FuenteFinanciacionId = ff.FuenteFinanciacionId
+                });
+            });
+            return ListDynamics;
+        }
+
+        public async Task<dynamic> GetListOrdenGiro(int pMenuId)
+        {
+            return pMenuId switch
+            {
+                (int)enumeratorMenu.Generar_Orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                (int)enumeratorMenu.Aprobar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                (int)enumeratorMenu.Tramitar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                _ => new { },
+            };
+        }
+
+        public async Task<dynamic> GetListSolicitudPagoOLD()
+        {
+            var result = await _context.SolicitudPago
+                 .Include(r => r.Contrato)
+                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
+                                                                            .Select(s => new
+                                                                            {
+                                                                                s.FechaAprobacionFinanciera,
+                                                                                s.NumeroSolicitud,
+                                                                                s.Contrato.ModalidadCodigo,
+                                                                                s.Contrato.NumeroContrato,
+                                                                                s.EstadoCodigo,
+                                                                                s.ContratoId,
+                                                                                s.SolicitudPagoId,
+                                                                                s.OrdenGiro
+                                                                            }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
+            List<dynamic> grind = new List<dynamic>();
+            List<Dominio> ListParametricas = _context.Dominio.Where(
+                                                                         d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
+                                                              ).ToList();
+
+            result.ForEach(r =>
+            {
+                bool RegistroCompleto = false;
+                string EstadoOrdenGiro = string.Empty;
+                if (r.OrdenGiro == null)
+                    EstadoOrdenGiro = ((int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro).ToString();
+                else
+                {
+                    EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
+                    RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
+                }
+                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
+
+                grind.Add(new
+                {
+                    r.FechaAprobacionFinanciera,
+                    r.NumeroSolicitud,
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    r.OrdenGiro,
+                    EstadoOrdenGiro,
+                    RegistroCompleto,
+                    r.SolicitudPagoId,
+                });
+            });
+            return grind;
+        }
+
+        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
+        {
+            SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
+
+            try
+            {
+                if (SolicitudPago.ContratoId > 0)
+                {
+                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
+                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
+                }
+                if (SolicitudPago.OrdenGiroId != null)
+                {
+                    SolicitudPago.OrdenGiro = _context.OrdenGiro
+                        .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
+                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
+                            .Include(d => d.SolicitudPago)
+                        .AsNoTracking().FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return SolicitudPago;
         }
         #endregion
 

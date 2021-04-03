@@ -32,7 +32,7 @@ namespace asivamosffie.api.Controllers
         [Route("gridRegisterDailyFollowUp")]
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
         {
-            var result = await _dailyFollowUp.gridRegisterDailyFollowUp();
+            var result = await _dailyFollowUp.gridRegisterDailyFollowUp(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace asivamosffie.api.Controllers
         [Route("gridVerifyDailyFollowUp")]
         public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
         {
-            var result = await _dailyFollowUp.gridVerifyDailyFollowUp();
+            var result = await _dailyFollowUp.gridVerifyDailyFollowUp(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             return result;
         }
 
@@ -48,7 +48,7 @@ namespace asivamosffie.api.Controllers
         [Route("gridValidateDailyFollowUp")]
         public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp()
         {
-            var result = await _dailyFollowUp.gridValidateDailyFollowUp();
+            var result = await _dailyFollowUp.gridValidateDailyFollowUp(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             return result;
         }
 

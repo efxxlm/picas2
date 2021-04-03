@@ -16,7 +16,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de aprobación de la póliza
       </th>
-      <td mat-cell *matCellDef="let element"><b>{{element.fechaAprobacionPoliza}}</b></td>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaAprobacionPoliza | date: 'dd/MM/yyyy'}}</b></td>
     </ng-container>
 
     <!-- numeroContrato Column -->
@@ -32,7 +32,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Llave MEN
       </th>
-      <td mat-cell *matCellDef="let element">{{element.llaveMEN}}</td>
+      <td mat-cell *matCellDef="let element">{{element.llaveMen}}</td>
     </ng-container>
 
     <!-- tipoNovedad Column -->
@@ -40,7 +40,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Tipo de novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.tipoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.novedadesSeleccionadas}}</td>
     </ng-container>
 
     <!-- fechaNovedad Column -->
@@ -48,7 +48,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.fechaNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.fechaSolictud | date: 'dd/MM/yyyy'}}</td>
     </ng-container>
 
     <!-- estadoRegistro Column -->
@@ -57,7 +57,7 @@
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
-        {{element.estadoRegistro}}
+        {{element.estadoNombre}}
       </td>
     </ng-container>
 
@@ -65,23 +65,21 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
+        
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'registrarAjusteProgramacion', element.id ]">
+        *ngIf="element.ajusteProgramacionId === undefined"
+          (click)="RegistrarNuevo( element )"
+          >
           Registrar ajuste a la programación
         </a>
-        <!-- <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
-          Enviar a comité técnico
-        </button> -->
-        <!-- <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'verDetalle', element.id ]">
-          Ver detalle
-        </a> -->
-        <!-- <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
-          Devolver solicitud
-        </button> -->
-        <!-- <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
-          Cancelar novedad
-        </button> -->
+
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          *ngIf="element.ajusteProgramacionId !== undefined"
+          (click)="RegistrarNuevo( element )"
+          >
+          Registrar ajuste a la programación
+        </a>
+        
       </td>
     </ng-container>
 

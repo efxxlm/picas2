@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public FuenteFinanciacion()
         {
             AportanteFuenteFinanciacion = new HashSet<AportanteFuenteFinanciacion>();
+            ComponenteUso = new HashSet<ComponenteUso>();
             ControlRecurso = new HashSet<ControlRecurso>();
             CuentaBancaria = new HashSet<CuentaBancaria>();
             GestionFuenteFinanciacion = new HashSet<GestionFuenteFinanciacion>();
@@ -32,6 +33,7 @@ namespace asivamosffie.model.Models
         public virtual CofinanciacionAportante Aportante { get; set; }
         public virtual CofinanciacionDocumento CofinanciacionDocumento { get; set; }
         public virtual ICollection<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
+        public virtual ICollection<ComponenteUso> ComponenteUso { get; set; }
         public virtual ICollection<ControlRecurso> ControlRecurso { get; set; }
         public virtual ICollection<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual ICollection<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }

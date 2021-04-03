@@ -23,6 +23,11 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   numeroSolicitud: any;
   estadoAcordeon: string;
   estadoAcordeon1: string;  
+  numTipoControversia: any;
+  estadoCodigo: any;
+
+  observacionesTecnico: any;
+  observacionesFiduciaria: any;
 
   constructor(private activatedRoute: ActivatedRoute,
     private services: ContractualControversyService,
@@ -38,6 +43,10 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   loadData(id) {
     this.services.GetControversiaContractualById(id).subscribe((resp:any)=>{
       this.numeroSolicitud = resp.numeroSolicitud;
+      this.numTipoControversia = resp.tipoControversiaCodigo;
+      this.estadoCodigo = resp.estadoCodigo;
+      this.observacionesTecnico = resp.observacionesComiteTecnico;
+      this.observacionesFiduciaria = resp.obversacionesComiteFiduciario;
       this.polizaService.GetListVistaContratoGarantiaPoliza(resp.contratoId).subscribe(resp_0=>{
         this.nombreContratista = resp_0[0].nombreContratista;
         this.tipoIdentificacion = resp_0[0].tipoDocumento;

@@ -8,8 +8,11 @@ namespace asivamosffie.model.Models
     public partial class ControversiaContractual
     {
 
-        //[NotMapped]
-        //public string NumeroSolicitudFormat { get; set; }
+        [NotMapped]
+        public string ObservacionesComiteTecnico { get; set; }
+
+        [NotMapped]
+        public string ObversacionesComiteFiduciario { get; set; }
     }
 }
        

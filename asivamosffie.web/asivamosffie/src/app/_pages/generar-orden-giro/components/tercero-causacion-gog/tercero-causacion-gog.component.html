@@ -11,25 +11,84 @@
     <div align="center" class="mb-1em">
         <b>Valor neto de giro:</b> {{ valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}
     </div>
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-        <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
-            <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="criterio.get( 'estadoSemaforo' ).value">
-                        {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
+
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
+                <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? criterio.get( 'estadoSemaforo' ).value : ''">
+                            {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+        
+                        <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+                            <mat-card-header class="header-card header-card--margin">
+                                <mat-card-title class="header-card--text">
+                                    {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
+                                </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content style="text-align: left;" [formGroup]="concepto">
+                                <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
     
-                    <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
-                        <mat-card-header class="header-card header-card--margin">
-                            <mat-card-title class="header-card--text">
-                                {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content style="text-align: left;" [formGroup]="concepto">
-                            <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-                            
-                            <ng-container *ngIf="variosAportantes === true; else unAportante">
+                                <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
+                                    <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
+                                    <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                    <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                    <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </p>
+                                    <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                                </div>
+
+                                <div>
+    
+                                    <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+
+                                    <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
+                                        <p *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> Si </p>
+                                        <p *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === false"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> No </p>
+
+                                        <div *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true">
+                                            <p><b>¿Cuántos descuentos se aplican sobre el concepto de pago? : </b> {{ getDescuentos( i, j ).length }} </p>
+
+                                            <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentos( i, j ).length > 0">
+                                                <div *ngFor="let discount of getDescuentos( i, j ).controls; index as k">
+                                                    <mat-card-title class="header-card--text sub-text">
+                                                        Descuento {{ k + 1 }}
+                                                    </mat-card-title>
+                                                    <div [formGroup]="discount">
+                                                        <p><b>Tipo de descuento: </b> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </p>
+                                                        <p><b>Valor del descuento: </b> {{ discount.get( 'tipoDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                </mat-expansion-panel> 
+            </mat-accordion>
+        </form>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
+                <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="criterio.get( 'estadoSemaforo' ).value">
+                            {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+        
+                        <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+                            <mat-card-header class="header-card header-card--margin">
+                                <mat-card-title class="header-card--text">
+                                    {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
+                                </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content style="text-align: left;" [formGroup]="concepto">
+                                <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+    
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <div class="row" style="padding-left: 0em !important;">
@@ -151,8 +210,10 @@
                                                                 <input  matInput
                                                                         #valorDescuento
                                                                         maxlength="20"
-                                                                        type="number"
                                                                         required
+                                                                        currencyMask
+                                                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k )"
                                                                         formControlName="valorDescuento"
                                                                         onKeyPress="if(this.value.length>=this.maxLength) return false;">
                                                             </mat-form-field>
@@ -200,160 +261,154 @@
                                         </button>
                                     </div>
                                 </div>
-                            </ng-container>
-                            <ng-template #unAportante>
-                                <mat-card-title class="header-card--text sub-text">
-                                    Aportante
-                                </mat-card-title>
-                                <p><strong>Tipo de aportante: </strong>Entidad territorial</p>
-                                <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
-                                <p><strong>Fuente de recursos: </strong>Contingencias</p>
-                                <p><strong>Valor facturado por el concepto para el aportante después del descuento: </strong>$ 7.970.000</p>
-                            </ng-template>
-
-                            <div>
+    
                                 <div>
-
-                                    <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
-
-                                    <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="row">
-                                                    <div class="pr-1">
-                                                        <label class="label-left" for="aplicaDescuentos" [ngClass]="{
-                                                            'color-secondaryColor':
-                                                              (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').touched) ||
-                                                              (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && estaEditando)
-                                                          }">¿Se requieren aplicar descuentos sobre el concepto de pago?</label>
+                                    <div>
+    
+                                        <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+    
+                                        <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="row">
+                                                        <div class="pr-1">
+                                                            <label class="label-left"
+                                                                    for="aplicaDescuentos"
+                                                                    [ngClass]="{ 'color-secondaryColor': (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').touched) || (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && estaEditando) }">
+                                                                    ¿Se requieren aplicar descuentos sobre el concepto de pago?
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <mat-radio-group class="radioInput" formControlName="aplicaDescuentos" required>
+                                                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                                                <mat-radio-button [value]="false">No</mat-radio-button>
+                                                            </mat-radio-group>
+                                                            <span class="required-form-group" style="margin-left: 1px;">*</span>
+                                                        </div>
+                                                        <span class="icon-incompleto">
+                                                            <img    class="icon-incompleto--img"
+                                                                    src="assets/img/icon/incompleto.svg"
+                                                                    alt="este campo es requerido"
+                                                                    [matTooltipPosition]="'above'"
+                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                    matTooltipClass="info-tooltip"
+                                                                    *ngIf="(getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').touched) || (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && estaEditando)">
+                                                        </span>
                                                     </div>
-                                                    <div class="col">
-                                                        <mat-radio-group class="radioInput" formControlName="aplicaDescuentos" required>
-                                                            <mat-radio-button [value]="true">Sí</mat-radio-button>
-                                                            <mat-radio-button [value]="false">No</mat-radio-button>
-                                                        </mat-radio-group>
-                                                        <span class="required-form-group" style="margin-left: 1px;">*</span>
-                                                    </div>
-                                                    <span class="icon-incompleto">
-                                                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                            alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                            matTooltip="Debe ingresar la información en el campo para continuar"
-                                                            matTooltipClass="info-tooltip" *ngIf="
-                                                            (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').touched) ||
-                                                              (getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').invalid && estaEditando)
-                                                          " />
-                                                    </span>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="d-flex mt-1em animatedDown" *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true">
-                                            <label class="mr-label" class="label-left"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').touched) ||
-                                                  (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && estaEditando)
-                                              }"><b>¿Cuántos descuentos se aplican sobre el concepto de
-                                                    pago?</b></label>
-                                            <div class="col d-flex">
-                                                <mat-form-field class="w-25">
-                                                    <input  matInput
-                                                            type="number"
-                                                            maxlength="2"
-                                                            (keypress)="validateNumberKeypress($event)"
-                                                            #numeroDescuento
-                                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                                            (ngModelChange)="getCantidadDescuentos( $event, i, j )"
-                                                            formControlName="numeroDescuentos"
-                                                            required>
-                                                </mat-form-field>
-                                                <span class="contador">{{2 - numeroDescuento.value.length}}</span>
+    
+                                            <div class="d-flex mt-1em animatedDown" *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true">
+                                                <label  class="mr-label label-left"
+                                                        [ngClass]="{ 'color-secondaryColor': (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').touched) || (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && estaEditando) }">
+                                                        <b>¿Cuántos descuentos se aplican sobre el concepto de pago?</b>
+                                                </label>
+                                                <div class="col d-flex">
+                                                    <mat-form-field class="w-25">
+                                                        <input  matInput
+                                                                type="number"
+                                                                maxlength="2"
+                                                                (keypress)="validateNumberKeypress($event)"
+                                                                #numeroDescuento
+                                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                (ngModelChange)="getCantidadDescuentos( $event, i, j )"
+                                                                formControlName="numeroDescuentos"
+                                                                required>
+                                                    </mat-form-field>
+                                                    <span class="contador">{{2 - numeroDescuento.value.length}}</span>
+                                                </div>
+                                                <span class="icon-incompleto">
+                                                    <img    class="icon-incompleto--img"
+                                                            src="assets/img/icon/incompleto.svg"
+                                                            alt="este campo es requerido"
+                                                            [matTooltipPosition]="'above'"
+                                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                                            matTooltipClass="info-tooltip"
+                                                            *ngIf="(getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').touched) || (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && estaEditando)">
+                                                  </span>
                                             </div>
-                                            <span class="icon-incompleto">
-                                                <img
-                                                  class="icon-incompleto--img"
-                                                  src="assets/img/icon/incompleto.svg"
-                                                  alt="este campo es requerido"
-                                                  [matTooltipPosition]="'above'"
-                                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                                  matTooltipClass="info-tooltip"
-                                                  *ngIf="
-                                                    (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').touched) ||
-                                                    (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && estaEditando)
-                                                  "
-                                                />
-                                              </span>
-                                        </div>
-
-                                        <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentos( i, j ).length > 0">
-                                            <div *ngFor="let discount of getDescuentos( i, j ).controls; index as k">
-                                                <mat-card-title class="header-card--text sub-text">
-                                                    Descuento {{ k + 1 }}
-                                                </mat-card-title>
-                                                <div [formGroup]="discount">
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <div class="row">
-                                                                <div class="pr-1">
-                                                                    <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <mat-form-field class="select-width w-75">
-                                                                        <mat-select formControlName="tipoDescuento" required>
-                                                                            <mat-option *ngFor="let descuento of tipoDescuentoArray" [value]="descuento.codigo">
-                                                                                {{ descuento.nombre }}
-                                                                            </mat-option>
-                                                                        </mat-select>
-                                                                    </mat-form-field>
+    
+                                            <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentos( i, j ).length > 0">
+                                                <div *ngFor="let discount of getDescuentos( i, j ).controls; index as k">
+                                                    <mat-card-title class="header-card--text sub-text">
+                                                        Descuento {{ k + 1 }}
+                                                    </mat-card-title>
+                                                    <div [formGroup]="discount">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <div class="row">
+                                                                    <div class="pr-1">
+                                                                        <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <mat-form-field class="select-width w-75">
+                                                                            <mat-select formControlName="tipoDescuento" required>
+                                                                                <mat-option *ngFor="let descuento of tipoDescuentoArray" [value]="descuento.codigo">
+                                                                                    {{ descuento.nombre }}
+                                                                                </mat-option>
+                                                                            </mat-select>
+                                                                        </mat-form-field>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <div class="row">
-                                                                <div class="pr-1">
-                                                                    <label class="label-left" for="valorDescuento">
-                                                                        Valor del descuento
-                                                                    </label>
-                                                                </div>
-                                                                <div class="col d-flex">
-                                                                    <mat-form-field class="full-width w-75">
-                                                                        <input matInput #valorDescuento currencyMask maxlength="20" required
-                                                                            formControlName="valorDescuento"
-                                                                            (keypress)="validateNumberKeypress($event)"
-                                                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                                                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                                                                    </mat-form-field>
-                                                                    <span class="contador" [matTooltipPosition]="'above'"
-                                                                        matTooltip="Valor en ($) Pesos colombianos"
-                                                                        matTooltipClass="info-tooltip">{{20 -
-                                                                        valorDescuento.value.length}}</span>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <div class="row">
+                                                                    <div class="pr-1">
+                                                                        <label class="label-left" for="valorDescuento">
+                                                                            Valor del descuento
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col d-flex">
+                                                                        <mat-form-field class="full-width w-75">
+                                                                            <input  matInput
+                                                                                    #valorDescuento
+                                                                                    currencyMask
+                                                                                    maxlength="20"
+                                                                                    required
+                                                                                    formControlName="valorDescuento"
+                                                                                    (keypress)="validateNumberKeypress($event)"
+                                                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                                    (ngModelChange)="validateDiscountValue( $event, i, j , k )"
+                                                                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                                                        </mat-form-field>
+                                                                        <span   class="contador"
+                                                                                [matTooltipPosition]="'above'"
+                                                                                matTooltip="Valor en ($) Pesos colombianos"
+                                                                                matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="text-right" *ngIf="getDescuentos( i, j ).length > 1">
-                                                        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, j, k )">
-                                                            <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                                                            Eliminar descuento
-                                                        </button>
+                                                        <div class="text-right" *ngIf="getDescuentos( i, j ).length > 1">
+                                                            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, j, k )">
+                                                                <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                                                                Eliminar descuento
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <div class="text-center mb-2em">
-                        <button mat-button color="warn" class="btn-guardar" type="submit">
-                            <img src="assets/img/icon/guardar.svg" alt="Regresar">
-                        </button>
-                    </div>
-            </mat-expansion-panel> 
-        </mat-accordion>
-    </form>
+                            </mat-card-content>
+                        </mat-card>
+                        <div class="text-center mb-2em">
+                            <button mat-button
+                                    color="warn"
+                                    class="btn-guardar"
+                                    [disabled]="criterio.dirty === false"
+                                    type="submit">
+                                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                            </button>
+                        </div>
+                </mat-expansion-panel> 
+            </mat-accordion>
+        </form>
+    </ng-template>
+    
 </section>

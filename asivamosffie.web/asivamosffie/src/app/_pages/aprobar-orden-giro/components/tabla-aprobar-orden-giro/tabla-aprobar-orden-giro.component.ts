@@ -3,6 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import moment from 'moment';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnviarAprobacionComponent } from '../dialog-enviar-aprobacion/dialog-enviar-aprobacion.component';
 
 @Component({
@@ -12,6 +17,8 @@ import { DialogEnviarAprobacionComponent } from '../dialog-enviar-aprobacion/dia
 })
 export class TablaAprobarOrdenGiroComponent implements OnInit {
 
+    listaMenu: ListaMenu = ListaMenuId;
+    estadoSolicitudPagoOrdenGiro: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     tablaAprobar = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
@@ -23,45 +30,28 @@ export class TablaAprobarOrdenGiroComponent implements OnInit {
       'estadoAprobacion',
       'gestion'
     ];
-    dataTable = [
-        {
-            fechaVerificacion: new Date(),
-            numeroOrden: 'ODG_Obr 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoAprobacion: 'Sin verificación',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaVerificacion: new Date(),
-            numeroOrden: 'ODG_Expensas 001',
-            modalidad: 'No aplica',
-            numeroContrato: 'N326326',
-            estadoAprobacion: 'Sin verificación',
-            esExpensas: true,
-            id: Math.round( Math.random() * 10 )
-        },
-        {
-            fechaVerificacion: new Date(),
-            numeroOrden: 'ODG_Otros Costos 001',
-            modalidad: 'Tipo B',
-            numeroContrato: 'N801801',
-            estadoAprobacion: 'Sin verificación',
-            esExpensas: false,
-            id: Math.round( Math.random() * 10 )
-        }
-    ];
 
     constructor(
-        private dialog: MatDialog )
-    { }
+        private routes: Router,
+        private dialog: MatDialog,
+        private ordenGiroSvc: OrdenPagoService )
+    {
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.verificarOrdenGiro )
+            .subscribe(
+                response => {
+                    console.log( response );
+
+                    response.forEach( registro => registro.fechaAprobacionFinanciera = moment( registro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ) );
+
+                    this.tablaAprobar = new MatTableDataSource( response );
+                    this.tablaAprobar.paginator = this.paginator;
+                    this.tablaAprobar.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        this.tablaAprobar = new MatTableDataSource( this.dataTable );
-        this.tablaAprobar.sort = this.sort;
-        this.tablaAprobar.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter( event: Event ) {
@@ -69,10 +59,36 @@ export class TablaAprobarOrdenGiroComponent implements OnInit {
         this.tablaAprobar.filter = filterValue.trim().toLowerCase();
     }
 
-    openDialogEnviarAprobacion() {
-        this.dialog.open( DialogEnviarAprobacionComponent, {
-            width: '80em'
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '40em',
+          data : { modalTitle, modalText }
         });
+    }
+
+    openDialogEnviarAprobacion( registro: any ) {
+        this.dialog.open( DialogEnviarAprobacionComponent, {
+            width: '80em',
+            data: registro
+        });
+    }
+
+    devolverOrdenGiro( registro: any ) {
+        const pOrdenGiro = {
+            ordenGiroId: registro.ordenGiroId,
+            estadoCodigo: EstadosSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+        }
+
+        this.ordenGiroSvc.changueStatusOrdenGiro( pOrdenGiro )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/aprobarOrdenGiro' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

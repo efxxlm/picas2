@@ -8,7 +8,9 @@
         Ver detalle controversia contractual {{this.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>{{this.numeroSolicitud}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número del contrato: <b>{{this.numContrato}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
+        <span>Solicitud: <b>{{this.numeroSolicitud}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número del contrato:
+            <b>{{this.numContrato}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo de controversia:
+            <b>{{this.tipoControversia}}</b></span>
     </p>
     <div style="margin-top: 2em">
         <mat-card class="shipping-card mainGris">
@@ -22,7 +24,8 @@
                 <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
                 <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
                 <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
-                <p><strong>Valor del contrato:</strong>{{this.valorContrato | currency: 'COP':'symbol-narrow':'.0-0'}}</p>
+                <p><strong>Valor del contrato:</strong>{{this.valorContrato | currency: 'COP':'symbol-narrow':'.0-0'}}
+                </p>
                 <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
                 <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
                 <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>
@@ -60,18 +63,26 @@
                                     Otra
                                 </div>
                             </div>
-                            <p><strong>Fecha de Comité Pre-Técnico:</strong> {{this.fechaComitePreTecnico | date:'dd/MM/yyyy'}}</p>
+                            <div *ngIf="this.cualOtroMotivo!=null">
+                                <p><strong>¿Cuál?:</strong></p>
+                                <div [innerHtml]="this.cualOtroMotivo"></div>
+                            </div>
+                            <p><strong>Fecha de Comité Pre-Técnico:</strong> {{this.fechaComitePreTecnico |
+                                date:'dd/MM/yyyy'}}</p>
                             <p><strong>Conclusión del Comité Pre-técnico de acuerdo con la solicitud:</strong></p>
                             <div [innerHtml]="this.conclusionComitePreTecnico"></div>
                             <p><strong>¿La solicitud procede?:</strong> {{this.laSolicitudProcede}}</p>
                             <p *ngIf="this.laSolicitudProcede=='No'"><strong>Motivos de rechazo:</strong></p>
                             <div *ngIf="this.laSolicitudProcede=='No'" [innerHtml]="this.motivosRechazo"></div>
-                            <p *ngIf="this.laSolicitudProcede=='Sí'"><strong>¿Requiere comité técnico?:</strong> {{this.vaParaComite}}</p>
+                            <p *ngIf="this.laSolicitudProcede=='Sí'"><strong>¿Requiere comité técnico?:</strong>
+                                {{this.vaParaComite}}</p>
                         </div>
                         <div *ngIf="this.codAux == '2' || this.codAux == '3' || this.codAux == '4'">
                             <p><strong>Tipo de controversia:</strong> {{this.tipoControversia}}</p>
-                            <p><strong>Fecha de radicado en SAC:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
-                            <p><strong>Número de radicado en SAC:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
+                            <p><strong>Fecha de radicado en SAC:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}
+                            </p>
+                            <p><strong>Número de radicado en SAC:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}
+                            </p>
                             <div *ngFor="let motivo of this.motivosList; let i = index">
                                 <div *ngIf="motivo.motivoSolicitudCodigo=='1'">
                                     Motivo 1
@@ -85,6 +96,10 @@
                                 <div *ngIf="motivo.motivoSolicitudCodigo=='4'">
                                     Otra
                                 </div>
+                            </div>
+                            <div *ngIf="this.cualOtroMotivo!=null">
+                                <p><strong>¿Cuál?:</strong></p>
+                                <div [innerHtml]="this.cualOtroMotivo"></div>
                             </div>
                             <p><strong>Resumen de la justificación de la solicitud:</strong></p>
                             <div [innerHtml]="this.conclusionComitePreTecnico"></div>
@@ -106,6 +121,10 @@
                                 <div *ngIf="motivo.motivoSolicitudCodigo=='4'">
                                     Otra
                                 </div>
+                            </div>
+                            <div *ngIf="this.cualOtroMotivo!=null">
+                                <p><strong>¿Cuál?:</strong></p>
+                                <div [innerHtml]="this.cualOtroMotivo"></div>
                             </div>
                             <p><strong>Resumen de la justificación de la solicitud:</strong></p>
                             <div [innerHtml]="this.conclusionComitePreTecnico"></div>
@@ -133,5 +152,29 @@
                 </mat-card>
             </mat-expansion-panel>
         </mat-accordion>
+    </div>
+    <div *ngIf="this.codAux=='1' && this.estadoCodigo=='6'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div [innerHtml]="this.observacionesTecnico"></div> 
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="this.codAux=='1' && this.estadoCodigo=='7'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div [innerHtml]="this.observacionesFiduciaria"></div> 
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>

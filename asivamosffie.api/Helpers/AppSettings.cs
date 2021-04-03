@@ -51,6 +51,10 @@
         public string DirectoryBaseFlujoInversion { get; set; }
 
         public string DirectoryRutaCargaActaTerminacionContrato { get; set; }
+
+        public string DirectoryBaseAjusteProgramacionObra { get; set; }
+
+        public string DirectoryBaseAjusteProgramacionFlujo { get; set; }
     }
   
 }

@@ -15,6 +15,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormTerceroGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean; 
     medioPagoArray: Dominio[] = [];
     bancosArray: Dominio[] = [];
     addressForm: FormGroup;
@@ -114,6 +115,26 @@ export class FormTerceroGiroGogComponent implements OnInit {
                 numeroIdentificacionBeneficiario: [ '' ]
             } )
         })
+    }
+
+    getMedioPago( codigo: string ) {
+        if ( this.medioPagoArray.length > 0 ) {
+            const medioPago = this.medioPagoArray.find( medioPago => medioPago.codigo === codigo );
+
+            if ( medioPago !== undefined ) {
+                return medioPago.nombre;
+            }
+        }
+    }
+
+    getBanco( codigo: string ) {
+        if ( this.bancosArray.length > 0 ) {
+            const banco = this.bancosArray.find( banco => banco.codigo === codigo );
+
+            if ( banco !== undefined ) {
+                return banco.nombre;
+            }
+        }
     }
 
     maxLength(e: any, n: number) {

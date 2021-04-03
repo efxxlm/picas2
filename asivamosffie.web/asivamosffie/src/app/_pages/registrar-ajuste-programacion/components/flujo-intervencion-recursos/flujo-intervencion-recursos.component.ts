@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CargarProgramacionComponent } from '../cargar-programacion/cargar-programacion.component';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component'
+import { CargarFlujoComponent } from '../cargar-flujo/cargar-flujo.component';
 
 export interface VerificacionDiaria {
   id: string;
@@ -46,6 +47,8 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  @Input() ajusteProgramacionInfo:any;
+
   constructor(
     public dialog: MatDialog
   ) { }
@@ -53,10 +56,10 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   ngOnInit(): void {
   }
 
-  openCargarProgramacion() {
-    const dialogRef = this.dialog.open(CargarProgramacionComponent, {
+  openCargarFlujo() {
+    const dialogRef = this.dialog.open(CargarFlujoComponent, {
       width: '75em',
-      // data: { }
+      data: { ajusteProgramacionInfo: this.ajusteProgramacionInfo }
     });
     dialogRef.afterClosed()
     .subscribe(response => {

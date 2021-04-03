@@ -24,70 +24,74 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoEstrategiaPago">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoEstrategiaPago : ''">
                     Estrategia de pagos
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago"></app-form-estrateg-pagos-gog>
+            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : ''">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : '' ) : ''">
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago"></app-desc-dir-tecnica-gog>
+            <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-desc-dir-tecnica-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoTerceroCausacion">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoTerceroCausacion : ''">
                     Tercero de causación
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tercero-causacion-gog [solicitudPago]="solicitudPago"></app-tercero-causacion-gog>
+            <app-tercero-causacion-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-tercero-causacion-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoOrigen !== undefined ? listaSemaforos.semaforoOrigen : ''">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoOrigen !== undefined ? listaSemaforos.semaforoOrigen : '' ) : ''">
                     Origen
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div align="center">
-                <b>Consecutivo FFIE: 001</b>    
+                <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
             </div>
 
-            <app-form-origen [solicitudPago]="solicitudPago" (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"></app-form-origen>
+            <app-form-origen    [solicitudPago]="solicitudPago"
+                                [esVerDetalle]="esVerDetalle"
+                                (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"
+                                (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
+            </app-form-origen>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoObservacion">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoObservacion : ''">
                     Observaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago"></app-observaciones-orden-giro-gog>
+            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-observaciones-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="listaSemaforos.semaforoSoporteUrl">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoSoporteUrl : ''">
                     Soporte de orden de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago"></app-soporte-orden-giro-gog>
+            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-soporte-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

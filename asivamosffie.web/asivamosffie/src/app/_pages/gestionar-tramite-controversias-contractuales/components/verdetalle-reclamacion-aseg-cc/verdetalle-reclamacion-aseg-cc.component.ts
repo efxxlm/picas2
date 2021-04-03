@@ -16,6 +16,7 @@ export class VerdetalleReclamacionAsegCcComponent implements OnInit {
   resumen: any;
   requiereReclamacionComite: string;
   soporteReclamacion: any;
+  reclamacion: any;
   constructor(private activatedRoute: ActivatedRoute,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
@@ -27,6 +28,7 @@ export class VerdetalleReclamacionAsegCcComponent implements OnInit {
   }
   loadData(id){
     this.services.GetControversiaActuacionById(id).subscribe((a:any)=>{
+      this.reclamacion = a;
       this.reclamacionCod = a.numeroActuacionReclamacion;
       this.actuacion = a.actuacionAdelantadaString;
       this.numActuacion = a.numeroActuacionFormat;

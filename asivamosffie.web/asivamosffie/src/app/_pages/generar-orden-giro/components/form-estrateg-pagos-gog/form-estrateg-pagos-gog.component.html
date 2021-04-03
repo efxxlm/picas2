@@ -1,46 +1,55 @@
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="solicitudPago !== undefined">
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
     <mat-card class="shipping-card">
         <mat-card-content style="text-align: left;">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="estrategiaPago" [ngClass]="{
-                                'color-secondaryColor':
-                                  (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
-                                  (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
-                              }">Estrategia de pagos</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="estrategiaPagoCodigo" required>
-                                    <mat-option *ngFor="let estrategia of estrategiaPagoArray" [value]="estrategia.codigo">
-                                        {{ estrategia.nombre }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                              (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
-                              (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
-                              " />
-                        </span>
-                    </div>
-                </div>
-            </div>
+            <p><b>Estrategia de pagos: </b> {{ getEstrategiaPago( addressForm.get( 'estrategiaPagoCodigo' ).value ) }} </p>
         </mat-card-content>
     </mat-card>
-    <div class="text-center mb-2em">
-        <button mat-button
-                color="warn"
-                class="btn-guardar"
-                type="submit"
-                [disabled]="addressForm.dirty === false">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
-        </button>
-    </div>
-</form>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="solicitudPago !== undefined">
+        <mat-card class="shipping-card">
+            <mat-card-content style="text-align: left;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="estrategiaPago" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
+                                      (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
+                                  }">Estrategia de pagos</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="estrategiaPagoCodigo" required>
+                                        <mat-option *ngFor="let estrategia of estrategiaPagoArray" [value]="estrategia.codigo">
+                                            {{ estrategia.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
+                                  (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
+                                  " />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center mb-2em">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="addressForm.dirty === false">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+</ng-template>

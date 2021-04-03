@@ -34,6 +34,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
     solicitudPagoExpensasId = 0;
     solicitudPagoId = 0;
     estaEditando = false;
+    saldoPresupuestal = 0;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -56,6 +57,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
                             this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
                             const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                             this.solicitudPagoExpensasId = solicitudPagoExpensas.solicitudPagoExpensasId;
+                            this.saldoPresupuestal = this.solicitudPago.saldoPresupuestal;
                             this.addressForm.setValue(
                                 {
                                     llaveMen: this.solicitudPago.contratacionProyecto.proyecto.llaveMen,
@@ -77,7 +79,17 @@ export class FormSolicitudExpensasComponent implements OnInit {
     }
 
     seleccionAutocomplete( llaveMen ){
+        this.saldoPresupuestal = llaveMen.saldoPresupuestal;
         this.addressForm.get( 'llaveMenSeleccionada' ).setValue( llaveMen );
+    }
+
+    checkValorTotal( value: number ) {
+        if ( value !== null ) {
+            if ( value > this.saldoPresupuestal ) {
+                this.addressForm.get( 'valorFacturado' ).setValue( null );
+                this.openDialog( '', '<b>El valor facturado no puede ser mayor al saldo presupuestal disponible.</b>' );
+            }
+        }
     }
 
     getLlaveMen( trigger: MatAutocompleteTrigger ) {

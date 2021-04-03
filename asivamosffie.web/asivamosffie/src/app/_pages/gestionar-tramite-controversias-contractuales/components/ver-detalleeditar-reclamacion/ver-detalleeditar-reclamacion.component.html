@@ -13,4 +13,28 @@
     <app-form-reclamacion-aseguradora-actuacion [controversiaID]=this.idControversia [controversiaAct]=this.idActuacion [isEditable]="true" 
     (numReclamacion)="this.numReclamacion=$event" (actuacion)="this.actuacion=$event"
     (numActuacion)="this.numActuacion=$event"></app-form-reclamacion-aseguradora-actuacion>
+    <div *ngIf="reclamacion?.observacionesComites[0] != null && reclamacion?.estadoActuacionReclamacionCodigo=='4'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div [innerHtml]="reclamacion?.observacionesComites[0]"></div> 
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="reclamacion?.observacionesFiduciaria[0] != null && reclamacion?.estadoActuacionReclamacionCodigo=='8'">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div [innerHtml]="reclamacion?.observacionesFiduciaria[0]"></div> 
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

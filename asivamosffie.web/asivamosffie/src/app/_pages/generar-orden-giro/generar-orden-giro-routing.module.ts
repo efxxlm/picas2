@@ -31,11 +31,11 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleEditarOrdenGiro/:id',
-    component: VerDetalleEditOrdenGiroGogComponent
+    component: FormGenerarOrdenGiroComponent
   },
   {
     path: 'verDetalleOrdenGiro/:id',
-    component: DetalleOrdenGiroGogComponent
+    component: FormGenerarOrdenGiroComponent
   }
 ];
 @NgModule({
