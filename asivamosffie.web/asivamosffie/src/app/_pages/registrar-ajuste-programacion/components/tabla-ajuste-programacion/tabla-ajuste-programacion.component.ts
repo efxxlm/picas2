@@ -51,6 +51,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
+    private dialog: MatDialog,
     private faseConstruccionServices: FaseUnoConstruccionService,
     private router: Router,
 
@@ -90,6 +91,24 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   RegistrarNuevo( ajusteProgramacion ){
     console.log('ss')
     this.router.navigate( [ '/registratAjusteProgramacion/registrarAjusteProgramacion', 0 ], { state: { ajusteProgramacion } } )
+  }
+
+  openDialog (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
+  EnviarASupervisor( ajuste ){
+    console.log( ajuste.ajusteProgramacionId )
+
+    this.faseConstruccionServices.EnviarAlSupervisorAjusteProgramacion( ajuste.ajusteProgramacionId )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message)
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit()        
+      })
   }
 
 }

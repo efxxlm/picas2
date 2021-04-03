@@ -93,6 +93,10 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                     this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
+                    if ( this.manejoAnticipoRequiere === false ) {
+                        this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                    }
+
                     if ( this.contrato.contratacion.contratacionProyecto.length  > 0 && this.contrato.contratacion.contratacionProyecto.length < 2 ) {
                         this.contratacionProyectoId = this.contrato.contratacion.contratacionProyecto[0].contratacionProyectoId;
                     }
@@ -398,6 +402,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     }
                     if ( this.solicitudPagoFase.registroCompletoCriterio === true ) {
                         this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto = true;
+                        this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
                         semaforoCriterioPago = 'completo';
                     }
 
@@ -429,9 +434,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         }
         
                     }
-                }
-                if ( this.manejoAnticipoRequiere === false ) {
-                    this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
                 }
 
                 if ( tipoAcordeon === 'detalleFactura' ) {

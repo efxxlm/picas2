@@ -74,10 +74,24 @@
         </a>
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          *ngIf="element.ajusteProgramacionId !== undefined"
+          *ngIf="element.ajusteProgramacionId !== undefined && element.estadoCodigo === '1'"
           (click)="RegistrarNuevo( element )"
           >
           Registrar ajuste a la programación
+        </a>
+
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          *ngIf="element.estadoCodigo === '2'"
+          (click)="EnviarASupervisor( element )"
+          >
+          Enviar ajuste a la programación
+        </a>
+
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          *ngIf="element.estadoCodigo === '2'"
+          (click)="RegistrarNuevo( element )"
+          >
+          Ver detalle/Editar
         </a>
         
       </td>

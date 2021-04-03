@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -32,6 +33,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
+    private faseUnoConstruccionService: FaseUnoConstruccionService,
     ) { }
 
   ngOnInit(): void {
@@ -75,7 +77,29 @@ export class FlujoIntervencionRecursosComponent implements OnInit {
     // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    console.log(this.addressForm.value)
+
+    let ajuste = {
+      ajusteProgramacionId: 1,
+      tieneObservacionesFlujoInversion: this.addressForm.value.tieneObservaciones,
+
+      AjustePragramacionObservacion: [
+        {
+          ajusteProgramacionId: 1,
+          observaciones: this.addressForm.value.observaciones,
+          
+        }
+      ]
+    }
+
+    this.faseUnoConstruccionService.CreateEditObservacionAjusteProgramacion( ajuste, false )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code === "200")
+          this.ngOnInit()
+      });
+
+    
   }
 
 }

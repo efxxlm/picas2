@@ -141,7 +141,7 @@ export class FaseUnoConstruccionService {
   }
 
   GetAjusteProgramacionGrid ( ) {
-    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
+    return this.http.get<any[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
   };
 
   uploadFileToValidateAdjustmentProgramming ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
@@ -163,5 +163,13 @@ export class FaseUnoConstruccionService {
   TransferMassiveLoadAdjustmentInvestmentFlow( pIdDocument: string, pProyectoId: number, pContratoId: number ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadAdjustmentInvestmentFlow?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
   };
+
+  EnviarAlSupervisorAjusteProgramacion( id ){  
+    return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlSupervisorAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
+  }
+
+  CreateEditObservacionAjusteProgramacion( ajusteProgramacion, esObra ){ 
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionAjusteProgramacion?esObra=${esObra}`, ajusteProgramacion );
+  }
 
 }

@@ -1127,6 +1127,166 @@ namespace asivamosffie.services
             }
         }
 
+        private async Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjustePragramacionObservacion pObservacion, string pUsuarioCreacion, bool esObra)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
+
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string strCrearEditar = "";
+                if (pObservacion.AjustePragramacionObservacionId > 0)
+                {
+                    strCrearEditar = "EDITAR OBSERVACION AJUSTE PROGRAMACION";
+                    AjustePragramacionObservacion ajustePragramacionObservacion = _context.AjustePragramacionObservacion.Find(pObservacion.AjustePragramacionObservacionId);
+
+                    ajustePragramacionObservacion.FechaModificacion = DateTime.Now;
+                    ajustePragramacionObservacion.UsuarioModificacion = pUsuarioCreacion;
+
+                    ajustePragramacionObservacion.Observaciones = pObservacion.Observaciones;
+
+                }
+                else
+                {
+                    strCrearEditar = "CREAR OBSERVACION AJUSTE PROGRAMACION";
+
+                    AjustePragramacionObservacion ajustePragramacionObservacion = new AjustePragramacionObservacion
+                    {
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuarioCreacion,
+
+                        AjusteProgramacionId = pObservacion.AjusteProgramacionId,
+                        Observaciones = pObservacion.Observaciones,
+                        EsObra = esObra,
+                    };
+
+                    _context.AjustePragramacionObservacion.Add(ajustePragramacionObservacion);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+
+            try
+            {
+                CreateEdit = "AJUSTE AJUSTE PROGRAMACION";
+                int idObservacion = 0;
+
+                if (pAjusteProgramacion.AjustePragramacionObservacion.Count() > 0)
+                    idObservacion = pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault().AjusteProgramacionId.Value;
+
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacion.AjusteProgramacionId);
+
+                //ajusteProgramacion.UsuarioModificacion = pUsuario;
+                //ajusteProgramacion.FechaModificacion = DateTime.Now;
+
+                    if (esObra == true)
+                    {
+                        ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
+
+                        ajusteProgramacion.TieneObservacionesProgramacionObra = pAjusteProgramacion.TieneObservacionesProgramacionObra;
+
+                        if (ajusteProgramacion.TieneObservacionesProgramacionObra.HasValue ? ajusteProgramacion.TieneObservacionesProgramacionObra.Value : false)
+                        {
+
+                            await CreateEditObservacionAjusteProgramacion(pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault(), pUsuario, esObra);
+                        }
+                        else
+                        {
+                            NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
+
+                            if (observacionDelete != null)
+                                observacionDelete.Eliminado = true;
+                        }
+
+                        ajusteProgramacion.RegistroCompletoValidacion = await ValidarRegistroCompletoValidacionAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
+                        if (ajusteProgramacion.RegistroCompletoValidacion.Value)
+                        {
+                            ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
+                        }
+                        else
+                        {
+                            ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+                        }
+
+
+                    }
+                    else
+                    {
+                        //novedadContractual.TieneObservacionesApoyo = pNovedadContractual.TieneObservacionesApoyo;
+
+                        //if (novedadContractual.TieneObservacionesApoyo.HasValue ? novedadContractual.TieneObservacionesApoyo.Value : true)
+                        //{
+                        //    await CreateEditObservacionSeguimientoDiario(pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault(), pNovedadContractual.UsuarioCreacion);
+                        //}
+                        //else
+                        //{
+                        //    NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
+
+                        //    if (observacionDelete != null)
+                        //        observacionDelete.Eliminado = true;
+                        //}
+
+                        //novedadContractual.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(novedadContractual.NovedadContractualId, esSupervisor, esTramite);
+                        //if (novedadContractual.RegistroCompletoVerificacion.Value)
+                        //{
+                        //    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
+                        //}
+                        //else
+                        //{
+                        //    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor;
+                        //}
+                    }
+
+
+
+
+
+
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pUsuario, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                    };
+            }
+        }
 
         #endregion createEdit
 
@@ -1841,6 +2001,44 @@ namespace asivamosffie.services
             _context.SaveChanges();
         }
 
+        private AjustePragramacionObservacion getObservacion(AjusteProgramacion pAjusteProgramacion, bool? pEsObra)
+        {
+            AjustePragramacionObservacion ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
+                        .Where(r => 
+                                    r.Archivada != true &&
+                                    r.Eliminado != true &&
+                                    r.EsObra == pEsObra
+                              )
+                        .FirstOrDefault();
+
+            return ajustePragramacionObservacion;
+        }
+
+        private async Task<bool> ValidarRegistroCompletoValidacionAjusteProgramacion(int id)
+        {
+            bool esCompleto = true;
+
+            AjusteProgramacion ap = await _context.AjusteProgramacion.Where(cc => cc.AjusteProgramacionId == id)
+                                                                .FirstOrDefaultAsync();
+
+
+            ap.ObservacionObra = getObservacion(ap, true);
+            ap.ObservacionFlujo = getObservacion(ap, false);
+
+            if (
+                 ap.TieneObservacionesProgramacionObra == null ||
+                 (ap.TieneObservacionesProgramacionObra == true && string.IsNullOrEmpty(ap.ObservacionObra != null ? ap.ObservacionObra.Observaciones : null)) ||
+                 ap.TieneObservacionesFlujoInversion == null ||
+                 (ap.TieneObservacionesFlujoInversion == true && string.IsNullOrEmpty(ap.ObservacionFlujo != null ? ap.ObservacionFlujo.Observaciones : null)) 
+
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
         #endregion private
 
         #region business
@@ -2334,6 +2532,70 @@ namespace asivamosffie.services
                 throw new Exception("El contrato no tiene DRP");
             }
 
+        }
+
+        public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                //Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId).Include(x => x.Contratacion).FirstOrDefault();
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                //envio correo
+                //envio correo a supervisor
+                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarRequisitosTecnicosFase2);
+
+                //string ncontrato = "";
+                //string fechaContrato = "";
+                //string template = TemplateRecoveryPassword.Contenido.
+                //    Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
+                //    Replace("_LinkF_", pDominioFront).
+                //    Replace("[FECHAVERIFICACION]", DateTime.Now.ToString("dd/MM/yyyy")).
+                //    Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                //    Replace("[CANTIDADPROYECTOSVERIFICADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                //    Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
+
+
+                //var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario).ToList();
+                //foreach (var usuarioadmin in usuariosadmin)
+                //{
+                //    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Aprobacion de requisitos técnicos de inicio para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
+                //}
+
+                //Contrato contrato = _context.Contrato.Find(pContratoId);
+                //jflorez, este evento solo sucede cuando esta completo y se aprueban los requisitos, por ello seteo el dato 20201202
+                //contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
+                
+                //ajusteProgramacion.UsuarioModificacion = pUsuarioCreacion;
+                //ajusteProgramacion.FechaModificacion = DateTime.Now;
+
+                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
         }
 
         #endregion business
@@ -4036,7 +4298,7 @@ namespace asivamosffie.services
                     if (ajusteProgramacion != null)
                     {
                         ajusteProgramacion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
-                        //ajusteProgramacion.RegistroCompletoProgramacionObra = true;
+                        ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
 
                         VerificarRegistroCompletoAjusteProgramacion( ajusteProgramacionId );
                     }
@@ -4550,7 +4812,7 @@ namespace asivamosffie.services
                         List<dynamic> listaFechas = new List<dynamic>();
 
                         ajusteProgramacion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
-                        //contratoConstruccion.RegistroCompletoFlujoInversion = true;
+                        ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
 
                         VerificarRegistroCompletoAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
 
