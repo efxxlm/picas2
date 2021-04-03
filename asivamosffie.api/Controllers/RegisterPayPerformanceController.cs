@@ -156,7 +156,21 @@ namespace asivamosffie.api.Controllers
             {
                 string author = User.Identity.Name;
                 var result = await _paymentAndPerformancesService.GetManagedPerformancesByStatus(author, uploadedOrderId, queryConsistentOrders);
-                return Ok(result);
+                if (result.IsSuccessful && !result.IsException)
+                {
+                    Stream stream = new FileStream(result.Data.ToString(), FileMode.Open, FileAccess.Read);
+
+                    if (stream == null)
+                        return NotFound();
+                    var file = File(stream, "application/octet-stream");
+                    return file;
+                }
+                else if (result.IsSuccessful && result.IsException)
+                {
+                    //Status409Conflict
+                    return Ok(result);
+                }
+                return BadRequest("Archivo no encontrado");
             }
             catch (Exception ex)
             {
