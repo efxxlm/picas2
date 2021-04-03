@@ -456,9 +456,8 @@ namespace asivamosffie.services
             // #2
             //Fecha de pago
             carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[indexWorkSheetRow, 2].Text);
-            DateTime fecha;
-
-            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 2].Text) || !DateTime.TryParseExact(worksheet.Cells[indexWorkSheetRow, 2].Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out fecha))
+            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 2].Text) ||
+                 !TryStringToDate(worksheet.Cells[indexWorkSheetRow, 2].Text, out DateTime fecha))
             {
                 errors.Add(new ExcelError(indexWorkSheetRow, 3, "Por favor ingresa solo fechas en este campo"));
             }
@@ -492,6 +491,26 @@ namespace asivamosffie.services
             return (carguePagosRendimiento, errors);
         }
 
+        public bool TryStringToDate(string sDate, out DateTime newDate)
+        {
+            newDate = DateTime.MinValue;
+            string[] dateElements = sDate.Split('/');
+
+            if (dateElements.Length == 0 || dateElements.Length < 3)
+            {
+                return false;
+            }
+
+            if(int.TryParse(dateElements[2], out int year) &&
+                int.TryParse(dateElements[1], out int month) &&
+                int.TryParse(dateElements[0], out int day))
+            {
+                newDate = new DateTime(year, month, day);
+                return true;
+            }
+            return false;
+        }
+
         private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
@@ -509,8 +528,8 @@ namespace asivamosffie.services
             performanceStructure.Add("Acumulado de gravamen financiero descontado no exentos", "Money");
 
             int indexCell = 1;
-            string dateValue = worksheet.Cells[1, 2].Text;
-            DateTime.TryParseExact(dateValue, "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime guideDate);
+            string dateValue = worksheet.Cells[2, 1].Text;
+            TryStringToDate(dateValue, out DateTime guideDate);
             int month = guideDate.Month;
 
             carguePagosRendimiento.Add("Row", indexRow.ToString());
@@ -518,12 +537,16 @@ namespace asivamosffie.services
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
                 carguePagosRendimiento.Add(rowFormat.Key, cellValue);
-                if ((rowFormat.Value == "Date")
-                    && (string.IsNullOrEmpty(cellValue) || !DateTime.TryParseExact(cellValue, "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime fecha)
-                    || (guideDate != DateTime.MinValue && guideDate.Month != fecha.Month)
-                    ))
+                if (rowFormat.Value == "Date")
                 {
-                    errors.Add(new ExcelError(indexRow, indexCell + 1, "Por favor ingresa solo fechas en este campo"));
+                    if (string.IsNullOrEmpty(cellValue) || !TryStringToDate(cellValue, out DateTime fecha))
+                    {
+                        errors.Add(new ExcelError(indexRow, indexCell + 1, "Por favor ingresa solo fechas en este campo"));
+                    }
+                    else if(guideDate != DateTime.MinValue && guideDate.Month != fecha.Month)
+                    {
+                        errors.Add(new ExcelError(indexRow, indexCell + 1, "Por favor ingrese todos los rendimientos del mismo mes"));
+                    }
                 }
                 else if ((rowFormat.Value == "AlphaNum")
                     && (string.IsNullOrWhiteSpace(cellValue) || !cellValue.IsValidSize(50)))
@@ -1130,7 +1153,8 @@ namespace asivamosffie.services
                             .Select(order => new
                             {
                                 Estado = order.CargueValido,
-                                ArchivoJson = order.TramiteJson
+                                ArchivoJson = order.TramiteJson,
+                                Uploaded = order.Json
                             }).FirstOrDefault();
 
             var rendimientosIncorporados = _context.RendimientosIncorporados.Where(x => 
@@ -1147,7 +1171,7 @@ namespace asivamosffie.services
                 return response;
             }
 
-            var managedPerfomances = MapManagedPerformances(rendimientosIncorporados);
+            var managedPerfomances = MapManagedPerformances(rendimientosIncorporados, collection.Uploaded);
             // TODO Pass to RendimientosIncorporados or JOIN Calculated data
             List<ManagedPerformancesOrder> list =
                 JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(collection.ArchivoJson);
@@ -1158,18 +1182,11 @@ namespace asivamosffie.services
 
 
             }
-
-            foreach (var item in list)
-            {
-
-            }
-
-
-            WriteCollectionToPath("RendimientosTramitados", directory, list, null);
+            string filePath  = WriteCollectionToPath("RendimientosTramitados", directory, managedPerfomances, null);
             ////the path of the file
             string newfilePath = directory + "/" + "RendimientosTramitados" + "_rev.xlsx";
 
-            response.Data = newfilePath;
+            response.Data = filePath;
             response.IsSuccessful = true;
             response.Message = await SaveAuditAction(author, actionId,
                                         menu,
@@ -1187,22 +1204,39 @@ namespace asivamosffie.services
         /// <param name="entities"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> MapManagedPerformances(IEnumerable<RendimientosIncorporados> entities)
+        public List<ManagedPerformancesOrder> MapManagedPerformances(IEnumerable<RendimientosIncorporados> entities, string uploadedJson)
         {
-            List<EntryPerformanceOrder> managedPerformances = new List<EntryPerformanceOrder>();
+            List<ManagedPerformancesOrder> managedPerformances = new List<ManagedPerformancesOrder>();
+            List<PerformanceOrder> performanceOrders = JsonConvert.DeserializeObject<List<PerformanceOrder>>(uploadedJson);
             foreach (var item in entities)
             {
-                //new ManagedPerformancesOrder() { }
-
-                //var perfomance = new EntryPerformanceOrder
-                //{
-                //    Status = item.Consistente.Value ? "Consistente" : "Inconsistente",
-                //    PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                //    AccountNumber = item.CuentaBancaria,
-                //    ExemptPerformances = item.
-                   
-                //}
+                var uploadedOrder = performanceOrders.Find(x => x.Row == item.Row);
+                var managedPerformanceOrder = new ManagedPerformancesOrder
+                {
+                    Status = item.Consistente.Value ? "Consistente" : "Inconsistente",
+                    PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    AccountNumber = uploadedOrder.AccountNumber,
+                    ExemptResources = uploadedOrder.ExemptResources,
+                    ExemptPerformances = uploadedOrder.ExemptPerformances,
+                    ExemptBankCharges = uploadedOrder.ExemptBankCharges,
+                    ExemptDiscountedCharge = uploadedOrder.ExemptDiscountedCharge,
+                    LiableContributtions = uploadedOrder.LiableContributtions,
+                    LiablePerformances = uploadedOrder.LiablePerformances,
+                    LiableBankCharges = uploadedOrder.LiableBankCharges,
+                    LiableDiscountedCharge = uploadedOrder.LiableDiscountedCharge,
+                    GeneratedPerformances = uploadedOrder.GeneratedPerformances
+                };
+                managedPerformances.Add(managedPerformanceOrder);
             }
+                
+
+                //var performance = (ManagedPerformancesOrder)uploadedOrder;
+
+               
+                    //PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    //AccountNumber = item.CuentaBancaria,
+                    //ExemptPerformances = uploadedOrder.ExemptPerformances
+
 
             return managedPerformances;
         }

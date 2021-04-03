@@ -148,15 +148,15 @@ namespace asivamosffie.model.APIModels
         [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
         public new decimal LiableDiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Total de rendimientos generados")]
-        public new decimal GeneratedPerformances { get; }
+        public new decimal GeneratedPerformances { get; set; }
         [JsonProperty(PropertyName = "Provisión gravamen financiero")]
-        public new decimal FinancialLienProvision { get; }
+        public new decimal FinancialLienProvision { get; set; }
         [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
-        public new decimal BankCharges { get; }
+        public new decimal BankCharges { get; set; }
         [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
-        public new decimal DiscountedCharge { get; }
+        public new decimal DiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Rendimiento a incorporar")]
-        public new decimal PerformancesToAdd { get; }
+        public new decimal PerformancesToAdd { get; set; }
         [JsonIgnore]
         public bool? BuiltIn { get; set; } 
     }
