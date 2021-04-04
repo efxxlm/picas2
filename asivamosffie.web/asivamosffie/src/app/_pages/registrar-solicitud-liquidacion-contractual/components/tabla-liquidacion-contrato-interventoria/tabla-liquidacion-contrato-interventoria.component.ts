@@ -6,11 +6,11 @@ import { RegisterContractualLiquidationRequestService } from 'src/app/core/_serv
 
 
 @Component({
-  selector: 'app-tabla-liquidacion-contrato-obra',
-  templateUrl: './tabla-liquidacion-contrato-obra.component.html',
-  styleUrls: ['./tabla-liquidacion-contrato-obra.component.scss']
+  selector: 'app-tabla-liquidacion-contrato-interventoria',
+  templateUrl: './tabla-liquidacion-contrato-interventoria.component.html',
+  styleUrls: ['./tabla-liquidacion-contrato-interventoria.component.scss']
 })
-export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewInit {
+export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, AfterViewInit {
 
   ELEMENT_DATA: any[] = [];
 
@@ -33,11 +33,11 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
   constructor(private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService) { }
 
   ngOnInit(): void {
-    this.getListContractualLiquidationObra();
+    this.getListContractualLiquidationInterventoria();
   }
 
-  getListContractualLiquidationObra() {
-    this.registerContractualLiquidationRequestService.getListContractualLiquidationObra().subscribe(report => {
+  getListContractualLiquidationInterventoria() {
+    this.registerContractualLiquidationRequestService.getListContractualLiquidationInterventoria().subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({

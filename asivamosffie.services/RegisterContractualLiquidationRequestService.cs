@@ -25,9 +25,14 @@ namespace asivamosffie.services
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
         }
 
-        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationRequest()
+        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationObra()
         {
-            return await _context.VContratacionProyectoSolicitudLiquidacion.ToListAsync();
+            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
+        }
+
+        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationInterventoria()
+        {
+            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
         }
 
     }

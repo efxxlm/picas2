@@ -44,7 +44,7 @@ namespace asivamosffie.model.Models
         public string RutaCargaActaTerminacionContrato { get; set; }
         public decimal? AvanceFisicoSemanal { get; set; }
         public decimal? ProgramacionSemanal { get; set; }
-        public string EstadoVerificacionLiquidacionCodigo { get; set; }
+        public string EstadoValidacionLiquidacionCodigo { get; set; }
         public DateTime? FechaValidacionLiquidacion { get; set; }
         public string EstadoAprobacionLiquidacionCodigo { get; set; }
         public DateTime? FechaAprobacionLiquidacion { get; set; }

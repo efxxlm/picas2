@@ -3,16 +3,8 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class ContratoPoliza
+    public partial class ContratoPolizaActulizacion
     {
-        public ContratoPoliza()
-        {
-            ContratoPolizaActualizacion = new HashSet<ContratoPolizaActualizacion>();
-            PolizaGarantia = new HashSet<PolizaGarantia>();
-            PolizaGarantiaActualizacion = new HashSet<PolizaGarantiaActualizacion>();
-            PolizaObservacion = new HashSet<PolizaObservacion>();
-        }
-
         public int ContratoId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public string TipoModificacionCodigo { get; set; }
@@ -44,9 +36,5 @@ namespace asivamosffie.model.Models
         public int ContratoPolizaId { get; set; }
 
         public virtual Contrato Contrato { get; set; }
-        public virtual ICollection<ContratoPolizaActualizacion> ContratoPolizaActualizacion { get; set; }
-        public virtual ICollection<PolizaGarantia> PolizaGarantia { get; set; }
-        public virtual ICollection<PolizaGarantiaActualizacion> PolizaGarantiaActualizacion { get; set; }
-        public virtual ICollection<PolizaObservacion> PolizaObservacion { get; set; }
     }
 }

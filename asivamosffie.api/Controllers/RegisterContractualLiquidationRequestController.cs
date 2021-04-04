@@ -28,13 +28,27 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-        [Route("gridRegisterContractualLiquidationRequest")]
+        [Route("gridRegisterContractualLiquidationObra")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> gridRegisterContractualLiquidationRequest()
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> gridRegisterContractualLiquidationObra()
         {
             try
             {
-                return await _registerContractualLiquidationRequest.gridRegisterContractualLiquidationRequest();
+                return await _registerContractualLiquidationRequest.gridRegisterContractualLiquidationObra();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("gridRegisterContractualLiquidationInterventoria")]
+        [HttpGet]
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> gridRegisterContractualLiquidationInterventoria()
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.gridRegisterContractualLiquidationInterventoria();
             }
             catch (Exception ex)
             {

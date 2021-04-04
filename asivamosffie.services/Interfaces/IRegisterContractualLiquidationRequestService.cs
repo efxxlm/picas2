@@ -11,6 +11,8 @@ namespace asivamosffie.services.Interfaces
     public interface IRegisterContractualLiquidationRequestService
     {
         //Consultas
-        Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationRequest();
+        Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationObra();
+        Task<List<VContratacionProyectoSolicitudLiquidacion>> gridRegisterContractualLiquidationInterventoria();
+
     }
 }
