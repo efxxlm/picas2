@@ -222,6 +222,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VConfinanciacionReporte> VConfinanciacionReporte { get; set; }
+        public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
         public virtual DbSet<VContratistaReporteHist> VContratistaReporteHist { get; set; }
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
@@ -1199,6 +1200,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVigencia).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroLicencia)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitudLiquidacion)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -7731,6 +7736,37 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorDocumento).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VContratacionProyectoSolicitudLiquidacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratacionProyectoSolicitudLiquidacion");
+
+                entity.Property(e => e.EstadoVerificacionLiquidacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoVerificacionLiquidacionString)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.FechaPoliza)
+                    .HasColumnName("fecha_poliza")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitudLiquidacion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProyectosAsociados).HasColumnName("proyectos_asociados");
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VContratistaReporteHist>(entity =>

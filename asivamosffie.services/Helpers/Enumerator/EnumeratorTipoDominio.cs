@@ -250,6 +250,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_Asignaacion = 173,
 
-        Motivos_Novedad_contractual = 174
+        Motivos_Novedad_contractual = 174,
+
+        Estados_verificacion_liquidación_codigo = 180
     }
 }
