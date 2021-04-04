@@ -395,6 +395,12 @@ namespace asivamosffie.services
                             _context.DemandanteConvocante.Update(demandanteConvocante);
                         }
                     }
+                    //vuelve a empezar el ciclo
+                    if (defensaJudicialBD.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Devuelta_por_comite_tecnico || defensaJudicialBD.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario)
+                    {
+                        defensaJudicialBD.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.En_analisis_juridico;
+                    }
+
                     defensaJudicialBD.EsCompleto = ValidarRegistroCompleto(defensaJudicialBD);
                     _context.DefensaJudicial.Update(defensaJudicialBD);
 
