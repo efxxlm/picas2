@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-expansion-panel',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./expansion-panel.component.scss']
 })
 export class ExpansionPanelComponent implements OnInit {
+
+  @Input() ajusteProgramacion: any;
 
   constructor() { }
 

@@ -25,5 +25,6 @@ namespace asivamosffie.model.Models
         public int ContratacionProyectoId { get; set; }
         public int ProyectoId { get; set; }
         public int ContratoId { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
     }
 }

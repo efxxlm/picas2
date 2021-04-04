@@ -25,6 +25,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
 
+        public virtual ContratacionProyecto ContratacionProyecto { get; set; }
+        public virtual NovedadContractual NovedadContractual { get; set; }
         public virtual ICollection<AjustePragramacionObservacion> AjustePragramacionObservacion { get; set; }
         public virtual ICollection<AjusteProgramacionFlujo> AjusteProgramacionFlujo { get; set; }
         public virtual ICollection<AjusteProgramacionObra> AjusteProgramacionObra { get; set; }

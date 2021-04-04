@@ -172,4 +172,12 @@ export class FaseUnoConstruccionService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionAjusteProgramacion?esObra=${esObra}`, ajusteProgramacion );
   }
 
+  GetAjusteProgramacionById( id ){ 
+    return this.http.get<any>( `${ this.urlApi }/GetAjusteProgramacionById?pAjusteProgramacionId=${id}`);
+  }
+
+  AprobarAjusteProgramacion( id ){  
+    return this.http.post<Respuesta>( `${ this.urlApi }/AprobarAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
+  }
+
 }

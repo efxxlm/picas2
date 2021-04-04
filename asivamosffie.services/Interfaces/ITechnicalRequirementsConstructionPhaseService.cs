@@ -54,6 +54,9 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario);
+        Task<AjusteProgramacion> GetAjusteProgramacionById(int pAjusteProgramacionId);
+        Task<Respuesta> AprobarAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+
 
     }
 }

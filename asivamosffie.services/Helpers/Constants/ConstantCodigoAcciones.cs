@@ -344,5 +344,6 @@
         public const string Load_Data_Ajuste_Flujo_Inversion = "248";
         public const string EnviarAlSupervisorAjusteProgramacion = "249";
         public const string Crear_Observacion_Ajuste_Programacion = "250";
+        public const string Aprobar_Ajuste_Programacion = "256";
     }
 }

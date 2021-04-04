@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -9,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './flujo-intervencion-recursos.component.html',
   styleUrls: ['./flujo-intervencion-recursos.component.scss']
 })
-export class FlujoIntervencionRecursosComponent implements OnInit {
+export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -30,13 +31,30 @@ export class FlujoIntervencionRecursosComponent implements OnInit {
     ]
   };
 
+  ajusteProgramacionId: number;
+  @Input() ajusteProgramacion: any;
+
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     private faseUnoConstruccionService: FaseUnoConstruccionService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+
     ) { }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ( changes.ajusteProgramacion )
+      {
+        this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion.tieneObservacionesFlujoInversion )
+        this.addressForm.get('observaciones').setValue( this.ajusteProgramacion.observacionFlujo ? this.ajusteProgramacion.observacionFlujo.observaciones : '' )
+      }
+  }
+
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe( parametros => {
+      this.ajusteProgramacionId = parametros.id;
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -80,7 +98,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit {
     console.log(this.addressForm.value)
 
     let ajuste = {
-      ajusteProgramacionId: 1,
+      ajusteProgramacionId: this.ajusteProgramacionId,
       tieneObservacionesFlujoInversion: this.addressForm.value.tieneObservaciones,
 
       AjustePragramacionObservacion: [
@@ -96,10 +114,13 @@ export class FlujoIntervencionRecursosComponent implements OnInit {
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")
-          this.ngOnInit()
+          this.router.navigate(["/validarAjusteProgramacion"]);
       });
 
     
   }
 
 }
+
+
+	

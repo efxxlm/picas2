@@ -701,5 +701,37 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("GetAjusteProgramacionById")]
+        [HttpGet]
+        public async Task<AjusteProgramacion> GetAjusteProgramacionById([FromQuery] int pAjusteProgramacionId)
+        {
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                return await _technicalRequirementsConstructionPhaseService.GetAjusteProgramacionById(pAjusteProgramacionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("AprobarAjusteProgramacion")]
+        [HttpPost]
+        public async Task<Respuesta> AprobarAjusteProgramacion([FromQuery] int pAjusteProgramacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarAjusteProgramacion(pAjusteProgramacionId, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

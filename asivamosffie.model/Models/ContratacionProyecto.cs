@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public ContratacionProyecto()
         {
+            AjusteProgramacion = new HashSet<AjusteProgramacion>();
             BalanceFinanciero = new HashSet<BalanceFinanciero>();
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
@@ -55,6 +56,7 @@ namespace asivamosffie.model.Models
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<AjusteProgramacion> AjusteProgramacion { get; set; }
         public virtual ICollection<BalanceFinanciero> BalanceFinanciero { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }

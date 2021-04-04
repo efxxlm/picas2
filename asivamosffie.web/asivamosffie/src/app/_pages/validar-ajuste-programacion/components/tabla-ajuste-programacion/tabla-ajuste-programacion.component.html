@@ -84,8 +84,19 @@
         </a>
         
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-        *ngIf="element.estadoCodigo === '6'">
+        *ngIf="element.estadoCodigo === '6' &&  
+               element.registroCompletoValidacion === true && 
+               ( element.tieneObservacionesFlujoInversion === true || element.tieneObservacionesProgramacionObra === true )">
           Enviar al interventor
+        </button> 
+
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        (click)="Aprobar(element.ajusteProgramacionId)"
+        *ngIf="element.estadoCodigo === '6' &&  
+               element.registroCompletoValidacion === true && 
+               element.tieneObservacionesFlujoInversion === false && 
+               element.tieneObservacionesProgramacionObra === false ">
+        Aprobar ajuste a la programación
         </button> 
 
       </td>

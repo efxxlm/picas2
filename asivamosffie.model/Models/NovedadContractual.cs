@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public NovedadContractual()
         {
+            AjusteProgramacion = new HashSet<AjusteProgramacion>();
             NovedadContractualAportante = new HashSet<NovedadContractualAportante>();
             NovedadContractualDescripcion = new HashSet<NovedadContractualDescripcion>();
             NovedadContractualObservaciones = new HashSet<NovedadContractualObservaciones>();
@@ -57,6 +58,7 @@ namespace asivamosffie.model.Models
         public virtual Usuario AbogadoRevision { get; set; }
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<AjusteProgramacion> AjusteProgramacion { get; set; }
         public virtual ICollection<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual ICollection<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual ICollection<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }

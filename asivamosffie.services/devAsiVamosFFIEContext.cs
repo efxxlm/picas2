@@ -342,6 +342,16 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<AjusteProgramacion>(entity =>
             {
                 entity.Property(e => e.EstadoCodigo).HasMaxLength(10);
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.AjusteProgramacion)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .HasConstraintName("FK_AjusteProgramacion_ContratacionProyecto");
+
+                entity.HasOne(d => d.NovedadContractual)
+                    .WithMany(p => p.AjusteProgramacion)
+                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasConstraintName("FK_AjusteProgramacion_NovedadContractual");
             });
 
             modelBuilder.Entity<AjusteProgramacionFlujo>(entity =>
@@ -5279,7 +5289,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<RendimientosIncorporados>(entity =>
             {
-                entity.HasKey(e => e.RendimientosIncorporadosId);
+                entity.HasNoKey();
 
                 entity.Property(e => e.CuentaBancaria)
                     .IsRequired()

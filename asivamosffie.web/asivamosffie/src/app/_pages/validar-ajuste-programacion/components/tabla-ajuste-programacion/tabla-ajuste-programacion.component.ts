@@ -59,7 +59,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.faseConstruccionServices.GetAjusteProgramacionGrid()
       .subscribe(respuesta => {
-        this.dataSource = new MatTableDataSource(respuesta.filter( r => r.estadoCodigo === '3' || r.estadoCodigo === '4' || r.estadoCodigo === '5' ));
+        this.dataSource = new MatTableDataSource(respuesta.filter( r => r.estadoCodigo === '3' || r.estadoCodigo === '4' || r.estadoCodigo === '5' || r.estadoCodigo === '6' ));
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -78,6 +78,22 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  Aprobar(id){
+    this.faseConstruccionServices.AprobarAjusteProgramacion( id )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code === "200")
+        this.ngAfterViewInit();
+      })
   }
 
 }
