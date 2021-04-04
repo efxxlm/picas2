@@ -81,7 +81,7 @@
         </a>
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          *ngIf="element.estadoCodigo === '2'"
+          *ngIf="element.estadoCodigo === '2' && element.registroCompleto === true"
           (click)="EnviarASupervisor( element )"
           >
           Enviar ajuste a la programación
@@ -92,6 +92,12 @@
           (click)="RegistrarNuevo( element )"
           >
           Ver detalle/Editar
+        </a>
+
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          *ngIf="element.estadoCodigo === '5'"
+          >
+          Ver detalle
         </a>
         
       </td>

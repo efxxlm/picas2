@@ -1249,13 +1249,13 @@ namespace asivamosffie.services
                 }
 
                 ajusteProgramacion.RegistroCompletoValidacion = await ValidarRegistroCompletoValidacionAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
-                if (ajusteProgramacion.RegistroCompletoValidacion.Value)
+                //if (ajusteProgramacion.RegistroCompletoValidacion.Value)
                 {
                     ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
                 }
-                else
+                //else
                 {
-                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+                    //ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
                 }
 
 

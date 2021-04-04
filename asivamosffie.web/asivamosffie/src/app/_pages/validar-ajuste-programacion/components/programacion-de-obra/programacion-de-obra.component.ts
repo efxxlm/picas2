@@ -99,12 +99,12 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
     console.log(this.addressForm.value)
 
     let ajuste = {
-      ajusteProgramacionId: 1,
+      ajusteProgramacionId: this.ajusteProgramacionId,
       tieneObservacionesProgramacionObra: this.addressForm.value.tieneObservaciones,
 
       AjustePragramacionObservacion: [
         {
-          ajusteProgramacionId: 1,
+          ajusteProgramacionId: this.ajusteProgramacionId,
           observaciones: this.addressForm.value.observaciones,
           
         }

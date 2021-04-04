@@ -103,7 +103,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
 
       AjustePragramacionObservacion: [
         {
-          ajusteProgramacionId: 1,
+          ajusteProgramacionId: this.ajusteProgramacionId,
           observaciones: this.addressForm.value.observaciones,
           
         }

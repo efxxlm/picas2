@@ -26,10 +26,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
                 private activatedRoute: ActivatedRoute )
   {
     this.getContrato();
-    if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/requisitosTecnicosConstruccion');
-      return;
-    };
+    // if (this.router.getCurrentNavigation().extras.replaceUrl) {
+    //   this.router.navigateByUrl('/requisitosTecnicosConstruccion');
+    //   return;
+    // };
 
     if (this.router.getCurrentNavigation().extras.state)
       this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
