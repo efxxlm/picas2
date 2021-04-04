@@ -17,7 +17,7 @@
             <mat-card-content align="left">
                 <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.actuacionAdelantadaString}}</p>
                 <div *ngIf="controversia?.actuacionAdelantadaOtro!=null">
-                    <p><strong>Cual: </strong>{{controversia?.actuacionAdelantadaOtro}}</p>
+                    <strong>Cual: </strong><span [innerHTML]="controversia?.actuacionAdelantadaOtro"></span>
                 </div>
                 <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
                     'dd/MM/yyyy'}}</p>

@@ -1343,6 +1343,7 @@ namespace asivamosffie.services
             {
                 ListProyectoGrilla.Add(new ProyectoGrilla
                 {
+                    NumeroContrato = contrato.NumeroContrato,
                     NombreContratista = proyecto.Contratista.Nombre,
                     TieneObra = proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString(),
                     TieneInterventoria = proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString(),
