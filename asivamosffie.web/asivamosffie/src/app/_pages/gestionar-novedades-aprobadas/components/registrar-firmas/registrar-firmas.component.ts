@@ -66,21 +66,21 @@ export class RegistrarFirmasComponent implements OnInit, OnChanges {
   ) { }
   ngOnChanges(changes: SimpleChanges): void {
 
-    if ( changes.novedad ){
-      this.addressForm.get('continuarProceso').setValue( this.novedad.deseaContinuar );
-      this.addressForm.get('fechaEnvioActaFirmaContratistaObra').setValue( this.novedad.fechaEnvioActaContratistaObra );
-      this.addressForm.get('fechaFirmaContratistaObra').setValue( this.novedad.fechaFirmaActaContratistaObra );
-      this.addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').setValue( this.novedad.fechaEnvioActaContratistaInterventoria );
-      this.addressForm.get('fechaFirmaContratistaInterventoria').setValue( this.novedad.fechaFirmaContratistaInterventoria );
-      this.addressForm.get('fechaEnvioActaFirmaApoyoSupervision').setValue( this.novedad.fechaEnvioActaApoyo );
-      this.addressForm.get('fechaFirmaApoyoSupervision').setValue( this.novedad.fechaFirmaApoyo );
-      this.addressForm.get('fechaEnvioFirmaSupervisor').setValue( this.novedad.fechaEnvioActaSupervisor );
-      this.addressForm.get('fechaFirmaSupervisor').setValue( this.novedad.fechaFirmaSupervisor );
-      this.addressForm.get('razones').setValue( this.novedad.razonesNoContinuaProceso );
-      this.addressForm.get('urlFirmas').setValue( this.novedad.urlSoporteFirmas );
+    if (changes.novedad) {
+      this.addressForm.get('continuarProceso').setValue(this.novedad.deseaContinuar);
+      this.addressForm.get('fechaEnvioActaFirmaContratistaObra').setValue(this.novedad.fechaEnvioActaContratistaObra);
+      this.addressForm.get('fechaFirmaContratistaObra').setValue(this.novedad.fechaFirmaActaContratistaObra);
+      this.addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').setValue(this.novedad.fechaEnvioActaContratistaInterventoria);
+      this.addressForm.get('fechaFirmaContratistaInterventoria').setValue(this.novedad.fechaFirmaContratistaInterventoria);
+      this.addressForm.get('fechaEnvioActaFirmaApoyoSupervision').setValue(this.novedad.fechaEnvioActaApoyo);
+      this.addressForm.get('fechaFirmaApoyoSupervision').setValue(this.novedad.fechaFirmaApoyo);
+      this.addressForm.get('fechaEnvioFirmaSupervisor').setValue(this.novedad.fechaEnvioActaSupervisor);
+      this.addressForm.get('fechaFirmaSupervisor').setValue(this.novedad.fechaFirmaSupervisor);
+      this.addressForm.get('razones').setValue(this.novedad.razonesNoContinuaProceso);
+      this.addressForm.get('urlFirmas').setValue(this.novedad.urlSoporteFirmas);
     }
 
-    
+
   }
 
   ngOnInit(): void {
@@ -104,40 +104,43 @@ export class RegistrarFirmasComponent implements OnInit, OnChanges {
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
   }
 
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
+
     let contadorConcurrencias = 0;
     let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    if (cadena) {
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias;
+        posicion += subcadena.length;
+      }
     }
     return contadorConcurrencias;
   }
 
   onSubmit() {
-    
+
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
-      this.novedad.deseaContinuar = this.addressForm.get('continuarProceso').value;
-      this.novedad.fechaEnvioActaContratistaObra = this.addressForm.get('fechaEnvioActaFirmaContratistaObra').value;
-      this.novedad.fechaFirmaActaContratistaObra = this.addressForm.get('fechaFirmaContratistaObra').value;
-      this.novedad.fechaEnvioActaContratistaInterventoria = this.addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').value;
-      this.novedad.fechaFirmaContratistaInterventoria = this.addressForm.get('fechaFirmaContratistaInterventoria').value;
-      this.novedad.fechaEnvioActaApoyo = this.addressForm.get('fechaEnvioActaFirmaApoyoSupervision').value;
-      this.novedad.fechaFirmaApoyo = this.addressForm.get('fechaFirmaApoyoSupervision').value;
-      this.novedad.fechaEnvioActaSupervisor = this.addressForm.get('fechaEnvioFirmaSupervisor').value;
-      this.novedad.fechaFirmaSupervisor = this.addressForm.get('fechaFirmaSupervisor').value;
-      this.novedad.razonesNoContinuaProceso = this.addressForm.get('razones').value;
-      this.novedad.urlSoporteFirmas = this.addressForm.get('urlFirmas').value;
+    this.novedad.deseaContinuar = this.addressForm.get('continuarProceso').value;
+    this.novedad.fechaEnvioActaContratistaObra = this.addressForm.get('fechaEnvioActaFirmaContratistaObra').value;
+    this.novedad.fechaFirmaActaContratistaObra = this.addressForm.get('fechaFirmaContratistaObra').value;
+    this.novedad.fechaEnvioActaContratistaInterventoria = this.addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').value;
+    this.novedad.fechaFirmaContratistaInterventoria = this.addressForm.get('fechaFirmaContratistaInterventoria').value;
+    this.novedad.fechaEnvioActaApoyo = this.addressForm.get('fechaEnvioActaFirmaApoyoSupervision').value;
+    this.novedad.fechaFirmaApoyo = this.addressForm.get('fechaFirmaApoyoSupervision').value;
+    this.novedad.fechaEnvioActaSupervisor = this.addressForm.get('fechaEnvioFirmaSupervisor').value;
+    this.novedad.fechaFirmaSupervisor = this.addressForm.get('fechaFirmaSupervisor').value;
+    this.novedad.razonesNoContinuaProceso = this.addressForm.get('razones').value;
+    this.novedad.urlSoporteFirmas = this.addressForm.get('urlFirmas').value;
 
-      this.guardar.emit(true);
+    this.guardar.emit(true);
 
   }
 }
