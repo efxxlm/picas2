@@ -27,6 +27,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public string NumeroActualizacion { get; set; }
         public string EstadoActualizacion { get; set; }
+        public bool? TieneObservacionEspecifica { get; set; }
 
         public virtual ContratoPoliza ContratoPoliza { get; set; }
         public virtual ICollection<ContratoPolizaActualizacionListaChequeo> ContratoPolizaActualizacionListaChequeo { get; set; }
