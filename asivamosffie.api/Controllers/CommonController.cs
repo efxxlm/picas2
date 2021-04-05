@@ -68,6 +68,7 @@ namespace asivamosffie.api.Controllers
          
         [HttpGet]
         [Route("GetMenuByRol")]
+        [Authorize]
         public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);

@@ -20,17 +20,6 @@ namespace asivamosffie.model.APIModels
             get { return ExemptPerformances + LiablePerformances; }
         }
 
-
-        /// Missing Rendimientos Incorporados
-
-        /// <summary>
-        /// Rendimientos Incorporados
-        /// </summary>
-        //public decimal RendimientosIncorporados
-        //{
-        //    get { return ExemptPerformances + LiablePerformances; }
-        //}
-
         /// <summary>
         /// Provisión gravamen financiero
         /// Muestra el cálculo realizado entre: sumatoria de “Acumulado de aportes de recursos no exentos” 
@@ -145,13 +134,12 @@ namespace asivamosffie.model.APIModels
         ///// Acumulado de gravamen financiero descontado no exentos
         ///// </summary>
         //[JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
-        [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
-        public new decimal LiableDiscountedCharge { get; set; }
+        //public new decimal LiableDiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Total de rendimientos generados")]
         public new decimal GeneratedPerformances { get; set; }
         [JsonProperty(PropertyName = "Provisión gravamen financiero")]
         public new decimal FinancialLienProvision { get; set; }
-        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
+        [JsonProperty(PropertyName = "Total gastos bancarios")]
         public new decimal BankCharges { get; set; }
         [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
         public new decimal DiscountedCharge { get; set; }
@@ -159,5 +147,22 @@ namespace asivamosffie.model.APIModels
         public new decimal PerformancesToAdd { get; set; }
         [JsonIgnore]
         public bool? BuiltIn { get; set; } 
+    }
+
+
+    public class ManagedPerformancesOrderDto : EntryPerformanceOrder
+    {
+        [JsonProperty(PropertyName = "Estado")]
+        public new string Status { get; set; }
+        [JsonProperty(PropertyName = "Total de rendimientos generados")]
+        public decimal GeneratedPerformances { get; set; }
+        [JsonProperty(PropertyName = "Provisión gravamen financiero")]
+        public decimal FinancialLienProvision { get; set; }
+        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
+        public decimal BankCharges { get; set; }
+        [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
+        public decimal DiscountedCharge { get; set; }
+        [JsonProperty(PropertyName = "Rendimiento a incorporar")]
+        public decimal PerformancesToAdd { get; set; }
     }
 }

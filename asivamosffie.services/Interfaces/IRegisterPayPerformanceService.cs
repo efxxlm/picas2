@@ -24,7 +24,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> NotifyEmailPerformanceInconsistencies(int uploadedOrderId, string author);
 
-        Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId, string author);
+        Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId);
 
         Task<Respuesta> GetManagedPerformancesByStatus(string author, int uploadedOrderId, bool? queryConsistentOrders = null);
 

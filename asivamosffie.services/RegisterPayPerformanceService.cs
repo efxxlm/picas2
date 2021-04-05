@@ -95,14 +95,16 @@ namespace asivamosffie.services
                 // Add the headers
                 Type listType = typeof(T);
                 var properties = listType.GetProperties();
-                int index = 0;
+                int index = 1;
                 foreach (var property in properties)
                 {
                     var customAtt = (JsonPropertyAttribute)Attribute.GetCustomAttribute(property, typeof(JsonPropertyAttribute));
                     if (customAtt != null)
                     {
-                        worksheet.Cells[1, ++index].Value = customAtt.PropertyName;
+                        worksheet.Cells[1, index].Value = customAtt.PropertyName;
+                        
                     }
+                    index++;
                 }
                 if(errors != null)
                 foreach (var item in errors)
@@ -125,17 +127,19 @@ namespace asivamosffie.services
         {
             bool isMailSent = false;
             var usertoSend = _context.UsuarioPerfil.Where(
-                       x => x.PerfilId == (int)enumeratorProfile).Include(y => y.Usuario);
-            foreach (var fiduciariaEmail in usertoSend)
-            {
-                isMailSent = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
-                    subject,
-                    template,
-                    _mailSettings.Sender,
-                    _mailSettings.Password,
-                    _mailSettings.MailServer,
-                    _mailSettings.MailPort);
-            }
+                       x => x.PerfilId == (int)enumeratorProfile).Include(y => y.Usuario).AsNoTracking().ToList();
+            var userMails = usertoSend.Select(x => x.Usuario.Email).ToList<string>();
+            isMailSent = this._commonService.EnviarCorreo(userMails, template, subject);
+            //foreach (var fiduciariaEmail in usertoSend)
+            //{
+            //    isMailSent = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
+            //        subject,
+            //        template,
+            //        _mailSettings.Sender,
+            //        _mailSettings.Password,
+            //        _mailSettings.MailServer,
+            //        _mailSettings.MailPort);
+            //}
             return isMailSent;
         }
 
@@ -193,6 +197,8 @@ namespace asivamosffie.services
         public readonly IConverter _converter;
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
         public readonly IBudgetAvailabilityService _budgetAvailabilityService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string _userName;
         public ISourceFundingService _fundingSourceService { get; }
         public MailSettings _mailSettings { get; }
         public readonly string CONSTPAGOS = "Pagos";
@@ -203,7 +209,8 @@ namespace asivamosffie.services
                                             ISourceFundingService fundingSourceService,
                                             ICommonService commonService,
                                             IDocumentService documentService,
-                                            IOptions<MailSettings> mailSettings
+                                            IOptions<MailSettings> mailSettings,
+                                            IHttpContextAccessor httpContextAccessor
             )
         {
             _converter = converter;
@@ -212,6 +219,8 @@ namespace asivamosffie.services
             _documentService = documentService;
             _mailSettings = mailSettings.Value;
             _commonService = commonService;
+            _httpContextAccessor = httpContextAccessor;
+            _userName = _httpContextAccessor.HttpContext.User.Identity.Name;
         }
 
         #region loads
@@ -720,7 +729,7 @@ namespace asivamosffie.services
             string action = ConstantCodigoAcciones.Tramitar_Rendimientos;
             int actionId = await GetActionIdAudit(action);
             string actionMesage = ConstantCommonMessages.Performances.TRAMITAR_RENDIMIENTOS;
-
+            
             var collection = await _context.CarguePagosRendimientos.FindAsync(uploadedOrderId);
 
             List<PerformanceOrder> performanceOrders = new List<PerformanceOrder>();
@@ -732,7 +741,7 @@ namespace asivamosffie.services
             var accountNumbers = performanceOrders.Select(x => x.AccountNumber).Distinct();
 
             decimal valorAporteEnCuenta = 0;
-            int registrosConsistentes = 0;
+            int registrosInconsistentes = 0;
 
             TryStringToDate(performanceOrders.First().PerformancesDate,  out DateTime currentMonthPerformances);
             DateTime beforeMonth = new DateTime(currentMonthPerformances.Year, currentMonthPerformances.Month, 1);
@@ -795,11 +804,11 @@ namespace asivamosffie.services
                     - accountOrder.BankCharges
                     - accountOrder.DiscountedCharge
                     - (visitas.HasValue ? visitas.Value : 0);
-                accountOrder.IsConsistent = false;
-                if (accountOrder.PerformancesToAdd < valorAporteEnCuenta)
+                accountOrder.IsConsistent = true;
+                if(accountOrder.PerformancesToAdd < 0 && valorAporteEnCuenta < accountOrder.PerformancesToAdd )
                 {
-                    accountOrder.IsConsistent = true;
-                    registrosConsistentes += 1;
+                    accountOrder.IsConsistent = false;
+                    registrosInconsistentes += 1;
                 }
                 TryStringToDate(accountOrder.PerformancesDate, out DateTime performancesDate);
                 var performanceEntity = new RendimientosIncorporados
@@ -830,8 +839,8 @@ namespace asivamosffie.services
                       FechaTramite = DateTime.Now,
                       //TODO Field to remove , will be replace by RendimientosIncorporados table
                       TramiteJson = tramite,
-                      RegistrosConsistentes = registrosConsistentes,
-                      RegistrosInconsistentes = performanceOrders.Count - registrosConsistentes,
+                      RegistrosConsistentes = performanceOrders.Count - registrosInconsistentes,
+                      RegistrosInconsistentes = registrosInconsistentes,
                   }); ;
                 await _context.SaveChangesAsync();
                 response.Data = performanceOrders;
@@ -841,28 +850,29 @@ namespace asivamosffie.services
             catch (Exception ex)
             {
                 response.IsSuccessful = false;
+                response.IsException = true;
                 response.Code = GeneralCodes.Error;
-                //response.Message = await SaveAuditAction(fileRequest.Username, actionId,
-                //                    enumeratorMenu.RegistrarPagosRendimientos,
-                //                    GeneralCodes.OperacionExitosa,
-                //                    actionMesage);
+                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
+                                    enumeratorMenu.GestionarRendimientos,
+                                    GeneralCodes.EntradaInvalida,
+                                    actionMesage);
             }
 
-            // TODO Audit
-            response.Message = ""; // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-
-
+            response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
+                                    enumeratorMenu.GestionarRendimientos,
+                                    GeneralCodes.OperacionExitosa,
+                                    actionMesage);
             return response;
         }
 
         // Notify to Approve
-        public async Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId, string author)
+        public async Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId)
         {
             Respuesta response = new Respuesta();
             bool isMailSent = false;
-#if DEBUG
+
             isMailSent = true;
-#endif
+
             int modifiedRows = -1;
             int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Notificar_Solicitud_Aprobacion);
             string actionMesage = ConstantCommonMessages.Performances.NOTIFICAR_SOLICITUD_APROBACION;
@@ -872,7 +882,7 @@ namespace asivamosffie.services
             if (uploadedPerformances == null || uploadedOrderId == 0)
             {
                 response.Code = GeneralCodes.EntradaInvalida;
-                response.Message = await SaveAuditAction(author, actionId,
+                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
                                         enumeratorMenu.GestionarRendimientos,
                                         response.Code,
                                         actionMesage);
@@ -885,25 +895,32 @@ namespace asivamosffie.services
                                                             (int)enumeratorTemplate.NotificacionAprobacion);
                 string inconsistencies = "";
                 string fechaCargue = "";
+                string total = "";
+                string consistencies = "";
+
                 if (uploadedPerformances != null)
                 {
                     inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                    total = uploadedPerformances.TotalRegistros.ToString();
+                    consistencies = uploadedPerformances.RegistrosConsistentes.ToString();
                     fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
                 }
-                // TODO Replace string
-                string template = temNotifyInconsistencies.Contenido
-                    .Replace("_LinkF_", _mailSettings.DominioFront).
+              
+                string template = temNotifyInconsistencies.Contenido.
                     Replace("[FECHA_CARGUE]", fechaCargue).
-                    Replace("[URL]", _mailSettings.DominioFront);
+                    Replace("[TOTAL]", total).
+                    Replace("[CONSISTENTES]", consistencies).
+                    Replace("[INCONSISTENTES]", inconsistencies);
 
-                string subject = "";
-#if !DEBUG
+                string subject = "Aprobar Incorporación de rendimientos";
+
                 isMailSent = this.SendMail(template, subject, EnumeratorPerfil.CordinadorFinanciera);
-#endif
+
+
                 if (!isMailSent)
                 {
                     response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
-                    response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                    response.Message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
                     return response;
                 }
@@ -914,13 +931,13 @@ namespace asivamosffie.services
                     {
                         PendienteAprobacion = true,
                         FechaModificacion = DateTime.Now,
-                        UsuarioModificacion = author
+                        UsuarioModificacion = _userName.ToUpper()
                     });
 
 
                 response.IsSuccessful = isMailSent;
                 response.Code = ConstMessagesPerformances.CorreoEnviado;
-                string message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                string message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
                 response.Message = message;
             }
@@ -929,7 +946,7 @@ namespace asivamosffie.services
                 response.IsSuccessful = false;
                 response.IsException = true;
                 response.Code = GeneralCodes.Error;
-                response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, ex.SubstringValid(_500));
             }
 
@@ -1071,24 +1088,30 @@ namespace asivamosffie.services
             {
                 Template temNotifyInconsistencies = await _commonService.GetTemplateById(
                                                             (int)enumeratorTemplate.NotificacionInconsistencias);
+
                 string inconsistencies = "";
                 string fechaCargue = "";
+                string total = "";
+                string consistencies = "";
+
                 if (uploadedPerformances != null)
                 {
                     inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                    total = uploadedPerformances.TotalRegistros.ToString();
+                    consistencies = uploadedPerformances.RegistrosConsistentes.ToString();
                     fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
                 }
-                // TODO Replace string
-                string template = temNotifyInconsistencies.Contenido
-                    .Replace("_LinkF_", _mailSettings.DominioFront).
-                    Replace("[FECHA_CARGUE]", fechaCargue).
-                    Replace("[INCONSISTENCIAS]", inconsistencies).
-                    Replace("[URL]", _mailSettings.DominioFront);
 
-                string subject = "";
-#if !DEBUG
-                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
-#endif
+                string template = temNotifyInconsistencies.Contenido.
+                    Replace("[FECHA_CARGUE]", fechaCargue).
+                    Replace("[TOTAL]", total).
+                    Replace("[CONSISTENTES]", consistencies).
+                    Replace("[INCONSISTENTES]", inconsistencies);
+
+                string subject = "Aprobar Incorporación de rendimientos";
+
+                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.CordinadorFinanciera);
+
                 if (!isMailSent)
                 {
                     response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
@@ -1200,14 +1223,14 @@ namespace asivamosffie.services
         /// <param name="entities"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public List<ManagedPerformancesOrder> MapManagedPerformances(IEnumerable<RendimientosIncorporados> entities, string uploadedJson)
+        public List<ManagedPerformancesOrderDto> MapManagedPerformances(IEnumerable<RendimientosIncorporados> entities, string uploadedJson)
         {
-            List<ManagedPerformancesOrder> managedPerformances = new List<ManagedPerformancesOrder>();
+            List<ManagedPerformancesOrderDto> managedPerformances = new List<ManagedPerformancesOrderDto>();
             List<PerformanceOrder> performanceOrders = JsonConvert.DeserializeObject<List<PerformanceOrder>>(uploadedJson);
             foreach (var item in entities)
             {
                 var uploadedOrder = performanceOrders.Find(x => x.Row == item.Row);
-                var managedPerformanceOrder = new ManagedPerformancesOrder
+                var managedPerformanceOrder = new ManagedPerformancesOrderDto
                 {
                     Status = item.Consistente.Value ? "Consistente" : "Inconsistente",
                     PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
