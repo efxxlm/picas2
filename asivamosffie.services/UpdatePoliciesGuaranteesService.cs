@@ -362,7 +362,7 @@ namespace asivamosffie.services
                                 FechaVigenciaAmparo = ContratoPolizaActualizacionSeguro.FechaVigenciaAmparo,
 
                                 TieneFechaValorAmparo = ContratoPolizaActualizacionSeguro.TieneFechaValorAmparo,
-                                FechaValorAmparo = ContratoPolizaActualizacionSeguro.FechaValorAmparo,
+                                ValorAmparo = ContratoPolizaActualizacionSeguro.ValorAmparo,
 
                                 RegistroCompletoActualizacion = ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacionSeguro),
                                 RegistroCompletoSeguro = ValidarRegistroCompletoContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro),
@@ -375,7 +375,7 @@ namespace asivamosffie.services
         {
             if (
                 (pContratoPolizaActualizacionSeguro.TieneFechaSeguro == true && !pContratoPolizaActualizacionSeguro.FechaSeguro.HasValue)
-             || (pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo == true && !pContratoPolizaActualizacionSeguro.FechaValorAmparo.HasValue)
+             || (pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo == true && !pContratoPolizaActualizacionSeguro.ValorAmparo.HasValue)
              || (pContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo == true && !pContratoPolizaActualizacionSeguro.FechaVigenciaAmparo.HasValue)
                 ) return false;
 

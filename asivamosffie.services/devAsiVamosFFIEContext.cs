@@ -1915,8 +1915,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSeguro).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaValorAmparo).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaVigenciaAmparo).HasColumnType("datetime");
 
                 entity.Property(e => e.RegistroCompletoActualizacion).HasDefaultValueSql("((0))");
@@ -1934,6 +1932,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(8, 2)");
 
                 entity.HasOne(d => d.ContratoPolizaActualizacion)
                     .WithMany(p => p.ContratoPolizaActualizacionSeguro)
