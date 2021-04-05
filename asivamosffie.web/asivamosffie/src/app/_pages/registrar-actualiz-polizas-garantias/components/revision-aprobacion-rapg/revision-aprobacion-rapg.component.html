@@ -9,30 +9,38 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaRevision"
-                                    [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaRevision.invalid }">Fecha
-                                    de la revisión 2</label>
+                                <label  class="label-left"
+                                        for="fechaRevision"
+                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaRevision.invalid }">
+                                        Fecha de la revisión 2</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="fechaRevision"
-                                        [matDatepicker]="pickerFechaRevision" readonly
-                                        (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA" />
-                                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                                    <input  matInput
+                                            formControlName="fechaRevision"
+                                            [matDatepicker]="pickerFechaRevision"
+                                            readonly
+                                            (click)="pickerFechaRevision.open()"
+                                            required
+                                            placeholder="DD/MM/AAAA">
+                                            <mat-datepicker #pickerFechaRevision></mat-datepicker>
                                 </mat-form-field>
-                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
-                                    class="btn-calendario">
-                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                <button mat-button
+                                        color="primary"
+                                        type="button"
+                                        (click)="pickerFechaRevision.open()"
+                                        class="btn-calendario">
+                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                                 </button>
                             </div>
                             <span class="icon-incompleto">
-                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                    matTooltipClass="info-tooltip" *ngIf="
-                      (addressForm.get('fechaRevision').invalid && addressForm.get('fechaRevision').touched) ||
-                      (addressForm.get('fechaRevision').invalid && estaEditando)
-                    " />
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="(addressForm.get('fechaRevision').invalid && addressForm.get('fechaRevision').touched) || (addressForm.get('fechaRevision').invalid && estaEditando)">
                             </span>
                         </div>
                     </div>
@@ -41,9 +49,10 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="estadoRevision"
-                                    [ngClass]="{ 'color-secondaryColor': addressForm.controls.estadoRevision.invalid }">Estado
-                                    de la revisión 2</label>
+                                <label  class="label-left"
+                                        for="estadoRevision"
+                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.estadoRevision.invalid }">
+                                        Estado de la revisión 2</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -55,49 +64,56 @@
                                 </mat-form-field>
                             </div>
                             <span class="icon-incompleto">
-                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                    matTooltipClass="info-tooltip" *ngIf="
-                      (addressForm.get('estadoRevision').invalid && addressForm.get('estadoRevision').touched) ||
-                      (addressForm.get('estadoRevision').invalid && estaEditando)
-                    " />
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="(addressForm.get('estadoRevision').invalid && addressForm.get('estadoRevision').touched) || (addressForm.get('estadoRevision').invalid && estaEditando)">
                             </span>
                         </div>
                     </div>
                 </div>
-                <div class="animatedDown" *ngIf="
-              addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'
-            ">
+                <div class="animatedDown" *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'">
                     <h2 class="card-subTitle">Aprobación</h2>
                     <div class="row">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaAprob"
-                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaAprob.invalid }">Fecha
-                                        de aprobación</label>
+                                    <label  class="label-left"
+                                            for="fechaAprob"
+                                            [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaAprob.invalid }">
+                                            Fecha de aprobación
+                                    </label>
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22"
-                                         readonly (click)="pickerFecha22.open()" required
-                                            placeholder="DD/MM/AAAA" />
-                                        <mat-datepicker #pickerFecha22></mat-datepicker>
+                                        <input  matInput
+                                                formControlName="fechaAprob"
+                                                [matDatepicker]="pickerFecha22"
+                                                readonly
+                                                (click)="pickerFecha22.open()"
+                                                required
+                                                placeholder="DD/MM/AAAA">
+                                                <mat-datepicker #pickerFecha22></mat-datepicker>
                                     </mat-form-field>
-                                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
-                                        class="btn-calendario">
-                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                    <button mat-button
+                                            color="primary"
+                                            type="button"
+                                            (click)="pickerFecha22.open()"
+                                            class="btn-calendario">
+                                            <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                                     </button>
                                 </div>
                                 <span class="icon-incompleto">
-                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip" *ngIf="
-                        (addressForm.get('fechaAprob').invalid && addressForm.get('fechaAprob').touched) ||
-                        (addressForm.get('fechaAprob').invalid && estaEditando)
-                      " />
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="(addressForm.get('fechaAprob').invalid && addressForm.get('fechaAprob').touched) || (addressForm.get('fechaAprob').invalid && estaEditando)">
                                 </span>
                             </div>
                         </div>
@@ -106,9 +122,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="responsableAprob"
-                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.responsableAprob.invalid }">Responsable
-                                        de aprobación</label>
+                                    <label  class="label-left"
+                                            for="responsableAprob"
+                                            [ngClass]="{ 'color-secondaryColor': addressForm.controls.responsableAprob.invalid }">
+                                            Responsable de aprobación
+                                    </label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -121,14 +139,13 @@
                                     </mat-form-field>
                                 </div>
                                 <span class="icon-incompleto">
-                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip" *ngIf="
-                        (addressForm.get('responsableAprob').invalid &&
-                          addressForm.get('responsableAprob').touched) ||
-                        (addressForm.get('responsableAprob').invalid && estaEditando)
-                      " />
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="(addressForm.get('responsableAprob').invalid && addressForm.get('responsableAprob').touched) || (addressForm.get('responsableAprob').invalid && estaEditando)">
                                 </span>
                             </div>
                         </div>
@@ -138,45 +155,31 @@
         </mat-card-content>
     </mat-card>
     <div class="d-flex align-items-center">
-        <div
-          class="text-area-quill  izqTitle helperWidthText"
-          [class.color-secondaryColor]="
-            (addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) ||
-            (addressForm.get('observacionesGenerales').invalid && estaEditando)
-          "
-        >
+        <div    class="text-area-quill  izqTitle helperWidthText"
+                [class.color-secondaryColor]="(addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) || (addressForm.get('observacionesGenerales').invalid && estaEditando)">
           <label for="observacionesGenerales" class="text-area-quill--label">Observaciones generales</label>
-          <quill-editor
-            class="quill-editor-style"
-            [styles]="editorStyle"
-            [modules]="config"
-            (onContentChanged)="maxLength($event, 2000)"
-            formControlName="observacionesGenerales"
-          >
+          <quill-editor class="quill-editor-style"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        #observaciones
+                        (onContentChanged)="maxLength($event, 2000)"
+                        formControlName="observacionesGenerales">
           </quill-editor>
         </div>
-        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{
-            2000 -
-              (textoLimpio(addressForm.controls.observacionesGenerales.value) > 2000
-                ? 2000
-                : textoLimpio(addressForm.controls.observacionesGenerales.value))
-          }}
+        <span class="contador miles" *ngIf="addressForm.get( 'observacionesGenerales' ).value">
+            {{ 2000 - ( textoLimpio( observaciones.quillEditor, 2000 ) ) }}
         </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value"> 2000 </span>
+        <span class="contador miles" *ngIf="addressForm.get( 'observacionesGenerales' ).value === null">
+            2000
+        </span>
         <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+          <img  class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
                 [matTooltipPosition]="'above'"
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
-            *ngIf="
-              (addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) ||
-              (addressForm.get('observacionesGenerales').invalid && estaEditando)
-            "
-          />
+                *ngIf="(addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) || (addressForm.get('observacionesGenerales').invalid && estaEditando)">
         </span>
       </div>
    <app-tabla-observaciones-rev-aprob-rapg></app-tabla-observaciones-rev-aprob-rapg>

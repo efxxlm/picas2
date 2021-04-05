@@ -9,12 +9,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="cumpleAsegurado" class="label-left"
-                                [class.color-secondaryColor]="
-                          (addressForm.get('cumpleAsegurado').invalid && addressForm.get('cumpleAsegurado').touched) ||
-                          (addressForm.get('cumpleAsegurado').invalid && estaEditando)
-                        ">
-                                ¿Cumple con los datos del Asegurado/ Beneficiario?
+                            <label  class="label-left"
+                                    for="cumpleAsegurado"
+                                    class="label-left"
+                                    [class.color-secondaryColor]="(addressForm.get('cumpleAsegurado').invalid && addressForm.get('cumpleAsegurado').touched) || (addressForm.get('cumpleAsegurado').invalid && estaEditando)">
+                                    ¿Cumple con los datos del Asegurado/ Beneficiario?
                             </label>
                         </div>
                         <div class="col">
@@ -25,13 +24,13 @@
                             <span class="required-form-group" style="margin-left: 1px">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('cumpleAsegurado').invalid && addressForm.get('cumpleAsegurado').touched) ||
-                          (addressForm.get('cumpleAsegurado').invalid && estaEditando)
-                        " />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="(addressForm.get('cumpleAsegurado').invalid && addressForm.get('cumpleAsegurado').touched) || (addressForm.get('cumpleAsegurado').invalid && estaEditando)">
                         </span>
                     </div>
                 </div>
@@ -40,13 +39,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="cumpleBeneficiario" class="label-left"
-                                [class.color-secondaryColor]="
-                          (addressForm.get('cumpleBeneficiario').invalid &&
-                            addressForm.get('cumpleBeneficiario').touched) ||
-                          (addressForm.get('cumpleBeneficiario').invalid && estaEditando)
-                        ">
-                                ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
+                            <label  class="label-left"
+                                    for="cumpleBeneficiario"
+                                    class="label-left"
+                                    [class.color-secondaryColor]="(addressForm.get('cumpleBeneficiario').invalid && addressForm.get('cumpleBeneficiario').touched) || (addressForm.get('cumpleBeneficiario').invalid && estaEditando)">
+                                    ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
                             </label>
                         </div>
                         <div class="col">
@@ -57,14 +54,13 @@
                             <span class="required-form-group" style="margin-left: 1px">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('cumpleBeneficiario').invalid &&
-                            addressForm.get('cumpleBeneficiario').touched) ||
-                          (addressForm.get('cumpleBeneficiario').invalid && estaEditando)
-                        " />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="(addressForm.get('cumpleBeneficiario').invalid && addressForm.get('cumpleBeneficiario').touched) || (addressForm.get('cumpleBeneficiario').invalid && estaEditando)">
                         </span>
                     </div>
                 </div>
@@ -73,12 +69,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="cumpleAfianzado" class="label-left"
-                                [class.color-secondaryColor]="
-                          (addressForm.get('cumpleAfianzado').invalid && addressForm.get('cumpleAfianzado').touched) ||
-                          (addressForm.get('cumpleAfianzado').invalid && estaEditando)
-                        ">
-                                ¿Cumple con los datos del Tomador / Afianzado?
+                            <label  class="label-left"
+                                    for="cumpleAfianzado"
+                                    class="label-left"
+                                    [class.color-secondaryColor]="(addressForm.get('cumpleAfianzado').invalid && addressForm.get('cumpleAfianzado').touched) || (addressForm.get('cumpleAfianzado').invalid && estaEditando)">
+                                    ¿Cumple con los datos del Tomador / Afianzado?
                             </label>
                         </div>
                         <div class="col">
@@ -89,13 +84,13 @@
                             <span class="required-form-group" style="margin-left: 1px">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('cumpleAfianzado').invalid && addressForm.get('cumpleAfianzado').touched) ||
-                          (addressForm.get('cumpleAfianzado').invalid && estaEditando)
-                        " />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="(addressForm.get('cumpleAfianzado').invalid && addressForm.get('cumpleAfianzado').touched) || (addressForm.get('cumpleAfianzado').invalid && estaEditando)">
                         </span>
                     </div>
                 </div>
@@ -104,12 +99,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="reciboDePago" class="label-left"
-                                [class.color-secondaryColor]="
-                          (addressForm.get('reciboDePago').invalid && addressForm.get('reciboDePago').touched) ||
-                          (addressForm.get('reciboDePago').invalid && estaEditando)
-                        ">
-                                ¿Se incluye el recibo de pago con los datos requeridos?
+                            <label  class="label-left"
+                                    for="reciboDePago"
+                                    class="label-left"
+                                    [class.color-secondaryColor]="(addressForm.get('reciboDePago').invalid && addressForm.get('reciboDePago').touched) || (addressForm.get('reciboDePago').invalid && estaEditando)">
+                                    ¿Se incluye el recibo de pago con los datos requeridos?
                             </label>
                         </div>
                         <div class="col">
@@ -120,13 +114,13 @@
                             <span class="required-form-group" style="margin-left: 1px">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('reciboDePago').invalid && addressForm.get('reciboDePago').touched) ||
-                          (addressForm.get('reciboDePago').invalid && estaEditando)
-                        " />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="(addressForm.get('reciboDePago').invalid && addressForm.get('reciboDePago').touched) || (addressForm.get('reciboDePago').invalid && estaEditando)">
                         </span>
                     </div>
                 </div>
@@ -135,13 +129,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="condicionesGenerales" class="label-left"
-                                [class.color-secondaryColor]="
-                          (addressForm.get('condicionesGenerales').invalid &&
-                            addressForm.get('condicionesGenerales').touched) ||
-                          (addressForm.get('condicionesGenerales').invalid && estaEditando)
-                        ">
-                                ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
+                            <label  class="label-left"
+                                    for="condicionesGenerales"
+                                    class="label-left"
+                                    [class.color-secondaryColor]="(addressForm.get('condicionesGenerales').invalid && addressForm.get('condicionesGenerales').touched) || (addressForm.get('condicionesGenerales').invalid && estaEditando)">
+                                    ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
                             </label>
                         </div>
                         <div class="col">
@@ -152,14 +144,13 @@
                             <span class="required-form-group" style="margin-left: 1px">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('condicionesGenerales').invalid &&
-                            addressForm.get('condicionesGenerales').touched) ||
-                          (addressForm.get('condicionesGenerales').invalid && estaEditando)
-                        " />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="(addressForm.get('condicionesGenerales').invalid && addressForm.get('condicionesGenerales').touched) || (addressForm.get('condicionesGenerales').invalid && estaEditando)">
                         </span>
                     </div>
                 </div>
@@ -167,8 +158,12 @@
         </mat-card-content>
     </mat-card>
     <div class="text-center mb-2em mt-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="submit"
+                [disabled]="addressForm.dirty === false">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
         </button>
     </div>
 </form>
