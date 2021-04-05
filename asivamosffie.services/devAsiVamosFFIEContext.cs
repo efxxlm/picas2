@@ -5462,7 +5462,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<RendimientosIncorporados>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.RendimientosIncorporadosId);
 
                 entity.Property(e => e.CuentaBancaria)
                     .IsRequired()
