@@ -376,6 +376,16 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=175`);
   }
 
+  listaTipoActualizacion() {
+    // Lista del campo tipo de actualizacion "Razón y tipo de actualización" CU 5.4.1
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=181`);
+  }
+
+  listaRazonActualizacion() {
+    // Lista del campo razon de la actualizacion "Razón y tipo de actualización" CU 5.4.1
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=183`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

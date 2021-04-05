@@ -1,10 +1,12 @@
+import { ActualizarPolizasService } from './../../../../core/_services/actualizarPolizas/actualizar-polizas.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import humanize from 'humanize-plus';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
 
 @Component({
   selector: 'app-razon-tipo-actualizacion-rapg',
@@ -13,6 +15,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class RazonTipoActualizacionRapgComponent implements OnInit {
 
+    @Input() contratoPoliza: any;
+    contratoPolizaActualizacion: any;
+    contratoPolizaActualizacionSeguro: any;
+    listaTipoActualizacion: TipoActualizacion = TipoActualizacionCodigo;
     addressForm = this.fb.group({
         contratoPolizaActualizacionId: [ 0 ],
         razonActualizacion: [null, Validators.required],
@@ -20,21 +26,9 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         polizasYSeguros: [null, Validators.required],
         seguros: this.fb.array( [] )
     });
-    razonActualizacionArray : any[] = [
-      {
-        valor:'1',
-        nombre: 'Terminación de contrato'
-      }
-    ]
+    razonActualizacionArray : Dominio[] = []
     polizasYSegurosArray: Dominio[] = [];
-    tipoActualizacionArray: any[] = [{
-      codigo: '1',
-      nombre: 'Fecha'
-    },
-    {
-      codigo: '2',
-      nombre: 'Valor'
-    }];
+    tipoActualizacionArray: Dominio[] = [];
     estaEditando = false;
 
     get seguros() {
@@ -44,14 +38,66 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     constructor(
         private common: CommonService,
         private fb: FormBuilder,
-        private router: Router,
-        private dialog: MatDialog )
+        private routes: Router,
+        private dialog: MatDialog,
+        private actualizarPolizaSvc: ActualizarPolizasService )
     {
-        this.common.listaGarantiasPolizas()
-            .subscribe( listaGarantiasPolizas => this.polizasYSegurosArray = listaGarantiasPolizas );
     }
 
     ngOnInit(): void {
+        this.getRazonTipoActualizacion();
+    }
+
+    async getRazonTipoActualizacion() {
+        this.polizasYSegurosArray = await this.common.listaGarantiasPolizas().toPromise();
+        this.razonActualizacionArray = await this.common.listaRazonActualizacion().toPromise();
+        this.tipoActualizacionArray = await this.common.listaTipoActualizacion().toPromise();
+
+        if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
+            if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
+                this.contratoPolizaActualizacion = this.contratoPoliza.contratoPolizaActualizacion[ 0 ];
+                this.addressForm.get( 'contratoPolizaActualizacionId' ).setValue( this.contratoPolizaActualizacion.contratoPolizaActualizacionId );
+                this.addressForm.get( 'razonActualizacion' ).setValue( this.contratoPolizaActualizacion.razonActualizacionCodigo !== undefined ? this.razonActualizacionArray.find( razon => razon.codigo === this.contratoPolizaActualizacion.razonActualizacionCodigo ).codigo : null );
+                this.addressForm.get( 'fechaExpedicion' ).setValue( this.contratoPolizaActualizacion.fechaExpedicionActualizacionPoliza !== undefined ? new Date( this.contratoPolizaActualizacion.fechaExpedicionActualizacionPoliza ) : null )
+
+                if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro !== undefined ) {
+                    if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro.length > 0 ) {
+                        this.contratoPolizaActualizacionSeguro = this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro;
+                        const segurosSeleccionados = [];
+
+                        for ( const seguro of this.contratoPolizaActualizacionSeguro ) {
+                            const poliza = this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo );
+                            const actualizacionSeleccionada = [];
+
+                            if ( seguro.tieneFechaSeguro === true ) {
+                                actualizacionSeleccionada.push( this.listaTipoActualizacion.seguros );
+                            }
+                            if ( seguro.tieneFechaVigenciaAmparo === true ) {
+                                actualizacionSeleccionada.push( this.listaTipoActualizacion.fecha );
+                            }
+                            if ( seguro.tieneFechaValorAmparo === true ) {
+                                actualizacionSeleccionada.push( this.listaTipoActualizacion.valor );
+                            }
+
+                            segurosSeleccionados.push( seguro.tipoSeguroCodigo );
+
+                            if ( poliza !== undefined ) {
+                                this.seguros.push( this.fb.group(
+                                    {
+                                        contratoPolizaActualizacionSeguroId: [ seguro.contratoPolizaActualizacionSeguroId ],
+                                        nombre: [ poliza.nombre ],
+                                        codigo: [ poliza.codigo ],
+                                        tipoActualizacion: [ actualizacionSeleccionada, Validators.required ]
+                                    }
+                                ) )
+                            }
+                        }
+
+                        this.addressForm.get( 'polizasYSeguros' ).setValue( segurosSeleccionados );
+                    }
+                }
+            }
+        }
     }
   
     getvalues( codigoSeguro: string ) {
@@ -84,6 +130,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
             if ( seguro !== undefined ) {
                 this.seguros.push( this.fb.group(
                     {
+                        contratoPolizaActualizacionSeguroId: [ 0 ],
                         nombre: [ seguro.nombre ],
                         codigo: [ seguro.codigo ],
                         tipoActualizacion: [ null, Validators.required ]
@@ -142,24 +189,55 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     onSubmit() {
         this.estaEditando = true;
 
-        const contratoPolizaActualizacion = {
-            contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
-            contratoPolizaId: 0,
-            razonActualizacionCodigo: '',
-            fechaExpedicionActualizacionPoliza: new Date(),
-            contratoPolizaActualizacionSeguro: [
-                {
-                    contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
-                    tipoSeguroCodigo: '',
-                    tieneFechaSeguro: true,
-                    fechaSeguro: new Date(),
-                    tieneFechaVigenciaAmparo: true,
-                    fechaVigenciaAmparo: new Date(),
-                    tieneFechaValorAmparo: true,
-                    fechaValorAmparo: 0
+        const contratoPolizaActualizacionSeguro = () => {
+            const listSeguro = [];
+
+            this.seguros.controls.forEach( control => {
+                const listaTipoActualizacionCodigo: string[] = control.get( 'tipoActualizacion' ).value;
+
+                if ( listaTipoActualizacionCodigo.length > 0 ) {
+                    const tieneFechaSeguro = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.seguros );
+                    const tieneFechaVigenciaAmparo = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.fecha );
+                    const tieneFechaValorAmparo = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.valor );
+
+                    listSeguro.push(
+                        {
+                            contratoPolizaActualizacionSeguroId: control.get( 'contratoPolizaActualizacionSeguroId' ).value,
+                            contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
+                            tipoSeguroCodigo: control.get( 'codigo' ).value,
+                            tieneFechaSeguro: tieneFechaSeguro !== undefined ? true : false,
+                            tieneFechaVigenciaAmparo: tieneFechaVigenciaAmparo !== undefined ? true : false,
+                            tieneFechaValorAmparo: tieneFechaValorAmparo !== undefined ? true : false,
+                        }
+                    )
                 }
-            ]
+            } );
+
+            return listSeguro;
         }
+
+        const pContratoPolizaActualizacion = {
+            contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
+            contratoPolizaId: this.contratoPoliza.contratoPolizaId,
+            razonActualizacionCodigo: this.addressForm.get( 'razonActualizacion' ).value,
+            fechaExpedicionActualizacionPoliza: new Date( this.addressForm.get( 'fechaExpedicion' ).value ).toISOString(),
+            contratoPolizaActualizacionSeguro: contratoPolizaActualizacionSeguro()
+        }
+
+        this.actualizarPolizaSvc.createorUpdateCofinancing( pContratoPolizaActualizacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', this.contratoPoliza.contratoPolizaId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
