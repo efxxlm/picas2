@@ -11,8 +11,18 @@
                 <div class="pr-1">
                   <label class="label-left">Nombre del aportante:</label>
                 </div>
-                <div class="col d-flex">
-                  <b class="valor-input"> {{ aportante.get('nombreAportante').value }} </b>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select
+                      required
+                      formControlName="cofinanciacionAportanteId"
+                      
+                    >
+                      <mat-option *ngFor="let aportante of listaAportantes" [value]="aportante.cofinanciacionAportanteId">
+                        {{ aportante.nombreAportanteString }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
             </div>

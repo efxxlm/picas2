@@ -150,8 +150,8 @@ export class FaseUnoConstruccionService {
     return this.http.post( `${ this.urlApi }/uploadFileToValidateAdjustmentProgramming?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
   };
 
-  transferMassiveLoadAdjustmentProgramming ( pIdDocument: string ) {
-    return this.http.post<Respuesta>( `${ this.urlApi }/transferMassiveLoadAdjustmentProgramming?pIdDocument=${ pIdDocument }`, '' )
+  transferMassiveLoadAdjustmentProgramming ( pIdDocument: string, pProyectoId, pContratoId ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/transferMassiveLoadAdjustmentProgramming?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
   };
 
   UploadFileToValidateAdjustmentInvestmentFlow ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {

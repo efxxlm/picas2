@@ -301,6 +301,19 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAportanteByContratacion")]
+        public async Task<List<CofinanciacionAportante>> GetAportanteByContratacion([FromQuery] int pId)
+        {
+            try
+            {
+                return await _contractualModification.GetAportanteByContratacion(pId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }
