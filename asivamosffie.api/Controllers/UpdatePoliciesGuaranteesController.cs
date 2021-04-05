@@ -56,9 +56,25 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(result);
             }
         }
-       
-        
-        
+
+        [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatusContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            Respuesta result = new Respuesta();
+            try
+            {
+                pContratoPolizaActualizacion.UsuarioCreacion = User.Identity.Name.ToUpper();
+                result = await _updatePoliciesGuaranteesService.ChangeStatusContratoPolizaActualizacionSeguro(pContratoPolizaActualizacion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.Data = ex;
+                return BadRequest(result);
+            }
+        }
+         
         [Route("CreateorUpdateCofinancing")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)

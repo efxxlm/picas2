@@ -346,5 +346,6 @@
         public const string Aprobar_Ajuste_Programacion = "256";
         public const string Crear_Editar_Actualizacion_Polizas_y_Garantias = "257";
         public const string Eliminar_Seguros_Actualizacion_Polizas_y_garantias ="258";
+        public const string Cambiar_Estado_Actualizar_Polizas_Y_Garantias ="259";
     }
 }

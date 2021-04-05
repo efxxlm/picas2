@@ -17,5 +17,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato);
 
+        Task<Respuesta> ChangeStatusContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion pContratoPolizaActualizacion);
+
     }
 }
