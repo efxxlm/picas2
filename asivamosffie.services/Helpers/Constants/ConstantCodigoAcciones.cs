@@ -312,10 +312,9 @@
 
         public const string Create_Edit_Defensa_Judicial_Seguimiento = "223";
         public const string Create_Edit_Menu_Perfil = "224";
-        public const string Activar_Desactivar_Rol = "225";
-        public const string Crear_Editar_Parametrica = "227";
-
+        public const string Activar_Desactivar_Rol = "225"; 
         public const string Eliminar_Demandado_Convocado = "226";
+        public const string Crear_Editar_Parametrica = "227";
         public const string Eliminar_Defensa_Judicial_Contratacion_Proyecto = "228";
 
 
@@ -330,7 +329,7 @@
         public const string Devolver_Novedad_Contractual = "236";
         public const string Crear_Editar_Novedad_Contractual_Tramite = "237";
         public const string Enviar_A_Comite_Novedad_Contractual = "238";
-        
+
 
         public const string Eliminar_Representante_Etc = "240";
         public const string RechazarNovedadPorInterventor = "241";
@@ -345,5 +344,6 @@
         public const string EnviarAlSupervisorAjusteProgramacion = "249";
         public const string Crear_Observacion_Ajuste_Programacion = "250";
         public const string Aprobar_Ajuste_Programacion = "256";
+        public const string Crear_Editar_Actualizacion_Polizas_y_Garantias ="257";
     }
 }

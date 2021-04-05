@@ -9,6 +9,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IUpdatePoliciesGuaranteesService
     {
+        Task<Respuesta> CreateEditContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion);
+
+        Task<List<VActualizacionPolizaYGarantias>> GetListVActualizacionPolizaYGarantias();
+
         Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato);
 
     }

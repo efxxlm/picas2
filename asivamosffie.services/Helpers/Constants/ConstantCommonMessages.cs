@@ -48,6 +48,13 @@ namespace asivamosffie.services.Helpers.Constant
             public const string CREAR_EDITAR_OBSERVACION_ORDEN_GIRO = "CREAR EDITAR OBSERVACION ORDEN GIRO";
         }
 
+        internal static class UpdatePolicies
+        {
+            public const string CREAR_ACTUALIZACION_POLIZA = "CREAR ACTUALIZACION POLIZAS Y GARANTIAS";
+
+            public const string EDITAR_ACTUALIZACION_POLIZA = "EDITAR ACTUALIZACION POLIZAS Y GARANTIAS";
+        }
+
     }
 
 }

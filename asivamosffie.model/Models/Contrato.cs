@@ -11,7 +11,6 @@ namespace asivamosffie.model.Models
             ContratoObservacion = new HashSet<ContratoObservacion>();
             ContratoPerfil = new HashSet<ContratoPerfil>();
             ContratoPoliza = new HashSet<ContratoPoliza>();
-            ContratoPolizaActulizacion = new HashSet<ContratoPolizaActulizacion>();
             ControversiaContractual = new HashSet<ControversiaContractual>();
             NovedadContractual = new HashSet<NovedadContractual>();
             ProgramacionPersonalContrato = new HashSet<ProgramacionPersonalContrato>();
@@ -94,7 +93,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
-        public virtual ICollection<ContratoPolizaActulizacion> ContratoPolizaActulizacion { get; set; }
         public virtual ICollection<ControversiaContractual> ControversiaContractual { get; set; }
         public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }

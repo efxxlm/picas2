@@ -18,7 +18,6 @@ namespace asivamosffie.api.Controllers
     public class UpdatePoliciesGuaranteesController : ControllerBase
     {
         public readonly IUpdatePoliciesGuaranteesService _updatePoliciesGuaranteesService;
-    
 
         public UpdatePoliciesGuaranteesController(IUpdatePoliciesGuaranteesService updatePoliciesGuaranteesService)
         {
@@ -32,6 +31,31 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _updatePoliciesGuaranteesService.GetContratoByNumeroContrato(pNumeroContrato);
             return respuesta;
         }
-         
+
+        [Route("GetListVActualizacionPolizaYGarantias")]
+        [HttpGet]
+        public async Task<List<VActualizacionPolizaYGarantias>> GetListVActualizacionPolizaYGarantias()
+        {
+            return await _updatePoliciesGuaranteesService.GetListVActualizacionPolizaYGarantias();
+        }
+
+        [Route("CreateorUpdateCofinancing")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            Respuesta result = new Respuesta();
+            try
+            {
+                pContratoPolizaActualizacion.UsuarioCreacion = User.Identity.Name.ToUpper();
+                result = await _updatePoliciesGuaranteesService.CreateEditContratoPolizaActualizacion(pContratoPolizaActualizacion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.Data = ex;
+                return BadRequest(result);
+            }
+        }
+
     }
 }
