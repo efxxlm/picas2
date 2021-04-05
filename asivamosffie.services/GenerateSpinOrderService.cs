@@ -774,14 +774,14 @@ namespace asivamosffie.services
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
             {
-                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() > 0)
+                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() == 0)
                     return false;
                 if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
                     return false;
             }
             else
             {
-                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() > 0)
+                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() == 0)
                     return false;
                 if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
                     return false;
