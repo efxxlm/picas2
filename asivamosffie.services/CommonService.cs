@@ -136,11 +136,11 @@ namespace asivamosffie.services
                 pContenido = pContenido
                     .Replace("_LinkF_", _mailSettings.DominioFront)
                     .Replace("[URL]", _mailSettings.DominioFront);
-
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
-
-                mail.From = new MailAddress(_mailSettings.Sender);
+                 
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress(_mailSettings.Sender)
+                };
 
                 foreach (var email in pListCorreo)
                 {
@@ -148,12 +148,15 @@ namespace asivamosffie.services
                 }
 
                 mail.Subject = pAsunto;
-                mail.IsBodyHtml = true;
-
+                mail.IsBodyHtml = true; 
                 mail.Body = pContenido;
-                SmtpServer.Port = _mailSettings.MailPort;
-                SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
-                SmtpServer.EnableSsl = false;
+
+                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer)
+                {
+                    Port = _mailSettings.MailPort,
+                    Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password),
+                    EnableSsl = false
+                };
                 SmtpServer.Send(mail);
 
             }
