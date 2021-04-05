@@ -75,7 +75,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                             if ( seguro.tieneFechaVigenciaAmparo === true ) {
                                 actualizacionSeleccionada.push( this.listaTipoActualizacion.fecha );
                             }
-                            if ( seguro.tieneFechaValorAmparo === true ) {
+                            if ( seguro.tieneValorAmparo === true ) {
                                 actualizacionSeleccionada.push( this.listaTipoActualizacion.valor );
                             }
 
@@ -198,7 +198,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                 if ( listaTipoActualizacionCodigo.length > 0 ) {
                     const tieneFechaSeguro = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.seguros );
                     const tieneFechaVigenciaAmparo = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.fecha );
-                    const tieneFechaValorAmparo = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.valor );
+                    const tieneValorAmparo = listaTipoActualizacionCodigo.find( codigo => codigo === this.listaTipoActualizacion.valor );
 
                     listSeguro.push(
                         {
@@ -207,7 +207,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                             tipoSeguroCodigo: control.get( 'codigo' ).value,
                             tieneFechaSeguro: tieneFechaSeguro !== undefined ? true : false,
                             tieneFechaVigenciaAmparo: tieneFechaVigenciaAmparo !== undefined ? true : false,
-                            tieneFechaValorAmparo: tieneFechaValorAmparo !== undefined ? true : false,
+                            tieneValorAmparo: tieneValorAmparo !== undefined ? true : false,
                         }
                     )
                 }

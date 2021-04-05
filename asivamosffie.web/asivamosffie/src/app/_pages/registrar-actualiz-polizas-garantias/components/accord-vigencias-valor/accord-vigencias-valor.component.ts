@@ -60,7 +60,7 @@ export class AccordVigenciasValorComponent implements OnInit {
                                     fechaSeguro: [ seguro.fechaSeguro !== undefined ? new Date( seguro.fechaSeguro ) : null, Validators.required ],
                                     tieneFechaAmparo: [ seguro.tieneFechaVigenciaAmparo ],
                                     fechaAmparo: [ seguro.fechaVigenciaAmparo !== undefined ? new Date( seguro.fechaVigenciaAmparo ) : null, Validators.required ],
-                                    tieneValorAmparo: [ seguro.tieneFechaValorAmparo ],
+                                    tieneValorAmparo: [ seguro.tieneValorAmparo ],
                                     valorAmparo: [ seguro.valorAmparo !== undefined ? seguro.valorAmparo : null, Validators.required ]
                                 }
                             ) )
