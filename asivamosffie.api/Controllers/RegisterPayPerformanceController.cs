@@ -137,8 +137,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                string author = User.Identity.Name;
-                var result = await _paymentAndPerformancesService.NotifyRequestManagedPerformancesApproval(uploadedOrderId, author);
+                var result = await _paymentAndPerformancesService.NotifyRequestManagedPerformancesApproval(uploadedOrderId);
                 return Ok(result);
             }
             catch (Exception ex)

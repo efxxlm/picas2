@@ -89,7 +89,7 @@ namespace asivamosffie.api
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
-
+            services.AddHttpContextAccessor();
             services.AddControllers(options =>
             {
                 options.Filters.Add<GlobalExceptionFilter>();
