@@ -88,10 +88,10 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                             if ( registroCompleto === 0 ) {
                                 this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
                             }
-                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length ) {
                                 this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
                             }
-                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
+                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length ) {
                                 this.listaSemaforos.semaforoTerceroCausacion = 'completo';
                             }
                         }

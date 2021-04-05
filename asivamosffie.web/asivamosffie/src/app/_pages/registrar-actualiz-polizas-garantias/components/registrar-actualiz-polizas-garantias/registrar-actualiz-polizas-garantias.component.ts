@@ -1,11 +1,16 @@
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ActualizarPolizasService } from './../../../../core/_services/actualizarPolizas/actualizar-polizas.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-registrar-actualiz-polizas-garantias',
@@ -13,101 +18,59 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./registrar-actualiz-polizas-garantias.component.scss']
 })
 export class RegistrarActualizPolizasGarantiasComponent implements OnInit {
-  verAyuda = false;
-  addressForm = this.fb.group({
-    numeroContrato: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(10) ] ) ],
-  });
-  myFilter = new FormControl();
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'numContrato',
-    'tipoContrato',
-    'contratista',
-    'gestion'
-  ];
-  dataTable: any[] = [
-    {
-      numContrato:'N801800',
-      tipoContrato:'Interventoria',
-      contratista:'Constructora Colpatria',
-      gestion: 1
-    },
-    {
-      numContrato:'N801801',
-      tipoContrato:'Obra',
-      contratista:'Interventores S.A',
-      gestion: 2
-    },
-    {
-      numContrato:'N801999',
-      tipoContrato:'Obra',
-      contratista:'Constructora Colpatria',
-      gestion: 3
-    },
-  ];
-  contratosList: any[] = [
-    {
-      codigo: '1',
-      numContrato: 'N801801'
-    },
-  ];
-  filteredContrato: Observable<string[]>;
-  selectedContract: any = '';
-  estaEditando = false;
-  constructor(
-    private fb: FormBuilder, 
-    private routes: Router
-  ) { 
-    //funcion Autocomplete
-    this.filteredContrato = this.myFilter.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-  }
 
-  ngOnInit(): void {
-  }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();    
-    if(value!="")
-    {      
-      let filtroportipo:string[]=[];
-      this.contratosList.forEach(element => {        
-        if(!filtroportipo.includes(element.numContrato))
+    verAyuda = false;
+    addressForm = this.fb.group(
         {
-          filtroportipo.push(element.numContrato);
+            numeroContrato: [ null ]
         }
-      });
-      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
-      return ret;
-    }
-    else
+    );
+    listContrato: any[] = [];
+    estaEditando = false;
+
+    constructor(
+        private fb: FormBuilder, 
+        private routes: Router,
+        private dialog: MatDialog,
+        private actualizarPolizaSvc: ActualizarPolizasService )
     {
-      return [];
     }
-    
-  }
-  seleccionAutocomplete(nombre: string){
-    this.selectedContract = nombre;
-    let lista: any[] = [];
-    this.contratosList.forEach(element => {
-      if (element.numeroContrato) {
-        lista.push(element);
-      }
-    });
-    let ret = lista.filter(x => x.numeroContrato.toLowerCase() === nombre.toLowerCase());
-    console.log(ret);
-    this.loadDataSource();
-  }
-  loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-  }
-  actualizarPoliza(id){
-    this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/actualizarPoliza', id]);
-  }
+
+    ngOnInit(): void {
+    }
+
+    loadDataSource() {
+    }
+
+    actualizarPoliza(id){
+      this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/actualizarPoliza', id]);
+    }
+
+    getContratos(  ) {
+        if ( this.addressForm.get( 'numeroContrato' ).value !== null ) {
+            if ( this.addressForm.get( 'numeroContrato' ).value.length > 0 ) {
+                this.listContrato = [];
+                this.actualizarPolizaSvc.getContratoByNumeroContrato( this.addressForm.get( 'numeroContrato' ).value )
+                    .subscribe(
+                        response => {
+                            console.log( response );
+                            this.listContrato = response;
+
+                            if ( response.length === 0 ) {
+                                this.openDialog( '', '<b>No se encontraron contratos relacionados.</b>' );
+                                this.addressForm.get( 'numeroContrato' ).setValue( null )
+                            }
+                        }
+                    )
+            }
+        }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
 }

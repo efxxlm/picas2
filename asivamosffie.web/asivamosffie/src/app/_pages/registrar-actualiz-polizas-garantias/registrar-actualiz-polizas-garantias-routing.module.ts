@@ -32,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleEditarPoliza/:id',
-    component:VerDetalleEditarPolizaRapgComponent
+    component:ActualizarPolizaRapgComponent
   },
   {
     path: 'verDetallePoliza/:id',

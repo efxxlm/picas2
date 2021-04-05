@@ -1,11 +1,11 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="esRegistroNuevo !== undefined">
     <div class="text-right">
         <a routerLink="/registrarActualizacionesPolizasYGarantias" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Actualizar póliza de contrato N801801
+        {{ esRegistroNuevo === true ? 'Actualizar' : 'Ver detalle/Editar' }} póliza de contrato N801801
     </h1>
     <mat-card class="shipping-card mainGris">
         <mat-card-content style="text-align: left;">

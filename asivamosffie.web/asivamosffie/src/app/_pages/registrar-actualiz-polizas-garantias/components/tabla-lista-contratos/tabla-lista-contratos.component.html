@@ -1,0 +1,32 @@
+<section class="d-flex justify-content-center">
+    <div class="table-responsive" style="width: 70%;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="numContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de contrato </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.numeroContrato }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="tipoContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de contrato </th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ getTipoSolicitudContrato( element.tipoSolicitudCodigo ) }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="contratista">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> nombre del contratista </th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.nombre }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            [routerLink]="[ 'actualizarPoliza', element.contratoPolizaId ]">
+                            Actualizar póliza
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</section>
