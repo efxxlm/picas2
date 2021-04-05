@@ -58,6 +58,12 @@ namespace asivamosffie.services
                 proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 proyecto.Sede = Sede;
+                LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                                                          && r.MenuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual
+                                                          && r.Eliminado != true
+                                                          && r.RegistroCompleto == true
+                                                          && r.Archivado != true
+                                                          && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Informe_final).FirstOrDefault();
 
                 ProyectoAjustado.Add(new
                 {
@@ -66,11 +72,11 @@ namespace asivamosffie.services
                     llaveMen = proyecto.LlaveMen,
                     tipoIntervencion = proyecto.tipoIntervencionString,
                     sede = proyecto.Sede.Nombre,
-                    estadoValidacion = "Sin validación",//definir!
+                    registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
                     proyectoId = proyecto.ProyectoId,
                     informeFinalId = proyecto.InformeFinal.FirstOrDefault().InformeFinalId,
                     institucionEducativa = proyecto.InstitucionEducativa.Nombre
-                });
+                }); ;
             }
 
             return ProyectoAjustado;
@@ -159,8 +165,186 @@ namespace asivamosffie.services
             return ListInformeFinalChequeo;
         }
 
+        public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _context.LiquidacionContratacionObservacion
+                                           .Where(r => r.MenuId == pMenuId
+                                               && r.ContratacionProyectoId == pContratacionProyectoId
+                                               && r.IdPadre == pPadreId
+                                               && r.TipoObservacionCodigo == pTipoObservacionCodigo)
+                                            .Select(p => new
+                                            {
+                                                p.LiquidacionContratacionObservacionId,
+                                                p.TieneObservacion,
+                                                p.Archivado,
+                                                p.FechaCreacion,
+                                                p.Observacion,
+                                                p.RegistroCompleto
+                                            }).ToListAsync();
+        }
 
+        public async Task<Respuesta> CreateUpdateLiquidacionContratacionObservacion(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Liquidacion_Contratacion_Observacion, (int)EnumeratorTipoDominio.Acciones);
 
+            try
+            {
+                if (pLiquidacionContratacionObservacion.LiquidacionContratacionObservacionId > 0)
+                {
+                    if (pLiquidacionContratacionObservacion.Archivado == null)
+                        pLiquidacionContratacionObservacion.Archivado = false;
+
+                    await _context.Set<LiquidacionContratacionObservacion>()
+                                  .Where(o => o.LiquidacionContratacionObservacionId == pLiquidacionContratacionObservacion.LiquidacionContratacionObservacionId)
+                                  .UpdateAsync(r => new LiquidacionContratacionObservacion()
+                                  {
+                                      Archivado = pLiquidacionContratacionObservacion.Archivado,
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pLiquidacionContratacionObservacion.UsuarioCreacion,
+                                      RegistroCompleto = ValidateCompleteRecordLiquidacionContratacionObservacion(pLiquidacionContratacionObservacion),
+                                      TieneObservacion = pLiquidacionContratacionObservacion.TieneObservacion,
+                                      Observacion = pLiquidacionContratacionObservacion.Observacion,
+                                  });
+                }
+                else
+                {
+                    pLiquidacionContratacionObservacion.Archivado = false;
+                    pLiquidacionContratacionObservacion.FechaCreacion = DateTime.Now;
+                    pLiquidacionContratacionObservacion.Eliminado = false;
+                    pLiquidacionContratacionObservacion.RegistroCompleto = ValidateCompleteRecordLiquidacionContratacionObservacion(pLiquidacionContratacionObservacion);
+
+                    _context.Entry(pLiquidacionContratacionObservacion).State = EntityState.Added;
+                    _context.SaveChanges();
+                }
+
+                Respuesta respuesta =
+                   new Respuesta
+                   {
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = GeneralCodes.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual, GeneralCodes.OperacionExitosa, idAccion, pLiquidacionContratacionObservacion.UsuarioCreacion, "CREAR OBSERVACIÓN LIQUIDACIÓN CONTRATACIÓN")
+                   };
+
+                if (pLiquidacionContratacionObservacion.Archivado != true)
+                    await ValidateCompleteObservation(pLiquidacionContratacionObservacion, pLiquidacionContratacionObservacion.UsuarioCreacion);
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual, GeneralCodes.Error, idAccion, pLiquidacionContratacionObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private bool ValidateCompleteRecordLiquidacionContratacionObservacion(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion)
+        {
+            if (pLiquidacionContratacionObservacion.TieneObservacion == false)
+            {
+                return true;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(pLiquidacionContratacionObservacion.Observacion))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private async Task<bool> ValidateCompleteObservation(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion, string pUsuarioMod)
+        {
+            try
+            {
+                ContratacionProyecto contratacionProyecto = await _context.ContratacionProyecto.FindAsync(pLiquidacionContratacionObservacion.ContratacionProyectoId);
+                
+                //genera consecutivo
+                if (pLiquidacionContratacionObservacion.MenuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual)
+                {
+                    if (String.IsNullOrEmpty(contratacionProyecto.NumeroSolicitudLiquidacion))
+                    {
+                        int consecutivo = _context.ContratacionProyecto
+                                        .Where(r => !String.IsNullOrEmpty(r.NumeroSolicitudLiquidacion))
+                                        .Count();
+                        contratacionProyecto.NumeroSolicitudLiquidacion = "SL " + (consecutivo + 1).ToString("000");
+                        _context.SaveChanges();
+                    }
+                }
+
+                int intCantidadTipoObservacionCodigo = 3;//ConstantCodigoTipoObservacionLiquidacionContratacion
+                
+                    int intCantidadObservacionesLiquidacionContratacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionProyectoId == pLiquidacionContratacionObservacion.ContratacionProyectoId
+                                                              && r.MenuId == pLiquidacionContratacionObservacion.MenuId
+                                                              && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
+                                                              && r.Archivado != true).Count();
+
+                //Valida si la cantidad del tipo de codigo es igual a las observaciones para ese menu 
+                bool blRegistroCompleto = false;
+                DateTime? FechaRegistroCompleto = null;
+                if (intCantidadObservacionesLiquidacionContratacion >= intCantidadTipoObservacionCodigo)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
+                    blRegistroCompleto = true;
+                }
+
+                switch (pLiquidacionContratacionObservacion.MenuId)
+                {
+                    case (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual:
+                        await _context.Set<ContratacionProyecto>()
+                        .Where(r => r.ContratacionProyectoId == pLiquidacionContratacionObservacion.ContratacionProyectoId)
+                        .UpdateAsync(r => new ContratacionProyecto()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoValidacionLiquidacionCodigo = blRegistroCompleto ? ConstantCodigoEstadoValidacionLiquidacion.Con_validacion : ConstantCodigoEstadoValidacionLiquidacion.En_proceso_de_validacion,
+                            RegistroCompletoVerificacionLiquidacion = blRegistroCompleto,
+                            FechaValidacionLiquidacion = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Aprobar_solicitud_liquidacion_contractual:
+                        await _context.Set<ContratacionProyecto>()
+                        .Where(r => r.ContratacionProyectoId == pLiquidacionContratacionObservacion.ContratacionProyectoId)
+                        .UpdateAsync(r => new ContratacionProyecto()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoAprobacionLiquidacionCodigo = blRegistroCompleto ? ConstantCodigoEstadoAprobacionLiquidacion.Con_aprobacion : ConstantCodigoEstadoAprobacionLiquidacion.En_proceso_de_aprobacion,
+                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto,
+                            FechaAprobacionLiquidacion = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual:
+                        await _context.Set<ContratacionProyecto>()
+                        .Where(r => r.ContratacionProyectoId == pLiquidacionContratacionObservacion.ContratacionProyectoId)
+                        .UpdateAsync(r => new ContratacionProyecto()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoTramiteLiquidacion = blRegistroCompleto ? ConstantCodigoEstadoVerificacionLiquidacion.Con_verificacion : ConstantCodigoEstadoVerificacionLiquidacion.En_proceso_de_verificacion,
+                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto,
+                            FechaTramiteLiquidacion = FechaRegistroCompleto
+                        });
+                        break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }

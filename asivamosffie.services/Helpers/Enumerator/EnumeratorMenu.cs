@@ -59,7 +59,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Verificar_Financieramente_Solicitud_De_Pago = 82,
         Validar_Financieramente_Solicitud_De_Pago = 83,
         Tramitar_orden_de_giro = 85,
-        Registrar_actualizacion_de_polizas_y_garantias = 91
+        Registrar_validar_solicitud_liquidacion_contractual = 88,
+        Aprobar_solicitud_liquidacion_contractual = 89,
+        Gestionar_tramite_liquidacion_contractual = 90,
+        Registrar_actualizacion_de_polizas_y_garantias = 91,
     }
 
     public enum enumeratorAccion

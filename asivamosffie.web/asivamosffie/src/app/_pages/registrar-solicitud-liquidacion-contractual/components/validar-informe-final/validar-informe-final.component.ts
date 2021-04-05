@@ -12,18 +12,32 @@ import { InformeFinal } from 'src/app/_interfaces/informe-final';
 export class ValidarInformeFinalComponent implements OnInit {
 
   proyectoId: number;
+  contratacionProyectoId: number;
   data: any;
+  listaTipoObservacionLiquidacionContratacion: any;
+  listaMenu: any;
   constructor(
     private route: ActivatedRoute,
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
+      this.contratacionProyectoId = params.id;
     });
   }
 
   ngOnInit(): void {
     this.getInformeFinalByProyectoId(this.proyectoId);
+    this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
+    .subscribe( response => {
+        this.listaTipoObservacionLiquidacionContratacion = response;
+        console.log("listaTipoObservacionLiquidacionContratacion: ",response );
+    });
+    this.registerContractualLiquidationRequestService.listaMenu()
+    .subscribe( response => {
+        this.listaMenu = response;
+        console.log("listaMenu: ",response );
+    });
   }
 
   getInformeFinalByProyectoId(proyectoId: number) {

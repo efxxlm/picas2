@@ -76,14 +76,13 @@
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [class.sin-diligenciar]="semaforoInformeFinal == 'Incompleto'"
+            [class.completo]="semaforoInformeFinal == 'Completo'"
           >
             Informe final
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-informe-final *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId"></app-tabla-informe-final>
+        <app-tabla-informe-final *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoInformeFinal)="valueSemaforoInformeFinal($event)"></app-tabla-informe-final>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

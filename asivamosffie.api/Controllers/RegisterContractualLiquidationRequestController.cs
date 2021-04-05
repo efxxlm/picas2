@@ -96,5 +96,31 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId")]
+        [HttpGet]
+        public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId([FromQuery] int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _registerContractualLiquidationRequest.GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(pMenuId, pContratacionProyectoId, pPadreId, pTipoObservacionCodigo);
+        }
+
+        [HttpPost]
+        [Route("CreateUpdateLiquidacionContratacionObservacion")]
+        public async Task<IActionResult> CreateUpdateLiquidacionContratacionObservacion([FromBody] LiquidacionContratacionObservacion pLiquidacionContratacionObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pLiquidacionContratacionObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerContractualLiquidationRequest.CreateUpdateLiquidacionContratacionObservacion(pLiquidacionContratacionObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

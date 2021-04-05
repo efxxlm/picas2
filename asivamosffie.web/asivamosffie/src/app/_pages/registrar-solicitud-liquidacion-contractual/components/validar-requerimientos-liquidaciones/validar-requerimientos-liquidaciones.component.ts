@@ -8,6 +8,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
 
+  semaforoInformeFinal = 'Incompleto'
   contratacionProyectoId: number;
   constructor(
     private route: ActivatedRoute,
@@ -21,4 +22,7 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  valueSemaforoInformeFinal(event: any){
+    this.semaforoInformeFinal = event;
+  }
 }

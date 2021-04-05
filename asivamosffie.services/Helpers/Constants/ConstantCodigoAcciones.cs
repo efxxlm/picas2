@@ -347,5 +347,8 @@
         public const string Crear_Editar_Actualizacion_Polizas_y_Garantias = "257";
         public const string Eliminar_Seguros_Actualizacion_Polizas_y_garantias ="258";
         public const string Cambiar_Estado_Actualizar_Polizas_Y_Garantias ="259";
+
+        //5.1.6 - 5.1.7 - 5.1.8
+        public const string Crear_Actualizar_Liquidacion_Contratacion_Observacion = "260";
     }
 }
