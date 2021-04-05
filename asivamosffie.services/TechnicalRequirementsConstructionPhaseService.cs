@@ -2677,6 +2677,16 @@ namespace asivamosffie.services
                     {
                         case ConstanTiposNovedades.Adición:
                             {
+                                for (int i = 0; i < programacions.Length; i++)
+                                {
+                                    if (ajusteProgramacionObras.Length > i)
+                                    {
+                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
+                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
+                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
+                                    }
+                                }
+
                                 for (int i = 0; i < flujoInversions.Length; i++)
                                 {
                                     if (ajusteProgramacionFlujos.Length > i)
@@ -2685,6 +2695,64 @@ namespace asivamosffie.services
                                     }
                                 }
 
+                                break;
+                            }
+                        case ConstanTiposNovedades.Prórroga:
+                            {
+                                for (int i = 0; i < programacions.Length; i++)
+                                {
+                                    if (ajusteProgramacionObras.Length > i)
+                                    {
+                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
+                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
+                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
+                                    }
+                                }
+
+                                for (int i = 0; i < ajusteProgramacionFlujos.Length; i++)
+                                {
+                                    if (flujoInversions.Length > i)
+                                    {
+                                        flujoInversions[i].Valor = ajusteProgramacionFlujos[i].Valor;
+                                    }
+                                    else
+                                    {
+                                        FlujoInversion flujo = new FlujoInversion
+                                        {
+                                            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
+                                            Semana = ajusteProgramacionFlujos[i].Semana,
+                                            Valor = ajusteProgramacionFlujos[i].Valor,
+                                            MesEjecucionId = ajusteProgramacionFlujos[i].MesEjecucionId,
+                                            ProgramacionId = ajusteProgramacionFlujos[i].ProgramacionId,
+                                            SeguimientoSemanalId = ajusteProgramacionFlujos[i].SeguimientoSemanalId,
+
+                                        };
+
+                                        _context.FlujoInversion.Add(flujo);
+                                    }
+                                }
+
+                                break;
+                            }
+                            case ConstanTiposNovedades.Reinicio:
+                            {
+                                for (int i = 0; i < programacions.Length; i++)
+                                {
+                                    if (ajusteProgramacionObras.Length > i)
+                                    {
+                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
+                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
+                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
+                                    }
+                                }
+
+                                for (int i = 0; i < ajusteProgramacionFlujos.Length; i++)
+                                {
+                                    if (flujoInversions.Length > i)
+                                    {
+                                        flujoInversions[i].Valor = ajusteProgramacionFlujos[i].Valor;
+                                    }
+                                }
                                 break;
                             }
                     }
@@ -3941,6 +4009,10 @@ namespace asivamosffie.services
 
         }
 
+        
+        
+        
+        
         public async Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo,
                                                                                 int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                                 int pContratoId, int pProyectoId)
@@ -3949,18 +4021,19 @@ namespace asivamosffie.services
 
             if (pAjusteProgramacionId == 0)
             {
-                AjusteProgramacion ajusteProgramacion = new AjusteProgramacion();
+                AjusteProgramacion ajusteProgramacionTemp = new AjusteProgramacion();
 
                 //ajusteProgramacion.UsuarioCreacion = pUsuarioCreo;
                 //ajusteProgramacion.FechaCreacion = DateTime.Now;
 
-                ajusteProgramacion.ContratacionProyectoId = pContratacionProyectId;
-                ajusteProgramacion.NovedadContractualId = pNovedadContractualId;
+                ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
+                ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
+                ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
 
-                _context.AjusteProgramacion.Add(ajusteProgramacion);
+                _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
                 _context.SaveChanges();
 
-                pAjusteProgramacionId = ajusteProgramacion.AjusteProgramacionId;
+                pAjusteProgramacionId = ajusteProgramacionTemp.AjusteProgramacionId;
             }
 
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
@@ -3973,12 +4046,25 @@ namespace asivamosffie.services
                                                                         .Include(r => r.Proyecto)
                                                                         .FirstOrDefault();
 
+            NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                .Include( x => x.NovedadContractualDescripcion )
+                                                                .FirstOrDefault( x => x.NovedadContractualId == pNovedadContractualId);
 
             Proyecto proyectoTemp = CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra);
 
+            AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
 
             DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
             DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
+
+            novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+           {
+               if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+               {
+                   double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
+                   proyectoTemp.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
+               }
+           });
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -4302,7 +4388,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> TransferMassiveLoadAdjustmentProgramming(string pIdDocument, string pUsuarioModifico)
+        public async Task<Respuesta> TransferMassiveLoadAdjustmentProgramming(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
 
@@ -4386,31 +4472,55 @@ namespace asivamosffie.services
 
                     AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(ajusteProgramacionId);
 
-                    //ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cc => cc.ContratoId == pContratoId && cc.ProyectoId == pProyectoId)
+                                                                        .FirstOrDefault();
 
-                    //Proyecto proyecto = CalcularFechaInicioContrato(contratoConstruccionId);
+                    Proyecto proyecto = CalcularFechaInicioContrato(contratoConstruccion.ContratoConstruccionId);
+
+                    NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                .Include(x => x.NovedadContractualDescripcion)
+                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
+
+                    novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+                    {
+                        if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+                        {
+                            double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
+                            proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
+                        }
+                    });
+
+                    MesEjecucion[] meses = _context.MesEjecucion.Where(x => x.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).ToArray();
 
                     int numeroMes = 1;
                     int idMes = 0;
-                    //for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
-                    //{
+                    for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
+                    {
+                          if ( meses.Length < numeroMes)
+                        {
+                            MesEjecucion mes = new MesEjecucion()
+                            {
+                                ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
+                                Numero = numeroMes,
+                                FechaInicio = fecha,
+                                FechaFin = fecha.AddMonths(1).AddDays(-1),
 
-                    //    MesEjecucion mes = new MesEjecucion()
-                    //    {
-                    //        ContratoConstruccionId = contratoConstruccionId,
-                    //        Numero = numeroMes,
-                    //        FechaInicio = fecha,
-                    //        FechaFin = fecha.AddMonths(1).AddDays(-1),
+                            };
 
-                    //    };
+                            _context.MesEjecucion.Add(mes);
+                        }
 
-                    //    _context.MesEjecucion.Add(mes);
-                    //    numeroMes++;
-                    //}
-                    //_context.SaveChanges();
+                        numeroMes++;
+                    }
+                    
 
-                    //MesEjecucion ultimoMes = _context.MesEjecucion.Where(m => m.ContratoConstruccionId == contratoConstruccionId).OrderByDescending(m => m.Numero).FirstOrDefault();
-                    //ultimoMes.FechaFin = proyecto.FechaFinEtapaObra;
+                    MesEjecucion ultimoMes = _context.MesEjecucion
+                                                            .Where(m => m.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
+                                                            .OrderByDescending(m => m.Numero)
+                                                            .FirstOrDefault();
+
+                    ultimoMes.FechaFin = proyecto.FechaFinEtapaObra;
 
                     _context.SaveChanges();
 
@@ -4497,10 +4607,27 @@ namespace asivamosffie.services
 
             Proyecto proyecto = CalcularFechasContrato(pProyectoId, contratoConstruccion.FechaInicioObra);
 
+            NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                .Include(x => x.NovedadContractualDescripcion)
+                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
+
+            novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+            {
+                if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+                {
+                    double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
+                    proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
+                }
+            });
+
+            List<dynamic> listaFechas = crearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
+
             //Numero semanas
-            int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
-            if (Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0)
-                numberOfWeeks++;
+            int numberOfWeeks = listaFechas.Count();
+
+            //int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
+            //if (Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0)
+            //    numberOfWeeks++;
 
             //Capitulos cargados
             AjusteProgramacionObra[] listaProgramacion = _context.AjusteProgramacionObra
@@ -4741,6 +4868,83 @@ namespace asivamosffie.services
 
         }
 
+        private List<dynamic> crearNuevasFecha( Proyecto proyecto, NovedadContractual novedadContractual, AjusteProgramacion ajusteProgramacion)
+        {
+            List<dynamic> listaFechasTemp = new List<dynamic>();
+            List<dynamic> listaFechas = new List<dynamic>();
+
+            DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
+
+            while (proyecto.FechaFinEtapaObra >= fechaTemp)
+            {
+                listaFechasTemp.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
+                fechaTemp = fechaTemp.AddDays(7);
+            }
+
+            // agrega la cantidad de dias del reinicio
+            if (
+                novedadContractual.NovedadContractualDescripcion.Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio).Count() > 0 && 
+                ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+            {
+                NovedadContractualDescripcion novedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion
+                                                                                                    .Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
+                                                                                                    .FirstOrDefault();
+
+                double cantidadDiasAgregados = (novedadContractualDescripcion.FechaFinSuspension.Value - novedadContractualDescripcion.FechaInicioSuspension.Value).TotalDays;
+
+                for (int j = 0; j < listaFechasTemp.Count(); j++)
+                {
+                    // busco el rango donde este la fecha de inicio de la novedad
+                    if (
+                            novedadContractualDescripcion.FechaInicioSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                            novedadContractualDescripcion.FechaInicioSuspension.Value <= listaFechasTemp[j].fechaFin
+                        )
+                    {
+                        // asigno la nueva fecha fin del rango
+                        listaFechasTemp[j].fechaFin = novedadContractualDescripcion.FechaInicioSuspension.Value;
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+
+                        // busco el rango donde este la fecha de inicio de la novedad si estan en la misma semana
+                        if (
+                                novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                                novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
+                            )
+                        {
+                            // asigno la nueva fecha Inicio del rango
+                            listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
+                            listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                        }
+                    }
+                    else
+                    // busco el rango donde este la fecha de inicio de la novedad
+                    if (
+                            novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                            novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
+                        )
+                    {
+                        // asigno la nueva fecha Inicio del rango
+                        listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                    }
+                    // suma la cantidad de dias a los rangos despues del reinicio
+                    else if (novedadContractualDescripcion.FechaFinSuspension < listaFechasTemp[j].fechaInicio)
+                    {
+                        listaFechasTemp[j].fechaInicio = listaFechasTemp[j].fechaInicio.AddDays(cantidadDiasAgregados);
+                        listaFechasTemp[j].fechaFin = listaFechasTemp[j].fechaFin.AddDays(cantidadDiasAgregados);
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                    }
+
+
+                }
+            }
+            else
+            {
+                listaFechas = listaFechasTemp.ToList();
+            }
+
+            return listaFechas;
+        }
+
         public async Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
@@ -4796,19 +5000,26 @@ namespace asivamosffie.services
 
 
 
-                    //carga el seguimiento semanal 
+                    // 
                     ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
+
+                    NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                .Include(x => x.NovedadContractualDescripcion)
+                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
+
                     if (contratacionProyecto != null)
                     {
-                        List<dynamic> listaFechas = new List<dynamic>();
-
-                        DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
-
-                        while (proyecto.FechaFinEtapaObra >= fechaTemp)
+                        novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
                         {
-                            listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
-                            fechaTemp = fechaTemp.AddDays(7);
-                        }
+                            if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+                            {
+                                double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
+                                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
+                            }
+                        });
+
+                        // ajusta las nuevas fechas 
+                        List<dynamic> listaFechas = crearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
 
                         int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
 
@@ -4823,8 +5034,8 @@ namespace asivamosffie.services
                         //_context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
 
                         int i = 1;
-                        //listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
-                        //{
+                        listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
+                        {
 
                         //    SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
                         //    {
@@ -4843,7 +5054,7 @@ namespace asivamosffie.services
 
                         //    i++;
 
-                        //});
+                        });
 
                         //SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
                         //                                                    .Where(s => s.ContratacionProyectoId == idContratacionproyecto)

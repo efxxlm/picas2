@@ -1,13 +1,147 @@
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Seguro 1
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-vigencias-valor-rapg></app-vigencias-valor-rapg>
-    </mat-expansion-panel>
-</mat-accordion>
+<section *ngIf="seguros.length > 0">
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <mat-accordion *ngFor="let seguro of seguros.controls; index as i">
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Seguro {{ i + 1 }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+    
+                <mat-card class="shipping-card">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text">
+                            {{ seguro.get( 'nombre' ).value }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;" [formGroup]="seguro">
+                        <div class="mt-2em" *ngIf="seguro.get( 'tieneSeguro' ).value === true">
+                            <p><b>Vigencia de la póliza: </b><em> {{ contratoPoliza.vigencia | date: 'dd/MM/yyyy' }} </em></p>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="fechaSeguro" [ngClass]="{
+                                                  'color-secondaryColor':
+                                                    (addressForm.get('fechaSeguro')?.invalid && addressForm.get('fechaSeguro').touched) ||
+                                                    (addressForm.get('fechaSeguro')?.invalid && estaEditando)
+                                                }">Vigencia actualizada de la póliza</label>
+                                        </div>
+                                        <div class="col d-flex align-items-center">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput formControlName="fechaSeguro"
+                                                    [matDatepicker]="pickerFecha22" readonly (click)="pickerFecha22.open()" required
+                                                    placeholder="DD/MM/AAAA" />
+                                                <mat-datepicker #pickerFecha22></mat-datepicker>
+                                            </mat-form-field>
+                                            <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
+                                                class="btn-calendario">
+                                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                            </button>
+                                        </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                  (addressForm.get('fechaSeguro')?.invalid && addressForm.get('fechaSeguro').touched) ||
+                                                  (addressForm.get('fechaSeguro')?.invalid && estaEditando)
+                                                " />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2em" *ngIf="seguro.get( 'tieneFechaAmparo' ).value === true">
+                            <p><b>Vigencia del amparo: </b><em> {{ contratoPoliza.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="fechaAmparo" [ngClass]="{
+                                                  'color-secondaryColor':
+                                                    (addressForm.get('fechaAmparo')?.invalid && addressForm.get('fechaAmparo').touched) ||
+                                                    (addressForm.get('fechaAmparo')?.invalid && estaEditando)
+                                                }">Vigencia actualizada del amparo</label>
+                                        </div>
+                                        <div class="col d-flex align-items-center">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput formControlName="fechaAmparo"
+                                                    [matDatepicker]="pickerFecha221" readonly (click)="pickerFecha221.open()"
+                                                    required placeholder="DD/MM/AAAA" />
+                                                <mat-datepicker #pickerFecha221></mat-datepicker>
+                                            </mat-form-field>
+                                            <button mat-button color="primary" type="button" (click)="pickerFecha221.open()"
+                                                class="btn-calendario">
+                                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                            </button>
+                                        </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                  (addressForm.get('fechaAmparo')?.invalid && addressForm.get('fechaAmparo').touched) ||
+                                                  (addressForm.get('fechaAmparo')?.invalid && estaEditando)
+                                                " />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2em" *ngIf="seguro.get( 'tieneValorAmparo' ).value === true">
+                            <p><b>Valor del amparo: </b><em> {{ contratoPoliza.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="valorAmparo"
+                                                [ngClass]="{ 'color-secondaryColor': addressForm.controls.valorAmparo?.invalid }">
+                                                Valor actualizado del amparo
+                                            </label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <mat-form-field class="full-width">
+                                                <input matInput #valorAmparo currencyMask maxlength="20" required
+                                                    formControlName="valorAmparo"
+                                                    (keypress)="validateNumberKeypress($event)"
+                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
+                                            </mat-form-field>
+                                            <span class="contador" [matTooltipPosition]="'above'"
+                                                matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                                {{ 20 - valorAmparo.value.length }}
+                                            </span>
+                                            <span class="icon-incompleto">
+                                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                    matTooltipClass="info-tooltip" *ngIf="
+                                                    (addressForm.get('valorAmparo')?.invalid && addressForm.get('valorAmparo').touched) ||
+                                                    (addressForm.get('valorAmparo')?.invalid && estaEditando)
+                                                  " />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+                <div class="text-center mb-2em">
+                    <button mat-button
+                            color="warn"
+                            class="btn-guardar"
+                            type="submit"
+                            [disabled]="seguro.dirty === false">
+                            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                    </button>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</section>
+<!--
 <mat-accordion>
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
@@ -18,3 +152,4 @@
         <app-vigencias-valor-rapg></app-vigencias-valor-rapg>
     </mat-expansion-panel>
 </mat-accordion>
+-->

@@ -90,4 +90,9 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorSupervisor`, novedad ); 
   }
 
+  GetAportanteByContratacion(pId)
+  {
+    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByContratacion?pId=${pId}` ); 
+  }
+
 }

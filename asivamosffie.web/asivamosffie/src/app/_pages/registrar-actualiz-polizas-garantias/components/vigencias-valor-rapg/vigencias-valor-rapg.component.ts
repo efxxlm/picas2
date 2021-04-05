@@ -7,6 +7,7 @@ import { Validators, FormBuilder } from '@angular/forms';
   styleUrls: ['./vigencias-valor-rapg.component.scss']
 })
 export class VigenciasValorRapgComponent implements OnInit {
+
   addressForm = this.fb.group({
     vigenciaActualizadaPoliza: [null, Validators.required],
     vigenciaActualizadaAmparo: [null, Validators.required],
@@ -50,7 +51,9 @@ export class VigenciasValorRapgComponent implements OnInit {
     }
     return contadorConcurrencias;
   }
+
   onSubmit() {
     this.estaEditando = true;
   }
+
 }

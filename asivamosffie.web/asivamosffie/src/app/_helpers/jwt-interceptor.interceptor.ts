@@ -180,10 +180,9 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
               this.authenticationService.logout(true);
               //location.reload(true);
           } else {
-              // console.log(err);
-              errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error.message}`;
-             console.log(errorMsg);
-             console.log(errorResponse.error.data.StackTraceString);
+            // console.log(err);
+            errorMsg = `Backend returned code ${errorResponse.status}, body was: ${ errorResponse.error !== undefined ? errorResponse.error.message : errorResponse.message }`;
+            console.warn(errorMsg);
 
           }
       }

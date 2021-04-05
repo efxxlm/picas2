@@ -25,6 +25,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   addressForm = this.fb.group([]);
   fasesSelect: Dominio[] = [];
   listaUsos: any[] = [];
+  listaAportantes: any[] = [];
   listaComponentes: any[] = [];
   componentesSelect: Dominio[] = [];
   usosSelect: Dominio[] = [];
@@ -85,6 +86,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       estadoSemaforo: [null],
       saldoDisponible: [null],
       contratacionProyectoAportanteId: [],
+      cofinanciacionAportanteId:[],
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
@@ -105,6 +107,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
         this.commonService.listaComponentes(),
         this.commonService.listaUsos(),
         this.projectContractingService.getListFaseComponenteUso(),
+        this.contractualNoveltyService.GetAportanteByContratacion( this.novedad.contrato.contratacionId )
         //this.projectContractingService.getContratacionProyectoById(id),
       ])
 
@@ -114,7 +117,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.componentesSelect = response[1];
           this.usosSelect = response[2];
           this.listaFaseUsosComponentes = response[3];
-          //this.contratacionProyecto = response[4];
+          this.listaAportantes = response[4];
+          //this.contratacionProyecto = response[5];
 
           setTimeout(() => {
 
@@ -161,6 +165,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
               }
               grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
               grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
+              grupoAportante.get('cofinanciacionAportanteId').setValue(apo.cofinanciacionAportanteId);
               //if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
               //  grupoAportante.get('nombreAportante').setValue('FFIE');
               //} else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
@@ -198,6 +203,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
                   };
 
+                  
                   grupoComponente.get('componenteAportanteId').setValue(compoApo.componenteAportanteNovedadId);
                   grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.novedadContractualAportanteId);
                   grupoComponente.get('fase').setValue(faseSeleccionada);
@@ -411,11 +417,11 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       };
 
       valorTotalSumado += controlAportante.get('valorAportanteProyecto').value;
-
+      
       const aportante: NovedadContractualAportante = {
         novedadContractualAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
         novedadContractualId: this.novedad.novedadContractualId,
-        cofinanciacionAportanteId: controlAportante.get('proyectoAportanteId').value,
+        cofinanciacionAportanteId: controlAportante.get('cofinanciacionAportanteId').value,
         valorAporte: controlAportante.get('valorAportanteProyecto').value,
         componenteAportanteNovedad: []
       };

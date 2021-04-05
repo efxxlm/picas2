@@ -272,6 +272,52 @@ namespace asivamosffie.services
             return novedadContractual;
         }
 
+        public async Task<List<CofinanciacionAportante>> GetAportanteByContratacion( int pId)
+        {
+            List<CofinanciacionAportante> listaAportantes = new List<CofinanciacionAportante>();
+
+            Contratacion contratacion = _context.Contratacion
+                                                    .Include(x => x.ContratacionProyecto)
+                                                        .ThenInclude( x => x.ContratacionProyectoAportante )
+                                                            .ThenInclude( x => x.CofinanciacionAportante )
+                                                    .FirstOrDefault(x => x.ContratacionId == pId);
+
+            contratacion.ContratacionProyecto.ToList().ForEach(cp =>
+           {
+               cp.ContratacionProyectoAportante.ToList().ForEach(cpa =>
+              {
+                  CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+                  cofinanciacionAportante.CofinanciacionAportanteId = cpa.CofinanciacionAportante.CofinanciacionAportanteId;
+
+                  if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                  {
+                      cofinanciacionAportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                  }
+                  else if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
+                  {
+                      //verifico si tiene municipio
+                      if (cpa.CofinanciacionAportante.MunicipioId != null)
+                      {
+                          cofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(cpa.CofinanciacionAportante.MunicipioId).Descripcion;
+                      }
+                      else//solo departamento
+                      {
+                          cofinanciacionAportante.NombreAportanteString = cpa.CofinanciacionAportante.DepartamentoId == null ? "" : _context.Localizacion.Find(cpa.CofinanciacionAportante.DepartamentoId).Descripcion;
+                          
+                      }
+
+                  }
+                  else
+                  {
+                      cofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(cpa.CofinanciacionAportante.NombreAportanteId).Nombre;
+                  }
+                  listaAportantes.Add(cofinanciacionAportante);
+              });
+           });
+
+            return listaAportantes;
+        }
+
 
         #endregion Gets
 
@@ -1548,8 +1594,8 @@ namespace asivamosffie.services
 
             foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
             {
-                // Suspension - Prórroga a la Suspensión
-                if (descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2")
+                // Suspension - Prórroga a la Suspensión -Reinicio
+                if (descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2" || descripcion.TipoNovedadCodigo == "6")
                 {
                     if (
                             descripcion.FechaInicioSuspension == null ||

@@ -19,12 +19,12 @@ namespace asivamosffie.services
     public class UpdatePoliciesGuaranteesService : IUpdatePoliciesGuaranteesService
     {
         private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService; 
+        private readonly ICommonService _commonService;
 
-        public UpdatePoliciesGuaranteesService( devAsiVamosFFIEContext context, ICommonService commonService)
+        public UpdatePoliciesGuaranteesService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _context = context; 
+            _context = context;
         }
 
         #region Get
@@ -32,27 +32,19 @@ namespace asivamosffie.services
         {
             try
             {
-                List<dynamic> List = new List<dynamic>();
-                List<Contrato> ListContratos = new List<Contrato>();
+                return await _context.Contrato
+                               .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                               .Include(c => c.ContratoPoliza)
+                               .Where(c => c.NumeroContrato.ToLower().Trim().Contains(pNumeroContrato.ToLower().Trim()) && c.ContratoPoliza.Count() > 0)
+                                      .Select(r => new
+                                      {
+                                          r.Contratacion.Contratista.Nombre,
+                                          r.Contratacion.TipoSolicitudCodigo,
+                                          r.ContratoPoliza.FirstOrDefault().ContratoPolizaId,
+                                          r.NumeroContrato,
+                                          r.ContratoId,
+                                      }).ToListAsync();
 
-                ListContratos = await _context.Contrato
-                                .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                                .Include(c => c.ContratoPoliza)
-                                .Where(c => c.ContratoPoliza.Count() > 0).ToListAsync();
-
-                foreach (var Contrato in ListContratos)
-                {
-                    List.Add(new
-                    {
-                        Contrato.Contratacion.Contratista.Nombre,
-                        Contrato.Contratacion.TipoSolicitudCodigo,
-                        Contrato.ContratoId,
-                        Contrato.NumeroContrato,
-                    });
-                }
-
-
-                return List;
             }
             catch (Exception ex)
             {
@@ -64,6 +56,7 @@ namespace asivamosffie.services
         {
             ContratoPoliza contratoPoliza = await _context.ContratoPoliza
                 .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+               .Include(c => c.Contrato).ThenInclude(c => c.Contratacion)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
@@ -93,6 +86,94 @@ namespace asivamosffie.services
 
         #region Create
 
+        public async Task<Respuesta> ChangeStatusContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion  pContratoPolizaActualizacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Actualizar_Polizas_Y_Garantias, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPolizaActualizacion>()
+                        .Where(c => c.ContratoPolizaActualizacionId == pContratoPolizaActualizacion.ContratoPolizaActualizacionId)
+                        .Update(c => new ContratoPolizaActualizacion
+                        {
+                            EstadoActualizacion  = pContratoPolizaActualizacion.EstadoActualizacion,
+                            UsuarioModificacion = pContratoPolizaActualizacion.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                               (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
+                                                                                               GeneralCodes.OperacionExitosa,
+                                                                                               idAccion,
+                                                                                               pContratoPolizaActualizacion.UsuarioCreacion,
+                                                                                               ConstantCommonMessages.UpdatePolicies.CAMBIAR_ESTADOS_ACTUALIZAR_POLIZA
+                                                                                           )
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = GeneralCodes.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacion.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+         
+        public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguros_Actualizacion_Polizas_y_garantias, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPolizaActualizacionSeguro>()
+                        .Where(c => c.ContratoPolizaActualizacionSeguroId == pContratoPolizaActualizacionSeguro.ContratoPolizaActualizacionSeguroId)
+                        .Update(c => new ContratoPolizaActualizacionSeguro
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pContratoPolizaActualizacionSeguro.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                               (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
+                                                                                               GeneralCodes.OperacionExitosa,
+                                                                                               idAccion,
+                                                                                               pContratoPolizaActualizacionSeguro.UsuarioCreacion,
+                                                                                               ConstantCommonMessages.UpdatePolicies.ELIMINAR_SEGUROS
+                                                                                           )
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = GeneralCodes.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacionSeguro.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
         public async Task<Respuesta> CreateEditContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Actualizacion_Polizas_y_Garantias, (int)EnumeratorTipoDominio.Acciones);
@@ -100,13 +181,13 @@ namespace asivamosffie.services
             try
             {
                 if (pContratoPolizaActualizacion.ContratoPolizaActualizacionId == 0)
-                { 
+                {
                     pContratoPolizaActualizacion.EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza;
                     pContratoPolizaActualizacion.NumeroActualizacion = await _commonService.EnumeradorActualizarPoliza();
                     pContratoPolizaActualizacion.RegistroCompleto = false;
                     pContratoPolizaActualizacion.FechaCreacion = DateTime.Now;
                     pContratoPolizaActualizacion.Eliminado = false;
-                    _context.ContratoPolizaActualizacion.Add(pContratoPolizaActualizacion); 
+                    _context.ContratoPolizaActualizacion.Add(pContratoPolizaActualizacion);
                 }
                 else
                 {
@@ -120,9 +201,9 @@ namespace asivamosffie.services
                                 TipoActualizacionCodigo = pContratoPolizaActualizacion.TipoActualizacionCodigo,
                                 FechaExpedicionActualizacionPoliza = pContratoPolizaActualizacion.FechaExpedicionActualizacionPoliza,
                                 ObservacionEspecifica = pContratoPolizaActualizacion.ObservacionEspecifica,
-
+                                TieneObservacionEspecifica = pContratoPolizaActualizacion.TieneObservacionEspecifica,
                                 RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacion(pContratoPolizaActualizacion),
-                                RegistroCompletoObservacionEspecifica = !string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica)
+                                RegistroCompletoObservacionEspecifica = ValidarRegistroCompletoObservacionEspecifica(pContratoPolizaActualizacion)
                             });
                 }
 
@@ -164,6 +245,17 @@ namespace asivamosffie.services
                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacion.UsuarioCreacion, ex.InnerException.ToString())
                    };
             }
+        }
+
+        private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == true)
+                return true;
+            else
+                if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
+                return false;
+
+            return true;
         }
 
         private void CreateEditContratoPolizaActualizacionListaChequeo(ICollection<ContratoPolizaActualizacionListaChequeo> pContratoPolizaActualizacionListaChequeo, string pAuthor)
@@ -250,7 +342,7 @@ namespace asivamosffie.services
                     ContratoPolizaActualizacionSeguro.Eliminado = false;
                     ContratoPolizaActualizacionSeguro.FechaCreacion = DateTime.Now;
                     ContratoPolizaActualizacionSeguro.RegistroCompletoActualizacion = ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacionSeguro);
-
+                    _context.ContratoPolizaActualizacionSeguro.Add(ContratoPolizaActualizacionSeguro);
                 }
                 else
                 {
@@ -269,8 +361,8 @@ namespace asivamosffie.services
                                 TieneFechaVigenciaAmparo = ContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo,
                                 FechaVigenciaAmparo = ContratoPolizaActualizacionSeguro.FechaVigenciaAmparo,
 
-                                TieneFechaValorAmparo = ContratoPolizaActualizacionSeguro.TieneFechaValorAmparo,
-                                FechaValorAmparo = ContratoPolizaActualizacionSeguro.FechaValorAmparo,
+                                TieneValorAmparo = ContratoPolizaActualizacionSeguro.TieneValorAmparo,
+                                ValorAmparo = ContratoPolizaActualizacionSeguro.ValorAmparo,
 
                                 RegistroCompletoActualizacion = ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacionSeguro),
                                 RegistroCompletoSeguro = ValidarRegistroCompletoContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro),
@@ -283,7 +375,7 @@ namespace asivamosffie.services
         {
             if (
                 (pContratoPolizaActualizacionSeguro.TieneFechaSeguro == true && !pContratoPolizaActualizacionSeguro.FechaSeguro.HasValue)
-             || (pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo == true && !pContratoPolizaActualizacionSeguro.FechaValorAmparo.HasValue)
+             || (pContratoPolizaActualizacionSeguro.TieneValorAmparo == true && !pContratoPolizaActualizacionSeguro.ValorAmparo.HasValue)
              || (pContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo == true && !pContratoPolizaActualizacionSeguro.FechaVigenciaAmparo.HasValue)
                 ) return false;
 
@@ -294,7 +386,7 @@ namespace asivamosffie.services
         {
             if (
                    !pContratoPolizaActualizacionSeguro.TieneFechaSeguro.HasValue
-                || !pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo.HasValue
+                || !pContratoPolizaActualizacionSeguro.TieneValorAmparo.HasValue
                 || !pContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo.HasValue
                  ) return false;
 

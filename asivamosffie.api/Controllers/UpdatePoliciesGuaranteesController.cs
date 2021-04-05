@@ -23,8 +23,17 @@ namespace asivamosffie.api.Controllers
         {
             _updatePoliciesGuaranteesService = updatePoliciesGuaranteesService;
         }
+ 
+        [Route("GetContratoPoliza")]
+        [HttpGet]
+        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId)
+        {
+            var respuesta = await _updatePoliciesGuaranteesService.GetContratoPoliza(pContratoPolizaId);
+            return respuesta;
+        }
 
-        [Route("GetContratoByNumeroContrato")]
+
+          [Route("GetContratoByNumeroContrato")]
         [HttpGet]
         public async Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato)
         {
@@ -39,6 +48,42 @@ namespace asivamosffie.api.Controllers
             return await _updatePoliciesGuaranteesService.GetListVActualizacionPolizaYGarantias();
         }
 
+        [Route("DeleteContratoPolizaActualizacionSeguro")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
+        {
+            Respuesta result = new Respuesta();
+            try
+            {
+                pContratoPolizaActualizacionSeguro.UsuarioCreacion = User.Identity.Name.ToUpper();
+                result = await _updatePoliciesGuaranteesService.DeleteContratoPolizaActualizacionSeguro(pContratoPolizaActualizacionSeguro);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.Data = ex;
+                return BadRequest(result);
+            }
+        }
+
+        [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatusContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            Respuesta result = new Respuesta();
+            try
+            {
+                pContratoPolizaActualizacion.UsuarioCreacion = User.Identity.Name.ToUpper();
+                result = await _updatePoliciesGuaranteesService.ChangeStatusContratoPolizaActualizacionSeguro(pContratoPolizaActualizacion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.Data = ex;
+                return BadRequest(result);
+            }
+        }
+         
         [Route("CreateorUpdateCofinancing")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)

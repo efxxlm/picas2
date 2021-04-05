@@ -613,13 +613,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("TransferMassiveLoadAdjustmentProgramming")]
         [HttpPost]
-        public async Task<IActionResult> TransferMassiveLoadAdjustmentProgramming([FromQuery] string pIdDocument)
+        public async Task<IActionResult> TransferMassiveLoadAdjustmentProgramming([FromQuery] string pIdDocument, int pProyectoId, int pContratoId)
         {
             try
             {
                 Respuesta respuesta = new Respuesta();
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadAdjustmentProgramming(pIdDocument, pUsuarioModifico);
+                respuesta = await _technicalRequirementsConstructionPhaseService.TransferMassiveLoadAdjustmentProgramming(pIdDocument, pUsuarioModifico, pProyectoId, pContratoId);
 
                 return Ok(respuesta);
             }

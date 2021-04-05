@@ -50,6 +50,10 @@ namespace asivamosffie.services.Helpers.Constant
 
         internal static class UpdatePolicies
         {
+            public const string ELIMINAR_SEGUROS = "ELIMINAR SEGUROS";
+
+            public const string CAMBIAR_ESTADOS_ACTUALIZAR_POLIZA = "CAMBIAR ESTADOS ACTUALIZAR POLIZA";
+          
             public const string CREAR_ACTUALIZACION_POLIZA = "CREAR ACTUALIZACION POLIZAS Y GARANTIAS";
 
             public const string EDITAR_ACTUALIZACION_POLIZA = "EDITAR ACTUALIZACION POLIZAS Y GARANTIAS";
