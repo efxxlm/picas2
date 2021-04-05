@@ -342,7 +342,7 @@ namespace asivamosffie.services
                     ContratoPolizaActualizacionSeguro.Eliminado = false;
                     ContratoPolizaActualizacionSeguro.FechaCreacion = DateTime.Now;
                     ContratoPolizaActualizacionSeguro.RegistroCompletoActualizacion = ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacionSeguro);
-
+                    _context.ContratoPolizaActualizacionSeguro.Add(ContratoPolizaActualizacionSeguro);
                 }
                 else
                 {
@@ -361,7 +361,7 @@ namespace asivamosffie.services
                                 TieneFechaVigenciaAmparo = ContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo,
                                 FechaVigenciaAmparo = ContratoPolizaActualizacionSeguro.FechaVigenciaAmparo,
 
-                                TieneFechaValorAmparo = ContratoPolizaActualizacionSeguro.TieneFechaValorAmparo,
+                                TieneValorAmparo = ContratoPolizaActualizacionSeguro.TieneValorAmparo,
                                 ValorAmparo = ContratoPolizaActualizacionSeguro.ValorAmparo,
 
                                 RegistroCompletoActualizacion = ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacionSeguro),
@@ -375,7 +375,7 @@ namespace asivamosffie.services
         {
             if (
                 (pContratoPolizaActualizacionSeguro.TieneFechaSeguro == true && !pContratoPolizaActualizacionSeguro.FechaSeguro.HasValue)
-             || (pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo == true && !pContratoPolizaActualizacionSeguro.ValorAmparo.HasValue)
+             || (pContratoPolizaActualizacionSeguro.TieneValorAmparo == true && !pContratoPolizaActualizacionSeguro.ValorAmparo.HasValue)
              || (pContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo == true && !pContratoPolizaActualizacionSeguro.FechaVigenciaAmparo.HasValue)
                 ) return false;
 
@@ -386,7 +386,7 @@ namespace asivamosffie.services
         {
             if (
                    !pContratoPolizaActualizacionSeguro.TieneFechaSeguro.HasValue
-                || !pContratoPolizaActualizacionSeguro.TieneFechaValorAmparo.HasValue
+                || !pContratoPolizaActualizacionSeguro.TieneValorAmparo.HasValue
                 || !pContratoPolizaActualizacionSeguro.TieneFechaVigenciaAmparo.HasValue
                  ) return false;
 
