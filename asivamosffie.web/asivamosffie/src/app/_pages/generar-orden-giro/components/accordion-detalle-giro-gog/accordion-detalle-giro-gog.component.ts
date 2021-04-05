@@ -126,19 +126,21 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
             }
         }
         // Check semaforo principal
-        const tieneSinDiligenciar = Object.values( this.listaSemaforos ).includes( 'sin-diligenciar' );
-        const tieneEnProceso = Object.values( this.listaSemaforos ).includes( 'en-proceso' );
-        const tieneCompleto = Object.values( this.listaSemaforos ).includes( 'completo' );
-
-        if ( tieneEnProceso === true ) {
-            this.estadoSemaforo.emit( 'en-proceso' );
-        }
-        if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
-            this.estadoSemaforo.emit( 'en-proceso' );
-        }
-        if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
-            this.estadoSemaforo.emit( 'completo' );
-        }
+        setTimeout(() => {
+            const tieneSinDiligenciar = Object.values( this.listaSemaforos ).includes( 'sin-diligenciar' );
+            const tieneEnProceso = Object.values( this.listaSemaforos ).includes( 'en-proceso' );
+            const tieneCompleto = Object.values( this.listaSemaforos ).includes( 'completo' );
+    
+            if ( tieneEnProceso === true ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
+                this.estadoSemaforo.emit( 'completo' );
+            }
+        }, 5000);
     }
 
     checkSemaforoOrigen( value: boolean ) {
