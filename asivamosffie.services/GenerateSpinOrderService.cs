@@ -559,8 +559,7 @@ namespace asivamosffie.services
                          Code = GeneralCodes.Error,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
                      };
-            }
-            return new Respuesta();
+            } 
         }
         #endregion
 

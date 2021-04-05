@@ -42,6 +42,7 @@ namespace asivamosffie.services
                                           r.Contratacion.TipoSolicitudCodigo,
                                           r.ContratoPoliza.FirstOrDefault().ContratoPolizaId,
                                           r.NumeroContrato,
+                                          r.ContratoId,
                                       }).ToListAsync();
 
             }
@@ -127,8 +128,7 @@ namespace asivamosffie.services
                    };
             }
         }
-
-
+         
         public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguros_Actualizacion_Polizas_y_garantias, (int)EnumeratorTipoDominio.Acciones);
@@ -246,7 +246,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool? ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
             if (pContratoPolizaActualizacion.TieneObservacionEspecifica == true)
                 return true;
