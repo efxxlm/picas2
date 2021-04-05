@@ -83,7 +83,7 @@
             Informe final
           </mat-panel-title>
         </mat-expansion-panel-header>
-        Informe final
+        <app-tabla-informe-final *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId"></app-tabla-informe-final>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

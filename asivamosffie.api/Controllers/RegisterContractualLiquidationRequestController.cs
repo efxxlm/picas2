@@ -28,13 +28,13 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-        [Route("gridRegisterContractualLiquidationObra")]
+        [Route("GridRegisterContractualLiquidationObra")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> gridRegisterContractualLiquidationObra()
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationObra()
         {
             try
             {
-                return await _registerContractualLiquidationRequest.gridRegisterContractualLiquidationObra();
+                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationObra();
             }
             catch (Exception ex)
             {
@@ -42,13 +42,54 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("gridRegisterContractualLiquidationInterventoria")]
+        [Route("GridRegisterContractualLiquidationInterventoria")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> gridRegisterContractualLiquidationInterventoria()
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationInterventoria()
         {
             try
             {
-                return await _registerContractualLiquidationRequest.gridRegisterContractualLiquidationInterventoria();
+                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationInterventoria();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GridInformeFinal")]
+        [HttpGet]
+        public async Task<ActionResult<List<dynamic>>> GridInformeFinal(int pContratacionProyectoId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GridInformeFinal(pContratacionProyectoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetInformeFinalByProyectoId")]
+        [HttpGet]
+        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId(int pProyectoId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetInformeFinalByProyectoId(pProyectoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [Route("GetInformeFinalAnexoByInformeFinalId")]
+        [HttpGet]
+        public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId(int pInformeFinalId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetInformeFinalAnexoByInformeFinalId(pInformeFinalId);
             }
             catch (Exception ex)
             {

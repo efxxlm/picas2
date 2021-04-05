@@ -1,0 +1,88 @@
+<div class="table-responsive mb-2em text-center">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- fechaenvio Column -->
+    <ng-container matColumnDef="fechaEnvio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Fecha de envío del informe final
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{ element.fechaEnvio }}</b>
+      </td>
+    </ng-container>
+
+    <!-- fechaAprobacion Column -->
+    <ng-container matColumnDef="fechaAprobacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Fecha de aprobación del informe final
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{ element.fechaAprobacion }}</b>
+      </td>
+    </ng-container>
+
+    <!-- llaveMEN Column -->
+    <ng-container matColumnDef="llaveMen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Llave MEN
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.llaveMen }}</td>
+    </ng-container>
+
+    <!-- tipoIntervencion Column -->
+    <ng-container matColumnDef="tipoIntervencion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Tipo de intervención
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.tipoIntervencion }}</td>
+    </ng-container>
+
+    <!-- institucionEducativa Column -->
+    <ng-container matColumnDef="institucionEducativa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Institución Educativa
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.institucionEducativa }}
+      </td>
+    </ng-container>
+
+    <!-- sede Column -->
+    <ng-container matColumnDef="sede">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Sede
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.sede }}</td>
+    </ng-container>
+
+    <!-- estadoValidacion Column -->
+    <ng-container matColumnDef="estadoValidacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estado de la validación
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.estadoValidacion }}
+      </td>
+    </ng-container>
+
+    <!-- id Column -->
+    <ng-container matColumnDef="contratacionProyectoId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Gestión
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <a
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['validarInformeFinal', element.proyectoId]"
+        >
+          Validar
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

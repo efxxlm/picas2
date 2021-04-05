@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ValidarRequerimientosLiquidacionesComponent } from './components/validar-requerimientos-liquidaciones/validar-requerimientos-liquidaciones.component';
 import { ValidarBalanceComponent } from './components/validar-balance/validar-balance.component';
 import { RecursosComprometidosPagadosComponent } from './components/recursos-comprometidos-pagados/recursos-comprometidos-pagados.component';
+import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'validarRequisitos/:id/validarBalance/recursos',
     component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarInformeFinal/:proyectoId',
+    component: ValidarInformeFinalComponent
   }
 ];
 

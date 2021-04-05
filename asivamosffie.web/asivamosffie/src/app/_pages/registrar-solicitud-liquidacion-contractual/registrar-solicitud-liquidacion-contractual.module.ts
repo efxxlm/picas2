@@ -23,6 +23,10 @@ import { TablaRecursosComprometidosComponent } from './components/tabla-recursos
 import { TablaFuentesYRecursosComponent } from './components/tabla-fuentes-y-recursos/tabla-fuentes-y-recursos.component';
 import { TablaTotalOrdenesDeGiroComponent } from './components/tabla-total-ordenes-de-giro/tabla-total-ordenes-de-giro.component';
 import { TablaLiquidacionContratoInterventoriaComponent } from './components/tabla-liquidacion-contrato-interventoria/tabla-liquidacion-contrato-interventoria.component';
+import { TablaInformeFinalComponent } from './components/tabla-informe-final/tabla-informe-final.component';
+import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
+import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
+import { FormObservacionInformeFinalComponent } from './components/form-observacion-informe-final/form-observacion-informe-final.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,10 @@ import { TablaLiquidacionContratoInterventoriaComponent } from './components/tab
     TablaFuentesYRecursosComponent,
     TablaTotalOrdenesDeGiroComponent,
     TablaLiquidacionContratoInterventoriaComponent,
+    TablaInformeFinalComponent,
+    ValidarInformeFinalComponent,
+    TablaInformeAnexosComponent,
+    FormObservacionInformeFinalComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-validar-requerimientos-liquidaciones',
@@ -7,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
 
-  constructor() { }
+  contratacionProyectoId: number;
+  constructor(
+    private route: ActivatedRoute,
+  ) { 
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
+  }
+
 
   ngOnInit(): void {
   }

@@ -12,10 +12,23 @@ export class RegisterContractualLiquidationRequestService {
   contractual_liquidation = 'RegisterContractualLiquidationRequest';
 
   getListContractualLiquidationObra(){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/gridRegisterContractualLiquidationObra`);
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationObra`);
   }
 
   getListContractualLiquidationInterventoria(){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/gridRegisterContractualLiquidationInterventoria`);
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria`);
   }
+
+  gridInformeFinal( pContratacionProyectoId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionProyectoId=${ pContratacionProyectoId }`);
+  }
+
+  getInformeFinalByProyectoId( pProyectoId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetInformeFinalByProyectoId?pProyectoId=${ pProyectoId }`);
+  }
+
+  getInformeFinalAnexoByInformeFinalId( pInformeFinalId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetInformeFinalAnexoByInformeFinalId?pInformeFinalId=${ pInformeFinalId }`);
+  }
+
 }
