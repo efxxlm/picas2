@@ -252,11 +252,11 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
-            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == true)
+            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == false)
                 return true;
             else
                 if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
-                return false;
+                    return false;
 
             return true;
         }
