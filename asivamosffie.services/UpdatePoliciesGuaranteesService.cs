@@ -133,6 +133,51 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Actualizacion_Polizas, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPolizaActualizacion>()
+                        .Where(c => c.ContratoPolizaActualizacionId == pContratoPolizaActualizacion.ContratoPolizaActualizacionId)
+                        .Update(c => new ContratoPolizaActualizacion
+                        {
+                            Eliminado= true,
+                            UsuarioModificacion = pContratoPolizaActualizacion.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                               (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
+                                                                                               GeneralCodes.OperacionExitosa,
+                                                                                               idAccion,
+                                                                                               pContratoPolizaActualizacion.UsuarioCreacion,
+                                                                                               ConstantCommonMessages.UpdatePolicies.ELIMINAR_ACTUALIZACION_POLIZA
+                                                                                           )
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = GeneralCodes.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacion.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
+
         public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguros_Actualizacion_Polizas_y_garantias, (int)EnumeratorTipoDominio.Acciones);

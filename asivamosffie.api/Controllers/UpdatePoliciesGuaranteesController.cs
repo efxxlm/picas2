@@ -23,7 +23,7 @@ namespace asivamosffie.api.Controllers
         {
             _updatePoliciesGuaranteesService = updatePoliciesGuaranteesService;
         }
- 
+
         [Route("GetContratoPoliza")]
         [HttpGet]
         public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId)
@@ -31,9 +31,8 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _updatePoliciesGuaranteesService.GetContratoPoliza(pContratoPolizaId);
             return respuesta;
         }
-
-
-          [Route("GetContratoByNumeroContrato")]
+         
+        [Route("GetContratoByNumeroContrato")]
         [HttpGet]
         public async Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato)
         {
@@ -65,8 +64,25 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(result);
             }
         }
-
-        [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
+      
+        [Route("DeleteContratoPolizaActualizacionSeguro")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            Respuesta result = new Respuesta();
+            try
+            {
+                pContratoPolizaActualizacion.UsuarioCreacion = User.Identity.Name.ToUpper();
+                result = await _updatePoliciesGuaranteesService.DeleteContratoPolizaActualizacionSeguro(pContratoPolizaActualizacion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.Data = ex;
+                return BadRequest(result);
+            }
+        }
+          [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatusContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
@@ -83,7 +99,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(result);
             }
         }
-         
+
         [Route("CreateEditContratoPolizaActualizacion")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
