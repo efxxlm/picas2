@@ -43,7 +43,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListVActualizacionPolizaYGarantias")]
         [HttpGet]
-        public async Task<List<VActualizacionPolizaYGarantias>> GetListVActualizacionPolizaYGarantias()
+        public async Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias()
         {
             return await _updatePoliciesGuaranteesService.GetListVActualizacionPolizaYGarantias();
         }

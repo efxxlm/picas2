@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion);
 
-        Task<List<VActualizacionPolizaYGarantias>> GetListVActualizacionPolizaYGarantias();
+        Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias();
 
         Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato);
 

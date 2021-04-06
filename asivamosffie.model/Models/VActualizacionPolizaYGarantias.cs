@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VActualizacionPolizaYGarantias
+    public partial class VActualizacionPolizaYgarantias
     {
         public DateTime? FechaExpedicionActualizacionPoliza { get; set; }
         public string NumeroContrato { get; set; }

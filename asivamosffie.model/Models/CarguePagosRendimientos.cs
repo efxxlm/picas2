@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class CarguePagosRendimientos
     {
+        public CarguePagosRendimientos()
+        {
+            RendimientosIncorporados = new HashSet<RendimientosIncorporados>();
+        }
+
         public int CargaPagosRendimientosId { get; set; }
         public string NombreArchivo { get; set; }
         public string Json { get; set; }
@@ -27,5 +32,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public string Errores { get; set; }
+
+        public virtual ICollection<RendimientosIncorporados> RendimientosIncorporados { get; set; }
     }
 }
