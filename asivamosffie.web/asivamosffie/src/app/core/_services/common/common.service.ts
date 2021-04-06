@@ -381,6 +381,11 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=181`);
   }
 
+  estadosPolizaActualizacion() {
+    // estados del caso de uso 5.4.1
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=182`);
+  }
+
   listaRazonActualizacion() {
     // Lista del campo razon de la actualizacion "Razón y tipo de actualización" CU 5.4.1
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=183`);

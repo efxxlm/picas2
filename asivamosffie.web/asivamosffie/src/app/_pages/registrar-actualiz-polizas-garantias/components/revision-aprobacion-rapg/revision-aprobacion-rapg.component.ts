@@ -21,6 +21,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
     listaPerfilCodigo = PerfilCodigo;
     estadosRevision = EstadosRevision;
     contratoPolizaActualizacion: any;
+    contadorRevision = 0;
     addressForm = this.fb.group({
         contratoPolizaActualizacionId: [ 0 ],
         contratoPolizaActualizacionRevisionAprobacionObservacionId: [ 0 ],
@@ -41,7 +42,6 @@ export class RevisionAprobacionRapgComponent implements OnInit {
             [{ align: [] }],
         ]
     };
-    enAprobacion = '2';
     estaEditando = false;
     //parametricas
     estadoArray: Dominio[] = [];
@@ -74,6 +74,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
                 if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionRevisionAprobacionObservacion !== undefined ) {
                     if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionRevisionAprobacionObservacion.length > 0 ) {
                         this.contratoPolizaActualizacionRevisionAprobacionObservacion = this.contratoPolizaActualizacion.contratoPolizaActualizacionRevisionAprobacionObservacion;
+                        this.contadorRevision = this.contratoPolizaActualizacionRevisionAprobacionObservacion.length;
 
                         const revision = this.contratoPolizaActualizacionRevisionAprobacionObservacion.filter( revision => revision.estadoSegundaRevision === this.estadosRevision.aprobacion );
 
@@ -81,6 +82,8 @@ export class RevisionAprobacionRapgComponent implements OnInit {
                             const ultimaRevision = revision[ revision.length - 1 ];
 
                             if ( this.contratoPolizaActualizacionRevisionAprobacionObservacion[ this.contratoPolizaActualizacionRevisionAprobacionObservacion.length - 1 ] === ultimaRevision ) {
+                                this.contadorRevision--;
+
                                 this.addressForm.setValue(
                                     {
                                         contratoPolizaActualizacionId: ultimaRevision.contratoPolizaActualizacionId,
@@ -128,7 +131,8 @@ export class RevisionAprobacionRapgComponent implements OnInit {
     }
 
     checkDisabledBtn() {
-        if ( this.addressForm.get( 'fechaRevision' ).value !== null && this.addressForm.get( 'estadoRevision' ).value !== null ) {
+
+        if ( this.addressForm.dirty === true && this.addressForm.get( 'fechaRevision' ).value !== null && this.addressForm.get( 'estadoRevision' ).value !== null ) {
             return false;
         }
 
@@ -163,13 +167,9 @@ export class RevisionAprobacionRapgComponent implements OnInit {
             ]
         }
 
-        const pContratoPolizaActualizacion = {
-            contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
-            contratoPolizaId: this.contratoPoliza.contratoPolizaId,
-            contratoPolizaActualizacionRevisionAprobacionObservacion: contratoPolizaActualizacionRevisionAprobacionObservacion()
-        }
+        this.contratoPolizaActualizacion.contratoPolizaActualizacionRevisionAprobacionObservacion = contratoPolizaActualizacionRevisionAprobacionObservacion();
 
-        this.actualizarPolizaSvc.createorUpdateCofinancing( pContratoPolizaActualizacion )
+        this.actualizarPolizaSvc.createorUpdateCofinancing( this.contratoPolizaActualizacion )
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );

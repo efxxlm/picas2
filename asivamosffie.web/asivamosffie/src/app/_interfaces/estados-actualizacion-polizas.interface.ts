@@ -1,3 +1,9 @@
+export enum EstadosActualizacionPoliza {
+    enRevisionActualizacionPoliza = '1',
+    conPolizaObservadaDevuelta = '2',
+    conAprobacionActualizacionPoliza = '3'
+}
+
 export interface TipoActualizacion {
     fecha: string;
     valor: string;

@@ -169,6 +169,14 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                         const indexSeguro =listSeguro.findIndex( codigo => codigo === this.seguros.controls[ index ].get( 'codigo' ).value );
                         listSeguro.splice( indexSeguro, 1 );
 
+                        if ( this.seguros.controls[ index ].get( 'contratoPolizaActualizacionSeguroId' ).value !== 0 ) {
+                            const pContratoPolizaActualizacionSeguro = {
+                                contratoPolizaActualizacionSeguroId: this.seguros.controls[ index ].get( 'contratoPolizaActualizacionSeguroId' ).value
+                            };
+
+                            this.actualizarPolizaSvc.deleteContratoPolizaActualizacionSeguro( pContratoPolizaActualizacionSeguro )
+                                .subscribe( );
+                        }
                         this.addressForm.get( 'polizasYSeguros' ).setValue( listSeguro );
                         this.seguros.removeAt( index );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );

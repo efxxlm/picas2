@@ -12,7 +12,7 @@
                                 <label  class="label-left"
                                         for="fechaRevision"
                                         [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaRevision.invalid }">
-                                        Fecha de la revisión {{ contratoPolizaActualizacionRevisionAprobacionObservacion.length + 1 }} </label>
+                                        Fecha de la revisión {{ contadorRevision + 1 }} </label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -52,7 +52,7 @@
                                 <label  class="label-left"
                                         for="estadoRevision"
                                         [ngClass]="{ 'color-secondaryColor': addressForm.controls.estadoRevision.invalid }">
-                                        Estado de la revisión {{ contratoPolizaActualizacionRevisionAprobacionObservacion.length + 1 }} </label>
+                                        Estado de la revisión {{ contadorRevision + 1 }} </label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="animatedDown" *ngIf="addressForm.get( 'estadoRevision' ).value === enAprobacion">
+                <div class="animatedDown" *ngIf="addressForm.get( 'estadoRevision' ).value === estadosRevision.aprobacion">
                     <h2 class="card-subTitle">Aprobación</h2>
                     <div class="row">
                         <div class="col-md-8">

@@ -83,13 +83,9 @@ export class ListaChequeoRapgComponent implements OnInit {
             ]
         }
 
-        const pContratoPolizaActualizacion = {
-            contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
-            contratoPolizaId: this.contratoPoliza.contratoPolizaId,
-            contratoPolizaActualizacionListaChequeo: getContratoPolizaActualizacionListaChequeo()
-        }
+        this.contratoPolizaActualizacion.contratoPolizaActualizacionListaChequeo = getContratoPolizaActualizacionListaChequeo()
 
-        this.actualizarPolizaSvc.createorUpdateCofinancing( pContratoPolizaActualizacion )
+        this.actualizarPolizaSvc.createorUpdateCofinancing( this.contratoPolizaActualizacion )
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );

@@ -36,7 +36,7 @@ const routes: Routes = [
   },
   {
     path: 'verDetallePoliza/:id',
-    component: VerDetallePolizaRapgComponent
+    component: ActualizarPolizaRapgComponent
   }
 ];
 @NgModule({
