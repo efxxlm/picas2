@@ -196,7 +196,8 @@ namespace asivamosffie.services
                                                                         .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                                 .Include( r => r.NovedadContractualAportante )
                                                                     .ThenInclude( r => r.ComponenteAportanteNovedad )
-                                                                        .ThenInclude( r => r.ComponenteUsoNovedad )
+                                                                        .ThenInclude( r => r.ComponenteFuenteNovedad )
+                                                                            .ThenInclude( r => r.ComponenteUsoNovedad )
                                                                 .FirstOrDefault();
 
             novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
@@ -244,13 +245,19 @@ namespace asivamosffie.services
                                                                             .FirstOrDefault()
                                                                             .Nombre;
 
-                    foreach ( ComponenteUsoNovedad componenteUsoNovedad in componenteAportanteNovedad.ComponenteUsoNovedad)
+                    foreach ( ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
                     {
-                        componenteUsoNovedad.NombreUso = listDominioUso
-                                                                    .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
-                                                                    .FirstOrDefault()
-                                                                    .Nombre;
+
+                        foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
+                        {
+                            componenteUsoNovedad.NombreUso = listDominioUso
+                                                                        .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
+                                                                        .FirstOrDefault()
+                                                                        .Nombre;
+                        }
                     }
+
+                    
                 }
             }
 
@@ -604,6 +611,68 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditNovedadContractualFuente(ComponenteFuenteNovedad componenteFuenteNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual_Tramite, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            try
+            {
+
+                if (string.IsNullOrEmpty(componenteFuenteNovedad.ComponenteFuenteNovedadId.ToString()) || componenteFuenteNovedad.ComponenteFuenteNovedadId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR NOVEDAD CONTRACTUAL FUENTE";
+                    componenteFuenteNovedad.FechaCreacion = DateTime.Now;
+                    componenteFuenteNovedad.Eliminado = false;
+
+                    _context.ComponenteFuenteNovedad.Add(componenteFuenteNovedad);
+
+                }
+                else
+                {
+                    strCrearEditar = "EDIT NOVEDAD CONTRACTUAL FUENTE";
+                    ComponenteFuenteNovedad componenteFuenteNovedadOld = _context.ComponenteFuenteNovedad.Find(componenteFuenteNovedad.ComponenteFuenteNovedadId);
+
+                    //Auditoria
+                    componenteFuenteNovedadOld.FechaModificacion = DateTime.Now;
+                    componenteFuenteNovedadOld.UsuarioCreacion = componenteFuenteNovedadOld.UsuarioCreacion;
+
+                    //Registros
+
+                    componenteFuenteNovedadOld.FuenteRecursosCodigo = componenteFuenteNovedad.FuenteRecursosCodigo;
+                    
+
+                    _context.ComponenteFuenteNovedad.Update(componenteFuenteNovedadOld);
+                }
+
+                foreach (ComponenteUsoNovedad uso in componenteFuenteNovedad.ComponenteUsoNovedad)
+                {
+                    uso.UsuarioCreacion = componenteFuenteNovedad.UsuarioCreacion;
+
+                    await CreateEditNovedadContractualUso(uso);
+                }
+
+
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, componenteFuenteNovedad.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         public async Task<Respuesta> CreateEditNovedadContractualComponente(ComponenteAportanteNovedad componenteAportanteNovedad)
         {
             Respuesta respuesta = new Respuesta();
@@ -641,11 +710,11 @@ namespace asivamosffie.services
                     _context.ComponenteAportanteNovedad.Update(componenteAportanteNovedadOld);
                 }
 
-                foreach (ComponenteUsoNovedad uso in componenteAportanteNovedad.ComponenteUsoNovedad)
+                foreach (ComponenteFuenteNovedad fuente in componenteAportanteNovedad.ComponenteFuenteNovedad)
                 {
-                    uso.UsuarioCreacion = componenteAportanteNovedad.UsuarioCreacion;
+                    fuente.UsuarioCreacion = componenteAportanteNovedad.UsuarioCreacion;
 
-                    await CreateEditNovedadContractualUso(uso);
+                    await CreateEditNovedadContractualFuente(fuente);
                 }
 
 
@@ -1713,15 +1782,25 @@ namespace asivamosffie.services
                               esCompleto = false;
                           }
 
-                          ca.ComponenteUsoNovedad.ToList().ForEach(cu =>
+                          ca.ComponenteFuenteNovedad.ToList().ForEach(cf =>
                          {
                              if (
-                                    cu.TipoUsoCodigo == null ||
-                                    cu.ValorUso == null
-                        )
+                                    cf.FuenteRecursosCodigo == null 
+                                )
                              {
                                  esCompleto = false;
                              }
+
+                             cf.ComponenteUsoNovedad.ToList().ForEach(cu =>
+                             {
+                                 if (
+                                        cu.TipoUsoCodigo == null ||
+                                        cu.ValorUso == null
+                                    )
+                                 {
+                                     esCompleto = false;
+                                 }
+                             });
                          });
 
                       });

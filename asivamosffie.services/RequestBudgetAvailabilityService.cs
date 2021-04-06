@@ -1739,10 +1739,34 @@ namespace asivamosffie.services
                                 var valorproyecto = detailDP.Contratacion.TipoSolicitudCodigo == "2" ? ppapor.ValorInterventoria : ppapor.ValorObra;
                                 if (detailDP.EsNovedadContractual != null && Convert.ToBoolean(detailDP.EsNovedadContractual))
                                 {
-                                    
 
-                                    valorproyecto = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
-                                    x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
+                                    List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
+                                                                                                        .Where(x => x.NovedadContractualId == detailDP.NovedadContractualId)
+                                                                                                            .Include( x => x.ComponenteAportanteNovedad )
+                                                                                                                .ThenInclude( x => x.ComponenteFuenteNovedad )
+                                                                                                                    .ThenInclude( x => x.ComponenteUsoNovedad )
+                                                                                                        .ToList();
+
+                                    novedadContractualAportantes.ForEach(nca =>
+                                   {
+                                       //if ( nca.CofinanciacionAportanteId == ppapor.AportanteId)
+                                       {
+                                           nca.ComponenteAportanteNovedad.ToList().ForEach(can =>
+                                          {
+                                              can.ComponenteFuenteNovedad.ToList().ForEach(cfn =>
+                                             {
+                                                 cfn.ComponenteUsoNovedad.ToList().ForEach(cun =>
+                                                {
+                                                    valorproyecto = valorproyecto + cun.ValorUso;
+                                                });
+                                             });
+                                          });
+                                       }
+                                   });
+
+                                    //valorproyecto = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
+                                    //x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
+
                                 }
                                 aportantes.Add(new CofinanicacionAportanteGrilla
                                 {
@@ -1775,8 +1799,32 @@ namespace asivamosffie.services
                                 valorAportate = _context.ProyectoAportante.Where(x => x.ProyectoId == proyectospp.ProyectoId && x.AportanteId == ppapor.AportanteId).Sum(x => x.ValorTotalAportante);
                                 if (detailDP.EsNovedadContractual != null && Convert.ToBoolean(detailDP.EsNovedadContractual))
                                 {
-                                    valorAportate = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
-                                    x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
+                                    List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
+                                                                                                        .Where(x => x.NovedadContractualId == detailDP.NovedadContractualId)
+                                                                                                            .Include(x => x.ComponenteAportanteNovedad)
+                                                                                                                .ThenInclude(x => x.ComponenteFuenteNovedad)
+                                                                                                                    .ThenInclude(x => x.ComponenteUsoNovedad)
+                                                                                                        .ToList();
+
+                                    novedadContractualAportantes.ForEach(nca =>
+                                    {
+                                        if (nca.CofinanciacionAportanteId == ppapor.AportanteId)
+                                        {
+                                            nca.ComponenteAportanteNovedad.ToList().ForEach(can =>
+                                            {
+                                                can.ComponenteFuenteNovedad.ToList().ForEach(cfn =>
+                                                {
+                                                    cfn.ComponenteUsoNovedad.ToList().ForEach(cun =>
+                                                    {
+                                                        valorAportate = valorAportate + cun.ValorUso;
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    });
+
+                                    //valorAportate = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
+                                    //x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
                                 }
 
 

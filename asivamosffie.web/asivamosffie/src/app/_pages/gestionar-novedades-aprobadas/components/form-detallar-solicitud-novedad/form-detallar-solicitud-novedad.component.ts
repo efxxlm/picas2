@@ -126,18 +126,6 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
               this.listaComponentes = this.componentesSelect.filter(value => this.novedad.contrato.contratacion.tipoSolicitudCodigo === value.codigo);
             };
 
-            //this.idSolicitud = this.contratacionProyecto.contratacionId;
-
-            // this.commonService.listaTipoIntervencion()
-            //   .subscribe((intervenciones: any) => {
-            //     for (const intervencion of intervenciones) {
-            //       if (intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo) {
-            //         this.tipoIntervencion = intervencion.nombre;
-            //         break;
-            //       }
-            //     }
-            //   });
-
             if (this.novedad.novedadContractualAportante === undefined || this.novedad.novedadContractualAportante.length === 0){
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
@@ -166,19 +154,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
               grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
               grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
               grupoAportante.get('cofinanciacionAportanteId').setValue(apo.cofinanciacionAportanteId);
-              //if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
-              //  grupoAportante.get('nombreAportante').setValue('FFIE');
-              //} else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
-              //  if (apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined) {
-              //    grupoAportante.get('nombreAportante').setValue(`Gobernación de ${apo['cofinanciacionAportante'].departamento.descripcion}`);
-              //  };
-              //  if (apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio !== undefined) {
-              //    grupoAportante.get('nombreAportante').setValue(`Alcaldía de ${apo['cofinanciacionAportante'].municipio.descripcion}`);
-              //  };
-              //} else if (apo['cofinanciacionAportante'].tipoAportanteId === 10) {
-              //  grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante'].nombreAportante.nombre}`);
-              //}
-
+              
               if (apo.componenteAportanteNovedad.length > 0) {
                 apo.componenteAportanteNovedad.forEach(compoApo => {
                   const grupoComponente = this.createComponente();
@@ -208,22 +184,22 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                   grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.novedadContractualAportanteId);
                   grupoComponente.get('fase').setValue(faseSeleccionada);
                   grupoComponente.get('componente').setValue(componenteSeleccionado);
-                  grupoComponente.get('listaUsos').setValue(listaDeUsos)
+                  //grupoComponente.get('listaUsos').setValue(listaDeUsos)
 
                   compoApo.componenteUsoNovedad.forEach(uso => {
-                    const grupoUso = this.createUso();
-                    const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
+                    // const grupoUso = this.createUso();
+                    // const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
 
-                    grupoUso.get('componenteUsoId').setValue(uso.componenteUsoNovedadId);
-                    grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteNovedadId);
-                    grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
-                    grupoUso.get('valorUso').setValue(uso.valorUso);
+                    // grupoUso.get('componenteUsoId').setValue(uso.componenteUsoNovedadId);
+                    // grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteNovedadId);
+                    // grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
+                    // grupoUso.get('valorUso').setValue(uso.valorUso);
 
-                    if (grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0) {
-                      grupoAportante.get('estadoSemaforo').setValue('sin-diligenciar');
-                    }
+                    // if (grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0) {
+                    //   grupoAportante.get('estadoSemaforo').setValue('sin-diligenciar');
+                    // }
 
-                    listaUsos.push(grupoUso);
+                    // listaUsos.push(grupoUso);
                   });
 
                   listaComponentes.push(grupoComponente);
@@ -346,8 +322,10 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
   addComponent(i: number) {
     let grupoComponente = this.createComponente();
-    let listaUsos = grupoComponente.get('usos') as FormArray;
-    listaUsos.push(this.createUso());
+    //let listaUsos = grupoComponente.get('usos') as FormArray;
+    //listaUsos.push(this.createUso());
+    let listaFuentes = grupoComponente.get('fuentes') as FormArray;
+    listaFuentes.push( this.createFuente() )
     this.componentes(i).push(grupoComponente);
   }
 
@@ -357,9 +335,31 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       contratacionProyectoAportanteId: [],
       fase: [null, Validators.required],
       componente: [null, Validators.required],
+      //usos: this.fb.array([]),
+      //listaUsos: this.listaUsos,
+      fuentes: this.fb.array([]),
+    });
+  }
+
+  addFuente(i: number) {
+    let grupoComponente = this.createComponente();
+    let listaUsos = grupoComponente.get('usos') as FormArray;
+    listaUsos.push(this.createUso());
+    this.componentes(i).push(grupoComponente);
+  }
+
+  createFuente(): FormGroup {
+    return this.fb.group({
       usos: this.fb.array([]),
       listaUsos: this.listaUsos,
+      fineteId:[],
     });
+  }
+
+  fuentes(j: number, i: number) {
+    // const control = this.addressForm.get('componentes') as FormArray;
+    // return control.controls[i].get('usos') as FormArray;
+    return this.componentes(j).controls[i].get('fuentes') as FormArray;
   }
 
   borrarArray(j: number, i: number) {
@@ -466,28 +466,6 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
       this.novedad.novedadContractualAportante.push(aportante);
     });
-
-    // if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length) {
-    //   this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
-    //   return;
-    // };
-    // if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length) {
-    //   this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
-    //   return;
-    // };
-    // if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length) {
-    //   if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria) {
-    //     this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
-    //     return;
-    //   };
-    // };
-
-    // if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length) {
-    //   if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra) {
-    //     this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
-    //     return;
-    //   };
-    // };
 
     if (valoresCorrectos) {
 

@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class ComponenteUsoNovedad
     {
         public int ComponenteUsoNovedadId { get; set; }
-        public int ComponenteAportanteNovedadId { get; set; }
+        public int ComponenteFuenteNovedadId { get; set; }
         public string TipoUsoCodigo { get; set; }
         public decimal ValorUso { get; set; }
         public bool? Eliminado { get; set; }
@@ -17,6 +17,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
 
-        public virtual ComponenteAportanteNovedad ComponenteAportanteNovedad { get; set; }
+        public virtual ComponenteFuenteNovedad ComponenteFuenteNovedad { get; set; }
     }
 }
