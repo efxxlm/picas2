@@ -110,5 +110,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
           this.ngAfterViewInit()        
       })
   }
-
+  verDetalle(ajusteProgramacion){
+    this.router.navigate( [ '/registratAjusteProgramacion/verHistorial', 0 ], { state: { ajusteProgramacion } } )
+  }
 }

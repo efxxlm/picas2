@@ -93,9 +93,9 @@
           >
           Ver detalle/Editar
         </a>
-
+        <!--(dbenitez) puse codigo 6 para temas de ver detalle-->
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          *ngIf="element.estadoCodigo === '5'"
+          *ngIf="element.estadoCodigo === '5' || element.estadoCodigo === '6'" (click)="verDetalle(element)"
           >
           Ver detalle
         </a>
