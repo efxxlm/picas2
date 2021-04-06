@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { EstadosRevision } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
 
 @Component({
   selector: 'app-tabla-observaciones-rev-aprob-rapg',
@@ -10,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaObservacionesRevAprobRapgComponent implements OnInit {
 
     @Input() historialObservaciones: any[] = [];
+    estadosRevision = EstadosRevision;
     displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
     dataSource = new MatTableDataSource();
     @ViewChild(MatSort, { static: true }) sort: MatSort;

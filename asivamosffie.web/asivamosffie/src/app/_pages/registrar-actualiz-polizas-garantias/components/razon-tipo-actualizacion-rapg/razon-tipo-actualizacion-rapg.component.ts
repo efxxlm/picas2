@@ -53,6 +53,14 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         this.razonActualizacionArray = await this.common.listaRazonActualizacion().toPromise();
         this.tipoActualizacionArray = await this.common.listaTipoActualizacion().toPromise();
 
+        this.polizasYSegurosArray.forEach( ( poliza, index ) => {
+            const garantia = this.contratoPoliza.polizaGarantia.find( garantia => garantia.tipoGarantiaCodigo === poliza.codigo );
+
+            if ( garantia === undefined ) {
+                this.polizasYSegurosArray.splice( index, 1 );
+            }
+        } )
+
         if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
             if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
                 this.contratoPolizaActualizacion = this.contratoPoliza.contratoPolizaActualizacion[ 0 ];

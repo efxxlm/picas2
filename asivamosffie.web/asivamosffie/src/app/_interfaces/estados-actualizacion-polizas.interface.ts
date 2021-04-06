@@ -9,3 +9,12 @@ export enum TipoActualizacionCodigo {
     valor = '2',
     seguros = '3',
 }
+
+export enum PerfilCodigo {
+    fiduciaria = 10
+}
+
+export enum EstadosRevision {
+    devuelta = '1',
+    aprobacion = '2'
+}
