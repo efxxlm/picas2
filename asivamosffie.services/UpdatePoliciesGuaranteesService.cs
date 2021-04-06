@@ -343,6 +343,9 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
         {
+            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision) 
+                return false; 
+
             if (
                     !pItem.SegundaFechaRevision.HasValue
                  || !pItem.FechaAprobacion.HasValue
