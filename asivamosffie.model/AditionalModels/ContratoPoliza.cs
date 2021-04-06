@@ -6,9 +6,11 @@ using System.Text;
 namespace asivamosffie.model.Models
 {
     public partial class ContratoPoliza
-    {
-
+    { 
         [NotMapped]
         public int ContratacionId { get; set; }
+
+        [NotMapped]
+        public Usuario UserResponsableAprobacion { get; set; }
     }
 }

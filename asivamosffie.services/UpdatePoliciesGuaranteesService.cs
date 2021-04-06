@@ -63,6 +63,8 @@ namespace asivamosffie.services
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
                 .FirstOrDefaultAsync();
 
+            contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
+
             GetRemoveDeleteItems(contratoPoliza);
 
             return contratoPoliza;
