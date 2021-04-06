@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogDetalleObservacionesComponent } from 'src/app/_pages/registrar-informe-final-proyecto/components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
 import { DialogObservacionesComponent } from 'src/app/_pages/solicitar-contratacion/components/dialog-observaciones/dialog-observaciones.component';
 import { CargarProgramacionComponent } from '../cargar-programacion/cargar-programacion.component';
+import { DialogDetalleObservacionesComponent } from '../dialog-detalle-observaciones/dialog-detalle-observaciones.component';
 export interface VerificacionDiaria {
   id: string;
   fechaCargue: string;
