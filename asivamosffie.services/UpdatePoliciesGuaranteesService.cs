@@ -133,7 +133,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        public async Task<Respuesta> DeleteContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Actualizacion_Polizas, (int)EnumeratorTipoDominio.Acciones);
 
@@ -176,8 +176,7 @@ namespace asivamosffie.services
                    };
             }
         }
-
-
+         
         public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguros_Actualizacion_Polizas_y_garantias, (int)EnumeratorTipoDominio.Acciones);
