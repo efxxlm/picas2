@@ -347,10 +347,9 @@ namespace asivamosffie.services
                 return false; 
 
             if (
-                    !pItem.SegundaFechaRevision.HasValue
-                 || !pItem.FechaAprobacion.HasValue
+                    !pItem.SegundaFechaRevision.HasValue 
                  || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
-                 || string.IsNullOrEmpty(pItem.ObservacionGeneral)
+                 || !pItem.FechaAprobacion.HasValue 
                  || pItem.ResponsableAprobacionId == 0
                  ) return false;
 
