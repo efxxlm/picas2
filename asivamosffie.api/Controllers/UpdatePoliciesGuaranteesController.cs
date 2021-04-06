@@ -84,7 +84,7 @@ namespace asivamosffie.api.Controllers
             }
         }
          
-        [Route("CreateorUpdateCofinancing")]
+        [Route("CreateEditContratoPolizaActualizacion")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
