@@ -34,6 +34,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ComiteTecnico> ComiteTecnico { get; set; }
         public virtual DbSet<ComponenteAportante> ComponenteAportante { get; set; }
         public virtual DbSet<ComponenteAportanteNovedad> ComponenteAportanteNovedad { get; set; }
+        public virtual DbSet<ComponenteFuenteNovedad> ComponenteFuenteNovedad { get; set; }
         public virtual DbSet<ComponenteUso> ComponenteUso { get; set; }
         public virtual DbSet<ComponenteUsoNovedad> ComponenteUsoNovedad { get; set; }
         public virtual DbSet<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
@@ -277,7 +278,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -820,6 +820,30 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_ComponenteAportanteNovedad_ComponenteAportanteNovedad");
             });
 
+            modelBuilder.Entity<ComponenteFuenteNovedad>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ComponenteAportanteNovedad)
+                    .WithMany(p => p.ComponenteFuenteNovedad)
+                    .HasForeignKey(d => d.ComponenteAportanteNovedadId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ComponenteFuenteNovedad_ComponenteAportanteNovedad");
+            });
+
             modelBuilder.Entity<ComponenteUso>(entity =>
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
@@ -878,11 +902,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
 
-                entity.HasOne(d => d.ComponenteAportanteNovedad)
+                entity.HasOne(d => d.ComponenteFuenteNovedad)
                     .WithMany(p => p.ComponenteUsoNovedad)
-                    .HasForeignKey(d => d.ComponenteAportanteNovedadId)
+                    .HasForeignKey(d => d.ComponenteFuenteNovedadId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComponenteUsoNovedad_ComponenteAportanteNovedad");
+                    .HasConstraintName("FK_ComponenteUsoNovedad_ComponenteFuenteNovedad");
             });
 
             modelBuilder.Entity<CompromisoSeguimiento>(entity =>
@@ -7992,6 +8016,22 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ContratacionProyectoSolicitudLiquidacion");
 
+                entity.Property(e => e.EstadoAprobacionLiquidacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoAprobacionLiquidacionString)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.EstadoTramiteLiquidacion)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoTramiteLiquidacionString)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
                 entity.Property(e => e.EstadoValidacionLiquidacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -8000,7 +8040,13 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
+                entity.Property(e => e.FechaAprobacionLiquidacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaPoliza).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("datetime");
 
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
