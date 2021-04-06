@@ -225,9 +225,9 @@ namespace asivamosffie.services
             string Nomeclatura = "ODG_";
 
             if (solicitudPago.Contrato.Contratacion.TipoContratacionCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
-                Nomeclatura = "Obr";
+                Nomeclatura += "Obr";
             else
-                Nomeclatura = "Int";
+                Nomeclatura += "Int";
 
             Nomeclatura += solicitudPago.Contrato.NumeroContrato;
 
