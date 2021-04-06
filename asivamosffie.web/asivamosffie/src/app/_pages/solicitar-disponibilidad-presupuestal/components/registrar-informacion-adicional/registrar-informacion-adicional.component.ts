@@ -19,6 +19,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   objetoDisponibilidad: DisponibilidadPresupuestal = {};
   listaProyectos: Proyecto[] = [];
+  idNovedad: number;
 
   addressForm = this.fb.group({
     plazoMeses: [null, Validators.required],
@@ -60,7 +61,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(params);
       this.objetoDisponibilidad.contratacionId = params.idContratacion;
       this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      this.objetoDisponibilidad.tipoSolicitudCodigo = params.idTipoSolicitud;
+      this.idNovedad = params.idNovedad;
       console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
@@ -138,37 +140,89 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
                 
           
               })*/
+
+            if (this.objetoDisponibilidad.tipoSolicitudCodigo == '2')//modificacionContractual
+            {
+              let plazoMesesNovedad = 0;
+              let plazoDiasNovedad = 0;
+
+              let plazoMesesObra = 0;
+              let plazoMesesInterventoria = 0;
+              let plazoDiasObra = 0;
+              let plazoDiasInterventoria = 0;
+
+              this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe(
+                res => {
+                  console.log(res);
+
+                  res = res.filter(x => x.novedadContractualId == this.idNovedad);
+
+                  this.ddpsolicitud = res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+                  this.ddpvalor = res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+                  this.ddpdetalle = res[0].novedadContractualDescripcion[0].resumenJustificacion;
+                  this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
+                  this.objetoDisponibilidad.esNovedadContractual = true;
+                  this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
+                  this.objetoDisponibilidad.tipoSolicitudCodigo = '1';//tradicional
+                  this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+
+                  res[0].novedadContractualDescripcion.forEach(novedad => {
+                    // Prorroga a la suspension - Prorroga - suspension
+                    if (novedad.tipoNovedadCodigo === '2' || novedad.tipoNovedadCodigo === '4' || novedad.tipoNovedadCodigo === '1') {
+                      if (novedad.plazoAdicionalMeses !== undefined)
+                        plazoMesesNovedad = novedad.plazoAdicionalDias;
+                      if (novedad.plazoAdicionalDias !== undefined)
+                        plazoDiasNovedad = novedad.plazoAdicionalDias;
+                    }
+                  });
+
+
+
+                  // obra
+                  if (this.tipoSolicitudCodigo === '1') {
+
+                    contratacion.contratacionProyecto.forEach(cp => {
+                      if (plazoDiasObra < cp.proyecto.plazoDiasObra)
+                        plazoDiasObra = cp.proyecto.plazoDiasObra;
+
+                      if (plazoMesesObra < cp.proyecto.plazoMesesObra)
+                        plazoMesesObra = cp.proyecto.plazoMesesObra;
+                    });
+
+                    this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
+                    this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
+                  } else {
+                    
+                    contratacion.contratacionProyecto.forEach(cp => {
+                      if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
+                        plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
+
+                      if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
+                        plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
+                    });
+
+                    this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesInterventoria);
+                    this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasInterventoria);
+                  }
+
+                  this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
+                },
+                err => {
+                  console.log(err);
+                }
+              )
+            }
+
           });
           console.log(this.listaProyectos);
-          },
-          err => {
-            console.log( err );
-          }
-        );
-      
-        if(this.objetoDisponibilidad.tipoSolicitudCodigo=='2')//modificacionContractual
-        {
-          this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe( 
-            res => {
-              console.log(res);
-              this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
-              this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
-              this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
-              this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
-              this.objetoDisponibilidad.esNovedadContractual = true;          
-              this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
-              this.objetoDisponibilidad.tipoSolicitudCodigo = '1';//tradicional
-              this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
-              this.addressForm.get("plazoMeses").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalMeses);
-              this.addressForm.get("plazoDias").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalDias);
-              this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
-            },
-            err => {
-              console.log( err );
-            }
-          )
-        }  
-      //})
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
+
+    //})
 
   }
 
@@ -205,13 +259,13 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   //   }
   // }
 
-  textoLimpio( evento: any, n: number ) {
-    if ( evento !== undefined ) {
-        return evento.getLength() > n ? n : evento.getLength();
+  textoLimpio(evento: any, n: number) {
+    if (evento !== undefined) {
+      return evento.getLength() > n ? n : evento.getLength();
     } else {
-        return 0;
+      return 0;
     }
-}
+  }
 
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
@@ -244,10 +298,10 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(this.tipoSolicitudCodigo, plazo)
       // obra
       if (this.tipoSolicitudCodigo == '1') {
-        this.contratacion.contratacionProyecto.forEach( cp => {
-          console.log( cp.proyecto.plazoMesesObra, cp.proyecto.plazoDiasObra);
+        this.contratacion.contratacionProyecto.forEach(cp => {
+          console.log(cp.proyecto.plazoMesesObra, cp.proyecto.plazoDiasObra);
           let plazoTemp = 0;
-          plazoTemp = cp.proyecto.plazoMesesObra * 30 ;
+          plazoTemp = cp.proyecto.plazoMesesObra * 30;
           plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasObra);
 
           if (plazoTemp > plazoObra)
@@ -255,29 +309,27 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
         });
 
-        if ( plazo < plazoObra )
-        {
-          console.log( plazoObra, plazo );
+        if (plazo < plazoObra) {
+          console.log(plazoObra, plazo);
           this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
           return false;
         }
-        
+
       }
       if (this.tipoSolicitudCodigo == '2') {
-        this.contratacion.contratacionProyecto.forEach( cp => {
-          console.log( cp.proyecto.plazoMesesInterventoria, cp.proyecto.plazoDiasInterventoria);
+        this.contratacion.contratacionProyecto.forEach(cp => {
+          console.log(cp.proyecto.plazoMesesInterventoria, cp.proyecto.plazoDiasInterventoria);
           let plazoTemp = 0;
-          plazoTemp = cp.proyecto.plazoMesesInterventoria * 30 ;
+          plazoTemp = cp.proyecto.plazoMesesInterventoria * 30;
           plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasInterventoria);
 
           if (plazoTemp > plazoInterventoria)
             plazoInterventoria = plazoTemp;
 
         });
-        
-        if ( plazo < plazoInterventoria )
-        {
-          console.log( plazoInterventoria, plazo );
+
+        if (plazo < plazoInterventoria) {
+          console.log(plazoInterventoria, plazo);
           this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
           return false;
         }

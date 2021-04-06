@@ -115,7 +115,8 @@ namespace asivamosffie.services
                                         .Include(r => r.ContratoPoliza)
                                         .ToList();
 
-            List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual.ToList();
+            List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
+                                                                        .Where(x => x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente).ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
 
@@ -124,9 +125,9 @@ namespace asivamosffie.services
                 if ( 
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
+
                         listaNovedadesActivas
-                                    .Where( x => x.ContratoId == contrato.ContratoId && 
-                                                 x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente )
+                                    .Where( x => x.ContratoId == contrato.ContratoId )
                                     .Count() == 0
                     )
                 {

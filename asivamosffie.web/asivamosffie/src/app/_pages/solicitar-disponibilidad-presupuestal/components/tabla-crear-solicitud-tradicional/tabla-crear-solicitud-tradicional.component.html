@@ -87,7 +87,7 @@
                     
                     <a mat-raised-button color="accent" 
                             class="btn-table" 
-                            [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1]"
+                            [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1,element.novedadContractualId]"
                             *ngIf="element.disponibilidadPresupuestalId != 0 && (element.estadoSolicitudText == '' ||
                             element.estadoSolicitudText == 'Devuelta por validación presupuestal')">
                             Ver detalle /Editar
@@ -95,14 +95,14 @@
                     
                     <a mat-raised-button color="accent" 
                         class="btn-table" 
-                        [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1]"
+                        [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1,element.novedadContractualId]"
                         *ngIf="element.disponibilidadPresupuestalId == 0">
                         Registrar información adicional
                     </a>
 
                     <a  mat-raised-button color="accent" 
                         class="btn-table" 
-                        [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1]"
+                        [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,element.tipoSolicitudText=='Modificación contractual'?2:1,element.novedadContractualId]"
                         *ngIf="element.disponibilidadPresupuestalId != 0 && ( element.estadoSolicitudText === 'Con validación presupuestal' ||
                          element.estadoSolicitudText === 'En validación presupuestal' ||  element.estadoSolicitudText === 'Con disponibilidad presupuestal'
                          ||  element.estadoSolicitudText === 'Rechazada por validación presupuestal' 

@@ -20,11 +20,11 @@ const routes: Routes = [
     component: TablaCrearSolicitudTradicionalComponent
   },
   {
-    path: 'crearSolicitudTradicional/registrar/:idContratacion/:idDisponibilidadPresupuestal/:idTipoSolicitud',
+    path: 'crearSolicitudTradicional/registrar/:idContratacion/:idDisponibilidadPresupuestal/:idTipoSolicitud/:idNovedad',
     component: RegistrarInformacionAdicionalComponent
   },
   {
-    path: 'crearSolicitudTradicional/verDetalle/:idDisponibilidadPresupuestal/:idTipoSolicitud/:id',
+    path: 'crearSolicitudTradicional/verDetalle/:idDisponibilidadPresupuestal/:idTipoSolicitud/:id/:idNovedad',
     component: DetalleDisponibilidadPresupuestalComponent
   },
   {

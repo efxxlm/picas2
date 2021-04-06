@@ -1003,6 +1003,7 @@ namespace asivamosffie.services
                 ValorSolicitud = (decimal)reader["ValorSolicitud"],
                 FechaComite = (DateTime)reader["FechaComite"],
                 EstadoSolicitudText = reader["EstadoSolicitudText"].ToString(),
+                NovedadContractualId = (int)reader["NovedadContractualId"],
 
             };
         }
