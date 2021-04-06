@@ -254,7 +254,8 @@ namespace asivamosffie.services
                         c.RegistrosInconsistentes,
                         c.RegistrosConsistentes,
                         c.MostrarInconsistencias,
-                        c.FechaTramite
+                        c.FechaTramite,
+                        c.PendienteAprobacion
                     });
                 });
 
@@ -1063,9 +1064,7 @@ namespace asivamosffie.services
         {
             Respuesta response = new Respuesta();
             bool isMailSent = false;
-#if DEBUG
-            isMailSent = true;
-#endif
+
             int modifiedRows = -1;
             int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Notificar_Inconsistencias);
             string actionMesage = ConstantCommonMessages.Performances.NOTIFICAR_INCONSISTENCIAS;

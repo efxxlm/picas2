@@ -47,7 +47,7 @@
                         Tramitar rendimientos
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" 
-                        *ngIf="element.registrosConsistentes > 0 "
+                        *ngIf="element.registrosConsistentes > 0 && !element.pendienteAprobacion "
                         (click)="requestApproval(element.cargaPagosRendimientosId, element)"
                         >
                         Enviar para aprobación
