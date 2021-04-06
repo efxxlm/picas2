@@ -25,7 +25,7 @@ export class ActualizarPolizasService {
   }
 
   createorUpdateCofinancing( pContratoPolizaActualizacion: any ) {
-    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateorUpdateCofinancing`, pContratoPolizaActualizacion )
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditContratoPolizaActualizacion`, pContratoPolizaActualizacion )
   }
 
 }
