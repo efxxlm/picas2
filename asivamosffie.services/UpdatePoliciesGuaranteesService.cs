@@ -315,6 +315,9 @@ namespace asivamosffie.services
                     item.FechaCreacion = DateTime.Now;
                     item.Eliminado = false;
                     item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item);
+                     
+                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item); 
+
                 }
                 else
                 {
