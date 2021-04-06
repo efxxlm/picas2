@@ -22,6 +22,7 @@ import { VerHistorialComponent } from './components/ver-historial/ver-historial.
 import { HistorialExpansionPanelComponent } from './components/historial-expansion-panel/historial-expansion-panel.component';
 import { DetalleTablaProgObraComponent } from './components/detalle-tabla-prog-obra/detalle-tabla-prog-obra.component';
 import { DetalleTablaFlujIntRecComponent } from './components/detalle-tabla-fluj-int-rec/detalle-tabla-fluj-int-rec.component';
+import { DialogDetalleObservacionesComponent } from './components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { DetalleTablaFlujIntRecComponent } from './components/detalle-tabla-fluj
     VerHistorialComponent,
     HistorialExpansionPanelComponent,
     DetalleTablaProgObraComponent,
-    DetalleTablaFlujIntRecComponent
+    DetalleTablaFlujIntRecComponent,
+    DialogDetalleObservacionesComponent
   ],
   imports: [
     CommonModule,

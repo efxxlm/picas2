@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogDetalleObservacionesComponent } from 'src/app/_pages/registrar-informe-final-proyecto/components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
 import { DialogObservacionesComponent } from 'src/app/_pages/solicitar-contratacion/components/dialog-observaciones/dialog-observaciones.component';
 import { CargarProgramacionComponent } from '../cargar-programacion/cargar-programacion.component';
 export interface VerificacionDiaria {
@@ -67,7 +68,7 @@ export class DetalleTablaProgObraComponent implements OnInit {
   }
 
   openObservaciones(id: string) {
-    const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
+    const dialogCargarProgramacion = this.dialog.open(DialogDetalleObservacionesComponent, {
       width: '75em',
       // data: { }
     });
