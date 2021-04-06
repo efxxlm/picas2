@@ -96,7 +96,6 @@ export class FormObservacionInformeFinalComponent implements OnInit {
         idPadre: this.informeFinalId
       };
 
-    console.log( pLiquidacionContratacionObservacion );
     this.registerContractualLiquidationRequestService.createUpdateLiquidacionContratacionObservacion( pLiquidacionContratacionObservacion )
         .subscribe(
             response => {

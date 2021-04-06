@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 
 @Component({
   selector: 'app-validar-balance',
@@ -8,12 +9,29 @@ import { Router } from '@angular/router';
 })
 export class ValidarBalanceComponent implements OnInit {
 
-  constructor(
-    private routes: Router
-  ) { }
+  contratacionProyectoId: number;
+  balanceFinancieroId: number;//definir
+  listaTipoObservacionLiquidacionContratacion: any;
+  listaMenu: any;
 
-  ngOnInit(): void {
+  constructor(
+    private routes: Router,
+    private route: ActivatedRoute,
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
   }
 
-  
+  ngOnInit(): void {
+    this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
+    .subscribe( response => {
+        this.listaTipoObservacionLiquidacionContratacion = response;
+    });
+    this.registerContractualLiquidationRequestService.listaMenu()
+    .subscribe( response => {
+        this.listaMenu = response;
+    });
+  }  
 }

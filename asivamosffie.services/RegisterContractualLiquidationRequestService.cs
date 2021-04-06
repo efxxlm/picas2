@@ -35,6 +35,11 @@ namespace asivamosffie.services
             return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
         }
 
+        public async Task<VContratacionProyectoSolicitudLiquidacion> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        {
+            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefaultAsync();
+        }
+
         public async Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId)
         {
             List<dynamic> ProyectoAjustado = new List<dynamic>();
@@ -345,6 +350,156 @@ namespace asivamosffie.services
                 return false;
             }
         }
+
+        private void ArchivarLiquidacionContratacionObservacion(ContratacionProyecto pContratacionProyecto)
+        {
+            _context.Set<LiquidacionContratacionObservacion>()
+                    .Where(r => r.ContratacionProyectoId == pContratacionProyecto.ContratacionProyectoId
+                              && r.TieneObservacion == false)
+                    .Update(r => new LiquidacionContratacionObservacion()
+                    {
+                        Archivado = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pContratacionProyecto.UsuarioCreacion
+                    });
+
+            _context.Set<ContratacionProyecto>()
+                .Where(s => s.ContratacionProyectoId == pContratacionProyecto.ContratacionProyectoId)
+                .Update(s => new ContratacionProyecto
+                {
+                    RegistroCompletoVerificacionLiquidacion = false,
+                    FechaValidacionLiquidacion = null,
+
+                    RegistroCompletoAprobacionLiquidacion = false,
+                    FechaAprobacionLiquidacion = null,
+
+                    RegistroCompletoTramiteLiquidacion = false,
+                    FechaTramiteLiquidacion = null,
+
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = pContratacionProyecto.UsuarioCreacion
+                });
+        }
+
+        #region  Emails
+        public async Task<Respuesta> ChangeStatusLiquidacionContratacionProyecto(ContratacionProyecto pContratacionProyecto, int menuId)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Contratacion_Proyecto_Liquidacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
+                if (contratacionProyectoOld != null)
+                {
+
+                    //5.1.6
+                    if (menuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual && pContratacionProyecto.EstadoValidacionLiquidacionCodigo == ConstantCodigoEstadoValidacionLiquidacion.Enviado_al_supervisor)
+                        await SendMailToSupervision(pContratacionProyecto.ContratacionProyectoId);
+
+                    ///5.1.7
+                    if (menuId == (int)enumeratorMenu.Aprobar_solicitud_liquidacion_contractual && pContratacionProyecto.EstadoAprobacionLiquidacionCodigo == ConstantCodigoEstadoAprobacionLiquidacion.Enviado_control_seguimiento)
+                        await SendMailToNovedades(pContratacionProyecto.ContratacionProyectoId);
+
+                    ///5.1.8
+                    if (menuId == (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual && pContratacionProyecto.EstadoTramiteLiquidacion == ConstantCodigoEstadoVerificacionLiquidacion.Enviado_a_liquidacion)
+                        await SendEmailToFinalLiquidation(pContratacionProyecto.ContratacionProyectoId);
+
+                    _context.Set<ContratacionProyecto>()
+                                          .Where(o => o.ContratacionProyectoId == pContratacionProyecto.ContratacionProyectoId)
+                                                                                                          .Update(r => new ContratacionProyecto()
+                                                                                                          {
+                                                                                                              FechaModificacion = DateTime.Now,
+                                                                                                              UsuarioModificacion = pContratacionProyecto.UsuarioCreacion,
+                                                                                                              EstadoValidacionLiquidacionCodigo = !String.IsNullOrEmpty(pContratacionProyecto.EstadoValidacionLiquidacionCodigo) ? pContratacionProyecto.EstadoValidacionLiquidacionCodigo : contratacionProyectoOld.EstadoValidacionLiquidacionCodigo,
+                                                                                                              EstadoAprobacionLiquidacionCodigo = !String.IsNullOrEmpty(pContratacionProyecto.EstadoAprobacionLiquidacionCodigo) ? pContratacionProyecto.EstadoAprobacionLiquidacionCodigo : contratacionProyectoOld.EstadoAprobacionLiquidacionCodigo,
+                                                                                                              EstadoTramiteLiquidacion = !String.IsNullOrEmpty(pContratacionProyecto.EstadoTramiteLiquidacion) ? pContratacionProyecto.EstadoTramiteLiquidacion : contratacionProyectoOld.EstadoTramiteLiquidacion,
+                                                                                                          });
+
+
+                }
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual, GeneralCodes.OperacionExitosa, idAccion, pContratacionProyecto.UsuarioCreacion, "Actualización de estados liquidación contractual ")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual, GeneralCodes.Error, idAccion, pContratacionProyecto.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        ///5.1.6 - Enviar al supervisor
+        private async Task<bool> SendMailToSupervision(int pContratacionProyectoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_supervisor_registro_liquidacion_contractual));
+            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        ///5.1.7 - Enviar al grupo de novedades 
+        private async Task<bool> SendMailToNovedades(int pContratacionProyectoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_grupo_novedades_aprobar_liquidacion_contractual));
+            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Seguimiento_y_control
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        ///5.1.8 - enaviar a juridica
+        private async Task<bool> SendEmailToFinalLiquidation(int pContratacionProyectoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_liquidacion_contractual_5_1_8));
+            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Juridica
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        private string ReplaceVariablesContratacionProyectoLiquidacion(string template, int pContratacionProyectoId)
+        {
+            ContratacionProyecto contratacionProyecto =
+                _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+                .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
+
+            template = template
+                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
+            return template;
+        }
+
+        #endregion
+
 
     }
 }

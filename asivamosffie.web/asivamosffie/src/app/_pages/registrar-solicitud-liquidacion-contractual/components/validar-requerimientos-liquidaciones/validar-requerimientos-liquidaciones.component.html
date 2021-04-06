@@ -7,11 +7,11 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       Validar requisitos para liquidación
-      N801801
+      {{ data.numeroContrato }}
     </h1>
     <p class="colorMainColor mt-05em">
       Fecha de actualización de póliza
-      <b> 10/11/2020 </b>
+      <b> {{ data.fechaPoliza  | date:'dd/MM/yyyy' }} </b>
     </p>
   </div>
 
@@ -21,19 +21,19 @@
         <strong>
           Número de contrato:
         </strong>
-        N801801
+        {{ data.numeroContrato }}
       </p>
       <p>
         <strong>
           Valor del contrato:
         </strong>
-        $ 105.000.000
+        {{data.valorSolicitud | currency:'USD':'symbol':'1.0'}}
       </p>
       <p>
         <strong>
           Cantidad de proyectos asociados:
         </strong>
-        1
+        {{ data.proyectosAsociados }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -57,7 +57,7 @@
             Actualización de póliza
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-actualizacion-poliza></app-actualizacion-poliza>
+        <app-actualizacion-poliza *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
@@ -70,7 +70,7 @@
             Balance financiero
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-balance-financiero></app-tabla-balance-financiero>
+        <app-tabla-balance-financiero *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoBalanceFinanciero)="valueSemaforoBalanceFinanciero($event)"></app-tabla-balance-financiero>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">

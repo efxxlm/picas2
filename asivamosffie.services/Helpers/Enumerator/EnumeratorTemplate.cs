@@ -125,7 +125,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         SeguimientoDiarioDevuelto = 122,
         NotificacionTresDiasNegativosSeguimientoDiario = 124,
 
-
+        Notificacion_supervisor_registro_liquidacion_contractual = 126,
+        Notificacion_grupo_novedades_aprobar_liquidacion_contractual = 127,
+        Notificacion_liquidacion_contractual_5_1_8 = 128,
 
     }
 }

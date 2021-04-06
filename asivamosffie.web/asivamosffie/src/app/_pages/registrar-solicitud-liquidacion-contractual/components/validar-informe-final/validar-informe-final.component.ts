@@ -31,12 +31,10 @@ export class ValidarInformeFinalComponent implements OnInit {
     this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
     .subscribe( response => {
         this.listaTipoObservacionLiquidacionContratacion = response;
-        console.log("listaTipoObservacionLiquidacionContratacion: ",response );
     });
     this.registerContractualLiquidationRequestService.listaMenu()
     .subscribe( response => {
         this.listaMenu = response;
-        console.log("listaMenu: ",response );
     });
   }
 

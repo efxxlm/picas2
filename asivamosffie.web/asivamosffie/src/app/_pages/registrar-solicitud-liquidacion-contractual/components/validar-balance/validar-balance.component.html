@@ -74,6 +74,6 @@
     </a>
   </div>
 
-  <app-form-observacion-balance></app-form-observacion-balance>
+  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
 
 </section>

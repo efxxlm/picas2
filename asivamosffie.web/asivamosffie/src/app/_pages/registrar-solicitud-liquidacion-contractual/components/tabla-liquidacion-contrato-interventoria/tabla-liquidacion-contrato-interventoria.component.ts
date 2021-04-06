@@ -1,8 +1,11 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 
 @Component({
@@ -29,11 +32,20 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   datosTabla = [];
+  listaMenu: any;
+  listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
 
-  constructor(private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService) { }
+  constructor(
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.getListContractualLiquidationInterventoria();
+    this.registerContractualLiquidationRequestService.listaMenu()
+    .subscribe( response => {
+        this.listaMenu = response;
+    });
   }
 
   getListContractualLiquidationInterventoria() {
@@ -46,6 +58,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             valorSolicitud: element.valorSolicitud,
             proyectosAsociados: element.proyectosAsociados,
             estadoValidacionLiquidacionString: element.estadoValidacionLiquidacionString,
+            estadoValidacionLiquidacionCodigo: element.estadoValidacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
             contratacionProyectoId: element.contratacionProyectoId
           });
@@ -83,5 +96,28 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  SendToSupervision( pContratacionProyectoId: number ) {
+    const pContratacionProyecto = {
+        contratacionProyectoId: pContratacionProyectoId,
+        estadoValidacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAlSupervisor
+    };
+
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.registrarSolicitudLiquidacionContratacion )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.ngOnInit();
+                return;
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
+    }
 
 }

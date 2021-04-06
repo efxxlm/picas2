@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 
 @Component({
   selector: 'app-form-observacion-actualizacion-poliza',
@@ -10,9 +11,16 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormObservacionActualizacionPolizaComponent implements OnInit {
 
+  
+  @Input() contratacionProyectoId: any;
+  @Input() tipoObservacionCodigo: string;
+  @Input() menuId: any;
+  @Input() contratoPolizaActualizacionId: number;
+
   observaciones: FormGroup = this.fb.group({
-    tieneObservaciones: [null, Validators.required],
-    observaciones: [null, Validators.required]
+    liquidacionContratacionObservacionId: [null, Validators.required],
+    tieneObservacion: [null, Validators.required],
+    observacion: [null, Validators.required]
   });
 
   editorStyle = {
@@ -30,10 +38,26 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(
+      this.menuId,
+      this.contratacionProyectoId,
+      this.contratoPolizaActualizacionId,
+      this.tipoObservacionCodigo
+    ).subscribe(response => {
+      if(response != null){
+        this.observaciones.patchValue(response[0]);
+      }
+    });
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -49,9 +73,39 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
     }
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
   onSubmit() {
-    console.log(this.observaciones.value);
     this.estaEditando = true;
+    this.observaciones.markAllAsTouched();
+    if ( this.observaciones.get( 'tieneObservacion' ).value !== null && this.observaciones.get( 'tieneObservacion' ).value === false ) {
+        this.observaciones.get( 'observacion' ).setValue( '' );
+    }
+
+    const pLiquidacionContratacionObservacion = {
+        liquidacionContratacionObservacionId: this.observaciones.get( 'liquidacionContratacionObservacionId' ).value,
+        contratacionProyectoId: this.contratacionProyectoId,
+        tipoObservacionCodigo: this.tipoObservacionCodigo,
+        tieneObservacion: this.observaciones.get( 'tieneObservacion' ).value !== null ? this.observaciones.get( 'tieneObservacion' ).value : this.observaciones.get( 'tieneObservacion' ).value,
+        observacion: this.observaciones.get( 'observacion' ).value !== null ? this.observaciones.get( 'observacion' ).value : this.observaciones.get( 'observacion' ).value,
+        menuId: this.menuId,
+        idPadre: this.contratoPolizaActualizacionId
+      };
+
+    this.registerContractualLiquidationRequestService.createUpdateLiquidacionContratacionObservacion( pLiquidacionContratacionObservacion )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.ngOnInit();
+                return;
+            },
+            err => this.openDialog( '', `<b>${ err.message }</b>` )
+        )
   }
 
 }

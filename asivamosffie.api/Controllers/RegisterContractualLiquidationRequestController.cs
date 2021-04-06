@@ -56,6 +56,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetContratacionProyectoByContratacionProyectoId")]
+        [HttpGet]
+        public async Task<ActionResult<VContratacionProyectoSolicitudLiquidacion>> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetContratacionProyectoByContratacionProyectoId(pContratacionProyectoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GridInformeFinal")]
         [HttpGet]
         public async Task<ActionResult<List<dynamic>>> GridInformeFinal(int pContratacionProyectoId)
@@ -121,6 +135,24 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+        [Route("ChangeStatusLiquidacionContratacionProyecto")]
+        public async Task<IActionResult> ChangeStatusLiquidacionContratacionProyecto([FromBody] ContratacionProyecto pContratacionProyecto, [FromQuery] int menudId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerContractualLiquidationRequest.ChangeStatusLiquidacionContratacionProyecto(pContratacionProyecto, menudId);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
     }
 }

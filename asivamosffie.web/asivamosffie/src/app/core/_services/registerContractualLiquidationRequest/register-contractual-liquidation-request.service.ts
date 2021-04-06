@@ -21,6 +21,10 @@ export class RegisterContractualLiquidationRequestService {
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria`);
   }
 
+  getContratacionProyectoByContratacionProyectoId(pContratacionProyectoId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratacionProyectoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
+  }
+  
   gridInformeFinal( pContratacionProyectoId: number ){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionProyectoId=${ pContratacionProyectoId }`);
   }
@@ -40,6 +44,11 @@ export class RegisterContractualLiquidationRequestService {
   createUpdateLiquidacionContratacionObservacion( pLiquidacionContratacionObservacion: any ) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/${this.contractual_liquidation}/CreateUpdateLiquidacionContratacionObservacion`, pLiquidacionContratacionObservacion);
   }
+
+  changeStatusLiquidacionContratacionProyecto( pContratacionProyecto: any , menuId: number) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/${this.contractual_liquidation}/ChangeStatusLiquidacionContratacionProyecto?menuId=${ menuId }`, pContratacionProyecto);
+  }
+
 
   listaTipoObservacionLiquidacionContratacion() {
     /*
