@@ -364,7 +364,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        private void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
+        public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
         {
             _context.Set<SolicitudPagoObservacion>()
                     .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId

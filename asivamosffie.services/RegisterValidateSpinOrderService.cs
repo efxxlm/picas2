@@ -22,9 +22,10 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
-
-        public RegisterValidateSpinOrderService(ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
+        private readonly IPaymentRequierementsService _paymentRequierementsService;
+        public RegisterValidateSpinOrderService(IPaymentRequierementsService paymentRequierementsService, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _paymentRequierementsService = paymentRequierementsService;
             _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _commonService = commonService;
             _context = context;
@@ -49,7 +50,11 @@ namespace asivamosffie.services
 
             //Crear URl aprobar
             if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
-                UpdateUrlAproved(pOrdenGiro);
+                ReturnOrdenGiroSolicitudPago(pOrdenGiro);
+            
+            //Crear URl aprobar
+            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Solicitud_devuelta_a_equipo_de_facturacion_por_generar_orden_de_giro)
+                ReturnOrdenGiroSolicitudPago(pOrdenGiro);
 
              
             try
@@ -92,8 +97,14 @@ namespace asivamosffie.services
             }
         }
 
-        private void UpdateUrlAproved(OrdenGiro pOrdenGiro)
+        private void ReturnOrdenGiroSolicitudPago(OrdenGiro pOrdenGiro)
         {
+            OrdenGiro ordenGiro = _context
+                   .OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                            .Include(s => s.SolicitudPago)
+                            .AsNoTracking()
+                            .FirstOrDefault();
+
             _context.Set<OrdenGiro>()
                       .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                       .Update(o => new OrdenGiro
@@ -102,6 +113,9 @@ namespace asivamosffie.services
                           FechaModificacion = DateTime.Now,
                           UsuarioModificacion = pOrdenGiro.UsuarioCreacion
                       });
+
+
+            //_paymentRequierementsService.ArchivarSolicitudPagoObservacion(ordenGiro.SolicitudPago);
         }
 
         private void UpdateUrlVerify(OrdenGiro pOrdenGiro)
@@ -314,7 +328,7 @@ namespace asivamosffie.services
             return true;
         }
 
-        public async Task<byte[]> GetListOrdenGiro(bool pBlRegistrosAprobados , DateTime pFechaInicial , DateTime pFechaFinal)
+        public async Task<byte[]> GetListOrdenGiro(DescargarOrdenGiro pDescargarOrdenGiro)
         {
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Tabla_Orden_Giro_Para_Tramitar).ToString();
 
@@ -334,7 +348,7 @@ namespace asivamosffie.services
 
             List<int> ListOrdenGiroIds = new List<int>();
 
-            if (pBlRegistrosAprobados)
+            if (pDescargarOrdenGiro.RegistrosAprobados)
             {
                 ListOrdenGiroIds =await _context.OrdenGiro
                     .Where(r => r.FechaRegistroCompletoAprobar.HasValue && !r.FechaRegistroCompletoTramitar.HasValue)
@@ -344,8 +358,8 @@ namespace asivamosffie.services
             {
                 ListOrdenGiroIds = await _context.OrdenGiro
                         .Where(r => r.FechaRegistroCompletoTramitar.HasValue
-                            && r.FechaRegistroCompletoTramitar >= pFechaInicial 
-                            && r.FechaRegistroCompletoTramitar <= pFechaFinal)
+                            && r.FechaRegistroCompletoTramitar >= pDescargarOrdenGiro.FechaInicial
+                            && r.FechaRegistroCompletoTramitar <= pDescargarOrdenGiro.FechaFinal)
                         .Select(r => r.OrdenGiroId).ToListAsync();
             }
 

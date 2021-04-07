@@ -17,6 +17,17 @@ namespace asivamosffie.services
 {
     public class RegisterValidatePaymentRequierementsService : IRegisterValidatePaymentRequierementsService
     {
+        #region constructor
+        private readonly devAsiVamosFFIEContext _context;
+        private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService; 
+        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        {
+            _documentService = documentService;
+            _commonService = commonService;
+            _context = context;
+        }
+        #endregion
 
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
@@ -106,17 +117,7 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region constructor
-        private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
-        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        {
-            _documentService = documentService;
-            _commonService = commonService;
-            _context = context;
-        }
-        #endregion
+
 
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
