@@ -1,5 +1,5 @@
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,6 +14,7 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Output() tieneObservacion = new EventEmitter<boolean>();
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaTipoSolicitudContrato: Dominio[] = [];
     valorTotalFactura = 0;

@@ -47,6 +47,37 @@
                 />
               </span>
         </div>
+
+        <div class="mt-1em" *ngIf="obsVerificar !== undefined || obsAprobar !== undefined">
+            <mat-card class="shipping-card border" align="left" *ngIf="obsVerificar !== undefined">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text card-title-detalle">
+                        Verificación de la coordinación financiera
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="margin-left: 2em;"><b> {{ obsVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                    <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones a esta sección de la orden de giro?</b>: Si</p>
+                    <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones a esta sección de la orden de giro?</b>: No</p>
+                    <section [innerHTML]="obsVerificar.observacion" style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"></section>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="shipping-card border" align="left" *ngIf="obsAprobar !== undefined">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text card-title-detalle">
+                        Aprobación de la dirección financiera
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="margin-left: 2em;"><b> {{ obsAprobar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                    <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones a esta sección de la orden de giro?</b>: Si</p>
+                    <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones a esta sección de la orden de giro?</b>: No</p>
+                    <section [innerHTML]="obsAprobar.observacion" style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"></section>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
         <button mat-button color="warn"
                 class="btn-guardar"
                 type="submit"

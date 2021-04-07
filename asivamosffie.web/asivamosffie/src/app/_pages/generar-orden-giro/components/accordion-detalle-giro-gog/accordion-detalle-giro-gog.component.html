@@ -29,7 +29,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-form-estrateg-pagos-gog>
+            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -80,7 +80,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-observaciones-orden-giro-gog>
+            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-observaciones-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -91,7 +91,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-soporte-orden-giro-gog>
+            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-soporte-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

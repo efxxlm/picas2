@@ -1,10 +1,12 @@
 import { Router } from '@angular/router';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ListaMenu, ListaMenuId, TipoObservaciones, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-form-estrateg-pagos-gog',
@@ -15,6 +17,12 @@ export class FormEstrategPagosGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Output() tieneObservacion = new EventEmitter<boolean>();
+    obsVerificar: any;
+    obsAprobar: any;
+    obsTramitar: any;
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
     ordenGiro: any;
@@ -27,7 +35,8 @@ export class FormEstrategPagosGogComponent implements OnInit {
         private commonSvc: CommonService,
         private ordenPagoSvc: OrdenPagoService,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
         this.commonSvc.listaEstrategiasPago()
             .subscribe( response => this.estrategiaPagoArray = response );
@@ -35,6 +44,10 @@ export class FormEstrategPagosGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getEstrategia();
+    }
+
+    async getEstrategia() {
         if ( this.solicitudPago.ordenGiro !== undefined ) {
 
             this.ordenGiro = this.solicitudPago.ordenGiro;
@@ -48,6 +61,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
                     if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
                         if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago.length > 0 ) {
                             const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago[0];
+
     
                             this.addressForm.setValue(
                                 {
@@ -56,6 +70,50 @@ export class FormEstrategPagosGogComponent implements OnInit {
                                     estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
                                 }
                             );
+
+                            // Get observaciones
+                            const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                this.listaMenu.verificarOrdenGiro,
+                                this.ordenGiroId,
+                                ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                                this.tipoObservaciones.estrategiaPago );
+                            const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                this.listaMenu.aprobarOrdenGiro,
+                                this.ordenGiroId,
+                                ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                                this.tipoObservaciones.estrategiaPago );
+                            const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.tramitarOrdenGiro,
+                                    this.ordenGiroId,
+                                    ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                                    this.tipoObservaciones.estrategiaPago );
+                            // Get lista de observacion y observacion actual
+
+                            if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                    this.obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                }
+                            }
+                            if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                    this.obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                }
+                            }
+                            if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                    this.obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                }
+                            }
+
+                            if ( this.obsVerificar !== undefined ) {
+                                this.tieneObservacion.emit( true );
+                            }
+                            if ( this.obsAprobar !== undefined ) {
+                                this.tieneObservacion.emit( true );
+                            }
+                            if ( this.obsTramitar !== undefined ) {
+                                this.tieneObservacion.emit( true );
+                            }
                         }
                     }
                 }
@@ -113,6 +171,21 @@ export class FormEstrategPagosGogComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.obsVerificar !== undefined ) {
+                        this.obsVerificar.archivada = !this.obsVerificar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsVerificar )
+                            .subscribe();
+                    }
+                    if ( this.obsAprobar !== undefined ) {
+                        this.obsAprobar.archivada = !this.obsAprobar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsAprobar )
+                            .subscribe();
+                    }
+                    if ( this.obsTramitar !== undefined ) {
+                        this.obsTramitar.archivada = !this.obsTramitar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsTramitar )
+                            .subscribe();
+                    }
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [

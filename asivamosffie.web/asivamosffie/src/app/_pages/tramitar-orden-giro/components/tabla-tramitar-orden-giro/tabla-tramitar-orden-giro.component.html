@@ -1,3 +1,20 @@
+<div class="d-flex justify-content-center mb-3em">
+        <button mat-raised-button
+                color="accent"
+                class="tabs--btn"
+                (click)="openDialogDescargarOrdenGiro()">
+                Descargar orden de giro para tramitar
+        </button>
+
+        <button mat-raised-button
+                color="accent"
+                *ngIf="tieneOrdenTramitada === true"
+                (click)="getOrdenGiroAprobadas()"
+                class="tabs--btn" style="margin-left: 2em;">
+                Descargar órdenes de giro aprobadas
+        </button>
+    </div>
+
 <section class="busqueda mt-3em">
     <mat-form-field appearance="outline" class="busqueda--input">
       <mat-label>Buscador / Filtro</mat-label>
