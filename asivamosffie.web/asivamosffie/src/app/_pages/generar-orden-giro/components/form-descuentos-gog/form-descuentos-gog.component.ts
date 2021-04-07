@@ -1,12 +1,14 @@
 import { Router } from '@angular/router';
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import humanize from 'humanize-plus';
+import { ListaMenu, ListaMenuId, TipoObservaciones, TipoObservacionesCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-form-descuentos-gog',
@@ -22,6 +24,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     @Input() descuento: any;
     @Input() valorNetoGiro: number;
     @Input() esVerDetalle: boolean;
+    @Output() tieneObservacion = new EventEmitter<boolean>();
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     estaEditando = false;
     recibeListaCriterios = false;
     cantidadAportantes: number;
@@ -58,6 +63,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
         private ordenGiroSvc: OrdenPagoService,
         private routes: Router,
         private fb: FormBuilder )
@@ -230,12 +236,63 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         if ( totalRegistroCompleto === 0 ) {
                             estadoSemaforo = 'en-proceso';
                         }
-                        setTimeout(() => {
+                        setTimeout( async () => {
                             // Set formulario de los descuentos
-                            detalleDescuentoTecnica.forEach( descuentoValue => {
-                                this.descuentos.controls.push( this.fb.group(
+                            for ( const descuentoValue of detalleDescuentoTecnica ) {
+                                // Get observaciones
+                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.verificarOrdenGiro,
+                                    this.ordenGiroId,
+                                    descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                    this.tipoObservaciones.direccionTecnica );
+                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.aprobarOrdenGiro,
+                                    this.ordenGiroId,
+                                    descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                    this.tipoObservaciones.direccionTecnica );
+                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.tramitarOrdenGiro,
+                                        this.ordenGiroId,
+                                        descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                        this.tipoObservaciones.direccionTecnica );
+                                // Get lista de observacion y observacion actual
+                                let obsVerificar = undefined;
+                                let obsAprobar = undefined;
+                                let obsTramitar = undefined;
+                                if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                    }
+                                }
+                                if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                    }
+                                }
+                                if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                    }
+                                }
+
+                                if ( obsVerificar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
+                                if ( obsAprobar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
+                                if ( obsTramitar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
+                                this.descuentos.push( this.fb.group(
                                     {
                                         estadoSemaforo,
+                                        obsVerificar: [ obsVerificar ],
+                                        obsAprobar: [ obsAprobar ],
+                                        obsTramitar: [ obsTramitar ],
                                         ordenGiroDetalleDescuentoTecnicaId: [ descuentoValue.ordenGiroDetalleDescuentoTecnicaId ],
                                         solicitudPagoFaseFacturaDescuentoId: [ descuentoValue.solicitudPagoFaseFacturaDescuentoId ],
                                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
@@ -243,14 +300,14 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                         criterios: this.fb.array( formArrayCriterios )
                                     }
                                 ) );
-                            } )
+                            }
                         }, 2000);
                     }
                 }
             } else {
                 this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
 
-                    this.descuentos.controls.push( this.fb.group(
+                    this.descuentos.push( this.fb.group(
                         {
                             estadoSemaforo: [ 'sin-diligenciar' ],
                             ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
@@ -266,7 +323,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         } else {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
 
-                this.descuentos.controls.push( this.fb.group(
+                this.descuentos.push( this.fb.group(
                     {
                         estadoSemaforo: [ 'sin-diligenciar' ],
                         ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
@@ -582,7 +639,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         return dialogRef.afterClosed();
     }
 
-    onSubmit() {
+    onSubmit( index: number ) {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
 
@@ -648,6 +705,25 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+
+                    if ( this.descuentos.controls[ index ].get( 'obsVerificar' ).value !== null ) {
+                        const obsVerificar = this.descuentos.controls[ index ].get( 'obsVerificar' ).value;
+                        obsVerificar.archivada = !obsVerificar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsVerificar )
+                            .subscribe();
+                    }
+                    if ( this.descuentos.controls[ index ].get( 'obsAprobar' ).value !== null ) {
+                        const obsAprobar = this.descuentos.controls[ index ].get( 'obsAprobar' ).value;
+                        obsAprobar.archivada = !obsAprobar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsAprobar )
+                            .subscribe();
+                    }
+                    if ( this.descuentos.controls[ index ].get( 'obsTramitar' ).value !== null ) {
+                        const obsTramitar = this.descuentos.controls[ index ].get( 'obsTramitar' ).value;
+                        obsTramitar.archivada = !obsTramitar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsTramitar )
+                            .subscribe();
+                    }
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [

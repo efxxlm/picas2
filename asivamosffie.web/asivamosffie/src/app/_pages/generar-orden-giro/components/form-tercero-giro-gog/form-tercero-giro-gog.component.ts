@@ -123,7 +123,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
                                     if ( listaObservacionTramitar.length > 0 ) {
                                         listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
                                     }
-                                    // Get lista de observacion y observacion actual    
+                                    // Get lista de observacion y observacion actual
                                     if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
                                         if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
                                             this.obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );

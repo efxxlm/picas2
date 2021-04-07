@@ -40,7 +40,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-desc-dir-tecnica-gog>
+            <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso'"></app-desc-dir-tecnica-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -51,7 +51,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tercero-causacion-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-tercero-causacion-gog>
+            <app-tercero-causacion-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoTerceroCausacion = 'en-proceso'"></app-tercero-causacion-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

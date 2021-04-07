@@ -46,6 +46,7 @@
                                 [solicitudPagoFaseFacturaDescuento]="this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento"
                                 [valorNetoGiro]="listData.valorNetoGiro"
                                 [solicitudPago]="solicitudPago"
-                                [esVerDetalle]="esVerDetalle">
+                                [esVerDetalle]="esVerDetalle"
+                                (tieneObservacion)="tieneObservacion.emit( true )">
     </app-form-descuentos-gog>
 </section>

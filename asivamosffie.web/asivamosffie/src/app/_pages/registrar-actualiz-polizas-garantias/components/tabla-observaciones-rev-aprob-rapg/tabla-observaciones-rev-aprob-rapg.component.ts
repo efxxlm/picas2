@@ -11,6 +11,7 @@ import { EstadosRevision } from 'src/app/_interfaces/estados-actualizacion-poliz
 export class TablaObservacionesRevAprobRapgComponent implements OnInit {
 
     @Input() historialObservaciones: any[] = [];
+    @Input() esVerDetalle: boolean;
     estadosRevision = EstadosRevision;
     displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
     dataSource = new MatTableDataSource();

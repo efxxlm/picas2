@@ -1,13 +1,14 @@
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
-import { TipoAportanteDominio, TipoAportanteCodigo } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { TipoAportanteDominio, TipoAportanteCodigo, ListaMenu, ListaMenuId, TipoObservaciones, TipoObservacionesCodigo } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { CommonService, Dominio } from './../../../../core/_services/common/common.service';
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import humanize from 'humanize-plus';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-tercero-causacion-gog',
@@ -18,6 +19,9 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Output() tieneObservacion = new EventEmitter<boolean>();
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     addressForm: FormGroup;
     tipoDescuentoArray: Dominio[] = [];
     listaCriterios: Dominio[] = [];
@@ -58,7 +62,8 @@ export class TerceroCausacionGogComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
-        private ordenGiroSvc: OrdenPagoService )
+        private ordenGiroSvc: OrdenPagoService,
+        private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
         this.commonSvc.listaFuenteTipoFinanciacion()
             .subscribe( listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion );
@@ -237,10 +242,64 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 }
 
                                 // Set formulario criterios
-                                setTimeout(() => {
+                                setTimeout( async () => {
+                                    // Get observaciones
+                                    let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
+                                    let obsVerificar = undefined;
+                                    let obsAprobar = undefined;
+                                    let obsTramitar = undefined;
+
+                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.verificarOrdenGiro,
+                                        this.ordenGiroId,
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                        this.tipoObservaciones.terceroCausacion );
+                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.aprobarOrdenGiro,
+                                        this.ordenGiroId,
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                        this.tipoObservaciones.terceroCausacion );
+                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.tramitarOrdenGiro,
+                                            this.ordenGiroId,
+                                            terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                            this.tipoObservaciones.terceroCausacion );
+                                    // Get lista de observacion y observacion actual
+                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+
+                                    if ( obsVerificar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
+                                    }
+                                    if ( obsAprobar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
+                                    }
+                                    if ( obsTramitar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
+                                    }
+
                                     this.criterios.push( this.fb.group(
                                         {
-                                            estadoSemaforo: [ terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso' ],
+                                            estadoSemaforo,
+                                            obsVerificar: [ obsVerificar ],
+                                            obsAprobar: [ obsAprobar ],
+                                            obsTramitar: [ obsTramitar ],
                                             ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                             tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                             nombre: [ criterio.nombre ],
@@ -499,11 +558,9 @@ export class TerceroCausacionGogComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    onSubmit() {
+    onSubmit( index: number ) {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
-        
-        console.log(this.addressForm.value);
 
         const getOrdenGiroDetalleTerceroCausacion = ( ) => {
             const listaTerceroCausacion = [];
@@ -539,7 +596,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
                         this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( descuentoControl => {
-                            console.log( conceptoControl, descuentoControl );
+
                             terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.push(
                                 {
                                     ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
@@ -574,6 +631,25 @@ export class TerceroCausacionGogComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+
+                    if ( this.criterios.controls[ index ].get( 'obsVerificar' ).value !== null ) {
+                        const obsVerificar = this.criterios.controls[ index ].get( 'obsVerificar' ).value;
+                        obsVerificar.archivada = !obsVerificar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsVerificar )
+                            .subscribe();
+                    }
+                    if ( this.criterios.controls[ index ].get( 'obsAprobar' ).value !== null ) {
+                        const obsAprobar = this.criterios.controls[ index ].get( 'obsAprobar' ).value;
+                        obsAprobar.archivada = !obsAprobar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsAprobar )
+                            .subscribe();
+                    }
+                    if ( this.criterios.controls[ index ].get( 'obsTramitar' ).value !== null ) {
+                        const obsTramitar = this.criterios.controls[ index ].get( 'obsTramitar' ).value;
+                        obsTramitar.archivada = !obsTramitar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( obsTramitar )
+                            .subscribe();
+                    }
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [

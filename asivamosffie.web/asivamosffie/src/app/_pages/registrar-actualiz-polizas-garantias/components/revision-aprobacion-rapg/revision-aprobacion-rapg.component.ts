@@ -18,6 +18,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RevisionAprobacionRapgComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     listaPerfilCodigo = PerfilCodigo;
     estadosRevision = EstadosRevision;
     contratoPolizaActualizacion: any;
@@ -108,6 +109,26 @@ export class RevisionAprobacionRapgComponent implements OnInit {
       const alphanumeric = /[0-9]/;
       const inputChar = String.fromCharCode(event.charCode);
       return alphanumeric.test(inputChar) ? true : false;
+    }
+
+    getEstadoRevision( codigo: string ) {
+        if ( this.estadoArray.length > 0 ) {
+            const estado = this.estadoArray.find( estado => estado.codigo === codigo );
+
+            if ( estado !== undefined ) {
+                return estado.nombre;
+            }
+        }
+    }
+
+    getResponsable( usuarioId: number ) {
+        if ( this.listaUsuarios.length > 0 ) {
+            const usuario = this.listaUsuarios.find( usuario => usuario.usuarioId === usuarioId );
+
+            if ( usuario !== undefined ) {
+                return `${ this.firstLetterUpperCase( usuario.primerNombre ) } ${ this.firstLetterUpperCase( usuario.primerApellido ) }`
+            }
+        }
     }
 
     firstLetterUpperCase( texto:string ) {

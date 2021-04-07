@@ -57,9 +57,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     private projectContractingService: ProjectContractingService,
     private commonService: CommonService,
     public dialog: MatDialog,
-    private router: Router,
-
-  ) {
+    private router: Router )
+  {
     this.getMunicipio();
   }
 
@@ -90,6 +89,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       saldoDisponible: [null],
       contratacionProyectoAportanteId: [],
       proyectoAportanteId: [],
+      listaFuenteFinanciacion: [ null ],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
       ],
@@ -112,13 +112,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         this.projectContractingService.getListFaseComponenteUso(),
       ])
 
-        .subscribe(response => {
+        .subscribe( async response => {
 
           this.fasesSelect = response[0];
           this.componentesSelect = response[1];
           this.usosSelect = response[2];
           this.contratacionProyecto = response[3];
           this.listaFaseUsosComponentes = response[4];
+          const listaFuenteTipoFinanciacion = await this.commonService.listaFuenteTipoFinanciacion().toPromise();
+          console.log( listaFuenteTipoFinanciacion )
 
           setTimeout(() => {
 
@@ -138,10 +140,20 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                 }
               });
 
-            this.contratacionProyecto.contratacionProyectoAportante.forEach(apo => {
+            this.contratacionProyecto.contratacionProyectoAportante.forEach( async apo => {
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
+              console.log( apo );
 
+              apo[ 'cofinanciacionAportante' ].fuenteFinanciacion.forEach( fuente => {
+                const fuenteFind = listaFuenteTipoFinanciacion.find( fuenteTipo => fuenteTipo.codigo === fuente.fuenteRecursosCodigo );
+                
+                if ( fuenteFind !== undefined ) {
+                  fuente.nombreFuente = fuenteFind.nombre;
+                }
+              } )
+
+              grupoAportante.get( 'listaFuenteFinanciacion' ).setValue( apo[ 'cofinanciacionAportante' ].fuenteFinanciacion );
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
               if (apo.valorAporte !== 0) {
@@ -307,13 +319,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   };
 
   addUso(j: number, i: number) {
-    this.componentes(j).controls[i].get('listaUsos').value.length
-    if (this.componentes(j).controls[i].get('listaUsos').value.length === this.usos(j, i).controls.length) {
-      this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
-      return;
-    };
-    const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
-    listaUsos.push(this.createUso());
+    if ( this.componentes(j).controls[i].get('listaUsos').value !== null ) {
+      this.componentes(j).controls[i].get('listaUsos').value.length
+      if (this.componentes(j).controls[i].get('listaUsos').value.length === this.usos(j, i).controls.length) {
+        this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
+        return;
+      };
+      const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
+      listaUsos.push(this.createUso());
+    }
   }
 
   deleteUso(borrarForm: any, i: number) {
@@ -324,10 +338,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     return this.fb.group({
       componenteUsoId: [],
       componenteAportanteId: [],
-      usoDescripcion: [null, Validators.compose([
-        Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
-      valorUso: [null, Validators.compose([
-        Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+      fuenteFinanciacionId: [ null, Validators.required ],
+      usoDescripcion: [null, Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
+      valorUso: [null, Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(20)])
       ],
       listaUsos: []
     });
@@ -345,7 +358,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       componenteAportanteId: [],
       contratacionProyectoAportanteId: [],
       fase: [null, Validators.required],
-      componente: [null, Validators.required],
+      componente: [ null, Validators.required ],
       usos: this.fb.array([]),
       listaUsos: this.listaUsos,
     });
@@ -432,9 +445,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         };
 
         listaUsos.controls.forEach(controlUsos => {
-          const componenteUso: ComponenteUso = {
+          const componenteUso: any = {
             componenteUsoId: controlUsos.get('componenteUsoId').value,
             componenteAportanteId: componenteAportante.componenteAportanteId,
+            fuenteFinanciacionId: controlUsos.get( 'fuenteFinanciacionId' ).value,
             tipoUsoCodigo: controlUsos.get('usoDescripcion').value ? controlUsos.get('usoDescripcion').value.codigo : null,
             valorUso: controlUsos.get('valorUso').value,
           };

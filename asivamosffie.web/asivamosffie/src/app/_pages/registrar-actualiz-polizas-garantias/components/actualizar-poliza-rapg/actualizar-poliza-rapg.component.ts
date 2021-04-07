@@ -17,6 +17,7 @@ export class ActualizarPolizaRapgComponent implements OnInit {
 
     contratoPoliza: any;
     esRegistroNuevo: boolean;
+    esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     estadosRevision = EstadosRevision;
     listaTipoSolicitudContrato: Dominio[] = [];
@@ -59,11 +60,17 @@ export class ActualizarPolizaRapgComponent implements OnInit {
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
 
             if ( urlSegment.path === 'actualizarPoliza' ) {
+                this.esVerDetalle = false;
                 this.esRegistroNuevo = true;
                 return;
             }
             if ( urlSegment.path === 'verDetalleEditarPoliza' ) {
+                this.esVerDetalle = false;
                 this.esRegistroNuevo = false;
+                return;
+            }
+            if ( urlSegment.path === 'verDetallePoliza' ) {
+                this.esVerDetalle = true;
                 return;
             }
 

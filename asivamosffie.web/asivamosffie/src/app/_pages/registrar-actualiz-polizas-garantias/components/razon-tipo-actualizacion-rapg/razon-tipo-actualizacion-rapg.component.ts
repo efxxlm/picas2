@@ -16,6 +16,7 @@ import { TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/
 export class RazonTipoActualizacionRapgComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     contratoPolizaActualizacionSeguro: any;
     listaTipoActualizacion: TipoActualizacion = TipoActualizacionCodigo;
@@ -157,6 +158,36 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     firstLetterUpperCase( texto:string ) {
         if ( texto !== undefined ) {
             return humanize.capitalize( String( texto ).toLowerCase() );
+        }
+    }
+
+    getRazonActualizacion( codigo: string ) {
+        if ( this.razonActualizacionArray.length > 0 ) {
+            const razon = this.razonActualizacionArray.find( razon => razon.codigo === codigo );
+
+            if ( razon !== undefined ) {
+                return razon.nombre;
+            }
+        }
+    }
+
+    getSeguros( codigo: string ) {
+        if ( this.polizasYSegurosArray.length > 0 ) {
+            const seguro = this.polizasYSegurosArray.find( seguro => seguro.codigo === codigo );
+
+            if ( seguro !== undefined ) {
+                return seguro.nombre;
+            }
+        }
+    }
+
+    getTipoActualizacion( codigo: string ) {
+        if ( this.tipoActualizacionArray.length > 0 ) {
+            const tipo = this.tipoActualizacionArray.find( tipo => tipo.codigo === codigo );
+
+            if ( tipo !== undefined ) {
+                return tipo.nombre;
+            }
         }
     }
 

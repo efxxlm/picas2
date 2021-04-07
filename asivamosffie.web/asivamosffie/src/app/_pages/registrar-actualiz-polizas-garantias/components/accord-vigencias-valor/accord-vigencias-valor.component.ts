@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class AccordVigenciasValorComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     contratoPolizaActualizacionSeguro: any;
     polizasYSegurosArray : Dominio[] = [];

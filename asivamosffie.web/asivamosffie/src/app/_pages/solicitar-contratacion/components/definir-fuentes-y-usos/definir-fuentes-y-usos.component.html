@@ -321,6 +321,47 @@
                                 <div class="pr-1">
                                   <label
                                     class="label-left"
+                                    for="fuenteFinanciacionId"
+                                    [class.color-secondaryColor]="
+                                      ( uso.get( 'fuenteFinanciacionId' )?.invalid && uso.get( 'fuenteFinanciacionId' ).touched) ||
+                                      (uso.get( 'fuenteFinanciacionId' )?.invalid && estaEditando)
+                                    "
+                                  >
+                                    Fuente
+                                  </label>
+                                </div>
+                                <div class="col">
+                                  <mat-form-field class="select-width">
+                                    <mat-select required formControlName="fuenteFinanciacionId">
+                                      <mat-option *ngFor="let fuente of aportante.get( 'listaFuenteFinanciacion' ).value" [value]="fuente.fuenteFinanciacionId">
+                                        {{ fuente.nombreFuente }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <span class="icon-incompleto">
+                                  <img
+                                    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="
+                                      (uso.get( 'fuenteFinanciacionId' )?.invalid && uso.get( 'fuenteFinanciacionId' ).touched) ||
+                                      (uso.get( 'fuenteFinanciacionId' )?.invalid && estaEditando)
+                                    "
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label
+                                    class="label-left"
                                     [class.color-secondaryColor]="
                                       (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
                                       (uso.get('valorUso')?.invalid && estaEditando)
