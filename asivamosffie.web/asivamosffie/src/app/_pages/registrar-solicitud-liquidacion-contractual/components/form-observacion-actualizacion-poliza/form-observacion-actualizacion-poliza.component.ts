@@ -53,7 +53,7 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
       this.contratoPolizaActualizacionId,
       this.tipoObservacionCodigo
     ).subscribe(response => {
-      if(response != null){
+      if(response != null && response.length > 0){
         this.observaciones.patchValue(response[0]);
       }
     });

@@ -91,7 +91,7 @@
           class="btn-table"
           [routerLink]="['aprobarRequisitosParaLiquidacion', element.contratacionProyectoId]"
         >
-          <span *ngIf="element.estadoAprobacionLiquidacionCodigo === '0' || element.estadoAprobacionLiquidacionCodigo == null">Aprobar requisitos para liquidación</span>
+          <span *ngIf="element.estadoAprobacionLiquidacionCodigo === '0' || element.estadoAprobacionLiquidacionCodigo == null || element.estadoAprobacionLiquidacionCodigo == ''">Aprobar requisitos para liquidación</span>
           <span *ngIf="element.estadoAprobacionLiquidacionCodigo === '1' || element.estadoAprobacionLiquidacionCodigo === '2'">Ver detalle/Editar</span>
         </a>
         <button

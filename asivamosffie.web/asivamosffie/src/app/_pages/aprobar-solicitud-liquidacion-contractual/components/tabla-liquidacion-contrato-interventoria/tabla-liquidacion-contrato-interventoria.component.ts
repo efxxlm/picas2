@@ -57,7 +57,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             proyectosAsociados: element.proyectosAsociados,
             estadoAprobacionLiquidacionString: element.estadoAprobacionLiquidacionString,
             estadoAprobacionLiquidacionCodigo: element.estadoAprobacionLiquidacionCodigo,
-            numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
+            numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion,
             contratacionProyectoId: element.contratacionProyectoId
           });
         })
@@ -105,7 +105,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
   SendToNovedades( pContratacionProyectoId: number ) {
     const pContratacionProyecto = {
         contratacionProyectoId: pContratacionProyectoId,
-        estadoAprobacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAliquidacion
+        estadoAprobacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoControlSeguimiento
     };
 
     this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.aprobarSolicitudLiquidacionContratacion )

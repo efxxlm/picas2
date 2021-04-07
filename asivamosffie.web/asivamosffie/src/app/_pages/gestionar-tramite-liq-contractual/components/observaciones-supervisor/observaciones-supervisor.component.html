@@ -1,0 +1,27 @@
+<mat-card class="shipping-card var-main-gris" *ngIf="observacionSupervisor">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Observaciones del supervisor
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong>
+        <span>{{ observacionSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </span>
+      </strong>
+    </p>
+    <p>
+      <strong>
+        {{ txt_pregunta }}
+      </strong>
+      
+      <span *ngIf="observacionSupervisor.tieneObservacion == true"> Si </span>
+      <span *ngIf="observacionSupervisor.tieneObservacion != true"> No </span>
+    </p>
+    <p
+      class="text-justify"
+      *ngIf="observacionSupervisor.observacion != null && observacionSupervisor.observacion != ''"
+      [innerHTML]="observacionSupervisor.observacion"
+    ></p>
+  </mat-card-content>
+</mat-card>

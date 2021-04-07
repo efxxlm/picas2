@@ -6,7 +6,8 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Aprobar informe final
+      <span *ngIf="!registroCompleto || registroCompleto === 'Incompleto'"> Aprobar informe final </span>
+      <span *ngIf="registroCompleto && registroCompleto === 'Completo'">Ver detalle/Editar aprobación de Informe final</span>
       {{ data.informeFinal.proyecto.llaveMen }}
     </h1>
     <p class="colorMainColor mt-1em">

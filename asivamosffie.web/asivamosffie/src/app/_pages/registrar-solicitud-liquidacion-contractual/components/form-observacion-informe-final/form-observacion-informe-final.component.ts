@@ -52,7 +52,7 @@ export class FormObservacionInformeFinalComponent implements OnInit {
       this.informeFinalId,
       this.tipoObservacionCodigo
     ).subscribe(response => {
-      if(response != null){
+      if(response != null && response.length > 0){
         this.observaciones.patchValue(response[0]);
       }
     });

@@ -86,11 +86,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInformeFinalByProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery]  int pProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery]  int pProyectoId, int pContratacionProyectoId, int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GetInformeFinalByProyectoId(pProyectoId);
+                return await _registerContractualLiquidationRequest.GetInformeFinalByProyectoId(pProyectoId, pContratacionProyectoId, pMenuId);
             }
             catch (Exception ex)
             {

@@ -6,7 +6,8 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Validar requisitos para liquidación
+      <span *ngIf="data.estadoValidacionLiquidacionCodigo === '0' || data.estadoValidacionLiquidacionCodigo == null || data.estadoValidacionLiquidacionCodigo == ''">Validar requisitos para liquidación</span>
+      <span *ngIf="data.estadoValidacionLiquidacionCodigo === '1' || data.estadoValidacionLiquidacionCodigo === '2'">Ver detalle/Editar validación de requisitos para liquidación</span>
       {{ data.numeroContrato }}
     </h1>
     <p class="colorMainColor mt-05em">

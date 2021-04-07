@@ -77,7 +77,7 @@
           class="btn-table"
           [routerLink]="['validarRequisitos', element.contratacionProyectoId]"
         >
-          <span *ngIf="element.estadoValidacionLiquidacionCodigo === '0' || element.estadoValidacionLiquidacionCodigo == null">Validar requisitos para liquidación</span>
+          <span *ngIf="element.estadoValidacionLiquidacionCodigo === '0' || element.estadoValidacionLiquidacionCodigo == null || element.estadoValidacionLiquidacionCodigo == ''">Validar requisitos para liquidación</span>
           <span *ngIf="element.estadoValidacionLiquidacionCodigo === '1' || element.estadoValidacionLiquidacionCodigo === '2'">Ver detalle/Editar</span>
         </a>
         <button

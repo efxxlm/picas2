@@ -123,7 +123,7 @@ namespace asivamosffie.services
             return ProyectoAjustado;
         }
 
-        public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
+        public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId, int pContratacionProyectoId, int pMenuId)
         {
             String numeroContratoObra = string.Empty, nombreContratistaObra = string.Empty, numeroContratoInterventoria = string.Empty, nombreContratistaInterventoria = string.Empty;
 
@@ -173,8 +173,16 @@ namespace asivamosffie.services
                     }
                 }
             }
+            LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                                          && r.MenuId == pMenuId
+                                          && r.Eliminado != true
+                                          && r.RegistroCompleto == true
+                                          && r.Archivado != true
+                                          && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Informe_final).FirstOrDefault();
+
             ProyectoAjustado.Add(new
             {
+                registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
                 numeroContratoObra = numeroContratoObra,
                 nombreContratistaObra = nombreContratistaObra,
                 numeroContratoInterventoria = numeroContratoInterventoria,

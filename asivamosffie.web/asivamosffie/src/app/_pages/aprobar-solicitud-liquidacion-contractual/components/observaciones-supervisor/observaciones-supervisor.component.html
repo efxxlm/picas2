@@ -7,21 +7,21 @@
   <mat-card-content>
     <p>
       <strong>
-        <span>{{ observacionApoyo.obsVigente.fechaCreacion | date: 'dd/MM/yyyy' }} </span>
+        <span>{{ observacionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </span>
       </strong>
     </p>
     <p>
       <strong>
-        ¿Tiene observaciones frente al informe final que deban ser tenidas en cuenta en la liquidación?:
+        {{ txt_pregunta }}
       </strong>
       
-      <span *ngIf="observacionApoyo.obsVigente.tieneObservacion == true"> Si </span>
-      <span *ngIf="observacionApoyo.obsVigente.tieneObservacion != true"> No </span>
+      <span *ngIf="observacionApoyo.tieneObservacion == true"> Si </span>
+      <span *ngIf="observacionApoyo.tieneObservacion != true"> No </span>
     </p>
     <p
       class="text-justify"
-      *ngIf="observacionApoyo.obsVigente.observacion != null && observacionApoyo.obsVigente.observacion != ''"
-      [innerHTML]="observacionApoyo.obsVigente.observacion"
+      *ngIf="observacionApoyo.observacion != null && observacionApoyo.observacion != ''"
+      [innerHTML]="observacionApoyo.observacion"
     ></p>
   </mat-card-content>
 </mat-card>

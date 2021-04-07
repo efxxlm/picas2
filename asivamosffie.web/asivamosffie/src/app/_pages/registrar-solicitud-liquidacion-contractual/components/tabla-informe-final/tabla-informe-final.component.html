@@ -77,7 +77,8 @@
           class="btn-table"
           [routerLink]="['validarInformeFinal', element.proyectoId]"
         >
-          Validar
+         <span *ngIf="element.registroCompleto !== 'Completo'">Validar</span>
+         <span *ngIf="element.registroCompleto === 'Completo'">Ver detalle/Editar</span>
         </a>
       </td>
     </ng-container>

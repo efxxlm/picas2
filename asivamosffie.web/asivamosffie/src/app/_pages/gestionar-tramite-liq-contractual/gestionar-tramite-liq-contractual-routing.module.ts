@@ -39,7 +39,7 @@ const routes: Routes = [
     component: VerificarRequisitosGtlcComponent
   },
   {
-    path : 'verificarBalance/:id',
+    path: 'verificarRequisitos/:id/verificarBalance',
     component: VerificarBalanceGtlcComponent
   },
   {
@@ -63,10 +63,6 @@ const routes: Routes = [
     component: DetalleTrasladoGtlcComponent
   },
   {
-    path:'verificarInformeFinal/:id',
-    component: VerificarInformeGtlcComponent
-  },
-  {
     path: 'verDetalleEditarVerificacion/:id',
     component: VerDetalleEditarVerificacionComponent
   },
@@ -81,6 +77,10 @@ const routes: Routes = [
   {
     path: 'detalleInformeFinal/:id',
     component: DetalleInformeFinalGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarInformeFinal/:proyectoId',
+    component: VerificarInformeGtlcComponent
   }
 ]; 
 @NgModule({

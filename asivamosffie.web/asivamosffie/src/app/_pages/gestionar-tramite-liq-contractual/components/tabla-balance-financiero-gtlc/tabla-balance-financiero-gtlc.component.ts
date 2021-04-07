@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,20 @@ import { Router } from '@angular/router';
 })
 export class TablaBalanceFinancieroGtlcComponent implements OnInit {
   @Input() verDetalleBtn;
-  displayedColumns: string[] = ['fechaTerminacionProyecto', 'llaveMEN', 'tipoIntervencion', 'institucionEducativa', 'sede', 'numeroTraslados', 'estadoBalance', 'gestion'];
+  @Input() contratacionProyectoId: number;
+  @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
+
+  displayedColumns: string[] = [
+    'fechaTerminacionProyecto',
+    'llaveMEN',
+    'tipoIntervencion',
+    'institucionEducativa',
+    'sede',
+    'numeroTraslados',
+    'estadoValidacion',
+    'id'
+  ];
+  
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -25,7 +38,7 @@ export class TablaBalanceFinancieroGtlcComponent implements OnInit {
       institucionEducativa: 'I.E Nuestra Señora Del Carmen/Única sede',
       sede: 'Única sede',
       numeroTraslados: '1',
-      estadoBalance: 'Sin balance validado',
+      estadoValidacion: 'Sin balance validado',
       id: 1
     },
   ];
@@ -41,8 +54,5 @@ export class TablaBalanceFinancieroGtlcComponent implements OnInit {
   };
   verDetalle(id){
     this.router.navigate(['/gestionarTramiteLiquidacionContractual/detalleBalanceFinanciero', id]);
-  }
-  verificar(id){
-    this.router.navigate(['/gestionarTramiteLiquidacionContractual/verificarBalance', id]);
   }
 }

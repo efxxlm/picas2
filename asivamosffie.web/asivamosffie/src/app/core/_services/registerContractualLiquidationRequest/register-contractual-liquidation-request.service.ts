@@ -29,8 +29,8 @@ export class RegisterContractualLiquidationRequestService {
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionProyectoId=${ pContratacionProyectoId }&pMenuId=${ pMenuId }`);
   }
 
-  getInformeFinalByProyectoId( pProyectoId: number ){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetInformeFinalByProyectoId?pProyectoId=${ pProyectoId }`);
+  getInformeFinalByProyectoId( pProyectoId: number, pContratacionProyectoId: number, pMenuId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetInformeFinalByProyectoId?pProyectoId=${ pProyectoId }&pContratacionProyectoId=${ pContratacionProyectoId }&pMenuId=${ pMenuId }`);
   }
 
   getInformeFinalAnexoByInformeFinalId( pInformeFinalId: number ){
