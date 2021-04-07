@@ -17,12 +17,12 @@ namespace asivamosffie.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class RegisterContractSettlement : ControllerBase
+    public class RegisterContractSettlementController : ControllerBase
     {
         public readonly IRegisterContractSettlementService _registerContractSettlementService;
         private readonly IOptions<AppSettings> _settings;
 
-        public RegisterContractSettlement(IRegisterContractSettlementService pRegisterContractSettlementService, IOptions<AppSettings> settings)
+        public RegisterContractSettlementController(IRegisterContractSettlementService pRegisterContractSettlementService, IOptions<AppSettings> settings)
         {
             _registerContractSettlementService = pRegisterContractSettlementService;
             _settings = settings;

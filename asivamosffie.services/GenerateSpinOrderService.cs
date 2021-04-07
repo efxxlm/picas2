@@ -440,7 +440,7 @@ namespace asivamosffie.services
                         {
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioCreacion,
-                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
+                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
                             EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
                         });
             }

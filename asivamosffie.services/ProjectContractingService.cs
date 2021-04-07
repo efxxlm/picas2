@@ -210,8 +210,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
-        {
-
+        { 
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.Contratista)
                 .Include(r => r.Contrato)
@@ -801,13 +800,13 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditComponenteUso(ComponenteUso pComponenteUso, bool esTransaccion)
         {
             Respuesta Respuesta = new Respuesta();
-
+       
             try
             {
                 if (pComponenteUso.ComponenteUsoId == 0)
                 {
                     pComponenteUso.FechaCreacion = DateTime.Now;
-                    pComponenteUso.Eliminado = false;
+                    pComponenteUso.Eliminado = false; 
                     pComponenteUso.RegistroCompleto = ValidarRegistroCompletoComponenteUso(pComponenteUso);
                     _context.ComponenteUso.Add(pComponenteUso);
                 }
@@ -816,7 +815,7 @@ namespace asivamosffie.services
                     ComponenteUso pComponenteUsoOld = await _context.ComponenteUso.FindAsync(pComponenteUso.ComponenteUsoId);
                     pComponenteUsoOld.UsuarioModificacion = pComponenteUso.UsuarioCreacion;
                     pComponenteUsoOld.FechaModificacion = DateTime.Now;
-
+                    pComponenteUsoOld.FuenteFinanciacionId = pComponenteUso.FuenteFinanciacionId;
                     pComponenteUsoOld.TipoUsoCodigo = pComponenteUso.TipoUsoCodigo;
                     pComponenteUsoOld.ValorUso = pComponenteUso.ValorUso;
                     pComponenteUsoOld.RegistroCompleto = ValidarRegistroCompletoComponenteUso(pComponenteUsoOld);
@@ -833,7 +832,10 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoComponenteUso(ComponenteUso pComponenteUsoOld)
         {
-            if (pComponenteUsoOld.TipoUsoCodigo == null && pComponenteUsoOld.ValorUso == 0)
+            if (pComponenteUsoOld.TipoUsoCodigo == null 
+                || pComponenteUsoOld.ValorUso == 0
+                || pComponenteUsoOld.FuenteFinanciacionId == 0
+                )
                 return false;
             return true;
         }

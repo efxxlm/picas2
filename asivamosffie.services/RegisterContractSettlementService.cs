@@ -29,14 +29,12 @@ namespace asivamosffie.services
           
         }
         #endregion
-
-
+         
         public async Task<dynamic> GetListContractSettlemen()
         { 
            return  await _context.VRegistrarLiquidacionContrato
                         .OrderByDescending(r => r.ContratoId)
                         .ToListAsync(); 
-        }
-         
+        } 
     }
 }
