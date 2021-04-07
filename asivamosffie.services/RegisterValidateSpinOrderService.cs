@@ -23,6 +23,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
         private readonly IPaymentRequierementsService _paymentRequierementsService;
+
         public RegisterValidateSpinOrderService(IPaymentRequierementsService paymentRequierementsService, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _paymentRequierementsService = paymentRequierementsService;
@@ -45,17 +46,14 @@ namespace asivamosffie.services
                 ReturnOrdenGiro(pOrdenGiro);
              
             //Crear URl Verificar
-            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
                 UpdateUrlVerify(pOrdenGiro);
 
-            //Crear URl aprobar
+            //Crear URl Aprobar
             if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
-                ReturnOrdenGiroSolicitudPago(pOrdenGiro);
+                UpdateUrlAproved(pOrdenGiro);
             
-            //Crear URl aprobar
-            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Solicitud_devuelta_a_equipo_de_facturacion_por_generar_orden_de_giro)
-                ReturnOrdenGiroSolicitudPago(pOrdenGiro);
-
+   
              
             try
             {
@@ -97,26 +95,7 @@ namespace asivamosffie.services
             }
         }
 
-        private void ReturnOrdenGiroSolicitudPago(OrdenGiro pOrdenGiro)
-        {
-            OrdenGiro ordenGiro = _context
-                   .OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
-                            .Include(s => s.SolicitudPago)
-                            .AsNoTracking()
-                            .FirstOrDefault();
-
-            _context.Set<OrdenGiro>()
-                      .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
-                      .Update(o => new OrdenGiro
-                      {
-                          UrlSoporteFirmadoVerificar = pOrdenGiro.UrlSoporteFirmadoVerificar,
-                          FechaModificacion = DateTime.Now,
-                          UsuarioModificacion = pOrdenGiro.UsuarioCreacion
-                      });
-
-
-            //_paymentRequierementsService.ArchivarSolicitudPagoObservacion(ordenGiro.SolicitudPago);
-        }
+     
 
         private void UpdateUrlVerify(OrdenGiro pOrdenGiro)
         {
@@ -125,6 +104,18 @@ namespace asivamosffie.services
                           .Update(o => new OrdenGiro
                           {
                               UrlSoporteFirmadoVerificar = pOrdenGiro.UrlSoporteFirmadoVerificar,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                          });
+        }
+
+        private void UpdateUrlAproved(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiro>()
+                          .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                          .Update(o => new OrdenGiro
+                          {
+                              UrlSoporteFirmadoAprobar = pOrdenGiro.UrlSoporteFirmadoAprobar,
                               FechaModificacion = DateTime.Now,
                               UsuarioModificacion = pOrdenGiro.UsuarioCreacion
                           });

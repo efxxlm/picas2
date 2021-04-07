@@ -116,8 +116,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
+         
 
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
