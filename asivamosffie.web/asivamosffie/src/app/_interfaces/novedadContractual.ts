@@ -137,13 +137,23 @@ export interface ComponenteAportanteNovedad{
         registroCompleto?: boolean,
         novedadContractualAportanteId?: number,
 
-        componenteUsoNovedad?: ComponenteUsoNovedad[]
+        componenteFuenteNovedad?: ComponenteFuenteNovedad[],
 
         nombreTipoComponente?: string,
         nombrefase?: string,
 }
 
-export interface ComponenteUsoNovedad{
+export interface ComponenteFuenteNovedad {
+
+        componenteFuenteNovedadId?: number,
+        componenteAportanteNovedadId?: number,
+        fuenteRecursosCodigo?: number,
+        eliminado?: boolean,
+        
+        componenteUsoNovedad?: ComponenteUsoNovedad[]
+}
+
+export interface ComponenteUsoNovedad {
         componenteUsoNovedadId?:number
         componenteAportanteNovedadId?:number
         tipoUsoCodigo?:string

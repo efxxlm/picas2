@@ -38,19 +38,24 @@ export class VerDetalleTramiteComponent implements OnInit {
           if (this.tieneAdicion === true) {
             this.novedad.novedadContractualAportante.forEach( na => {
               na.componenteAportanteNovedad.forEach( ca => {
-                ca.componenteUsoNovedad.forEach( cu => {
+                ca.componenteFuenteNovedad.forEach( cf => {
 
-                  this.detallarSolicitud.push(
-                    { 
-                      aportante: na.nombreAportante,
-                      valorAportante: na.valorAporte,
-                      componente: ca.nombreTipoComponente,
-                      fase: ca.nombrefase,
-                      uso: cu.nombreUso,
-                      valorUso: cu.valorUso 
-                    })
+                  cf.componenteUsoNovedad.forEach( cu => {
+
+                    this.detallarSolicitud.push(
+                      { 
+                        aportante: na.nombreAportante,
+                        valorAportante: na.valorAporte,
+                        componente: ca.nombreTipoComponente,
+                        fase: ca.nombrefase,
+                        uso: cu.nombreUso,
+                        valorUso: cu.valorUso 
+                      })
+  
+                  });
 
                 });
+                
 
               });
 

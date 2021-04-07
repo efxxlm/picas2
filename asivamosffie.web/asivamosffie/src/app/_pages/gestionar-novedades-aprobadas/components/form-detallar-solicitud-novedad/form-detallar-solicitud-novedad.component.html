@@ -13,7 +13,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required formControlName="cofinanciacionAportanteId">
+                    <mat-select required formControlName="cofinanciacionAportanteId" (selectionChange)="changeAportante(j)" >
                       <mat-option *ngFor="let aportante of listaAportantes"
                         [value]="aportante.cofinanciacionAportanteId">
                         {{ aportante.nombreAportanteString }}
@@ -132,8 +132,8 @@
                                 {{ componente.nombre }}
                               </mat-option>
                             </mat-select>
-                            <input type="hidden" formControlName="componenteAportanteId" />
-                            <input type="hidden" formControlName="contratacionProyectoAportanteId" />
+                            <!-- <input type="hidden" formControlName="componenteAportanteId" />
+                            <input type="hidden" formControlName="contratacionProyectoAportanteId" /> -->
                           </mat-form-field>
                         </div>
                         <span class="icon-incompleto">
@@ -166,8 +166,9 @@
                                 <mat-form-field class="select-width">
                                   <mat-select required formControlName="fuenteId">
                                     <section>
-                                      <mat-option *ngFor="let u of listaAportantes" [value]="u">
-                                        {{ u.nombre }}
+                                      
+                                      <mat-option *ngFor="let u of aportante.value.listaFuentes" [value]="u.fuenteRecursosCodigo">
+                                        {{ u.fuenteRecursosString }}
                                       </mat-option>
                                     </section>
                                   </mat-select>
@@ -256,8 +257,8 @@
                                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                           formControlName="valorUso" />
-                                        <input type="hidden" formControlName="componenteUsoId" />
-                                        <input type="hidden" formControlName="componenteAportanteId" />
+                                        <!-- <input type="hidden" formControlName="componenteUsoId" />
+                                        <input type="hidden" formControlName="componenteAportanteId" /> -->
                                       </mat-form-field>
                                       <span class="contador" [matTooltipPosition]="'above'"
                                         matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">

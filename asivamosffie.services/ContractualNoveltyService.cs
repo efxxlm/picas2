@@ -326,6 +326,39 @@ namespace asivamosffie.services
             return listaAportantes;
         }
 
+        public async Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId)
+        {
+            List<Dominio> listaDominio = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
+
+            List<FuenteFinanciacion> listaFuentes = new List<FuenteFinanciacion>();
+
+            var listaFuentesAgrupadas =
+                from fuente in _context.FuenteFinanciacion
+                where fuente.AportanteId == pConfinanciacioAportanteId
+                group fuente by new { fuente.AportanteId, fuente.FuenteRecursosCodigo } into newGroup
+                
+                select new FuenteFinanciacion()
+                {
+                    AportanteId = newGroup.Key.AportanteId,
+                    FuenteRecursosCodigo = newGroup.Key.FuenteRecursosCodigo
+                };
+
+            foreach ( var fuente in listaFuentesAgrupadas)
+            {
+                fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
+
+                listaFuentes.Add(fuente);
+            }
+
+            
+
+            foreach( var fuente in listaFuentes)
+            {
+                fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
+            }
+
+            return listaFuentes;
+        }
 
         #endregion Gets
 

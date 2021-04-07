@@ -4,6 +4,7 @@ import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
+import { FuenteFinanciacion } from '../fuenteFinanciacion/fuente-financiacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +94,12 @@ export class ContractualNoveltyService {
   GetAportanteByContratacion(pId)
   {
     return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByContratacion?pId=${pId}` ); 
+  }
+
+  
+  GetFuentesByAportante(pId)
+  {
+    return this.http.get<FuenteFinanciacion[]>( `${ this.urlApi }/GetFuentesByAportante?pConfinanciacioAportanteId=${pId}` ); 
   }
 
 }
