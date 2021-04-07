@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
+import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 
 @Component({
@@ -15,7 +16,6 @@ import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionCont
 })
 export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewInit {
 
-  ELEMENT_DATA: any[] = [];
 
   displayedColumns: string[] = [
     'fechaPoliza',
@@ -26,30 +26,28 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
     'estadoValidacionLiquidacionString',
     'contratacionProyectoId'
   ];
-
+  
+  ELEMENT_DATA: any[] = [];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   datosTabla = [];
-  listaMenu: any;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
   listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
 
   constructor(
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private routes: Router
     ) { }
 
   ngOnInit(): void {
-    this.getListContractualLiquidationObra();
-    this.registerContractualLiquidationRequestService.listaMenu()
-    .subscribe( response => {
-        this.listaMenu = response;
-    });
+    this.getListContractualLiquidationObra(this.listaMenu.registrarSolicitudLiquidacionContratacion);
   }
 
-  getListContractualLiquidationObra() {
-    this.registerContractualLiquidationRequestService.getListContractualLiquidationObra().subscribe(report => {
+  getListContractualLiquidationObra(menuId: number) {
+    this.registerContractualLiquidationRequestService.getListContractualLiquidationObra(menuId).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -114,9 +112,9 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.ngOnInit();
-                return;
-            }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+                this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                .then( () => this.routes.navigate( ['/registrarSolicitudLiquidacionContractual'] ) );
+              }, err => this.openDialog( '', `<b>${ err.message }</b>` )
         );
     }
 

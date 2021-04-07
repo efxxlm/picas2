@@ -25,22 +25,58 @@ namespace asivamosffie.services
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
         }
 
-        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra()
+        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra(int pMenuId)
         {
-            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
+            List<VContratacionProyectoSolicitudLiquidacion> result = await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
+
+            switch (pMenuId)
+            {
+                case (int)enumeratorMenu.Aprobar_solicitud_liquidacion_contractual:
+                    result =  result.Where(s =>
+                       s.EstadoValidacionLiquidacionCodigo == ConstantCodigoEstadoValidacionLiquidacion.Enviado_al_supervisor).ToList();
+                    break;
+
+                case (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual:
+                    result = result.Where(s =>
+                      s.EstadoAprobacionLiquidacionCodigo == ConstantCodigoEstadoAprobacionLiquidacion.Enviado_control_seguimiento).ToList();
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result;
         }
 
-        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationInterventoria()
+        public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationInterventoria(int pMenuId)
         {
-            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
-        }
+            List<VContratacionProyectoSolicitudLiquidacion> result = await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
 
+            switch (pMenuId)
+            {
+                case (int)enumeratorMenu.Aprobar_solicitud_liquidacion_contractual:
+                    result = result.Where(s =>
+                      s.EstadoValidacionLiquidacionCodigo == ConstantCodigoEstadoValidacionLiquidacion.Enviado_al_supervisor).ToList();
+                    break;
+
+                case (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual:
+                    result = result.Where(s =>
+                      s.EstadoAprobacionLiquidacionCodigo == ConstantCodigoEstadoAprobacionLiquidacion.Enviado_control_seguimiento).ToList();
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result;
+        }
+       
         public async Task<VContratacionProyectoSolicitudLiquidacion> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId)
         {
             return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefaultAsync();
         }
 
-        public async Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId)
+        public async Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId, int pMenuId)
         {
             List<dynamic> ProyectoAjustado = new List<dynamic>();
 
@@ -64,7 +100,7 @@ namespace asivamosffie.services
                 proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 proyecto.Sede = Sede;
                 LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                                                          && r.MenuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual
+                                                          && r.MenuId == pMenuId
                                                           && r.Eliminado != true
                                                           && r.RegistroCompleto == true
                                                           && r.Archivado != true
@@ -186,6 +222,33 @@ namespace asivamosffie.services
                                                 p.Observacion,
                                                 p.RegistroCompleto
                                             }).ToListAsync();
+        }
+
+        public async Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            List<dynamic> observaciones = new List<dynamic>();
+
+            LiquidacionContratacionObservacion obsVigente = await _context.LiquidacionContratacionObservacion
+                                           .Where(r => r.MenuId == pMenuId
+                                               && r.ContratacionProyectoId == pContratacionProyectoId
+                                               && r.IdPadre == pPadreId
+                                               && r.TipoObservacionCodigo == pTipoObservacionCodigo
+                                               && r.Archivado == false || r.Archivado == null).FirstOrDefaultAsync();
+
+            List<LiquidacionContratacionObservacion> historialObservaciones = await _context.LiquidacionContratacionObservacion
+                               .Where(r => r.MenuId == pMenuId
+                                   && r.ContratacionProyectoId == pContratacionProyectoId
+                                   && r.IdPadre == pPadreId
+                                   && r.TipoObservacionCodigo == pTipoObservacionCodigo
+                                   && r.Archivado == true).ToListAsync();
+
+            observaciones.Add(new
+            {
+                obsVigente,
+                historialObservaciones
+            });
+
+            return observaciones;
         }
 
         public async Task<Respuesta> CreateUpdateLiquidacionContratacionObservacion(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion)

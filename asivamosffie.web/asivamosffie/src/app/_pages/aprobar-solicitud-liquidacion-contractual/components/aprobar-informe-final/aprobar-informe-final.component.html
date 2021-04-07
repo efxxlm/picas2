@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="data">
   <div class="text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -7,14 +7,14 @@
     </div>
     <h1 class="title-menu--h1">
       Aprobar informe final
-      LL457326
+      {{ data.informeFinal.proyecto.llaveMen }}
     </h1>
     <p class="colorMainColor mt-1em">
       <span class="mx-1em">
-        Fecha de envío del informe final <b> 29/11/2020 </b>
+        Fecha de envío del informe final <b> {{ data.informeFinal.fechaEnvioEtc  | date:'dd/MM/yyyy' }} </b>
       </span>
       <span class="mx-1em">
-        Fecha de aprobación del informe final <b> 29/11/2020 </b>
+        Fecha de aprobación del informe final <b> {{ data.informeFinal.fechaAprobacionFinal  | date:'dd/MM/yyyy' }} </b>
       </span>
     </p>
   </div>
@@ -30,55 +30,55 @@
         <strong>
           Tipo de intervención:
         </strong>
-        Remodelación
+        {{ data.informeFinal.proyecto.tipoIntervencionString }}
       </p>
       <p>
         <strong>
           Institución Educativa:
         </strong>
-        I.E Nuestra Señora Del Carmen
+        {{ data.informeFinal.proyecto.institucionEducativa.nombre }}
       </p>
       <p>
         <strong>
           Sede:
         </strong>
-        Única Sede
+        {{ data.informeFinal.proyecto.sede.nombre }}
       </p>
       <p>
         <strong>
           Departamento:
         </strong>
-        Boyacá
+        {{ data.informeFinal.proyecto.departamentoObj.descripcion }}
       </p>
       <p>
         <strong>
           Municipio:
         </strong>
-        Susacón
+        {{ data.informeFinal.proyecto.municipioObj.descripcion }}
       </p>
       <p>
         <strong>
           Número de contrato de obra:
         </strong>
-        CC223456789
+        {{ data.numeroContratoObra }}
       </p>
       <p>
         <strong>
           Nombre del contratista de obra:
         </strong>
-        Constructora Colpatria SAS
+        {{ data.nombreContratistaObra }}
       </p>
       <p>
         <strong>
         Número de contrato de interventoría:
         </strong>
-        CI8769-98076
+        {{ data.numeroContratoInterventoria }}
       </p>
       <p>
         <strong>
         Nombre de contratista de interventoría:
         </strong>
-        Constructora Bolivar
+        {{ data.nombreContratistaInterventoria }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -94,13 +94,13 @@
         <strong>
           URL Acta de recibo a satisfaccion - Obra:
         </strong>
-        https://drive.google.com/drive/LJ776554/actadereciboasatisfaccion-obra
+        {{ data.informeFinal.urlActa }}
       </p>
       <p>
         <strong>
           Fecha de suscripción:
         </strong>
-        30/06/2020
+        {{ data.informeFinal.fechaSuscripcion | date:'dd/MM/yyyy' }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -113,32 +113,12 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         
-        <app-tabla-informe-anexos></app-tabla-informe-anexos>
-  
+        <app-tabla-informe-anexos *ngIf="data != null && data != 'undefined'" [informeFinalId] = "data.informeFinal.informeFinalId"></app-tabla-informe-anexos>
+
     </mat-expansion-panel>
   </mat-accordion>
 
-  <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Validación apoyo a la supervisión
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        <strong>
-          15/11/2020
-        </strong>
-      </p>
-      <p>
-        <strong>
-          ¿Tiene observaciones frente al informe final que deban ser tenidas en cuenta en la liquidación?:
-        </strong>
-        No
-      </p>
-    </mat-card-content>
-  </mat-card>
-
-  <app-observaciones-informe-final></app-observaciones-informe-final>
+  <app-observaciones-supervisor *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"></app-observaciones-supervisor>
+  <app-observaciones-informe-final *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-observaciones-informe-final>
 
 </section>

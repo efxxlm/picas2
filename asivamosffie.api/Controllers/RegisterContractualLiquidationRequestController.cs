@@ -30,11 +30,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridRegisterContractualLiquidationObra")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationObra()
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationObra([FromQuery]  int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationObra();
+                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationObra(pMenuId);
             }
             catch (Exception ex)
             {
@@ -44,11 +44,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridRegisterContractualLiquidationInterventoria")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationInterventoria()
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationInterventoria([FromQuery]  int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationInterventoria();
+                return await _registerContractualLiquidationRequest.GridRegisterContractualLiquidationInterventoria(pMenuId);
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionProyectoByContratacionProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<VContratacionProyectoSolicitudLiquidacion>> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        public async Task<ActionResult<VContratacionProyectoSolicitudLiquidacion>> GetContratacionProyectoByContratacionProyectoId([FromQuery]  int pContratacionProyectoId)
         {
             try
             {
@@ -72,11 +72,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridInformeFinal")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GridInformeFinal(int pContratacionProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GridInformeFinal([FromQuery]  int pContratacionProyectoId, int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GridInformeFinal(pContratacionProyectoId);
+                return await _registerContractualLiquidationRequest.GridInformeFinal(pContratacionProyectoId, pMenuId);
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInformeFinalByProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId(int pProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery]  int pProyectoId)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace asivamosffie.api.Controllers
         }
         [Route("GetInformeFinalAnexoByInformeFinalId")]
         [HttpGet]
-        public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId(int pInformeFinalId)
+        public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId([FromQuery]  int pInformeFinalId)
         {
             try
             {
@@ -151,6 +151,13 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        [Route("GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId")]
+        [HttpGet]
+        public async Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId([FromQuery] int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _registerContractualLiquidationRequest.GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(pMenuId, pContratacionProyectoId, pPadreId, pTipoObservacionCodigo);
         }
 
 

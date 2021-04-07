@@ -45,7 +45,7 @@ const routes: Routes = [
     component: DetalleTrasladosComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarInformeFinal/:id',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarInformeFinal/:proyectoId',
     component: AprobarInformeFinalComponent
   }
 ];

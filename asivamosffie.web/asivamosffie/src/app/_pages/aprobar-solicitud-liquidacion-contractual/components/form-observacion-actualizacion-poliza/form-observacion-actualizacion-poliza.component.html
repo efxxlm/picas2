@@ -5,10 +5,10 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="tieneObservaciones"
+            for="tieneObservacion"
             [class.color-secondaryColor]="
-              (observaciones.get('tieneObservaciones').invalid && observaciones.get('tieneObservaciones').touched) ||
-              (observaciones.get('tieneObservaciones').invalid && estaEditando)
+              (observaciones.get('tieneObservacion').invalid && observaciones.get('tieneObservacion').touched) ||
+              (observaciones.get('tieneObservacion').invalid && estaEditando)
             "
           >
             ¿Desde la supervisión tiene observaciones frente a la actualización de la póliza que deban ser tenidas en
@@ -16,11 +16,11 @@
           </label>
         </div>
         <div>
-          <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-            <mat-radio-button [value]="true" [checked]="observaciones.get('tieneObservaciones').value === true">
+          <mat-radio-group class="radioInput" formControlName="tieneObservacion">
+            <mat-radio-button [value]="true" [checked]="observaciones.get('tieneObservacion').value === true">
               Sí
             </mat-radio-button>
-            <mat-radio-button [value]="false" [checked]="observaciones.get('tieneObservaciones').value === false">
+            <mat-radio-button [value]="false" [checked]="observaciones.get('tieneObservacion').value === false">
               No
             </mat-radio-button>
           </mat-radio-group>
@@ -36,8 +36,8 @@
           matTooltip="Debe ingresar la información en el campo para continuar"
           matTooltipClass="info-tooltip"
           *ngIf="
-            (observaciones.get('tieneObservaciones').invalid && observaciones.get('tieneObservaciones').touched) ||
-            (observaciones.get('tieneObservaciones').invalid && estaEditando)
+            (observaciones.get('tieneObservacion').invalid && observaciones.get('tieneObservacion').touched) ||
+            (observaciones.get('tieneObservacion').invalid && estaEditando)
           "
         />
       </span>
@@ -45,22 +45,22 @@
   </div>
   <div
     class="d-flex mt-2em align-items-center animatedDown"
-    *ngIf="observaciones.value.tieneObservaciones == true"
+    *ngIf="observaciones.value.tieneObservacion == true"
     align="left"
   >
     <div
       class="text-area-quill"
       [class.color-secondaryColor]="
-        (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
-        (observaciones.get('observaciones').invalid && estaEditando)
+        (observaciones.get('observacion').invalid && observaciones.get('observacion').touched) ||
+        (observaciones.get('observacion').invalid && estaEditando)
       "
     >
       <label
         class="text-area-quill--label align-left-label"
         [class.colorMainColor]="
           !(
-            (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
-            (observaciones.get('observaciones').invalid && estaEditando)
+            (observaciones.get('observacion').invalid && observaciones.get('observacion').touched) ||
+            (observaciones.get('observacion').invalid && estaEditando)
           )
         "
       >
@@ -71,16 +71,16 @@
         [styles]="editorStyle"
         [modules]="config"
         (onContentChanged)="maxLength($event, 1000)"
-        formControlName="observaciones"
+        formControlName="observacion"
         #obsGestionSst
         required
       >
       </quill-editor>
     </div>
-    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
+    <span class="contador miles" *ngIf="observaciones.get('observacion').value">
       {{ 1000 - textoLimpio(obsGestionSst.quillEditor, 1000) }}
     </span>
-    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value"> 1000 </span>
+    <span class="contador miles" *ngIf="!observaciones.get('observacion').value"> 1000 </span>
     <span class="icon-incompleto">
       <img
         class="icon-incompleto--img"
@@ -90,8 +90,8 @@
         matTooltip="Debe ingresar la información en el campo para continuar"
         matTooltipClass="info-tooltip"
         *ngIf="
-          (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
-          (observaciones.get('observaciones').invalid && estaEditando)
+          (observaciones.get('observacion').invalid && observaciones.get('observacion').touched) ||
+          (observaciones.get('observacion').invalid && estaEditando)
         "
       />
     </span>
@@ -103,9 +103,9 @@
       class="btn-guardar"
       type="submit"
       [disabled]="
-        observaciones.get('tieneObservaciones').value === null ||
-        observaciones.get('tieneObservaciones').value === undefined ||
-        (observaciones.get('tieneObservaciones').value === true && observaciones.get('observaciones').invalid)
+        observaciones.get('tieneObservacion').value === null ||
+        observaciones.get('tieneObservacion').value === undefined ||
+        (observaciones.get('tieneObservacion').value === true && observaciones.get('observacion').invalid)
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />

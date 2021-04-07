@@ -1,16 +1,8 @@
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    numero: '1',
-    item: '29/11/2020',
-    tipoAnexo: '29/11/2020',
-    ubicacion: 'LL457326'
-  }
-];
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 
 @Component({
   selector: 'app-tabla-informe-anexos',
@@ -19,20 +11,44 @@ const ELEMENT_DATA = [
 })
 export class TablaInformeAnexosComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
+  @Input() informeFinalId : number;
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = [
     'numero',
     'item',
-    'tipoAnexo',
+    'tipoAnexoString',
     'ubicacion'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  datosTabla = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+
+  constructor(private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService) { }
 
   ngOnInit(): void {
+    this.getInformeFinalAnexoByInformeFinalId(this.informeFinalId);
+  }
+
+  getInformeFinalAnexoByInformeFinalId(informeFinalId: number) {
+    this.registerContractualLiquidationRequestService.getInformeFinalAnexoByInformeFinalId(informeFinalId).subscribe(report => {
+      if(report != null){
+        report.forEach(element => {
+          this.datosTabla.push({
+            numero: element.informeFinalListaChequeo.posicion,
+            item: element.informeFinalListaChequeo.nombre,
+            tipoAnexoString: element.informeFinalAnexo ? element.informeFinalAnexo.tipoAnexoString : "",
+            calificacionCodigo: element.calificacionCodigo,
+            numRadicadoSac: element.informeFinalAnexo ? element.informeFinalAnexo.numRadicadoSac : "",
+            fechaRadicado:element.informeFinalAnexo ? element.informeFinalAnexo.fechaRadicado : "",
+            urlSoporte:  element.informeFinalAnexo ?element.informeFinalAnexo.urlSoporte : "",
+            tipoAnexo: element.informeFinalAnexo ? element.informeFinalAnexo.tipoAnexo : ""
+          });
+        })
+      }
+      this.dataSource.data = this.datosTabla;
+    });
   }
 
   ngAfterViewInit() {

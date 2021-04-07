@@ -95,6 +95,6 @@
     </mat-card-content>
   </mat-card>
 
-  <app-form-observacion-balance></app-form-observacion-balance>
+  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
 
 </section>

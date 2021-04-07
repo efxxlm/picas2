@@ -1,20 +1,9 @@
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    fechaEnvio: '29/11/2020',
-    fechaAprobacion: '29/11/2020',
-    llaveMEN: 'LL457326',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-    sede: 'Única sede',
-    estadoValidacion: 'Sin validación'
-  }
-];
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-tabla-informe-final',
@@ -23,25 +12,62 @@ const ELEMENT_DATA = [
 })
 export class TablaInformeFinalComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = [
     'fechaEnvio',
     'fechaAprobacion',
-    'llaveMEN',
+    'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
     'sede',
     'estadoValidacion',
-    'id'
+    'contratacionProyectoId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  datosTabla = [];
+
+  @Input() contratacionProyectoId: number;
+  @Output() semaforoInformeFinal = new EventEmitter<string>();
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+
+  constructor(
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) { 
+  }
 
   ngOnInit(): void {
+    this.gridInformeFinal(this.contratacionProyectoId);
   }
+
+  gridInformeFinal(contratacionProyectoId: number) {
+    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionProyectoId, this.listaMenu.aprobarSolicitudLiquidacionContratacion).subscribe(report => {
+      if(report != null){
+        report.forEach(element => {
+          this.datosTabla.push({
+            fechaEnvio : element.fechaEnvio.split('T')[0].split('-').reverse().join('/'),
+            fechaAprobacion : element.fechaAprobacion.split('T')[0].split('-').reverse().join('/'),
+            llaveMen: element.llaveMen,
+            tipoIntervencion: element.tipoIntervencion,
+            institucionEducativa: element.institucionEducativa,
+            sede: element.sede,
+            estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
+            registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
+            contratacionProyectoId: contratacionProyectoId,
+            proyectoId: element.proyectoId
+          });
+        })
+      }
+      this.dataSource.data = this.datosTabla;
+      if(this.datosTabla.length > 0){
+        this.semaforoInformeFinal.emit(this.datosTabla[0].registroCompleto);
+      }
+    });
+  }
+
 
   // ngAfterViewInit() {
   //   this.dataSource.sort = this.sort;

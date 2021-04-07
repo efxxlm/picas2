@@ -332,4 +332,4 @@
   </mat-card-content>
 </mat-card>
 
-<app-form-observacion-actualizacion-poliza></app-form-observacion-actualizacion-poliza>
+<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-actualizacion-poliza>

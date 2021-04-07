@@ -6,8 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion,ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
-
+import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-tabla-liquidacion-contrato-interventoria',
@@ -17,33 +16,33 @@ import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionCont
 export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, AfterViewInit {
 
   ELEMENT_DATA: any[] = [];
-
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   displayedColumns: string[] = [
+    'fechaValidacionLiquidacion',
     'fechaPoliza',
     'numeroSolicitudLiquidacion',
     'numeroContrato',
     'valorSolicitud',
     'proyectosAsociados',
-    'estadoValidacionLiquidacionString',
+    'estadoAprobacionLiquidacionString',
     'contratacionProyectoId'
   ];
 
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
   datosTabla = [];
-  listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
 
   constructor(
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
     private dialog: MatDialog,
     private routes: Router
-  ) { }
+    ) { }
 
   ngOnInit(): void {
-    this.getListContractualLiquidationInterventoria(this.listaMenu.registrarSolicitudLiquidacionContratacion);
+    this.getListContractualLiquidationInterventoria(this.listaMenu.aprobarSolicitudLiquidacionContratacion);
   }
 
   getListContractualLiquidationInterventoria(menuId: number) {
@@ -51,12 +50,13 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
+            fechaValidacionLiquidacion : element.fechaValidacionLiquidacion.split('T')[0].split('-').reverse().join('/'),
             fechaPoliza : element.fechaPoliza.split('T')[0].split('-').reverse().join('/'),
             numeroContrato: element.numeroContrato,
             valorSolicitud: element.valorSolicitud,
             proyectosAsociados: element.proyectosAsociados,
-            estadoValidacionLiquidacionString: element.estadoValidacionLiquidacionString,
-            estadoValidacionLiquidacionCodigo: element.estadoValidacionLiquidacionCodigo,
+            estadoAprobacionLiquidacionString: element.estadoAprobacionLiquidacionString,
+            estadoAprobacionLiquidacionCodigo: element.estadoAprobacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
             contratacionProyectoId: element.contratacionProyectoId
           });
@@ -102,20 +102,21 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
     });
   }
 
-  SendToSupervision( pContratacionProyectoId: number ) {
+  SendToNovedades( pContratacionProyectoId: number ) {
     const pContratacionProyecto = {
         contratacionProyectoId: pContratacionProyectoId,
-        estadoValidacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAlSupervisor
+        estadoAprobacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAliquidacion
     };
 
-    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.registrarSolicitudLiquidacionContratacion )
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.aprobarSolicitudLiquidacionContratacion )
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
                 this.routes.navigateByUrl( '/', {skipLocationChange: true} )
-                .then( () => this.routes.navigate( ['/registrarSolicitudLiquidacionContractual'] ) );
+                .then( () => this.routes.navigate( ['/aprobarSolicitudLiquidacionContractual'] ) );
             }, err => this.openDialog( '', `<b>${ err.message }</b>` )
         );
     }
+
 
 }

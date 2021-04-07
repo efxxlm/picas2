@@ -1,0 +1,27 @@
+<mat-card class="shipping-card var-main-gris" *ngIf="observacionApoyo">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Validación apoyo a la supervisión
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong>
+        <span>{{ observacionApoyo.obsVigente.fechaCreacion | date: 'dd/MM/yyyy' }} </span>
+      </strong>
+    </p>
+    <p>
+      <strong>
+        ¿Tiene observaciones frente al informe final que deban ser tenidas en cuenta en la liquidación?:
+      </strong>
+      
+      <span *ngIf="observacionApoyo.obsVigente.tieneObservacion == true"> Si </span>
+      <span *ngIf="observacionApoyo.obsVigente.tieneObservacion != true"> No </span>
+    </p>
+    <p
+      class="text-justify"
+      *ngIf="observacionApoyo.obsVigente.observacion != null && observacionApoyo.obsVigente.observacion != ''"
+      [innerHTML]="observacionApoyo.obsVigente.observacion"
+    ></p>
+  </mat-card-content>
+</mat-card>

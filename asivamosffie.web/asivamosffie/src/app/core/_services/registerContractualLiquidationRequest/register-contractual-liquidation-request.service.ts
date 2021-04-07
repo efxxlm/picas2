@@ -13,20 +13,20 @@ export class RegisterContractualLiquidationRequestService {
 
   contractual_liquidation = 'RegisterContractualLiquidationRequest';
 
-  getListContractualLiquidationObra(){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationObra`);
+  getListContractualLiquidationObra(pMenuId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationObra?pMenuId=${ pMenuId }`);
   }
 
-  getListContractualLiquidationInterventoria(){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria`);
+  getListContractualLiquidationInterventoria(pMenuId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria?pMenuId=${ pMenuId }`);
   }
 
   getContratacionProyectoByContratacionProyectoId(pContratacionProyectoId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratacionProyectoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
   }
   
-  gridInformeFinal( pContratacionProyectoId: number ){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionProyectoId=${ pContratacionProyectoId }`);
+  gridInformeFinal( pContratacionProyectoId: number, pMenuId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionProyectoId=${ pContratacionProyectoId }&pMenuId=${ pMenuId }`);
   }
 
   getInformeFinalByProyectoId( pProyectoId: number ){
@@ -38,7 +38,11 @@ export class RegisterContractualLiquidationRequestService {
   }
 
   getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId( pMenuId: number, pContratacionProyectoId: number, pPadreId: number, pTipoObservacionCodigo: string ) {
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId?pMenuId=${ pMenuId }&pContratacionProyectoId=${ pContratacionProyectoId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` );
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId?pMenuId=${ pMenuId }&pContratacionProyectoId=${ pContratacionProyectoId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` );
+  }
+
+  getHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId( pMenuId: number, pContratacionProyectoId: number, pPadreId: number, pTipoObservacionCodigo: string ) {
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId?pMenuId=${ pMenuId }&pContratacionProyectoId=${ pContratacionProyectoId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` );
   }
 
   createUpdateLiquidacionContratacionObservacion( pLiquidacionContratacionObservacion: any ) {
