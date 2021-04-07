@@ -279,6 +279,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -4114,6 +4116,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.RegistroCompletoVerificar).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.TieneObservacion).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UrlSoporteFirmadoAprobar).HasMaxLength(500);
+
+                entity.Property(e => e.UrlSoporteFirmadoVerificar).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)

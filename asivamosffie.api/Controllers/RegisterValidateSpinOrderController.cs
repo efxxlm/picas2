@@ -63,9 +63,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListOrdenGiro")]
-        public async Task<FileResult> GetListOrdenGiro([FromQuery] bool pBlRegistrosAprobados)
+        public async Task<FileResult> GetListOrdenGiro([FromQuery] bool pBlRegistrosAprobados , DateTime pFechaInicial, DateTime pFechaFinal)
         {
-            return File(await _registerValidateSpinOrderService.GetListOrdenGiro(pBlRegistrosAprobados), "application/pdf");
+            return File(await _registerValidateSpinOrderService.GetListOrdenGiro(pBlRegistrosAprobados, pFechaInicial, pFechaFinal), "application/pdf");
         }
 
         [HttpGet]

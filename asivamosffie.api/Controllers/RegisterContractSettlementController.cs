@@ -16,7 +16,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class RegisterContractSettlement : ControllerBase
     {
         public readonly IRegisterContractSettlementService _registerContractSettlementService;
@@ -28,6 +28,12 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-       
+        [Route("GetListContractSettlemen")]
+        [HttpGet]
+        public async Task<dynamic> GetListContractSettlemen()
+        {
+            return await _registerContractSettlementService.GetListContractSettlemen();
+        }
+         
     }
 }
