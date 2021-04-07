@@ -120,7 +120,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           this.contratacionProyecto = response[3];
           this.listaFaseUsosComponentes = response[4];
           const listaFuenteTipoFinanciacion = await this.commonService.listaFuenteTipoFinanciacion().toPromise();
-          console.log( listaFuenteTipoFinanciacion )
 
           setTimeout(() => {
 
@@ -143,7 +142,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
             this.contratacionProyecto.contratacionProyectoAportante.forEach( async apo => {
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
-              console.log( apo );
 
               apo[ 'cofinanciacionAportante' ].fuenteFinanciacion.forEach( fuente => {
                 const fuenteFind = listaFuenteTipoFinanciacion.find( fuenteTipo => fuenteTipo.codigo === fuente.fuenteRecursosCodigo );
@@ -208,6 +206,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                     const grupoUso = this.createUso();
                     const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
 
+                    grupoUso.get( 'fuenteFinanciacionId' ).setValue( uso[ 'fuenteFinanciacionId' ] !== undefined ? uso[ 'fuenteFinanciacionId' ] : null )
                     grupoUso.get('componenteUsoId').setValue(uso.componenteUsoId);
                     grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteId);
                     grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
