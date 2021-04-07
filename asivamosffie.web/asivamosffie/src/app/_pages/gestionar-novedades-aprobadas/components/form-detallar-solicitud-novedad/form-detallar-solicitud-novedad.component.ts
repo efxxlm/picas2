@@ -48,10 +48,13 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     return this.addressForm.get('aportantes') as FormArray;
   }
 
-  usos(j: number, i: number) {
+    usos(posicionAportante: number, posicionComponente: number, posicionFuente: number) {
     // const control = this.addressForm.get('componentes') as FormArray;
     // return control.controls[i].get('usos') as FormArray;
-    return this.componentes(j).controls[i].get('usos') as FormArray;
+    const fuentes = this.componentes(posicionAportante).controls[posicionComponente].get('fuentes') as FormArray;
+    //console.log( fuentes, posicionFuente )
+    const usos = fuentes.controls[posicionFuente].get('usos') as FormArray;
+    return usos;
   }
 
   constructor(
@@ -131,10 +134,15 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
 
               const grupoComponente = this.createComponente();
-              const listaUsos = grupoComponente.get('usos') as FormArray;
+              const listaFuentes = grupoComponente.get('fuentes') as FormArray;
+
+              const grupoFuente = this.createFuente()
+              const listaUsos = grupoFuente.get('usos') as FormArray;
 
               const grupoUso = this.createUso();
+
               listaUsos.push(grupoUso);
+              listaFuentes.push(grupoFuente)
 
               listaComponentes.push(grupoComponente);
               this.aportantes.push(grupoAportante);
@@ -186,21 +194,26 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                   grupoComponente.get('componente').setValue(componenteSeleccionado);
                   //grupoComponente.get('listaUsos').setValue(listaDeUsos)
 
-                  compoApo.componenteUsoNovedad.forEach(uso => {
-                    // const grupoUso = this.createUso();
-                    // const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
-
-                    // grupoUso.get('componenteUsoId').setValue(uso.componenteUsoNovedadId);
-                    // grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteNovedadId);
-                    // grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
-                    // grupoUso.get('valorUso').setValue(uso.valorUso);
-
-                    // if (grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0) {
-                    //   grupoAportante.get('estadoSemaforo').setValue('sin-diligenciar');
-                    // }
-
-                    // listaUsos.push(grupoUso);
+                  compoApo['componenteFuenteNovedad'].forEach(fuente => {
+                    fuente.componenteUsoNovedad.forEach(uso => {
+                      // const grupoUso = this.createUso();
+                      // const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
+  
+                      // grupoUso.get('componenteUsoId').setValue(uso.componenteUsoNovedadId);
+                      // grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteNovedadId);
+                      // grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
+                      // grupoUso.get('valorUso').setValue(uso.valorUso);
+  
+                      // if (grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0) {
+                      //   grupoAportante.get('estadoSemaforo').setValue('sin-diligenciar');
+                      // }
+  
+                      // listaUsos.push(grupoUso);
+                    });
                   });
+    
+
+                  
 
                   listaComponentes.push(grupoComponente);
                 });
@@ -229,25 +242,33 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   changeFase(posicionAportante, posicionComponente) {
 
     this.componentes(posicionAportante).controls[posicionComponente].get('componente').setValue(null);
-    this.usos(posicionAportante, posicionComponente).controls.forEach(control => {
-      control.get('usoDescripcion').setValue(null);
-    })
+
+    let posicionFuente = 0;
+    this.fuentes(posicionAportante,posicionComponente).controls.forEach(fuente => {
+      this.usos(posicionAportante, posicionComponente, posicionFuente).controls.forEach(control => {
+        control.get('usoDescripcion').setValue(null);
+        posicionFuente++;
+      })  
+    });
+    
 
   }
 
-  getListaUsosFiltrado(posicionAportante, posicionComponente, posicionUso) {
+  getListaUsosFiltrado(posicionAportante, posicionComponente, posicionFuente, posicionUso) {
 
-    let usoSeleccionado = this.usos(posicionAportante, posicionComponente).controls[posicionUso];
+    
+    let usoSeleccionado = this.usos(posicionAportante, posicionComponente, posicionFuente).controls[posicionUso];
 
     //let listaUsos =this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.map((x) => x);
     let listaUsos: any[] = [];
 
-    if ( this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value )
-    this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.forEach(u => {
+    
+    if ( this.fuentes(posicionAportante, posicionComponente).controls[posicionFuente].get('listaUsos').value )
+        this.fuentes(posicionAportante, posicionComponente).controls[posicionFuente].get('listaUsos').value.forEach(u => {
         listaUsos.push(u)
     });
 
-    this.usos(posicionAportante, posicionComponente).controls.forEach(u => {
+    this.usos(posicionAportante, posicionComponente, posicionFuente).controls.forEach(u => {
 
       if (listaUsos !== undefined && u.value.usoDescripcion)
         listaUsos = listaUsos.filter(uso => uso.codigo != u.value.usoDescripcion.codigo);
@@ -273,8 +294,11 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
         usos.forEach(u => {
           listaDeUsos.push(this.usosSelect.find(uso => u.usoId == uso.codigo));
         });
-        this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').setValue(listaDeUsos)
-        //this.listaUsos = listaDeUsos;
+
+        let fuentes = this.fuentes(posicionAportante, posicionComponente);
+        fuentes.controls.forEach( f => {
+          f.get('listaUsos').setValue(listaDeUsos)
+        });
       };
     };
   };
@@ -293,13 +317,14 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   };
 
 
-  addUso(j: number, i: number) {
-    this.componentes(j).controls[i].get('listaUsos').value.length
-     if (this.componentes(j).controls[i].get('listaUsos').value.length === this.usos(j, i).controls.length) {
+  addUso(posicionAportante: number, posicioncomponente: number, posicionFuente) {
+    
+    let fuentes = this.componentes(posicionAportante).controls[posicioncomponente].get('fuentes') as FormArray;
+     if (fuentes.controls[posicionFuente].get('listaUsos').value.length === this.usos(posicionAportante, posicioncomponente, posicionFuente).controls.length) {
        this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.novedad.contrato.contratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
        return;
      };
-    const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
+    const listaUsos = fuentes.controls[posicionFuente].get('usos') as FormArray;
     listaUsos.push(this.createUso());
   }
 
@@ -341,25 +366,28 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     });
   }
 
-  addFuente(i: number) {
-    let grupoComponente = this.createComponente();
-    let listaUsos = grupoComponente.get('usos') as FormArray;
+  addFuente(posicionAportante: number, posicionComponente) {
+    let grupofuente = this.createFuente();
+    let listaUsos = grupofuente.get('usos') as FormArray;
     listaUsos.push(this.createUso());
-    this.componentes(i).push(grupoComponente);
+    let fuentes = this.componentes(posicionAportante).controls[posicionComponente].get('fuentes') as FormArray;
+    fuentes.controls.push(grupofuente);
+
+    this.getlistaUsos(posicionAportante, posicionComponente )
   }
 
   createFuente(): FormGroup {
     return this.fb.group({
       usos: this.fb.array([]),
       listaUsos: this.listaUsos,
-      fineteId:[],
+      fuenteId:[],
     });
   }
 
-  fuentes(j: number, i: number) {
+  fuentes(posicionAportante: number, PosicionComponente: number) {
     // const control = this.addressForm.get('componentes') as FormArray;
     // return control.controls[i].get('usos') as FormArray;
-    return this.componentes(j).controls[i].get('fuentes') as FormArray;
+    return this.componentes(posicionAportante).controls[PosicionComponente].get('fuentes') as FormArray;
   }
 
   borrarArray(j: number, i: number) {

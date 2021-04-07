@@ -148,137 +148,140 @@
                       </div>
                     </div>
                   </div>
-                  <div class="animatedDown" *ngFor="let fuente of fuentes(j, i).controls; let l = index">
-                    <div [formGroupName]="l">
-                      <div class="row">
-                        <div class="col-md-8">
-                          <div class="row">
-                            <div class="pr-1">
-                              <label class="label-left" [class.color-secondaryColor]="
+                  <div formGroupName="fuentes">
+                    <div class="animatedDown" *ngFor="let fuente of fuentes(j, i).controls; let l = index">
+                      <div [formGroupName]="l">
+                        <div class="row">
+                          <div class="col-md-8">
+                            <div class="row">
+                              <div class="pr-1">
+                                <label class="label-left" [class.color-secondaryColor]="
                               (addressForm.get('fuenteId')?.invalid && addressForm.get('fuenteId').touched) ||
                               (addressForm.get('fuenteId')?.invalid && estaEditando)
                             ">
-                                Fuente {{ i + 1 }}
-                              </label>
-                            </div>
-                            <div class="col">
-                              <mat-form-field class="select-width">
-                                <mat-select required formControlName="fuenteId">
-                                  <section>
-                                    <mat-option *ngFor="let u of getListaUsosFiltrado(j, i, k)" [value]="u">
-                                      {{ u.nombre }}
-                                    </mat-option>
-                                  </section>
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-                            <span class="icon-incompleto">
-                              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip" *ngIf="
+                                  Fuente {{ l + 1 }}
+                                </label>
+                              </div>
+                              <div class="col">
+                                <mat-form-field class="select-width">
+                                  <mat-select required formControlName="fuenteId">
+                                    <section>
+                                      <mat-option *ngFor="let u of listaAportantes" [value]="u">
+                                        {{ u.nombre }}
+                                      </mat-option>
+                                    </section>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                              <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip" *ngIf="
                               (addressForm.get('fuenteId')?.invalid && addressForm.get('fuenteId').touched) ||
                               (addressForm.get('fuenteId')?.invalid && estaEditando)
                             " />
-                            </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-md-4 text-right">
+                            <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" (click)="addFuente( j, i )"
+                            *ngIf="l + 1 === fuentes(j, i).length">
+                              <img src="assets/img/icon/mas.svg" alt="Agregar otro uso" />
+                              Agregar otra fuente
+                            </button>
                           </div>
                         </div>
-                        <div class="col-md-4 text-right">
-                          <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity">
-                            <img src="assets/img/icon/mas.svg" alt="Agregar otro uso" />
-                            Agregar otra fuente
-                          </button>
-                        </div>
-                      </div>
-                      <div formGroupName="usos">
-                        <div class="animatedDown" *ngFor="let uso of usos(j, i, l).controls; let k = index">
-                          <div [formGroupName]="k">
-    
-                            <div class="row">
-                              <div class="col-md-8">
-                                <div class="row">
-                                  <div class="pr-1">
-                                    <label class="label-left" [class.color-secondaryColor]="
+                        <div formGroupName="usos">
+                          <div class="animatedDown" *ngFor="let uso of usos(j, i, l).controls; let k = index">
+                            <div [formGroupName]="k">
+
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <div class="row">
+                                    <div class="pr-1">
+                                      <label class="label-left" [class.color-secondaryColor]="
                                         (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
                                         (uso.get('usoDescripcion')?.invalid && estaEditando)
                                       ">
-                                      Uso {{ k + 1 }}
-                                    </label>
-                                  </div>
-                                  <div class="col">
-                                    <mat-form-field class="select-width">
-                                      <mat-select required formControlName="usoDescripcion">
-                                        <section>
-                                          <mat-option *ngFor="let u of getListaUsosFiltrado(j, i, k)" [value]="u">
-                                            {{ u.nombre }}
-                                          </mat-option>
-                                        </section>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <span class="icon-incompleto">
-                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                      matTooltip="Debe ingresar la información en el campo para continuar"
-                                      matTooltipClass="info-tooltip" *ngIf="
-                                        (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
-                                        (uso.get('usoDescripcion')?.invalid && estaEditando)
-                                      " />
-                                  </span>
-                                </div>
-                              </div>
-    
-                              <div class="col-md-4 text-right p-0">
-                                <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                  *ngIf="usos(j, i).length > 1" (click)="deleteUso(usos(j, i), k)">
-                                  <img src="assets/img/icon/menos.svg" alt="Eliminar uso" />
-                                  Eliminar uso
-                                </button>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-8">
-                                <div class="row">
-                                  <div class="pr-1">
-                                    <label class="label-left" [class.color-secondaryColor]="
-                                        (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
-                                        (uso.get('valorUso')?.invalid && estaEditando)
-                                      ">
-                                      Valor del uso
-                                    </label>
-                                  </div>
-                                  <div class="col d-flex">
-                                    <mat-form-field class="full-width">
-                                      <input matInput #valorUso currencyMask required maxLength="20"
-                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
-                                        formControlName="valorUso" />
-                                      <input type="hidden" formControlName="componenteUsoId" />
-                                      <input type="hidden" formControlName="componenteAportanteId" />
-                                    </mat-form-field>
-                                    <span class="contador" [matTooltipPosition]="'above'"
-                                      matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
-                                      {{ 20 - valorUso.value.length }}
-                                    </span>
+                                        Uso {{ k + 1 }}
+                                      </label>
+                                    </div>
+                                    <div class="col">
+                                      <mat-form-field class="select-width">
+                                        <mat-select required formControlName="usoDescripcion">
+                                          <section>
+                                            <mat-option *ngFor="let u of getListaUsosFiltrado(j, i, l, k)" [value]="u">
+                                              {{ u.nombre }}
+                                            </mat-option>
+                                          </section>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
                                     <span class="icon-incompleto">
                                       <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
                                         alt="este campo es requerido" [matTooltipPosition]="'above'"
                                         matTooltip="Debe ingresar la información en el campo para continuar"
                                         matTooltipClass="info-tooltip" *ngIf="
-                                          (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
-                                          (uso.get('valorUso')?.invalid && estaEditando)
-                                        " />
+                                        (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
+                                        (uso.get('usoDescripcion')?.invalid && estaEditando)
+                                      " />
                                     </span>
                                   </div>
                                 </div>
+
+                                <div class="col-md-4 text-right p-0">
+                                  <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                    *ngIf="usos(j, i, l).length > 1" (click)="deleteUso(usos(j, i, l), k)">
+                                    <img src="assets/img/icon/menos.svg" alt="Eliminar uso" />
+                                    Eliminar uso
+                                  </button>
+                                </div>
                               </div>
-                              <div class="col-md-4 text-right">
-                                <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                  *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
-                                  <img src="assets/img/icon/mas.svg" alt="Agregar otro uso" />
-                                  Agregar otro uso
-                                </button>
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <div class="row">
+                                    <div class="pr-1">
+                                      <label class="label-left" [class.color-secondaryColor]="
+                                        (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                        (uso.get('valorUso')?.invalid && estaEditando)
+                                      ">
+                                        Valor del uso
+                                      </label>
+                                    </div>
+                                    <div class="col d-flex">
+                                      <mat-form-field class="full-width">
+                                        <input matInput #valorUso currencyMask required maxLength="20"
+                                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                                          formControlName="valorUso" />
+                                        <input type="hidden" formControlName="componenteUsoId" />
+                                        <input type="hidden" formControlName="componenteAportanteId" />
+                                      </mat-form-field>
+                                      <span class="contador" [matTooltipPosition]="'above'"
+                                        matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                        {{ 20 - valorUso.value.length }}
+                                      </span>
+                                      <span class="icon-incompleto">
+                                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip" *ngIf="
+                                          (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                          (uso.get('valorUso')?.invalid && estaEditando)
+                                        " />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                  <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                    *ngIf="k + 1 === usos(j, i, l).length" (click)="addUso(j, i, l)">
+                                    <img src="assets/img/icon/mas.svg" alt="Agregar otro uso" />
+                                    Agregar otro uso
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -287,7 +290,7 @@
                     </div>
                   </div>
 
-                  
+
                   <div class="text-right mt-1em">
                     <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
                       *ngIf="componentes(j).length > 1" (click)="borrarArray(j, i)">
