@@ -1852,7 +1852,7 @@ namespace asivamosffie.services
                             .AsNoTracking()
                         .FirstOrDefault();
 
-                    solicitudPago.SaldoPresupuestal = _context.VValorFacturadoContrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestal;
+                    solicitudPago.SaldoPresupuestal = _context.VSaldoPresupuestalXcontrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestalOtrosCostos;
 
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
