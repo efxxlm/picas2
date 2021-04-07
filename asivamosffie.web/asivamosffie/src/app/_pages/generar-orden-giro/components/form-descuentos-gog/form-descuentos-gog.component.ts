@@ -310,6 +310,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                     this.descuentos.push( this.fb.group(
                         {
                             estadoSemaforo: [ 'sin-diligenciar' ],
+                            obsVerificar: [ null ],
+                            obsAprobar: [ null ],
+                            obsTramitar: [ null ],
                             ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
                             solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                             tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
@@ -326,6 +329,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                 this.descuentos.push( this.fb.group(
                     {
                         estadoSemaforo: [ 'sin-diligenciar' ],
+                        obsVerificar: [ null ],
+                        obsAprobar: [ null ],
+                        obsTramitar: [ null ],
                         ordenGiroDetalleDescuentoTecnicaId: [ 0 ],
                         solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],

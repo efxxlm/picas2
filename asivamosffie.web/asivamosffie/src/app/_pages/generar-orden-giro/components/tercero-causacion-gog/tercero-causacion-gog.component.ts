@@ -347,6 +347,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 this.criterios.push( this.fb.group(
                                     {
                                         estadoSemaforo: [ 'sin-diligenciar' ],
+                                        obsVerificar: [ null ],
+                                        obsAprobar: [ null ],
+                                        obsTramitar: [ null ],
                                         ordenGiroDetalleTerceroCausacionId: [ 0 ],
                                         tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                         nombre: [ criterio.nombre ],
