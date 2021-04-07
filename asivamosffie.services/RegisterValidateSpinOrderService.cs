@@ -249,7 +249,7 @@ namespace asivamosffie.services
                 bool blRegistroCompleto = false;
 
                 DateTime? FechaRegistroCompleto = null;
-                if (intCantidadDependenciasOrdenGiro >= intCantidadObservaciones)
+                if (intCantidadObservaciones  >= intCantidadDependenciasOrdenGiro)
                 {
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
