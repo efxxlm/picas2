@@ -342,15 +342,23 @@ namespace asivamosffie.services
             if (pDescargarOrdenGiro.RegistrosAprobados)
             {
                 ListOrdenGiroIds =await _context.OrdenGiro
-                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue && !r.FechaRegistroCompletoTramitar.HasValue)
-                    .Select(r => r.OrdenGiroId).ToListAsync();
+                    .Include(s=> s.SolicitudPago)
+                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue 
+                       && !r.FechaRegistroCompletoTramitar.HasValue
+                       && r.SolicitudPago.Count() >0  
+                    )
+                    .Select(r => r.OrdenGiroId)
+
+                    .ToListAsync();
             }
             else
             {
                 ListOrdenGiroIds = await _context.OrdenGiro
+                      .Include(s => s.SolicitudPago)
                         .Where(r => r.FechaRegistroCompletoTramitar.HasValue
                             && r.FechaRegistroCompletoTramitar >= pDescargarOrdenGiro.FechaInicial
-                            && r.FechaRegistroCompletoTramitar <= pDescargarOrdenGiro.FechaFinal)
+                            && r.FechaRegistroCompletoTramitar <= pDescargarOrdenGiro.FechaFinal
+                            && r.SolicitudPago.Count() > 0)
                         .Select(r => r.OrdenGiroId).ToListAsync();
             }
 
@@ -375,6 +383,7 @@ namespace asivamosffie.services
                                  .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
                                 .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
                                 .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
+                            
                                 .FirstOrDefault();
 
             decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
@@ -387,7 +396,7 @@ namespace asivamosffie.services
                        .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
                        .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
                        .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
-                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato : " ")
+                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato : " ")
                        .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }
