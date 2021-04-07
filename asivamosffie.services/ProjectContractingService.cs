@@ -922,40 +922,35 @@ namespace asivamosffie.services
                  && pContratacionProyectoAntiguo.EsAvanceobra.HasValue      //Pregunta 2
                  && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                  && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
-              )
-            {
+              ) 
                 return true;
-            }
-
+             
             if (
                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
               && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
               && pContratacionProyectoAntiguo.RequiereLicencia.HasValue   //Pregunta 4
-               )
-            {
+               ) 
                 return true;
-            }
+           
 
             if (
                pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
                && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue    //Pregunta 5
-            )
-            {
+            ) 
                 return true;
-            }
+           
             if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
-                if (pContratacionProyectoAntiguo.RequiereLicencia == false)
-                {
+                if (pContratacionProyectoAntiguo.RequiereLicencia == false) 
                     return true;
-                }
+             
 
             }
 
@@ -970,14 +965,11 @@ namespace asivamosffie.services
                 if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
                     if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
-                    {
-                        return true;
-                    }
+                      return true;
+                   
                 }
-                else
-                {
-                    return true;
-                }
+                else 
+                    return true; 
             }
             return false;
         }
