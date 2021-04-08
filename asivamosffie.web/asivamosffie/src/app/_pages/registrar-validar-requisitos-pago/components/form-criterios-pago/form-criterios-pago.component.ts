@@ -21,6 +21,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     @Input() tieneObservacion: boolean;
     @Input() listaMenusId: any;
     @Input() criteriosPagoFacturaCodigo: string;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     solicitudPagoRegistrarSolicitudPago: any;
     registroCompletoCriterio = false;
@@ -48,10 +49,12 @@ export class FormCriteriosPagoComponent implements OnInit {
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         setTimeout(() => {
-            if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
-                this.addressForm.controls[ 'criterioPago' ].disable();
+            if ( this.tieneObservacionOrdenGiro === undefined ) {
+                if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
+                    this.addressForm.controls[ 'criterioPago' ].disable();
+                }
             }
-        }, 1500);
+        }, 2000 );
     }
 
     ngOnInit(): void {
@@ -188,7 +191,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     }
                                     this.criteriosArray = response;
                                     this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
-                                    if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
+                                    if ( this.registroCompletoCriterio === true && this.tieneObservacion === false && this.tieneObservacionOrdenGiro === undefined ) {
                                         this.criterios.disable();
                                     }
                                 }
@@ -322,7 +325,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     }
                                     this.criteriosArray = response;
                                     this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
-                                    if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
+                                    if ( this.registroCompletoCriterio === true && this.tieneObservacion === false && this.tieneObservacionOrdenGiro === undefined ) {
                                         this.criterios.disable();
                                     }
                                 }

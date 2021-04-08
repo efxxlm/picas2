@@ -23,6 +23,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     @Input() tieneObservacion: boolean;
     @Input() listaMenusId: any;
     @Input() criteriosPagoProyectoCodigo: string;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     esAutorizar: boolean;
     observacion: any;
@@ -177,6 +178,17 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
                                             if ( this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto.length > 0 ) {
                                                 setTimeout(() => {
+                                                    let registroCompleto = 0;
+                                                    for ( const criterio of this.solicitudPagoFaseCriterio ) {
+                                                        if ( criterio.registroCompleto === true ) {
+                                                            registroCompleto++;
+                                                        }
+                                                    }
+                                                    if ( this.solicitudPagoFaseCriterio.length === registroCompleto && this.tieneObservacion === false && this.tieneObservacionOrdenGiro === undefined ) {
+                                                        setTimeout(() => {
+                                                            this.projects.disable();
+                                                        }, 2000);
+                                                    }
                                                     // Get observacion CU autorizar solicitud de pago 4.1.9
                                                     this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                                         this.listaMenusId.autorizarSolicitudPagoId,
@@ -331,7 +343,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                         registroCompleto++;
                     }
                 }
-                if ( this.solicitudPagoFaseCriterio.length === registroCompleto && this.tieneObservacion === false ) {
+                if ( this.solicitudPagoFaseCriterio.length === registroCompleto && this.tieneObservacion === false && this.tieneObservacionOrdenGiro === undefined ) {
                     setTimeout(() => {
                         this.projects.disable();
                     }, 2000);

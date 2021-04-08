@@ -20,6 +20,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPago: any;
     @Input() contrato: any;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() tieneObservacionSemaforo = new EventEmitter<boolean>();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -158,7 +159,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                             // hasValue in Object Form
 
                             this.estadoRegistroCompleto.formRegistroCompleto = !Object.values( this.addressForm.value ).includes( null );
-                            if ( this.estadoRegistroCompleto.formRegistroCompleto === true ) {
+                            if ( this.estadoRegistroCompleto.formRegistroCompleto === true && this.tieneObservacionOrdenGiro === undefined ) {
                                 this.addressForm.get( 'fechaSolicitud' ).disable();
                                 this.addressForm.get( 'numeroRadicado' ).disable();
                                 this.addressForm.get( 'faseContrato' ).disable();

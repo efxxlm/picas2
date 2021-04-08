@@ -225,7 +225,7 @@
       <div class="text-right">
         <button mat-button color="warn" type="button" class="btn-eliminar"
                 (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )"
-                *ngIf="registroCompletoCriterio === false">
+                *ngIf="registroCompletoCriterio === false || tieneObservacionOrdenGiro !== undefined">
           <img src="assets/img/icon/menos.svg">
           Eliminar criterio
         </button>

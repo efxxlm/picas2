@@ -62,13 +62,11 @@ export class GenerarOrdenGiroComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    devolverSolicitud(){
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.height = 'auto';
-        dialogConfig.width = '1020px';
-        //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-        const dialogRef = this.dialog.open(DialogDevolverSolPagoGogComponent, dialogConfig);
-        //dialogRef.afterClosed().subscribe(value => {});
+    devolverSolicitud( registro: any ){
+        this.dialog.open( DialogDevolverSolPagoGogComponent, {
+            width: '80em',
+            data: registro
+        });
     }
 
     openDialog(modalTitle: string, modalText: string) {

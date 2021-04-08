@@ -19,6 +19,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
     @Input() tieneObservacion: boolean;
     @Input() listaMenusId: any;
     @Input() amortizacionAnticipoCodigo: string;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
@@ -70,6 +71,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
             this.estaEditando = true;
             if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
                 this.addressForm.disable();
+            }
+            if ( this.tieneObservacionOrdenGiro !== undefined ) {
+                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
             }
             this.addressForm.markAllAsTouched();
             this.addressForm.setValue(

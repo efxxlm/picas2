@@ -72,9 +72,11 @@
                         </table>
                     </div>
                     <div class="tabs--actions"  style="margin-top: 1em;">
-                        <button mat-raised-button color="accent" class="tabs--btn auxBtn"
-                            (click)="this.openProyectosAsociados()">
-                            Ver proyectos asociados
+                        <button mat-raised-button
+                                color="accent"
+                                class="tabs--btn auxBtn"
+                                (click)="this.openProyectosAsociados()">
+                                Ver proyectos asociados
                         </button>
                     </div>
                 </mat-card-content>
@@ -115,7 +117,8 @@
                                                                 *ngIf="registroCompletoAcordeones.registroCompletoFormaDePago === true"
                                                                 [listaMenusId]="menusIdPath"
                                                                 [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
-                                                                (tieneObservacionSemaforo)="tieneObservacionSemaforo = $event">
+                                                                (tieneObservacionSemaforo)="tieneObservacionSemaforo = $event"
+                                                                [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro">
                         </app-form-registrar-solicitud-de-pago>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -158,6 +161,24 @@
             </app-form-soporte-solicitud-url>
         </mat-expansion-panel>
     </mat-accordion>
+
+    <div class="mt-3em">
+        <mat-card   class="shipping-card border"
+                    align="left"
+                    style="width: 80%;"
+                    *ngIf="contrato.solicitudPagoOnly.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion && contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text card-title-detalle">
+                    Devolución de generar orden de giro
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+                <section [innerHTML]="contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro" style="margin-left: 2em;"></section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
     <div style="margin-top: 1em;margin-bottom: 1em;">
         <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
             Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
