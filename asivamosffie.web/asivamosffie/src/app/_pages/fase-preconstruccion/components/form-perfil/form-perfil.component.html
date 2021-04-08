@@ -298,11 +298,7 @@
                   <label
                     class="label-left"
                     for="fechaAprobacion"
-                    [class.color-secondaryColor]="
-                      (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
-                      (perfil.get('fechaAprobacion').invalid && estaEditando)
-                    "
-                  >
+                    [class.color-secondaryColor]="perfil.get('fechaAprobacion').value === null">
                     Fecha de aprobación de la totalidad de las hojas de vida
                   </label>
                 </div>
@@ -344,11 +340,7 @@
                       [matTooltipPosition]="'above'"
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
-                        (perfil.get('fechaAprobacion').invalid && estaEditando)
-                      "
-                    />
+                      *ngIf="perfil.get('fechaAprobacion').value === null">
                   </span>
                 </div>
               </div>

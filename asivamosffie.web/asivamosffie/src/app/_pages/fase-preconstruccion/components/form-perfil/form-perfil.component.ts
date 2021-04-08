@@ -244,7 +244,7 @@ export class FormPerfilComponent implements OnInit {
               cantidadHvRequeridas          : [ perfil.cantidadHvRequeridas ? perfil.cantidadHvRequeridas : null, Validators.required ],
               cantidadHvRecibidas           : [ perfil.cantidadHvRecibidas ? perfil.cantidadHvRecibidas : null, Validators.required ],
               cantidadHvAprobadas           : [ perfil.cantidadHvAprobadas ? perfil.cantidadHvAprobadas : null, Validators.required ],
-              fechaAprobacion               : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null, Validators.required ],
+              fechaAprobacion               : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               tieneObservacionSupervisor    : [ perfil.tieneObservacionSupervisor !== undefined ? perfil.tieneObservacionSupervisor : null ],
               observacion                   : [ observacionInterventor.length > 0 ? observacionInterventor[ observacionInterventor.length - 1 ].observacion : null, Validators.required ],
               observacionSupervisor         : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].observacion : null, Validators.required ],
@@ -297,6 +297,10 @@ export class FormPerfilComponent implements OnInit {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
       }
     }
+  }
+
+  checkDateAprove( value: FormControl ) {
+    console.log( value )
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -462,7 +466,7 @@ export class FormPerfilComponent implements OnInit {
 
         perfilesArray.push(
           {
-            tieneObservacionSupervisor: perfil.dirty === true && perfil.get( 'observacionSupervisor' ).value !== null ? false : perfil.get( 'tieneObservacionSupervisor' ).value,
+            tieneObservacionSupervisor: perfil.dirty === true && perfil.get( 'observacionSupervisor' ).value !== null ? false : null,
             cantidadHvAprobadas: Number( perfil.get( 'cantidadHvAprobadas' ).value ),
             cantidadHvRecibidas: Number( perfil.get( 'cantidadHvRecibidas' ).value ),
             cantidadHvRequeridas: Number( perfil.get( 'cantidadHvRequeridas' ).value ),

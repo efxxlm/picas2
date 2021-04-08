@@ -25,9 +25,10 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
 
   ngOnInit(): void {
     this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
+      console.log(  )
       let enrevisionC  = 0;
       for (let polizas of resp) {
-        if (polizas.estadoPoliza === 'Con aprobación de pólizas' && polizas.registroCompletoPolizaNombre=='Completo') {
+        if (polizas.estadoPoliza === 'Con aprobación de pólizas') {
           this.dataTable.push(polizas);
           enrevisionC++;
         };
