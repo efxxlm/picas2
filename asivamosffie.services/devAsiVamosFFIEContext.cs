@@ -829,6 +829,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)

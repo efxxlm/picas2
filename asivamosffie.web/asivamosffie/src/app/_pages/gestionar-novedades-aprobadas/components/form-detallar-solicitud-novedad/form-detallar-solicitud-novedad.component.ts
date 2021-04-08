@@ -195,7 +195,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
                         grupoFuente.get('componenteFuenteNovedadId').setValue(fuente.componenteFuenteNovedadId)
                         grupoFuente.get('listaUsos').setValue(listaDeUsos)
-                        grupoFuente.get('fuenteId').setValue(fuente.fuenteRecursosCodigo.toString())
+                        grupoFuente.get('fuenteId').setValue(fuente.fuenteFinanciacionId.toString())
 
                         console.log(grupoFuente.get('fuenteId').value)
                         console.log(grupoAportante.get('listaFuentes').value)
@@ -540,7 +540,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           const componenteFuenteNovedad: ComponenteFuenteNovedad = {
             componenteAportanteNovedadId: componenteAportante.componenteAportanteNovedadId,
             componenteFuenteNovedadId: controlFuentes.get('componenteFuenteNovedadId').value,
-            fuenteRecursosCodigo: controlFuentes.get('fuenteId').value,
+            fuenteFinanciacionId: controlFuentes.get('fuenteId').value,
             componenteUsoNovedad: []
 
           }

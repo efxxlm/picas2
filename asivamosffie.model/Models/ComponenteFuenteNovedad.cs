@@ -12,12 +12,13 @@ namespace asivamosffie.model.Models
 
         public int ComponenteFuenteNovedadId { get; set; }
         public int ComponenteAportanteNovedadId { get; set; }
-        public int FuenteRecursosCodigo { get; set; }
+        public int FuenteFinanciacionId { get; set; }
         public bool? Eliminado { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string FuenteRecursosCodigo { get; set; }
 
         public virtual ComponenteAportanteNovedad ComponenteAportanteNovedad { get; set; }
         public virtual ICollection<ComponenteUsoNovedad> ComponenteUsoNovedad { get; set; }

@@ -330,32 +330,31 @@ namespace asivamosffie.services
         {
             List<Dominio> listaDominio = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
 
-            List<FuenteFinanciacion> listaFuentes = new List<FuenteFinanciacion>();
+            List<FuenteFinanciacion> listaFuentes = _context.FuenteFinanciacion
+                                                                .Where( x => x.AportanteId == pConfinanciacioAportanteId)
+                                                                .Include( x => x.CofinanciacionDocumento)
+                                                                .ToList();
 
-            var listaFuentesAgrupadas =
-                from fuente in _context.FuenteFinanciacion
-                where fuente.AportanteId == pConfinanciacioAportanteId
-                group fuente by new { fuente.AportanteId, fuente.FuenteRecursosCodigo } into newGroup
+            //var listaFuentesAgrupadas =
+            //    from fuente in _context.FuenteFinanciacion
+            //    where fuente.AportanteId == pConfinanciacioAportanteId
+            //    group fuente by new { fuente.AportanteId, fuente.FuenteRecursosCodigo } into newGroup
                 
-                select new FuenteFinanciacion()
-                {
-                    AportanteId = newGroup.Key.AportanteId,
-                    FuenteRecursosCodigo = newGroup.Key.FuenteRecursosCodigo
-                };
+            //    select new FuenteFinanciacion()
+            //    {
+            //        AportanteId = newGroup.Key.AportanteId,
+            //        FuenteRecursosCodigo = newGroup.Key.FuenteRecursosCodigo
+            //    };
 
-            foreach ( var fuente in listaFuentesAgrupadas)
+            foreach ( var fuente in listaFuentes )
             {
                 fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
+                fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente.CofinanciacionDocumento.VigenciaAporte); 
 
                 listaFuentes.Add(fuente);
             }
 
             
-
-            foreach( var fuente in listaFuentes)
-            {
-                fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
-            }
 
             return listaFuentes;
         }

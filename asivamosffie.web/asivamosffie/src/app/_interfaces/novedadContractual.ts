@@ -147,7 +147,8 @@ export interface ComponenteFuenteNovedad {
 
         componenteFuenteNovedadId?: number,
         componenteAportanteNovedadId?: number,
-        fuenteRecursosCodigo?: number,
+        fuenteRecursosCodigo?: string,
+        fuenteFinanciacionId?: number,
         eliminado?: boolean,
         
         componenteUsoNovedad?: ComponenteUsoNovedad[]

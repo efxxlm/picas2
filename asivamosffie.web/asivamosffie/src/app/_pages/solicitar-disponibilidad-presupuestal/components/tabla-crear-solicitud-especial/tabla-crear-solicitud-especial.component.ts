@@ -76,7 +76,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   enviarSolicitud(e: number) {
     
-    this.budgetAvailabilityService.sendRequest( e )
+    this.budgetAvailabilityService.sendRequest( e, 0, false )
       .subscribe( respuesta => {
         this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")
