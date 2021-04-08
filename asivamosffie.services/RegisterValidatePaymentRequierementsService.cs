@@ -479,9 +479,10 @@ namespace asivamosffie.services
 
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
+                pSolicitudPago.ObservacionDevolucionOrdenGiro = string.Empty;
                 pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
-
+                pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                 pSolicitudPago.FechaModificacion = DateTime.Now;
                 pSolicitudPago.TieneObservacion = false;
             }
