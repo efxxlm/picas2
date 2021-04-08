@@ -808,6 +808,10 @@ namespace asivamosffie.services
                 || pOrdenGiro.OrdenGiroTercero == null
                 ) return false;
 
+            if(pOrdenGiro.OrdenGiroDetalle.Count() == 0 
+                || pOrdenGiro.OrdenGiroTercero.Count() == 0
+                ) return false;
+
             foreach (var item in pOrdenGiro.OrdenGiroDetalle)
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalle(item))

@@ -46,14 +46,16 @@ namespace asivamosffie.services
                 ReturnOrdenGiro(pOrdenGiro);
              
             //Crear URl Verificar
-            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
+            if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
                 UpdateUrlVerify(pOrdenGiro);
 
             //Crear URl Aprobar
-            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+            if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
                 UpdateUrlAproved(pOrdenGiro);
-            
-   
+
+            if ((intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro))
+                ResetObservations(pOrdenGiro);
+
              
             try
             {
@@ -95,7 +97,15 @@ namespace asivamosffie.services
             }
         }
 
-     
+        private void ResetObservations(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiroObservacion>()
+                    .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                    .Update(o => new OrdenGiroObservacion
+                    {
+                        Archivada =  true
+                    }); 
+        }
 
         private void UpdateUrlVerify(OrdenGiro pOrdenGiro)
         {

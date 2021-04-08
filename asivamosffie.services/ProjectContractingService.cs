@@ -210,7 +210,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
-        { 
+        {
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.Contratista)
                 .Include(r => r.Contrato)
@@ -800,13 +800,13 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditComponenteUso(ComponenteUso pComponenteUso, bool esTransaccion)
         {
             Respuesta Respuesta = new Respuesta();
-       
+
             try
             {
                 if (pComponenteUso.ComponenteUsoId == 0)
                 {
                     pComponenteUso.FechaCreacion = DateTime.Now;
-                    pComponenteUso.Eliminado = false; 
+                    pComponenteUso.Eliminado = false;
                     pComponenteUso.RegistroCompleto = ValidarRegistroCompletoComponenteUso(pComponenteUso);
                     _context.ComponenteUso.Add(pComponenteUso);
                 }
@@ -832,7 +832,7 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoComponenteUso(ComponenteUso pComponenteUsoOld)
         {
-            if (pComponenteUsoOld.TipoUsoCodigo == null 
+            if (pComponenteUsoOld.TipoUsoCodigo == null
                 || pComponenteUsoOld.ValorUso == 0
                 || pComponenteUsoOld.FuenteFinanciacionId == 0
                 )
@@ -922,35 +922,35 @@ namespace asivamosffie.services
                  && pContratacionProyectoAntiguo.EsAvanceobra.HasValue      //Pregunta 2
                  && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                  && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
-              ) 
+              )
                 return true;
-             
+
             if (
                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
               && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
               && pContratacionProyectoAntiguo.RequiereLicencia.HasValue   //Pregunta 4
-               ) 
+               )
                 return true;
-           
+
 
             if (
                pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
                && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue    //Pregunta 5
-            ) 
+            )
                 return true;
-           
+
             if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
-                if (pContratacionProyectoAntiguo.RequiereLicencia == false) 
+                if (pContratacionProyectoAntiguo.RequiereLicencia == false)
                     return true;
-             
+
 
             }
 
@@ -965,11 +965,11 @@ namespace asivamosffie.services
                 if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
                     if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
-                      return true;
-                   
+                        return true;
+
                 }
-                else 
-                    return true; 
+                else
+                    return true;
             }
             return false;
         }
@@ -1115,39 +1115,37 @@ namespace asivamosffie.services
              || contratacion.ContratistaId == null
              )
                 return false;
-            else
+
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
-                foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                if (!ContratacionProyecto.RegistroCompleto.HasValue)
+                    return false;
+                else if (!(bool)ContratacionProyecto.RegistroCompleto)
+                    return false;
+            }
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+            {
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                 {
-                    if (!ContratacionProyecto.RegistroCompleto.HasValue)
+                    if (ContratacionProyectoAportante.ComponenteAportante.Count() == 0)
                         return false;
-                    else if (!(bool)ContratacionProyecto.RegistroCompleto)
-                        return false;
-                }
-                foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
-                {
-                    foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
-                    {
-                        if (ContratacionProyectoAportante.ComponenteAportante.Count() == 0)
+
+                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante.Where(r => r.Eliminado != true))
+                    { 
+                        if (
+                              string.IsNullOrEmpty(ComponenteAportante.TipoComponenteCodigo)
+                           || string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
                             return false;
 
-                        foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                        foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                         {
-                            if (ComponenteAportante.Eliminado.HasValue && !(bool)ComponenteAportante.Eliminado)
-                            {
-                                if (string.IsNullOrEmpty(ComponenteAportante.TipoComponenteCodigo)
-                                   || string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
-                                    return false;
-                                foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
-                                {
-                                    if (ComponenteUso.TipoUsoCodigo == null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
-                                        return false;
-                                }
-                            }
-                        }
+                            if (ComponenteUso.TipoUsoCodigo == null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
+                                return false;
+                        } 
                     }
                 }
             }
+
             return true;
         }
 
