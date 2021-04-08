@@ -118,6 +118,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual DbSet<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
         public virtual DbSet<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
+        public virtual DbSet<NovedadContractualRegistroPresupuestal> NovedadContractualRegistroPresupuestal { get; set; }
         public virtual DbSet<OrdenGiro> OrdenGiro { get; set; }
         public virtual DbSet<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual DbSet<OrdenGiroDetalleDescuentoTecnica> OrdenGiroDetalleDescuentoTecnica { get; set; }
@@ -4077,6 +4078,58 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.NovedadContractualObservaciones)
                     .HasForeignKey(d => d.NovedadContractualId)
                     .HasConstraintName("FK_NovedadContractualObservaciones_NovedadContractual");
+            });
+
+            modelBuilder.Entity<NovedadContractualRegistroPresupuestal>(entity =>
+            {
+                entity.Property(e => e.EstadoSolicitudCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaDdp)
+                    .HasColumnName("FechaDDP")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaDrp)
+                    .HasColumnName("FechaDRP")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Objeto).HasMaxLength(4000);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.DisponibilidadPresupuestal)
+                    .WithMany(p => p.NovedadContractualRegistroPresupuestal)
+                    .HasForeignKey(d => d.DisponibilidadPresupuestalId)
+                    .HasConstraintName("FK_NovedadContractualRegistroPresupuestal_DisponibilidadPresupuestal");
+
+                entity.HasOne(d => d.NovedadContractual)
+                    .WithMany(p => p.NovedadContractualRegistroPresupuestal)
+                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasConstraintName("FK_NovedadContractualRegistroPresupuestal_NovedadContractual");
             });
 
             modelBuilder.Entity<OrdenGiro>(entity =>

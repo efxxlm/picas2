@@ -339,13 +339,43 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
       this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
       this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
+      
       console.log(this.objetoDisponibilidad);
-      this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
+
+      if ( this.objetoDisponibilidad.esNovedadContractual === true ){
+
+        const registroPresupuesta = {
+        //novedadContractualRegistroPresupuestalId = this.objetoDisponibilidad.NovedadContractualRegistroPresupuestalId,
+        novedadContractualId: this.objetoDisponibilidad.novedadContractualId,
+        disponibilidadPresupuestalId: this.objetoDisponibilidad.disponibilidadPresupuestalId,
+        numeroSolicitud: this.objetoDisponibilidad.numeroSolicitud,
+        valorSolicitud: this.objetoDisponibilidad.valorSolicitud,
+        estadoSolicitudCodigo: this.objetoDisponibilidad.estadoSolicitudCodigo,
+        objeto: this.objetoDisponibilidad.objeto,
+        eliminado: this.objetoDisponibilidad.eliminado,
+        fechaDdp: this.objetoDisponibilidad.fechaDdp,
+        numeroDrp: this.objetoDisponibilidad.numeroDrp,
+        plazoMeses: this.objetoDisponibilidad.plazoMeses,
+        plazoDias: this.objetoDisponibilidad.plazoDias,
+        
+        }
+
+        this.budgetAvailabilityService.createOrEditInfoAdditionalNoveltly(registroPresupuesta, this.objetoDisponibilidad.contratacionId)
         .subscribe(respuesta => {
           this.openDialog('', `<b>${respuesta.message}</b>`);
           if (respuesta.code == "200")
             this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
         })
+
+      }else{
+        this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
+        .subscribe(respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
+          if (respuesta.code == "200")
+            this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
+        })
+      }
+      
 
     }
     else {

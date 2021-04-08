@@ -30,13 +30,14 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId);
         Task<Contrato> GetContratoByNumeroContrato(string pNumero);
         Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto();
-        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-        Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
+        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, int RegistroPId, bool esNovedad, string user, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId);
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
         Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId);
         Task<dynamic> GetContratos();
         Task<dynamic> getNovedadContractualByContratacionId(int contratacionId);
+        Task<Respuesta> CreateOrEditInfoAdditionalNoveltly(NovedadContractualRegistroPresupuestal pRegistro, int pContratacionId, string user);
     }
     
 }

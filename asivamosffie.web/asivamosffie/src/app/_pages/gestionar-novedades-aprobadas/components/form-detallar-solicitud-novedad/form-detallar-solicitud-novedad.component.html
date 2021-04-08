@@ -47,7 +47,7 @@
                       formControlName="valorAportanteProyecto" (ngModelChange)="
                         validarSaldoDisponible(
                           $event,
-                          aportante.get('saldoDisponible').value,
+                          
                           aportante.get('nombreAportante').value
                         )
                       " />
@@ -310,11 +310,29 @@
           </div>
         </mat-card-content>
       </mat-card>
-      <div class="text-center" *ngIf="aportante.get('valorAportanteProyecto').value > 0 && esSaldoPermitido === true">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-          <img src="assets/img/icon/guardar.svg" alt="guardar" />
+      
+      <div class="text-right mt-1em">
+        <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+          *ngIf="aportantes.controls.length > 1" (click)="borrarArray(j, i)">
+          <img src="assets/img/icon/menos.svg" alt="Eliminar componente" />
+          Eliminar Aportante
+        </button>
+        {{ aportantes.controls.length }} {{ listaAportantes.length }}
+        <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+          *ngIf="aportantes.controls.length < listaAportantes.length" (click)="addAportante()">
+          <img src="assets/img/icon/mas.svg" alt="Agregar otro componente" />
+          Agregar otro Aportante
         </button>
       </div>
+
+
+      
     </section>
   </mat-accordion>
+
+  <div class="text-center" *ngIf="esSaldoPermitido === true">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="guardar" />
+    </button>
+  </div>
 </form>

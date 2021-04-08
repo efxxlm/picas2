@@ -132,22 +132,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
             };
 
             if (this.novedad.novedadContractualAportante === undefined || this.novedad.novedadContractualAportante.length === 0) {
-              const grupoAportante = this.createAportante();
-              const listaComponentes = grupoAportante.get('componentes') as FormArray;
 
-              const grupoComponente = this.createComponente();
-              const listaFuentes = grupoComponente.get('fuentes') as FormArray;
-
-              const grupoFuente = this.createFuente()
-              const listaUsos = grupoFuente.get('usos') as FormArray;
-
-              const grupoUso = this.createUso();
-
-              listaUsos.push(grupoUso);
-              listaFuentes.push(grupoFuente)
-
-              listaComponentes.push(grupoComponente);
-              this.aportantes.push(grupoAportante);
+              this.addAportante();
 
               console.log('aa')
             }
@@ -195,7 +181,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
                       };
 
-                      
+
                       grupoComponente.get('componenteAportanteNovedadId').setValue(compoApo.componenteAportanteNovedadId);
                       grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.novedadContractualAportanteId);
                       grupoComponente.get('fase').setValue(faseSeleccionada);
@@ -211,8 +197,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                         grupoFuente.get('listaUsos').setValue(listaDeUsos)
                         grupoFuente.get('fuenteId').setValue(fuente.fuenteRecursosCodigo.toString())
 
-                        console.log( grupoFuente.get('fuenteId').value)
-                        console.log( grupoAportante.get('listaFuentes').value )
+                        console.log(grupoFuente.get('fuenteId').value)
+                        console.log(grupoAportante.get('listaFuentes').value)
 
                         fuente.componenteUsoNovedad.forEach(uso => {
                           const grupoUso = this.createUso();
@@ -328,13 +314,23 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     };
   };
 
-  validarSaldoDisponible(saldoIngresado: number, saldoDisponible: number, nombreAportante: string) {
-    // if (saldoIngresado > saldoDisponible) {
-    //   this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);
-    //   this.esSaldoPermitido = false;
-    // } else if (saldoIngresado <= saldoDisponible) {
-    this.esSaldoPermitido = true;
-    // };
+  validarSaldoDisponible(saldoIngresado: number, nombreAportante: string) {
+
+    let saldoDisponible = 0;
+
+    this.novedad.novedadContractualDescripcion.forEach( descripcion => {
+      // Adicion
+      if ( descripcion.tipoNovedadCodigo === "3" ){
+        saldoDisponible = descripcion.presupuestoAdicionalSolicitado; 
+      }
+    });
+
+     if (saldoIngresado > saldoDisponible) {
+       this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);
+       this.esSaldoPermitido = false;
+     } else if (saldoIngresado <= saldoDisponible) {
+        this.esSaldoPermitido = true;
+     };
   };
 
   deleteUsoSeleccionado(usoCodigo: any) {
@@ -370,8 +366,27 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     });
   }
 
+  addAportante() {
+    const grupoAportante = this.createAportante();
+    const listaComponentes = grupoAportante.get('componentes') as FormArray;
+
+    const grupoComponente = this.createComponente();
+    const listaFuentes = grupoComponente.get('fuentes') as FormArray;
+
+    const grupoFuente = this.createFuente()
+    const listaUsos = grupoFuente.get('usos') as FormArray;
+
+    const grupoUso = this.createUso();
+
+    listaUsos.push(grupoUso);
+    listaFuentes.push(grupoFuente)
+
+    listaComponentes.push(grupoComponente);
+    this.aportantes.push(grupoAportante);
+  }
+
   addComponent(i: number) {
-    
+
 
     let grupoComponente = this.createComponente();
     //let listaUsos = grupoComponente.get('usos') as FormArray;
@@ -379,8 +394,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     let listaFuentes = grupoComponente.get('fuentes') as FormArray;
     let grupoUso = this.createUso();
     let grupofuente = this.createFuente();
-    let listaUsos = grupofuente.get( 'usos' ) as FormArray;
-    listaUsos.push( grupoUso ); 
+    let listaUsos = grupofuente.get('usos') as FormArray;
+    listaUsos.push(grupoUso);
     listaFuentes.push(grupofuente)
     this.componentes(i).push(grupoComponente);
   }

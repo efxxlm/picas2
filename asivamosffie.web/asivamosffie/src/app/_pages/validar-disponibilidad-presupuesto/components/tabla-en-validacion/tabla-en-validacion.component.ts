@@ -10,6 +10,8 @@ export interface PeriodicElement {
   numero: string;
   tipo: string;
   estadoRegistro: boolean;
+  esNovedad: boolean;
+  novedadId: number;
 }
 
 
@@ -44,7 +46,7 @@ export class TablaEnValidacionComponent implements OnInit {
       //console.log(fecha.getDate()  + "/" + (fecha.getMonth()+1) + "/" + fecha.getFullYear() );
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
-        tipo:element.tipoSolicitud})
+        tipo:element.tipoSolicitud, esNovedad:element.esNovedad, novedadId: element.novedadContractualRegistroPresupuestalId})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
@@ -68,9 +70,9 @@ export class TablaEnValidacionComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  validar(id: number) {
+  validar(id: number, esNovedad, novedadId) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/enValidacionPresupuestal', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/enValidacionPresupuestal', id,esNovedad,novedadId ]);
   }
 
 }

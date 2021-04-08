@@ -266,16 +266,35 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateOrEditInfoAdditionalNoveltly")]
+        [HttpPost]
+        public async Task<Respuesta> CreateOrEditInfoAdditionalNoveltly([FromBody] NovedadContractualRegistroPresupuestal pRegistro, int pContratacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditionalNoveltly(pRegistro, pContratacionId, user);
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("SendRequest")]
         [HttpPost]
-        public async Task<IActionResult> SendRequest(int disponibilidadPresupuestalId)
+        public async Task<IActionResult> SendRequest(int disponibilidadPresupuestalId, int RegistroPId, bool esNovedad)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId, RegistroPId, esNovedad, user, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
 
             }

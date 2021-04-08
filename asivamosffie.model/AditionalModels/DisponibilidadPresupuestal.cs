@@ -25,5 +25,11 @@ namespace asivamosffie.model.Models
          
         [NotMapped]
         public decimal SaldoContrato { get; set; }
+        
+        [NotMapped]
+        public int NovedadContractualRegistroPresupuestalId { get; set; }
+
+        [NotMapped]
+        public bool EsNovedad { get; set; }
     }
 }

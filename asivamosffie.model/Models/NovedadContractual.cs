@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             NovedadContractualAportante = new HashSet<NovedadContractualAportante>();
             NovedadContractualDescripcion = new HashSet<NovedadContractualDescripcion>();
             NovedadContractualObservaciones = new HashSet<NovedadContractualObservaciones>();
+            NovedadContractualRegistroPresupuestal = new HashSet<NovedadContractualRegistroPresupuestal>();
         }
 
         public int NovedadContractualId { get; set; }
@@ -62,5 +63,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual ICollection<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual ICollection<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
+        public virtual ICollection<NovedadContractualRegistroPresupuestal> NovedadContractualRegistroPresupuestal { get; set; }
     }
 }

@@ -73,7 +73,7 @@
     
                     <button mat-raised-button color="accent" 
                             class="btn-table" 
-                            (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
+                            (click)="enviarSolicitud(element.disponibilidadPresupuestalId, element.novedadContractualRegistroPresupuestalId, element.esNovedad)"
                             *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == '' ||
                             element.estadoSolicitudText == 'Devuelta por validación presupuestal'">
                             Enviar solicitud

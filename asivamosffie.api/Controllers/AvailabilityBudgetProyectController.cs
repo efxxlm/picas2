@@ -48,7 +48,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyect(rubroAfinanciarId, disponibilidadPresupuestalId);
+                var result = await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyect(disponibilidadPresupuestalId);
                 return Ok(result);
             }
             catch (Exception ex)
