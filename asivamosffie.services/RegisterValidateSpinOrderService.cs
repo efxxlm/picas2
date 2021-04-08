@@ -214,8 +214,12 @@ namespace asivamosffie.services
         {
             try
             {
-
                 int intCantidadDependenciasOrdenGiro = 4;
+
+                if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
+                    intCantidadDependenciasOrdenGiro = 3;
+
+
 
                 OrdenGiro ordenGiro = _context.OrdenGiro
                     .Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId)
