@@ -35,6 +35,7 @@ export class TablaBalanceFinancieroComponent implements OnInit {
   ];
 
   @Input() contratacionProyectoId: number;
+  @Input() esVerDetalle: boolean;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
 
   dataSource = new MatTableDataSource(ELEMENT_DATA);

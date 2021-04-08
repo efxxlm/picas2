@@ -28,6 +28,7 @@ export class TablaInformeFinalComponent implements OnInit {
   datosTabla = [];
 
   @Input() contratacionProyectoId: number;
+  @Input() esVerDetalle: boolean;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
 

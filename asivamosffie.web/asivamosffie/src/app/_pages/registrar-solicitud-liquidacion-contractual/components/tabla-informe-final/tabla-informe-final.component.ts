@@ -25,6 +25,7 @@ export class TablaInformeFinalComponent implements OnInit {
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   @Input() contratacionProyectoId: number;
+  @Input() esVerDetalle: boolean;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
 

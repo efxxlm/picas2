@@ -39,6 +39,14 @@ const routes: Routes = [
     component: VerificarRequisitosGtlcComponent
   },
   {
+    path : 'verDetalleEditarRequisitos/:id',
+    component: VerificarRequisitosGtlcComponent
+  },
+  {
+    path : 'verDetalleRequisitos/:id',
+    component: VerificarRequisitosGtlcComponent
+  },
+  {
     path: 'verificarRequisitos/:id/verificarBalance',
     component: VerificarBalanceGtlcComponent
   },
@@ -81,7 +89,31 @@ const routes: Routes = [
   {
     path: 'verificarRequisitos/:id/verificarInformeFinal/:proyectoId',
     component: VerificarInformeGtlcComponent
-  }
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: VerificarInformeGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: VerificarInformeGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleInformeFinal/:proyectoId',
+    component: VerificarInformeGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    component: VerificarBalanceGtlcComponent
+  },
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

@@ -311,25 +311,5 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<mat-card class="shipping-card var-main-gris">
-  <mat-card-header class="header-card header-card--margin">
-    <mat-card-title class="header-card--text">
-      Validación apoyo a la supervisión
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <p>
-      <strong> 
-        15/11/2020
-      </strong>
-    </p>
-    <p>
-      <strong> 
-        ¿Tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la liquidación?:
-      </strong>
-      No
-    </p>
-  </mat-card-content>
-</mat-card>
-
-<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-actualizacion-poliza>
+<app-observaciones-supervisor *ngIf="contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"  [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
+<app-form-observacion-actualizacion-poliza *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId"  [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-actualizacion-poliza>

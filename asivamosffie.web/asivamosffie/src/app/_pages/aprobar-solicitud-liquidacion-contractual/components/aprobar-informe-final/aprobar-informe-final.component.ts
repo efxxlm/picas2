@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 import { InformeFinal } from 'src/app/_interfaces/informe-final';
@@ -19,6 +19,8 @@ export class AprobarInformeFinalComponent implements OnInit {
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
   registroCompleto : string;
   informeFinal: InformeFinal;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +29,22 @@ export class AprobarInformeFinalComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
       this.contratacionProyectoId = params.id;
+    });
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'aprobarInformeFinal' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarInformeFinal' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleInformeFinal' ) {
+          this.esVerDetalle = true;
+          return;
+      }
     });
   }
 

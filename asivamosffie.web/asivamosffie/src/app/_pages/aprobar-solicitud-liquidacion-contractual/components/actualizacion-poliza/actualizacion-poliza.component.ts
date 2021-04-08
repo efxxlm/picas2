@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-actualizacion-poliza',
@@ -11,8 +12,11 @@ export class ActualizacionPolizaComponent implements OnInit {
 
   contratacionProyectoId: number;
   contratoPolizaActualizacionId: number;//definir
-  listaTipoObservacionLiquidacionContratacion: any;
-  listaMenu: any;
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
+  @Input() contratoPolizaId : number;
+  @Input() esVerDetalle: boolean;
   @Output() semaforoActualizacionPoliza = new EventEmitter<string>();
 
   listaPolizas = [
@@ -36,14 +40,6 @@ export class ActualizacionPolizaComponent implements OnInit {
    }
 
    ngOnInit(): void {
-    this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
-    .subscribe( response => {
-        this.listaTipoObservacionLiquidacionContratacion = response;
-    });
-    this.registerContractualLiquidationRequestService.listaMenu()
-    .subscribe( response => {
-        this.listaMenu = response;
-    });
   }  
 
 }

@@ -6,8 +6,12 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Validar balance
-      LL457326
+      <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+          Ver detalle aprobación balance LL457326
+      </ng-container>
+      <ng-template #noEsVerDetalle>
+          {{ esRegistroNuevo === true ? 'Aprobar' : 'Ver detalle/Editar' }} balance LL457326
+      </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">
       <span class="mx-1em">
@@ -74,27 +78,7 @@
     </a>
   </div>
 
-  <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Validación apoyo a la supervisión
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        <strong> 
-          15/11/2020
-        </strong>
-      </p>
-      <p>
-        <strong> 
-          ¿Tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la liquidación?:
-        </strong>
-        No
-      </p>
-    </mat-card-content>
-  </mat-card>
-
-  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
+  <app-observaciones-supervisor *ngIf="contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"  [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
+  <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
 
 </section>

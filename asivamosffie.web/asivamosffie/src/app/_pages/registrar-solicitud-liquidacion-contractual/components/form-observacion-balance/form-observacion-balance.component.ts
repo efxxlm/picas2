@@ -15,11 +15,13 @@ export class FormObservacionBalanceComponent implements OnInit {
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() balanceFinancieroId: number;
+  @Input() esVerDetalle: boolean;
 
   observaciones: FormGroup = this.fb.group({
     liquidacionContratacionObservacionId: [null, Validators.required],
     tieneObservacion: [null, Validators.required],
-    observacion: [null, Validators.required]
+    observacion: [null, Validators.required],
+    fechaCreacion: [null, Validators.required]
   });
 
   editorStyle = {

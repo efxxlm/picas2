@@ -10,7 +10,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./tabla-balance-financiero-gtlc.component.scss']
 })
 export class TablaBalanceFinancieroGtlcComponent implements OnInit {
+
   @Input() verDetalleBtn;
+  @Input() esVerDetalle: boolean;
   @Input() contratacionProyectoId: number;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
 

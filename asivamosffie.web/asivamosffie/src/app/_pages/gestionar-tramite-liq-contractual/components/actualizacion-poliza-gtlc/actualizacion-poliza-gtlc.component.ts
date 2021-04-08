@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-actualizacion-poliza-gtlc',
@@ -15,9 +16,13 @@ export class ActualizacionPolizaGtlcComponent implements OnInit {
   dataSource = new MatTableDataSource();
   contratacionProyectoId: number = null;
   contratoPolizaActualizacionId: number = null;//definir
-  listaTipoObservacionLiquidacionContratacion: any;
-  listaMenu: any;
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
   @Output() semaforoActualizacionPoliza = new EventEmitter<string>();
+  @Input() esVerDetalle: boolean;
+  @Input() contratoPolizaId : number;
+
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
@@ -47,13 +52,5 @@ export class ActualizacionPolizaGtlcComponent implements OnInit {
    }
 
    ngOnInit(): void {
-    this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
-    .subscribe( response => {
-        this.listaTipoObservacionLiquidacionContratacion = response;
-    });
-    this.registerContractualLiquidationRequestService.listaMenu()
-    .subscribe( response => {
-        this.listaMenu = response;
-    });
   }  
 }

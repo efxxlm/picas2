@@ -25,5 +25,6 @@ namespace asivamosffie.model.Models
         public int ProyectoId { get; set; }
         public int InformeFinalId { get; set; }
         public string LlaveMen { get; set; }
+        public int? ContratoId { get; set; }
     }
 }

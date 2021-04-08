@@ -5,7 +5,14 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">Verificar balance LL457326</h1>
+    <h1 class="title-menu--h1">
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            Ver detalle verificación balance LL457326
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar' }} balance LL457326
+        </ng-template>  
+    </h1>
     <p class="info-sub-title">
         <span>Número de contrato de obra: <b>N801801</b></span>
         <span>Número de contrato de interventoria: <b>A513513</b></span>
@@ -32,6 +39,6 @@
             Traslados de recursos
         </button>
     </div>
-    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-observaciones-supervisor>
-    <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
+    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
+    <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
 </section>

@@ -6,9 +6,12 @@
         </a>
       </div>
       <h1 class="title-menu--h1">
-        <span *ngIf="!registroCompleto || registroCompleto === 'Incompleto'">Verificar informe final</span>
-        <span *ngIf="registroCompleto && registroCompleto === 'Completo'">Ver detalle/Editar verificación de Informe final</span>
-        {{ data.informeFinal.proyecto.llaveMen }}
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            Ver detalle verificación de Informe final {{ data.informeFinal.proyecto.llaveMen }}
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar verificación de' }} Informe final {{ data.informeFinal.proyecto.llaveMen }}
+        </ng-template>  
       </h1>
       <p class="colorMainColor mt-1em">
         <span class="mx-1em">
@@ -119,7 +122,7 @@
       </mat-expansion-panel>
     </mat-accordion>
   
-    <app-observaciones-supervisor *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion"></app-observaciones-supervisor>
-    <app-observaciones-informe-final *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion"></app-observaciones-informe-final>
+    <app-observaciones-supervisor *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle]="esVerDetalle"></app-observaciones-supervisor>
+    <app-observaciones-informe-final *ngIf="!esVerDetalle && contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion"></app-observaciones-informe-final>
   
   </section>  

@@ -13,6 +13,7 @@ import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from '
 export class TablaInformeFinalGtlcComponent implements OnInit {
 
   @Input() verDetalleBtn;
+  @Input() esVerDetalle: boolean;
   @Input() contratacionProyectoId: number;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;

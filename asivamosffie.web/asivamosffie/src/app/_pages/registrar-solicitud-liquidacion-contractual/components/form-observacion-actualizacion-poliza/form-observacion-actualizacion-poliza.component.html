@@ -1,4 +1,4 @@
-<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()" *ngIf="!esVerDetalle">
   <div class="row justify-content-center align-items-center">
     <div class="col-md-12">
       <div class="row justify-content-center align-items-center" style="width: 100%">
@@ -104,3 +104,30 @@
     </button>
   </div>
 </form>
+<mat-card class="shipping-card var-main-gris" *ngIf="esVerDetalle">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Validación apoyo a la supervisión
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong>
+        <span>{{ observaciones.get('fechaCreacion').value | date: 'dd/MM/yyyy' }} </span>
+      </strong>
+    </p>
+    <p>
+      <strong>
+        ¿Tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la liquidación?:
+      </strong>
+      
+      <span *ngIf="observaciones.get('tieneObservacion').value === true"> Si </span>
+      <span *ngIf="observaciones.get('tieneObservacion').value !== true"> No </span>
+    </p>
+    <p
+      class="text-justify"
+      *ngIf="observaciones.get('observacion').value != null && observaciones.get('observacion').value != ''"
+      [innerHTML]="observaciones.get('observacion').value"
+    ></p>
+  </mat-card-content>
+</mat-card>

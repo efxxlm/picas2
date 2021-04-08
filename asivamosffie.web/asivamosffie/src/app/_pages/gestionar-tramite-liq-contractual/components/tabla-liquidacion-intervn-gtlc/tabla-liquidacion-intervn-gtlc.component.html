@@ -42,37 +42,45 @@
             Gestión
             </th>
             <td mat-cell *matCellDef="let element">
-            <a *ngIf="element.estadoTramiteLiquidacionCodigo !== '3'"
+                <a *ngIf="element.estadoTramiteLiquidacionCodigo === '0' || element.estadoTramiteLiquidacionCodigo == null || element.estadoTramiteLiquidacionCodigo == ''"
                 mat-button
                 mat-raised-button
                 color="accent"
                 class="btn-table"
                 [routerLink]="['verificarRequisitos', element.contratacionProyectoId]"
-            >
-                <span *ngIf="element.estadoTramiteLiquidacionCodigo === '0' || element.estadoTramiteLiquidacionCodigo == null || element.estadoTramiteLiquidacionCodigo == ''">Verificar requisitos para liquidación</span>
-                <span *ngIf="element.estadoTramiteLiquidacionCodigo === '1' || element.estadoTramiteLiquidacionCodigo === '2'">Ver detalle/Editar</span>
-            </a>
-            <button
-                *ngIf="element.estadoTramiteLiquidacionCodigo === '2'"
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="btn-table"
-                type="button"
-                (click)="SendToFinalLiquidation(element.contratacionProyectoId)"
-            >
-                Enviar para liquidación
-            </button>
-            <a *ngIf="element.estadoTramiteLiquidacionCodigo === '3'"
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="btn-table"
-                type="button"
-                [routerLink]="['verDetalleVerificacion', element.contratacionProyectoId]"
-            >
-                Ver detalle
-            </a>
+                >
+                    Verificar requisitos para liquidación
+                </a>
+                <a *ngIf="element.estadoTramiteLiquidacionCodigo === '1' || element.estadoTramiteLiquidacionCodigo === '2'"
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table"
+                    [routerLink]="['verDetalleEditarRequisitos', element.contratacionProyectoId]"
+                >
+                    Ver detalle/Editar
+                </a>
+                <button
+                    *ngIf="element.estadoTramiteLiquidacionCodigo === '2'"
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table"
+                    type="button"
+                    (click)="SendToFinalLiquidation(element.contratacionProyectoId)"
+                >
+                    Enviar para liquidación
+                </button>
+                <a *ngIf="element.estadoTramiteLiquidacionCodigo === '3'"
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table"
+                    type="button"
+                    [routerLink]="['verDetalleRequisitos', element.contratacionProyectoId]"
+                >
+                    Ver detalle
+                </a>
             </td>
       </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

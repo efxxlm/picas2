@@ -24,7 +24,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
         }
-
+        #region grid principal
         public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra(int pMenuId)
         {
             List<VContratacionProyectoSolicitudLiquidacion> result = await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
@@ -70,12 +70,17 @@ namespace asivamosffie.services
 
             return result;
         }
-       
+
+        #endregion
+
+        #region data general
         public async Task<VContratacionProyectoSolicitudLiquidacion> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId)
         {
             return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefaultAsync();
         }
+        #endregion
 
+        #region informe final
         public async Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId, int pMenuId)
         {
             List<dynamic> ProyectoAjustado = new List<dynamic>();
@@ -213,7 +218,33 @@ namespace asivamosffie.services
             }
             return ListInformeFinalChequeo;
         }
+        #endregion
 
+        #region contrato póliza
+
+        public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId)
+        {
+            ContratoPoliza contratoPoliza = await _context.ContratoPoliza
+                .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+                .Include(c => c.PolizaGarantia)
+                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion)
+                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
+                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
+                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
+                .FirstOrDefaultAsync();
+
+            if (contratoPoliza != null)
+            {
+                contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
+            }
+
+            return contratoPoliza;
+
+        }
+
+        #endregion
+
+        #region manejo de observaciones 
         public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
         {
             return await _context.LiquidacionContratacionObservacion
@@ -366,10 +397,8 @@ namespace asivamosffie.services
 
                 //Valida si la cantidad del tipo de codigo es igual a las observaciones para ese menu 
                 bool blRegistroCompleto = false;
-                DateTime? FechaRegistroCompleto = null;
                 if (intCantidadObservacionesLiquidacionContratacion >= intCantidadTipoObservacionCodigo)
                 {
-                    FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
                 }
 
@@ -383,8 +412,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
                             EstadoValidacionLiquidacionCodigo = blRegistroCompleto ? ConstantCodigoEstadoValidacionLiquidacion.Con_validacion : ConstantCodigoEstadoValidacionLiquidacion.En_proceso_de_validacion,
-                            RegistroCompletoVerificacionLiquidacion = blRegistroCompleto,
-                            FechaValidacionLiquidacion = FechaRegistroCompleto
+                            RegistroCompletoVerificacionLiquidacion = blRegistroCompleto
                         });
                         break;
 
@@ -396,8 +424,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
                             EstadoAprobacionLiquidacionCodigo = blRegistroCompleto ? ConstantCodigoEstadoAprobacionLiquidacion.Con_aprobacion : ConstantCodigoEstadoAprobacionLiquidacion.En_proceso_de_aprobacion,
-                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto,
-                            FechaAprobacionLiquidacion = FechaRegistroCompleto
+                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto
                         });
                         break;
 
@@ -409,8 +436,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
                             EstadoTramiteLiquidacion = blRegistroCompleto ? ConstantCodigoEstadoVerificacionLiquidacion.Con_verificacion : ConstantCodigoEstadoVerificacionLiquidacion.En_proceso_de_verificacion,
-                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto,
-                            FechaTramiteLiquidacion = FechaRegistroCompleto
+                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto
                         });
                         break;
                 }
@@ -452,7 +478,6 @@ namespace asivamosffie.services
                 });
         }
 
-        #region  Emails
         public async Task<Respuesta> ChangeStatusLiquidacionContratacionProyecto(ContratacionProyecto pContratacionProyecto, int menuId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Contratacion_Proyecto_Liquidacion, (int)EnumeratorTipoDominio.Acciones);
@@ -460,19 +485,26 @@ namespace asivamosffie.services
             try
             {
                 ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
+                DateTime? fechaValidacion = (DateTime)contratacionProyectoOld.FechaValidacionLiquidacion;
+                DateTime? fechaAprobacion = (DateTime)contratacionProyectoOld.FechaAprobacionLiquidacion;
+                DateTime? fechaTramite = (DateTime)contratacionProyectoOld.FechaTramiteLiquidacion;
+
                 if (contratacionProyectoOld != null)
                 {
 
                     //5.1.6
                     if (menuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual && pContratacionProyecto.EstadoValidacionLiquidacionCodigo == ConstantCodigoEstadoValidacionLiquidacion.Enviado_al_supervisor)
+                        fechaValidacion = DateTime.Now;
                         await SendMailToSupervision(pContratacionProyecto.ContratacionProyectoId);
 
                     ///5.1.7
                     if (menuId == (int)enumeratorMenu.Aprobar_solicitud_liquidacion_contractual && pContratacionProyecto.EstadoAprobacionLiquidacionCodigo == ConstantCodigoEstadoAprobacionLiquidacion.Enviado_control_seguimiento)
+                        fechaAprobacion = DateTime.Now;
                         await SendMailToNovedades(pContratacionProyecto.ContratacionProyectoId);
 
                     ///5.1.8
                     if (menuId == (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual && pContratacionProyecto.EstadoTramiteLiquidacion == ConstantCodigoEstadoVerificacionLiquidacion.Enviado_a_liquidacion)
+                        fechaTramite = DateTime.Now;
                         await SendEmailToFinalLiquidation(pContratacionProyecto.ContratacionProyectoId);
 
                     _context.Set<ContratacionProyecto>()
@@ -484,6 +516,9 @@ namespace asivamosffie.services
                                                                                                               EstadoValidacionLiquidacionCodigo = !String.IsNullOrEmpty(pContratacionProyecto.EstadoValidacionLiquidacionCodigo) ? pContratacionProyecto.EstadoValidacionLiquidacionCodigo : contratacionProyectoOld.EstadoValidacionLiquidacionCodigo,
                                                                                                               EstadoAprobacionLiquidacionCodigo = !String.IsNullOrEmpty(pContratacionProyecto.EstadoAprobacionLiquidacionCodigo) ? pContratacionProyecto.EstadoAprobacionLiquidacionCodigo : contratacionProyectoOld.EstadoAprobacionLiquidacionCodigo,
                                                                                                               EstadoTramiteLiquidacion = !String.IsNullOrEmpty(pContratacionProyecto.EstadoTramiteLiquidacion) ? pContratacionProyecto.EstadoTramiteLiquidacion : contratacionProyectoOld.EstadoTramiteLiquidacion,
+                                                                                                              FechaValidacionLiquidacion = fechaValidacion,
+                                                                                                              FechaAprobacionLiquidacion = fechaAprobacion,
+                                                                                                              FechaTramiteLiquidacion = fechaTramite
                                                                                                           });
 
 
@@ -513,7 +548,9 @@ namespace asivamosffie.services
             }
         }
 
+        #endregion
 
+        #region correos
         ///5.1.6 - Enviar al supervisor
         private async Task<bool> SendMailToSupervision(int pContratacionProyectoId)
         {

@@ -6,9 +6,12 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="data.estadoValidacionLiquidacionCodigo === '0' || data.estadoValidacionLiquidacionCodigo == null || data.estadoValidacionLiquidacionCodigo == ''">Validar requisitos para liquidación</span>
-      <span *ngIf="data.estadoValidacionLiquidacionCodigo === '1' || data.estadoValidacionLiquidacionCodigo === '2'">Ver detalle/Editar validación de requisitos para liquidación</span>
-      {{ data.numeroContrato }}
+      <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+          Ver detalle validación de requisitos para liquidación {{ data.numeroContrato }}
+      </ng-container>
+      <ng-template #noEsVerDetalle>
+          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar validación de' }} requisitos para liquidación {{ data.numeroContrato }}
+      </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">
       Fecha de actualización de póliza
@@ -40,7 +43,7 @@
   </mat-card>
 
   <div>
-    <p class="info-container text-center">
+    <p *ngIf="!esVerDetalle" class="info-container text-center">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
       <span class="info-text completo">Completo</span>
@@ -48,7 +51,7 @@
 
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
-        <mat-expansion-panel-header class="expansion-style--header">
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
           <mat-panel-title
             class="expansion-style--title"
             [class.sin-diligenciar]="true"
@@ -58,10 +61,15 @@
             Actualización de póliza
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-actualizacion-poliza *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza>
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="esVerDetalle">
+          <mat-panel-title class="expansion-style--title">
+            Actualización de póliza
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-actualizacion-poliza *ngIf="contratacionProyectoId && data" [contratacionProyectoId]="contratacionProyectoId" [contratoPolizaId]="data.contratoPolizaId" [esVerDetalle]="esVerDetalle" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
-        <mat-expansion-panel-header class="expansion-style--header">
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
           <mat-panel-title
             class="expansion-style--title"
             [class.sin-diligenciar]="true"
@@ -71,10 +79,15 @@
             Balance financiero
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-balance-financiero *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoBalanceFinanciero)="valueSemaforoBalanceFinanciero($event)"></app-tabla-balance-financiero>
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="esVerDetalle">
+          <mat-panel-title class="expansion-style--title">
+            Balance financiero
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-balance-financiero *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" [esVerDetalle]="esVerDetalle" (semaforoBalanceFinanciero)="valueSemaforoBalanceFinanciero($event)"></app-tabla-balance-financiero>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
-        <mat-expansion-panel-header class="expansion-style--header">
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
           <mat-panel-title
             class="expansion-style--title"
             [class.sin-diligenciar]="semaforoInformeFinal == 'Incompleto'"
@@ -83,7 +96,12 @@
             Informe final
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-informe-final *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" (semaforoInformeFinal)="valueSemaforoInformeFinal($event)"></app-tabla-informe-final>
+        <mat-expansion-panel-header class="expansion-style--header" *ngIf="esVerDetalle">
+          <mat-panel-title class="expansion-style--title">
+            Informe final
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-informe-final *ngIf="contratacionProyectoId" [contratacionProyectoId]="contratacionProyectoId" [esVerDetalle]="esVerDetalle" (semaforoInformeFinal)="valueSemaforoInformeFinal($event)"></app-tabla-informe-final>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

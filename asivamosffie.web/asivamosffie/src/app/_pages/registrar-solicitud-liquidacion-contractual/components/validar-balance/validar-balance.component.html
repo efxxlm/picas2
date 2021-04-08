@@ -6,8 +6,12 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Validar balance
-      LL457326
+      <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+          Ver detalle validación balance LL457326
+      </ng-container>
+      <ng-template #noEsVerDetalle>
+          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance LL457326
+      </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">
       <span class="mx-1em">
@@ -74,6 +78,6 @@
     </a>
   </div>
 
-  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
+  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [esVerDetalle]="esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"></app-form-observacion-balance>
 
 </section>

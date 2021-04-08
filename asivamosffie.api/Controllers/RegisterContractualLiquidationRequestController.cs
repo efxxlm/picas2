@@ -97,6 +97,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
         [Route("GetInformeFinalAnexoByInformeFinalId")]
         [HttpGet]
         public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId([FromQuery]  int pInformeFinalId)
@@ -160,6 +161,13 @@ namespace asivamosffie.api.Controllers
             return await _registerContractualLiquidationRequest.GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(pMenuId, pContratacionProyectoId, pPadreId, pTipoObservacionCodigo);
         }
 
+        [Route("GetContratoPoliza")]
+        [HttpGet]
+        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId)
+        {
+            var respuesta = await _registerContractualLiquidationRequest.GetContratoPoliza(pContratoPolizaId);
+            return respuesta;
+        }
 
     }
 }

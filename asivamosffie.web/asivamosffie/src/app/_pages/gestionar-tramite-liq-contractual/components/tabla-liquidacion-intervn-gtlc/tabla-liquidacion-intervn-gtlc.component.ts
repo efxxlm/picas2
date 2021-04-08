@@ -101,7 +101,7 @@ export class TablaLiquidacionIntervnGtlcComponent implements OnInit {
   SendToFinalLiquidation( pContratacionProyectoId: number ) {
     const pContratacionProyecto = {
         contratacionProyectoId: pContratacionProyectoId,
-        estadoTramiteLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAliquidacion
+        estadoTramiteLiquidacion: this.listaEstadoLiquidacionSolicitud.enviadoAliquidacion
     };
 
     this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.gestionarSolicitudLiquidacionContratacion )

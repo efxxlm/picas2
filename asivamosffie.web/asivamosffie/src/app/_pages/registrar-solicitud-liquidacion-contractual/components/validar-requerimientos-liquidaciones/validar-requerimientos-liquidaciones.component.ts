@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 
 @Component({
@@ -14,6 +14,8 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
   semaforoInformeFinal = 'Incompleto'
   contratacionProyectoId: number;
   data: any;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
   
   constructor(
     private route: ActivatedRoute,
@@ -21,6 +23,22 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.contratacionProyectoId = params.id;
+    });
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'validarRequisitos' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarRequisitos' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleRequisitos' ) {
+          this.esVerDetalle = true;
+          return;
+      }
     });
   }
 

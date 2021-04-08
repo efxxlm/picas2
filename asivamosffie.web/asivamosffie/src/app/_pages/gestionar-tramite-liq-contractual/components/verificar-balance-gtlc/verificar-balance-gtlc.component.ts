@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-verificar-balance-gtlc',
@@ -12,8 +13,11 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   estaEditando = false;
   contratacionProyectoId: number;
   balanceFinancieroId: number;//definir
-  listaTipoObservacionLiquidacionContratacion: any;
-  listaMenu: any;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
+
 
   constructor(
     private router: Router,
@@ -23,16 +27,24 @@ export class VerificarBalanceGtlcComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.contratacionProyectoId = params.id;
     });
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'verificarBalance' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarBalance' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleBalance' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
   }
   ngOnInit(): void {
-    this.registerContractualLiquidationRequestService.listaTipoObservacionLiquidacionContratacion()
-    .subscribe( response => {
-        this.listaTipoObservacionLiquidacionContratacion = response;
-    });
-    this.registerContractualLiquidationRequestService.listaMenu()
-    .subscribe( response => {
-        this.listaMenu = response;
-    });
   }  
 
   irRecursosComprometidos(id){
