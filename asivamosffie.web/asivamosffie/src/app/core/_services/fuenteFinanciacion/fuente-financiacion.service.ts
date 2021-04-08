@@ -38,6 +38,10 @@ export class FuenteFinanciacionService {
     return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid?disponibilidadPresupuestalProyectoid=${id}&aportanteID=${idaportante}`);
   }
 
+  GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal( id: number, idaportante:number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal?NovedadContractualRegistroPresupuestalId=${id}&aportanteID=${idaportante}`);
+  }
+
   GetListFuentesFinanciacionByDisponibilidadPresupuestalid(id: any) {
     return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestald?disponibilidadPresupuestaId=${id}`);
   }

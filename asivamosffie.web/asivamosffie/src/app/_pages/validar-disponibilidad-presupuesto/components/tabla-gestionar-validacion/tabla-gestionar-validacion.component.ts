@@ -20,6 +20,8 @@ export interface PeriodicElement {
   disponibilidadPresupuestalProyectoid:number;
   valorGestionado:number;
   ver:boolean;
+  esNovedad?:boolean;
+  novedadContractualRegistroPresupuestalId?: number 
 }
 
 
@@ -55,9 +57,10 @@ export class TablaGestionarValidacionComponent implements OnInit {
   @Input()proyectos: any;
   @Input()codigo: any;
   @Input()ver: any;
+  @Input()detalle:any;
   
   ngOnInit(): void {
-    console.log(this.ver);
+    console.log(this.detalle);
     let elements:PeriodicElement[]=[];
     this.proyectos.forEach(element => {
       element.aportantes.forEach(element2 => {
@@ -74,7 +77,10 @@ export class TablaGestionarValidacionComponent implements OnInit {
           valorAportante:element2.valorAportanteAlProyecto,
           disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
           valorGestionado:element.valorGestionado,
-          ver:this.ver
+          ver:this.ver,
+          esNovedad: this.detalle.esNovedad,
+          novedadContractualRegistroPresupuestalId: this.detalle.novedadContractualRegistroPresupuestalId,
+
         });  
       });
     });
@@ -107,12 +113,12 @@ export class TablaGestionarValidacionComponent implements OnInit {
     });
   }
 
-  gestionarFuentes(id: any) {
-    console.log(id);
+  gestionarFuentes(element: any) {
+    console.log(element);
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     this.dialog.open(FormGestionarFuentesComponent, {
-      width: '70em', data: { elemento: id, codigo:this.codigo,ver:this.ver }
+      width: '70em', data: { elemento: element, codigo:this.codigo,ver:this.ver }
     });
   }
 

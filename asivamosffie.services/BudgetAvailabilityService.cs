@@ -1316,17 +1316,35 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: valida disponibilidad por validacion pres
         impacto: CU 3.3.2*/
-        public async Task<Respuesta> SetValidarValidacionDDP(int id, string usuariomod
+        public async Task<Respuesta> SetValidarValidacionDDP(int id, string usuariomod, bool esNovedad, int RegistroPresupuestalId
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(id);
+
+            DisponibilidadPresupuestal DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(id);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_validacion_presupuestal;
-                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                DisponibilidadCancelar.UsuarioModificacion = usuariomod;
-                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+
+                if (esNovedad == true)
+                {
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Find(RegistroPresupuestalId);
+
+                    novedadContractualRegistroPresupuestal.FechaModificacion = DateTime.Now;
+                    novedadContractualRegistroPresupuestal.UsuarioModificacion = usuariomod;
+                    novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo = estado.ToString();
+                }
+                else
+                {
+                    
+
+                    
+                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                    DisponibilidadCancelar.UsuarioModificacion = usuariomod;
+                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                }
+
+                
                 /*
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
@@ -1338,6 +1356,7 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido.Replace("[NUMERODISPONIBILIDAD]",DisponibilidadCancelar.NumeroSolicitud).
                     Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP con validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
+
                 return
                 new Respuesta
                 {

@@ -26,9 +26,9 @@ export class DisponibilidadPresupuestalService {
     return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetDisponibilidadPresupuestalByID?DisponibilidadPresupuestalId=${id}`);
   }
 
-  GetDetailAvailabilityBudgetProyect(id)
+  GetDetailAvailabilityBudgetProyect(id, esNovedad='false', RegistroNovedadId='0')
   {
-    return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyect?disponibilidadPresupuestalId=${id}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyect?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}`);
   }
 
   StartDownloadPDF(pdf)
@@ -64,9 +64,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetCancelDDP`,DisponibilidadPresupuestalObservacion);
   }
-  SetValidarValidacionDDP(id)
+  SetValidarValidacionDDP(id, esNovedad, RegistroPresupuestalId)
   {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}&esNovedad=${esNovedad}&RegistroPresupuestalId=${RegistroPresupuestalId}`,null);
   }
   SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any)
   {

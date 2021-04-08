@@ -156,6 +156,7 @@
 
     <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget?.proyectos"
         [codigo]="detailavailabilityBudget?.numeroSolicitud"
+        [detalle]="detailavailabilityBudget"
         *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
     </app-tabla-gestionar-validacion>
     <!--<app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"
