@@ -302,9 +302,9 @@ export class TerceroCausacionComponent implements OnInit {
                                         listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
                                     }
                                     // Get lista observaciones archivadas
-                                    const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true );
-                                    const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true );
-                                    const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true );
+                                    const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                                    const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                                    const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                     if ( obsArchivadasVerificar.length > 0 ) {
                                         obsArchivadasVerificar.forEach( obs => historialObservaciones.push( obs ) );
                                     }
