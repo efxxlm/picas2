@@ -681,16 +681,17 @@ namespace asivamosffie.services
                             }
                         }
 
-                    }
+                        comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
+                        await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                        await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
-                    comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
-                    await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    }
+                    foreach (var SesionComentarios in comiteTecnico.SesionComentario)
+                    {
+                        SesionComentarios.ValidacionVoto = true;
+                    } 
                 }
-                foreach (var SesionComentarios in comiteTecnico.SesionComentario)
-                {
-                    SesionComentarios.ValidacionVoto = true;
-                }
+
 
                 //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
                 if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
@@ -742,7 +743,7 @@ namespace asivamosffie.services
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pUser.Email, strCrearEditar)
                 };
-               } 
+            }
             catch (Exception ex)
             {
                 return new Respuesta
@@ -753,179 +754,6 @@ namespace asivamosffie.services
                     Code = ConstantMessagesSesionComiteTema.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, pUser.Email, ex.InnerException.ToString().Substring(0, 500))
                 };
-            }
-        }
-        /// <summary>
-        /// Tarea Programada 
-        /// </summary>
-        /// <param name="pServerUser"></param>
-        /// <returns></returns>
-        public async Task GetApproveExpiredMinutes(string pServerUser)
-        {
-
-            int intCantidadDiasDeVencimiento = Int32.Parse(await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tiempo_Aprobar_Acta).Select(r => r.Nombre).FirstOrDefaultAsync());
-            DateTime FechaCorteActas = DateTime.Now.AddDays(-intCantidadDiasDeVencimiento);
-            List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion).Where(r => r.FechaModificacion.HasValue && r.FechaModificacion < FechaCorteActas).ToList();
-            foreach (var comite in comiteTecnicos)
-            {
-                comite.EstadoActaCodigo = ConstantCodigoActas.Aprobada;
-                comite.FechaModificacion = DateTime.Now;
-                comite.UsuarioModificacion = pServerUser;
-            }
-
-            _context.SaveChanges();
-        }
-
-        public async Task<bool> EnviarActaAprobada(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            try
-            {
-                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-
-                ComiteTecnico comiteTecnico = _context.ComiteTecnico
-                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                    .Include(r => r.SesionParticipante)
-                      .ThenInclude(r => r.Usuario)
-                         .ThenInclude(r => r.SesionComentario)
-                    .FirstOrDefault();
-
-                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
-                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
-                string TotalRegistros = string.Empty;
-
-                foreach (var SesionParticipante in comiteTecnico.SesionParticipante)
-                {
-                    TotalRegistros += Registros;
-
-                    TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
-                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.PrimerNombre.ToLower() + " " + SesionParticipante.Usuario.PrimerApellido.ToLower()));
-
-                }
-                Tabla = Tabla.Replace("[REGISTROS]", TotalRegistros);
-
-                bool blEnvioCorreo = false;
-                var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
-
-                foreach (var usuario in usuariosecretario)
-                {
-                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
-                    string template =
-                        TemplateActaAprobada.Contenido
-                        .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
-                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                        .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
-                        .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
-
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
-                }
-
-                return blEnvioCorreo;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> NotificarCompromisos(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            try
-            {
-                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-
-                ComiteTecnico comiteTecnico = _context.ComiteTecnico
-                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                        .ThenInclude(r => r.SesionSolicitudCompromiso)
-                            .ThenInclude(r => r.ResponsableSesionParticipante)
-                                .ThenInclude(r => r.Usuario)
-
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                        .ThenInclude(r => r.SesionSolicitudCompromiso)
-                            .ThenInclude(r => r.ResponsableSesionParticipante)
-                                .ThenInclude(r => r.Usuario)
-
-                    .Include(r => r.SesionComiteTema)
-                        .ThenInclude(r => r.TemaCompromiso)
-                            .ThenInclude(r => r.ResponsableNavigation)
-                                .ThenInclude(r => r.Usuario)
-                    .FirstOrDefault();
-
-                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
-                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
-                string TotalRegistros = string.Empty;
-
-                bool blEnvioCorreo = false;
-
-                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico.Distinct())
-                {
-                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
-                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
-                    {
-                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
-                        {
-                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
-                            string template =
-                                TemplateNotificacionCompromisos.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
-                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
-                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
-
-                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
-                    }
-                }
-
-                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Distinct())
-                {
-                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true).ToList();
-                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
-                    {
-                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
-                        {
-                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
-                            string template =
-                                TemplateNotificacionCompromisos.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
-                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
-                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
-
-                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
-                    }
-                }
-
-                foreach (var tema in comiteTecnico.SesionComiteTema)
-                {
-                    //tema.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
-                    foreach (var compromiso in tema.TemaCompromiso)
-                    {
-                        if (!string.IsNullOrEmpty(compromiso?.ResponsableNavigation?.Usuario?.Email))
-                        {
-                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
-                            string template =
-                                TemplateNotificacionCompromisos.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
-                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                                .Replace("[COMPROMISO]", compromiso.Tarea)
-                                .Replace("[FECHA_CUMPLIMIENTO]", compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
-
-                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(compromiso?.ResponsableNavigation?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
-                    }
-                }
-
-                return blEnvioCorreo;
-            }
-            catch (Exception e)
-            {
-                return false;
             }
         }
 
@@ -945,7 +773,6 @@ namespace asivamosffie.services
         {
             return (
                 pComiteTecnico.SesionParticipante.Count()
-
 
                 == pComiteTecnico.SesionComentario
                     .Where(r => r.EstadoActaVoto != null && r.ValidacionVoto != true)
@@ -1112,152 +939,182 @@ namespace asivamosffie.services
             }
         }
 
-        //plantilla - Acta de comité técnico
-        //Forozco
-        public async Task<HTMLContent> GetHTMLString(ActaComite obj)
+        public async Task<bool> NotificarCompromisos(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             try
             {
-                var sb = new StringBuilder();
-                sb.Append(@"
-                        <!DOCTYPE html>
-                            <html lang='en'>
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
-                            <head>
-                                <meta charset='UTF-8'>
-                                <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-                                <title>Acta de comité técnico</title>
-                            </head>
-                           <body>
-                                <div style='text-align-last: center; margin-top: 50px; margin-bottom: 30px;'>
-                                    <span>
-                                    FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE
-                                    <pre style=' white-space:normal'></pre>
-                                    NIT. 900900129-8
-                                    <pre style='white-space: normal'></pre>
-                                    MINISTERIO DE EDUCACIÓN
-                                    </span>
-                                </div>
+                ComiteTecnico comiteTecnico = _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                            .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
 
-                                <div>
-                                    <span style='position: absolute;'>
-                                        <img src='' alt=''>
-                                    </span>
-                                </div>
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                            .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
 
+                    .Include(r => r.SesionComiteTema)
+                        .ThenInclude(r => r.TemaCompromiso)
+                            .ThenInclude(r => r.ResponsableNavigation)
+                                .ThenInclude(r => r.Usuario)
+                    .FirstOrDefault();
 
-                                <table style='max-width: 800px;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
-                                    <tbody>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: center; padding: 5px 10px 5px 10px;background: #E7E6E6; ' align='center '>
-                                                <p style='text-decoration: none; color: #000; font-size: 18px; margin-top: 0; font-weight: 700; margin: 0; '>
-                                                    Acta de comité técnico
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: left; padding: 16px 10px 5px 10px; '>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Número de comité:
-                                                    <span style='color: #FF0000; '>
-                                                      NumeroComite
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Fecha del comité:
-                                                    <span style='color: #FF0000; '>
-                                                     FechaComite
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Miembros participantes
-                                                    <span style='color: #FF0000; '>
-                                                        MiembrosParticipantes
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Nombre miembro:
-                                                    <span style='color: #FF0000; '>
-                                                        NombreMiembro
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Invitados
-                                                    <span style='color: #FF0000; '>
-                                                        Invitados
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Nombre invitado:
-                                                    <span style='color: #FF0000; '>
-                                                        NombreInvitado
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Cargo:
-                                                    <span style='color: #FF0000; '>
-                                                        Cargo
-                                                    </span>
-                                                </p>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    Entidad:
-                                                    <span style='color: #FF0000; '>
-                                                        Entidad
-                                                    </span>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
+                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
+                string TotalRegistros = string.Empty;
 
-                                <table style='max-width: 800px;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
-                                    <tbody>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: center; padding: 5px 10px 5px 10px;background: #E7E6E6; ' align='center '>
-                                                <p style='text-decoration: none; color: #000; font-size: 18px; margin-top: 0; font-weight: 700; margin: 0; '>
-                                                    Orden del día
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: left; padding: 16px 10px 5px 10px; '>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    mostrar los temas trabajados en la orden del día del comité
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table style='max-width: 800px;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
-                                    <tbody>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: center; padding: 5px 10px 5px 10px;background: #E7E6E6; ' align='center '>
-                                                <p style='text-decoration: none; color: #000; font-size: 18px; margin-top: 0; font-weight: 700; margin: 0; '>
-                                                    1. Solicitudes contractuales
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style='font-family: 'Roboto', Helvetica, Arial, sans-serif; font-weight: 300; text-align: left; padding: 16px 10px 5px 10px; '>
-                                                <p style='text-decoration: none; color: #000; font-size: 16px; margin-bottom: 5px; margin-top: 0; '>
-                                                    mostrar los temas trabajados en la orden del día del comité
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </body>
+                bool blEnvioCorreo = false;
 
-                            </html>");
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico.Distinct())
+                {
+                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
+                    {
+                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
 
-                obj.htmlContent = sb;
-                return new HTMLContent(sb.ToString());
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Distinct())
+                {
+                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true).ToList();
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
+                    {
+                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                foreach (var tema in comiteTecnico.SesionComiteTema)
+                {
+                    //tema.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
+                    foreach (var compromiso in tema.TemaCompromiso)
+                    {
+                        if (!string.IsNullOrEmpty(compromiso?.ResponsableNavigation?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", compromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(compromiso?.ResponsableNavigation?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                return blEnvioCorreo;
             }
             catch (Exception e)
             {
-                return new HTMLContent("");
+                return false;
+            }
+        }
+
+        public async Task<bool> EnviarActaAprobada(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            try
+            {
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
+                ComiteTecnico comiteTecnico = _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                    .Include(r => r.SesionParticipante)
+                      .ThenInclude(r => r.Usuario)
+                         .ThenInclude(r => r.SesionComentario)
+                    .FirstOrDefault();
+
+                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
+                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
+                string TotalRegistros = string.Empty;
+
+                foreach (var SesionParticipante in comiteTecnico.SesionParticipante)
+                {
+                    TotalRegistros += Registros;
+
+                    TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
+                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.PrimerNombre.ToLower() + " " + SesionParticipante.Usuario.PrimerApellido.ToLower()));
+
+                }
+                Tabla = Tabla.Replace("[REGISTROS]", TotalRegistros);
+
+                bool blEnvioCorreo = false;
+                var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+
+                foreach (var usuario in usuariosecretario)
+                {
+                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
+                    string template =
+                        TemplateActaAprobada.Contenido
+                        .Replace("_LinkF_", pDominioFront)
+                        .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
+                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                        .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
+                        .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
+
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+                return blEnvioCorreo;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// Tarea Programada 
+        /// </summary>
+        /// <param name="pServerUser"></param>
+        /// <returns></returns>
+        public async Task GetApproveExpiredMinutes(string pServerUser)
+        {
+
+            int intCantidadDiasDeVencimiento = Int32.Parse(await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tiempo_Aprobar_Acta).Select(r => r.Nombre).FirstOrDefaultAsync());
+            DateTime FechaCorteActas = DateTime.Now.AddDays(-intCantidadDiasDeVencimiento);
+            List<ComiteTecnico> comiteTecnicos = _context.ComiteTecnico.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.En_proceso_Aprobacion).Where(r => r.FechaModificacion.HasValue && r.FechaModificacion < FechaCorteActas).ToList();
+            foreach (var comite in comiteTecnicos)
+            {
+                comite.EstadoActaCodigo = ConstantCodigoActas.Aprobada;
+                comite.FechaModificacion = DateTime.Now;
+                comite.UsuarioModificacion = pServerUser;
             }
 
+            _context.SaveChanges();
+        }
+
+        public Task<HTMLContent> GetHTMLString(ActaComite obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

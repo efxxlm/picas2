@@ -9,7 +9,7 @@ namespace asivamosffie.model.Models
         public string NumeroSolicitud { get; set; }
         public int ContratoId { get; set; }
         public string NumeroContrato { get; set; }
-        public string Nombre { get; set; }
+        public string NombreEstado { get; set; }
         public string EstadoSolicitudCodigo { get; set; }
     }
 }
