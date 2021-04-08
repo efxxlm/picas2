@@ -131,8 +131,11 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                   }
                 }
                 if ( observacionTipo2.length > 0 ) {
-                  // tslint:disable-next-line: no-string-literal
-                  perfil[ 'observacionApoyo' ] = observacionTipo2[ observacionTipo2.length - 1 ];
+                  const obsApoyo = observacionTipo2.find( obsApoyo => obsApoyo.eliminado === false );
+
+                  if ( obsApoyo !== undefined ) {
+                    perfil[ 'observacionApoyo' ] = obsApoyo;
+                  }
                 }
               }
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {

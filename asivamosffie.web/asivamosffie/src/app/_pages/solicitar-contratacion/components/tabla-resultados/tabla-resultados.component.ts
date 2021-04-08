@@ -101,7 +101,7 @@ export class TablaResultadosComponent implements OnInit {
 
     if (this.esMultiproyecto === true ) {
       if ( tieneInterventoria.length > 0 || tieneObra.length > 0 ) {
-        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
+        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes individuales en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
         return;
       }
     }
