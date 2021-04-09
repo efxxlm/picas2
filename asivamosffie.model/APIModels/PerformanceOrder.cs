@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.Generic;
 using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace asivamosffie.model.APIModels
@@ -158,11 +160,55 @@ namespace asivamosffie.model.APIModels
         public decimal GeneratedPerformances { get; set; }
         [JsonProperty(PropertyName = "Provisión gravamen financiero")]
         public decimal FinancialLienProvision { get; set; }
-        [JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
+        [JsonProperty(PropertyName = "Total gastos bancarios")]
         public decimal BankCharges { get; set; }
         [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
         public decimal DiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Rendimiento a incorporar")]
         public decimal PerformancesToAdd { get; set; }
     }
+
+
+    public class ApprovedPerfomancesDto
+    {
+        [JsonProperty(PropertyName = "Cuenta Bancaria")]
+        public string CuentaBancaria { get; set; }
+        [JsonProperty(PropertyName = "Total de rendimientos generados")]
+        public decimal TotalRendimientosGenerados { get; set; }
+        [JsonProperty(PropertyName = "Rendimientos Incorporados")]
+        public decimal Incorporados { get; set; }
+
+        [JsonProperty(PropertyName = "Provisión gravamen financiero")]
+        public decimal ProvisionGravamenFinanciero { get; set; }
+        [JsonProperty(PropertyName = "Total gastos bancarios")]
+        public decimal TotalGastosBancarios { get; set; }
+
+        [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
+        public decimal TotalGravamenFinancieroDescontado { get; set; }
+        [JsonProperty(PropertyName = "Visitas")]
+        public decimal Visitas { get; set; }
+        [JsonProperty(PropertyName = "Rendimiento a incorporar")]
+        public decimal RendimientoIncorporar { get; set; }
+
+    }
+
+
+    public class DataResult
+    {
+        public string Numero { get; set; }
+
+        public string Aportante { get; set; }
+
+        public decimal? Anterior { get; set; }
+
+        public decimal? Actual { get; set; }
+    }
+
+
+    public class MinuteTemplate
+    {
+        public string PerformancesDate { get; set; }
+        public List<DataResult> Registers { get; set; }
+    }
+    
 }

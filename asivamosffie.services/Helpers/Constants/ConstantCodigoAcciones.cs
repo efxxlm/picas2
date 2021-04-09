@@ -277,6 +277,10 @@
         public const string Tramitar_Rendimientos = "200";
         public const string Notificar_Inconsistencias = "254";
         public const string Notificar_Solicitud_Aprobacion = "255";
+        public const string Aprobar_Incorporacion_Rendimientos = "263";
+        public const string Generar_Acta_Rendimientos = "264";
+        public const string Registrar_Acta_Rendimientos = "265";
+        public const string Ver_Acta_Rendimientos = "266";
 
         //Informe final
         public const string Crear_Informe_Final = "192";

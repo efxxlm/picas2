@@ -25,7 +25,10 @@ namespace asivamosffie.services.Helpers.Constant
 
             public const string NOTIFICAR_INCONSISTENCIAS = "NOTIFICAR INCONSISTENCIAS";
             public const string NOTIFICAR_SOLICITUD_APROBACION = "NOTIFICAR SOLICITUD APROBACION";
-
+            public const string INCORPORAR_RENDIMIENTOS = "INCORPORAR_RENDIMIENTOS";
+            public const string GENERAR_ACTA_RENDIMIENTOS = "GENERAR ACTA RENDIMIENTOS";
+            public const string CARGAR_ACTA_RENDIMIENTOS = "CARGAR ACTA RENDIMIENTOS";
+            public const string VER_RENDIMIENTOS_INCORPORADOS = "VER RENDIMIENTOS INCORPORADOS";
         }
          
         #region Mensajes Acciones ManagementCommitteeReportService

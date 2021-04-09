@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.95.3" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="DotLiquid" Version="2.1.418" />
     <PackageReference Include="EPPlus" Version="5.2.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
@@ -22,5 +23,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Templates\PDF\PerformanceMinute.liquid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

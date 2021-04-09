@@ -73,7 +73,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   }
 
   includePerformances(uploadedOrder: any){
-    this.faseDosPagosRendimientosSvc.includePerformances(uploadedOrder.carguePagosRendimientosId)
+    this.faseDosPagosRendimientosSvc.includePerformances(uploadedOrder.registerId)
       .subscribe((response: Respuesta)=>{
         if(response.isSuccessful){
           uploadedOrder.registrosIncorporados = response.data;
@@ -84,10 +84,21 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   downloadConsistencies(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.downloadManagedPerformances(uploadedOrderId, true)
     .subscribe((content)=>{
-      // if(response.isSuccessful){
-      //   uploadedOrder.registrosIncorporados = response.data;
-      // }
       FileDownloader.exportExcel("Consistencias.xlsx", content)
+    });
+  }
+
+  viewAddedRegister(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.downloadApprovedIncorporatedPerformances(uploadedOrderId)
+    .subscribe((content)=>{
+      FileDownloader.exportExcel("RendimientosIncorporados.xlsx", content)
+    });
+  }
+  generateMinute(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.generateMinute(uploadedOrderId)
+    .subscribe((content)=>{
+      console.log(content)
+      FileDownloader.exportPDF("ActaRendimientos.pdf", content)
     });
   }
 

@@ -38,19 +38,23 @@
                     >
                         Incorporar rendimientos
                     </button>
+                    {{element|json}}
                      <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados == 0"
-                      (click)="downloadConsistencies(element.cargaPagosRendimientosId)"
+                      (click)="downloadConsistencies(element.registerId)"
                      >
                         Ver registros consistentes
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
+                        (click)="generateMinute(element.registerId)">
                         Generar Acta
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
                     (click)="uploadSignedMinutes();">
                         Cargar acta firmada
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
+                        (click)="viewAddedRegister(element.registerId)"
+                        >
                         Ver registros incorporados
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.acta">
