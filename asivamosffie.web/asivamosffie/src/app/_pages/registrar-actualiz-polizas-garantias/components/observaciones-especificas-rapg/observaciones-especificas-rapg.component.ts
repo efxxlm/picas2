@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class ObservacionesEspecificasRapgComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     addressForm = this.fb.group({
         tieneObservaciones: [null, Validators.required],

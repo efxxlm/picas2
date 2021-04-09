@@ -18,6 +18,8 @@ namespace asivamosffie.model.Models
         public int? DisponibilidadPresupuestalProyectoId { get; set; }
         public string EstadoCodigo { get; set; }
         public int? DisponibilidadPresupuestalId { get; set; }
+        public bool? EsNovedad { get; set; }
+        public int? NovedadContractualRegistroPresupuestalId { get; set; }
 
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual DisponibilidadPresupuestalProyecto DisponibilidadPresupuestalProyecto { get; set; }

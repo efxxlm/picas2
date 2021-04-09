@@ -13,7 +13,7 @@
     </div>
 
     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="addressForm">
             <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
                 <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -202,7 +202,7 @@
                                                             <label  class="label-left"
                                                                     for="valorDescuento"
                                                                     [ngClass]="{ 'color-secondaryColor': (aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando) }">
-                                                                    Valor del descuento
+                                                                    Valor facturado por el concepto para el aportante
                                                             </label>
                                                         </div>
                                                         <div class="col d-flex">
@@ -397,12 +397,58 @@
                                 </div>
                             </mat-card-content>
                         </mat-card>
+
+                        <div *ngIf="criterio.get( 'obsVerificar' ).value !== null || criterio.get( 'obsAprobar' ).value !== null || criterio.get( 'obsTramitar' ).value !== null">
+                            <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsVerificar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Verificación de la coordinación financiera
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsVerificar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="criterio.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                
+                            <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsAprobar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Aprobación de la dirección financiera
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsAprobar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="criterio.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                
+                            <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsTramitar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Observaciones de fiduciaria
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsTramitar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="criterio.get( 'obsTramitar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
                         <div class="text-center mb-2em">
                             <button mat-button
                                     color="warn"
                                     class="btn-guardar"
                                     [disabled]="criterio.dirty === false"
-                                    type="submit">
+                                    type="button"
+                                    (click)="onSubmit( i )">
                                     <img src="assets/img/icon/guardar.svg" alt="Regresar">
                             </button>
                         </div>

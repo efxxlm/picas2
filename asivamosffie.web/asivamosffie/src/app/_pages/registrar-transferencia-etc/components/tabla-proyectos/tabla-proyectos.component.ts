@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { RegisterProjectEtcService } from 'src/app/core/_services/registerProjectETC/register-project-etc.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -43,6 +44,7 @@ export class TablaProyectosComponent implements OnInit, AfterViewInit {
   constructor(
     public dialog: MatDialog,
     private registerProjectETCService: RegisterProjectEtcService,
+    private routes: Router
   ) { }
 
   ngOnInit(): void {
@@ -109,7 +111,8 @@ export class TablaProyectosComponent implements OnInit, AfterViewInit {
     this.registerProjectETCService.sendProjectToEtc(informeFinalId)
       .subscribe(respuesta => {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.ngOnInit();
+        this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+        .then( () => this.routes.navigate( ['/registrarTransferenciaProyectosETC'] ) );
       });
   }
 

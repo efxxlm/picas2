@@ -1,7 +1,8 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-tabla-informe-final',
@@ -24,6 +25,9 @@ export class TablaInformeFinalComponent implements OnInit {
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   @Input() contratacionProyectoId: number;
+  @Input() esVerDetalle: boolean;
+  @Output() semaforoInformeFinal = new EventEmitter<string>();
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
 
   datosTabla = [];
 
@@ -38,7 +42,7 @@ export class TablaInformeFinalComponent implements OnInit {
   }
 
   gridInformeFinal(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionProyectoId).subscribe(report => {
+    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -48,13 +52,17 @@ export class TablaInformeFinalComponent implements OnInit {
             tipoIntervencion: element.tipoIntervencion,
             institucionEducativa: element.institucionEducativa,
             sede: element.sede,
-            estadoValidacion: element.estadoValidacion,
+            estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
+            registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
             contratacionProyectoId: contratacionProyectoId,
             proyectoId: element.proyectoId
           });
         })
       }
       this.dataSource.data = this.datosTabla;
+      if(this.datosTabla.length > 0){
+        this.semaforoInformeFinal.emit(this.datosTabla[0].registroCompleto);
+      }
     });
   }
 

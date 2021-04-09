@@ -50,9 +50,11 @@ namespace asivamosffie.services
 
             try
             {
-                SesionComiteSolicitud sesionComiteSolicitudOld = await
-                    _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                    .Include(r => r.ComiteTecnico).FirstOrDefaultAsync();
+                SesionComiteSolicitud sesionComiteSolicitudOld =
+                    await _context.SesionComiteSolicitud
+                    .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                    .Include(r => r.ComiteTecnico) 
+                    .FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
@@ -64,6 +66,7 @@ namespace asivamosffie.services
                     .Include(r => r.Contrato)
                     .Include(r => r.DisponibilidadPresupuestal)
                     .FirstOrDefault();
+
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 contratacion.FechaModificacion = DateTime.Now;
                 contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
@@ -822,7 +825,7 @@ namespace asivamosffie.services
                         _context.GestionFuenteFinanciacion
                         .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true)
                                .Include(x => x.FuenteFinanciacion)
-                                    .ThenInclude(x => x.Aportante) 
+                                    .ThenInclude(x => x.Aportante)
                                         .ThenInclude(x => x.CofinanciacionDocumento)
                               .Include(x => x.FuenteFinanciacion)
                                               .ThenInclude(x => x.Aportante)
@@ -850,7 +853,7 @@ namespace asivamosffie.services
 
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto.Where(r => r.Eliminado != true).Distinct().ToList())
                 {
-                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r=> r.Eliminado != true).Distinct().ToList())
+                    foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).Distinct().ToList())
                     {
                         foreach (var DisponibilidadPresupuestal in ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).Distinct().ToList())
                         {
@@ -978,29 +981,26 @@ namespace asivamosffie.services
         public async Task<bool> EnviarNotificacion(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             try
-            {
-                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-                //TODO Validar Cuandos sea otro tipo de solicitud
-
+            { 
                 bool blEnvioCorreo = false;
-                var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
+                List<EnumeratorPerfil> perfils = new List<EnumeratorPerfil> 
+                { 
+                    EnumeratorPerfil.Fiduciaria
+                }; 
+                 
                 List<Dominio> ListDominio = _context.Dominio.ToList();
-                foreach (var usuario in usuariosecretario)
-                {
-                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificarFiduciaria322);
-                    string template =
-                        TemplateActaAprobada.Contenido
-                        .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
-                        .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
-                        .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
-                        .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MM-yy") : " ")
-                        .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MM-yy") : " ")
-                        .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MM-yy") : " ")
-                        .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud ?? " ");
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisi�n", template, pSender, pPassword, pMailServer, pMailPort);
-                }
-
+                Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificarFiduciaria322);
+                string template =  TemplateActaAprobada.Contenido
+                    .Replace("_LinkF_", pDominioFront)
+                    .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
+                    .Replace("[NUMERO_DDP]", pSesionComiteSolicitud?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.NumeroDdp ?? " ")
+                    .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.Objeto ?? " ")
+                    .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MM-yy") : " ")
+                    .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MM-yy") : " ")
+                    .Replace("[FECHA_ENVIO_TRAMITE]", DateTime.Now.ToString("dd-MM-yy"))
+                    .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud?.Contratacion?.NumeroSolicitud ?? " ");
+                 
+                _commonService.EnviarCorreo(perfils, template, TemplateActaAprobada.Asunto);
                 return blEnvioCorreo;
             }
             catch (Exception e)

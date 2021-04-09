@@ -16,6 +16,7 @@ import { TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/
 export class RazonTipoActualizacionRapgComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     contratoPolizaActualizacionSeguro: any;
     listaTipoActualizacion: TipoActualizacion = TipoActualizacionCodigo;
@@ -52,6 +53,14 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         this.polizasYSegurosArray = await this.common.listaGarantiasPolizas().toPromise();
         this.razonActualizacionArray = await this.common.listaRazonActualizacion().toPromise();
         this.tipoActualizacionArray = await this.common.listaTipoActualizacion().toPromise();
+
+        this.polizasYSegurosArray.forEach( ( poliza, index ) => {
+            const garantia = this.contratoPoliza.polizaGarantia.find( garantia => garantia.tipoGarantiaCodigo === poliza.codigo );
+
+            if ( garantia === undefined ) {
+                this.polizasYSegurosArray.splice( index, 1 );
+            }
+        } )
 
         if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
             if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
@@ -152,6 +161,36 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         }
     }
 
+    getRazonActualizacion( codigo: string ) {
+        if ( this.razonActualizacionArray.length > 0 ) {
+            const razon = this.razonActualizacionArray.find( razon => razon.codigo === codigo );
+
+            if ( razon !== undefined ) {
+                return razon.nombre;
+            }
+        }
+    }
+
+    getSeguros( codigo: string ) {
+        if ( this.polizasYSegurosArray.length > 0 ) {
+            const seguro = this.polizasYSegurosArray.find( seguro => seguro.codigo === codigo );
+
+            if ( seguro !== undefined ) {
+                return seguro.nombre;
+            }
+        }
+    }
+
+    getTipoActualizacion( codigo: string ) {
+        if ( this.tipoActualizacionArray.length > 0 ) {
+            const tipo = this.tipoActualizacionArray.find( tipo => tipo.codigo === codigo );
+
+            if ( tipo !== undefined ) {
+                return tipo.nombre;
+            }
+        }
+    }
+
     deleteSeguro( index: number ) {
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
@@ -161,6 +200,14 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                         const indexSeguro =listSeguro.findIndex( codigo => codigo === this.seguros.controls[ index ].get( 'codigo' ).value );
                         listSeguro.splice( indexSeguro, 1 );
 
+                        if ( this.seguros.controls[ index ].get( 'contratoPolizaActualizacionSeguroId' ).value !== 0 ) {
+                            const pContratoPolizaActualizacionSeguro = {
+                                contratoPolizaActualizacionSeguroId: this.seguros.controls[ index ].get( 'contratoPolizaActualizacionSeguroId' ).value
+                            };
+
+                            this.actualizarPolizaSvc.deleteContratoPolizaActualizacionSeguro( pContratoPolizaActualizacionSeguro )
+                                .subscribe( );
+                        }
                         this.addressForm.get( 'polizasYSeguros' ).setValue( listSeguro );
                         this.seguros.removeAt( index );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );

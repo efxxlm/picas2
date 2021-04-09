@@ -1,5 +1,5 @@
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm">
         <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -348,11 +348,57 @@
                                 </div>
                             </div>
                         </section>
+
+                        <div *ngIf="descuento.get( 'obsVerificar' ).value !== null || descuento.get( 'obsAprobar' ).value !== null || descuento.get( 'obsTramitar' ).value !== null">
+                            <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsVerificar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Verificación de la coordinación financiera
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsVerificar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="descuento.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                
+                            <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsAprobar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Aprobación de la dirección financiera
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsAprobar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="descuento.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                
+                            <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsTramitar' ).value !== null">
+                                <mat-card-header class="header-card">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        Observaciones de fiduciaria
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsTramitar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="descuento.get( 'obsTramitar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === true"></section>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
                         <div class="text-center mb-2em">
                             <button mat-button
                                     color="warn"
                                     class="btn-guardar"
-                                    type="submit"
+                                    type="button"
+                                    (click)="onSubmit( i )"
                                     [disabled]="getCriterios( i ).dirty === false">
                                     <img src="assets/img/icon/guardar.svg" alt="Regresar">
                             </button>

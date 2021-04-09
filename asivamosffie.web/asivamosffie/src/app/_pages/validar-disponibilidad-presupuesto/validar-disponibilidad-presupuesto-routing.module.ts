@@ -16,7 +16,7 @@ const routes: Routes = [
     component: ValidarComponent
   },
   {
-    path: 'enValidacionPresupuestal/:id',
+    path: 'enValidacionPresupuestal/:id/:esNovedad/:novedadId',
     component: ValidacionPresupuestalComponent
   },
   {

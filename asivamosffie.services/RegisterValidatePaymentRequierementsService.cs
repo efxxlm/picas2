@@ -17,6 +17,17 @@ namespace asivamosffie.services
 {
     public class RegisterValidatePaymentRequierementsService : IRegisterValidatePaymentRequierementsService
     {
+        #region constructor
+        private readonly devAsiVamosFFIEContext _context;
+        private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService; 
+        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        {
+            _documentService = documentService;
+            _commonService = commonService;
+            _context = context;
+        }
+        #endregion
 
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
@@ -105,18 +116,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-        #region constructor
-        private readonly devAsiVamosFFIEContext _context;
-        private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
-        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        {
-            _documentService = documentService;
-            _commonService = commonService;
-            _context = context;
-        }
-        #endregion
+         
 
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
@@ -479,11 +479,20 @@ namespace asivamosffie.services
 
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
-                pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
-                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
 
-                pSolicitudPago.FechaModificacion = DateTime.Now;
-                pSolicitudPago.TieneObservacion = false;
+                decimal? ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
+                _context.Set<SolicitudPago>()
+                        .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                        .Update(s => new SolicitudPago
+                        {
+                            FechaModificacion = DateTime.Now,
+                            TieneObservacion = false,
+
+                            ObservacionDevolucionOrdenGiro = null,
+                            UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
+                            ValorFacturado = ValorFacturado,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString() 
+                        }); 
             }
             else
             {
@@ -1852,7 +1861,7 @@ namespace asivamosffie.services
                             .AsNoTracking()
                         .FirstOrDefault();
 
-                    solicitudPago.SaldoPresupuestal = _context.VValorFacturadoContrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestal;
+                    solicitudPago.SaldoPresupuestal = _context.VSaldoPresupuestalXcontrato.Where(v => v.ContratoId == solicitudPago.ContratoId).FirstOrDefault().SaldoPresupuestalOtrosCostos;
 
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;

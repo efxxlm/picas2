@@ -1,11 +1,12 @@
-import { ListaMediosPagoCodigo, MediosPagoCodigo } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { ListaMediosPagoCodigo, ListaMenu, ListaMenuId, MediosPagoCodigo, TipoObservaciones, TipoObservacionesCodigo } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { Router } from '@angular/router';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 
 @Component({
   selector: 'app-form-tercero-giro-gog',
@@ -15,7 +16,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormTerceroGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
-    @Input() esVerDetalle: boolean; 
+    @Input() esVerDetalle: boolean;
+    @Output() tieneObservacion = new EventEmitter<boolean>();
+    obsVerificar: any;
+    obsAprobar: any;
+    obsTramitar: any;
+    listaMenu: ListaMenu = ListaMenuId;
+    tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     medioPagoArray: Dominio[] = [];
     bancosArray: Dominio[] = [];
     addressForm: FormGroup;
@@ -29,7 +36,8 @@ export class FormTerceroGiroGogComponent implements OnInit {
         private commonSvc: CommonService,
         private ordenPagoSvc: OrdenPagoService,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
         this.addressForm = this.crearFormulario();
     }
@@ -40,7 +48,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
                 this.medioPagoArray = listaMediosPago;
 
                 this.commonSvc.listaBancos()
-                    .subscribe( listaBancos => {
+                    .subscribe( async listaBancos => {
                         this.bancosArray = listaBancos;
 
                         if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -88,6 +96,58 @@ export class FormTerceroGiroGogComponent implements OnInit {
                                                 }
                                             )
                                         }
+                                    }
+
+                                    // Get observaciones
+                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.verificarOrdenGiro,
+                                        this.ordenGiroId,
+                                        this.ordenGiroTerceroId,
+                                        this.tipoObservaciones.terceroGiro );
+                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.aprobarOrdenGiro,
+                                        this.ordenGiroId,
+                                        this.ordenGiroTerceroId,
+                                        this.tipoObservaciones.terceroGiro );
+                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.tramitarOrdenGiro,
+                                            this.ordenGiroId,
+                                            this.ordenGiroTerceroId,
+                                            this.tipoObservaciones.terceroGiro );
+                                    if ( listaObservacionVerificar.length > 0 ) {
+                                        listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                    }
+                                    if ( listaObservacionAprobar.length > 0 ) {
+                                        listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                    }
+                                    if ( listaObservacionTramitar.length > 0 ) {
+                                        listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                    }
+                                    // Get lista de observacion y observacion actual
+                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            this.obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            this.obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            this.obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                        }
+                                    }
+
+                                    if ( this.obsVerificar !== undefined ) {
+                                        this.tieneObservacion.emit( true );
+                                    }
+                                    if ( this.obsAprobar !== undefined ) {
+                                        this.tieneObservacion.emit( true );
+                                    }
+                                    if ( this.obsTramitar !== undefined ) {
+                                        this.tieneObservacion.emit( true );
                                     }
                                 }
                             }
@@ -206,6 +266,21 @@ export class FormTerceroGiroGogComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.obsVerificar !== undefined ) {
+                        this.obsVerificar.archivada = !this.obsVerificar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsVerificar )
+                            .subscribe();
+                    }
+                    if ( this.obsAprobar !== undefined ) {
+                        this.obsAprobar.archivada = !this.obsAprobar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsAprobar )
+                            .subscribe();
+                    }
+                    if ( this.obsTramitar !== undefined ) {
+                        this.obsTramitar.archivada = !this.obsTramitar.archivada;
+                        this.obsOrdenGiro.createEditSpinOrderObservations( this.obsTramitar )
+                            .subscribe();
+                    }
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [

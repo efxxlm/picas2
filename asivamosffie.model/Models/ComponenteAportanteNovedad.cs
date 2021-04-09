@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public ComponenteAportanteNovedad()
         {
-            ComponenteUsoNovedad = new HashSet<ComponenteUsoNovedad>();
+            ComponenteFuenteNovedad = new HashSet<ComponenteFuenteNovedad>();
         }
 
         public int ComponenteAportanteNovedadId { get; set; }
@@ -25,6 +25,6 @@ namespace asivamosffie.model.Models
 
         public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
         public virtual NovedadContractualAportante NovedadContractualAportante { get; set; }
-        public virtual ICollection<ComponenteUsoNovedad> ComponenteUsoNovedad { get; set; }
+        public virtual ICollection<ComponenteFuenteNovedad> ComponenteFuenteNovedad { get; set; }
     }
 }

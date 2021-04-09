@@ -52,9 +52,11 @@
             </mat-expansion-panel-header>
 
             <app-accordion-info-general-gog [solicitudPago]="solicitudPago"
-                                            [esVerDetalle]="esVerDetalle">
+                                            [esVerDetalle]="esVerDetalle"
+                                            (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'">
             </app-accordion-info-general-gog>
         </mat-expansion-panel>
+
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?semaforoDetalle : ''">

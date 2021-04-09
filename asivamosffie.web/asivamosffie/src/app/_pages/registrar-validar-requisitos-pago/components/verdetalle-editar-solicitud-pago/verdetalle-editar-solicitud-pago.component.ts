@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados/dialog-proyectos-asociados.component';
 
 @Component({
@@ -18,6 +19,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
     dataSource = new MatTableDataSource();
     modalidadContratoArray: Dominio[] = [];
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -42,6 +44,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
       'valor',
       'saldo'
     ];
+    tieneObservacionOrdenGiro: boolean;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -91,6 +94,10 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
+
+                                if ( this.contrato.solicitudPagoOnly.estadoCodigo === this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion && this.contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined ) {
+                                    this.tieneObservacionOrdenGiro = true;
+                                }
 
                                 // Get semaforo forma de pago y registro completo
                                 if ( this.contrato.solicitudPago.length > 1 ) {

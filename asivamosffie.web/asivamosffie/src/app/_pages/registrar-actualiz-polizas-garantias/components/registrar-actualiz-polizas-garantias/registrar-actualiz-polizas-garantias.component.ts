@@ -26,6 +26,7 @@ export class RegistrarActualizPolizasGarantiasComponent implements OnInit {
         }
     );
     listContrato: any[] = [];
+    listActualizacion: any[] = [];
     estaEditando = false;
 
     constructor(
@@ -34,16 +35,20 @@ export class RegistrarActualizPolizasGarantiasComponent implements OnInit {
         private dialog: MatDialog,
         private actualizarPolizaSvc: ActualizarPolizasService )
     {
+        this.actualizarPolizaSvc.getListVActualizacionPolizaYGarantias()
+            .subscribe(
+                getListVActualizacionPolizaYGarantias => {
+                    if ( getListVActualizacionPolizaYGarantias.length > 0 ) {
+                        this.listActualizacion = getListVActualizacionPolizaYGarantias;
+                    }
+                }
+            )
     }
 
     ngOnInit(): void {
     }
 
     loadDataSource() {
-    }
-
-    actualizarPoliza(id){
-      this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/actualizarPoliza', id]);
     }
 
     getContratos(  ) {

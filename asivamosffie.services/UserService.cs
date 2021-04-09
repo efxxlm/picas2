@@ -194,7 +194,7 @@ namespace asivamosffie.services
                 {
                     respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
                 }
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña");
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContrasena, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña");
             }
             catch (Exception ex)
             {

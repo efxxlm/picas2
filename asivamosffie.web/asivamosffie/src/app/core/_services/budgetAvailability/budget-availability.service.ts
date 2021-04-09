@@ -38,8 +38,8 @@ export class BudgetAvailabilityService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/createOrEditInfoAdditional`, disponibilidadPresupuestal);
   }
 
-  sendRequest( id: number ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/sendRequest?disponibilidadPresupuestalId=${ id }`, null);
+  sendRequest( DisponibilidadId: number, RegistroPId: number, esNovedad: boolean ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/sendRequest?disponibilidadPresupuestalId=${ DisponibilidadId }&RegistroPId=${RegistroPId}&esNovedad=${esNovedad}`, null);
   }
   
   deleteRequest( id: number ){
@@ -109,6 +109,11 @@ export class BudgetAvailabilityService {
   getNovedadContractual(contratacionId: number) {
     return this.http.get<any>( `${ environment.apiUrl }/RequestBudgetAvailability/getNovedadContractualByContratacionId?contratacionId=${contratacionId}`);
   }  
+  
+  createOrEditInfoAdditionalNoveltly( registroPresupuesta, pContratacionId ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/CreateOrEditInfoAdditionalNoveltly?pContratacionId=${pContratacionId}`, registroPresupuesta);
+  }
+
 };
 interface TipoDDP{
   DDP_tradicional: string;

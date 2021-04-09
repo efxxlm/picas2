@@ -54,6 +54,7 @@ namespace asivamosffie.model.Models
         public string ObservacionRadicacionSacTecnica { get; set; }
         public bool? EstaRechazada { get; set; }
         public decimal? ValorFacturado { get; set; }
+        public string ObservacionDevolucionOrdenGiro { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }

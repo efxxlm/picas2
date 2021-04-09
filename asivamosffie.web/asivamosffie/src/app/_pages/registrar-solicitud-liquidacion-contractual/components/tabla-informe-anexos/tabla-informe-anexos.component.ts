@@ -4,14 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 
-const ELEMENT_DATA = [
-  {
-    numero: '1',
-    item: '29/11/2020',
-    tipoAnexo: '29/11/2020',
-    ubicacion: 'LL457326'
-  }
-];
 
 @Component({
   selector: 'app-tabla-informe-anexos',
@@ -21,14 +13,14 @@ const ELEMENT_DATA = [
 export class TablaInformeAnexosComponent implements OnInit, AfterViewInit {
 
   @Input() informeFinalId : number;
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = [
     'numero',
     'item',
     'tipoAnexoString',
     'ubicacion'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

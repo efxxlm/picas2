@@ -63,5 +63,5 @@
 
     <app-tabla-lista-contratos *ngIf="listContrato.length > 0" [listContrato]="listContrato"></app-tabla-lista-contratos>
 
-    <app-tabla-general-rapg></app-tabla-general-rapg>
+    <app-tabla-general-rapg *ngIf="listActualizacion.length > 0" [listaActualizacionPoliza]="listActualizacion"></app-tabla-general-rapg>
 </section>

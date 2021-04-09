@@ -1,12 +1,12 @@
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="fechaEnvioInformeFinal">
+        <ng-container matColumnDef="fechaEnvio">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del envío del informe final </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaEnvioInformeFinal }}</b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaEnvio }}</b> </td>
         </ng-container>
-        <ng-container matColumnDef="fechaAprobacionInformeFinal">
+        <ng-container matColumnDef="fechaAprobacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación del informe final </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaAprobacionInformeFinal }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaAprobacion }} </td>
         </ng-container>
         <ng-container matColumnDef="llaveMen">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
@@ -28,17 +28,39 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
             <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoVerificacion }} </td>
         </ng-container>
-        <ng-container matColumnDef="gestion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element" align="center">
-                <button mat-raised-button color="accent" class="btn-table" (click)="verDetalleInformeFinal(element.id)"
-                    *ngIf="this.verDetalleBtn==true">
-                    Ver detalle
-                </button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="verificarInformeFinal(element.id)"
-                    *ngIf="this.verDetalleBtn==false">
-                    Verificar
-                </button>
+        <!-- id Column -->
+        <ng-container matColumnDef="contratacionProyectoId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Gestión
+            </th>
+            <td mat-cell *matCellDef="let element">
+            <a *ngIf="!esVerDetalle && element.registroCompleto !== 'Completo'"
+                mat-button
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                [routerLink]="['verificarInformeFinal', element.proyectoId]"
+            >
+                Verificar
+            </a> 
+            <a *ngIf="!esVerDetalle && element.registroCompleto === 'Completo'"
+                mat-button
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                [routerLink]="['verDetalleEditarInformeFinal', element.proyectoId]"
+            >
+            Ver detalle/Editar
+            </a>
+            <a *ngIf="esVerDetalle"
+                mat-button
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                [routerLink]="['verDetalleInformeFinal', element.proyectoId]"
+                >
+            Ver detalle
+            </a>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

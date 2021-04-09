@@ -85,6 +85,17 @@ namespace asivamosffie.services
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
+                else
+                {
+                    _context.Set<OrdenGiro>()
+                            .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                            .Update(o => new OrdenGiro
+                            {
+                                EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                            });  
+                }
                 if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
                     CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
@@ -429,7 +440,7 @@ namespace asivamosffie.services
                         {
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioCreacion,
-                            RegistroCompleto = string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
+                            RegistroCompleto = !string.IsNullOrEmpty(pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo),
                             EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
                         });
             }
@@ -559,7 +570,7 @@ namespace asivamosffie.services
                          Code = GeneralCodes.Error,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
                      };
-            } 
+            }
         }
         #endregion
 
@@ -795,6 +806,10 @@ namespace asivamosffie.services
             if (
                    pOrdenGiro.OrdenGiroDetalle == null
                 || pOrdenGiro.OrdenGiroTercero == null
+                ) return false;
+
+            if(pOrdenGiro.OrdenGiroDetalle.Count() == 0 
+                || pOrdenGiro.OrdenGiroTercero.Count() == 0
                 ) return false;
 
             foreach (var item in pOrdenGiro.OrdenGiroDetalle)

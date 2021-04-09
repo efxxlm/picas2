@@ -11,31 +11,31 @@
 <div class="table-responsive mb-2em">
   <table mat-table [dataSource]="dataSource" matSort>
     <!-- fechaValidacion Column -->
-    <ng-container matColumnDef="fechaValidacion">
+    <ng-container matColumnDef="fechaValidacionLiquidacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de validación
       </th>
       <td mat-cell *matCellDef="let element">
-        <b>{{ element.fechaValidacion }}</b>
+        <b>{{ element.fechaValidacionLiquidacion }}</b>
       </td>
     </ng-container>
 
     <!-- fechaActualizacion Column -->
-    <ng-container matColumnDef="fechaActualizacion">
+    <ng-container matColumnDef="fechaPoliza">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de actualización de póliza
       </th>
       <td mat-cell *matCellDef="let element">
-        <b>{{ element.fechaActualizacion }}</b>
+        <b>{{ element.fechaPoliza }}</b>
       </td>
     </ng-container>
 
     <!-- numeroSolicitud Column -->
-    <ng-container matColumnDef="numeroSolicitud">
+    <ng-container matColumnDef="numeroSolicitudLiquidacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Número de solicitud
       </th>
-      <td mat-cell *matCellDef="let element">{{ element.numeroSolicitud }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.numeroSolicitudLiquidacion }}</td>
     </ng-container>
 
     <!-- numeroContrato Column -->
@@ -49,47 +49,79 @@
     </ng-container>
 
     <!-- valor Column -->
-    <ng-container matColumnDef="valor">
+    <ng-container matColumnDef="valorSolicitud">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Valor
       </th>
-      <td mat-cell *matCellDef="let element">{{ element.valor }}</td>
+      <td mat-cell *matCellDef="let element">
+        {{element.valorSolicitud | currency:'USD':'symbol':'1.0'}}
+      </td>
     </ng-container>
 
     <!-- cantidadProyectosAsociados Column -->
-    <ng-container matColumnDef="cantidadProyectosAsociados">
+    <ng-container matColumnDef="proyectosAsociados">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Cantidad de proyectos asociados
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.cantidadProyectosAsociados }}
+        {{ element.proyectosAsociados }}
       </td>
     </ng-container>
 
     <!-- estadoAprobacion Column -->
-    <ng-container matColumnDef="estadoAprobacion">
+    <ng-container matColumnDef="estadoAprobacionLiquidacionString">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado de la aprobación
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.estadoAprobacion }}
+        {{ element.estadoAprobacionLiquidacionString }}
       </td>
     </ng-container>
 
     <!-- id Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="contratacionProyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Gestión
       </th>
       <td mat-cell *matCellDef="let element">
-        <a
+        <a *ngIf="element.estadoAprobacionLiquidacionCodigo === '0' || element.estadoAprobacionLiquidacionCodigo == null || element.estadoAprobacionLiquidacionCodigo == ''"
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['aprobarRequisitosParaLiquidacion', element.id]"
+          [routerLink]="['aprobarRequisitosParaLiquidacion', element.contratacionProyectoId]"
         >
           Aprobar requisitos para liquidación
+        </a>
+        <a *ngIf="element.estadoAprobacionLiquidacionCodigo === '1' || element.estadoAprobacionLiquidacionCodigo === '2'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['verDetalleEditarRequisitos', element.contratacionProyectoId]"
+        >
+          Ver detalle/Editar
+        </a>
+        <button
+          *ngIf="element.estadoAprobacionLiquidacionCodigo === '2'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+          (click)="SendToNovedades(element.contratacionProyectoId)"
+        >
+          Enviar a control y seguimiento
+        </button>
+        <a *ngIf="element.estadoAprobacionLiquidacionCodigo === '3'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+          [routerLink]="['verDetalleRequisitos', element.contratacionProyectoId]"
+        >
+          Ver detalle
         </a>
       </td>
     </ng-container>

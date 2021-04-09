@@ -364,7 +364,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        private void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
+        public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
         {
             _context.Set<SolicitudPagoObservacion>()
                     .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
@@ -380,6 +380,9 @@ namespace asivamosffie.services
                 .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                 .Update(s => new SolicitudPago
                 {
+                    OrdenGiroId = null,
+                    ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
+                   
                     RegistroCompleto = false,
                     FechaRegistroCompleto = null,
 
@@ -397,7 +400,7 @@ namespace asivamosffie.services
 
                     FechaModificacion = DateTime.Now,
                     UsuarioModificacion = pSolicitudPago.UsuarioCreacion
-                });
+                }); ;
         }
         #endregion
 
@@ -681,6 +684,10 @@ namespace asivamosffie.services
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_A_Order_Giro)
                     await SendEmailAprovedValidar(pSolicitudPago.SolicitudPagoId);
 
+                //Crear URl aprobar
+                if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Solicitud_devuelta_a_equipo_de_facturacion_por_generar_orden_de_giro)
+                    ReturnOrdenGiroSolicitudPago(pSolicitudPago);
+
 
                 _context.Set<SolicitudPago>()
                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
@@ -720,7 +727,19 @@ namespace asivamosffie.services
             }
         }
 
+        private void ReturnOrdenGiroSolicitudPago(SolicitudPago pSolicitudPago)
+        { 
+            _context.Set<OrdenGiro>()
+                    .Where(o => o.OrdenGiroId == pSolicitudPago.OrdenGiroId)
+                    .Update(o => new OrdenGiro
+                    {
+                        Eliminado = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
 
+            ArchivarSolicitudPagoObservacion(pSolicitudPago);
+        }
         ///4.3.2 Aprobar *
         private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
         {

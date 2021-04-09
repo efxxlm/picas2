@@ -20,7 +20,7 @@ export class FormGestionarFuentesComponent implements OnInit {
           Validators.required, Validators.minLength(1), Validators.maxLength(20)])
         ],
         nuevoSaldo: [null],
-        gestionid:[null]
+        gestionid: [null]
       })
     ])
   });
@@ -39,6 +39,8 @@ export class FormGestionarFuentesComponent implements OnInit {
   disponibilidadPresupuestalProyectoid: any;
   valorGestionado: any;
   estaEditando = false;
+  esNovedad = false;
+  novedadContractualRegistroPresupuestalId: number;
 
   constructor(
     private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
@@ -46,101 +48,113 @@ export class FormGestionarFuentesComponent implements OnInit {
     public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data
   ) { }
 
-  ngOnInit(): void { 
-    console.log("Viene id"+this.data);
+  ngOnInit(): void {
+    console.log("Viene id" + this.data);
     console.log(this.data);
-    this.solicitud=this.data.elemento.id;
-    this.nombreAportante=this.data.elemento.nombreAportante;
-    this.valorAportante=this.data.elemento.valorAportante;
-    this.llaveMen=this.data.elemento.llaveMen;
-    this.tipoInterventor=this.data.elemento.tipoInterventor;
-    this.departamento=this.data.elemento.departamento;
-    this.municipio=this.data.elemento.municipio;
-    this.institucion=this.data.elemento.institucion;
-    this.sede=this.data.elemento.sede;
-    this.disponibilidadPresupuestalProyectoid=this.data.elemento.disponibilidadPresupuestalProyectoid;
-    this.valorGestionado=this.data.elemento.valorGestionado;
-    this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid,this.data.elemento.id).subscribe(lista => {
-      console.log(lista);
-      this.fuentesbase=lista;
-      let esEdicion=false;
-      lista.forEach(element => {
-        this.fuentesArray.push({name:element.fuente,value:element.fuenteFinanciacionID});  
-        if(element.gestionFuenteFinanciacionID>0)
-        {
-          esEdicion=true;
-        }
+    console.log();
+    this.solicitud = this.data.elemento.id;
+    this.nombreAportante = this.data.elemento.nombreAportante;
+    this.valorAportante = this.data.elemento.valorAportante;
+    this.llaveMen = this.data.elemento.llaveMen;
+    this.tipoInterventor = this.data.elemento.tipoInterventor;
+    this.departamento = this.data.elemento.departamento;
+    this.municipio = this.data.elemento.municipio;
+    this.institucion = this.data.elemento.institucion;
+    this.sede = this.data.elemento.sede;
+    this.disponibilidadPresupuestalProyectoid = this.data.elemento.disponibilidadPresupuestalProyectoid;
+    this.valorGestionado = this.data.elemento.valorGestionado;
+    this.esNovedad = this.data.elemento.esNovedad;
+    this.novedadContractualRegistroPresupuestalId = this.data.elemento.novedadContractualRegistroPresupuestalId;
+
+    if (this.esNovedad === true) {
+      this.fuenteFinanciacionService.GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(this.novedadContractualRegistroPresupuestalId, this.data.elemento.id)
+      .subscribe(lista => {
+        this.cargarInformacion( lista );      
+
       });
-      if(esEdicion)
-      {
-        let fuentesarray=this.fuentes;  
-        fuentesarray.clear(); 
+    }else{
+      this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid, this.data.elemento.id)
+      .subscribe(lista => {
+        this.cargarInformacion( lista );      
 
+      });
+    }
+
+    
+  }
+
+  cargarInformacion( lista: any[] ){
+    console.log(lista);
+        this.fuentesbase = lista;
+        let esEdicion = false;
         lista.forEach(element => {
-          if(element.gestionFuenteFinanciacionID>0)//es edición
-          {
-            let fuent=this.crearFuente();
-            //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
-
-            fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
-            fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
-            fuent.get('valorSolicitado').setValue(element.valor_solicitado_de_la_fuente);
-            fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
-            fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
-            fuentesarray.push(fuent);
-            // console.log(fuentesarray);
-            this.estaEditando = true;
-            this.addressForm.markAllAsTouched();
+          this.fuentesArray.push({ name: element.fuente, value: element.fuenteFinanciacionID });
+          if (element.gestionFuenteFinanciacionID > 0) {
+            esEdicion = true;
           }
         });
-      }
-      
-    });
+        if (esEdicion) {
+          let fuentesarray = this.fuentes;
+          fuentesarray.clear();
+
+          lista.forEach(element => {
+            if (element.gestionFuenteFinanciacionID > 0)//es edición
+            {
+              let fuent = this.crearFuente();
+              //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
+
+              fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
+              fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
+              fuent.get('valorSolicitado').setValue(element.valor_solicitado_de_la_fuente);
+              fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
+              fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
+              fuentesarray.push(fuent);
+              // console.log(fuentesarray);
+              this.estaEditando = true;
+              this.addressForm.markAllAsTouched();
+            }
+          });
+        }
   }
-  fuenteCambio(fuente:any)
-  {
-    let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+
+  fuenteCambio(fuente: any) {
+    let fuenteSeleccionada = this.fuentesbase.filter(x => x.fuenteFinanciacionID == fuente.controls.fuentecampo.value);
     //valido que no se haya seleccionado previamente
-    let cont=0;
+    let cont = 0;
     this.addressForm.value.fuentes.forEach(element => {
       console.log(element.fuentecampo);
-      if(element.fuentecampo==fuente.controls.fuentecampo.value)
-      {
+      if (element.fuentecampo == fuente.controls.fuentecampo.value) {
         cont++;
       }
     });
-    if(cont>1)
-    {
-     this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
-     console.log(fuente);
-     fuente.get("fuentecampo").set("");
+    if (cont > 1) {
+      this.openDialog("", "<b>Ya seleccionaste esta fuente de financiación</b>");
+      console.log(fuente);
+      fuente.get("fuentecampo").set("");
     }
-    else
-    {
+    else {
       fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
     }
   }
-  reste(fuente:any)
-  {
-    if(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value<0)
-    {
-      let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
-      this.openDialog("","El saldo actual de la fuente <b>"+fuenteSeleccionada[0].fuente+"</b> es menor al valor solicitado de la fuente, verifique por favor.");
-      fuente.get('valorSolicitado').setValue(0);  
+  reste(fuente: any) {
+    if (fuente.controls.saldoActual.value - fuente.controls.valorSolicitado.value < 0) {
+      let fuenteSeleccionada = this.fuentesbase.filter(x => x.fuenteFinanciacionID == fuente.controls.fuentecampo.value);
+      this.openDialog("", "El saldo actual de la fuente <b>" + fuenteSeleccionada[0].fuente + "</b> es menor al valor solicitado de la fuente, verifique por favor.");
+      fuente.get('valorSolicitado').setValue(0);
     }
-    fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
-    
+    fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value - fuente.controls.valorSolicitado.value);
+
   }
-  openDialog(modalTitle: string, modalText: string, reload=false) {
-    let dialog=this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string, reload = false) {
+    let dialog = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    dialog.afterClosed().subscribe(c=>{
-      if(reload){
+    dialog.afterClosed().subscribe(c => {
+      if (reload) {
         location.reload();
       }
-      
+
     });
 
   }
@@ -158,21 +172,19 @@ export class FormGestionarFuentesComponent implements OnInit {
 
   borrarArray(borrarForm: any, i: number) {
     console.log(borrarForm);
-    this.openDialogSiNo("",'<b>¿Está seguro de eliminar este registro?</b>',i,borrarForm);
+    this.openDialogSiNo("", '<b>¿Está seguro de eliminar este registro?</b>', i, borrarForm);
   }
 
 
-  openDialogSiNo(modalTitle: string, modalText: string,id:number,borrarForm:any) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialogSiNo(modalTitle: string, modalText: string, id: number, borrarForm: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText,siNoBoton:true }
-    });   
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result === true)
-      {
-        if(borrarForm.value[id].gestionid>0)
-        {
+      if (result === true) {
+        if (borrarForm.value[id].gestionid > 0) {
           this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
             response => {
               borrarForm.removeAt(id);
@@ -181,24 +193,24 @@ export class FormGestionarFuentesComponent implements OnInit {
             error => {
               console.log(<any>error);
               let mensaje: string;
-                if (error.error.message){
-                  mensaje = error.error.message;
-                }else {
-                  mensaje = error.message;
-                }
-                this.openDialog('Error', mensaje);
-                
-              },
-            () =>{
+              if (error.error.message) {
+                mensaje = error.error.message;
+              } else {
+                mensaje = error.message;
+              }
+              this.openDialog('Error', mensaje);
+
+            },
+            () => {
               //else
-            }); 
+            });
         }
-        else{
+        else {
           borrarForm.removeAt(id);
           this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
         }
-        
-      }           
+
+      }
     });
   }
 
@@ -213,8 +225,8 @@ export class FormGestionarFuentesComponent implements OnInit {
       valorSolicitado: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(20)])
       ],
-      nuevoSaldo: [null, Validators.required],      
-      gestionid:[null]
+      nuevoSaldo: [null, Validators.required],
+      gestionid: [null]
     });
   }
 
@@ -222,21 +234,24 @@ export class FormGestionarFuentesComponent implements OnInit {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.controls.fuentes.value);
-    let mensaje="";
+    let mensaje = "";
+    console.log(this.addressForm.controls.fuentes.value);
     this.addressForm.controls.fuentes.value.forEach(fuente => {
-      let CreateFinancialFundingGestion={
-        FuenteFinanciacionId:fuente.fuentecampo,
-        ValorSolicitado:fuente.valorSolicitado,
-        gestionFuenteFinanciacionID:fuente.gestionid,
-        DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid,
+      let CreateFinancialFundingGestion = {
+        FuenteFinanciacionId: fuente.fuentecampo,
+        ValorSolicitado: fuente.valorSolicitado,
+        gestionFuenteFinanciacionID: fuente.gestionid,
+        DisponibilidadPresupuestalProyectoId: this.disponibilidadPresupuestalProyectoid,
+        EsNovedad: this.esNovedad,
+        NovedadContractualRegistroPresupuestalId: this.novedadContractualRegistroPresupuestalId,
+
       };
-      this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
-        {
-          console.log("Guardado");
-          mensaje=result.message
-        });
-    });      
-    this.openDialog('','<b>La información a sido guardada exitosamente.</b>',true);  
-    
+      this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result => {
+        console.log("Guardado");
+        mensaje = result.message
+      });
+    });
+    this.openDialog('', '<b>La información a sido guardada exitosamente.</b>', true);
+
   }
 }

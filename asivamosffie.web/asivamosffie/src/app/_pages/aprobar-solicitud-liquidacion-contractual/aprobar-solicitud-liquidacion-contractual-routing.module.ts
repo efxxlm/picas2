@@ -21,7 +21,31 @@ const routes: Routes = [
     component: AprobarRequisitosLiquidacionComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id',
+    component: AprobarRequisitosLiquidacionComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id',
+    component: AprobarRequisitosLiquidacionComponent
+  },
+  {
     path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance',
+    component: AprobarBalanceComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance',
+    component: AprobarBalanceComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    component: AprobarBalanceComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance',
+    component: AprobarBalanceComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance',
     component: AprobarBalanceComponent
   },
   {
@@ -45,8 +69,24 @@ const routes: Routes = [
     component: DetalleTrasladosComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarInformeFinal/:id',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarInformeFinal/:proyectoId',
     component: AprobarInformeFinalComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: AprobarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: AprobarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleInformeFinal/:proyectoId',
+    component: AprobarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    component: AprobarBalanceComponent
   }
 ];
 

@@ -60,6 +60,8 @@ namespace asivamosffie.services.Helpers.Constant
             public const string CREAR_ACTUALIZACION_POLIZA = "CREAR ACTUALIZACION POLIZAS Y GARANTIAS";
 
             public const string EDITAR_ACTUALIZACION_POLIZA = "EDITAR ACTUALIZACION POLIZAS Y GARANTIAS";
+
+            public const string ELIMINAR_ACTUALIZACION_POLIZA = "ELIMINAR ACTUALIZACION POLIZAS Y GARANTIAS";
         }
 
     }

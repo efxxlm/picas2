@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public int MiembroSesionParticipanteId { get; set; }
         public string EstadoActaVoto { get; set; }
         public bool? ValidacionVoto { get; set; }
+        public bool? Eliminado { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual Usuario MiembroSesionParticipante { get; set; }

@@ -28,6 +28,8 @@ import { TablaInformeFinalComponent } from './components/tabla-informe-final/tab
 import { AprobarInformeFinalComponent } from './components/aprobar-informe-final/aprobar-informe-final.component';
 import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
 import { ObservacionesInformeFinalComponent } from './components/observaciones-informe-final/observaciones-informe-final.component';
+import { TablaLiquidacionContratoInterventoriaComponent } from './components/tabla-liquidacion-contrato-interventoria/tabla-liquidacion-contrato-interventoria.component';
+import { ObservacionesSupervisorComponent } from './components/observaciones-supervisor/observaciones-supervisorcomponent';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { ObservacionesInformeFinalComponent } from './components/observaciones-i
     TablaInformeFinalComponent,
     AprobarInformeFinalComponent,
     TablaInformeAnexosComponent,
-    ObservacionesInformeFinalComponent
+    ObservacionesInformeFinalComponent,
+    TablaLiquidacionContratoInterventoriaComponent,
+    ObservacionesSupervisorComponent
   ],
   imports: [
     CommonModule,

@@ -263,7 +263,7 @@ namespace asivamosffie.services
                 //Enviar Notificaciones
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
 
-                //Cambio pedido por yuly que se envia cuando
+                //Cambio pedido por yuly que se envia cuando se envia a registrados
                 if (pEstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
                     await EnviarNotificaciones(contratoOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
@@ -369,24 +369,21 @@ namespace asivamosffie.services
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
             DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
 
-            var emails = _context.UsuarioPerfil
-                .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica
-                    || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)
-                .Select(x => x.Usuario.Email)
-                .ToList();
-            bool blEnvioCorreo = false;
-
-            foreach (var email in emails)
+            List<EnumeratorPerfil> emails = new List<EnumeratorPerfil>
             {
-                string template = TemplateRecoveryPassword.Contenido
-                            .Replace("_LinkF_", pDominioFront)
-                            .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
-                            .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
-                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
-                            .Replace("[Observaciones]", pContrato.Observaciones);
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
+                EnumeratorPerfil.Juridica,
+                EnumeratorPerfil.Tecnica
+            };
 
-            }
+            bool blEnvioCorreo = false; 
+            string template = TemplateRecoveryPassword.Contenido
+                        .Replace("_LinkF_", pDominioFront)
+                        .Replace("[TIPO_CONTRATO]", pContrato?.Contratacion?.NumeroSolicitud)
+                        .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
+                        .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
+                        .Replace("[Observaciones]", pContrato.Observaciones);
+              
+            _commonService.EnviarCorreo(emails, template, TemplateRecoveryPassword.Asunto);
             return blEnvioCorreo;
         }
 

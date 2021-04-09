@@ -2043,6 +2043,83 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
+        private List<dynamic> CrearNuevasFecha(Proyecto proyecto, NovedadContractual novedadContractual, AjusteProgramacion ajusteProgramacion)
+        {
+            List<dynamic> listaFechasTemp = new List<dynamic>();
+            List<dynamic> listaFechas = new List<dynamic>();
+
+            DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
+
+            while (proyecto.FechaFinEtapaObra >= fechaTemp)
+            {
+                listaFechasTemp.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
+                fechaTemp = fechaTemp.AddDays(7);
+            }
+
+            // agrega la cantidad de dias del reinicio
+            if (
+                novedadContractual.NovedadContractualDescripcion.Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio).Count() > 0 &&
+                ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+            {
+                NovedadContractualDescripcion novedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion
+                                                                                                    .Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
+                                                                                                    .FirstOrDefault();
+
+                double cantidadDiasAgregados = (novedadContractualDescripcion.FechaFinSuspension.Value - novedadContractualDescripcion.FechaInicioSuspension.Value).TotalDays;
+
+                for (int j = 0; j < listaFechasTemp.Count(); j++)
+                {
+                    // busco el rango donde este la fecha de inicio de la novedad
+                    if (
+                            novedadContractualDescripcion.FechaInicioSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                            novedadContractualDescripcion.FechaInicioSuspension.Value <= listaFechasTemp[j].fechaFin
+                        )
+                    {
+                        // asigno la nueva fecha fin del rango
+                        listaFechasTemp[j].fechaFin = novedadContractualDescripcion.FechaInicioSuspension.Value;
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+
+                        // busco el rango donde este la fecha de inicio de la novedad si estan en la misma semana
+                        if (
+                                novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                                novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
+                            )
+                        {
+                            // asigno la nueva fecha Inicio del rango
+                            listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
+                            listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                        }
+                    }
+                    else
+                    // busco el rango donde este la fecha de inicio de la novedad
+                    if (
+                            novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
+                            novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
+                        )
+                    {
+                        // asigno la nueva fecha Inicio del rango
+                        listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                    }
+                    // suma la cantidad de dias a los rangos despues del reinicio
+                    else if (novedadContractualDescripcion.FechaFinSuspension < listaFechasTemp[j].fechaInicio)
+                    {
+                        listaFechasTemp[j].fechaInicio = listaFechasTemp[j].fechaInicio.AddDays(cantidadDiasAgregados);
+                        listaFechasTemp[j].fechaFin = listaFechasTemp[j].fechaFin.AddDays(cantidadDiasAgregados);
+                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
+                    }
+
+
+                }
+            }
+            else
+            {
+                listaFechas = listaFechasTemp.ToList();
+            }
+
+            return listaFechas;
+        }
+
         #endregion private
 
         #region business
@@ -4620,7 +4697,7 @@ namespace asivamosffie.services
                 }
             });
 
-            List<dynamic> listaFechas = crearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
+            List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
 
             //Numero semanas
             int numberOfWeeks = listaFechas.Count();
@@ -4868,82 +4945,7 @@ namespace asivamosffie.services
 
         }
 
-        private List<dynamic> crearNuevasFecha( Proyecto proyecto, NovedadContractual novedadContractual, AjusteProgramacion ajusteProgramacion)
-        {
-            List<dynamic> listaFechasTemp = new List<dynamic>();
-            List<dynamic> listaFechas = new List<dynamic>();
-
-            DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
-
-            while (proyecto.FechaFinEtapaObra >= fechaTemp)
-            {
-                listaFechasTemp.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
-                fechaTemp = fechaTemp.AddDays(7);
-            }
-
-            // agrega la cantidad de dias del reinicio
-            if (
-                novedadContractual.NovedadContractualDescripcion.Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio).Count() > 0 && 
-                ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
-            {
-                NovedadContractualDescripcion novedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion
-                                                                                                    .Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
-                                                                                                    .FirstOrDefault();
-
-                double cantidadDiasAgregados = (novedadContractualDescripcion.FechaFinSuspension.Value - novedadContractualDescripcion.FechaInicioSuspension.Value).TotalDays;
-
-                for (int j = 0; j < listaFechasTemp.Count(); j++)
-                {
-                    // busco el rango donde este la fecha de inicio de la novedad
-                    if (
-                            novedadContractualDescripcion.FechaInicioSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                            novedadContractualDescripcion.FechaInicioSuspension.Value <= listaFechasTemp[j].fechaFin
-                        )
-                    {
-                        // asigno la nueva fecha fin del rango
-                        listaFechasTemp[j].fechaFin = novedadContractualDescripcion.FechaInicioSuspension.Value;
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-
-                        // busco el rango donde este la fecha de inicio de la novedad si estan en la misma semana
-                        if (
-                                novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                                novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
-                            )
-                        {
-                            // asigno la nueva fecha Inicio del rango
-                            listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
-                            listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                        }
-                    }
-                    else
-                    // busco el rango donde este la fecha de inicio de la novedad
-                    if (
-                            novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                            novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
-                        )
-                    {
-                        // asigno la nueva fecha Inicio del rango
-                        listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                    }
-                    // suma la cantidad de dias a los rangos despues del reinicio
-                    else if (novedadContractualDescripcion.FechaFinSuspension < listaFechasTemp[j].fechaInicio)
-                    {
-                        listaFechasTemp[j].fechaInicio = listaFechasTemp[j].fechaInicio.AddDays(cantidadDiasAgregados);
-                        listaFechasTemp[j].fechaFin = listaFechasTemp[j].fechaFin.AddDays(cantidadDiasAgregados);
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                    }
-
-
-                }
-            }
-            else
-            {
-                listaFechas = listaFechasTemp.ToList();
-            }
-
-            return listaFechas;
-        }
+        
 
         public async Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
         {
@@ -5019,50 +5021,52 @@ namespace asivamosffie.services
                         });
 
                         // ajusta las nuevas fechas 
-                        List<dynamic> listaFechas = crearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
+                        List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
 
                         int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
 
-                        List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
-                                                                    .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
+                        List<SeguimientoSemanalTemp> listaSeguimientos = _context.SeguimientoSemanalTemp
+                                                                    .Where(p => p.ContratacionProyectoId == idContratacionproyecto && p.AjusteProgramaionId == ajusteProgramacionId)
+                                                                    .ToList();
 
                         // eliminar registros cargados
                         List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == ajusteProgramacionId).ToList();
                         _context.AjusteProgramacionFlujo.RemoveRange(listaFlujo);
 
                         // elimina los existentes
-                        //_context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
+                        _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientos);
 
                         int i = 1;
                         listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
                         {
+                        //    if ( listaSeguimientos.Where(x => x.NumeroSemana  )
+                            SeguimientoSemanalTemp seguimientoSemanal = new SeguimientoSemanalTemp()
+                            {
+                                ContratacionProyectoId = idContratacionproyecto,
+                                AjusteProgramaionId = ajusteProgramacionId,
+                                Eliminado = false,
+                                UsuarioCreacion = pUsuarioModifico,
+                                FechaCreacion = DateTime.Now,
+                                NumeroSemana = i,
+                                FechaInicio = f.fechaInicio,
+                                FechaFin = f.fechaFin,
+                                RegistroCompleto = false,
+                            };
 
-                        //    SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
-                        //    {
-                        //        ContratacionProyectoId = idContratacionproyecto,
-                        //        Eliminado = false,
-                        //        UsuarioCreacion = pUsuarioModifico,
-                        //        FechaCreacion = DateTime.Now,
-                        //        NumeroSemana = i,
-                        //        FechaInicio = f.fechaInicio,
-                        //        FechaFin = f.fechaFin,
-                        //        RegistroCompleto = false,
-                        //    };
+                            _context.SeguimientoSemanalTemp.Add(seguimientoSemanal);
+                            _context.SaveChanges();
 
-                        //    _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                        //    _context.SaveChanges();
-
-                        //    i++;
+                            i++;
 
                         });
 
-                        //SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
-                        //                                                    .Where(s => s.ContratacionProyectoId == idContratacionproyecto)
-                        //                                                    .OrderByDescending(s => s.NumeroSemana)
-                        //                                                    .FirstOrDefault();
+                        SeguimientoSemanalTemp seguimientoSemanal = _context.SeguimientoSemanalTemp
+                                                                            .Where(s => s.ContratacionProyectoId == idContratacionproyecto && s.AjusteProgramaionId == ajusteProgramacionId)
+                                                                            .OrderByDescending(s => s.NumeroSemana)
+                                                                            .FirstOrDefault();
 
-                        //seguimientoSemanal.FechaFin = proyecto.FechaFinEtapaObra;
-                        //_context.SaveChanges();
+                        seguimientoSemanal.FechaFin = proyecto.FechaFinEtapaObra;
+                        _context.SaveChanges();
 
                     }
 

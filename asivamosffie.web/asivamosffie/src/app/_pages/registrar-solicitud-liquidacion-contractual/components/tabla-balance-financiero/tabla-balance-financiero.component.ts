@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -33,6 +33,11 @@ export class TablaBalanceFinancieroComponent implements OnInit {
     'estadoValidacion',
     'id'
   ];
+
+  @Input() contratacionProyectoId: number;
+  @Input() esVerDetalle: boolean;
+  @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
+
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;

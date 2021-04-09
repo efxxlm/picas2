@@ -19,6 +19,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     @Input() tieneObservacion: boolean;
     @Input() datosFacturaCodigo: string;
     @Input() listaMenusId: any;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
@@ -68,7 +69,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
 
-            if ( this.addressForm.get( 'numeroFactura' ).value !== undefined && this.addressForm.get( 'fechaFactura' ).value !== undefined ) {
+            if ( this.addressForm.get( 'numeroFactura' ).value !== undefined && this.addressForm.get( 'fechaFactura' ).value !== undefined && this.tieneObservacionOrdenGiro === undefined ) {
                 this.addressForm.disable();
             }
 

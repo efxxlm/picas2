@@ -44,11 +44,11 @@ namespace asivamosffie.api.Controllers
 
         //Detalle de la solicitud
         [Route("GetDetailAvailabilityBudgetProyect")]
-        public async Task<IActionResult> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId)
+        public async Task<IActionResult> GetDetailAvailabilityBudgetProyect(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             try
             {
-                var result = await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyect(rubroAfinanciarId, disponibilidadPresupuestalId);
+                var result = await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyect(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
                 return Ok(result);
             }
             catch (Exception ex)

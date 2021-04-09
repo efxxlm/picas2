@@ -1,0 +1,107 @@
+<section class="container" *ngIf="ajusteProgramacionInfo">
+    <div class="container text-center">
+      <div class="text-right">
+        <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+      </div>
+      <h1 class="title-menu--h1">
+        Ver historial de ajuste a la programación {{ ajusteProgramacionInfo.llaveMen }}
+      </h1>
+      <p class="info-sub-title">
+        <span>
+          Fecha de aprobacion de póliza:
+          <b>
+            {{ ajusteProgramacionInfo.fechaAprobacionPoliza  | date: 'dd/MM/yyyy' }}
+          </b>
+        </span>
+        <span>
+          Número de contrato:
+          <b>
+            {{ ajusteProgramacionInfo.numeroContrato }}
+          </b>
+        </span>
+      </p>
+    </div>
+  
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-content>
+        <p>
+          <strong>
+            Tipo de modificación:
+          </strong>
+          {{ ajusteProgramacionInfo.novedadesSeleccionadas }}
+        </p>
+        <p>
+          <strong>
+            Fecha de incio:
+          </strong>
+          30/06/2020
+        </p>
+        <p>
+          <strong>
+            Fecha final antes de la modificación:
+          </strong>
+          09/11/2022
+        </p>
+        <p>
+          <strong>
+            Nueva fecha de finalización:
+          </strong>
+          15/02/2023
+        </p>
+        <p>
+          <strong>
+            Nombre del contratista:
+          </strong>
+          {{ ajusteProgramacionInfo.nombreContratista }}
+        </p>
+        <p>
+          <strong>
+            Número de identificación (NIT/RUT):
+          </strong>
+          {{ ajusteProgramacionInfo.nombreContratista }}
+        </p>
+        <p>
+          <strong>
+            Tipo de intervención:
+          </strong>
+          Remodelación
+        </p>
+        <p>
+          <strong>
+            Departamento:
+          </strong>
+          Boyacá
+        </p>
+        <p>
+          <strong>
+            Institución Educativa:
+          </strong>
+          Nuestra Señora del Carmen
+        </p>
+        <p>
+          <strong>
+            Sede:
+          </strong>
+          Unica sede
+        </p>
+        <p>
+          <strong>
+            Municipio:
+          </strong>
+          Susacón
+        </p>
+        <p>
+          <strong>
+            Valor total del proyecto:
+          </strong>
+          $ 60.000.000
+        </p>
+      </mat-card-content>
+    </mat-card>
+  
+    <div class="mb-2em">
+      <app-historial-expansion-panel [ajusteProgramacionInfo]="ajusteProgramacionInfo"></app-historial-expansion-panel>
+    </div>
+  </section>

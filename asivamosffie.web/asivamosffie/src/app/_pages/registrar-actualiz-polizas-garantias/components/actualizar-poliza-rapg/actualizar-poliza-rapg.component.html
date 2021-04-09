@@ -1,11 +1,17 @@
-<section class="container text-center" *ngIf="esRegistroNuevo !== undefined && contratoPoliza !== undefined">
+<section class="container text-center" *ngIf="esVerDetalle !== undefined && contratoPoliza !== undefined">
     <div class="text-right">
         <a routerLink="/registrarActualizacionesPolizasYGarantias" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        {{ esRegistroNuevo === true ? 'Actualizar' : 'Ver detalle/Editar' }} póliza de contrato N801801
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            Ver detalle póliza de contrato {{ contratoPoliza.contrato.numeroContrato }}
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            {{ esRegistroNuevo === true ? 'Actualizar' : 'Ver detalle/Editar' }} póliza de contrato {{ contratoPoliza.contrato.numeroContrato }}
+        </ng-template>
+        
     </h1>
     <mat-card class="shipping-card mainGris">
         <mat-card-content style="text-align: left;">
@@ -24,17 +30,17 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="polizaYSeguros">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Polizas y seguros </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{element.polizaYSeguros}} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ getPoliza( element.tipoGarantiaCodigo ) }} </td>
             </ng-container>
             <ng-container matColumnDef="responsableAprobacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Reponsable de la aprobación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{element.responsableAprobacion}} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ getResponsable( ) }} </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
-    <div class="text-center mt-2em">
+    <div class="text-center mt-2em" *ngIf="esVerDetalle === false">
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
             <span class="info-text en-proceso">En proceso</span>
@@ -44,59 +50,59 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoAcordeones.acordeonTipoActualizacion : ''">
                     Razón y tipo de actualización
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-razon-tipo-actualizacion-rapg [contratoPoliza]="contratoPoliza"></app-razon-tipo-actualizacion-rapg>
+            <app-razon-tipo-actualizacion-rapg [contratoPoliza]="contratoPoliza" [esVerDetalle]="esVerDetalle"></app-razon-tipo-actualizacion-rapg>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoAcordeones.acordeonVigenciaValor : ''">
                     Vigencias y valor
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-accord-vigencias-valor [contratoPoliza]="contratoPoliza"></app-accord-vigencias-valor>
+            <app-accord-vigencias-valor [contratoPoliza]="contratoPoliza" *ngIf="acordeonRegistroCompleto.acordeonTipoActualizacion === true" [esVerDetalle]="esVerDetalle"></app-accord-vigencias-valor>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoAcordeones.acordeonObsEspecifica : ''">
                     Observaciones especificas
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-observaciones-especificas-rapg [contratoPoliza]="contratoPoliza"></app-observaciones-especificas-rapg>
+            <app-observaciones-especificas-rapg [contratoPoliza]="contratoPoliza" *ngIf="acordeonRegistroCompleto.acordeonVigenciaValor === true" [esVerDetalle]="esVerDetalle"></app-observaciones-especificas-rapg>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoAcordeones.acordeonListaChequeo : ''">
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-lista-chequeo-rapg></app-lista-chequeo-rapg>
+            <app-lista-chequeo-rapg [contratoPoliza]="contratoPoliza" *ngIf="acordeonRegistroCompleto.acordeonObsEspecifica === true" [esVerDetalle]="esVerDetalle"></app-lista-chequeo-rapg>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoAcordeones.acordeonRevision : ''">
                     Revisión y aprobación
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-revision-aprobacion-rapg></app-revision-aprobacion-rapg>
+            <app-revision-aprobacion-rapg [contratoPoliza]="contratoPoliza" *ngIf="acordeonRegistroCompleto.acordeonListaChequeo === true" [esVerDetalle]="esVerDetalle"></app-revision-aprobacion-rapg>
         </mat-expansion-panel>
     </mat-accordion>
-    <div style="margin-top: 1em;">
+    <div style="margin-top: 1em;" *ngIf="esVerDetalle === false">
         <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
             Los acordeones se habilitarán de forma secuencial, un vez se tenga completa la información de la sección anterior
         </div>

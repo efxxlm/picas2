@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId,TipoObservacionLiquidacionContrato,TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-actualizacion-poliza',
@@ -6,6 +9,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./actualizacion-poliza.component.scss']
 })
 export class ActualizacionPolizaComponent implements OnInit {
+
+  contratacionProyectoId: number;
+  contratoPolizaActualizacionId: number;//definir
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
+  @Input() contratoPolizaId : number;
+  @Input() esVerDetalle: boolean;
+  @Output() semaforoActualizacionPoliza = new EventEmitter<string>();
 
   listaPolizas = [
     {
@@ -18,9 +30,34 @@ export class ActualizacionPolizaComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
+   }
 
-  ngOnInit(): void {
-  }
+   ngOnInit(): void {
+    this.registerContractualLiquidationRequestService.getContratoPoliza( this.contratoPolizaId )
+    .subscribe(
+        response => {
+            /*this.contratoPoliza = response;
+            this.responsable = this.contratoPoliza.userResponsableAprobacion;
+
+            if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
+                if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
+                    this.contratoPolizaActualizacion = this.contratoPoliza.contratoPolizaActualizacion[ 0 ];
+                }
+            }
+
+            if ( this.contratoPolizaActualizacion !== undefined ) {
+                this.checkSemaforos();
+            }
+            this.dataSource = new MatTableDataSource( this.contratoPoliza.polizaGarantia );*/
+        }
+    )
+  }  
 
 }

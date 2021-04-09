@@ -94,9 +94,9 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
       })
     }
 
-  enviarSolicitud(e: number) {
-    console.log(e);
-    this.budgetAvailabilityService.sendRequest( e )
+  enviarSolicitud(DisponibilidadId: number, RegistroPId: number, esNovedad: boolean) {
+    //console.log(e);
+    this.budgetAvailabilityService.sendRequest( DisponibilidadId, RegistroPId, esNovedad )
       .subscribe( respuesta => {
         this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")

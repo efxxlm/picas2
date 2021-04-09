@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { FaseUnoPreconstruccionService } from 'src/app/core/_services/faseUnoPreconstruccion/fase-uno-preconstruccion.service';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
@@ -15,12 +15,18 @@ export class VerDetalleComponent implements OnInit {
   contrato: Contrato;
   observacionAPoyo = '2';
   perfilesCv: Dominio[] = [];
+  esInterventoria = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private commonSvc: CommonService,
     private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService )
   {
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'interventoriaVerDetalle' ) {
+        this.esInterventoria = true;
+      }
+    } )
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
     this.commonSvc.listaPerfil()
       .subscribe(

@@ -189,6 +189,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       const fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
       const fechaFirmaContratos = fechaFirmaContrato.toISOString();
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
+      this.estadoCodigo = this.estadoCodigos.firmado;
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
     }

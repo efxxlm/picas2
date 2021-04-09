@@ -271,6 +271,20 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetFuentesByAportante")]
+        public async Task<List<FuenteFinanciacion>> GetFuentesByAportante([FromQuery]int pConfinanciacioAportanteId)
+        {
+            try
+            {
+                return await _contractualModification.GetFuentesByAportante(pConfinanciacioAportanteId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
         [Route("GetNovedadContractualById")]
         public async Task<NovedadContractual> GetNovedadContractualById([FromQuery] int pId)
         {

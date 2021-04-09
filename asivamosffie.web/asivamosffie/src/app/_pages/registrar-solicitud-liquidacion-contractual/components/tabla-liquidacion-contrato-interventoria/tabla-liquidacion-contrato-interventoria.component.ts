@@ -1,8 +1,12 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion,ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 
 @Component({
@@ -29,15 +33,21 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   datosTabla = [];
+  listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
 
-  constructor(private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService) { }
+  constructor(
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+    private dialog: MatDialog,
+    private routes: Router
+  ) { }
 
   ngOnInit(): void {
-    this.getListContractualLiquidationInterventoria();
+    this.getListContractualLiquidationInterventoria(this.listaMenu.registrarSolicitudLiquidacionContratacion);
   }
 
-  getListContractualLiquidationInterventoria() {
-    this.registerContractualLiquidationRequestService.getListContractualLiquidationInterventoria().subscribe(report => {
+  getListContractualLiquidationInterventoria(menuId: number) {
+    this.registerContractualLiquidationRequestService.getListContractualLiquidationInterventoria(menuId).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -46,6 +56,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             valorSolicitud: element.valorSolicitud,
             proyectosAsociados: element.proyectosAsociados,
             estadoValidacionLiquidacionString: element.estadoValidacionLiquidacionString,
+            estadoValidacionLiquidacionCodigo: element.estadoValidacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
             contratacionProyectoId: element.contratacionProyectoId
           });
@@ -83,5 +94,28 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  SendToSupervision( pContratacionProyectoId: number ) {
+    const pContratacionProyecto = {
+        contratacionProyectoId: pContratacionProyectoId,
+        estadoValidacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAlSupervisor
+    };
+
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.registrarSolicitudLiquidacionContratacion )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                .then( () => this.routes.navigate( ['/registrarSolicitudLiquidacionContractual'] ) );
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
+    }
 
 }

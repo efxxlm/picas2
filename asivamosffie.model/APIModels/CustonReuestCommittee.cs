@@ -23,6 +23,10 @@ namespace asivamosffie.model.APIModels
 		public int TipoAportanteId{ get; set; }        
         public string EstadoSolicitudCodigo { get; set; }
         public string EstadoSolicitudText { get; set; }
-        
+        public int NovedadContractualId { get; set; }
+        public bool EsNovedad { get; set; }
+        public int NovedadContractualRegistroPresupuestalId { get; set; }
+
+
     }
 }

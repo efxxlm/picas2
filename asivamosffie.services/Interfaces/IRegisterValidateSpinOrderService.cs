@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidateSpinOrderService
     {
-         Task<byte[]> GetListOrdenGiro(bool pBlRegistrosAprobados);
+         Task<byte[]> GetListOrdenGiro(DescargarOrdenGiro pDescargarOrdenGiro);
 
         Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro);
 

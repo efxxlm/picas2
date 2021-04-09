@@ -70,7 +70,7 @@
         Gestión
       </th>
       <td mat-cell *matCellDef="let element">
-        <a
+        <a *ngIf="element.estadoValidacionLiquidacionCodigo === '0' || element.estadoValidacionLiquidacionCodigo == null || element.estadoValidacionLiquidacionCodigo == ''"
           mat-button
           mat-raised-button
           color="accent"
@@ -78,6 +78,36 @@
           [routerLink]="['validarRequisitos', element.contratacionProyectoId]"
         >
           Validar requisitos para liquidación
+        </a>
+        <a *ngIf="element.estadoValidacionLiquidacionCodigo === '1' || element.estadoValidacionLiquidacionCodigo === '2'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['verDetalleEditarRequisitos', element.contratacionProyectoId]"
+        >
+          Ver detalle/Editar
+        </a>
+        <button
+          *ngIf="element.estadoValidacionLiquidacionCodigo === '2'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+          (click)="SendToSupervision(element.contratacionProyectoId)"
+        >
+          Enviar al supervisor
+        </button>
+        <a *ngIf="element.estadoValidacionLiquidacionCodigo === '3'"
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+          [routerLink]="['verDetalleRequisitos', element.contratacionProyectoId]"
+        >
+          Ver detalle
         </a>
       </td>
     </ng-container>

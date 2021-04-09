@@ -72,17 +72,16 @@ export class FormContratacionComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {
           this.contratacion = resp;
-          console.log( this.contratacion );
+
           if ( resp.contrato.length > 0 ) {
             let rutaDocumento;
             if ( resp.contrato[0].rutaDocumento !== undefined ) {
               rutaDocumento = resp.contrato[0].rutaDocumento.split( /\\/gi );
-              console.log( rutaDocumento );
               rutaDocumento = rutaDocumento[ rutaDocumento.length -1 ];
             } else {
               rutaDocumento = null;
             };
-            console.log( resp.contrato[0] );
+
             this.modalidadContratoArray = modalidadContrato;
             this.form.reset({
               numeroContrato: resp.contrato[0].numeroContrato || '',
@@ -95,7 +94,7 @@ export class FormContratacionComponent implements OnInit {
               documento: rutaDocumento,
               rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
             });
-            console.log( this.form.value );
+
             this.estaEditando = true;
           };
         } );

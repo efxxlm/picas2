@@ -32,7 +32,7 @@ namespace asivamosffie.services
         public async Task<List<VRegistrarFase1>> GetListContratacion2(int pAuthor)
         {
             return await _context.VRegistrarFase1
-                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() 
+                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()
                     && r.TieneFasePreconstruccion.Value > 0
                     && r.InterventorId == pAuthor
                     )
@@ -444,9 +444,12 @@ namespace asivamosffie.services
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor || pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                     contratoMod.EstaDevuelto = true;
 
+
+
                 //Enviar Correo Botón aprobar inicio 3.1.6
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
+                    GetReiniciarObservaciones(contratoMod);
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
@@ -454,6 +457,7 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
+                    GetReiniciarObservaciones(contratoMod);
                     GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
@@ -461,7 +465,7 @@ namespace asivamosffie.services
 
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                {
+                { 
                     GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
@@ -549,6 +553,18 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, UsuarioModificacion, ex.InnerException.ToString().ToUpper())
                     };
             }
+        }
+
+        private void GetReiniciarObservaciones(Contrato contratoMod)
+        {
+            _context.Set<ContratoPerfilObservacion>()
+                    .Where(c => c.ContratoPerfilId == contratoMod.ContratoPerfil.FirstOrDefault().ContratoPerfilId)
+                    .Update(c => new ContratoPerfilObservacion
+                    {
+                        Eliminado = true,
+                        UsuarioCreacion = contratoMod.UsuarioModificacion,
+                        FechaModificacion = DateTime.Now
+                    }); 
         }
 
         private void GetDeleteTieneObservacionSupervisor(int pContratoId)

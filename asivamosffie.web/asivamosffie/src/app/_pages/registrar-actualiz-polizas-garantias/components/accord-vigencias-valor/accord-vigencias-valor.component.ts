@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class AccordVigenciasValorComponent implements OnInit {
 
     @Input() contratoPoliza: any;
+    @Input() esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     contratoPolizaActualizacionSeguro: any;
     polizasYSegurosArray : Dominio[] = [];
@@ -52,8 +53,18 @@ export class AccordVigenciasValorComponent implements OnInit {
                         this.contratoPolizaActualizacionSeguro = this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro;
 
                         for ( const seguro of this.contratoPolizaActualizacionSeguro ) {
+                            let semaforo = 'sin-diligenciar';
+
+                            if ( seguro.registroCompletoSeguro === false ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( seguro.registroCompletoSeguro === true ) {
+                                semaforo = 'completo';
+                            }
+
                             this.seguros.push( this.fb.group(
                                 {
+                                    semaforo,
                                     nombre: [ this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo ).nombre ],
                                     codigo: [ seguro.tipoSeguroCodigo ],
                                     tieneSeguro: [ seguro.tieneFechaSeguro ],

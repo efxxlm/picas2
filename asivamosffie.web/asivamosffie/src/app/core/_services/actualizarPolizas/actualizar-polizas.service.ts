@@ -25,7 +25,19 @@ export class ActualizarPolizasService {
   }
 
   createorUpdateCofinancing( pContratoPolizaActualizacion: any ) {
-    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateorUpdateCofinancing`, pContratoPolizaActualizacion )
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditContratoPolizaActualizacion`, pContratoPolizaActualizacion )
+  }
+
+  deleteContratoPolizaActualizacionSeguro( pContratoPolizaActualizacionSeguro: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteContratoPolizaActualizacionSeguro`, pContratoPolizaActualizacionSeguro );
+  }
+
+  deleteContratoPolizaActualizacion( pContratoPolizaActualizacion: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteContratoPolizaActualizacion`, pContratoPolizaActualizacion );
+  }
+
+  changeStatusContratoPolizaActualizacionSeguro( pContratoPolizaActualizacion: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/ChangeStatusContratoPolizaActualizacionSeguro`, pContratoPolizaActualizacion )
   }
 
 }

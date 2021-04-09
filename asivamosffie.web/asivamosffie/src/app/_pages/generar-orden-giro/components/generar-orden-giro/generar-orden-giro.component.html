@@ -78,12 +78,18 @@
                                     || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
                             Ver detalle/Editar
                     </button>
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            (click)="devolverSolicitud( element )"
+                            *ngIf=" element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
+                            Devolver solicitud de pago
+                    </button>
                     <!--
-                        <button mat-raised-button
-                                color="accent"
-                                class="btn-table">
-                                Devolver solicitud de pago
-                        </button>
                         Se habilitan los botones ver detalle y descargar orden de giro en estado enviadaVerificacionOrdenGiro === '13'
                         el Boton descargar orden de giro aparece en CU 4.3.3, 4.3.4 y 4.3.5
                     -->

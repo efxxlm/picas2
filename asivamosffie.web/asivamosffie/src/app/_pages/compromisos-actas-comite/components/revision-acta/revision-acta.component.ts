@@ -84,6 +84,12 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         console.log(this.acta);
 
         for ( let tema of this.acta.sesionComiteTema ) {
+          tema.temaCompromiso.forEach( ( value, index ) => {
+            if ( value.responsableNavigation === undefined ) {
+              tema.temaCompromiso.splice( index, 1 );
+            }
+          } )
+
           let totalAprobado = 0;
           let totalNoAprobado = 0;
           if ( tema.esProposicionesVarios === undefined || tema.esProposicionesVarios === false ) {
@@ -125,7 +131,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         };
 
         for (let participante of this.acta.sesionParticipanteView) {
-          this.miembrosParticipantes.push(`${participante.primerNombre} ${participante.primerApellido}`);
+          this.miembrosParticipantes.push(`${participante.nombres} ${participante.apellidos}`);
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)

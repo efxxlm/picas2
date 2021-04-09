@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IPaymentRequierementsService
     {
+        void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago);
+
         Task<bool> SolicitudPagoPendienteVerificacion();
 
         Task<bool> SolicitudPagoPendienteAutorizacion();

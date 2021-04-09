@@ -28,7 +28,7 @@ namespace asivamosffie.services.Interfaces
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
-        Task<Respuesta> SetValidarValidacionDDP(int pId, string pUsuarioModificacion
+        Task<Respuesta> SetValidarValidacionDDP(int pId, string pUsuarioModificacion, bool esNovedad, int RegistroPresupuestalId
             , string pDominioFront,string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> CreateFinancialFundingGestion(GestionFuenteFinanciacion pDisponibilidadPresObservacion);
         Task<Respuesta> DeleteFinancialFundingGestion(int pIdDisponibilidadPresObservacion, string usuarioModificacion);

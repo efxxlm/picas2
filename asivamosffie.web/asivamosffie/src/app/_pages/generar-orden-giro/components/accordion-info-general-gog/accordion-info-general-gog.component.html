@@ -49,7 +49,7 @@
                         <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitudDdp | currency:'':'symbol-narrow':'.0-0' }} </td>
                     </ng-container>
                     <ng-container matColumnDef="saldo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo actual DRP</th>
                         <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPresupuestal | currency:'':'symbol-narrow':'.0-0' }} </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -82,7 +82,7 @@
                     Tercero de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-tercero-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-form-tercero-giro-gog>
+            <app-form-tercero-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'; tieneObservacion.emit( true )"></app-form-tercero-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

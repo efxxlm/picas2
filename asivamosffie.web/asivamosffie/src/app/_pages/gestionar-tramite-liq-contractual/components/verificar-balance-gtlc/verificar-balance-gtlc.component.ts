@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-verificar-balance-gtlc',
@@ -8,53 +10,43 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./verificar-balance-gtlc.component.scss']
 })
 export class VerificarBalanceGtlcComponent implements OnInit {
-  idBalance: any;
-  addressForm = this.fb.group({});
-  editorStyle = {
-    height: '45px',
-    overflow: 'auto'
-  };
-
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-    ]
-  };
   estaEditando = false;
-  constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
+  contratacionProyectoId: number;
+  balanceFinancieroId: number;//definir
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
-  ngOnInit(): void {
-    this.addressForm = this.crearFormulario();
-    this.activatedRoute.params.subscribe(param => {
-      console.log(param.id);
-      this.idBalance = param.id;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'verificarBalance' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarBalance' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleBalance' ) {
+          this.esVerDetalle = true;
+          return;
+      }
     });
   }
-  crearFormulario() {
-    return this.fb.group({
-      tieneObservaciones: [null, Validators.required],
-      observaciones:[null, Validators.required],
-    })
-  }
-  maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
-    }
-  }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
-    }
-  }
-  onSubmit() {
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value);
-  }
+  ngOnInit(): void {
+  }  
+
   irRecursosComprometidos(id){
     this.router.navigate(['/gestionarTramiteLiquidacionContractual/recursosComprometidos', id]);
   }

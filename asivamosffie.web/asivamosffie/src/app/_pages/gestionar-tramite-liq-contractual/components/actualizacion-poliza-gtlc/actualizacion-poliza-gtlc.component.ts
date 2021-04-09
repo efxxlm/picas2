@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Params } from '@angular/router';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-actualizacion-poliza-gtlc',
@@ -9,7 +12,18 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./actualizacion-poliza-gtlc.component.scss']
 })
 export class ActualizacionPolizaGtlcComponent implements OnInit {
+
   dataSource = new MatTableDataSource();
+  contratacionProyectoId: number = null;
+  contratoPolizaActualizacionId: number = null;//definir
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
+  @Output() semaforoActualizacionPoliza = new EventEmitter<string>();
+  @Input() esVerDetalle: boolean;
+  @Input() contratoPolizaId : number;
+
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
     'polizaYSeguros',
@@ -25,52 +39,18 @@ export class ActualizacionPolizaGtlcComponent implements OnInit {
       responsableAprobacion: 'Andres Nikolai Montealegre Rojas'
     }
   ]
-  addressForm = this.fb.group({});
-  editorStyle = {
-    height: '45px',
-    overflow: 'auto'
-  };
 
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-    ]
-  };
   estaEditando = false;
-  constructor(private fb: FormBuilder) { }
 
-  ngOnInit(): void {
-    this.addressForm = this.crearFormulario();
-    this.loadDataSource();
-  }
-  
-  loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.sort = this.sort;
-  }
-  crearFormulario() {
-    return this.fb.group({
-      tieneObservaciones: [null, Validators.required],
-      observaciones:[null, Validators.required],
-    })
-  }
-  maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
-    }
-  }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
-    }
-  }
-  onSubmit() {
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value);
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
+   }
+
+   ngOnInit(): void {
+  }  
 }

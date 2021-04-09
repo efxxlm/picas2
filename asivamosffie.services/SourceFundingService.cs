@@ -673,6 +673,76 @@ namespace asivamosffie.services
             }
             return ListaRetorno;
         }
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(int NovedadContractualRegistroPresupuestalId, int aportanteID)
+        {
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
+            List<int> listaIds = new List<int>();
+
+            NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
+                                                                                                        .Where(x => x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
+                                                                                                        .Include(x => x.NovedadContractual)
+                                                                                                            .ThenInclude(x => x.NovedadContractualAportante)
+                                                                                                                .ThenInclude(x => x.ComponenteAportanteNovedad)
+                                                                                                                    .ThenInclude(x => x.ComponenteFuenteNovedad)
+                                                                                                        .FirstOrDefault();
+            List<FuenteFinanciacion> listaFuentes = new List<FuenteFinanciacion>();
+
+            //var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+
+            novedadContractualRegistroPresupuestal.NovedadContractual.NovedadContractualAportante = novedadContractualRegistroPresupuestal.NovedadContractual.NovedadContractualAportante.Where(x => x.Eliminado != true).ToList();
+            novedadContractualRegistroPresupuestal.NovedadContractual.NovedadContractualAportante.ToList().ForEach(aportante =>
+           {
+               if (aportante.CofinanciacionAportanteId == aportanteID)
+               {
+                   aportante.ComponenteAportanteNovedad = aportante.ComponenteAportanteNovedad.Where(x => x.Eliminado != true).ToList();
+                   aportante.ComponenteAportanteNovedad.ToList().ForEach(componente =>
+                  {
+                      componente.ComponenteFuenteNovedad = componente.ComponenteFuenteNovedad.Where(x => x.Eliminado != true).ToList();
+                      componente.ComponenteFuenteNovedad.ToList().ForEach(fuente =>
+                     {
+                         //listaFuentes.Add(_context.FuenteFinanciacion.Find(fuente.FuenteFinanciacionId));
+                         listaIds.Add(fuente.FuenteFinanciacionId);
+                     });
+                  });
+               }
+           });
+
+            var financiaciones = _context.FuenteFinanciacion
+                                               .Where(x => listaIds.Contains( x.FuenteFinanciacionId) && 
+                                                      x.Eliminado == false)
+                                               .ToList();
+
+            foreach (var financiacion in financiaciones)
+            {
+                var valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
+                                                                                        .Where(x => !(bool)x.Eliminado && 
+                                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
+                                                                                        .Sum(x => x.ValorSolicitado);
+
+                var valorsolicitado = _context.GestionFuenteFinanciacion
+                                                    .Where(x => !(bool)x.Eliminado && 
+                                                           x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                           x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
+                                                    .Sum(x => x.ValorSolicitado);
+
+                ListaRetorno.Add(new GrillaFuentesFinanciacion
+                {
+                    FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
+                    Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                    Nuevo_saldo_de_la_fuente = valorDisponible - valorsolicitado,
+                    Saldo_actual_de_la_fuente = valorDisponible,
+                    Valor_solicitado_de_la_fuente = valorsolicitado,
+                    GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion
+                                                                .Where(x => !(bool)x.Eliminado && 
+                                                                       x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                                       x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
+                                                                .Select(x => x.GestionFuenteFinanciacionId)
+                                                                .FirstOrDefault(),
+                });
+            }
+            return ListaRetorno;
+        }
 
         public async Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {

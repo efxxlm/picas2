@@ -22,9 +22,11 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
+        private readonly IPaymentRequierementsService _paymentRequierementsService;
 
-        public RegisterValidateSpinOrderService(ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterValidateSpinOrderService(IPaymentRequierementsService paymentRequierementsService, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _paymentRequierementsService = paymentRequierementsService;
             _committeeSessionFiduciarioService = committeeSessionFiduciarioService;
             _commonService = commonService;
             _context = context;
@@ -36,6 +38,25 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
+            int intEstadoCodigo = Int32.Parse(pOrdenGiro.EstadoCodigo);
+
+            //Reinicia Orden giro si devuelven la solicitud
+            if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Orden_de_giro_devuelta_por_verificacion
+              && intEstadoCodigo <= (int)EnumEstadoOrdenGiro.Orden_de_giro_devuelta_por_tramite_fiduciario)
+                ReturnOrdenGiro(pOrdenGiro);
+             
+            //Crear URl Verificar
+            if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
+                UpdateUrlVerify(pOrdenGiro);
+
+            //Crear URl Aprobar
+            if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+                UpdateUrlAproved(pOrdenGiro);
+
+            if ((intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro))
+                ResetObservations(pOrdenGiro);
+
+             
             try
             {
                 _context.Set<OrdenGiro>()
@@ -76,6 +97,59 @@ namespace asivamosffie.services
             }
         }
 
+        private void ResetObservations(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiroObservacion>()
+                    .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                    .Update(o => new OrdenGiroObservacion
+                    {
+                        Archivada =  true
+                    }); 
+        }
+
+        private void UpdateUrlVerify(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiro>()
+                          .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                          .Update(o => new OrdenGiro
+                          {
+                              UrlSoporteFirmadoVerificar = pOrdenGiro.UrlSoporteFirmadoVerificar,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                          });
+        }
+
+        private void UpdateUrlAproved(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiro>()
+                          .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                          .Update(o => new OrdenGiro
+                          {
+                              UrlSoporteFirmadoAprobar = pOrdenGiro.UrlSoporteFirmadoAprobar,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                          });
+        }
+
+        private void ReturnOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                        .Update(o => new OrdenGiro
+                        {
+                            RegistroCompleto = false,
+                            RegistroCompletoAprobar = false,
+                            RegistroCompletoVerificar = false,
+                            RegistroCompletoTramitar = false,
+                            FechaRegistroCompleto = null,
+                            FechaRegistroCompletoAprobar = null,
+                            FechaRegistroCompletoTramitar = null,
+                            FechaRegistroCompletoVerificar = null,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                        });
+        }
+         
         public async Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -116,10 +190,10 @@ namespace asivamosffie.services
                                            pOrdenGiroObservacion.UsuarioCreacion,
                                            ConstantCommonMessages.SpinOrder.CREAR_EDITAR_OBSERVACION_ORDEN_GIRO)
                 };
-                if (pOrdenGiroObservacion.Archivada != true)  
+                if (pOrdenGiroObservacion.Archivada != true)
                     await ValidateCompleteObservation(pOrdenGiroObservacion, pOrdenGiroObservacion.UsuarioCreacion);
-              
-              
+
+
                 return respuesta;
             }
             catch (Exception ex)
@@ -140,8 +214,12 @@ namespace asivamosffie.services
         {
             try
             {
-
                 int intCantidadDependenciasOrdenGiro = 4;
+
+                if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
+                    intCantidadDependenciasOrdenGiro = 3;
+
+
 
                 OrdenGiro ordenGiro = _context.OrdenGiro
                     .Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId)
@@ -152,7 +230,7 @@ namespace asivamosffie.services
 
                 foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
                 {
-                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r=> r.Eliminado != true).ToList())
+                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
                     {
                         intCantidadDependenciasOrdenGiro++;
                     }
@@ -178,20 +256,20 @@ namespace asivamosffie.services
                                                             && r.Eliminado != true
                                                             && r.Archivada != true
                                                             && r.TieneObservacion == true
-                                                            ); 
+                                                            );
 
                 //Valida si la cantidad de relaciones  
                 //es igual a la cantidad de observaciones  
                 bool blRegistroCompleto = false;
 
                 DateTime? FechaRegistroCompleto = null;
-                if (intCantidadDependenciasOrdenGiro >= intCantidadObservaciones)
+                if (intCantidadObservaciones  >= intCantidadDependenciasOrdenGiro)
                 {
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
                 }
 
-       
+
                 switch (pOrdenGiroObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_orden_de_giro:
@@ -243,7 +321,7 @@ namespace asivamosffie.services
                 return false;
             }
         }
-         
+
         private bool ValidateCompleteRecordOrdenGiroObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
         {
             if (pOrdenGiroObservacion.TieneObservacion == false)
@@ -255,7 +333,7 @@ namespace asivamosffie.services
             return true;
         }
 
-        public async Task<byte[]> GetListOrdenGiro(bool pBlRegistrosAprobados)
+        public async Task<byte[]> GetListOrdenGiro(DescargarOrdenGiro pDescargarOrdenGiro)
         {
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Tabla_Orden_Giro_Para_Tramitar).ToString();
 
@@ -275,17 +353,27 @@ namespace asivamosffie.services
 
             List<int> ListOrdenGiroIds = new List<int>();
 
-            if (pBlRegistrosAprobados)
+            if (pDescargarOrdenGiro.RegistrosAprobados)
             {
-                ListOrdenGiroIds = _context.OrdenGiro
-                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue && !r.FechaRegistroCompletoTramitar.HasValue)
-                    .Select(r => r.OrdenGiroId).ToList();
+                ListOrdenGiroIds =await _context.OrdenGiro
+                    .Include(s=> s.SolicitudPago)
+                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue 
+                       && !r.FechaRegistroCompletoTramitar.HasValue
+                       && r.SolicitudPago.Count() >0  
+                    )
+                    .Select(r => r.OrdenGiroId)
+
+                    .ToListAsync();
             }
             else
             {
-                ListOrdenGiroIds = _context.OrdenGiro
-                        .Where(r => r.FechaRegistroCompletoTramitar.HasValue)
-                        .Select(r => r.OrdenGiroId).ToList();
+                ListOrdenGiroIds = await _context.OrdenGiro
+                      .Include(s => s.SolicitudPago)
+                        .Where(r => r.FechaRegistroCompletoTramitar.HasValue
+                            && r.FechaRegistroCompletoTramitar >= pDescargarOrdenGiro.FechaInicial
+                            && r.FechaRegistroCompletoTramitar <= pDescargarOrdenGiro.FechaFinal
+                            && r.SolicitudPago.Count() > 0)
+                        .Select(r => r.OrdenGiroId).ToListAsync();
             }
 
             string RegistrosOrdenGiro = string.Empty;
@@ -309,6 +397,7 @@ namespace asivamosffie.services
                                  .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
                                 .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
                                 .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
+                            
                                 .FirstOrDefault();
 
             decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
@@ -321,7 +410,7 @@ namespace asivamosffie.services
                        .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
                        .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
                        .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
-                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato : " ")
+                       .Replace("[NUMERO_CONTRATO]", (ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato) ?? " ")
                        .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }

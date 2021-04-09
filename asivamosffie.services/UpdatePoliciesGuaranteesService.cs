@@ -56,11 +56,14 @@ namespace asivamosffie.services
         {
             ContratoPoliza contratoPoliza = await _context.ContratoPoliza
                 .Where(c => c.ContratoPolizaId == pContratoPolizaId)
-               .Include(c => c.Contrato).ThenInclude(c => c.Contratacion)
+                .Include(c=> c.PolizaGarantia)
+                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
                 .FirstOrDefaultAsync();
+
+            contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
 
             GetRemoveDeleteItems(contratoPoliza);
 
@@ -68,9 +71,9 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<VActualizacionPolizaYGarantias>> GetListVActualizacionPolizaYGarantias()
+        public async Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias()
         {
-            return await _context.VActualizacionPolizaYGarantias.ToListAsync();
+            return await _context.VActualizacionPolizaYgarantias.ToListAsync();
         }
 
         private void GetRemoveDeleteItems(ContratoPoliza contratoPoliza)
@@ -86,7 +89,7 @@ namespace asivamosffie.services
 
         #region Create
 
-        public async Task<Respuesta> ChangeStatusContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion  pContratoPolizaActualizacion)
+        public async Task<Respuesta> ChangeStatusContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Actualizar_Polizas_Y_Garantias, (int)EnumeratorTipoDominio.Acciones);
 
@@ -96,7 +99,7 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPolizaActualizacionId == pContratoPolizaActualizacion.ContratoPolizaActualizacionId)
                         .Update(c => new ContratoPolizaActualizacion
                         {
-                            EstadoActualizacion  = pContratoPolizaActualizacion.EstadoActualizacion,
+                            EstadoActualizacion = pContratoPolizaActualizacion.EstadoActualizacion,
                             UsuarioModificacion = pContratoPolizaActualizacion.UsuarioCreacion,
                             FechaModificacion = DateTime.Now
                         });
@@ -113,6 +116,50 @@ namespace asivamosffie.services
                                                                                                idAccion,
                                                                                                pContratoPolizaActualizacion.UsuarioCreacion,
                                                                                                ConstantCommonMessages.UpdatePolicies.CAMBIAR_ESTADOS_ACTUALIZAR_POLIZA
+                                                                                           )
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                   new Respuesta
+                   {
+                       IsSuccessful = false,
+                       IsException = true,
+                       IsValidation = false,
+                       Code = GeneralCodes.Error,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacion.UsuarioCreacion, ex.InnerException.ToString())
+                   };
+            }
+        }
+
+        public async Task<Respuesta> DeleteContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Actualizacion_Polizas, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPolizaActualizacion>()
+                        .Where(c => c.ContratoPolizaActualizacionId == pContratoPolizaActualizacion.ContratoPolizaActualizacionId)
+                        .Update(c => new ContratoPolizaActualizacion
+                        {
+                            Eliminado= true,
+                            UsuarioModificacion = pContratoPolizaActualizacion.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                               (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
+                                                                                               GeneralCodes.OperacionExitosa,
+                                                                                               idAccion,
+                                                                                               pContratoPolizaActualizacion.UsuarioCreacion,
+                                                                                               ConstantCommonMessages.UpdatePolicies.ELIMINAR_ACTUALIZACION_POLIZA
                                                                                            )
                 };
             }
@@ -249,11 +296,11 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
-            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == true)
+            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == false)
                 return true;
             else
                 if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
-                return false;
+                    return false;
 
             return true;
         }
@@ -269,6 +316,22 @@ namespace asivamosffie.services
                     item.Eliminado = false;
                     item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item);
                     _context.ContratoPolizaActualizacionListaChequeo.Add(item);
+                }
+                else
+                {
+                    _context.Set<ContratoPolizaActualizacionListaChequeo>()
+                            .Where(c => c.ContratoPolizaActualizacionListaChequeoId == item.ContratoPolizaActualizacionListaChequeoId)
+                            .Update(c => new ContratoPolizaActualizacionListaChequeo
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pAuthor,
+                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item),
+                                CumpleDatosAseguradoBeneficiario = item.CumpleDatosAseguradoBeneficiario,
+                                CumpleDatosBeneficiarioGarantiaBancaria = item.CumpleDatosBeneficiarioGarantiaBancaria,
+                                CumpleDatosTomadorAfianzado = item.CumpleDatosTomadorAfianzado,
+                                TieneReciboPagoDatosRequeridos = item.TieneReciboPagoDatosRequeridos,
+                                TieneCondicionesGeneralesPoliza = item.TieneCondicionesGeneralesPoliza
+                            }); 
                 }
             }
         }
@@ -296,6 +359,9 @@ namespace asivamosffie.services
                     item.FechaCreacion = DateTime.Now;
                     item.Eliminado = false;
                     item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item);
+                     
+                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item); 
+
                 }
                 else
                 {
@@ -321,11 +387,13 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
         {
+            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision) 
+                return false; 
+
             if (
-                    !pItem.SegundaFechaRevision.HasValue
-                 || !pItem.FechaAprobacion.HasValue
+                    !pItem.SegundaFechaRevision.HasValue 
                  || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
-                 || string.IsNullOrEmpty(pItem.ObservacionGeneral)
+                 || !pItem.FechaAprobacion.HasValue 
                  || pItem.ResponsableAprobacionId == 0
                  ) return false;
 

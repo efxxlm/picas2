@@ -19,6 +19,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     @Input() tieneObservacion: boolean;
     @Input() datosFacturaDescuentoCodigo: string;
     @Input() listaMenusId: any;
+    @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     esAutorizar: boolean;
     observacion: any;
@@ -85,7 +86,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
                         )
                     );
                 }
-                if ( this.solicitudPagoFaseFactura.registroCompleto === true ) {
+                if ( this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined ) {
                     this.formDescuentos.disable();
                 }
 

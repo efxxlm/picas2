@@ -252,10 +252,17 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Motivos_Novedad_contractual = 174,
 
-        Estados_verificacion_liquidación_codigo = 180,
+        Estados_validacion_liquidacion_codigo = 180,
 
         Tipo_Actualizacion_Polizas_y_garantias = 181,
 
-        Estados_Actualizacion_Poliza = 182
+        Estados_Actualizacion_Poliza = 182,
+
+        Tipo_Observacion_Liquidacion_Contratacion = 184,
+
+        Estados_aprobacion_liquidacion_codigo = 185,
+
+        Estados_verificacion_liquidacion_codigo = 187,
+
     }
 }

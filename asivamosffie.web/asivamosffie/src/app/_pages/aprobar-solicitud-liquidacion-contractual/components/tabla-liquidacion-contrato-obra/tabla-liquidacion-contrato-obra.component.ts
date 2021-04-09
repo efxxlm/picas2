@@ -1,20 +1,12 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    fechaValidacion: '15/11/2020',
-    fechaActualizacion: '10/11/2020',
-    numeroSolicitud: 'SL00001',
-    numeroContrato: 'N801801',
-    valor: '$ 105.000.000',
-    cantidadProyectosAsociados: '1',
-    estadoAprobacion: 'Sin aprobación'
-  }
-];
+import { Router } from '@angular/router';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-tabla-liquidacion-contrato-obra',
@@ -23,24 +15,55 @@ const ELEMENT_DATA = [
 })
 export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewInit {
 
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA: any[] = [];
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   displayedColumns: string[] = [
-    'fechaValidacion',
-    'fechaActualizacion',
-    'numeroSolicitud',
+    'fechaValidacionLiquidacion',
+    'fechaPoliza',
+    'numeroSolicitudLiquidacion',
     'numeroContrato',
-    'valor',
-    'cantidadProyectosAsociados',
-    'estadoAprobacion',
-    'id'
+    'valorSolicitud',
+    'proyectosAsociados',
+    'estadoAprobacionLiquidacionString',
+    'contratacionProyectoId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+
+  datosTabla = [];
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
+
+  constructor(
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+    private dialog: MatDialog,
+    private routes: Router
+    ) { }
 
   ngOnInit(): void {
+    this.getListContractualLiquidationObra(this.listaMenu.aprobarSolicitudLiquidacionContratacion);
+  }
+
+  getListContractualLiquidationObra(menuId: number) {
+    this.registerContractualLiquidationRequestService.getListContractualLiquidationObra(menuId).subscribe(report => {
+      if(report != null){
+        report.forEach(element => {
+          this.datosTabla.push({
+            fechaValidacionLiquidacion : element.fechaValidacionLiquidacion.split('T')[0].split('-').reverse().join('/'),
+            fechaPoliza : element.fechaPoliza.split('T')[0].split('-').reverse().join('/'),
+            numeroContrato: element.numeroContrato,
+            valorSolicitud: element.valorSolicitud,
+            proyectosAsociados: element.proyectosAsociados,
+            estadoAprobacionLiquidacionString: element.estadoAprobacionLiquidacionString,
+            estadoAprobacionLiquidacionCodigo: element.estadoAprobacionLiquidacionCodigo,
+            numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion,
+            contratacionProyectoId: element.contratacionProyectoId
+          });
+        })
+      }
+      this.dataSource.data = this.datosTabla;
+    });
   }
 
   ngAfterViewInit() {
@@ -71,5 +94,29 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  SendToNovedades( pContratacionProyectoId: number ) {
+    const pContratacionProyecto = {
+        contratacionProyectoId: pContratacionProyectoId,
+        estadoAprobacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoControlSeguimiento
+    };
+
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.aprobarSolicitudLiquidacionContratacion )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                .then( () => this.routes.navigate( ['/aprobarSolicitudLiquidacionContractual'] ) );
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
+    }
+
 
 }

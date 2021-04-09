@@ -17,7 +17,15 @@ const routes: Routes = [
     component: ValidarRequerimientosLiquidacionesComponent
   },
   {
-    path: 'validarRequisitos/:id/validarBalance',
+    path: 'verDetalleEditarRequisitos/:id',
+    component:ValidarRequerimientosLiquidacionesComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id',
+    component: ValidarRequerimientosLiquidacionesComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarBalance/:id',
     component: ValidarBalanceComponent
   },
   {
@@ -27,6 +35,34 @@ const routes: Routes = [
   {
     path: 'validarRequisitos/:id/validarInformeFinal/:proyectoId',
     component: ValidarInformeFinalComponent
+  },
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: ValidarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
+    component: ValidarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleInformeFinal/:proyectoId',
+    component: ValidarInformeFinalComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance',
+    component: ValidarBalanceComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarValidarBalance',
+    component: ValidarBalanceComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance',
+    component: ValidarBalanceComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    component: ValidarBalanceComponent
   }
 ];
 

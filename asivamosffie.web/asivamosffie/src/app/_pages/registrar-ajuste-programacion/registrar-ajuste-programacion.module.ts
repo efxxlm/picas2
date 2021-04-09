@@ -18,6 +18,11 @@ import { CargarProgramacionComponent } from './components/cargar-programacion/ca
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
 import { DialogValidacionRegistroComponent } from './components/dialog-validacion-registro/dialog-validacion-registro.component';
 import { CargarFlujoComponent } from './components/cargar-flujo/cargar-flujo.component';
+import { VerHistorialComponent } from './components/ver-historial/ver-historial.component';
+import { HistorialExpansionPanelComponent } from './components/historial-expansion-panel/historial-expansion-panel.component';
+import { DetalleTablaProgObraComponent } from './components/detalle-tabla-prog-obra/detalle-tabla-prog-obra.component';
+import { DetalleTablaFlujIntRecComponent } from './components/detalle-tabla-fluj-int-rec/detalle-tabla-fluj-int-rec.component';
+import { DialogDetalleObservacionesComponent } from './components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
 
 
 @NgModule({
@@ -31,7 +36,12 @@ import { CargarFlujoComponent } from './components/cargar-flujo/cargar-flujo.com
     CargarProgramacionComponent,
     DialogObservacionesComponent,
     DialogValidacionRegistroComponent,
-    CargarFlujoComponent
+    CargarFlujoComponent,
+    VerHistorialComponent,
+    HistorialExpansionPanelComponent,
+    DetalleTablaProgObraComponent,
+    DetalleTablaFlujIntRecComponent,
+    DialogDetalleObservacionesComponent
   ],
   imports: [
     CommonModule,
