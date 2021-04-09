@@ -36,30 +36,32 @@
               <mat-card-content>
                   <p>
                     <b>Nombre del contratista:</b>
-                    {{ contrato.contratacion.contratista.nombre }}
+                    <i> {{ contrato.contratacion.contratista.nombre }} </i>
                   </p>
                   <p>
                     <b>Número de identificación (NIT/RUT):</b>
-                    {{ contrato.contratacion.contratista.numeroIdentificacion }}
+                    <i> {{ contrato.contratacion.contratista.numeroIdentificacion }} </i>
                   </p>
                   <p>
                     <b>Tipo de intervención:</b>
-                    {{ contratoProyecto.proyecto.tipoIntervencionCodigo }}
+                    <i> {{ contratoProyecto.proyecto.tipoIntervencionCodigo }} </i>
                   </p>
                   <p>
                     <b>Departamento:</b>
-                    {{ contratoProyecto.proyecto.departamento }}
+                    <i> {{ contratoProyecto.proyecto.departamento }} </i>
                   </p>
                   <p>
                     <b>Municipio:</b>
-                    {{ contratoProyecto.proyecto.municipio }}
+                    <i> {{ contratoProyecto.proyecto.municipio }} </i>
                   </p>
                   <p>
                     <b>Valor total del proyecto:</b>
-                    {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+                    <i> {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </i>
                   </p>
               </mat-card-content>
           </mat-card>
+
+          <p class="d-flex justify-content-center"><b style="margin-right: .3em;"> ¿Cuantos perfiles diferentes del contratista de obra se requieren para ejecutar el proyecto?: </b> <i> {{ contratoProyecto.proyecto.contratoPerfil.length }} </i> </p>
 
           <mat-accordion *ngFor="let perfil of contratoProyecto.proyecto.contratoPerfil; index as i">
               <mat-expansion-panel class="expansion-style sub-expansion">
@@ -73,7 +75,7 @@
                       <mat-card-content>
                           <p>
                             <b>Perfil:</b>
-                            {{ getNombrePerfil( perfil.perfilCodigo ) }}
+                            <i> {{ getNombrePerfil( perfil.perfilCodigo ) }} </i>
                           </p>
                           <p>
                             <b>Cantidad de hojas de vida requeridas:</b>
@@ -102,7 +104,7 @@
                           </p>
                           <p>
                             <b>URL con soporte:</b>
-                            {{ perfil.rutaSoporte }}
+                            <i> {{ perfil.rutaSoporte }} </i>
                           </p>
                       </mat-card-content>
                   </mat-card>

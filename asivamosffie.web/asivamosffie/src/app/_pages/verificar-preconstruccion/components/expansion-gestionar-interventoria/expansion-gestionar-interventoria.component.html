@@ -40,27 +40,27 @@
         <mat-card-content>
           <p>
             <b>Nombre del contratista:</b>
-            {{ contrato.contratacion.contratista.nombre }}
+            <i> {{ contrato.contratacion.contratista.nombre }} </i>
           </p>
           <p>
             <b>Número de identificación (NIT/RUT):</b>
-            {{ contrato.contratacion.contratista.numeroIdentificacion }}
+            <i> {{ contrato.contratacion.contratista.numeroIdentificacion }} </i>
           </p>
           <p>
             <b>Tipo de intervención:</b>
-            {{ contratacion.proyecto.tipoIntervencionCodigo }}
+            <i> {{ contratacion.proyecto.tipoIntervencionCodigo }} </i>
           </p>
           <p>
             <b>Departamento:</b>
-            {{ contratacion.proyecto.departamento }}
+            <i> {{ contratacion.proyecto.departamento }} </i>
           </p>
           <p>
             <b>Municipio:</b>
-            {{ contratacion.proyecto.municipio }}
+            <i> {{ contratacion.proyecto.municipio }} </i>
           </p>
           <p>
             <b>Valor total del proyecto:</b>
-            {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+            <i> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </i>
           </p>
         </mat-card-content>
       </mat-card>

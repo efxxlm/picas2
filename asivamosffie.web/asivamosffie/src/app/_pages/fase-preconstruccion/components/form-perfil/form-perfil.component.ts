@@ -178,9 +178,9 @@ export class FormPerfilComponent implements OnInit {
           }
         );
       for ( const perfil of this.perfilProyecto ) {
-        const observacionSupervisor = [];
         const numeroRadicados = [];
         const observacionInterventor = [];
+        let observacionSupervisor = [];
         let semaforo;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push(
@@ -206,14 +206,7 @@ export class FormPerfilComponent implements OnInit {
         }
 
         if ( perfil.contratoPerfilObservacion.length > 0 ) {
-          for ( const obs of perfil.contratoPerfilObservacion ) {
-            if ( obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsInterventor ) {
-              observacionInterventor.push( obs );
-            }
-            if ( obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsSupervisor && perfil.tieneObservacionSupervisor === true ) {
-              observacionSupervisor.push( obs );
-            }
-          }
+          observacionSupervisor = perfil.contratoPerfilObservacion.filter( obs => obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsSupervisor && perfil.tieneObservacionSupervisor === true )
         }
         if ( perfil.registroCompleto === true ) {
           if ( perfil.tieneObservacionSupervisor === true ) {
@@ -233,20 +226,19 @@ export class FormPerfilComponent implements OnInit {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
+        console.log( perfil.observacion, perfil )
         this.perfiles.push(
           this.fb.group(
             {
               estadoSemaforo                : [ perfil.tieneObservacionSupervisor === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ), Validators.required ],
               contratoPerfilId              : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0, Validators.required ],
-              perfilObservacion             : [ ( perfil.contratoPerfilObservacion.length === 0 )
-                                                  ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId, Validators.required ],
               perfilCodigo                  : [ perfil.perfilCodigo ? perfil.perfilCodigo : null, Validators.required ],
               cantidadHvRequeridas          : [ perfil.cantidadHvRequeridas ? perfil.cantidadHvRequeridas : null, Validators.required ],
               cantidadHvRecibidas           : [ perfil.cantidadHvRecibidas ? perfil.cantidadHvRecibidas : null, Validators.required ],
               cantidadHvAprobadas           : [ perfil.cantidadHvAprobadas ? perfil.cantidadHvAprobadas : null, Validators.required ],
               fechaAprobacion               : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               tieneObservacionSupervisor    : [ perfil.tieneObservacionSupervisor !== undefined ? perfil.tieneObservacionSupervisor : null ],
-              observacion                   : [ observacionInterventor.length > 0 ? observacionInterventor[ observacionInterventor.length - 1 ].observacion : null, Validators.required ],
+              observacion                   : [ perfil.observacion !== undefined ? perfil.observacion : null, Validators.required ],
               observacionSupervisor         : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].observacion : null, Validators.required ],
               contratoPerfilObservacionArray: [ perfil.contratoPerfilObservacion.length > 0 ? perfil.contratoPerfilObservacion : [] ],
               fechaObservacion              : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].fechaCreacion : null, Validators.required ],
@@ -448,21 +440,12 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvRecibidas = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas = Number( value.cantidadHvRequeridas );
         value.contratoPerfilNumeroRadicado = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion = value.observacion ? [{ observacion: value.observacion }] : null;
         value.fechaAprobacion = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId = this.contratoId;
         value.proyectoId = this.proyectoId;
       } );
     } else {
       this.perfiles.controls.forEach( perfil => {
-
-        if ( perfil.get( 'contratoPerfilObservacionArray' ).value.length > 0 ) {
-          perfil.get( 'contratoPerfilObservacionArray' ).value.forEach( ( obs, index ) => {
-            if ( obs.contratoPerfilObservacionId === perfil.get( 'perfilObservacion' ).value ) {
-              perfil.get( 'contratoPerfilObservacionArray' ).value.splice( index, 1 );
-            }
-          } );
-        }
 
         perfilesArray.push(
           {
@@ -471,7 +454,7 @@ export class FormPerfilComponent implements OnInit {
             cantidadHvRecibidas: Number( perfil.get( 'cantidadHvRecibidas' ).value ),
             cantidadHvRequeridas: Number( perfil.get( 'cantidadHvRequeridas' ).value ),
             contratoPerfilNumeroRadicado: perfil.get( 'contratoPerfilNumeroRadicado' ).value[0].length === 0 ? null : perfil.get( 'contratoPerfilNumeroRadicado' ).value,
-            contratoPerfilObservacion: perfil.get( 'observacion' ).value !== null ? ( perfil.get( 'contratoPerfilObservacionArray' ).value.length > 0 ? [ ...perfil.get( 'contratoPerfilObservacionArray' ).value, { contratoPerfilObservacionId: perfil.get( 'perfilObservacion' ).value, contratoPerfilId: perfil.get( 'contratoPerfilId' ).value, observacion: perfil.get( 'observacion' ).value } ] : [ { contratoPerfilObservacionId: perfil.get( 'perfilObservacion' ).value, contratoPerfilId: perfil.get( 'contratoPerfilId' ).value, observacion: perfil.get( 'observacion' ).value } ] ) : null,
+            observacion: perfil.get( 'observacion' ).value,
             fechaAprobacion: perfil.get( 'fechaAprobacion' ).value !== null ? new Date( perfil.get( 'fechaAprobacion' ).value ).toISOString() : perfil.get( 'fechaAprobacion' ).value,
             contratoPerfilId: perfil.get( 'contratoPerfilId' ).value,
             perfilCodigo: perfil.get( 'perfilCodigo' ).value,

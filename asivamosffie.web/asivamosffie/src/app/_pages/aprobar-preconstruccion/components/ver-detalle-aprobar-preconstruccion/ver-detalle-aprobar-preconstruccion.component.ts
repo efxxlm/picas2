@@ -41,7 +41,6 @@ export class VerDetalleAprobarPreconstruccionComponent implements OnInit {
         const observacionesTipo3 = [];
         console.log( this.contrato );
         for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
-          // tslint:disable-next-line: no-string-literal
           for ( const perfil of contratacionProyecto.proyecto[ 'contratoPerfil' ] ) {
             for ( const observacion of perfil.contratoPerfilObservacion ) {
               if ( observacion.tipoObservacionCodigo === this.tipoObservaciones.observacionAPoyo ) {
@@ -52,11 +51,9 @@ export class VerDetalleAprobarPreconstruccionComponent implements OnInit {
               }
             }
             if ( observacionesTipo2.length > 0 ) {
-              // tslint:disable-next-line: no-string-literal
-              perfil[ 'observacionApoyo' ] = observacionesTipo2[ observacionesTipo2.length - 1 ];
+              perfil[ 'observacionApoyo' ] = observacionesTipo2.find( obsApoyo => obsApoyo.eliminado === false );
             }
             if ( observacionesTipo3.length > 0 ) {
-              // tslint:disable-next-line: no-string-literal
               perfil[ 'observacionSupervisor' ] = observacionesTipo3[ observacionesTipo3.length - 1 ];
             }
           }

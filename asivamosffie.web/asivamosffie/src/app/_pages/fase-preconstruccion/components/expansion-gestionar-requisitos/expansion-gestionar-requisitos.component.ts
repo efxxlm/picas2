@@ -81,7 +81,6 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
       .subscribe(
         response => {
-          // tslint:disable-next-line: no-string-literal
           this.openDialog( '', `<b>${ response['message'] }</b>` );
           this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
