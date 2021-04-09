@@ -66,7 +66,6 @@ export class FaseDosPagosRendimientosService {
   }
 
   downloadPerformancesInconsistencies(uploadedOrderId :number){
-    //  fileRequest , { responseType: "blob" })
     return this.http.post(
       `${this.urlApi}/downloadPerformancesInconsistencies?uploadedOrderId=${uploadedOrderId}&status=${1}`, {} , {responseType: "blob" })
   }
@@ -81,6 +80,15 @@ export class FaseDosPagosRendimientosService {
     return this.http.post(`${this.urlApi}/includePerformances?uploadedOrderId=${uploadedOrderId}`, {});
   }
 
+  downloadApprovedIncorporatedPerformances(uploadedOrderId :number){
+    return this.http.post(
+      `${this.urlApi}/ApprovedIncorporatedPerformances?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" })
+  }
+
+  generateMinute(uploadedOrderId :number){
+    return this.http.post(
+      `${this.urlApi}/PerformanceMinute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" });
+  }
   uploadMinutes(uploadedOrderId :number, formData: FormData){
     // const formData = new FormData()
     // formData.append('file', documento, documento.name)

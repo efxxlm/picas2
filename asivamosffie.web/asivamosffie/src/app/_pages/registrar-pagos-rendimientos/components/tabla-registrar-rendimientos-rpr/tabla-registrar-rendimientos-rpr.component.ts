@@ -30,22 +30,6 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
   constructor(public dialog: MatDialog, private faseDosPagosRendimientosSvc: FaseDosPagosRendimientosService) { }
 
   ngOnInit(): void {
-    // this.dataSource = new MatTableDataSource(this.dataTable);
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
-    // this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    // this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-    //   if (length === 0 || pageSize === 0) {
-    //     return '0 de ' + length;
-    //   }
-    //   length = Math.max(length, 0);
-    //   const startIndex = page * pageSize;
-    //   // If the start index exceeds the list length, do not try and fix the end index to the end.
-    //   const endIndex = startIndex < length ?
-    //     Math.min(startIndex + pageSize, length) :
-    //     startIndex + pageSize;
-    //   return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-    // };
     this.loadDataSource();
   }
 
@@ -59,6 +43,14 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
       this.dataSource = new MatTableDataSource(response)
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
+
+      this.dataSource.sortingDataAccessor = (item: any , property): string | number => {
+        switch (property) {
+          case 'fechaCargue': return new Date(`${item.fechaCargue}`).toString();
+          default: return item[property];
+        }
+      };
+
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página'
 
       this.paginator._intl.getRangeLabel = (page, pageSize, length) => {

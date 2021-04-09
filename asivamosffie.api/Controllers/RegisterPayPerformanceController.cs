@@ -42,8 +42,7 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    string strUsuario = User.Identity.Name.ToUpper();
-                    respuesta = await _paymentAndPerformancesService.UploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
+                    respuesta = await _paymentAndPerformancesService.UploadFileToValidate(file, typeFile, saveSuccessProcess);
                 }
                 return Ok(respuesta);
             }
@@ -73,7 +72,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var response = await _paymentAndPerformancesService.SetObservationPayments(data.typeFile, data.observaciones, data.cargaPagosRendimientosId);
+                var response = await _paymentAndPerformancesService.SetObservationPayments(data.observaciones, data.cargaPagosRendimientosId);
 
                 return Ok(response);
             }
@@ -284,6 +283,38 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("ApprovedIncorporatedPerformances")]
+        [HttpPost]
+        public async Task<IActionResult> DownloadApprovedIncorporatedPerformances(int uploadedOrderId)
+        {
+            try
+            {
+                
+                var result = await _paymentAndPerformancesService.DownloadApprovedIncorporatedPerfomances
+                    (uploadedOrderId);
+                if (result.IsSuccessful && !result.IsException)
+                {
+                    Stream stream = new FileStream(result.Data.ToString(), FileMode.Open, FileAccess.Read);
+
+                    if (stream == null)
+                        return NotFound();
+                    var file = File(stream, "application/octet-stream");
+                    return file;
+                }
+                else if (result.IsSuccessful && result.IsException)
+                {
+                    //Status409Conflict
+                    return Ok(result);
+                }
+                return BadRequest("Archivo no encontrado");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         [Route("uploadMinutes")]
         [HttpPost]
         public async Task<Respuesta> UploadSignedMinutes(int uploadedOrderId)
@@ -299,20 +330,19 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("downloadTemplate")]
+        [Route("PerformanceMinute")]
         [HttpPost]
-        public async Task<IActionResult> DownloadTemplateMinutes(IFormFile file, [FromQuery] string typeFile, bool saveSuccessProcess)
+        public async Task<IActionResult> DownloadTemplateMinutes(int uploadedOrderId)
         {
             try
             {
                 Respuesta respuesta = new Respuesta();
 
-                if (file.Length > 0 && file.FileName.Contains(".xls"))
-                {
                     string strUsuario = User.Identity.Name;
-                    respuesta = await _paymentAndPerformancesService.UploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
-                }
-                return Ok(respuesta);
+               var  fileBytes = await _paymentAndPerformancesService.GenerateMinute(uploadedOrderId) ;
+
+
+                return File(fileBytes, "application/pdf", "archs" + ".pdf");
             }
             catch (Exception ex)
             {

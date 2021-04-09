@@ -19,7 +19,6 @@ namespace asivamosffie.model.Models
         public bool? Consistente { get; set; }
         public int Row { get; set; }
         public bool? Aprobado { get; set; }
-
         public virtual CarguePagosRendimientos CarguePagosRendimientos { get; set; }
     }
 }

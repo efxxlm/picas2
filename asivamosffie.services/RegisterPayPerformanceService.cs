@@ -19,10 +19,13 @@ using Microsoft.Extensions.Options;
 using asivamosffie.model.AditionalModels;
 using asivamosffie.services.Helpers.Extensions;
 using DinkToPdf;
-using DocumentFormat.OpenXml.Spreadsheet;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace asivamosffie.services
 {
+
     public partial class RegisterPayPerformanceService
     {
         #region Audit
@@ -130,16 +133,6 @@ namespace asivamosffie.services
                        x => x.PerfilId == (int)enumeratorProfile).Include(y => y.Usuario).AsNoTracking().ToList();
             var userMails = usertoSend.Select(x => x.Usuario.Email).ToList<string>();
             isMailSent = this._commonService.EnviarCorreo(userMails, template, subject);
-            //foreach (var fiduciariaEmail in usertoSend)
-            //{
-            //    isMailSent = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
-            //        subject,
-            //        template,
-            //        _mailSettings.Sender,
-            //        _mailSettings.Password,
-            //        _mailSettings.MailServer,
-            //        _mailSettings.MailPort);
-            //}
             return isMailSent;
         }
 
@@ -147,7 +140,7 @@ namespace asivamosffie.services
         private byte[] ConvertirPDF(Plantilla pPlantilla)
         {
             string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            if (!string.IsNullOrEmpty(pPlantilla?.Encabezado?.Contenido))
             {
                 strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             }
@@ -157,14 +150,14 @@ namespace asivamosffie.services
                 ImageQuality = 1080,
                 PageOffset = 0,
                 ColorMode = ColorMode.Color,
-                Orientation = Orientation.Landscape,
+                Orientation = Orientation.Portrait,
                 PaperSize = PaperKind.A4,
                 Margins = new MarginSettings
                 {
-                    Top = pPlantilla.MargenArriba,
-                    Left = pPlantilla.MargenIzquierda,
-                    Right = pPlantilla.MargenDerecha,
-                    Bottom = pPlantilla.MargenAbajo
+                    Top = 10,
+                    Left = 0,
+                    Right = 0,
+                    Bottom = 0
                 },
                 DocumentTitle = DateTime.Now.ToString(),
             };
@@ -220,7 +213,7 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _commonService = commonService;
             _httpContextAccessor = httpContextAccessor;
-            _userName = _httpContextAccessor.HttpContext.User.Identity.Name;
+            _userName = _httpContextAccessor.HttpContext.User.Identity.Name.ToUpper();
         }
 
         #region loads
@@ -266,11 +259,11 @@ namespace asivamosffie.services
         /// Validate and Upload Payments and Performances
         /// </summary>
         /// <param name="pFile"></param>
-        /// <param name="author"></param>
         /// <param name="fileType"></param>
         /// <param name="saveSuccessProcess"></param>
+        /// 
         /// <returns></returns>        
-        public async Task<Respuesta> UploadFileToValidate(IFormFile pFile, string author, string fileType, bool saveSuccessProcess)
+        public async Task<Respuesta> UploadFileToValidate(IFormFile pFile, string fileType, bool saveSuccessProcess)
         {
             int CantidadRegistrosInvalidos = 0;
             int idAction = await GetActionIdAudit(ConstantCodigoAcciones.Validar_Excel_Registro_Pagos);
@@ -284,7 +277,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = true,
                     Code = GeneralCodes.EntradaInvalida,
-                    Message = await SaveAuditAction(author, idAction,
+                    Message = await SaveAuditAction(_userName, idAction,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         GeneralCodes.EntradaInvalida,
                                         actionMesage)
@@ -378,7 +371,7 @@ namespace asivamosffie.services
                         TipoCargue = fileType,
                         FechaCargue = DateTime.Now,
                         Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos),
-                        UsuarioCreacion = author,
+                        UsuarioCreacion = _userName,
                         Errores = JsonConvert.SerializeObject(errors),
                     };
 
@@ -389,7 +382,7 @@ namespace asivamosffie.services
                 {
                     try
                     {
-                        isValidPayment = await ProcessPayment(fileType, listaCarguePagosRendimientos, author);
+                        isValidPayment = await ProcessPayment(fileType, listaCarguePagosRendimientos, _userName);
                     }
                     catch (Exception)
                     {
@@ -416,7 +409,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await SaveAuditAction(author, idAction,
+                    Message = await SaveAuditAction(_userName, idAction,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         GeneralCodes.OperacionExitosa,
                                         actionMesage)
@@ -627,7 +620,7 @@ namespace asivamosffie.services
                 IsException = false,
                 IsValidation = false,
                 Code = GeneralCodes.OperacionExitosa,
-                Message = await SaveAuditAction(author, actionId,
+                Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         codeResponse,
                                         actionMesage)
@@ -853,13 +846,13 @@ namespace asivamosffie.services
                 response.IsSuccessful = false;
                 response.IsException = true;
                 response.Code = GeneralCodes.Error;
-                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
+                response.Message = await SaveAuditAction(_userName, actionId,
                                     enumeratorMenu.GestionarRendimientos,
                                     GeneralCodes.EntradaInvalida,
                                     actionMesage);
             }
 
-            response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
+            response.Message = await SaveAuditAction(_userName, actionId,
                                     enumeratorMenu.GestionarRendimientos,
                                     GeneralCodes.OperacionExitosa,
                                     actionMesage);
@@ -883,7 +876,7 @@ namespace asivamosffie.services
             if (uploadedPerformances == null || uploadedOrderId == 0)
             {
                 response.Code = GeneralCodes.EntradaInvalida;
-                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId,
+                response.Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.GestionarRendimientos,
                                         response.Code,
                                         actionMesage);
@@ -921,7 +914,7 @@ namespace asivamosffie.services
                 if (!isMailSent)
                 {
                     response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
-                    response.Message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
+                    response.Message = await SaveAuditAction(_userName, actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
                     return response;
                 }
@@ -932,13 +925,13 @@ namespace asivamosffie.services
                     {
                         PendienteAprobacion = true,
                         FechaModificacion = DateTime.Now,
-                        UsuarioModificacion = _userName.ToUpper()
+                        UsuarioModificacion = _userName
                     });
 
 
                 response.IsSuccessful = isMailSent;
                 response.Code = ConstMessagesPerformances.CorreoEnviado;
-                string message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
+                string message = await SaveAuditAction(_userName, actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
                 response.Message = message;
             }
@@ -947,7 +940,7 @@ namespace asivamosffie.services
                 response.IsSuccessful = false;
                 response.IsException = true;
                 response.Code = GeneralCodes.Error;
-                response.Message = await SaveAuditAction(_userName.ToUpper(), actionId, enumeratorMenu.GestionarRendimientos,
+                response.Message = await SaveAuditAction(_userName, actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, ex.SubstringValid(_500));
             }
 
@@ -966,11 +959,11 @@ namespace asivamosffie.services
         /// <param name="listaCarguePagosRendimientos"></param>
         public async Task<bool> ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos, string author)
         {
-            foreach (var pagoRendimiento in listaCarguePagosRendimientos)
+            foreach (var payment in listaCarguePagosRendimientos)
             {
                 if (typeFile == "Pagos")
                 {
-                    string cellValue = pagoRendimiento["Número de orden de giro"];
+                    string cellValue = payment["Número de orden de giro"];
                     var solicitud = await _context.SolicitudPago.Where(
                     x => x.NumeroSolicitud == cellValue)
                     .Include(solicitud => solicitud.OrdenGiro)
@@ -990,7 +983,7 @@ namespace asivamosffie.services
                     //if (gestionFuentesFinanciacion == null) 
                     //    return false;
                    
-                    var valorSolicitado = pagoRendimiento["Valor neto girado"];
+                    var valorSolicitado = payment["Valor neto girado"];
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
                     pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
                     pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
@@ -1010,7 +1003,7 @@ namespace asivamosffie.services
             return true;
         }
 
-        public async Task<Respuesta> SetObservationPayments(string author, string observaciones, int uploadedOrderId)
+        public async Task<Respuesta> SetObservationPayments(string observaciones, int uploadedOrderId)
         {
             Respuesta response = new Respuesta();
             string actionMesage = ConstantCommonMessages.Performances.OBSERVACIONES_PAGOS;
@@ -1019,7 +1012,7 @@ namespace asivamosffie.services
             if (string.IsNullOrWhiteSpace(observaciones))
             {
                 response.Code = GeneralCodes.CamposVacios;
-                response.Message = await SaveAuditAction(author, actionId,
+                response.Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         GeneralCodes.EntradaInvalida,
                                         actionMesage);
@@ -1033,7 +1026,7 @@ namespace asivamosffie.services
                       .UpdateAsync(o => new CarguePagosRendimientos()
                       {
                           FechaModificacion = DateTime.Now,
-                          UsuarioModificacion = author,
+                          UsuarioModificacion = _userName,
                           Observaciones = observaciones
                       });
 
@@ -1042,7 +1035,7 @@ namespace asivamosffie.services
 
             response.IsSuccessful = true;
             response.Code = codeResponse;
-            response.Message = await SaveAuditAction(author, actionId,
+            response.Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         codeResponse,
                                         actionMesage);
@@ -1148,6 +1141,11 @@ namespace asivamosffie.services
         }
 
 
+        //public async Task<Respuesta> DownloadPerformances(string menu, string actionMessage, int uploadedOrderId)
+        //{
+
+        //}
+
         public async Task<Respuesta> GetManagedPerformancesByStatus(string author, int uploadedOrderId, bool? withConsistentOrders = null)
         {
             Respuesta response = new Respuesta();
@@ -1163,6 +1161,8 @@ namespace asivamosffie.services
 
             if (uploadedOrderId == 0)
             {
+                response.IsValidation = true;
+                response.IsSuccessful = false;
                 response.Code = GeneralCodes.EntradaInvalida;
                 response.Message = await SaveAuditAction(author, actionId,
                                         menu,
@@ -1180,7 +1180,7 @@ namespace asivamosffie.services
                             }).FirstOrDefault();
 
             var rendimientosIncorporados = _context.RendimientosIncorporados.Where(x => 
-                            x.CarguePagosRendimientosId == uploadedOrderId).AsNoTracking();
+                            x.CarguePagosRendimientosId == uploadedOrderId);
 
 
             if (string.IsNullOrWhiteSpace(collection.ArchivoJson))
@@ -1192,7 +1192,7 @@ namespace asivamosffie.services
                                         actionMesage);
                 return response;
             }
-
+            
             var managedPerfomances = MapManagedPerformances(rendimientosIncorporados, collection.Uploaded);
 
             if (withConsistentOrders.HasValue)
@@ -1250,16 +1250,6 @@ namespace asivamosffie.services
                 };
                 managedPerformances.Add(managedPerformanceOrder);
             }
-                
-
-                //var performance = (ManagedPerformancesOrder)uploadedOrder;
-
-               
-                    //PerformancesDate = item.FechaRendimientos.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    //AccountNumber = item.CuentaBancaria,
-                    //ExemptPerformances = uploadedOrder.ExemptPerformances
-
-
             return managedPerformances;
         }
 
@@ -1275,53 +1265,336 @@ namespace asivamosffie.services
                x.CargaPagosRendimientosId
            }).AsNoTracking();
 
-            performancesOrders.ToList().ForEach(requestedApproval =>
-            {
-                int builtInRegister = 0;
-                List<ManagedPerformancesOrder> list = JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(requestedApproval.TramiteJson);
-                builtInRegister = list.Where(x => x.BuiltIn.HasValue && x.BuiltIn.Value == true).Count();
-                requestedApprovals.Add(new
-                {
-                    requestedApproval.FechaCargue,
-                    requestedApproval.CargaPagosRendimientosId,
-                    RegistrosIncorporados = builtInRegister,
-                });
 
-            });
+            var rendimientosIncorporados = from performance in _context.RendimientosIncorporados
+                                           join register in _context.CarguePagosRendimientos 
+                                            on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId                                           
+                                           group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue } into g                                          
+                                           select new { RegisterId = g.Key.CarguePagosRendimientosId, 
+                                               RegistrosIncorporados = g.Sum(x => x.Aprobado.HasValue && x.Aprobado.Value ? 1: 0),
+                                               FechaCargue = g.Key.FechaCargue };
+              //  Include(r => r.CarguePagosRendimientos).AsNoTracking(); ;
 
-            return requestedApprovals;
+            //var collection = rendimientosIncorporados.FirstOrDefault().CarguePagosRendimientos;
+
+            //performancesOrders.ToList().ForEach(requestedApproval =>
+            //{
+            //    int builtInRegister = 0;
+            //    List<ManagedPerformancesOrder> list = JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(requestedApproval.TramiteJson);
+            //    builtInRegister = list.Where(x => x.BuiltIn.HasValue && x.BuiltIn.Value == true).Count();
+            //    requestedApprovals.Add(new
+            //    {
+            //        requestedApproval.FechaCargue,
+            //        requestedApproval.CargaPagosRendimientosId,
+            //        RegistrosIncorporados = builtInRegister,
+            //    });
+
+            //});
+
+            return rendimientosIncorporados.ToList<dynamic>();
         }
 
 
         /// Incorporar rendimientos
-        /// 
-        public Task<Respuesta> IncludePerformances(int uploadOrderId)
-        {
-            // Deserialize ManagedPerformanceOrders
+        /// // Deserialize ManagedPerformanceOrders
             // foreach account 
             // cuentas
             // saldos en fuentest modificar
             // 
 
             // Add a column incorporado en Cargue o nueva tabla
+        public async Task<Respuesta> IncludePerformances(int uploadedOrderId)
+        {
+            Respuesta response = new Respuesta();
+            string actionMesage = ConstantCommonMessages.Performances.INCORPORAR_RENDIMIENTOS;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Aprobar_Incorporacion_Rendimientos);
+            enumeratorMenu menu = enumeratorMenu.AprobarIncorporacionRendimientos;
 
-            // Se incorpora todo el bloque o solo los consistentes ? 
-            return null;
+            
+
+            var rendimientosIncorporados = _context.RendimientosIncorporados.Where(x =>
+                            x.CarguePagosRendimientosId == uploadedOrderId && x.Consistente == true)
+                .Include( r => r.CarguePagosRendimientos);
+
+            var collection = rendimientosIncorporados.FirstOrDefault().CarguePagosRendimientos;
+ 
+            var managedPerfomances = MapManagedPerformances(rendimientosIncorporados, collection.Json);
+
+            foreach (var accountReturnOrder in managedPerfomances)
+            {
+                var bankAccount = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountReturnOrder.AccountNumber)
+                    .AsNoTracking().ToList<CuentaBancaria>().FirstOrDefault();
+
+                if (bankAccount == null)
+                {
+                    new Exception("La cuenta asignada no existe");
+                    response.IsValidation = true;
+                    response.IsSuccessful = false;
+                    response.Data = $"Cuenta bancaria No. {accountReturnOrder.AccountNumber} no encontrada";
+
+                    response.Code = GeneralCodes.EntradaInvalida;
+                    response.Message = await SaveAuditAction(_userName, actionId,
+                                            menu,
+                                            response.Code,
+                                            actionMesage);
+                    return response;
+                }
+
+                var gestionFuenteFinanciacionId = (int)bankAccount.FuenteFinanciacionId;
+
+                decimal valorSolicitado = accountReturnOrder.PerformancesToAdd;
+
+                var gestionFuenteFinanciacion = new GestionFuenteFinanciacion();
+                gestionFuenteFinanciacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
+                gestionFuenteFinanciacion.ValorSolicitado = valorSolicitado;
+                gestionFuenteFinanciacion.UsuarioCreacion = _userName;
+
+                var sumValoresSolicitados = _context.GestionFuenteFinanciacion
+                    .Where(x => !(bool)x.Eliminado && 
+                                 x.FuenteFinanciacionId == gestionFuenteFinanciacion.FuenteFinanciacionId)
+                    .Sum(x => x.ValorSolicitado);
+
+                var fuente = await _context.FuenteFinanciacion.FindAsync(gestionFuenteFinanciacion.FuenteFinanciacionId);
+                gestionFuenteFinanciacion.SaldoActual = (decimal)fuente.ValorFuente - sumValoresSolicitados;
+                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual - gestionFuenteFinanciacion.ValorSolicitado;
+                int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
+                gestionFuenteFinanciacion.FechaCreacion = DateTime.Now;
+                gestionFuenteFinanciacion.EstadoCodigo = estado.ToString();
+                gestionFuenteFinanciacion.Eliminado = false; 
+
+                 _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacion);
+            }
+
+            await _context.Set<RendimientosIncorporados>()
+                .Where(order => order.CarguePagosRendimientosId == uploadedOrderId)
+                .UpdateAsync(o => new RendimientosIncorporados()
+                {
+                    Aprobado = true
+                });
+            int rowCount = await _context.SaveChangesAsync();
+
+            response.Data = rendimientosIncorporados.Count(); ; 
+            response.IsSuccessful = true;
+            response.IsException = false;
+            response.Code = GeneralCodes.OperacionExitosa;
+            response.Message = await SaveAuditAction(_userName, actionId,
+                                    menu,
+                                    response.Code,
+                                    actionMesage);
+            return response;
         }
 
-        public void VerRegistrosIncorporados(int uploadOrderId)
+        public async Task<Respuesta> DownloadApprovedIncorporatedPerfomances(int uploadedOrderId)
         {
+            Respuesta response = new Respuesta();
+            var rendimientosIncorporados =(from performance in _context.RendimientosIncorporados
+                                          where performance.CarguePagosRendimientosId == uploadedOrderId
+                                          select  new ApprovedPerfomancesDto 
+                                            {
+                                                CuentaBancaria  = performance.CuentaBancaria,
+                                                TotalRendimientosGenerados = performance.TotalRendimientosGenerados,
+                                                Incorporados = performance.Incorporados,
+                                                ProvisionGravamenFinanciero = performance.ProvisionGravamenFinanciero,
+                                                TotalGastosBancarios = performance.TotalGastosBancarios,
+                                                TotalGravamenFinancieroDescontado = performance.TotalGravamenFinancieroDescontado,
+                                                Visitas = performance.Visitas,
+                                                RendimientoIncorporar = performance.RendimientoIncorporar
+                                            }).ToList();
 
+
+        
+            string directory = CheckFileDownloadDirectory();
+            string filePath = WriteCollectionToPath("RendimientosTramitados", directory, rendimientosIncorporados, null);
+            ////the path of the file
+            string newfilePath = directory + "/" + "RendimientosTramitados" + "_rev.xlsx";
+
+            response.Data = filePath;
+            response.IsSuccessful = true;
+            //response.Message = await SaveAuditAction(author, actionId,
+            //                            menu,
+            //                            GeneralCodes.OperacionExitosa,
+            //                            actionMesage);
+
+            return response;
+
+
+
+            // TODO Review Payment concept..
+            //    var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
+
+            //    var visitas = accountPayments.Sum(v => v.ValorNetoGiro);
+            //    var account = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountOrder.AccountNumber).FirstOrDefault();
+
+
+            //    if (account == null)
+            //    {
+            //        new Exception("La cuenta asignada no existe");
+            //    }
+            //    var fundingSources = await _context.FuenteFinanciacion.
+            //        Where(r => !(bool)r.Eliminado && account.FuenteFinanciacionId == r.FuenteFinanciacionId).
+            //        Include(r => r.Aportante).ToListAsync();
+
+            //    foreach (var fundingSource in fundingSources)
+            //    {
+            //        fundingSource.ControlRecurso = _context.ControlRecurso
+            //            .Where(x => x.FuenteFinanciacionId == fundingSource
+            //            .FuenteFinanciacionId && !(bool)x.Eliminado).AsNoTracking().ToList();
+            //        foreach (var control in fundingSource.ControlRecurso)
+            //        {
+            //            control.FuenteFinanciacion = null; //
+            //        }
+
+            //        foreach (var element in fundingSource.ControlRecurso)
+            //        {
+            //            valorAporteEnCuenta += element.ValorConsignacion;
+            //        }
+            //    }
         }
 
-        public void GenerarActa(string author, int uploadOrderId)
+        static void RegisterSafeTypes<T>()
         {
+
+            Type listType = typeof(T);
+            var properties = listType.GetProperties();
+            int index = 1;
+
+            var safePropertyNames = listType.GetProperties()
+                       .Select(p => p.Name)
+                       .ToArray();
+
+            foreach (var property in properties)
+            {
+               
+                Console.WriteLine("Marking {0}.{1} as safe", property.Name, safePropertyNames);
+            }
+            DotLiquid.Template.RegisterSafeType(listType, safePropertyNames);
+        }
+
+
+        //        APORTANTE
+
+        //SALDO ANTERIOR RENDIMIENTOS INCORPORADOS
+        //RENDIMIENTOS A INCORPORADOS EN ESTE MES
+        //NUEVO SALDO RENDIMIENTOS INCORPORADOS
+        //Listado de aportantes de registros consistentes cargados en la funcionalidad "Gestionar rendimientos"
+        //Se deben tomar del valor incorporado en el mes anterior
+
+        //Registros consistentes de rendimientos incorporados cargados en la funcionalidad "Gestionar rendimientos"
+
+        //Sumatoria de "Saldo anterior rendimientos incorporados" y "Rendimientos a incorporados en este mes"
+        public async Task<byte[]> GenerateMinute(int uploadOrderId)
+        {
+            var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+
+            var report = await GenerarActaRendimientos(2);
+
+
+
+            // var templateFilePath = System.IO.Path.Combine(workingDirectory, @"Templates/PerformanceMinute.html");
+            var minute = new MinuteTemplate
+            {
+                PerformancesDate = DateTime.Now.ToString(),
+                Registers = report
+            };
+            string htmlTemplate= "";
+            var dire = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var templateFilePath = string.Concat(workingDirectory, System.IO.Path.DirectorySeparatorChar, @"Templates", System.IO.Path.DirectorySeparatorChar, "PDF", System.IO.Path.DirectorySeparatorChar, @"PerformanceMinute.liquid");
+            using (var templateStream = System.IO.File.OpenRead(templateFilePath))
+            using (var renderDocument = new System.IO.MemoryStream())
+            {
+                using (var streamReader = new StreamReader(templateStream))
+                {
+                    var templateContent = streamReader.ReadToEnd();
+                    var template = DotLiquid.Template.Parse(templateContent);
+                    RegisterSafeTypes<MinuteTemplate>();
+                    RegisterSafeTypes<DataResult>();
+                    // DotLiquid.Template.RegisterSafeType(typeof(DataResult), new[] { "PerformancesDate" });
+                    //  DotLiquid.Template templssate = DotLiquid.Template.Parse(template);  // Parses and compiles the template
+                    htmlTemplate = template.Render(DotLiquid.Hash.FromAnonymousObject(new { minute = minute })); // Renders the output => "hi tobi";                }
+                }
+            }
+
+
             // Datos 
             // Leer estructura pdf
             // Generar PDF
-
+            //Hash hash = Hash.FromAnonymousObject(new { Model = data });
+            //Template template = Template.Parse(liquidTemplateString);
+            //string renderedOutput = template.Render(hash);
             // this.GetPDFMinutes();
+            var plantilla = new Plantilla();
+            plantilla.Contenido = htmlTemplate;
+            return ConvertirPDF(plantilla);
         }
+
+
+        public async Task<List<DataResult>> GenerarActaRendimientos(int mesActual)
+        {
+            string idSequence = string.Empty;
+            List<DataResult> resultSource = new List<DataResult>();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                //System.Data.SqlClient.SqlParameter[] parameterList = new System.Data.SqlClient.SqlParameter[]
+                //       {
+                //         new System.Data.SqlClient.SqlParameter("@mesActual", mesActual )
+                //       };
+
+                command.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@mesActual", mesActual));
+
+                command.CommandText = "GenerarActaRendimientos";
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                if (command.Connection.State != System.Data.ConnectionState.Open)
+                {
+                    command.Connection.Open();
+                }
+
+                System.Data.Common.DbDataReader reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new DataResult
+                        {
+                            
+                            Numero = reader.GetString(0),
+                            Aportante = reader.GetString(1),
+                            Actual = reader.GetDecimal(2),
+                            Anterior = reader.GetDecimal(3)
+                        };
+                        resultSource.Add(row);
+                    }
+                }
+                reader.Dispose();
+            }
+            return resultSource;
+        }
+
+        //public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
+        //{
+        //    using (System.Data.SqlClient.SqlConnection sql = new SqlConnection(_connectionString))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("GetBudgetAvailabilityRequest", sql))
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            var response = new List<CustonReuestCommittee>();
+        //            await sql.OpenAsync();
+
+        //            using (var reader = await cmd.ExecuteReaderAsync())
+        //            {
+        //                while (await reader.ReadAsync())
+        //                {
+        //                    response.Add(MapToValue(reader));
+        //                }
+        //            }
+
+        //            return response;
+        //        }
+        //    }
+        //}
 
 
         public async Task<byte[]> GetPDFMinutes(int id, string usuarioModificacion)
@@ -1330,127 +1603,12 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
-            DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
-                .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
-            //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
-
-            if (disponibilidad == null)
-            {
-                return Array.Empty<byte>();
-            }
-            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = await ReemplazarDatosPlantilla(plantilla.Contenido, false);
-            plantilla.Contenido = contenido;
+          
+            var plantilla = new Plantilla();
+            //Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            //string contenido = await ReemplazarDatosPlantilla(plantilla.Contenido, false);
+            plantilla.Contenido = "";
             return ConvertirPDF(plantilla);
-        }
-
-
-        private async Task<string> ReemplazarDatosPlantilla(string strContenido, bool pEsContruccion)
-        {
-            CultureInfo ci = new CultureInfo("es-MX");
-
-            Contrato contrato = new Contrato();
-
-            Plantilla plantilla = new Plantilla();
-            if (pEsContruccion)
-            {
-                plantilla = await _context.Plantilla
-                   .Include(r => r.Encabezado)
-                   .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Obra_Construccion)
-                   .ToString()).FirstOrDefaultAsync();
-            }
-
-            Usuario Supervisor = contrato.UsuarioInterventoria;
-
-            //Registros Proyectos 
-            string PlantillaRegistrosProyectos = _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registro_Proyectos_Acta).ToString()).FirstOrDefault().Contenido;
-            string RegistrosProyectos = string.Empty;
-
-            List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
-
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-
-            foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-            {
-                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                Localizacion Departamento = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-                InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
-                RegistrosProyectos += PlantillaRegistrosProyectos;
-                RegistrosProyectos = RegistrosProyectos
-                    .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
-                    .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                    .Replace("[DEPARTAMENTO]", Departamento.Descripcion)
-                    .Replace("[MUNICIPIO]", Municipio.Descripcion)
-                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa.Nombre)
-                    .Replace("[SEDE]", Sede.Nombre);
-            }
-
-            string MesesFase1 = string.Empty;
-            string DiasFase1 = string.Empty;
-            string MesesFase2 = string.Empty;
-            string DiasFase2 = string.Empty;
-
-            MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes / " : " meses / ");
-            DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
-            MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes / " : " meses / ");
-            DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " dia " : " dias ");
-
-            string MesesFase1Contrato = string.Empty;
-            string DiasFase1Contrato = string.Empty;
-
-            MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / ");
-            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día " : " días  ");
-
-
-            plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
-            plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_POLIZA]", contrato.ContratoPoliza.FirstOrDefault().NumeroPoliza);
-
-            plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_CONTRATO_OBRA]", contrato.NumeroContrato);
-            plantilla.Contenido = plantilla.Contenido.Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos);
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_ACTA_INICIO_OBRA]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : " ");
-
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.PrimerNombre + " " + Supervisor.PrimerApellido);
-            plantilla.Contenido = plantilla.Contenido.Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " - ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVENTORIA]", Supervisor?.NumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
-
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal);
-            plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina);
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp);
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_GENERACION_DRP]", (bool)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp.HasValue ? ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yyyy") : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy")));
-            plantilla.Contenido = plantilla.Contenido.Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto);
-            decimal ValorInicialContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE1_PREC]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " ) ") : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )") : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " )" : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )" : " ");
-            decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
-            plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_1]", MesesFase1 + DiasFase1);
-            plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_2]", MesesFase2 + DiasFase2);
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_PREVISTA_TERMINACION]", contrato.FechaTerminacion.HasValue ? ((DateTime)contrato.FechaTerminacion).ToString("dd-MM-yyyy") : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[OBSERVACIONES]", contrato.Observaciones);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[CC_SUPERVISOR]", contrato?.UsuarioInterventoria.NumeroIdentificacion ?? " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[CARGO]", " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
-
-            return strContenido;
-
         }
 
     }

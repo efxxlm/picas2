@@ -14,3 +14,11 @@
 .textoGris{
     color: var(--fontColor) !important;
 }
+
+.input-file--btn{
+    &:hover {
+        background-color: #d1d1d1;
+        background-color: var(--grayColor);
+        text-decoration: none;
+      }
+}
