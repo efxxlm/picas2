@@ -35,15 +35,23 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
     numeroIdentificacion: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(12)])
     ],
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
       Validators.required, Validators.maxLength(500)])
     ],
-    telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
+    telefono: [
+      null,
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.minLength(7),
+        Validators.maxLength(10),
+        Validators.min(9999999),
+        Validators.max(9999999999)
+      ])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,
@@ -73,8 +81,16 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     direccion: [null, Validators.compose([
       Validators.required, Validators.maxLength(500)])
     ],
-    telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
+    telefono: [
+      null,
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.minLength(7),
+        Validators.maxLength(10),
+        Validators.min(9999999),
+        Validators.max(9999999999)
+      ])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,
@@ -98,7 +114,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
     numeroIdentificacion: [null, Validators.compose([
-      Validators.required, Validators.maxLength(12)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(12)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.maxLength(12)])
@@ -108,8 +124,16 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     direccion: [null, Validators.compose([
       Validators.required, Validators.maxLength(500)])
     ],
-    telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
+    telefono: [
+      null,
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.minLength(7),
+        Validators.maxLength(10),
+        Validators.min(9999999),
+        Validators.max(9999999999)
+      ])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,

@@ -389,6 +389,7 @@ export class HojaVidaContratistaComponent implements OnInit {
 
   agregarNumeroRadicado( numeroRadicado: number, construccionPerfilId: number ) {
     this.numeroRadicado( numeroRadicado ).push( this.fb.group({ construccionPerfilNumeroRadicadoId: 0, construccionPerfilId, numeroRadicado: '' }) );
+    if (this.estaEditando) this.formContratista.markAllAsTouched();
   }
 
   eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
