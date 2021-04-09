@@ -82,6 +82,7 @@ export class ActualizarPolizaRapgComponent implements OnInit {
                 response => {
                     this.contratoPoliza = response;
                     this.responsable = this.contratoPoliza.userResponsableAprobacion;
+                    console.log( this.contratoPoliza );
 
                     if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
                         if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
