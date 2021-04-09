@@ -22,6 +22,7 @@ using DinkToPdf;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 namespace asivamosffie.services
 {
@@ -1485,17 +1486,22 @@ namespace asivamosffie.services
         public async Task<byte[]> GenerateMinute(int uploadOrderId)
         {
             var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var uploadOrder  = await _context.CarguePagosRendimientos.FindAsync(uploadOrderId);
 
-
-            var report = await GenerarActaRendimientos(2);
-
-
-
+            var report = await GenerarActaRendimientos(uploadOrder.FechaCargue.Month);
+            decimal actual = report.Sum(x => x.Actual).HasValue ? report.Sum(x => x.Actual).Value: 0;
+            decimal anterior = report.Sum(x => x.Anterior).HasValue ? report.Sum(x => x.Actual).Value : 0;
+            var image = ImageToBase64();
             // var templateFilePath = System.IO.Path.Combine(workingDirectory, @"Templates/PerformanceMinute.html");
             var minute = new MinuteTemplate
             {
                 PerformancesDate = DateTime.Now.ToString(),
-                Registers = report
+                Registers = report,
+                Image = "data:image/png;base64," + image,
+                Actual = actual,
+                Anterior = anterior,
+                Total = actual + anterior
+
             };
             string htmlTemplate= "";
             var dire = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -1529,6 +1535,25 @@ namespace asivamosffie.services
             return ConvertirPDF(plantilla);
         }
 
+        public string ImageToBase64()
+        {
+            var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var templateFilePath = string.Concat(workingDirectory, System.IO.Path.DirectorySeparatorChar, @"Templates", Path.DirectorySeparatorChar, @"FFIE.png");
+
+            using (Image image = Image.FromFile(templateFilePath))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+
+                    // Convert byte[] to Base64 String
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+        }
+
 
         public async Task<List<DataResult>> GenerarActaRendimientos(int mesActual)
         {
@@ -1536,11 +1561,6 @@ namespace asivamosffie.services
             List<DataResult> resultSource = new List<DataResult>();
             using (var command = _context.Database.GetDbConnection().CreateCommand())
             {
-                //System.Data.SqlClient.SqlParameter[] parameterList = new System.Data.SqlClient.SqlParameter[]
-                //       {
-                //         new System.Data.SqlClient.SqlParameter("@mesActual", mesActual )
-                //       };
-
                 command.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@mesActual", mesActual));
 
                 command.CommandText = "GenerarActaRendimientos";
@@ -1563,7 +1583,8 @@ namespace asivamosffie.services
                             Numero = reader.GetString(0),
                             Aportante = reader.GetString(1),
                             Actual = reader.GetDecimal(2),
-                            Anterior = reader.GetDecimal(3)
+                            Anterior = reader.GetDecimal(3),
+                            Total = reader.GetDecimal(4)
                         };
                         resultSource.Add(row);
                     }

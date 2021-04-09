@@ -79,7 +79,7 @@
   <body lang="ES-CO" style="word-wrap: break-word">
 
   <div style="text-align: center;">
-  <img src="FFIE.png" alt="FFIE">
+  <img src="{{ minute.image }}" alt="FFIE">
   </div>
     <div class="WordSection1">
       <p class="Standard" style="margin-bottom: 0cm; line-height: normal">
@@ -91,7 +91,7 @@
         align="center"
         style="margin-bottom: 0cm; text-align: center; line-height: normal"
       >
-        <b>ACTA DE INCORPORACIÃ“N DE RENDIMIENTOS</b>
+        <b>ACTA DE INCORPORACIÓN DE RENDIMIENTOS</b>
       </p>
 
       <p
@@ -110,7 +110,7 @@
         <b>Acta No. </b
         ><i
           ><span style="color: red"
-            >Consecutivo generado por el sistema</span
+            >0001</span
           ></i
         >
       </p>
@@ -120,7 +120,7 @@
       </p>
 
       <p class="Standard" style="margin-bottom: 0cm; line-height: normal">
-        BogotÃ¡,
+        Bogotá,
         <i
           ><span style="color: red">
             {{ minute.performances_date }}
@@ -304,7 +304,7 @@
             >
               <i
                 ><span style="font-size: 10pt; color: red"
-                  >{{item.anterior}}</span
+                  >${{item.anterior}}</span
                 ></i
               >
             </p>
@@ -332,7 +332,7 @@
             >
               <i
                 ><span style="font-size: 10pt; color: red"
-                  >{{item.anterior}}</span
+                  >${{item.actual}}</span
                 ></i
               >
             </p>
@@ -360,7 +360,7 @@
             >
               <i
                 ><span style="font-size: 10pt; color: red"
-                  >{{item.actual}}</span
+                  >${{item.total}}</span
                 ></i
               >
             </p>
@@ -413,7 +413,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">{{minute.total}}</span></i>
+              <i><span style="color: red">${{minute.anterior}}</span></i>
             </p>
           </td>
           <td
@@ -438,7 +438,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">Formato pesos ($)</span></i>
+              <i><span style="color: red">${{minute.actual}}</span></i>
             </p>
           </td>
           <td
@@ -463,7 +463,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">Formato pesos ($)</span></i>
+              <i><span style="color: red">${{minute.total}}</span></i>
             </p>
           </td>
         </tr>
