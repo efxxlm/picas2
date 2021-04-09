@@ -208,7 +208,8 @@ namespace asivamosffie.services
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     contratoPerfilObservacionOld.Eliminado = false;
-                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
+                                    contratoPerfilObservacionOld.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion?.ToUpper();
                                 }
                                 else
                                 {
@@ -443,9 +444,7 @@ namespace asivamosffie.services
 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor || pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                     contratoMod.EstaDevuelto = true;
-
-
-
+                 
                 //Enviar Correo Botón aprobar inicio 3.1.6
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
