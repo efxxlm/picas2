@@ -22,6 +22,7 @@ using DinkToPdf;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 namespace asivamosffie.services
 {
@@ -302,6 +303,7 @@ namespace asivamosffie.services
                 var bankAccounts = _context.CuentaBancaria.Where(
                     x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
 
+                List<string> accounts = new List<string>();
                 bool accountsDifferents = columnAccounst.Count != worksheet.Dimension.Rows - 1;
 
                 // Query payment 
@@ -329,7 +331,7 @@ namespace asivamosffie.services
                         }
                         else if (fileType == "Rendimientos")
                         {
-                            var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts);
+                            var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts, accounts);
 
                             carguePagosRendimiento = validatedValues.list;
                             if (validatedValues.errors != null)
@@ -514,7 +516,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
+        private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts, List<string> accounts)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
             List<ExcelError> errors = new List<ExcelError>();
@@ -534,6 +536,7 @@ namespace asivamosffie.services
             string dateValue = worksheet.Cells[2, 1].Text;
             TryStringToDate(dateValue, out DateTime guideDate);
             int month = guideDate.Month;
+
 
             carguePagosRendimiento.Add("Row", indexRow.ToString());
             foreach (var rowFormat in performanceStructure)
@@ -564,6 +567,12 @@ namespace asivamosffie.services
 
                 if (errors.Count  == 0 && rowFormat.Key == "Número de Cuenta")
                 {
+                    if (accounts.Any(x => x == cellValue))
+                    {
+                        errors.Add(new ExcelError(indexRow, indexCell + 1, $" El archivo cuenta con números de cuenta ya repetidos. Por favor verifique y vuelva a cargar."));
+                    }
+                    accounts.Add(cellValue);
+
                     var activeAccount = bankAccounts.SingleOrDefault(account => account.NumeroCuentaBanco == cellValue);
                     var hasError = activeAccount == null;
                     if (activeAccount != null)
@@ -1485,17 +1494,22 @@ namespace asivamosffie.services
         public async Task<byte[]> GenerateMinute(int uploadOrderId)
         {
             var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var uploadOrder  = await _context.CarguePagosRendimientos.FindAsync(uploadOrderId);
 
-
-            var report = await GenerarActaRendimientos(2);
-
-
-
+            var report = await GenerarActaRendimientos(uploadOrder.FechaCargue.Month);
+            decimal actual = report.Sum(x => x.Actual).HasValue ? report.Sum(x => x.Actual).Value: 0;
+            decimal anterior = report.Sum(x => x.Anterior).HasValue ? report.Sum(x => x.Actual).Value : 0;
+            var image = ImageToBase64();
             // var templateFilePath = System.IO.Path.Combine(workingDirectory, @"Templates/PerformanceMinute.html");
             var minute = new MinuteTemplate
             {
                 PerformancesDate = DateTime.Now.ToString(),
-                Registers = report
+                Registers = report,
+                Image = "data:image/png;base64," + image,
+                Actual = actual,
+                Anterior = anterior,
+                Total = actual + anterior
+
             };
             string htmlTemplate= "";
             var dire = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -1529,6 +1543,25 @@ namespace asivamosffie.services
             return ConvertirPDF(plantilla);
         }
 
+        public string ImageToBase64()
+        {
+            var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var templateFilePath = string.Concat(workingDirectory, System.IO.Path.DirectorySeparatorChar, @"Templates", Path.DirectorySeparatorChar, @"FFIE.png");
+
+            using (Image image = Image.FromFile(templateFilePath))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+
+                    // Convert byte[] to Base64 String
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+        }
+
 
         public async Task<List<DataResult>> GenerarActaRendimientos(int mesActual)
         {
@@ -1536,11 +1569,6 @@ namespace asivamosffie.services
             List<DataResult> resultSource = new List<DataResult>();
             using (var command = _context.Database.GetDbConnection().CreateCommand())
             {
-                //System.Data.SqlClient.SqlParameter[] parameterList = new System.Data.SqlClient.SqlParameter[]
-                //       {
-                //         new System.Data.SqlClient.SqlParameter("@mesActual", mesActual )
-                //       };
-
                 command.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@mesActual", mesActual));
 
                 command.CommandText = "GenerarActaRendimientos";
@@ -1563,7 +1591,8 @@ namespace asivamosffie.services
                             Numero = reader.GetString(0),
                             Aportante = reader.GetString(1),
                             Actual = reader.GetDecimal(2),
-                            Anterior = reader.GetDecimal(3)
+                            Anterior = reader.GetDecimal(3),
+                            Total = reader.GetDecimal(4)
                         };
                         resultSource.Add(row);
                     }

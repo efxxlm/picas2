@@ -202,12 +202,22 @@ namespace asivamosffie.model.APIModels
         public decimal? Anterior { get; set; }
 
         public decimal? Actual { get; set; }
+
+        public decimal? Total { get; set; }
     }
 
 
     public class MinuteTemplate
     {
         public string PerformancesDate { get; set; }
+
+        public string Image { get; set; }
+
+        public decimal Actual { get; set; }
+
+        public decimal Anterior { get; set; }
+
+        public decimal Total { get; set; }
         public List<DataResult> Registers { get; set; }
     }
     
