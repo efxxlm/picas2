@@ -197,7 +197,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionSupervisor;
-
+                            contratoPerfilOld.RegistroCompletoPerfilesProyecto = ValidarRegistroCompletoPerfilesProyecto(ContratacionProyecto.Proyecto);
                             if (contratoPerfilOld.RegistroCompleto == false)
                                 RegistroCompletoContrato = false;
 
@@ -249,6 +249,7 @@ namespace asivamosffie.services
                             CreateEdit = "CREAR CONTRATO PERFIL";
                             ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                             ContratoPerfil.FechaCreacion = DateTime.Now;
+                            ContratoPerfil.RegistroCompletoPerfilesProyecto = ValidarRegistroCompletoPerfilesProyecto(ContratacionProyecto.Proyecto); 
                             ContratoPerfil.Eliminado = false; 
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
@@ -335,6 +336,16 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, pContrato.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private bool  ValidarRegistroCompletoPerfilesProyecto(Proyecto proyecto)
+        {
+            foreach (var ContratoPerfil in proyecto.ContratoPerfil)
+            {
+                if (!ValidarRegistroCompletoContratoPerfil(ContratoPerfil))
+                    return false;
+            } 
+            return true;
         }
 
         public async Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion)
