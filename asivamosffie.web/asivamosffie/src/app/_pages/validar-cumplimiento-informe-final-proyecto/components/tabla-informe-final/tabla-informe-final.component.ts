@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -44,7 +45,8 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     public dialog: MatDialog,
-    private validarCumplimientoInformeFinalService: ValidarCumplimientoInformeFinalService
+    private validarCumplimientoInformeFinalService: ValidarCumplimientoInformeFinalService,
+    private routes: Router
   ) {}
 
   ngOnInit(): void {
@@ -111,14 +113,16 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   sendFinalReportToSupervision(pProyectoId: number) {
     this.validarCumplimientoInformeFinalService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
       this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
-      this.ngOnInit();
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.routes.navigate( ['/validarCumplimientoInformeFinalProyecto'] ) );
     });
   }
 
   approveFinalReportByFulfilment(pProyectoId: number) {
     this.validarCumplimientoInformeFinalService.approveFinalReportByFulfilment(pProyectoId).subscribe(respuesta => {
       this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
-      this.ngOnInit();
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.routes.navigate( ['/validarCumplimientoInformeFinalProyecto'] ) );
     });
   }
 }

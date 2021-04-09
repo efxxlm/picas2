@@ -91,6 +91,10 @@ const routes: Routes = [
     component: VerificarInformeGtlcComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/verificarInformeFinal/:proyectoId',
+    component: VerificarInformeGtlcComponent
+  },
+  {
     path: 'verificarRequisitos/:id/verDetalleEditarInformeFinal/:proyectoId',
     component: VerificarInformeGtlcComponent
   },

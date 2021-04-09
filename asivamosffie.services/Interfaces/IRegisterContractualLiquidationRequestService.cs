@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
         //Consultas
         Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra(int pMenuId);
         Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationInterventoria(int pMenuId);
-        Task<VContratacionProyectoSolicitudLiquidacion> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId);
+        Task<List<dynamic>> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId);
         Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId, int pMenuId);
         Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId, int pContratacionProyectoId, int pMenuId);
         Task<List<InformeFinalInterventoria>> GetInformeFinalAnexoByInformeFinalId(int pInformeFinalId);
@@ -21,7 +21,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateUpdateLiquidacionContratacionObservacion(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion);
         Task<Respuesta> ChangeStatusLiquidacionContratacionProyecto(ContratacionProyecto pContratacionProyecto, int menuId);
         Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo);
-        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId);
+        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, int pMenuId, int pContratacionProyectoId);
 
     }
 }

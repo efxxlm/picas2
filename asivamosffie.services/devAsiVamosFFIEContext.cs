@@ -280,7 +280,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -9751,6 +9750,8 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
             });
+
+            modelBuilder.HasSequence<int>("ConsecutivoActaRendimientos");
 
             OnModelCreatingPartial(modelBuilder);
         }

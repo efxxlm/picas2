@@ -49,6 +49,7 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
   }
 
   buildForm() {
+    console.log(this.menuId,this.contratacionProyectoId,this.contratoPolizaActualizacionId,this.tipoObservacionCodigo);
     this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(
       this.menuId,
       this.contratacionProyectoId,

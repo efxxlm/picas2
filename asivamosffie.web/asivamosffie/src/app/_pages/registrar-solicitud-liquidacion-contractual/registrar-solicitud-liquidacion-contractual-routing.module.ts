@@ -49,6 +49,10 @@ const routes: Routes = [
     component: ValidarInformeFinalComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/validarInformeFinal/:proyectoId',
+    component: ValidarInformeFinalComponent
+  },
+  {
     path: 'verDetalleEditarRequisitos/:id/validarBalance',
     component: ValidarBalanceComponent
   },

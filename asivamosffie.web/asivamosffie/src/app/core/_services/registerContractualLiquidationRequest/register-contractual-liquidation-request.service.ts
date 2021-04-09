@@ -20,9 +20,9 @@ export class RegisterContractualLiquidationRequestService {
   getListContractualLiquidationInterventoria(pMenuId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria?pMenuId=${ pMenuId }`);
   }
-
-  getContratoPoliza(pContratoPolizaId: number){
-    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratoPolizaByContratoId?pContratoPolizaId=${ pContratoPolizaId }`);
+  
+  getContratoPoliza(pContratoPolizaId: number, pMenuId: number, pContratacionProyectoId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratoPoliza?pContratoPolizaId=${ pContratoPolizaId }&pMenuId=${ pMenuId }&pContratacionProyectoId=${ pContratacionProyectoId }`);
   }
 
   getContratacionProyectoByContratacionProyectoId(pContratacionProyectoId: number){

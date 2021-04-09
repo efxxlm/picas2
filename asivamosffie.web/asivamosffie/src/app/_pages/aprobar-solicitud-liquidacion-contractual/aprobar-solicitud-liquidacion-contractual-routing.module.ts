@@ -73,6 +73,10 @@ const routes: Routes = [
     component: AprobarInformeFinalComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/aprobarInformeFinal/:proyectoId',
+    component: AprobarInformeFinalComponent
+  },
+  {
     path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarInformeFinal/:proyectoId',
     component: AprobarInformeFinalComponent
   },

@@ -50,7 +50,7 @@ export class VerificarRequisitosGtlcComponent implements OnInit {
   getContratacionProyectoByContratacionProyectoId(contratacionProyectoId: number) {
     this.registerContractualLiquidationRequestService.getContratacionProyectoByContratacionProyectoId(contratacionProyectoId).subscribe(response => {
       if(response != null){
-        this.data = response;
+        this.data = response[0];
       }
     });
   }

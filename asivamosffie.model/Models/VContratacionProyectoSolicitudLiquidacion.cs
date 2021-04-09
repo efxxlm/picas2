@@ -26,5 +26,7 @@ namespace asivamosffie.model.Models
         public int InformeFinalId { get; set; }
         public string LlaveMen { get; set; }
         public int? ContratoId { get; set; }
+        public int? ContratoPolizaId { get; set; }
+        public int ContratoPolizaActualizacionId { get; set; }
     }
 }

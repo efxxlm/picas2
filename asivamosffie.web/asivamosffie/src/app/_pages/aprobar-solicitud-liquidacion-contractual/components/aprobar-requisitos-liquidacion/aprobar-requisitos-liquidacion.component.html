@@ -56,9 +56,8 @@
         <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [class.sin-diligenciar]="semaforoActualizacionPoliza == 'Incompleto'"
+            [class.completo]="semaforoActualizacionPoliza == 'Completo'"
           >
             Actualización de póliza
           </mat-panel-title>
@@ -68,15 +67,14 @@
             Actualización de póliza
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-actualizacion-poliza *ngIf="contratacionProyectoId" [esVerDetalle]="esVerDetalle" [contratacionProyectoId]="contratacionProyectoId" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza>
+        <app-actualizacion-poliza *ngIf="contratacionProyectoId && data" [esVerDetalle]="esVerDetalle" [contratacionProyectoId]="contratacionProyectoId" [contratoPolizaActualizacionId]="data.contratoPolizaActualizacionId" [contratoPolizaId]="data.contratoPolizaId" [data]="data" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [class.sin-diligenciar]="semaforoBalanceFinanciero == 'Incompleto'"
+            [class.completo]="semaforoBalanceFinanciero == 'Completo'"
           >
             Balance financiero
           </mat-panel-title>

@@ -58,7 +58,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionProyectoByContratacionProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<VContratacionProyectoSolicitudLiquidacion>> GetContratacionProyectoByContratacionProyectoId([FromQuery]  int pContratacionProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GetContratacionProyectoByContratacionProyectoId([FromQuery]  int pContratacionProyectoId)
         {
             try
             {
@@ -138,13 +138,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [Route("ChangeStatusLiquidacionContratacionProyecto")]
-        public async Task<IActionResult> ChangeStatusLiquidacionContratacionProyecto([FromBody] ContratacionProyecto pContratacionProyecto, [FromQuery] int menudId)
+        public async Task<IActionResult> ChangeStatusLiquidacionContratacionProyecto([FromBody] ContratacionProyecto pContratacionProyecto, [FromQuery] int menuId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerContractualLiquidationRequest.ChangeStatusLiquidacionContratacionProyecto(pContratacionProyecto, menudId);
+                respuesta = await _registerContractualLiquidationRequest.ChangeStatusLiquidacionContratacionProyecto(pContratacionProyecto, menuId);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -163,9 +163,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoPoliza")]
         [HttpGet]
-        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId)
+        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId, int pMenuId, int pContratacionProyectoId)
         {
-            var respuesta = await _registerContractualLiquidationRequest.GetContratoPoliza(pContratoPolizaId);
+            var respuesta = await _registerContractualLiquidationRequest.GetContratoPoliza(pContratoPolizaId, pMenuId, pContratacionProyectoId);
             return respuesta;
         }
 
