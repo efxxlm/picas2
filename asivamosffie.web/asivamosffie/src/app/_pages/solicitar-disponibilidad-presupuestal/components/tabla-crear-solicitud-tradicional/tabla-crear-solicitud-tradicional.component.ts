@@ -58,8 +58,11 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
 
     ]).subscribe( response => {
         this.listaSolicitudes = response[0];
-        this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
-        console.log( response[0] );
+        this.listaSolicitudes.forEach(element => {
+          element.fechaSolicitud = element.fechaSolicitud.split('T')[0].split('-').reverse().join('/');
+        });
+        this.dataSource = new MatTableDataSource(this.listaSolicitudes);
+        // console.log( response[0] );
         this.initPaginator();
       })
 

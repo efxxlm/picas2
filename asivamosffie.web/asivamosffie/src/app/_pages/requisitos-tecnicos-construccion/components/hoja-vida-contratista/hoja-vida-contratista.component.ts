@@ -255,6 +255,8 @@ export class HojaVidaContratistaComponent implements OnInit {
             }
           )
         );
+        this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
       }
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );

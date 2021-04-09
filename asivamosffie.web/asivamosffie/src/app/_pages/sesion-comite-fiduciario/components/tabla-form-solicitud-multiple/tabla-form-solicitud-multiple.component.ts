@@ -34,6 +34,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   proyectos: ContratacionProyecto[] = []
   contratacion: Contratacion;
 
+  estaEditando = false;
+
   displayedColumns: string[] = [
     'idMen',
     'tipoInterventor',
@@ -211,7 +213,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   cargarRegistro() {
 
     if (this.sesionComiteSolicitud.contratacion) {
-      let promesa = new Promise(resolve => {
+      let promesa = new Promise<void>(resolve => {
         this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
           .subscribe(contra => {
             this.contratacion = contra;

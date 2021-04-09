@@ -773,7 +773,11 @@
                     <input type="hidden" formControlName="procesoSeleccionCronogramaId" />
                     <div class="quill-ancho">
                       <quill-editor
-                        class="quill-editor-style"
+                        class="quill-editor-style quill-dentro-de-la-tabla"
+                        [class.invalid]="
+                          (cronograma.get('descripcion').invalid && cronograma.get('descripcion').touched) ||
+                          (cronograma.get('descripcion').invalid && estaEditando)
+                        "
                         [styles]="editorStyle"
                         [modules]="config"
                         (onContentChanged)="maxLength($event, 500)"
@@ -877,6 +881,21 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (addressForm.get('responsableEquipoTecnico').invalid &&
+                        addressForm.get('responsableEquipoTecnico').touched) ||
+                      (addressForm.get('responsableEquipoTecnico').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>

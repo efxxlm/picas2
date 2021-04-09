@@ -58,7 +58,7 @@ export class TablaCronogramaComponent implements OnInit {
 
   editorStyle = {
     height: '100px',
-    width: '600px'
+    width: '500px'
   };
 
   config = {
@@ -175,7 +175,7 @@ export class TablaCronogramaComponent implements OnInit {
 
           listaProcesos.push({
             estadoDelSolicitud: nombreEstado.nombre,
-            fechaSolicitud: proceso.fechaCreacion,
+            fechaSolicitud: proceso.fechaCreacion.split('T')[0].split('-').reverse().join('/'),
             id: {
               estadoActividadCodigo: proceso.estadoActividadCodigo,
               numeroProceso: proceso.numeroProceso,
@@ -208,15 +208,13 @@ export class TablaCronogramaComponent implements OnInit {
 
   agregaFuente() {
     this.addressForm.push(this.crearActividad());
+    if (this.editMode.valor) this.addressForm.markAllAsTouched();
   }
 
   crearActividad(): FormGroup {
     return this.fb.group({
       procesoSeleccionCronogramaId: [],
-      descripcion: [
-        null,
-        Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(500)])
-      ],
+      descripcion: [null, Validators.required],
       fecha: [null, Validators.required],
       etapaActualProceso: [null, Validators.required],
       procesoSeleccionCronogramaMonitoreoId: []

@@ -76,7 +76,10 @@
             <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
           </button>
           <span class="required-form-group required-calendar ml-05">*</span>
-          <mat-form-field class="mt-min mat-sin-borde">
+          <mat-form-field
+            class="mt-min mat-sin-borde"
+            [class.mat-form-field-invalid]="!element.fechaRadicado && estaEditando"
+          >
             <input
               matInput
               [matDatepicker]="fechaRadicado"
@@ -100,7 +103,10 @@
             <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
           </button>
           <span class="required-form-group required-calendar ml-05">*</span>
-          <mat-form-field class="mt-min mat-sin-borde">
+          <mat-form-field
+            class="mt-min mat-sin-borde"
+            [class.mat-form-field-invalid]="!element.fechaAprobacion && estaEditando"
+          >
             <input
               matInput
               [matDatepicker]="fechaAprobacion"
@@ -183,7 +189,9 @@
         ><b>URL con soporte</b></label
       >
       <div class="w-80">
-        <mat-form-field>
+        <mat-form-field
+          [class.mat-form-field-invalid]="(urlSoporte === null && estaEditando) || (urlSoporte === '' && estaEditando)"
+          >
           <input matInput type="text" [(ngModel)]="urlSoporte" required />
         </mat-form-field>
       </div>

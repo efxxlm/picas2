@@ -226,17 +226,17 @@ div.mat-select-arrow {
   color: $mainColor;
 }
 
-
 .table-checkbox {
   padding: 0.5em;
 
   &.radio {
-    .mat-checkbox-background, .mat-checkbox-frame{
+    .mat-checkbox-background,
+    .mat-checkbox-frame {
       border-radius: 50%;
       border: var(--mainColor) 1.5px solid;
     }
     .mat-checkbox-checked.mat-accent .mat-checkbox-background {
-      box-shadow: 0 0 0 1px #fff, 0 0 0 2px $mainColor
+      box-shadow: 0 0 0 1px #fff, 0 0 0 2px $mainColor;
     }
 
     .mat-checkbox-checked .mat-checkbox-checkmark {
@@ -302,6 +302,11 @@ div.mat-select-arrow {
     right: 2.5em;
     top: -4em;
   }
+  &--5 {
+    .mat-select-arrow-wrapper {
+      right: calc(50% + 5px);
+    }
+  }
 }
 
 .spacing-0 {
@@ -320,12 +325,12 @@ div.mat-select-arrow {
   background-color: transparent;
 }
 
-.noBorderForm{
-    height: 0px;
+.noBorderForm {
+  height: 0px;
 }
 
-.noBorderForm:focus{
-    height: 0px;
+.noBorderForm:focus {
+  height: 0px;
 }
 
 .icon-incompleto {
@@ -337,11 +342,11 @@ div.mat-select-arrow {
   .mat-form-field ~ & {
     transform: translateY(0) !important;
   }
-  
+
   .col + & {
     margin-left: -16px;
   }
-  
+
   &--img {
     height: 2em;
     border: solid 1px $secondaryColor;

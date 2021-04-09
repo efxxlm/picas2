@@ -6,12 +6,8 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="!edicion">
-        Registrar
-      </span>
-      <span *ngIf="edicion">
-        Ver detalle/ Editar
-      </span>
+      <span *ngIf="!edicion"> Registrar </span>
+      <span *ngIf="edicion"> Ver detalle/ Editar </span>
       aporte y fuente de recursos
     </h1>
   </div>
@@ -232,9 +228,7 @@
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left">
-              Municipio
-            </label>
+            <label class="label-left"> Municipio </label>
           </div>
           <div class="col capitalize">
             <mat-form-field class="select-width">
@@ -369,6 +363,7 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    required
                   />
                 </mat-form-field>
                 <span
@@ -751,7 +746,14 @@
                             </label>
                           </div>
                           <div class="col">
-                            <mat-form-field class="select-width">
+                            <mat-form-field
+                              class="select-width"
+                              [class.mat-form-field-invalid]="
+                                (vigencia.get('vigenciaAportante').invalid &&
+                                  vigencia.get('vigenciaAportante').touched) ||
+                                (vigencia.get('vigenciaAportante').invalid && edicion)
+                              "
+                            >
                               <mat-select formControlName="vigenciaAportante" required>
                                 <mat-option *ngFor="let VigenciaAporte of VigenciasAporte" [value]="VigenciaAporte">
                                   {{ VigenciaAporte }}
@@ -793,7 +795,13 @@
                             </label>
                           </div>
                           <div class="col d-flex">
-                            <mat-form-field class="full-width maincolor">
+                            <mat-form-field
+                              class="full-width maincolor"
+                              [class.mat-form-field-invalid]="
+                                (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
+                                (vigencia.get('valorVigencia').invalid && edicion)
+                              "
+                            >
                               <input
                                 matInput
                                 #valorVigencia
@@ -1183,17 +1191,17 @@
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
-        <button
-          mat-button
-          color="warn"
-          *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
-          type="button"
-          class="btn-eliminar"
-          (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"          
-        >
-          <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
-          Eliminar Registro
-        </button>
+      <button
+        mat-button
+        color="warn"
+        *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
+        type="button"
+        class="btn-eliminar"
+        (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"
+      >
+        <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
+        Eliminar Registro
+      </button>
     </div>
   </form>
 </div>

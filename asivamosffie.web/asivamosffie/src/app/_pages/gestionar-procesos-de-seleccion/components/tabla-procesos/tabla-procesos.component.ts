@@ -53,6 +53,7 @@ export class TablaProcesosComponent implements OnInit {
       this.listaProceso = respuesta[0];
 
       this.listaProceso.forEach( proceso => {
+        proceso.fechaCreacion = proceso.fechaCreacion.split('T')[0].split('-').reverse().join('/');
         let nombreTipo = respuesta[1].find( p => p.codigo == proceso.tipoProcesoCodigo )
         let nombreEstado = respuesta[2].find( p => p.codigo == proceso.estadoProcesoSeleccionCodigo )
         let nombreEtapa = respuesta[3].find( p => p.codigo == proceso.etapaProcesoSeleccionCodigo )

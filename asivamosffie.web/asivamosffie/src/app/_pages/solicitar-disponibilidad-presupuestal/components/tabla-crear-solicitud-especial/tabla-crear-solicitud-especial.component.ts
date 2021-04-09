@@ -45,7 +45,10 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
     this.budgetAvailabilityService.getDDPEspecial()
       .subscribe( listaDDP => {
-        console.log( listaDDP );
+        // console.log( listaDDP );
+        listaDDP.forEach(element => {
+          element.fechaSolicitud = element.fechaSolicitud.split('T')[0].split('-').reverse().join('/');
+        });
         this.dataSource = new MatTableDataSource(listaDDP);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
@@ -9,7 +9,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-evaluacion.component.html',
   styleUrls: ['./form-evaluacion.component.scss']
 })
-export class FormEvaluacionComponent {
+export class FormEvaluacionComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Input() editar:boolean;
@@ -38,6 +38,12 @@ export class FormEvaluacionComponent {
   estaEditando = false;
 
   constructor(private fb: FormBuilder,public dialog: MatDialog) {}
+
+  ngOnInit(): void {
+    this.estaEditando = this.editar;
+    if (this.estaEditando) this.addressForm.markAllAsTouched();
+  }
+
   noGuardado=true;
   ngOnDestroy(): void {
     if ( this.noGuardado===true && this.addressForm.dirty) {

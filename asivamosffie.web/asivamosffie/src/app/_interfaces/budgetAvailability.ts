@@ -3,7 +3,7 @@ import { Proyecto } from '../core/_services/project/project.service';
 
 export interface GrillaDisponibilidadPresupuestal{
     disponibilidadPresupuestalId?: number,
-    fechaSolicitud?: Date,
+    fechaSolicitud?: any,
     tipoSolicitudCodigo?: string,
     tipoSolicitudText?: string,
     numeroSolicitud?: string,
@@ -93,6 +93,7 @@ export interface CustonReuestCommittee{
 }
 
 export interface ListAportantes{
+    fechaSolicitud: any;
     contratacionProyectoId?: number,
     contratacionProyectoAportanteId?: number,
     contratacionId?: number,

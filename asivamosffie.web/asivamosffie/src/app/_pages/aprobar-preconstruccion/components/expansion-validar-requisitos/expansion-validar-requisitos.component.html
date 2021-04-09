@@ -146,8 +146,11 @@
             </div>
           </div>
           <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
-            <div class="text-area-quill">
-              <label class="text-area-quill--label size-label colorMainColor">
+            <div class="text-area-quill" [class.color-secondaryColor]="!perfil['verificarObservacion'] && estaEditando">
+              <label
+                class="text-area-quill--label size-label colorMainColor"
+                [class.secondaryColor]="!perfil['verificarObservacion'] && estaEditando"
+              >
                 Observaciones a las hojas de vida del contratista de obra
               </label>
               <quill-editor
@@ -162,11 +165,9 @@
               </quill-editor>
             </div>
             <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null">
-              {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+              {{ 1000 - textoLimpio(observaciones.quillEditor, 1000) }}
             </span>
-            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null">
-                1000
-            </span>
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null"> 1000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"

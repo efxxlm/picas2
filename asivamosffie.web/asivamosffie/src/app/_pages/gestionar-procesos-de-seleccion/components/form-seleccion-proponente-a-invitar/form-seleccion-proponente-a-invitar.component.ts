@@ -57,6 +57,8 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.estaEditando = this.editar;
+    if (this.estaEditando) this.addressForm.markAllAsTouched();
     return new Promise<void>(resolve => {
       resolve();
     });

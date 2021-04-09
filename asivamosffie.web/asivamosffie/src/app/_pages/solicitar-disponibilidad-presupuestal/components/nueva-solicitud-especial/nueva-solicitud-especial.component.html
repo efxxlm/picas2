@@ -98,7 +98,7 @@
                 }}
               </span>
               <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value === null"> 1000 </span>
-              <span class="icon-incompleto">
+              <span class="icon-incompleto mt-3em">
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
@@ -476,7 +476,17 @@
             (addressForm.get('observacionLimiteEspecial').invalid && estaEditando)
           "
         >
-          <label for="observacionLimiteEspecial" class="text-area-quill--label title-objeto">Limitación especial</label>
+          <label
+            for="observacionLimiteEspecial"
+            class="text-area-quill--label title-objeto"
+            [class.secondaryColor]="
+            (addressForm.get('observacionLimiteEspecial').invalid &&
+              addressForm.get('observacionLimiteEspecial').touched) ||
+            (addressForm.get('observacionLimiteEspecial').invalid && estaEditando)
+          "
+            >
+            Limitación especial
+          </label>
           <quill-editor
             class="quill-editor-style"
             [styles]="editorStyle"

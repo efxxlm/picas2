@@ -260,6 +260,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   agregarActividad() {
     this.cronogramas.push(this.createActividad());
+    if (this.estaEditando) this.addressForm.markAllAsTouched();
   }
 
   createActividad(): FormGroup {

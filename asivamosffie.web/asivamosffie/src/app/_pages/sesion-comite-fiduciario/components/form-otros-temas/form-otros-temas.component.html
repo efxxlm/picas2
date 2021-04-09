@@ -203,7 +203,7 @@
                 ¿Este tema del orden del día generó compromisos?
               </label>
             </div>
-            <div class="col">
+            <div class="col d-flex">
               <mat-radio-group
                 class="radioInput"
                 formControlName="tieneCompromisos"
@@ -212,22 +212,22 @@
                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('tieneCompromisos').invalid && addressForm.get('tieneCompromisos').touched) ||
+                    (addressForm.get('tieneCompromisos').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (addressForm.get('tieneCompromisos').invalid && addressForm.get('tieneCompromisos').touched) ||
-                (addressForm.get('tieneCompromisos').invalid && estaEditando)
-              "
-            />
-          </span>
         </div>
       </div>
       <div class="row" *ngIf="addressForm.value.tieneCompromisos == true">

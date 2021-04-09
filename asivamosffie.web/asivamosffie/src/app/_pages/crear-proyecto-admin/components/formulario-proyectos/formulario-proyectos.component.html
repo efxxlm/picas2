@@ -24,7 +24,10 @@
                   </label>
                 </div>
                 <div class="col">
-                  <mat-form-field class="select-width">
+                  <mat-form-field
+                    class="select-width"
+                    [class.mat-form-field-invalid]="!aportantes.aportanteId && estaEditando"
+                  >
                     <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)">
                       <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.dominioId">
                         {{ listado.nombre }}
@@ -36,10 +39,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="!aportantes.aportanteId && estaEditando"
                   />
                 </span>
@@ -66,7 +69,10 @@
                       </label>
                     </div>
                     <div class="col">
-                      <mat-form-field class="select-width">
+                      <mat-form-field
+                        class="select-width"
+                        [class.mat-form-field-invalid]="!fuente.fuenteFinanciacionId && estaEditando"
+                      >
                         <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">
                           <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
                             Número de acuerdo: <b>{{ listado.cofinanciacionDocumento?.numeroAcuerdo }}</b> Tipo:
@@ -79,10 +85,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="!fuente.fuenteFinanciacionId && estaEditando"
                       />
                     </span>
@@ -96,7 +102,10 @@
                       </label>
                     </div>
                     <div class="col d-flex">
-                      <mat-form-field class="full-width">
+                      <mat-form-field
+                        class="full-width"
+                        [class.mat-form-field-invalid]="!fuente.valorFuente && estaEditando"
+                      >
                         <input
                           matInput
                           [(ngModel)]="fuente.valorFuente"
@@ -109,7 +118,7 @@
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                           (keypress)="blockNumber($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -124,10 +133,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="!fuente.valorFuente && estaEditando"
                         />
                       </span>

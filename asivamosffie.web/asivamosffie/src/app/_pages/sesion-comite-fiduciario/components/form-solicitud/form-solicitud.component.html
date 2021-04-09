@@ -171,8 +171,25 @@
               </label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select required formControlName="estadoSolicitud">
+              <mat-form-field
+                class="select-width"
+                [class.mat-form-field-invalid]="
+                  (addressForm.get('estadoSolicitud').value === '1' && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').value === '1' && estaEditando) ||
+                  (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').invalid && estaEditando)
+                "
+              >
+                <mat-select
+                  required
+                  formControlName="estadoSolicitud"
+                  [class.mat-select-invalid]="
+                    (addressForm.get('estadoSolicitud').value === '1' && addressForm.get('estadoSolicitud').touched) ||
+                    (addressForm.get('estadoSolicitud').value === '1' && estaEditando) ||
+                    (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
+                    (addressForm.get('estadoSolicitud').invalid && estaEditando)
+                  "
+                >
                   <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
                     {{ estado.nombre }}
                   </mat-option>
@@ -265,7 +282,7 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput type="url" required formControlName="url" maxlength="1000" />
+            <input matInput type="url" required formControlName="url" />
           </mat-form-field>
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>

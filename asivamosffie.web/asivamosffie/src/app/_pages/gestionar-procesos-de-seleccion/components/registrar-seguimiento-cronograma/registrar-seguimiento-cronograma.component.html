@@ -29,10 +29,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('tipoIntervencion').invalid && addressForm.get('tipoIntervencion').touched) ||
                   (addressForm.get('tipoIntervencion').invalid && estaEditando)
@@ -44,7 +44,7 @@
       </div>
 
       <div class="text-center">
-        <div class="busqueda mt-1em">
+        <!-- <div class="busqueda mt-1em">
           <mat-form-field appearance="outline" class="busqueda--input">
             <mat-label>Buscador / Filtro</mat-label>
             <input matInput #filtro />
@@ -52,7 +52,7 @@
           <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
             <img src="assets/img/icon/lupa.svg" alt="Buscar" />
           </button>
-        </div>
+        </div> -->
         <div class="table-responsive">
           <table
             formGroupName="actividades"
@@ -122,7 +122,7 @@
                   </div>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted" [ngClass]="{ redBackground: pasado[i] }">
-                  <div class="select-table">
+                  <mat-form-field class="select-table select-table--5">
                     <mat-select formControlName="estadoActividad" required *ngIf="activo[i]">
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
@@ -131,7 +131,7 @@
                     <div *ngIf="!activo[i]">
                       {{ form.get('estadoActividad').value.nombre }}
                     </div>
-                  </div>
+                  </mat-form-field>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <div class="d-flex justify-content-center">

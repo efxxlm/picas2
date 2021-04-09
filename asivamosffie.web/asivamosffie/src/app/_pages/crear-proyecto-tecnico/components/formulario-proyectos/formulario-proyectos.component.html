@@ -28,7 +28,10 @@
               </label>
             </div>
             <div class="col d-flex align-items-center">
-              <mat-form-field class="example-full-width">
+              <mat-form-field
+                class="example-full-width"
+                [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+              >
                 <input
                   matInput
                   [matDatepicker]="picker"
@@ -71,7 +74,10 @@
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [class.mat-form-field-invalid]="!proyecto.numeroActaJunta && estaEditando"
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.numeroActaJunta"
@@ -120,7 +126,10 @@
               </label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field
+                class="select-width"
+                [class.mat-form-field-invalid]="!proyecto.tipoIntervencionCodigo && estaEditando"
+              >
                 <mat-select
                   required
                   [(ngModel)]="proyecto.tipoIntervencionCodigo"
@@ -156,7 +165,7 @@
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field class="full-width" [class.mat-form-field-invalid]="!proyecto.llaveMen && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.llaveMen"
@@ -198,7 +207,7 @@
               </label>
             </div>
             <div class="col capitalize">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.regid && estaEditando">
                 <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
                   <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId" class="capitalize">
                     {{ listado.descripcion }}
@@ -229,7 +238,7 @@
               </label>
             </div>
             <div class="col capitalize">
-              <mat-form-field class="select-width">
+              <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.depid && estaEditando">
                 <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
                   <mat-option
                     *ngFor="let listado of listadoDepartamento"
@@ -267,7 +276,10 @@
               </label>
             </div>
             <div class="col capitalize">
-              <mat-form-field class="select-width">
+              <mat-form-field
+                class="select-width"
+                [class.mat-form-field-invalid]="!proyecto.localizacionIdMunicipio && estaEditando"
+              >
                 <mat-select
                   required
                   [(ngModel)]="proyecto.localizacionIdMunicipio"
@@ -308,7 +320,10 @@
           </label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field
+            class="select-width"
+            [class.mat-form-field-invalid]="!proyecto.institucionEducativaId && estaEditando"
+          >
             <mat-select required [(ngModel)]="proyecto.institucionEducativaId" (selectionChange)="getSede()">
               <mat-option *ngFor="let listado of listadoInstitucion" [value]="listado.institucionEducativaSedeId">
                 {{ listado.nombre }}
@@ -332,7 +347,12 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left"> Código DANE IE </label>
+              <label class="label-left"
+              [class.mat-form-field-invalid]="!proyecto.institucionEducativaId && estaEditando"
+            >
+                Código DANE IE
+                
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
@@ -364,7 +384,7 @@
           </label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.sedeId && estaEditando">
             <mat-select required [(ngModel)]="proyecto.sedeId" (selectionChange)="getCodigoDane()">
               <mat-option *ngFor="let listado of listadoSede" [value]="listado.institucionEducativaSedeId">
                 {{ listado.nombre }}
@@ -418,11 +438,15 @@
           <label
             class="label-left"
             [ngClass]="{ 'color-secondaryColor': !proyecto.coordinacionResponsableCodigo && estaEditando }"
-            >Coordinación responsable</label
           >
+            Coordinación responsable
+          </label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field
+            class="select-width"
+            [class.mat-form-field-invalid]="!proyecto.coordinacionResponsableCodigo && estaEditando"
+          >
             <mat-select required [(ngModel)]="proyecto.coordinacionResponsableCodigo">
               <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.codigo">
                 {{ listado.nombre }}
@@ -489,9 +513,14 @@
           </label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field
+            class="select-width"
+            [class.mat-form-field-invalid]="
+              !proyecto.convocatoriaId && estaEditando && proyecto.enConvocatoria === true
+            "
+          >
             <mat-select required [(ngModel)]="proyecto.convocatoriaId" [disabled]="proyecto.enConvocatoria === false">
-              <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
+              <mat-option *ngFor="let listado; of" [value]="listado.dominioId">
                 {{ listado.nombre }}
               </mat-option>
             </mat-select>
@@ -517,11 +546,15 @@
               <label
                 class="label-left"
                 [ngClass]="{ 'color-secondaryColor': !proyecto.cantPrediosPostulados && estaEditando }"
-                >Número de predios postulados</label
               >
+                Número de predios postulados
+              </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [class.mat-form-field-invalid]="!proyecto.cantPrediosPostulados && estaEditando"
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.cantPrediosPostulados"
@@ -566,11 +599,15 @@
               <label
                 class="label-left"
                 [ngClass]="{ 'color-secondaryColor': !proyecto.tipoPredioCodigo && estaEditando }"
-                >Tipo de Predio(s)</label
               >
+                Tipo de Predio(s)
+              </label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width">
+              <mat-form-field
+                class="select-width"
+                [class.mat-form-field-invalid]="!proyecto.tipoPredioCodigo && estaEditando"
+              >
                 <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo">
                   <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                     {{ listado.nombre }}
@@ -613,6 +650,10 @@
               </label>
               <mat-form-field
                 class="w-8em"
+                [class.mat-form-field-invalid]="
+                  (!proyecto.predioPrincipal.ubicacionLatitud && estaEditando) ||
+                  proyecto.predioPrincipal.ubicacionLatitud === '°'
+                "
                 [matTooltipPosition]="'above'"
                 matTooltip="Este campo  permite ingresar números decimales"
                 matTooltipClass="info-tooltip"
@@ -664,7 +705,13 @@
               >
                 Longitud
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field
+                class="w-8em"
+                [class.mat-form-field-invalid]="
+                  (!proyecto.predioPrincipal.ubicacionLongitud && estaEditando) ||
+                  proyecto.predioPrincipal.ubicacionLongitud === '°'
+                "
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud"
@@ -712,11 +759,15 @@
           <label
             class="label-left"
             [ngClass]="{ 'color-secondaryColor': !proyecto.predioPrincipal.direccion && estaEditando }"
-            >Dirección del predio principal</label
           >
+            Dirección del predio principal
+          </label>
         </div>
         <div class="col d-flex">
-          <mat-form-field class="full-width">
+          <mat-form-field
+            class="full-width"
+            [class.mat-form-field-invalid]="!proyecto.predioPrincipal.direccion && estaEditando"
+          >
             <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text" />
           </mat-form-field>
           <span
@@ -751,7 +802,10 @@
           >
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field
+            class="select-width"
+            [class.mat-form-field-invalid]="!proyecto.predioPrincipal.documentoAcreditacionCodigo && estaEditando"
+          >
             <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
               <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                 {{ listado.nombre }}
@@ -782,7 +836,10 @@
               >
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [class.mat-form-field-invalid]="!proyecto.predioPrincipal.numeroDocumento && estaEditando"
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.predioPrincipal.numeroDocumento"
@@ -833,7 +890,14 @@
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [class.mat-form-field-invalid]="
+                  !proyecto.predioPrincipal.cedulaCatastral &&
+                  estaEditando &&
+                  !(proyecto.predioPrincipal.documentoAcreditacionCodigo != '1')
+                "
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral"
@@ -887,11 +951,15 @@
                   <label
                     class="label-left"
                     [ngClass]="{ 'color-secondaryColor': !predios.predio.documentoAcreditacionCodigo && estaEditando }"
-                    >Documento de acreditación del predio</label
                   >
+                    Documento de acreditación del predio
+                  </label>
                 </div>
                 <div class="col">
-                  <mat-form-field class="select-width">
+                  <mat-form-field
+                    class="select-width"
+                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                  >
                     <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
@@ -920,11 +988,15 @@
                   <label
                     class="label-left"
                     [ngClass]="{ 'color-secondaryColor': !predios.predio.numeroDocumento && estaEditando }"
-                    >Número del documento de acreditación</label
                   >
+                    Número del documento de acreditación
+                  </label>
                 </div>
                 <div class="col d-flex">
-                  <mat-form-field class="full-width">
+                  <mat-form-field
+                    class="full-width"
+                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                  >
                     <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text" />
                   </mat-form-field>
                   <span
@@ -967,7 +1039,10 @@
                   </label>
                 </div>
                 <div class="col d-flex">
-                  <mat-form-field class="full-width">
+                  <mat-form-field
+                    class="full-width"
+                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                  >
                     <input
                       matInput
                       [(ngModel)]="predios.predio.cedulaCatastral"
@@ -1028,11 +1103,15 @@
               <label
                 class="label-left"
                 [ngClass]="{ 'color-secondaryColor': !proyecto.cantidadAportantes && estaEditando }"
-                >¿Cuántos aportantes hacen parte de este proyecto?</label
               >
+                ¿Cuántos aportantes hacen parte de este proyecto?
+              </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+              >
                 <input
                   matInput
                   [(ngModel)]="proyecto.cantidadAportantes"
@@ -1080,11 +1159,16 @@
                 <label
                   class="label-left"
                   [ngClass]="{ 'color-secondaryColor': !aportantes.aportante.tipoAportanteId && estaEditando }"
-                  >Tipo de aportante</label
+                  >
+                  Tipo de aportante
+                  </label
                 >
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field
+                  class="select-width"
+                  [class.mat-form-field-invalid]="!aportantes.aportante.tipoAportanteId && estaEditando"
+                >
                   <mat-select
                     required
                     (selectionChange)="getAportante($event, ii)"
@@ -1123,11 +1207,15 @@
                 <label
                   class="label-left"
                   [ngClass]="{ 'color-secondaryColor': !aportantes.nombreAportante && estaEditando }"
-                  >Aportante</label
                 >
+                  Aportante
+                </label>
               </div>
               <div class="col">
-                <mat-form-field class="select-width">
+                <mat-form-field
+                  class="select-width"
+                  [class.mat-form-field-invalid]="!aportantes.nombreAportante && estaEditando"
+                >
                   <mat-select
                     required
                     [(ngModel)]="aportantes.nombreAportante"
@@ -1163,12 +1251,16 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.depto && estaEditando }"
-                  >Departamento</label
-                >
+                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.depto && estaEditando }">
+                  Departamento
+                </label>
               </div>
+              {{ listadoDepto[ii] | json }}
               <div class="col capitalize">
-                <mat-form-field class="select-width">
+                <mat-form-field
+                  class="select-width"
+                  [class.mat-form-field-invalid]="!aportantes.depto && estaEditando"
+                >
                   <mat-select required [(ngModel)]="aportantes.depto" (selectionChange)="getMunAportante($event, ii)">
                     <mat-option
                       *ngFor="let listado of listadoDepto[ii]"
@@ -1206,6 +1298,7 @@
               <div class="pr-1">
                 <label class="label-left">Municipio</label>
               </div>
+              {{ listadoMun[ii] | json }}
               <div class="col capitalize">
                 <mat-form-field class="select-width">
                   <mat-select [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event, ii)">
@@ -1234,7 +1327,10 @@
                 >
               </div>
               <div class="col d-flex">
-                <mat-form-field class="select-width">
+                <mat-form-field
+                  class="select-width"
+                  [class.mat-form-field-invalid]="!aportantes.aportanteId && estaEditando"
+                >
                   <mat-select required [(ngModel)]="aportantes.aportanteId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
                       Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
@@ -1260,12 +1356,15 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.valorObra && estaEditando }"
-                  >Valor obra</label
-                >
+                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.valorObra && estaEditando }">
+                  Valor obra
+                </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field
+                  class="full-width"
+                  [class.mat-form-field-invalid]="!aportantes.valorObra && estaEditando"
+                >
                   <input
                     matInput
                     [(ngModel)]="aportantes.valorObra"
@@ -1288,7 +1387,7 @@
                 </span>
                 <span class="icon-incompleto">
                   <img
-                    *ngIf="!proyecto.valorObra && estaEditando"
+                    *ngIf="!aportantes.valorObra && estaEditando"
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
@@ -1308,11 +1407,15 @@
                 <label
                   class="label-left"
                   [ngClass]="{ 'color-secondaryColor': !aportantes.valorInterventoria && estaEditando }"
-                  >Valor interventoría</label
                 >
+                  Valor interventoría
+                </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field
+                  class="full-width"
+                  [class.mat-form-field-invalid]="!aportantes.valorInterventoria && estaEditando"
+                >
                   <input
                     matInput
                     [(ngModel)]="aportantes.valorInterventoria"
@@ -1335,7 +1438,7 @@
                 </span>
                 <span class="icon-incompleto">
                   <img
-                    *ngIf="!proyecto.valorInterventoria && estaEditando"
+                    *ngIf="!aportantes.valorInterventoria && estaEditando"
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
@@ -1355,11 +1458,15 @@
                 <label
                   class="label-left"
                   [ngClass]="{ 'color-secondaryColor': !aportantes.valorTotalAportante && estaEditando }"
-                  >Valor total aportante</label
                 >
+                  Valor total aportante
+                </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field
+                  class="full-width"
+                  [class.mat-form-field-invalid]="!aportantes.valorTotalAportante && estaEditando"
+                >
                   <input
                     matInput
                     [(ngModel)]="aportantes.valorTotalAportante"
@@ -1418,14 +1525,14 @@
             <div class="pr-1">
               <label class="label-left">Plazo obra</label>
             </div>
-            <div class="col">
+            <div class="col d-flex">
               <label
                 class="label-left sub-label"
                 [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesObra && estaEditando }"
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoMesesObra"
@@ -1459,7 +1566,7 @@
               >
                 Días
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoDiasObra"
@@ -1498,14 +1605,14 @@
             <div class="pr-1">
               <label class="label-left">Plazo interventoría</label>
             </div>
-            <div class="col">
+            <div class="col d-flex">
               <label
                 class="label-left sub-label"
                 [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesInterventoria && estaEditando }"
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoMesesInterventoria"
@@ -1539,7 +1646,7 @@
               >
                 Días
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoDiasInterventoria"
@@ -1581,11 +1688,15 @@
             <label
               class="label-left"
               [ngClass]="{ 'color-secondaryColor': !infraestructura.infraestructuraCodigo && estaEditando }"
-              >Infraestructura a intervenir</label
             >
+              Infraestructura a intervenir
+            </label>
           </div>
           <div class="col">
-            <mat-form-field class="select-width">
+            <mat-form-field
+              class="select-width"
+              [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+            >
               <!-- {{infraestructura.infraestructuraCodigo}} -->
               <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
                 <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
@@ -1617,7 +1728,10 @@
                 >
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field
+                  class="full-width"
+                  [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                >
                   <input
                     matInput
                     [(ngModel)]="infraestructura.cantidad"

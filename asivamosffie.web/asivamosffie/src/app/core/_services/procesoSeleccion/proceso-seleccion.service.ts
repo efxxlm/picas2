@@ -155,7 +155,7 @@ export interface ProcesoSeleccion{
   tipoOrdenEligibilidadCodigo?: string,
   cantidadProponentesInvitados?: number,
 
-  fechaCreacion?:Date,
+  fechaCreacion?:string,
   urlSoporteProponentesSeleccionados?:string,
 
   procesoSeleccionGrupo?: ProcesoSeleccionGrupo[],

@@ -43,7 +43,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,
@@ -60,13 +60,13 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(12)])
     ],
     representanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(2), Validators.maxLength(100)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(12)])
     ],
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
@@ -74,7 +74,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,
@@ -109,7 +109,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
-      Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
       Validators.required,
@@ -435,6 +435,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   onSubmitPersonaNatural() {
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
+    this.personaJuridicaIndividualForm.markAllAsTouched();
+    this.unionTemporalForm.markAllAsTouched();
+    this.myJuridica.markAllAsTouched();
+    this.myJuridica2.markAllAsTouched();
+    this.representanteLegal.markAllAsTouched();
     this.myControl.markAllAsTouched();
     if (this.personaNaturalForm.get('correoElectronico').invalid) {
       this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
@@ -464,6 +469,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
+    this.personaJuridicaIndividualForm.markAllAsTouched();
+    this.unionTemporalForm.markAllAsTouched();
+    this.myJuridica.markAllAsTouched();
+    this.myJuridica2.markAllAsTouched();
+    this.representanteLegal.markAllAsTouched();
     this.myControl.markAllAsTouched();
 
     if (this.personaJuridicaIndividualForm.get('correoElectronico').invalid) {
@@ -516,6 +526,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   onSubmitUnionTemporal() {
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
+    this.personaJuridicaIndividualForm.markAllAsTouched();
+    this.unionTemporalForm.markAllAsTouched();
+    this.myJuridica.markAllAsTouched();
+    this.myJuridica2.markAllAsTouched();
+    this.representanteLegal.markAllAsTouched();
     this.myControl.markAllAsTouched();
 
     if (this.unionTemporalForm.get('correoElectronico').invalid) {
@@ -590,6 +605,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "1": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.personaJuridicaIndividualForm.markAllAsTouched();
+              this.unionTemporalForm.markAllAsTouched();
+              this.myJuridica.markAllAsTouched();
+              this.myJuridica2.markAllAsTouched();
+              this.representanteLegal.markAllAsTouched();
               this.myControl.markAllAsTouched();
               this.personaNaturalForm.get('municipio').setValue(municipio);
               this.personaNaturalForm.get('depaetamento').setValue(departamentoSeleccionado);
@@ -608,6 +628,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "2": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.personaJuridicaIndividualForm.markAllAsTouched();
+              this.unionTemporalForm.markAllAsTouched();
+              this.myJuridica.markAllAsTouched();
+              this.myJuridica2.markAllAsTouched();
+              this.representanteLegal.markAllAsTouched();
               this.myControl.markAllAsTouched();
               this.personaJuridicaIndividualForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue(proponente.procesoSeleccionProponenteId);
@@ -625,6 +650,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "4": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.personaJuridicaIndividualForm.markAllAsTouched();
+              this.unionTemporalForm.markAllAsTouched();
+              this.myJuridica.markAllAsTouched();
+              this.myJuridica2.markAllAsTouched();
+              this.representanteLegal.markAllAsTouched();
               this.myControl.markAllAsTouched();
               (<FormArray>this.unionTemporalForm.get('entidades')).clear();
               let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
@@ -765,7 +795,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
     this.unionTemporalForm.get('depaetamento').setValue("");
     this.unionTemporalForm.get('procesoSeleccionProponenteId').setValue(""),
-      this.unionTemporalForm.get('nombreConsorcio').setValue("");
+    this.unionTemporalForm.get('nombreConsorcio').setValue("");
     this.unionTemporalForm.get('numeroIdentificacion').setValue("");
     this.unionTemporalForm.get('nombre').setValue("");
     this.unionTemporalForm.get('cedulaRepresentanteLegal').setValue("");

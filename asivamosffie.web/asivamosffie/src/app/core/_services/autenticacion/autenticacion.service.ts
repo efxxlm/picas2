@@ -88,7 +88,7 @@ export class AutenticacionService {
 
   logout(errorLogout=false) {
     // remove user from local storage to log user out
-    console.log("va por error "+errorLogout);
+    // console.log("va por error "+errorLogout);
     if(!errorLogout)
     {
       this.seteventLogOut().subscribe();

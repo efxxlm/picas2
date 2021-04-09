@@ -50,5 +50,10 @@
 
 .title-objeto {
   font-size: 20px;
+  color: #174193;
   color: var(--mainColor);
+  &.secondaryColor {
+      color: #d21e18;
+      color: var(--secondaryColor);
+  }
 }

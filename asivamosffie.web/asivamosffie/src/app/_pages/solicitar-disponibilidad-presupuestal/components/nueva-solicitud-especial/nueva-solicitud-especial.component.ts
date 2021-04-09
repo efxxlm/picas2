@@ -126,38 +126,38 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       .subscribe(
         () => this.buscarProyecto()
       );
-/**deprecated es un autocompletar*/
-/*
-    this.addressForm.get( 'numeroContrato' ).valueChanges
-      .pipe(
-        debounceTime( 2000 )
-      )
-      .subscribe( response => {
-      
-        if ( response.length >= 3 ) {
-          this.budgetAvailabilityService.getNumeroContrato( response )
-            .subscribe(
-              ( response: any[] ) => {
-                this.contrato = response;
-                for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
-                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie ) {
-                    this.tipoAportantes.push( { value: this.tipoAportante.aportanteFfie, nombre: 'FFIE' } );
-                  };
-                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteEt ) {
-                    //por integrar
-                  };
-                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteTercero ) {
-                    //por integrar
-                  }
+        /**deprecated es un autocompletar*/
+        /*
+            this.addressForm.get( 'numeroContrato' ).valueChanges
+              .pipe(
+                debounceTime( 2000 )
+              )
+              .subscribe( response => {
+              
+                if ( response.length >= 3 ) {
+                  this.budgetAvailabilityService.getNumeroContrato( response )
+                    .subscribe(
+                      ( response: any[] ) => {
+                        this.contrato = response;
+                        for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
+                          if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie ) {
+                            this.tipoAportantes.push( { value: this.tipoAportante.aportanteFfie, nombre: 'FFIE' } );
+                          };
+                          if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteEt ) {
+                            //por integrar
+                          };
+                          if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteTercero ) {
+                            //por integrar
+                          }
+                        }
+                        console.log( this.contrato );
+                      },
+                      err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
+                    );
                 }
-                console.log( this.contrato );
-              },
-              err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
-            );
-        }
 
-      } );
-*/
+              } );
+        */
       this.addressForm.get( 'tipoAportante' ).valueChanges
         .subscribe( value => {
           this.nombreAportantes = [];      
@@ -244,7 +244,10 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 console.log(this.nombreAportantes);
                 let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                                   
                 console.log(nombreAportante[0]);
-                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);            
+                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);      
+                this.estaEditando = true;
+                this.addressForm.markAllAsTouched();
+                this.myFilter.markAllAsTouched();      
               },
               //err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
             );          

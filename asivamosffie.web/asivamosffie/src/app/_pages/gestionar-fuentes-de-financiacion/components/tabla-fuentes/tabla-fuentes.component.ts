@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FuenteFinanciacion, FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import {
+  FuenteFinanciacion,
+  FuenteFinanciacionService
+} from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -12,24 +15,34 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
 
-
 @Component({
   selector: 'app-tabla-fuentes',
   templateUrl: './tabla-fuentes.component.html',
   styleUrls: ['./tabla-fuentes.component.scss']
 })
 export class TablaFuentesComponent implements OnInit {
-
-  displayedColumns: string[] = [ 'fechaCreacion', 'tipoAportante', 'aportante', 'vigencia', 'fuenteDeRecursos', 'valorAporteFuenteDeRecursos', 'valorAporteEnCuenta', 'estado', 'id'];
+  displayedColumns: string[] = [
+    'fechaCreacion',
+    'tipoAportante',
+    'aportante',
+    'vigencia',
+    'fuenteDeRecursos',
+    'valorAporteFuenteDeRecursos',
+    'valorAporteEnCuenta',
+    'estado',
+    'id'
+  ];
   dataSource = new MatTableDataSource();
 
   listaFF: any[] = [];
   listaNombreAportante: Dominio[] = [];
-  listaTipoAportante: Dominio[] =[];
+  listaTipoAportante: Dominio[] = [];
   listaFuenteRecursos: Dominio[] = [];
 
+  datosTabla = [];
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -37,95 +50,103 @@ export class TablaFuentesComponent implements OnInit {
   }
 
   constructor(
-                private fuenteFinanciacionService: FuenteFinanciacionService,
-                private commonService: CommonService,
-                private router: Router,
-                public dialog: MatDialog
-  ) { }
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private commonService: CommonService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    
     forkJoin([
       this.fuenteFinanciacionService.listaFuenteFinanciacionshort(),
       this.commonService.listaNombreAportante(),
       this.commonService.listaTipoAportante(),
       this.commonService.listaFuenteRecursos()
-    ]).subscribe( respuesta => {
-      this.listaFF = respuesta[0]
+    ]).subscribe(respuesta => {
+      this.listaFF = respuesta[0];
       this.listaNombreAportante = respuesta[1];
       this.listaTipoAportante = respuesta[2];
       this.listaFuenteRecursos = respuesta[3];
 
-      this.listaFF.forEach( ff => {
-        ff.valorAporteEnCuenta=0;
-        ff.controlRecurso.forEach(element => {          
-          
-          ff.valorAporteEnCuenta+=element.valorConsignacion;
+      this.listaFF.forEach(ff => {
+        ff.valorAporteEnCuenta = 0;
+        ff.controlRecurso.forEach(element => {
+          ff.valorAporteEnCuenta += element.valorConsignacion;
         });
-        let fuenteRecursos = this.listaFuenteRecursos.find( fr => fr.codigo == ff.fuenteRecursosCodigo );
+        let fuenteRecursos = this.listaFuenteRecursos.find(fr => fr.codigo == ff.fuenteRecursosCodigo);
         let valorTotalCuenta: number = 0;
 
-        ff.vigencia = ff.vigenciaAporte ? ff.vigenciaAporte.length > 0 ? ff.vigenciaAporte[0].tipoVigenciaCodigo : '': '' ;
-        ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : ''; 
-        
-      })
-      
-      this.listaFF.forEach(element => {
-        element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/');
+        ff.vigencia = ff.vigenciaAporte
+          ? ff.vigenciaAporte.length > 0
+            ? ff.vigenciaAporte[0].tipoVigenciaCodigo
+            : ''
+          : '';
+        ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : '';
       });
 
-      this.dataSource = new MatTableDataSource(this.listaFF);
-  
+      this.listaFF.forEach(element => {
+        this.datosTabla.push({
+          fechaCreacion: (element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/')),
+          tipoAportanteString: element.aportante.tipoAportanteString,
+          nombreAportanteString: element.aportante.nombreAportanteString,
+          vigenciaCofinanciacionId: element.aportante.cofinanciacion.vigenciaCofinanciacionId,
+          fuenteRecursosString: element.fuenteRecursosString,
+          valorFuente: element.valorFuente,
+          valorAporteEnCuenta: element.valorAporteEnCuenta,
+          registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
+          tipoAportanteId: element.aportante.tipoAportanteId,
+          aportanteId: element.aportanteId,
+          fuenteFinanciacionId: element.fuenteFinanciacionId
+        });
+      });
+
+      this.dataSource = new MatTableDataSource(this.datosTabla);
+
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-
-    })
-
-    
+    });
   }
 
   editarFuente(e: number, idTipo: number) {
     console.log(e);
-    this.router.navigate(['/registrarFuentes',e,idTipo]);
+    this.router.navigate(['/registrarFuentes', e, idTipo]);
   }
   eliminarFuente(e: number) {
-    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',e)
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', e);
   }
 
   controlRecursosFuente(e: number) {
-    this.router.navigate(['/gestionarFuentes/controlRecursos',e,0])
+    this.router.navigate(['/gestionarFuentes/controlRecursos', e, 0]);
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText, siNoBoton:true }
-    });   
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result === true)
-      {
+      if (result === true) {
         this.eliminarRegistro(e);
-      }           
+      }
     });
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
 
-  eliminarRegistro(e: number){
-    this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
+  eliminarRegistro(e: number) {
+    this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe(resultado => {
       let res = resultado as Respuesta;
       this.openDialog('', `<b>${res.message}</b>`);
       this.ngOnInit();
-    })
+    });
   }
-
 }

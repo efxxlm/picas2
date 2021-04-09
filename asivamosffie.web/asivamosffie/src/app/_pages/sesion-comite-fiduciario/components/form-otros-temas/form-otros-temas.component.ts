@@ -145,6 +145,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   agregaCompromiso() {
     this.compromisos.push(this.crearCompromiso());
+    if ( this.estaEditando) this.addressForm.markAllAsTouched();
   }
 
   crearCompromiso() {
@@ -223,6 +224,7 @@ export class FormOtrosTemasComponent implements OnInit {
     if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
         this.compromisos.push(this.crearCompromiso());
+        if ( this.estaEditando) this.addressForm.markAllAsTouched();
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
       if (this.validarCompromisosDiligenciados()) {
@@ -349,6 +351,7 @@ export class FormOtrosTemasComponent implements OnInit {
               grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
 
               this.compromisos.push(grupoCompromiso)
+              if ( this.estaEditando) this.addressForm.markAllAsTouched();
             })
 
           });

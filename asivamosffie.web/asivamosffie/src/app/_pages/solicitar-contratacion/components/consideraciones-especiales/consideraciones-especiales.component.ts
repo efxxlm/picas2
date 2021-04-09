@@ -8,33 +8,32 @@ import { Contratacion } from 'src/app/_interfaces/project-contracting';
   styleUrls: ['./consideraciones-especiales.component.scss']
 })
 export class ConsideracionesEspecialesComponent implements OnInit {
-
   @Input() contratacion: Contratacion;
-  @Output() guardar: EventEmitter<any> = new EventEmitter()
+  @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   addressForm = this.fb.group({
     reasignacion: ['', Validators.required],
-    descripcion: [ null ]
+    descripcion: [null]
   });
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
+      [{ align: [] }]
     ]
   };
   estaEditando = false;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.cargarEdicion()
+    this.cargarEdicion();
   }
-  
+
   private cargarEdicion() {
     setTimeout(() => {
-      if ( this.contratacion[ 'contratista' ] !== undefined ) {
+      if (this.contratacion['contratista'] !== undefined) {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
       }
@@ -47,29 +46,30 @@ export class ConsideracionesEspecialesComponent implements OnInit {
     }
   }
 
-  textoLimpio( evento: any, n: number ) {
-    if ( evento !== undefined ) {
-        return evento.getLength() > n ? n : evento.getLength();
+  textoLimpio(evento: any, n: number) {
+    if (evento !== undefined) {
+      return evento.getLength() > n ? n : evento.getLength();
     } else {
-        return 0;
+      return 0;
     }
   }
 
   onSubmit() {
-
     this.contratacion.esObligacionEspecial = this.addressForm.get('reasignacion').value;
     this.contratacion.consideracionDescripcion = this.addressForm.get('descripcion').value;
 
     this.guardar.emit(null);
-    console.log( this.contratacion );
-
+    console.log(this.contratacion);
   }
 
-  cargarRegistros(){
-
-    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '' );
-    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion !== undefined ? this.contratacion.consideracionDescripcion : null );
-
+  cargarRegistros() {
+    this.addressForm
+      .get('reasignacion')
+      .setValue(this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '');
+    this.addressForm
+      .get('descripcion')
+      .setValue(
+        this.contratacion.consideracionDescripcion !== undefined ? this.contratacion.consideracionDescripcion : null
+      );
   }
-
 }

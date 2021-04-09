@@ -468,15 +468,22 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor': !documento.vigenciaAporte && documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            (!documento.vigenciaAporte && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.vigenciaAporte && estaEditando)
+                          "
                         >
                           Vigencia del aporte
                         </label>
                       </div>
                       <div class="col">
-                        <mat-form-field class="select-width">
+                        <mat-form-field
+                          class="select-width"
+                          [class.mat-form-field-invalid]="
+                            (!documento.vigenciaAporte && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.vigenciaAporte && estaEditando)
+                          "
+                        >
                           <mat-select [(ngModel)]="documento.vigenciaAporte" required>
                             <mat-option
                               *ngFor="let vigenciaAportante of vigenciasAportante"
@@ -495,7 +502,10 @@
                           [matTooltipPosition]="'above'"
                           matTooltip="Debe ingresar la información en el campo para continuar"
                           matTooltipClass="info-tooltip"
-                          *ngIf="!documento.vigenciaAporte && documento.cofinanciacionAportanteId > 0"
+                          *ngIf="
+                            (!documento.vigenciaAporte && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.vigenciaAporte && estaEditando)
+                          "
                         />
                       </span>
                     </div>
@@ -507,18 +517,24 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor':
-                              ((documento.valorDocumento < 1 || documento.valorDocumento == undefined) &&
-                                documento.cofinanciacionAportanteId > 0) ||
-                              (documento.valorDocumento == undefined && estaEditando)
-                          }"
+                          [class.color-secondaryColor]="
+                            ((documento.valorDocumento < 1 || documento.valorDocumento == undefined) &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (documento.valorDocumento == undefined && estaEditando)
+                          "
                         >
                           Valor indicado en el documento
                         </label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="full-width maincolor">
+                        <mat-form-field
+                          class="full-width maincolor"
+                          [class.mat-form-field-invalid]="
+                            ((documento.valorDocumento < 1 || documento.valorDocumento == undefined) &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (documento.valorDocumento == undefined && estaEditando)
+                          "
+                        >
                           <input
                             matInput
                             #valorIndicadoEnElDocumento
@@ -564,16 +580,22 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor':
-                              !documento.tipoDocumentoId && documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            (!documento.tipoDocumentoId && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.tipoDocumentoId && estaEditando)
+                          "
                         >
                           Tipo de documento
                         </label>
                       </div>
                       <div class="col">
-                        <mat-form-field class="select-width">
+                        <mat-form-field
+                          class="select-width"
+                          [class.mat-form-field-invalid]="
+                            (!documento.tipoDocumentoId && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.tipoDocumentoId && estaEditando)
+                          "
+                        >
                           <mat-select [(ngModel)]="documento.tipoDocumentoId" required>
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.dominioId">
                               {{ tipoDocumento.nombre }}
@@ -589,7 +611,10 @@
                           [matTooltipPosition]="'above'"
                           matTooltip="Debe ingresar la información en el campo para continuar"
                           matTooltipClass="info-tooltip"
-                          *ngIf="!documento.tipoDocumentoId && documento.cofinanciacionAportanteId > 0"
+                          *ngIf="
+                            (!documento.tipoDocumentoId && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.tipoDocumentoId && estaEditando)
+                          "
                         />
                       </span>
                     </div>
@@ -602,17 +627,24 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor':
-                              (!documento.numeroActa || documento.numeroActa == '') &&
-                              documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            ((!documento.numeroActa || documento.numeroActa == '') &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.numeroActa && estaEditando)
+                          "
                         >
                           Número de acta
                         </label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="full-width">
+                        <mat-form-field
+                          class="full-width"
+                          [class.mat-form-field-invalid]="
+                            ((!documento.numeroActa || documento.numeroActa == '') &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.numeroActa && estaEditando)
+                          "
+                        >
                           <input
                             matInput
                             #numeroDocumento
@@ -644,8 +676,9 @@
                             matTooltip="Debe ingresar la información en el campo para continuar"
                             matTooltipClass="info-tooltip"
                             *ngIf="
-                              (!documento.numeroActa || documento.numeroActa == '') &&
-                              documento.cofinanciacionAportanteId > 0
+                              ((!documento.numeroActa || documento.numeroActa == '') &&
+                                documento.cofinanciacionAportanteId > 0) ||
+                              (!documento.numeroActa && estaEditando)
                             "
                           />
                         </span>
@@ -659,15 +692,22 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor': !documento.fechaActa && documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            (!documento.fechaActa && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.fechaActa && estaEditando)
+                          "
                         >
                           Fecha del acta
                         </label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="example-full-width">
+                        <mat-form-field
+                          class="example-full-width"
+                          [class.mat-form-field-invalid]="
+                            (!documento.fechaActa && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.fechaActa && estaEditando)
+                          "
+                        >
                           <input
                             matInput
                             [matDatepicker]="picker"
@@ -691,7 +731,10 @@
                             [matTooltipPosition]="'above'"
                             matTooltip="Debe ingresar la información en el campo para continuar"
                             matTooltipClass="info-tooltip"
-                            *ngIf="!documento.fechaActa && documento.cofinanciacionAportanteId > 0"
+                            *ngIf="
+                              (!documento.fechaActa && documento.cofinanciacionAportanteId > 0) ||
+                              (!documento.fechaActa && estaEditando)
+                            "
                           />
                         </span>
                       </div>
@@ -705,17 +748,24 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor':
-                              (documento.numeroAcuerdo < 1 || documento.numeroAcuerdo == undefined) &&
-                              documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            ((documento.numeroAcuerdo < 1 || documento.numeroAcuerdo == undefined) &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.numeroAcuerdo && estaEditando)
+                          "
                         >
                           Número de documento {{ documento.tipoDocumentoId == 25 ? 'de acuerdo' : '' }}
                         </label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="full-width">
+                        <mat-form-field
+                          class="full-width"
+                          [class.mat-form-field-invalid]="
+                            ((documento.numeroAcuerdo < 1 || documento.numeroAcuerdo == undefined) &&
+                              documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.numeroAcuerdo && estaEditando)
+                          "
+                        >
                           <input
                             matInput
                             #numeroDocumentoa
@@ -747,8 +797,9 @@
                             matTooltip="Debe ingresar la información en el campo para continuar"
                             matTooltipClass="info-tooltip"
                             *ngIf="
-                              (documento.numeroAcuerdo < 1 || documento.numeroAcuerdo == undefined) &&
-                              documento.cofinanciacionAportanteId > 0
+                              ((documento.numeroAcuerdo < 1 || documento.numeroAcuerdo == undefined) &&
+                                documento.cofinanciacionAportanteId > 0) ||
+                              (!documento.numeroAcuerdo && estaEditando)
                             "
                           />
                         </span>
@@ -763,15 +814,22 @@
                       <div class="pr-1">
                         <label
                           class="label-left"
-                          [ngClass]="{
-                            'color-secondaryColor': !documento.fechaAcuerdo && documento.cofinanciacionAportanteId > 0
-                          }"
+                          [class.color-secondaryColor]="
+                            (!documento.fechaAcuerdo && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.fechaAcuerdo && estaEditando)
+                          "
                         >
                           Fecha del documento {{ documento.tipoDocumentoId == 25 ? 'de acuerdo' : '' }}
                         </label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="example-full-width">
+                        <mat-form-field
+                          class="example-full-width"
+                          [class.mat-form-field-invalid]="
+                            (!documento.fechaAcuerdo && documento.cofinanciacionAportanteId > 0) ||
+                            (!documento.fechaAcuerdo && estaEditando)
+                          "
+                        >
                           <input
                             matInput
                             [matDatepicker]="picker"
@@ -796,7 +854,10 @@
                             [matTooltipPosition]="'above'"
                             matTooltip="Debe ingresar la información en el campo para continuar"
                             matTooltipClass="info-tooltip"
-                            *ngIf="!documento.fechaAcuerdo && documento.cofinanciacionAportanteId > 0"
+                            *ngIf="
+                              (!documento.fechaAcuerdo && documento.cofinanciacionAportanteId > 0) ||
+                              (!documento.fechaAcuerdo && estaEditando)
+                            "
                           />
                         </span>
                       </div>

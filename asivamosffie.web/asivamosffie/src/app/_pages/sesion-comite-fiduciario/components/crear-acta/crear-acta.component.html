@@ -39,8 +39,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario">
-                <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-accordion>
+                <mat-expansion-panel
+                    class="expansion-style sub-expansion"
+                    *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario"
+                >
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title "
 

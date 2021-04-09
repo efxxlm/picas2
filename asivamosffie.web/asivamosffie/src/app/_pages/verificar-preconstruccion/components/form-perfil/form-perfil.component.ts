@@ -248,6 +248,9 @@ export class FormPerfilComponent implements OnInit {
             rutaSoporte: [ perfil.rutaSoporte ? perfil.rutaSoporte : '', Validators.required ]
           })
         );
+        this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
+        this.perfiles.markAllAsTouched();
       }
       if (this.perfilesCompletos > 0 && this.perfilesCompletos === this.perfilProyecto.length) {
         this.perfilesCompletados.emit('completo');
@@ -370,6 +373,10 @@ export class FormPerfilComponent implements OnInit {
     this.numeroRadicado(numeroRadicado).push(
       this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' })
     );
+    if (this.estaEditando) {
+      this.formContratista.markAllAsTouched();
+      this.perfiles.markAllAsTouched();
+    }
   }
 
   eliminarNumeroRadicado(numeroPerfil: number, numeroRadicado) {
@@ -443,6 +450,9 @@ export class FormPerfilComponent implements OnInit {
           contratoId: this.contratoId,
           proyectoId: this.proyectoId
         });
+        this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
+        this.perfiles.markAllAsTouched();
       });
     }
 

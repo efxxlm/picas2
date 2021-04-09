@@ -155,3 +155,14 @@
 .quill-editor-style.card.invalid .ql-container.ql-snow {
   border-color: $secondaryColor;
 }
+
+.quill-dentro-de-la-tabla {
+  .ql-container.ql-snow {
+    margin-bottom: .5em;
+  }
+  &.invalid {
+    .ql-container.ql-snow {
+      border-bottom: $secondaryColor solid 1px;
+    }
+  }
+}

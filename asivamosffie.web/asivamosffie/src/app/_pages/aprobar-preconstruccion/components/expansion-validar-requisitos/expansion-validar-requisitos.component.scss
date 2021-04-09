@@ -5,3 +5,8 @@
 .size-label {
     font-size: 1.4em;
 }
+
+.colorMainColor.secondaryColor {
+    color: #d21e18;
+    color: var(--secondaryColor);
+}
