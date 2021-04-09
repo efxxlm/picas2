@@ -1561,25 +1561,24 @@ namespace asivamosffie.services
             return ListContratoGrilla.OrderByDescending(r => r.FechaFirma).ToList();
 
         }
-
+         
         public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId)
         {
             List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
 
+            if(pContratoId == 0)
+            {
+                return ListContratoGrilla; 
+            }
             List<Contrato> ListContratos = new List<Contrato>();
 
-            if (pContratoId == 0)
-            {
-                ListContratos = await _context.Contrato
-                                                    .Where(r => (bool)r.Eliminado == false).Distinct()
-                                                                                           .ToListAsync();
-            }
-            else
-            {
-                ListContratos = await _context.Contrato
-                                                    .Where(r => r.ContratoId == pContratoId)
-                                                                                            .ToListAsync();
-            }
+
+            ListContratos = await _context.Contrato
+                                                .Where(r => r.ContratoId == pContratoId)
+                                                .Include(r => r.ContratoPoliza).ThenInclude(R => R.PolizaGarantia)
+                                                .Include(R => R.ContratoPoliza).ThenInclude(R => R.PolizaObservacion)
+                                                .ToListAsync();
+
             foreach (var contrato in ListContratos)
             {
                 try
@@ -1691,8 +1690,6 @@ namespace asivamosffie.services
                         //ValorContrato = contrato.Valor.ToString(),
                         ValorContrato = vlrContratoComponenteUso,
 
-
-
                         //EstadoRegistro 
                         //public bool? RegistroCompleto { get; set; }                         
 
@@ -1729,7 +1726,7 @@ namespace asivamosffie.services
             return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
 
         }
-         
+
         /*jflorez, ajusto la suma*/
         private decimal getSumVlrContratoComponente(int contratacionId)
         {
