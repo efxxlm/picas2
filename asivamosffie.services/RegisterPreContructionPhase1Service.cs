@@ -186,6 +186,7 @@ namespace asivamosffie.services
                         {
                             CreateEdit = "EDITAR CONTRATO PERFIL";
                             ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
+                            contratoPerfilOld.Observacion = ContratoPerfil.Observacion;
                             contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
                             contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
                             contratoPerfilOld.CantidadHvRequeridas = ContratoPerfil.CantidadHvRequeridas;
@@ -248,8 +249,7 @@ namespace asivamosffie.services
                             CreateEdit = "CREAR CONTRATO PERFIL";
                             ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                             ContratoPerfil.FechaCreacion = DateTime.Now;
-                            ContratoPerfil.Eliminado = false;
-                            ContratoPerfil.Observacion = ContratoPerfil.Observacion;
+                            ContratoPerfil.Eliminado = false; 
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
 
@@ -446,7 +446,7 @@ namespace asivamosffie.services
 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor || pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                     contratoMod.EstaDevuelto = true;
-                 
+
                 //Enviar Correo Botón aprobar inicio 3.1.6
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
@@ -466,7 +466,7 @@ namespace asivamosffie.services
 
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                { 
+                {
                     GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
@@ -559,7 +559,7 @@ namespace asivamosffie.services
         private void GetReiniciarObservaciones(Contrato contratoMod)
         {
             _context.Set<ContratoPerfilObservacion>()
-                    .Where(c => 
+                    .Where(c =>
                     c.ContratoPerfilId == contratoMod.ContratoPerfil.FirstOrDefault().ContratoPerfilId
                     && c.TipoObservacionCodigo != "1")
                     .Update(c => new ContratoPerfilObservacion
@@ -567,7 +567,7 @@ namespace asivamosffie.services
                         Eliminado = true,
                         UsuarioCreacion = contratoMod.UsuarioModificacion,
                         FechaModificacion = DateTime.Now
-                    }); 
+                    });
         }
 
         private void GetDeleteTieneObservacionSupervisor(int pContratoId)
@@ -629,8 +629,10 @@ namespace asivamosffie.services
 
         private async Task<bool> EnviarCorreoSupervisorAprobar(string pTipoContrato, Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
-
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor
+            };
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobadoInterventoriaObra3_1_8_);
 
             string template = TemplateRecoveryPassword.Contenido
@@ -639,20 +641,16 @@ namespace asivamosffie.services
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
                 .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-            bool blEnvioCorreo = false;
-
-            foreach (var item in usuarios)
-            {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
-            }
-            return blEnvioCorreo;
+             
+            return _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
         }
 
         private async Task<bool> EnviarCorreo(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
-
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor
+            };
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarInicio316);
 
             string template = TemplateRecoveryPassword.Contenido
@@ -660,19 +658,16 @@ namespace asivamosffie.services
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
                 .Replace("[FECHA_POLIZA]", ((DateTime)contratoMod.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-            bool blEnvioCorreo = false;
-
-            foreach (var item in usuarios)
-            {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
-            }
-            return blEnvioCorreo;
+             
+            return _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
         }
 
         private async Task<bool> EnviarCorreoSupervisor(string pTipoContrato, Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor
+            };
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarSupervisor317);
 
@@ -682,14 +677,8 @@ namespace asivamosffie.services
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
                 .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-            bool blEnvioCorreo = false;
-
-            foreach (var item in usuarios)
-            {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
-            }
-            return blEnvioCorreo;
+             
+            return _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
         }
 
         /// <summary>
@@ -708,11 +697,12 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == 
-            (int)EnumeratorPerfil.Interventor 
-            || x.PerfilId == (int)EnumeratorPerfil.Supervisor 
-            || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
-             
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor,
+                EnumeratorPerfil.Interventor
+            };
+
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarPoliza4diasNoGestion);
             foreach (var contrato in contratos)
             {
@@ -726,10 +716,7 @@ namespace asivamosffie.services
                                     .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
                                     .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
+                        _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
                     }
                 }
             }
@@ -747,8 +734,13 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaSupervisor317_2dias);
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor,
+                EnumeratorPerfil.Interventor,
+                EnumeratorPerfil.Tecnica
+            };
+             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaSupervisor317_2dias);
 
             foreach (var contrato in contratos)
             {
@@ -759,12 +751,7 @@ namespace asivamosffie.services
                                 .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
                                 .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
                                 .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-                    foreach (var item in usuarios)
-                    {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
-                    }
-
+                    _commonService.EnviarCorreo  (enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
                 }
             }
         }
@@ -780,7 +767,13 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor,
+                EnumeratorPerfil.Interventor,
+                EnumeratorPerfil.Tecnica
+            };
+            
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaPolizas317_4dias);
             foreach (var contrato in contratos)
             {
@@ -794,10 +787,7 @@ namespace asivamosffie.services
                                     .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
                                     .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendiente", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
+                        _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
                     }
                 }
             }
@@ -814,7 +804,11 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor, 
+                EnumeratorPerfil.Tecnica
+            };
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alertas2DiasObraInterventoria318);
 
@@ -833,10 +827,7 @@ namespace asivamosffie.services
                                     .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                     .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
+                        _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
                     }
                 }
             }
@@ -853,13 +844,15 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
-
+            List<EnumeratorPerfil> enumeratorPerfils = new List<EnumeratorPerfil>
+            {
+                EnumeratorPerfil.Supervisor,
+                EnumeratorPerfil.Tecnica
+            };
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alertas2DiasObraInterventoria318);
 
             foreach (var contrato in contratos)
-            {
-
+            { 
                 if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
                     DateTime fechaValidacion = contrato.FechaAprobacionRequisitosApoyo.HasValue ? ((DateTime)contrato.FechaAprobacionRequisitosApoyo) : ((DateTime)contrato.FechaModificacion);
@@ -871,10 +864,8 @@ namespace asivamosffie.services
                                  .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
                                  .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                  .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
+                     
+                        _commonService.EnviarCorreo(enumeratorPerfils, template, TemplateRecoveryPassword.Asunto);
                     }
                 }
             }
