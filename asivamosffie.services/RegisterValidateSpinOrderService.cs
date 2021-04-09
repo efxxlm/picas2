@@ -410,7 +410,7 @@ namespace asivamosffie.services
                        .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
                        .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
                        .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
-                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato : " ")
+                       .Replace("[NUMERO_CONTRATO]", (ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato) ?? " ")
                        .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }
