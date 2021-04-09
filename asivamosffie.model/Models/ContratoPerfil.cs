@@ -28,6 +28,7 @@ namespace asivamosffie.model.Models
         public int ProyectoId { get; set; }
         public bool? TieneObservacionApoyo { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
+        public string Observacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }

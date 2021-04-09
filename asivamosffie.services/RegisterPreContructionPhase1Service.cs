@@ -208,7 +208,7 @@ namespace asivamosffie.services
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     contratoPerfilObservacionOld.Eliminado = false;
-                                    contratoPerfilObservacionOld.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                                    contratoPerfilObservacionOld.TipoObservacionCodigo = ContratoPerfilObservacion.TipoObservacionCodigo;
                                     contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion?.ToUpper();
                                 }
                                 else
@@ -249,6 +249,7 @@ namespace asivamosffie.services
                             ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                             ContratoPerfil.FechaCreacion = DateTime.Now;
                             ContratoPerfil.Eliminado = false;
+                            ContratoPerfil.Observacion = ContratoPerfil.Observacion;
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
 
@@ -382,6 +383,7 @@ namespace asivamosffie.services
                  || contratoPerfilOld.CantidadHvAprobadas == 0
                  || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
+                   || string.IsNullOrEmpty(contratoPerfilOld.Observacion)
                 )
                 return false;
 
@@ -706,7 +708,11 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == 
+            (int)EnumeratorPerfil.Interventor 
+            || x.PerfilId == (int)EnumeratorPerfil.Supervisor 
+            || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+             
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarPoliza4diasNoGestion);
             foreach (var contrato in contratos)
             {
