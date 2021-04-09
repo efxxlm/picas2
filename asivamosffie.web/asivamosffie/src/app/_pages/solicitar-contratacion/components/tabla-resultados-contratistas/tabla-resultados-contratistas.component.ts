@@ -18,9 +18,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
 
   @Input() contratacion: Contratacion;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
-
   contratista: ContratistaGrilla;
-
+  seDiligencioCampo = false;
   unionTemporal: FormControl;
   nombreContratista: FormControl;
   numeroDocumento: FormControl;
@@ -60,6 +59,9 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
       if (this.contratacion[ 'contratista' ] !== undefined)
          this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
       
+      if ( this.contratacion[ 'contratista' ] !== undefined || this.contratacion[ 'contratista' ] !== undefined || this.contratacion[ 'contratista' ] !== undefined ) {
+        this.buscar();
+      }
     }
 
   }
@@ -85,8 +87,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   selectElement(elemento: ContratistaGrilla) {
     this.contratista = {
       idContratista: elemento.idContratista,
-
     }
+    this.seDiligencioCampo = true;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -119,6 +121,9 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           this.openDialog( '', '<b>No se encontraron registros asociados al criterio de búsqueda seleccionado.</b>' );
           return;
         }
+
+
+
         this.dataSource = new MatTableDataSource(response);
         setTimeout(() => {
           this.dataSource.sort = this.sort;
@@ -129,6 +134,24 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
         }, 10);
       })
 
+  }
+
+  checkRegistro( registro: any ) {
+    if ( this.unionTemporal.value === false ) {
+      if ( this.numeroDocumento.value !== null && this.nombreContratista.value !== null ) {
+        if ( registro.numeroIdentificacion === this.numeroDocumento.value ) {
+          return true;
+        }
+      }
+    }
+
+    if ( this.unionTemporal.value === true ) {
+      if ( this.nombreContratista.value !== null ) {
+        if ( this.nombreContratista.value === registro.nombre ) {
+          return true;
+        }
+      }
+    }
   }
 
   changeUnionTemporal(){
