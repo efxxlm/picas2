@@ -303,6 +303,7 @@ namespace asivamosffie.services
                 var bankAccounts = _context.CuentaBancaria.Where(
                     x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
 
+                List<string> accounts = new List<string>();
                 bool accountsDifferents = columnAccounst.Count != worksheet.Dimension.Rows - 1;
 
                 // Query payment 
@@ -330,7 +331,7 @@ namespace asivamosffie.services
                         }
                         else if (fileType == "Rendimientos")
                         {
-                            var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts);
+                            var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts, accounts);
 
                             carguePagosRendimiento = validatedValues.list;
                             if (validatedValues.errors != null)
@@ -515,7 +516,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
+        private (Dictionary<string, string> list, List<ExcelError> errors) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts, List<string> accounts)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
             List<ExcelError> errors = new List<ExcelError>();
@@ -535,6 +536,7 @@ namespace asivamosffie.services
             string dateValue = worksheet.Cells[2, 1].Text;
             TryStringToDate(dateValue, out DateTime guideDate);
             int month = guideDate.Month;
+
 
             carguePagosRendimiento.Add("Row", indexRow.ToString());
             foreach (var rowFormat in performanceStructure)
@@ -565,6 +567,12 @@ namespace asivamosffie.services
 
                 if (errors.Count  == 0 && rowFormat.Key == "Número de Cuenta")
                 {
+                    if (accounts.Any(x => x == cellValue))
+                    {
+                        errors.Add(new ExcelError(indexRow, indexCell + 1, $" El archivo cuenta con números de cuenta ya repetidos. Por favor verifique y vuelva a cargar."));
+                    }
+                    accounts.Add(cellValue);
+
                     var activeAccount = bankAccounts.SingleOrDefault(account => account.NumeroCuentaBanco == cellValue);
                     var hasError = activeAccount == null;
                     if (activeAccount != null)
