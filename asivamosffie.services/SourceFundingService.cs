@@ -203,6 +203,18 @@ namespace asivamosffie.services
                     {
                         retorno = false;
                     }
+
+                    fuentefinanciacion.VigenciaAporte.Where( x => x.Eliminado != true).ToList().ForEach(vig =>
+                   {
+                        if (
+                                vig.ValorAporte == null ||
+                                vig.ValorAporte == 0 ||
+                                vig.VigenciaAporteId == null
+                       )
+                       {
+                           retorno = false;
+                       }
+                   });
                 }
                 else
                 {
@@ -602,6 +614,7 @@ namespace asivamosffie.services
                     //VigenciaAporteAntigua.FuenteFinanciacion = vigenciaAporte.FuenteFinanciacion;
                     VigenciaAporteAntigua.TipoVigenciaCodigo = vigenciaAporte.TipoVigenciaCodigo;
                     VigenciaAporteAntigua.ValorAporte = vigenciaAporte.ValorAporte;
+                    VigenciaAporteAntigua.Eliminado = vigenciaAporte.Eliminado;
 
                     //_context.VigenciaAporte.Update(VigenciaAporteAntigua);
                 }

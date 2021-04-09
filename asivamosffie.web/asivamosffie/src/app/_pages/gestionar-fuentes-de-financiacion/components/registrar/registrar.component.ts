@@ -28,6 +28,10 @@ import { Aportante } from 'src/app/core/_services/project/project.service';
   styleUrls: ['./registrar.component.scss']
 })
 export class RegistrarComponent implements OnInit {
+
+  listaVigenciasEliminadas=[];
+  estaEditando = false;
+
   addressForm: FormGroup;
 
   maxDate: Date;
@@ -202,6 +206,7 @@ export class RegistrarComponent implements OnInit {
         grupo.get('fuenteFinanciacionId').setValue(ff.fuenteFinanciacionId);
 
         // Vigencias
+        let cantidadVigencias = 0; 
         ff.vigenciaAporte.forEach(v => {
           const grupoVigencia = this.createVigencia();
           const vigenciaSeleccionada = this.VigenciasAporte.find(vtemp => vtemp == v.tipoVigenciaCodigo);
@@ -209,9 +214,14 @@ export class RegistrarComponent implements OnInit {
           grupoVigencia.get('vigenciaAporteId').setValue(v.vigenciaAporteId);
           grupoVigencia.get('vigenciaAportante').setValue(vigenciaSeleccionada);
           grupoVigencia.get('valorVigencia').setValue(v.valorAporte);
+          
+
 
           listaVigencias.push(grupoVigencia);
+          cantidadVigencias++;
         });
+
+        grupo.get('cuantasVigencias').setValue(cantidadVigencias);
 
         // Cuentas bancarias
         ff.cuentaBancaria.forEach(ba => {
@@ -266,9 +276,11 @@ export class RegistrarComponent implements OnInit {
 
   changeMunicipio() {
     const idMunicipio = this.addressForm.get('municipio').value.localizacionId;
-    this.nombresAportantes2 = this.nombresAportantes.filter(z => z.municipioId == idMunicipio);
-    if (this.nombresAportantes2.length == 0) {
-      this.openDialog('', '<b>No tiene acuerdos disponibles.</b>');
+    console.log( this.nombresAportantes, idMunicipio )
+    this.nombresAportantes2=this.nombresAportantes.filter(z=>z.municipioId == (idMunicipio === undefined ? 0 : idMunicipio));
+    if(this.nombresAportantes2.length==0)
+    {
+      this.openDialog("","<b>No tiene acuerdos disponibles.</b>");
     }
   }
 
@@ -519,7 +531,9 @@ export class RegistrarComponent implements OnInit {
 
   CambioNumerovigencia(j: number) {
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
-    if (FormNumvigencias.cuantasVigencias != null && FormNumvigencias.cuantasVigencias != '') {
+    
+    if(FormNumvigencias.cuantasVigencias!=null && FormNumvigencias.cuantasVigencias!="")
+    {
       if (FormNumvigencias.cuantasVigencias > this.vigencias1(j).length && FormNumvigencias.cuantasVigencias < 100) {
         if (FormNumvigencias.cuantasVigencias == 1) {
           this.vigencias1(j).push(
@@ -697,21 +711,28 @@ export class RegistrarComponent implements OnInit {
   }
 
   borrarArrayVigencias(borrarForm: any, i: number, j: number) {
-    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', borrarForm, i, j, 1);
+    this.openDialogSiNo("", "<b>¿Está seguro de eliminar este registro?</b>", borrarForm, i, j, 1);
   }
 
-  removeItemVigencia(borrarForm: any, i: number, j: number, mensaje = true) {
-    if (borrarForm.value[i].vigenciaAporteId != null) {
-      this.cofinanciacionService.eliminarVigencia(borrarForm.value[i].vigenciaAporteId).subscribe(response => {
-        borrarForm.removeAt(i);
-        this.addressForm
-          .get('fuenteRecursosArray')
-          ['controls'][j].get('cuantasVigencias')
-          .setValue(this.vigencias1(j).length);
+  removeItemVigencia(borrarForm: FormArray, i: number,j:number,mensaje=true)
+  {    
+    if(borrarForm.value[i].vigenciaAporteId!=null)
+    {
+      //this.cofinanciacionService.eliminarVigencia(borrarForm.value[i].vigenciaAporteId).subscribe(response=>
+        //{
+          this.listaVigenciasEliminadas.push(borrarForm.controls[i]);
+          //borrarForm.controls[i].get('eliminado').setValue( true );
 
-        this.openDialog('', '<b>La información a sido eliminada correctamente.</b>', false);
-      });
-    } else {
+          //console.log(borrarForm.controls[i].get('eliminado').value)
+          borrarForm.removeAt(i);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
+      
+          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+        //});
+      
+    }
+    else
+    {
       borrarForm.removeAt(i);
       this.addressForm
         .get('fuenteRecursosArray')
@@ -784,6 +805,20 @@ export class RegistrarComponent implements OnInit {
           cofinanciacionDocumento: null
         }
       };
+
+      this.listaVigenciasEliminadas.forEach( vi => {
+        console.log( vi )
+        const vigenciaAporte: VigenciaAporte = {
+               vigenciaAporteId: vi.get('vigenciaAporteId').value,
+               fuenteFinanciacionId: 0,
+               tipoVigenciaCodigo: vi.get('vigenciaAportante').value,
+               valorAporte: vi.get('valorVigencia').value,
+               eliminado: true
+  
+             };
+             fuente.vigenciaAporte.push(vigenciaAporte);
+      }); 
+
       if (vigencias.controls.length > 0) {
         let totalaportes = 0;
         vigencias.controls.forEach(controlVi => {
@@ -794,7 +829,7 @@ export class RegistrarComponent implements OnInit {
             valorAporte: controlVi.get('valorVigencia').value
           };
           totalaportes += controlVi.get('valorVigencia').value;
-          valortotla += controlVi.get('valorVigencia').value;
+          valortotla += controlVi.get('valorVigencia').value ? controlVi.get('valorVigencia').value : 0;
           fuente.vigenciaAporte.push(vigenciaAporte);
         });
         //si tengo vigencias mi valor base es la fuente
@@ -837,14 +872,30 @@ export class RegistrarComponent implements OnInit {
 
     //si tengo vigencias
 
+    //console.log(valorBase2, )
+
     if (valorBase2 > 0) {
-      if (valorBase2 != valortotla) {
-        this.openDialog(
-          '',
-          '<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>'
-        );
-        bitValorok = false;
-        return false;
+      
+      console.log( valorBase2, valorBase, valortotla )
+
+      if(valorBase2>0)
+      {
+        if(valorBase2!=valortotla)
+        {            
+          this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+          bitValorok=false;
+          return false;
+        }  
+        //aunque tenga vigencias, valido sobre el documento para ffie
+        if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
+        {
+          if(valorBase!=valortotla)
+          {            
+           this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+            bitValorok=false;
+            return false;
+          }
+        }
       }
       //aunque tenga vigencias, valido sobre el documento para ffie
       if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {

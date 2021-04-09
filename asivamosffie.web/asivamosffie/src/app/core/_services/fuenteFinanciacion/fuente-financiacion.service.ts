@@ -140,7 +140,8 @@ export interface VigenciaAporte{
   tipoVigenciaCodigo: string,
   valorAporte: number,
   fechaCreacion?: Date,
-  usuarioCreacion?: string
+  usuarioCreacion?: string,
+  eliminado?: boolean,
 }
 
 export interface ControlRecurso{

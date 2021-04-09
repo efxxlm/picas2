@@ -19,14 +19,11 @@
       <mat-card-content>
         <div class="row" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
                   (addressForm.controls.nombreAportante.invalid && edicion)
-              }"
-            >
+              }">
               Nombre del aportante
             </label>
           </div>
@@ -40,41 +37,29 @@
             </mat-form-field>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="
                 (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
                 (addressForm.controls.nombreAportante.invalid && edicion)
-              "
-            />
+              " />
           </span>
         </div>
         <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.nombreAportanteFFIE.invalid &&
                     addressForm.controls.nombreAportanteFFIE.touched) ||
                   (addressForm.controls.nombreAportanteFFIE.invalid && edicion)
-              }"
-            >
+              }">
               Acuerdos de cofinanciación
             </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select
-                formControlName="nombreAportanteFFIE"
-                (selectionChange)="changeNombreAportanteFFIE()"
-                required
-              >
+              <mat-select formControlName="nombreAportanteFFIE" (selectionChange)="changeNombreAportanteFFIE()"
+                required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
                   Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId }} - Número del acuerdo:
                   {{ nombreAportantes.cofinanciacion.cofinanciacionId }}
@@ -83,19 +68,13 @@
             </mat-form-field>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="
                 (addressForm.controls.nombreAportanteFFIE.invalid &&
                   addressForm.controls.nombreAportanteFFIE.touched) ||
                 (addressForm.controls.nombreAportanteFFIE.invalid && edicion)
-              "
-            />
+              " />
           </span>
         </div>
         <!--pueden ser varios documentos por acuerdo, entonces lo cambio por una lista
@@ -132,14 +111,11 @@
         </div>-->
         <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
                   (addressForm.controls.tipoDocumento.invalid && edicion)
-              }"
-            >
+              }">
               Tipo de documento
             </label>
           </div>
@@ -153,18 +129,12 @@
             </mat-form-field>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="
                 (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
                 (addressForm.controls.tipoDocumento.invalid && edicion)
-              "
-            />
+              " />
           </span>
         </div>
         <!--    <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
@@ -191,14 +161,11 @@
         </div>-->
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
                   (addressForm.controls.departamento.invalid && edicion)
-              }"
-            >
+              }">
               Departamento
             </label>
           </div>
@@ -212,18 +179,12 @@
             </mat-form-field>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="
                 (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
                 (addressForm.controls.departamento.invalid && edicion)
-              "
-            />
+              " />
           </span>
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
@@ -244,14 +205,11 @@
         </div>
         <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
                   (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
-              }"
-            >
+              }">
               Vigencia del acuerdo de cofinanciación
             </label>
           </div>
@@ -266,18 +224,12 @@
             </mat-form-field>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="
                 (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
                 (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
-              "
-            />
+              " />
           </span>
         </div>
       </mat-card-content>
@@ -301,27 +253,21 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card
-      class="shipping-card"
-      *ngIf="
+    <mat-card class="shipping-card" *ngIf="
         tipoAportante.Tercero.includes(tipoAportanteId.toString()) ||
         tipoAportante.ET.includes(tipoAportanteId.toString())
-      "
-    >
+      ">
       <mat-card-header class="header-card mlmenor">
         <mat-card-title class="header-card--text"> Registros Presupuestales </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
+            <label class="label-left" [ngClass]="{
                 'color-secondaryColor':
                   (addressForm.controls.tieneRP.invalid && addressForm.controls.tieneRP.touched) ||
                   (addressForm.controls.tieneRP.invalid && edicion)
-              }"
-            >
+              }">
               ¿Este aporte tiene RP?
             </label>
           </div>
@@ -336,57 +282,35 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label
-                  class="label-left"
-                  [ngClass]="{
+                <label class="label-left" [ngClass]="{
                     'color-secondaryColor':
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
-                  }"
-                >
+                  }">
                   ¿Cuántos RP tiene asociados?
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input
-                    matInput
-                    #cuantosRP
-                    type="number"
-                    min="1"
-                    class="maincolor"
-                    max="99"
-                    formControlName="cuantosRP"
-                    maxlength="20"
-                    (keyup)="CambioNumeroRP()"
-                    (change)="CambioNumeroRP()"
+                  <input matInput #cuantosRP type="number" min="1" class="maincolor" max="99"
+                    formControlName="cuantosRP" maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     required
                   />
                 </mat-form-field>
-                <span
-                  class="contador"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Campo numérico"
-                  matTooltipClass="info-tooltip"
-                >
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">
                   {{ 2 - cuantosRP.value.length }}
                 </span>
                 <span class="icon-incompleto">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
-                    "
-                  />
+                    " />
                 </span>
               </div>
             </div>
@@ -400,54 +324,36 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label
-                        class="label-left"
-                        [ngClass]="{
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (registroPresupuestal.get('numeroRP').invalid &&
                               registroPresupuestal.get('numeroRP').touched) ||
                             (registroPresupuestal.get('numeroRP').invalid && edicion)
-                        }"
-                      >
+                        }">
                         Número de RP
                       </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
-                        <input
-                          matInput
-                          #numeroRP
-                          type="number"
-                          formControlName="numeroRP"
-                          maxlength="50"
+                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        />
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                         <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
-                      <span
-                        class="contador"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Campo numérico"
-                        matTooltipClass="info-tooltip"
-                      >
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">
                         {{ 50 - numeroRP.value.length }}
                       </span>
                       <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido" [matTooltipPosition]="'above'"
                           matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="
+                          matTooltipClass="info-tooltip" *ngIf="
                             (registroPresupuestal.get('numeroRP').invalid &&
                               registroPresupuestal.get('numeroRP').touched) ||
                             (registroPresupuestal.get('numeroRP').invalid && edicion)
-                          "
-                        />
+                          " />
                       </span>
                     </div>
                   </div>
@@ -457,47 +363,31 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label
-                        class="label-left"
-                        [ngClass]="{
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
                             (registroPresupuestal.get('fecha').invalid && edicion)
-                        }"
-                      >
+                        }">
                         Fecha
                       </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input
-                          matInput
-                          [matDatepicker]="picker"
-                          formControlName="fecha"
-                          class="maincolor"
-                          placeholder="DD/MM/AAAA"
-                          [max]="maxDate"
-                          (click)="picker.open()"
-                          readonly
-                        />
+                        <input matInput [matDatepicker]="picker" formControlName="fecha" class="maincolor"
+                          placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly />
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                       </button>
                       <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido" [matTooltipPosition]="'above'"
                           matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="
+                          matTooltipClass="info-tooltip" *ngIf="
                             (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
                             (registroPresupuestal.get('fecha').invalid && edicion)
-                          "
-                        />
+                          " />
                       </span>
                     </div>
                   </div>
@@ -507,15 +397,12 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label
-                        class="label-left"
-                        [ngClass]="{
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (registroPresupuestal.get('numerodocumentoRP').invalid &&
                               registroPresupuestal.get('numerodocumentoRP').touched) ||
                             (registroPresupuestal.get('numerodocumentoRP').invalid && edicion)
-                        }"
-                      >
+                        }">
                         Documento de apropiación
                       </label>
                     </div>
@@ -529,19 +416,14 @@
                       </mat-form-field>
                     </div>
                     <span class="icon-incompleto ml-1-5em">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
+                      <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido" [matTooltipPosition]="'above'"
                         matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="
+                        matTooltipClass="info-tooltip" *ngIf="
                           (registroPresupuestal.get('numerodocumentoRP').invalid &&
                             registroPresupuestal.get('numerodocumentoRP').touched) ||
                           (registroPresupuestal.get('numerodocumentoRP').invalid && edicion)
-                        "
-                      />
+                        " />
                     </span>
                   </div>
                 </div>
@@ -565,24 +447,19 @@
             <mat-card-content>
               <div class="row">
                 <div class="pr-1">
-                  <label
-                    class="label-left"
-                    [ngClass]="{
+                  <label class="label-left" [ngClass]="{
                       'color-secondaryColor':
                         (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
                         (fuente.get('fuenteRecursos').invalid && edicion)
-                    }"
-                  >
+                    }">
                     Fuente de recursos
                   </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="fuenteRecursos" required>
-                      <mat-option
-                        *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]"
-                        [value]="fuenteDeRecursos1"
-                      >
+                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]"
+                        [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}
                         <input formControlName="fuenteFinanciacionId" type="hidden" />
                       </mat-option>
@@ -590,77 +467,51 @@
                   </mat-form-field>
                 </div>
                 <span class="icon-incompleto">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
                       (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
                       (fuente.get('fuenteRecursos').invalid && edicion)
-                    "
-                  />
+                    " />
                 </span>
               </div>
               <div class="row">
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label
-                        class="label-left"
-                        [ngClass]="{
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
                             (fuente.get('valorFuenteRecursos').invalid && edicion)
-                        }"
-                      >
+                        }">
                         Valor aporte fuente de recursos
                       </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
-                        <input
-                          matInput
-                          #valorAporte
-                          currencyMask
-                          formControlName="valorFuenteRecursos"
-                          maxlength="20"
-                          required
-                          (keypress)="validateNumberKeypress($event); validateonevige(j)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          [options]="{
+                        <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
+                          required (keypress)="validateNumberKeypress($event); validateonevige(j)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;" [options]="{
                             prefix: '$ ',
                             thousands: '.',
                             precision: '0',
                             align: 'center',
                             allowNegative: false
-                          }"
-                        />
+                          }" />
                       </mat-form-field>
-                      <span
-                        class="contador"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Valor en ($) Pesos colombianos"
-                        matTooltipClass="info-tooltip"
-                      >
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                        matTooltipClass="info-tooltip">
                         {{ 20 - valorAporte.value.length }}
                       </span>
                     </div>
                     <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
+                      <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido" [matTooltipPosition]="'above'"
                         matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="
+                        matTooltipClass="info-tooltip" *ngIf="
                           (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
                           (fuente.get('valorFuenteRecursos').invalid && edicion)
-                        "
-                      />
+                        " />
                     </span>
                   </div>
                 </div>
@@ -670,56 +521,34 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label
-                        class="label-left"
-                        [ngClass]="{
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
                             (fuente.get('cuantasVigencias').invalid && edicion)
-                        }"
-                      >
+                        }">
                         ¿De cuántas vigencias se realizará el aporte?
                       </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input
-                          matInput
-                          #cuantasVigencias
-                          type="number"
-                          class="maincolor"
-                          min="1"
-                          max="99"
-                          maxlength="2"
-                          formControlName="cuantasVigencias"
-                          (keyup)="CambioNumerovigencia(j)"
-                          required
+                        <input matInput #cuantasVigencias type="number" class="maincolor" min="1" max="99" maxlength="2"
+                          formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        />
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                       </mat-form-field>
-                      <span
-                        class="contador"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Campo numérico"
-                        matTooltipClass="info-tooltip"
-                      >
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">
                         {{ 2 - cuantasVigencias.value.length }}
                       </span>
                       <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido" [matTooltipPosition]="'above'"
                           matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="
+                          matTooltipClass="info-tooltip" *ngIf="
                             (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
                             (fuente.get('cuantasVigencias').invalid && edicion)
-                          "
-                        />
+                          " />
                       </span>
                     </div>
                   </div>
@@ -728,14 +557,15 @@
               <div formGroupName="vigencias" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
                 <div *ngFor="let vigencia of vigencias1(j).controls; let i = index">
                   <div [formGroupName]="i">
-                    <mat-card-title class="header-card--text sub-text"> Vigencia {{ i + 1 }} </mat-card-title>
-                    <div class="row">
-                      <div class="col-md-8">
-                        <div class="row">
-                          <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                    <section >
+                      <mat-card-title class="header-card--text sub-text" >
+                        Vigencia {{ i + 1 }}
+                      </mat-card-title>
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (vigencia.get('vigenciaAportante').invalid &&
                                     vigencia.get('vigenciaAportante').touched) ||
@@ -773,19 +603,16 @@
                                 (vigencia.get('vigenciaAportante').invalid &&
                                   vigencia.get('vigenciaAportante').touched) ||
                                 (vigencia.get('vigenciaAportante').invalid && edicion)
-                              "
-                            />
-                          </span>
+                              " />
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-8">
-                        <div class="row">
-                          <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
                                   (vigencia.get('valorVigencia').invalid && edicion)
@@ -818,48 +645,33 @@
                                   precision: '0',
                                   align: 'center',
                                   allowNegative: false
-                                }"
-                              />
-                            </mat-form-field>
-                            <span
-                              class="contador"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Valor en ($) Pesos colombianos"
-                              matTooltipClass="info-tooltip"
-                            >
-                              {{ 20 - valorVigencia.value.length }}
-                            </span>
-                            <span class="icon-incompleto">
-                              <img
-                                class="icon-incompleto--img"
-                                src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-                                [matTooltipPosition]="'above'"
-                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip"
-                                *ngIf="
+                                }" />
+                              </mat-form-field>
+                              <span class="contador" [matTooltipPosition]="'above'"
+                                matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                {{ 20 - valorVigencia.value.length }}
+                              </span>
+                              <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip" *ngIf="
                                   (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
                                   (vigencia.get('valorVigencia').invalid && edicion)
-                                "
-                              />
-                            </span>
+                                " />
+                              </span>
+                            </div>
                           </div>
                         </div>
+                        <div class="col-md-4 text-right">
+                          <button mat-button color="warn" *ngIf="vigencias1(j).controls.length > 1" type="button"
+                            class="btn-eliminar" (click)="borrarArrayVigencias(vigencias1(j), i, j)">
+                            <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
+                            Eliminar vigencia
+                          </button>
+                        </div>
                       </div>
-                      <div class="col-md-4 text-right">
-                        <button
-                          mat-button
-                          color="warn"
-                          *ngIf="vigencias1(j).controls.length > 1"
-                          type="button"
-                          class="btn-eliminar"
-                          (click)="borrarArrayVigencias(vigencias1(j), i, j)"
-                        >
-                          <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
-                          Eliminar vigencia
-                        </button>
-                      </div>
-                    </div>
+                    </section>
                   </div>
                 </div>
               </div>
@@ -871,102 +683,66 @@
                     <mat-card-title class="header-card--text sub-text"> Cuenta bancaria {{ i + 1 }} </mat-card-title>
                     <div class="row">
                       <div class="pr-1">
-                        <label
-                          class="label-left"
-                          [ngClass]="{
+                        <label class="label-left" [ngClass]="{
                             'color-secondaryColor':
                               (cuentaBancaria.get('numeroCuenta').invalid &&
                                 cuentaBancaria.get('numeroCuenta').touched) ||
                               (cuentaBancaria.get('numeroCuenta').invalid && edicion)
-                          }"
-                        >
+                          }">
                           Número de cuenta
                         </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input
-                            matInput
-                            #numeroCuemta
-                            type="text"
-                            formControlName="numeroCuenta"
-                            maxlength="20"
-                            required
-                          />
+                          <input matInput #numeroCuemta type="text" formControlName="numeroCuenta" maxlength="20"
+                            required />
                         </mat-form-field>
-                        <span
-                          class="contador"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Campo numérico"
-                          matTooltipClass="info-tooltip"
-                        >
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip">
                           {{ 20 - numeroCuemta.value.length }}
                         </span>
                         <span class="icon-incompleto">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
+                          <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido" [matTooltipPosition]="'above'"
                             matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="
+                            matTooltipClass="info-tooltip" *ngIf="
                               (cuentaBancaria.get('numeroCuenta').invalid &&
                                 cuentaBancaria.get('numeroCuenta').touched) ||
                               (cuentaBancaria.get('numeroCuenta').invalid && edicion)
-                            "
-                          />
+                            " />
                         </span>
                       </div>
                     </div>
                     <div class="row">
                       <div class="pr-1">
-                        <label
-                          class="label-left"
-                          [ngClass]="{
+                        <label class="label-left" [ngClass]="{
                             'color-secondaryColor':
                               (cuentaBancaria.get('nombreCuenta').invalid &&
                                 cuentaBancaria.get('nombreCuenta').touched) ||
                               (cuentaBancaria.get('nombreCuenta').invalid && edicion)
-                          }"
-                        >
+                          }">
                           Nombre de cuenta
                         </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input
-                            matInput
-                            #nombreCuenta
-                            type="text"
-                            maxlength="100"
-                            formControlName="nombreCuenta"
-                            required
-                          />
+                          <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta"
+                            required />
                           <input type="hidden" formControlName="cuentaBancariaId" />
                         </mat-form-field>
-                        <span
-                          class="contador"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Campo alfanumérico"
-                          matTooltipClass="info-tooltip"
-                        >
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                          matTooltipClass="info-tooltip">
                           {{ 100 - nombreCuenta.value.length }}
                         </span>
                         <span class="icon-incompleto">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
+                          <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido" [matTooltipPosition]="'above'"
                             matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="
+                            matTooltipClass="info-tooltip" *ngIf="
                               (cuentaBancaria.get('nombreCuenta').invalid &&
                                 cuentaBancaria.get('nombreCuenta').touched) ||
                               (cuentaBancaria.get('nombreCuenta').invalid && edicion)
-                            "
-                          />
+                            " />
                         </span>
                       </div>
                     </div>
@@ -974,51 +750,33 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                            <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (cuentaBancaria.get('codigoSIFI').invalid &&
                                     cuentaBancaria.get('codigoSIFI').touched) ||
                                   (cuentaBancaria.get('codigoSIFI').invalid && edicion)
-                              }"
-                            >
+                              }">
                               Código SIFI
                             </label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">
-                              <input
-                                matInput
-                                #codigoSIFI
-                                type="text"
-                                formControlName="codigoSIFI"
-                                maxlength="6"
-                                required
-                              />
+                              <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6"
+                                required />
                             </mat-form-field>
-                            <span
-                              class="contador"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Campo alfanumérico"
-                              matTooltipClass="info-tooltip"
-                            >
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                              matTooltipClass="info-tooltip">
                               {{ 6 - codigoSIFI.value.length }}
                             </span>
                             <span class="icon-incompleto">
-                              <img
-                                class="icon-incompleto--img"
-                                src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-                                [matTooltipPosition]="'above'"
+                              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
                                 matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip"
-                                *ngIf="
+                                matTooltipClass="info-tooltip" *ngIf="
                                   (cuentaBancaria.get('codigoSIFI').invalid &&
                                     cuentaBancaria.get('codigoSIFI').touched) ||
                                   (cuentaBancaria.get('codigoSIFI').invalid && edicion)
-                                "
-                              />
+                                " />
                             </span>
                           </div>
                         </div>
@@ -1028,15 +786,12 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                            <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (cuentaBancaria.get('tipoCuenta').invalid &&
                                     cuentaBancaria.get('tipoCuenta').touched) ||
                                   (cuentaBancaria.get('tipoCuenta').invalid && edicion)
-                              }"
-                            >
+                              }">
                               Tipo de cuenta
                             </label>
                           </div>
@@ -1047,19 +802,14 @@
                             </mat-radio-group>
                             <span class="required-form-group">*</span>
                             <span class="icon-incompleto">
-                              <img
-                                class="icon-incompleto--img"
-                                src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-                                [matTooltipPosition]="'above'"
+                              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
                                 matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip"
-                                *ngIf="
+                                matTooltipClass="info-tooltip" *ngIf="
                                   (cuentaBancaria.get('tipoCuenta').invalid &&
                                     cuentaBancaria.get('tipoCuenta').touched) ||
                                   (cuentaBancaria.get('tipoCuenta').invalid && edicion)
-                                "
-                              />
+                                " />
                             </span>
                           </div>
                         </div>
@@ -1069,14 +819,11 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                            <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
                                   (cuentaBancaria.get('banco').invalid && edicion)
-                              }"
-                            >
+                              }">
                               Banco
                             </label>
                           </div>
@@ -1090,18 +837,13 @@
                             </mat-form-field>
                           </div>
                           <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido" [matTooltipPosition]="'above'"
                               matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                              matTooltipClass="info-tooltip" *ngIf="
                                 (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
                                 (cuentaBancaria.get('banco').invalid && edicion)
-                              "
-                            />
+                              " />
                           </span>
                         </div>
                       </div>
@@ -1110,14 +852,11 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label
-                              class="label-left"
-                              [ngClass]="{
+                            <label class="label-left" [ngClass]="{
                                 'color-secondaryColor':
                                   (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
                                   (cuentaBancaria.get('extra').invalid && edicion)
-                              }"
-                            >
+                              }">
                               ¿Exenta?
                             </label>
                           </div>
@@ -1128,31 +867,21 @@
                             </mat-radio-group>
                             <span class="required-form-group">*</span>
                             <span class="icon-incompleto">
-                              <img
-                                class="icon-incompleto--img"
-                                src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-                                [matTooltipPosition]="'above'"
+                              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
                                 matTooltip="Debe ingresar la información en el campo para continuar"
-                                matTooltipClass="info-tooltip"
-                                *ngIf="
+                                matTooltipClass="info-tooltip" *ngIf="
                                   (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
                                   (cuentaBancaria.get('extra').invalid && edicion)
-                                "
-                              />
+                                " />
                             </span>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 text-right">
-                        <button
-                          mat-button
-                          color="warn"
-                          type="button"
-                          class="btn-eliminar"
+                        <button mat-button color="warn" type="button" class="btn-eliminar"
                           *ngIf="addressForm.value.fuenteRecursosArray[j].cuentasBancaria.length > 1"
-                          (click)="borrarArray(cuentasBancaria(j).controls, j, 3, i)"
-                        >
+                          (click)="borrarArray(cuentasBancaria(j).controls, j, 3, i)">
                           <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria" />
                           Eliminar cuenta bancaria
                         </button>
@@ -1168,14 +897,9 @@
               <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria" />
               Agregar otra cuenta bancaria
             </button>
-            <button
-              mat-button
-              color="warn"
-              type="button"
-              class="btn-eliminar"
+            <button mat-button color="warn" type="button" class="btn-eliminar"
               (click)="borrarArray(fuenteRecursosArray, j, 2, 0)"
-              *ngIf="addressForm.value.fuenteRecursosArray.length > 1"
-            >
+              *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
               <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos" />
               Eliminar fuente de recursos
             </button>

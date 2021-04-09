@@ -104,7 +104,7 @@ namespace asivamosffie.services
                     || string.IsNullOrEmpty(proyecto.NumeroActaJunta.ToString())
                     || string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo.ToString())
                     || string.IsNullOrEmpty(proyecto.LlaveMen.ToString())
-                    || string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio.ToString())
+                    || string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio)
                     || string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
                     || string.IsNullOrEmpty(proyecto.SedeId.ToString())
                     || string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
@@ -722,7 +722,7 @@ namespace asivamosffie.services
                     proyectoAntiguo.FechaSesionJunta = pProyecto.FechaSesionJunta;
                     proyectoAntiguo.TipoIntervencionCodigo = pProyecto.TipoIntervencionCodigo.ToString();
                     proyectoAntiguo.LlaveMen = pProyecto.LlaveMen;
-                    proyectoAntiguo.LocalizacionIdMunicipio = pProyecto.LocalizacionIdMunicipio.ToString();
+                    proyectoAntiguo.LocalizacionIdMunicipio = pProyecto.LocalizacionIdMunicipio;
                     proyectoAntiguo.InstitucionEducativaId = pProyecto.InstitucionEducativaId;
                     proyectoAntiguo.SedeId = pProyecto.SedeId;
                     proyectoAntiguo.EnConvocatoria = pProyecto.EnConvocatoria;

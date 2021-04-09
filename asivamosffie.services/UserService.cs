@@ -115,7 +115,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
-            var user = _context.Usuario.Find(pidusuario);
+            var user = await GetUsuario(pidusuario);
             Respuesta respuesta = new Respuesta();
             //var UppUser = Helpers.Helpers.ConvertToUpercase(user);
             //var OldpwdEncrypt = Helpers.Helpers.encryptSha1(Newpwd.ToUpper());
@@ -145,11 +145,21 @@ namespace asivamosffie.services
                         user.UsuarioModificacion = user.Email;
                         user.CambiarContrasena = false;
                         await _context.SaveChangesAsync();
+
+                        List<VUsuarioPerfil> perfiles = await _context.VUsuarioPerfil.Where(y => y.UsuarioId == user.UsuarioId).ToListAsync();
+                        List<Menu> menus = await _context.MenuPerfil.Where(y => perfiles.Select(x => x.PerfilId).Contains(y.PerfilId)).Select(x => x.Menu).Distinct().ToListAsync();
+
                         respuesta = new Respuesta()
                         {
                             IsSuccessful = true,
                             IsValidation = true,
-                            Data = user,
+                            Data = new
+                            {
+                                datausuario = user,
+                                dataperfiles = perfiles,
+                                datamenu = menus
+                            },
+                            
                             Code = ConstantMessagesContrasena.OperacionExitosa
                         };
                     }
