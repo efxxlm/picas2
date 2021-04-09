@@ -9,7 +9,7 @@
   </button>
 </div>
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="fechaCargue"  matSortDirection="desc" class="mat-elevation-z8" >
     <ng-container matColumnDef="fechaCargue">
       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%">
         Fecha de cargue

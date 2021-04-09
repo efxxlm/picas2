@@ -14,6 +14,7 @@ import { ObservacionesReportPagoRprComponent } from './components/observaciones-
 
 @NgModule({
   declarations: [RegistrarPagosRendimientosComponent, TablaRegistrarPagosRprComponent, TablaRegistrarRendimientosRprComponent, DialogCargarReportPagosRprComponent, DialogCargarReportRendRprComponent, ObservacionesReportPagoRprComponent],
+  entryComponents:[ DialogCargarReportPagosRprComponent, DialogCargarReportRendRprComponent, ObservacionesReportPagoRprComponent],
   imports: [
     RegistrarPagosRendimientosRoutingModule,
     CommonModule,

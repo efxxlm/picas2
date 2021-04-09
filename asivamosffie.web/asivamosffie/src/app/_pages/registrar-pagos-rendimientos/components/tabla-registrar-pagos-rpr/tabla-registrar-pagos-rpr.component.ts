@@ -12,6 +12,13 @@ import { filter } from 'rxjs/internal/operators/filter'
 import { switchMap } from 'rxjs/operators'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
 
+export interface Payment{
+  fechaCargue: string
+  totalRegistros: number
+  registrosValidos: number
+  registrosInvalidos: number
+  estadoCargue: string
+}
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
   templateUrl: './tabla-registrar-pagos-rpr.component.html',
@@ -49,6 +56,15 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
         this.dataSource = new MatTableDataSource(response)
         this.dataSource.paginator = this.paginator
         this.dataSource.sort = this.sort
+
+
+        this.dataSource.sortingDataAccessor = (item: Payment , property): string | number => {
+          switch (property) {
+            case 'fechaCargue': return new Date(item.fechaCargue).toString();
+            default: return item[property];
+          }
+        };
+
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página'
 
         this.paginator._intl.getRangeLabel = (page, pageSize, length) => {

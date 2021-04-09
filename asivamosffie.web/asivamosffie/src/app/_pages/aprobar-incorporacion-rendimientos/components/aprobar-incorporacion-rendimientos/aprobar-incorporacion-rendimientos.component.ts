@@ -44,6 +44,14 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+
+    this.dataSource.sortingDataAccessor = (item: any , property): string | number => {
+      switch (property) {
+        case 'fechaCargue': return new Date(item.fechaCargue).toString();
+        default: return item[property];
+      }
+    };
+
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;
@@ -64,7 +72,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   };
 
   
-  cargarActaFirmada(uploadedOrderId: number){
+  uploadSignedMinutes(uploadedOrderId: number){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '50%';
@@ -94,6 +102,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
       FileDownloader.exportExcel("RendimientosIncorporados.xlsx", content)
     });
   }
+
   generateMinute(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.generateMinute(uploadedOrderId)
     .subscribe((content)=>{
@@ -101,15 +110,6 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
       FileDownloader.exportPDF("ActaRendimientos.pdf", content)
     });
   }
-
-  uploadSignedMinutes(){
-
-  }
-
-  downloadTemplateMinutes(){
-
-  }
-
 
 
 }
