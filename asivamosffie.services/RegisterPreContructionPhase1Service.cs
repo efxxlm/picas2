@@ -558,7 +558,9 @@ namespace asivamosffie.services
         private void GetReiniciarObservaciones(Contrato contratoMod)
         {
             _context.Set<ContratoPerfilObservacion>()
-                    .Where(c => c.ContratoPerfilId == contratoMod.ContratoPerfil.FirstOrDefault().ContratoPerfilId)
+                    .Where(c => 
+                    c.ContratoPerfilId == contratoMod.ContratoPerfil.FirstOrDefault().ContratoPerfilId
+                    && c.TipoObservacionCodigo != "1")
                     .Update(c => new ContratoPerfilObservacion
                     {
                         Eliminado = true,
