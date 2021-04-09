@@ -586,25 +586,6 @@
           Eliminar perfil
         </button>
 
-        <section *ngIf="perfil.get('observacionSupervisor').value !== undefined">
-          <mat-card
-            class="shipping-card var-main-gris"
-            style="margin-top: 3em"
-            *ngIf="perfil.get('observacionSupervisor').value !== null"
-            align="left"
-          >
-            <mat-card-header class="header-card">
-              <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <b style="margin-top: 0.8em; margin-left: 2em">
-                {{ perfil.get('fechaObservacion').value | date: 'dd/MM/yyyy' }}
-              </b>
-              <section [innerHTML]="perfil.get('observacionSupervisor').value" style="margin-left: 2em"></section>
-            </mat-card-content>
-          </mat-card>
-        </section>
-
         <button
           mat-button
           color="warn"
@@ -617,6 +598,22 @@
           Eliminar perfil
         </button>
       </div>
+
+      <mat-card
+        class="shipping-card var-main-gris"
+        style="margin-top: 3em"
+        *ngIf="perfil.get('observacionSupervisor').value !== null"
+      >
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <b style="margin-top: 0.8em; margin-left: 2em">
+            {{ perfil.get('fechaObservacion').value | date: 'dd/MM/yyyy' }}
+          </b>
+          <section [innerHTML]="perfil.get('observacionSupervisor').value" style="margin-left: 2em"></section>
+        </mat-card-content>
+      </mat-card>
 
       <div class="text-center">
         <button

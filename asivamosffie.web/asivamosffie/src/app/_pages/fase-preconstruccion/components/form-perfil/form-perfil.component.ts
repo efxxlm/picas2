@@ -226,7 +226,7 @@ export class FormPerfilComponent implements OnInit {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
-        console.log( perfil.observacion, perfil )
+
         this.perfiles.push(
           this.fb.group(
             {

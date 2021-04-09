@@ -96,11 +96,7 @@
                             <b>Fecha de aprobación de la totalidad de las hojas de vida:</b>
                             {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
                           </p>
-                          <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-                            <div *ngIf="obs.tipoObservacionCodigo === '1'">
-                              <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
-                            </div>
-                          </section>
+                          <b style="margin-bottom: .5em;">Observaciones:</b> <div [innerHTML]="perfil.observacion"></div>
                           <p *ngFor="let radicadoFfie of perfil.contratoPerfilNumeroRadicado; index as j">
                             <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }}:</b>
                             {{ radicadoFfie['numeroRadicado'] }}

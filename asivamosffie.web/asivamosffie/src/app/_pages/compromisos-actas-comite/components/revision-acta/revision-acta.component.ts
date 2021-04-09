@@ -159,7 +159,6 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   textoLimpio(texto: string, maxLength: number) {
     if (texto !== undefined) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      console.log(textolimpio.length);
       return textolimpio.length > maxLength ? maxLength : textolimpio.length;
     } else {
       return 0;

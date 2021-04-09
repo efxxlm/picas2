@@ -500,6 +500,6 @@
   </div>
 
   <div class="container text-center">
-    <app-tabla-detalle-acta *ngIf="comentarios" [data]="acta.sesionComentario"></app-tabla-detalle-acta>
+    <app-tabla-detalle-acta *ngIf="acta.sesionComentario.length > 0" [data]="acta.sesionComentario"></app-tabla-detalle-acta>
   </div>
 </div>

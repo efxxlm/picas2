@@ -137,27 +137,30 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       } );
   };
   cargarDatos(id) {
-    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
-      this.fechaFirmaContrato = data[0].fechaFirmaContrato;
-      this.tipoSolicitud = data[0].tipoSolicitud;
-      this.numContrato = data[0].numeroContrato;
-      this.tipoIdentificacion = data[0].tipoDocumento;
-      if (data[0].objetoContrato != undefined || data[0].objetoContrato != null) {
-        this.objeto = data[0].objetoContrato;
-      }
-      else {
-        this.objeto = '';
-      };
-      this.tipoContrato = data[0].tipoContrato;
-      if (data[0].valorContrato != undefined || data[0].valorContrato != null) {
-        this.valorContrato = data[0].valorContrato;
-      }
-      else {
-        this.valorContrato = 0;
-      }
-      this.plazoContrato = data[0].plazoContrato;
-      this.loadContratacionId(data[0].contratacionId);
-    });
+    if ( id !== undefined ) {
+      this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
+        console.log( data )
+        this.fechaFirmaContrato = data[0].fechaFirmaContrato;
+        this.tipoSolicitud = data[0].tipoSolicitud;
+        this.numContrato = data[0].numeroContrato;
+        this.tipoIdentificacion = data[0].tipoDocumento;
+        if (data[0].objetoContrato != undefined || data[0].objetoContrato != null) {
+          this.objeto = data[0].objetoContrato;
+        }
+        else {
+          this.objeto = '';
+        };
+        this.tipoContrato = data[0].tipoContrato;
+        if (data[0].valorContrato != undefined || data[0].valorContrato != null) {
+          this.valorContrato = data[0].valorContrato;
+        }
+        else {
+          this.valorContrato = 0;
+        }
+        this.plazoContrato = data[0].plazoContrato;
+        this.loadContratacionId(data[0].contratacionId);
+      });
+    }
     /*
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(a => {
       this.loadPolizaId(a);
@@ -241,7 +244,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     ref.afterClosed().subscribe(result => {
       if(reload)
       {
-        this.router.navigate(['/generarPolizasYGarantias']);
+        this.router.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.router.navigate( [ '/generarPolizasYGarantias' ] ) );
       }      
      });
   }
