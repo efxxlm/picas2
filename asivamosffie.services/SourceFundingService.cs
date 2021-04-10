@@ -104,6 +104,8 @@ namespace asivamosffie.services
                     fuente.FechaModificacion = DateTime.Now;
                     fuente.ValorFuente = fuentefinanciacion.ValorFuente;
                     fuente.RegistroCompleto = fuentefinanciacion.RegistroCompleto;
+                    fuente.Eliminado = fuentefinanciacion.Eliminado;
+
                     _context.FuenteFinanciacion.Update(fuente);
                     _context.SaveChanges();
                 }

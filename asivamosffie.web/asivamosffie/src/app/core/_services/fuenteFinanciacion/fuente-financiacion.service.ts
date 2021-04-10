@@ -116,7 +116,8 @@ export interface FuenteFinanciacion{
    cuentaBancaria?: CuentaBancaria[],
    vigenciaAporte?: VigenciaAporte[],
    controlRecurso?: ControlRecurso[],
-   cofinanciacionDocumentoId?:number
+   cofinanciacionDocumentoId?:number,
+   eliminado?: boolean,
    //DateTime FechaCreacion: Date 
    //string UsuarioCreacion: string
 }

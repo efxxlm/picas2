@@ -30,6 +30,7 @@ import { Aportante } from 'src/app/core/_services/project/project.service';
 export class RegistrarComponent implements OnInit {
 
   listaVigenciasEliminadas=[];
+  listaFuentesEliminadas=[];
   estaEditando = false;
 
   addressForm: FormGroup;
@@ -696,13 +697,16 @@ export class RegistrarComponent implements OnInit {
           });
       } else {
         this.fuenteFinanciacionService
-          .eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId)
-          .subscribe(response => {
-            this.openDialog('', response.message, false);
-            if (response.code === '200') {
+          //.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId)
+          //.subscribe(response => {
+            //this.openDialog('', response.message, false);
+            //if (response.code === '200') {
+              console.log( borrarForm.controls[i]  )
+              this.listaFuentesEliminadas.push( borrarForm.controls[i] );
               borrarForm.removeAt(i);
-            }
-          });
+              this.openDialog('', '<b>La información a sido eliminada correctamente.</b>', false);
+            //}
+          //});
       }
     } else {
       borrarForm.removeAt(i);
@@ -781,6 +785,22 @@ export class RegistrarComponent implements OnInit {
     let valortotla = 0;
     let valorBase = this.valorTotal;
     let valorBase2 = 0;
+
+    this.listaFuentesEliminadas.forEach( fu => {
+      const fuente: FuenteFinanciacion = {
+        fuenteFinanciacionId: fu.get('fuenteFinanciacionId').value,
+        aportanteId: this.idAportante,
+        fuenteRecursosCodigo: fu.get('fuenteRecursos').value?.codigo,
+        valorFuente: fu.get('valorFuenteRecursos').value,
+        cantVigencias: fu.get('cuantasVigencias').value,
+        cuentaBancaria: [],
+        vigenciaAporte: [],
+        cofinanciacionDocumentoId: this.documentoFFIEID,
+        eliminado: true,
+      }
+      lista.push(fuente);
+    }); 
+
     this.fuenteRecursosArray.controls.forEach(controlFR => {
       const vigencias = controlFR.get('vigencias') as FormArray;
       if (vigencias.controls.length == 0) {
@@ -795,6 +815,7 @@ export class RegistrarComponent implements OnInit {
         cuentaBancaria: [],
         vigenciaAporte: [],
         cofinanciacionDocumentoId: this.documentoFFIEID,
+        eliminado: false,
         aportante: {
           cofinanciacionAportanteId: this.idAportante,
           cuentaConRp: this.addressForm.get('tieneRP').value == '1' ? true : false,
