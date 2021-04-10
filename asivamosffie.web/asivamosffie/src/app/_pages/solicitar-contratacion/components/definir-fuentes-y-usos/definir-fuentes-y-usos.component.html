@@ -172,8 +172,8 @@
                               class="label-left"
                               for="fase"
                               [class.color-secondaryColor]="
-                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase')?.invalid && estaEditando)
+                                (conponente.get('fase')?.invalid && conponente.get('fase').touched) ||
+                                (conponente.get('fase')?.invalid && estaEditando)
                               "
                             >
                               Fase
@@ -202,8 +202,8 @@
                               matTooltip="Debe ingresar la información en el campo para continuar"
                               matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase')?.invalid && estaEditando)
+                                (conponente.get('fase')?.invalid && conponente.get('fase').touched) ||
+                                (conponente.get('fase')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -218,8 +218,8 @@
                               class="label-left"
                               for="componente"
                               [class.color-secondaryColor]="
-                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente')?.invalid && estaEditando)
+                                (conponente.get('componente')?.invalid && conponente.get('componente').touched) ||
+                                (conponente.get('componente')?.invalid && estaEditando)
                               "
                             >
                               Componente
@@ -249,8 +249,8 @@
                               matTooltip="Debe ingresar la información en el campo para continuar"
                               matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente')?.invalid && estaEditando)
+                                (conponente.get('componente')?.invalid && conponente.get('componente').touched) ||
+                                (conponente.get('componente')?.invalid && estaEditando)
                               "
                             />
                           </span>
