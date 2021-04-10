@@ -180,6 +180,7 @@ export class FormularioProyectosComponent implements OnInit {
     if(!vigenciasCorrectas)
     {
       this.openDialog('', '<b>La vigencia del acuerdo de cofinanciación es obligatoria.</b>');
+      return;
     }
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(
       respuesta => {
