@@ -282,6 +282,45 @@ namespace asivamosffie.services.Helpers
             return true;
         }
 
+        public static bool EnviarCorreoMultipleDestinatario(List<string> pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort, bool pMailHighPriority = false, string pFileNamePath = "")
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(pStrSmtpServerV);
+
+                mail.From = new MailAddress(pCorreoLocal);
+                foreach(var destinatario in pDestinatario)
+                {
+                    mail.To.Add(destinatario);
+                }
+                
+                mail.Subject = pAsunto;
+                mail.IsBodyHtml = true;
+
+                Attachment item;
+                if (pFileNamePath != "")
+                {
+                    item = new Attachment(pFileNamePath);
+                    mail.Attachments.Add(item);
+                }
+
+                if (pMailHighPriority)
+                    mail.Priority = MailPriority.High;
+                mail.Body = pMensajeHtml;
+                SmtpServer.Port = pSmtpPort;
+                SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;

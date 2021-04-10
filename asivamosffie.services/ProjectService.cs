@@ -821,7 +821,7 @@ namespace asivamosffie.services
                     decimal valorinterventoria = 0;
                     decimal valorobra = 0;
                     decimal valortotal = 0;
-                    //Aportantes 
+                    //Aportantes EnviarProyectoAdministrativoByProyectoId
                     foreach (var proyectoAportante in pProyecto.ProyectoAportante)
                     {
                         if (proyectoAportante.ProyectoAportanteId == 0)
@@ -1958,12 +1958,9 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido.Replace("[proyecto]", proyecto.ProyectoAdministrativoId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[fecha]", Convert.ToDateTime(proyecto.FechaCreado).ToString("dd/MM/yyyy"));
 
                 //template = template.Replace("_Link_", urlDestino);                
-                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).ToList();
-                foreach (var usuarioadmin in usuariosadmin)
-                {
-                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
-                    string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
-                }
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).Select(x=>x.Usuario.Email).ToList();
+                Helpers.Helpers.EnviarCorreoMultipleDestinatario(usuariosadmin, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
+                string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
             }
             catch (Exception ex)
             {
@@ -1978,6 +1975,7 @@ namespace asivamosffie.services
             var resultado = await _context.FuenteFinanciacion.
                 Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado).
                 Include(x => x.CofinanciacionDocumento).
+                ThenInclude(x=>x.CofinanciacionAportante).
                 OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
             foreach (var res in resultado)
             {

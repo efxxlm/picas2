@@ -75,7 +75,7 @@
                       >
                         <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">
                           <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
-                            Número de acuerdo: <b>{{ listado.cofinanciacionDocumento?.numeroAcuerdo }}</b> Tipo:
+                            Número de acuerdo: <b>{{ listado.aportante?.cofinanciacionId }}</b> Tipo:
                             <b>{{ listado.fuenteRecursosString }}</b>
                           </mat-option>
                         </mat-select>
