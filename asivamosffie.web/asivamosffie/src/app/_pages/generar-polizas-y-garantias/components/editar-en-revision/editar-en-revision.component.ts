@@ -145,6 +145,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
                             if ( this.contratoPoliza.polizaListaChequeo !== undefined ) {
                                 if ( this.contratoPoliza.polizaListaChequeo.length > 0 ) {
                                     const polizaListaChequeo = this.contratoPoliza.polizaListaChequeo[ 0 ];
+                                    this.polizaListaChequeoId = polizaListaChequeo.polizaListaChequeoId;
 
                                     this.addressForm.get( 'cumpleAsegurado' ).setValue( polizaListaChequeo.cumpleDatosAseguradoBeneficiario !== undefined ? polizaListaChequeo.cumpleDatosAseguradoBeneficiario : null );
                                     this.addressForm.get( 'cumpleBeneficiario' ).setValue( polizaListaChequeo.cumpleDatosBeneficiarioGarantiaBancaria !== undefined ? polizaListaChequeo.cumpleDatosBeneficiarioGarantiaBancaria : null );

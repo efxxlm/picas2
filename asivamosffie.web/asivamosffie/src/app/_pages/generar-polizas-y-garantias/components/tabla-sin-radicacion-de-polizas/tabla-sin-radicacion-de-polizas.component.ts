@@ -2,8 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { EstadoPolizaCodigo } from 'src/app/_interfaces/gestionar-polizas-garantias.interface';
 
 @Component({
   selector: 'app-tabla-sin-radicacion-de-polizas',
@@ -11,60 +13,42 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-sin-radicacion-de-polizas.component.scss']
 })
 export class TablaSinRadicacionDePolizasComponent implements OnInit {
-  @Output() estadoSemaforo = new EventEmitter<string>();
-  displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
-  dataSource = new MatTableDataSource();
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    estadoPolizaCodigo = EstadoPolizaCodigo;
+    displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    dataTable: any[] = [];
 
-  dataTable: any[] = [];
+    constructor( private polizaSvc: PolizaGarantiaService ) {
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.sinRadicacion )
+        .subscribe(
+            getListGrillaContratoGarantiaPoliza => {
+                if ( getListGrillaContratoGarantiaPoliza.length === 0 ) {
+                    this.estadoSemaforo.emit( 'completo' );
+                    return;
+                } else {
+                    this.estadoSemaforo.emit( 'sin-diligenciar' );
+                }
 
-  loadDataItems: Subscription;
-  constructor(private polizaService: PolizaGarantiaService) { }
+                getListGrillaContratoGarantiaPoliza.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? ( moment( registro.fechaFirma ).format( 'DD/MM/YYYY' ) ) : '' );
 
-  ngOnInit(): void {
-    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
-      let sinRadicacion = 0;
-      for (let polizas of resp) {
-        if ((polizas.estadoPoliza === 'Sin radicación de pólizas' || polizas.estadoPoliza === 'sin definir') && polizas.registroCompletoPolizaNombre == 'Incompleto' && polizas.tipoSolicitudCodigoContratacion == '6') {
-          this.dataTable.push(polizas);
-          sinRadicacion++;
-        };
-      };
-      if (sinRadicacion === this.dataTable.length) {
-        this.estadoSemaforo.emit('sin-diligenciar');
-      };
-      if (this.dataTable.length == 0) {
-        this.estadoSemaforo.emit('completo');
-      }
+                this.dataSource = new MatTableDataSource( getListGrillaContratoGarantiaPoliza );
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+            }
+        );
+    }
 
-      if ( this.dataTable.length > 0 ) {
-        this.dataTable.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? registro.fechaFirma.split('T')[0].split('-').reverse().join('/') : '');
-      }
+    ngOnInit(): void {
+    }
 
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-        if (length === 0 || pageSize === 0) {
-          return '0 de ' + length;
-        }
-        length = Math.max(length, 0);
-        const startIndex = page * pageSize;
-        // If the start index exceeds the list length, do not try and fix the end index to the end.
-        const endIndex = startIndex < length ?
-          Math.min(startIndex + pageSize, length) :
-          startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-      };
-    });
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    };
 
 }

@@ -4,9 +4,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadoPolizaCodigo } from 'src/app/_interfaces/gestionar-polizas-garantias.interface';
 
 @Component({
   selector: 'app-tabla-en-revision-de-polizas',
@@ -16,6 +18,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaEnRevisionDePolizasComponent implements OnInit {
 
     @Output() estadoSemaforo1 = new EventEmitter<string>();
+    estadoPolizaCodigo = EstadoPolizaCodigo;
     displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -24,57 +27,54 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
     loadDataItems: Subscription;
 
     constructor(
-        private polizaService: PolizaGarantiaService,
+        private polizaSvc: PolizaGarantiaService,
         private routes: Router,
         private dialog: MatDialog )
-    { }
+    {
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.enRevision )
+            .subscribe(
+                getListGrillaContratoGarantiaPoliza => {
+                    let totalIncompleto = 0;
+                    let totalCompleto = 0;
+
+                    if ( getListGrillaContratoGarantiaPoliza.length === 0 ) {
+                        this.estadoSemaforo1.emit( 'completo' );
+                        return;
+                    }
+
+                    getListGrillaContratoGarantiaPoliza.forEach( registro => {
+                        registro.fechaFirma = registro.fechaFirma !== undefined ? ( moment( registro.fechaFirma ).format( 'DD/MM/YYYY' ) ) : '';
+
+                        if ( registro.registroCompletoPoliza === true ) {
+                            totalCompleto++;
+                        }
+                        if ( registro.registroCompletoPoliza !== true ) {
+                            totalIncompleto++;
+                        }
+                    } );
+
+                    if ( totalIncompleto > 0 && totalIncompleto === getListGrillaContratoGarantiaPoliza.length ) {
+                        this.estadoSemaforo1.emit( 'sin-diligenciar' );
+                    }
+                    if ( totalIncompleto > 0 && totalIncompleto < getListGrillaContratoGarantiaPoliza.length ) {
+                        this.estadoSemaforo1.emit( 'en-proceso' );
+                    }
+                    if ( totalCompleto > 0 && totalCompleto < getListGrillaContratoGarantiaPoliza.length ) {
+                        this.estadoSemaforo1.emit( 'en-proceso' );
+                    }
+                    if ( totalCompleto > 0 && totalCompleto === getListGrillaContratoGarantiaPoliza.length ) {
+                        this.estadoSemaforo1.emit( 'completo' );
+                    }
+
+                    this.dataSource = new MatTableDataSource( getListGrillaContratoGarantiaPoliza );
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.paginator = this.paginator;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
-          let enrevisionInc = 0;
-          let enrevisionC = 0;
-          for (let polizas of resp) {
-            if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoPolizaNombre == 'Incompleto') {
-              this.dataTable.push(polizas);
-              enrevisionInc++;
-            };
-            if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoPolizaNombre == 'Completo') {
-              this.dataTable.push(polizas);
-              enrevisionC++;
-            };
-          };
-          if (enrevisionInc === this.dataTable.length && enrevisionC == 0) {
-            this.estadoSemaforo1.emit('sin-diligenciar');
-          };
-          if (enrevisionC === this.dataTable.length && enrevisionInc == 0) {
-            this.estadoSemaforo1.emit('completo');
-          };
-          if (enrevisionC > 0 && enrevisionInc > 0) {
-            this.estadoSemaforo1.emit('en-proceso');
-          };
-          if (this.dataTable.length == 0) {
-            this.estadoSemaforo1.emit('completo');
-          } else {
-            this.dataTable.forEach( registro => registro.fechaFirma = registro.fechaFirma.split('T')[0].split('-').reverse().join('/') );
-          }
-
-          this.dataSource = new MatTableDataSource(this.dataTable);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-          this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-            if (length === 0 || pageSize === 0) {
-              return '0 de ' + length;
-            }
-            length = Math.max(length, 0);
-            const startIndex = page * pageSize;
-            // If the start index exceeds the list length, do not try and fix the end index to the end.
-            const endIndex = startIndex < length ?
-              Math.min(startIndex + pageSize, length) :
-              startIndex + pageSize;
-            return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-          };
-        });
     }
 
     applyFilter(event: Event) {
@@ -89,19 +89,22 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
         });
     }
 
-    aprobarPoliza(id) {
-        this.polizaService.CambiarEstadoPolizaByContratoId("4", id).subscribe(resp1 => {
-            if (resp1.isSuccessful == true) {
-                this.polizaService.AprobarContratoByIdContrato(id).subscribe(data1 => {
-                  this.openDialog("","<b>La información ha sido guardada exitosamente.</b>");
-                  console.log("envió correo");
-                });
+    aprobarPoliza( contratoPolizaId: number ) {
+        const pContratoPoliza = {
+            contratoPolizaId,
+            estadoPolizaCodigo: this.estadoPolizaCodigo.conAprobacion
+        };
 
-                this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
-                  () => this.routes.navigate(['/generarPolizasYGarantias'])
-                );
-            }
-        });
+        this.polizaSvc.changeStatusEstadoPoliza( pContratoPoliza )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then(
+                        () => this.routes.navigate( [ '/generarPolizasYGarantias' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
