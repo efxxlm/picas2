@@ -29,9 +29,9 @@ namespace asivamosffie.services
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
         {
             if (string.IsNullOrEmpty(pEstadoCodigo))
-                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r=> r.ContratoPolizaId).ToListAsync();
+                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
             else
-                return await _context.VGestionarGarantiasPolizas.Where(v=> v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -53,7 +53,6 @@ namespace asivamosffie.services
 
             try
             {
-
                 foreach (var ContratoPoliza in pContrato.ContratoPoliza)
                 {
                     if (ContratoPoliza.ContratoPolizaId > 0)
@@ -149,17 +148,6 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoPolizaObservacion(PolizaObservacion polizaObservacion)
-        {
-            if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Devuelta)
-                return false;
-
-            if (!polizaObservacion.FechaAprobacion.HasValue
-                || polizaObservacion.ResponsableAprobacionId == 0
-                ) return false;
-
-            return true;
-        }
 
         private void CreateEditPolizaListaChequeo(ICollection<PolizaListaChequeo> pListpolizaListaChequeo, string usuarioCreacion)
         {
@@ -190,19 +178,6 @@ namespace asivamosffie.services
                     _context.PolizaListaChequeo.Add(PolizaListaChequeo);
                 }
             }
-        }
-
-        private bool ValidarRegistroCompletoListaChequeo(PolizaListaChequeo pPolizaListaChequeo)
-        {
-            if (
-                  !pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario.HasValue
-               || !pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria.HasValue
-               || !pPolizaListaChequeo.CumpleDatosTomadorAfianzado.HasValue
-               || !pPolizaListaChequeo.TieneReciboPagoDatosRequeridos.HasValue
-               || !pPolizaListaChequeo.TieneCondicionesGeneralesPoliza.HasValue
-                ) return false;
-
-            return true;
         }
 
         private void CreateEditPolizaGarantia(ICollection<PolizaGarantia> pListPolizaGarantia, string pAuthor)
@@ -237,6 +212,66 @@ namespace asivamosffie.services
             }
         }
 
+        public bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
+        {
+            if (
+                   string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString())
+                || string.IsNullOrEmpty(contratoPoliza.NumeroPoliza.ToString())
+                || string.IsNullOrEmpty(contratoPoliza.NumeroCertificado.ToString())
+                || string.IsNullOrEmpty(contratoPoliza.FechaExpedicion.ToString())
+                || string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString())
+                )
+                return false;
+
+            if (contratoPoliza.PolizaListaChequeo.Count() == 0)
+                return false;
+
+            foreach (var PolizaListaChequeo in contratoPoliza.PolizaListaChequeo)
+            {
+                if (!ValidarRegistroCompletoListaChequeo(PolizaListaChequeo))
+                    return false;
+            }
+            if (contratoPoliza.PolizaGarantia.Count() == 0)
+                return false;
+
+            foreach (var PolizaGarantia in contratoPoliza.PolizaGarantia)
+            {
+                if (!ValidarRegistroCompletoPolizaGarantia(PolizaGarantia))
+                    return false;
+            }
+
+            if (contratoPoliza.PolizaObservacion.Count() == 0)
+                return false;
+
+            foreach (var PolizaObservacion in contratoPoliza.PolizaObservacion)
+            {
+                if (!ValidarRegistroCompletoPolizaObservacion(PolizaObservacion))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoListaChequeo(PolizaListaChequeo pPolizaListaChequeo)
+        {
+            if (
+                  !pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario.HasValue
+               || !pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria.HasValue
+               || !pPolizaListaChequeo.CumpleDatosTomadorAfianzado.HasValue
+               || !pPolizaListaChequeo.TieneReciboPagoDatosRequeridos.HasValue
+               || !pPolizaListaChequeo.TieneCondicionesGeneralesPoliza.HasValue
+                ) return false;
+
+            if (
+                  pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario == false
+               || pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria == false
+               || pPolizaListaChequeo.CumpleDatosTomadorAfianzado == false
+               || pPolizaListaChequeo.TieneReciboPagoDatosRequeridos == false
+               || pPolizaListaChequeo.TieneCondicionesGeneralesPoliza == false
+                ) return false;
+            return true;
+        }
+
         private bool ValidarRegistroCompletoPolizaGarantia(PolizaGarantia polizaGarantia)
         {
             if (
@@ -248,28 +283,17 @@ namespace asivamosffie.services
             return true;
         }
 
-        public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
+        private bool ValidarRegistroCompletoPolizaObservacion(PolizaObservacion polizaObservacion)
         {
-            if (contratoPoliza.EstadoPolizaCodigo == ConstanCodigoEstadoRevision.aprobada)
-            {
-                if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
-                    return false;
-            }
-
-            if (
-                   string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.NumeroPoliza.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.NumeroCertificado.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.FechaExpedicion.ToString())
-                || !contratoPoliza.IncluyeCondicionesGenerales.HasValue
-                || string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString())
-                )
+            if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Devuelta)
                 return false;
 
+            if (!polizaObservacion.FechaAprobacion.HasValue
+                || polizaObservacion.ResponsableAprobacionId == 0
+                ) return false;
 
             return true;
         }
-
 
         #endregion
 
