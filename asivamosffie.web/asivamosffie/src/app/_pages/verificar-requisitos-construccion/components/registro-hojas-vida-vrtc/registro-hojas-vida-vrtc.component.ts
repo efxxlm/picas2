@@ -378,6 +378,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     this.numeroRadicado( numeroRadicado ).push(
       this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' })
     );
+    if (this.estaEditando) this.formContratista.markAllAsTouched();
   }
 
   eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
