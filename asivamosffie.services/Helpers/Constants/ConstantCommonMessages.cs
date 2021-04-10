@@ -63,7 +63,12 @@ namespace asivamosffie.services.Helpers.Constant
 
             public const string ELIMINAR_ACTUALIZACION_POLIZA = "ELIMINAR ACTUALIZACION POLIZAS Y GARANTIAS";
         }
+        internal static class GuaranteePolicies
+        {
+            public const string CREAR_EDITAR = "CREAR EDITAR GARANTIAS Y POLIZAS";
 
+            public const string ERROR = "OCURRIO UN ERROR AL PROCESAR LA SOLICITUD";
+        }
     }
 
 }

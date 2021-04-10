@@ -11,7 +11,7 @@ using System.Linq;
 using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
-{ 
+{
     public class GuaranteePolicyService : IGuaranteePolicyService
     {
         private readonly ICommonService _commonService;
@@ -28,7 +28,7 @@ namespace asivamosffie.services
         #region Opt
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
         {
-            return await _context.VGestionarGarantiasPolizas.ToListAsync( );
+            return await _context.VGestionarGarantiasPolizas.ToListAsync();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -44,35 +44,72 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
         {
-            foreach (var ContratoPoliza in pContrato.ContratoPoliza)
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
             {
-                if (ContratoPoliza.ContratoPolizaId > 0)
-                {
-                    await _context.Set<ContratoPoliza>()
-                             .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
-                             .UpdateAsync(c => new ContratoPoliza
-                             {  
-                                 UsuarioModificacion = pContrato.UsuarioCreacion,
-                                 FechaModificacion = DateTime.Now,
-                                 RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
-                                 NombreAseguradora = ContratoPoliza.NombreAseguradora,
-                                 NumeroPoliza = ContratoPoliza.NumeroPoliza,
-                                 NumeroCertificado = ContratoPoliza.NumeroCertificado,
-                                 FechaExpedicion = ContratoPoliza.FechaExpedicion
-                             }); 
-                }
-                else
-                {
-                    ContratoPoliza.FechaCreacion = DateTime.Now;
-                    ContratoPoliza.Eliminado = false;
-                    _context.ContratoPoliza.Add(ContratoPoliza);
-                }
 
-                CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
-                CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
+                foreach (var ContratoPoliza in pContrato.ContratoPoliza)
+                {
+                    if (ContratoPoliza.ContratoPolizaId > 0)
+                    {
+                        await _context.Set<ContratoPoliza>()
+                                 .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
+                                 .UpdateAsync(c => new ContratoPoliza
+                                 {
+                                     UsuarioModificacion = pContrato.UsuarioCreacion,
+                                     FechaModificacion = DateTime.Now,
+                                     RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
+                                     NombreAseguradora = ContratoPoliza.NombreAseguradora,
+                                     NumeroPoliza = ContratoPoliza.NumeroPoliza,
+                                     NumeroCertificado = ContratoPoliza.NumeroCertificado,
+                                     FechaExpedicion = ContratoPoliza.FechaExpedicion
+                                 });
+                    }
+                    else
+                    {
+                        ContratoPoliza.FechaCreacion = DateTime.Now;
+                        ContratoPoliza.Eliminado = false;
+                        _context.ContratoPoliza.Add(ContratoPoliza);
+                    }
+
+                    CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
+                    CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
+                }
+                return
+                       new Respuesta
+                       {
+                           IsSuccessful = true,
+                           IsException = false,
+                           IsValidation = false,
+                           Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                           Message =
+                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                           (int)enumeratorMenu.GestionarGarantias,
+                                                                                           ConstantMessagesContratoPoliza.OperacionExitosa,
+                                                                                           idAccion,
+                                                                                           pContrato.UsuarioCreacion,
+                                                                                           ConstantCommonMessages.GuaranteePolicies.CREAR_EDITAR
+                                                                                       )
+                       };
             }
-
-            return new Respuesta();
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
+                    Message =
+                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                           (int)enumeratorMenu.GestionarGarantias,
+                                                                                           ConstantMessagesContratoPoliza.ErrorInterno,
+                                                                                           idAccion,
+                                                                                           pContrato.UsuarioCreacion,
+                                                                                           ConstantCommonMessages.GuaranteePolicies.ERROR
+                                                                                       )
+                };
+            }
         }
 
         private void CreateEditPolizaListaChequeo(ICollection<PolizaListaChequeo> pListpolizaListaChequeo, string usuarioCreacion)
@@ -101,7 +138,7 @@ namespace asivamosffie.services
                     PolizaListaChequeo.FechaCreacion = DateTime.Now;
                     PolizaListaChequeo.Eliminado = false;
                     PolizaListaChequeo.RegistroCompleto = ValidarRegistroCompletoListaChequeo(PolizaListaChequeo);
-                    _context.PolizaListaChequeo.Add(PolizaListaChequeo); 
+                    _context.PolizaListaChequeo.Add(PolizaListaChequeo);
                 }
             }
         }
@@ -167,7 +204,7 @@ namespace asivamosffie.services
             if (contratoPoliza.EstadoPolizaCodigo == ConstanCodigoEstadoRevision.aprobada)
             {
                 if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
-                    return false; 
+                    return false;
             }
 
             if (
@@ -221,7 +258,7 @@ namespace asivamosffie.services
 
                 msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
                 msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
- 
+
                 msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
 
                 if (polizaObservacion != null)
@@ -347,7 +384,7 @@ namespace asivamosffie.services
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
-                            Code = ConstantMessagesContratoPoliza.CreadoCorrrectamente,
+                            Code = ConstantMessagesContratoPoliza.CreacionExitosa,
                             Message =
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo(
                                                                                             (int)enumeratorMenu.GestionarGarantias,
@@ -642,17 +679,17 @@ namespace asivamosffie.services
                         contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
 
                         contratoPolizaBD.NombreAseguradora = contratoPoliza.NombreAseguradora;
-        
+
                         contratoPolizaBD.NumeroPoliza = contratoPoliza.NumeroPoliza;
                         contratoPolizaBD.NumeroCertificado = contratoPoliza.NumeroCertificado;
-                
+
                         contratoPolizaBD.EstadoPolizaCodigo = contratoPoliza.EstadoPolizaCodigo;
                         contratoPolizaBD.FechaExpedicion = contratoPoliza.FechaExpedicion;
 
 
                         contratoPolizaBD.IncluyeCondicionesGenerales = contratoPoliza.IncluyeCondicionesGenerales;
                         contratoPolizaBD.FechaAprobacion = contratoPoliza.FechaAprobacion;
- 
+
                         LimpiarEntradasContratoPoliza(ref contratoPolizaBD);
                         _context.ContratoPoliza.Update(contratoPolizaBD);
 
@@ -1250,7 +1287,7 @@ namespace asivamosffie.services
         {
             msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
             msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
- 
+
             msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
 
             PolizaObservacion polizaObservacion;
@@ -1497,7 +1534,7 @@ namespace asivamosffie.services
 
         }
 
-      
+
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
             List<GrillaContratoGarantiaPoliza> ListContratoGrilla = new List<GrillaContratoGarantiaPoliza>();
