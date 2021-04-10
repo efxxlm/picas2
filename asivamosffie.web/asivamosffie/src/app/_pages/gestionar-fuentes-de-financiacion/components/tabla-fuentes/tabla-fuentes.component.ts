@@ -23,13 +23,13 @@ import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.se
 export class TablaFuentesComponent implements OnInit {
   displayedColumns: string[] = [
     'fechaCreacion',
-    'tipoAportante',
-    'aportante',
-    'vigencia',
-    'fuenteDeRecursos',
-    'valorAporteFuenteDeRecursos',
+    'tipoAportanteString',
+    'nombreAportanteString',
+    'vigenciaCofinanciacionId',
+    'fuenteRecursosString',
+    'valorFuente',
     'valorAporteEnCuenta',
-    'estado',
+    'registroCompleto',
     'id'
   ];
   dataSource = new MatTableDataSource();

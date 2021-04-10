@@ -17,27 +17,27 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="tipoAportante">
+      <ng-container matColumnDef="tipoAportanteString">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de aportante</th>
         <td mat-cell *matCellDef="let element">{{ element.tipoAportanteString }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="aportante">
+      <ng-container matColumnDef="nombreAportanteString">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
         <td mat-cell *matCellDef="let element">{{ element.nombreAportanteString }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="vigencia">
+      <ng-container matColumnDef="vigenciaCofinanciacionId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Vigencia del acuerdo de cofinanciación</th>
         <td mat-cell *matCellDef="let element">{{ element.vigenciaCofinanciacionId }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="fuenteDeRecursos">
+      <ng-container matColumnDef="fuenteRecursosString">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fuente de recursos</th>
         <td mat-cell *matCellDef="let element">{{ element.fuenteRecursosString }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="valorAporteFuenteDeRecursos">
+      <ng-container matColumnDef="valorFuente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor aporte fuente de recursos</th>
         <td mat-cell *matCellDef="let element">{{ element.valorFuente | currency: '':'symbol':'3.0' }}</td>
       </ng-container>
@@ -47,7 +47,7 @@
         <td mat-cell *matCellDef="let element">{{ element.valorAporteEnCuenta | currency: '':'symbol':'3.0' }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="estado">
+      <ng-container matColumnDef="registroCompleto">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado del registro</th>
         <td mat-cell *matCellDef="let element">{{ element.registroCompleto }}</td>
       </ng-container>
