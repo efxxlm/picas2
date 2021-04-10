@@ -137,7 +137,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<PlanesProgramasListaChequeoRespuesta> PlanesProgramasListaChequeoRespuesta { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
-        public virtual DbSet<PolizaActualizacionRevisionAprobacionObservacion> PolizaActualizacionRevisionAprobacionObservacion { get; set; }
         public virtual DbSet<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual DbSet<PolizaGarantiaActualizacion> PolizaGarantiaActualizacion { get; set; }
         public virtual DbSet<PolizaListaChequeo> PolizaListaChequeo { get; set; }
@@ -282,8 +281,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -4639,44 +4636,6 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("fk_PiePagina_Plantilla");
             });
 
-            modelBuilder.Entity<PolizaActualizacionRevisionAprobacionObservacion>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.Property(e => e.EstadoRevision)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaRevision).HasColumnType("datetime");
-
-                entity.Property(e => e.PolizaActualizacionRevisionAprobacionObservacionId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.ContratoPoliza)
-                    .WithMany()
-                    .HasForeignKey(d => d.ContratoPolizaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PolizaActualizacionRevisionAprobacionObservacion_ContratoPoliza");
-
-                entity.HasOne(d => d.ResponsableAprobacion)
-                    .WithMany()
-                    .HasForeignKey(d => d.ResponsableAprobacionId)
-                    .HasConstraintName("FK_PolizaActualizacionRevisionAprobacionObservacion_ResponsableAprobacion");
-            });
-
             modelBuilder.Entity<PolizaGarantia>(entity =>
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
@@ -4759,17 +4718,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoRevisionCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaRevision).HasColumnType("datetime");
-
-                entity.Property(e => e.Observacion).IsRequired();
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 

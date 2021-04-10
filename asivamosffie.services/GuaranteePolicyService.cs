@@ -39,7 +39,8 @@ namespace asivamosffie.services
                                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
-                                        .FirstOrDefaultAsync();
+                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia) 
+                                        .FirstOrDefaultAsync(); 
         }
 
         public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
@@ -75,6 +76,8 @@ namespace asivamosffie.services
 
                     CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
                     CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
+                 //   CreateEditPolizaActualizacionRevisionAprobacionObservacion(ContratoPoliza.act) // ContratoPoliza.polizaActualiza
+                  //  CreateEdit
                 }
                 return
                        new Respuesta
@@ -192,7 +195,7 @@ namespace asivamosffie.services
         {
             if (
                 string.IsNullOrEmpty(polizaGarantia.TipoGarantiaCodigo)
-                || polizaGarantia.ValorAmparo == 0
+                || polizaGarantia.ValorAmparo == null
                 || !polizaGarantia.VigenciaAmparo.HasValue
                 || !polizaGarantia.Vigencia.HasValue
                 ) return false;
@@ -264,7 +267,7 @@ namespace asivamosffie.services
                 if (polizaObservacion != null)
                 {
                     msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
-                    msjNotificacion.FechaRevision = polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
+          
                     msjNotificacion.FechaRevisionDateTime = polizaObservacion.FechaRevision;
 
                 }
@@ -479,8 +482,7 @@ namespace asivamosffie.services
                     template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));
                     template = template.Replace("_Plazo_", ListVista.PlazoContrato);
                     template = template.Replace("_NumeroDRP_", NumeroDRP?.FirstOrDefault()?.NumeroDrp ?? " ");
-                    template = template.Replace("_LinkF_", appSettingsService.DominioFront);
-                    template = template.Replace("_Fecha_Revision_", polizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
+                    template = template.Replace("_LinkF_", appSettingsService.DominioFront); 
                     template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == polizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                     template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(polizaObservacion.Observacion));
                     template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
@@ -600,7 +602,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", ListVista.PlazoContrato);
                 template = template.Replace("_LinkF_", appSettingsService.DominioFront);
-                template = template.Replace("_Fecha_Revision_", pPolizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
+          
                 template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == pPolizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                 template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(pPolizaObservacion.Observacion));
                 template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
@@ -1297,7 +1299,7 @@ namespace asivamosffie.services
             if (polizaObservacion != null)
             {
                 msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
-                msjNotificacion.FechaRevision = polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
+      
             }
 
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
