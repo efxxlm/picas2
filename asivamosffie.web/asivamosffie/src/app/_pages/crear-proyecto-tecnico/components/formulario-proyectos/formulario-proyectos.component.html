@@ -520,7 +520,7 @@
             "
           >
             <mat-select required [(ngModel)]="proyecto.convocatoriaId" [disabled]="proyecto.enConvocatoria === false">
-              <mat-option *ngFor="let listado; of" [value]="listado.dominioId">
+              <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
                 {{ listado.nombre }}
               </mat-option>
             </mat-select>

@@ -980,7 +980,7 @@ export class FormularioProyectosComponent implements OnInit {
                   });
                   this.proyecto.proyectoAportante[i].mun = this.proyecto.proyectoAportante[
                     i
-                  ].aportante.municipioId.toString();
+                  ].aportante.municipioId?.toString();
                   this.getVigenciaByMun(null, i);
                 });
             });
