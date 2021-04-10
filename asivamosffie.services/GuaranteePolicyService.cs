@@ -41,7 +41,7 @@ namespace asivamosffie.services
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
-                                        .FirstOrDefaultAsync(); 
+                                        .FirstOrDefaultAsync();
         }
 
         public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
@@ -76,8 +76,8 @@ namespace asivamosffie.services
                     }
 
                     CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
+                    CreateEditPolizaObservacion(ContratoPoliza.PolizaObservacion, pContrato.UsuarioCreacion);
                     CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
-                    CreateEditPolizaObservacion(ContratoPoliza.PolizaObservacion); 
                 }
                 return
                        new Respuesta
@@ -115,12 +115,47 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditPolizaObservacion(ICollection<PolizaObservacion> pListPolizaObservacion)
+        private void CreateEditPolizaObservacion(ICollection<PolizaObservacion> pListPolizaObservacion, string pAuthor)
         {
             foreach (var PolizaObservacion in pListPolizaObservacion)
             {
-
+                if (PolizaObservacion.PolizaObservacionId == 0)
+                {
+                    PolizaObservacion.UsuarioCreacion = pAuthor;
+                    PolizaObservacion.FechaCreacion = DateTime.Now;
+                    PolizaObservacion.Eliminado = false;
+                    PolizaObservacion.RegistroCompleto = ValidarRegistroCompletoPolizaObservacion(PolizaObservacion);
+                    _context.PolizaObservacion.Add(PolizaObservacion);
+                }
+                else
+                {
+                    _context.Set<PolizaObservacion>()
+                            .Where(p => p.PolizaObservacionId == PolizaObservacion.PolizaObservacionId)
+                            .Update(p => new PolizaObservacion
+                            {
+                                UsuarioModificacion = pAuthor,
+                                FechaModificacion = DateTime.Now,
+                                RegistroCompleto = ValidarRegistroCompletoPolizaObservacion(PolizaObservacion),
+                                Observacion = PolizaObservacion.Observacion,
+                                FechaRevision = PolizaObservacion.FechaRevision,
+                                EstadoRevisionCodigo = PolizaObservacion.EstadoRevisionCodigo,
+                                FechaAprobacion = PolizaObservacion.FechaAprobacion,
+                                ResponsableAprobacionId = PolizaObservacion.ResponsableAprobacionId
+                            });
+                }
             }
+        }
+
+        private bool ValidarRegistroCompletoPolizaObservacion(PolizaObservacion polizaObservacion)
+        {
+            if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Devuelta)
+                return false;
+
+            if (!polizaObservacion.FechaAprobacion.HasValue
+                || polizaObservacion.ResponsableAprobacionId == 0
+                ) return false;
+
+            return true;
         }
 
         private void CreateEditPolizaListaChequeo(ICollection<PolizaListaChequeo> pListpolizaListaChequeo, string usuarioCreacion)
@@ -275,7 +310,7 @@ namespace asivamosffie.services
                 if (polizaObservacion != null)
                 {
                     msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
-          
+
                     msjNotificacion.FechaRevisionDateTime = polizaObservacion.FechaRevision;
 
                 }
@@ -490,7 +525,7 @@ namespace asivamosffie.services
                     template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));
                     template = template.Replace("_Plazo_", ListVista.PlazoContrato);
                     template = template.Replace("_NumeroDRP_", NumeroDRP?.FirstOrDefault()?.NumeroDrp ?? " ");
-                    template = template.Replace("_LinkF_", appSettingsService.DominioFront); 
+                    template = template.Replace("_LinkF_", appSettingsService.DominioFront);
                     template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == polizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                     template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(polizaObservacion.Observacion));
                     template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
@@ -610,7 +645,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", ListVista.PlazoContrato);
                 template = template.Replace("_LinkF_", appSettingsService.DominioFront);
-          
+
                 template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == pPolizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                 template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(pPolizaObservacion.Observacion));
                 template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
@@ -1307,7 +1342,7 @@ namespace asivamosffie.services
             if (polizaObservacion != null)
             {
                 msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
-      
+
             }
 
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
