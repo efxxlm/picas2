@@ -44,73 +44,82 @@
     </div>
   </div>
 
-  <app-tabla-detalle-compromiso
-    *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2' || comite.estadoCodigo === '1'"
-    [compromisoId]="comite.compromisoId"
-    [tipoCompromiso]="comite.tipoSolicitud"
-  ></app-tabla-detalle-compromiso>
-
-  <div
-    class="text-center flex mb-2em"
-    *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'"
-  >
-    <div class="mr-right-1">
-      <label>Estado del compromiso</label>
-    </div>
-
-    <div class="w-30">
-      <mat-form-field>
-        <mat-select [(ngModel)]="estadoCodigo" required>
-          <mat-option *ngFor="let estado of estados" [value]="estado.value">
-            {{ estado.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
+  <app-tabla-detalle-compromiso *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2' || comite.estadoCodigo === '1'"
+                                [compromisoId]="comite.compromisoId"
+                                [tipoCompromiso]="comite.tipoSolicitud">
+  </app-tabla-detalle-compromiso>
 
   <div *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
     <form autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
-      <div class="d-flex align-items-center">
-        <div
-          class="text-area-quill"
-          [class.color-secondaryColor]="
-            (reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched) ||
-            (reporte.get('reporteEstado').invalid && estaEditando)
-          "
-        >
-          <label for="reporteEstado" class="text-area-quill--label header">Gestión realizada</label>
-          <quill-editor
-            class="quill-editor-style"
-            [styles]="editorStyle"
-            [modules]="config"
-            (onContentChanged)="maxLength($event, 500)"
-            formControlName="reporteEstado"
-            required
-          ></quill-editor>
+      <div  class="text-center flex mb-2em"
+            *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
+        <div class="mr-right-1">
+          <label [class.color-secondaryColor]="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid)">
+            Estado del compromiso
+          </label>
+        </div>
+
+        <div class="w-30">
+          <mat-form-field>
+            <mat-select formControlName="estadoCodigo" required>
+              <mat-option *ngFor="let estado of estados" [value]="estado.value">
+                {{ estado.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <span class="icon-incompleto" style="margin-left: 3em;margin-bottom: .3em;">
+          <img  class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid)">
+        </span>
+      </div>
+
+      <div class="d-flex mt-2em align-items-center animatedDown">
+        <div  class="text-area-quill"
+              [class.color-secondaryColor]="reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid">
+            <label  class="text-area-quill--label align-left-label header-label"
+                    [class.colorMainColor]="!(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid)">
+                    Gestión realizada
+            </label>
+            <quill-editor   class="quill-editor-style ml-1em"
+                            [styles]="editorStyle"
+                            [modules]="config"
+                            (onContentChanged)="maxLength($event, 1000)"
+                            formControlName="reporteEstado"
+                            #observacion
+                            required>
+            </quill-editor>
         </div>
         <span class="contador miles" *ngIf="reporte.get('reporteEstado').value !== null">
           {{ 500 - textoLimpio(reporte.get('reporteEstado').value, 500) }}
         </span>
-        <span class="contador miles" *ngIf="reporte.get('reporteEstado').value === null"> 500 </span
-        ><span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-            *ngIf="
-              (reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched) ||
-              (reporte.get('reporteEstado').invalid && estaEditando)
-            "
-          />
+        <span class="contador miles" *ngIf="reporte.get('reporteEstado').value === null">
+          500
+        </span>
+        <span class="icon-incompleto">
+          <img  class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched) || reporte.get('reporteEstado').invalid">
         </span>
       </div>
+
       <div class="text-center">
-        <button mat-button color="warn" class="btn-guardar mr-bottom-2" type="submit">
-          <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+        <button mat-button
+                color="warn"
+                class="btn-guardar mr-bottom-2"
+                type="submit"
+                [disabled]="reporte.dirty === false">
+          <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
       </div>
     </form>

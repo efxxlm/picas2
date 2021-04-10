@@ -62,21 +62,21 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion" style="margin-top: .6em;">
+      <div *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion" style="margin-top: .6em;">
         <div class="pr-1">
           <label><b>Justificación</b></label>
         </div>
         <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion"></div>
       </div>
 
-      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion" style="margin-top: .6em;">
+      <div *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion" style="margin-top: .6em;">
         <div class="pr-1">
           <label><b>Justificación</b></label>
         </div>
         <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccionMonitoreo?.procesoSeleccion?.justificacion"></div>
       </div>
 
-      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso" style="margin-top: .6em;">
+      <div *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso" style="margin-top: .6em;">
         <div class="pr-1">
           <label><b>Justificación</b></label>
         </div>
@@ -84,13 +84,13 @@
       </div>
       
       <div style="margin-top: .6em;">
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitud !== undefined && esComiteFiduciario === false">
+        <div *ngIf="solicitudes.desarrolloSolicitud !== undefined && esComiteFiduciario === false">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
           <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></div>
         </div>
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitudFiduciario !== undefined && esComiteFiduciario === true">
+        <div *ngIf="solicitudes.desarrolloSolicitudFiduciario !== undefined && esComiteFiduciario === true">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
@@ -130,7 +130,7 @@
       </div>
 
       <ng-container *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion || solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual; else elseTemplate">
-        <div class="row" style="margin-top: .6em;">
+        <div style="margin-top: .6em;">
           <div class="pr-1">
             <label><b>Observaciones de la solicitud</b></label>
           </div>
@@ -138,14 +138,14 @@
         </div>
       </ng-container>
       <ng-template #elseTemplate>
-        <div class="row" style="margin-top: .6em;">
-          <section class="d-flex" *ngIf="esComiteFiduciario === false">
+        <div style="margin-top: .6em;">
+          <section *ngIf="esComiteFiduciario === false">
             <div class="pr-1">
               <label><b>Observaciones</b></label>
             </div>
             <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observaciones )"></div>
           </section>
-          <section class="d-flex" *ngIf="esComiteFiduciario === true">
+          <section *ngIf="esComiteFiduciario === true">
             <div class="pr-1">
               <label><b>Observaciones</b></label>
             </div>

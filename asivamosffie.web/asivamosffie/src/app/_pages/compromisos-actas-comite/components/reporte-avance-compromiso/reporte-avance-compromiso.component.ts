@@ -47,8 +47,9 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.comite) {
       const observacion = await this.compromisoSvc.cargarObservacionGestion(this.comite.compromisoId);
+      console.log( observacion )
       if (this.comite.estadoCodigo === '2' || this.comite.estadoCodigo === '3') {
-        this.estadoCodigo = this.comite.estadoCodigo;
+        this.reporte.get( 'estadoCodigo' ).setValue( this.comite.estadoCodigo );
       }
       if (observacion !== null) {
         this.reporte.get('reporteEstado').setValue(observacion);
@@ -57,12 +58,12 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.estadoCodigo === undefined && this.reporte.get('reporteEstado').value !== null) {
+    if ( this.reporte.get( 'estadoCodigo' ).value === null && this.reporte.get('reporteEstado').value !== null) {
       if (this.seRealizoPeticion === false && this.comite.estadoCodigo !== '3') {
         this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
       }
     }
-    if (this.estadoCodigo !== undefined && this.reporte.get('reporteEstado').value !== null) {
+    if (this.reporte.get( 'estadoCodigo' ).value !== null && this.reporte.get('reporteEstado').value !== null) {
       if (this.seRealizoPeticion === false && this.comite.estadoCodigo !== '3') {
         this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
       }
@@ -78,7 +79,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
     confirmarDialog.afterClosed()
       .subscribe(response => {
         if (response === true) {
-          if (this.estadoCodigo === undefined && this.reporte.get('reporteEstado').value !== null) {
+          if (this.reporte.get( 'estadoCodigo' ).value === null && this.reporte.get('reporteEstado').value !== null) {
             this.openDialog('', '<b>Debe seleccionar el estado del Compromiso</b>');
           }
           this.compromisoSvc.guardarObservacionStorage(this.reporte.get('reporteEstado').value, this.comite.compromisoId);
@@ -118,6 +119,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
 
   crearFormulario() {
     this.reporte = this.fb.group({
+      estadoCodigo: [ null, Validators.required ],
       reporteEstado: [null, Validators.required]
     });
   }
@@ -132,13 +134,13 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.estaEditando = true;
     this.reporte.markAllAsTouched();
-    if (this.reporte.invalid || this.estadoCodigo === undefined) {
+    if ( this.reporte.get( 'estadoCodigo' ).dirty === false ) {
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
 
     this.comite.tarea = this.reporte.get('reporteEstado').value;
-    this.compromisoSvc.postCompromisos(this.comite, this.estadoCodigo)
+    this.compromisoSvc.postCompromisos( this.comite, this.reporte.get( 'estadoCodigo' ).value )
       .subscribe(
         resp => {
           this.seRealizoPeticion = true;

@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 
 @Component({
@@ -46,7 +47,23 @@ export class TablaGestionCompromisosComponent implements OnInit {
     this.compromisosSvc.getGrillaCompromisos()
       .subscribe( ( resp: any[] ) => {
         if ( resp.length > 0 ) {
-          resp.forEach( registro => registro.fechaComite = registro.fechaComite.split('T')[0].split('-').reverse().join('/') );
+          resp.forEach( registro => {
+            registro.fechaComite = moment( registro.fechaComite ).format( 'DD/MM/YYYY' );
+            registro.fechaCumplimiento = moment( registro.fechaCumplimiento ).format( 'DD/MM/YYYY' );
+
+            if ( registro.estadoCodigo === undefined ) {
+              registro.estadoCodigoNombre = 'Sin avance';
+            }
+            if ( registro.estadoCodigo === this.listaEstadosCompromisos.sinIniciar ) {
+              registro.estadoCodigoNombre = 'Sin iniciar';
+            }
+            if ( registro.estadoCodigo === this.listaEstadosCompromisos.enProceso ) {
+              registro.estadoCodigoNombre = 'En proceso';
+            }
+            if ( registro.estadoCodigo === this.listaEstadosCompromisos.finalizado ) {
+              registro.estadoCodigoNombre = 'Finalizada';
+            }
+          } );
         }
 
         this.dataSource = new MatTableDataSource( resp );
