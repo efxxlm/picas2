@@ -133,7 +133,6 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
         });
       }
-      this.datosAportantes.markAllAsTouched();
     });
   }
 
@@ -248,6 +247,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
       }
     }
+    if (this.estaEditando) this.datosAportantes.markAllAsTouched();
   }
 
   createAportante(): FormGroup {
