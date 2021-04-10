@@ -39,7 +39,8 @@ namespace asivamosffie.services
                                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia) 
+                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
+                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
                                         .FirstOrDefaultAsync(); 
         }
 
@@ -76,8 +77,7 @@ namespace asivamosffie.services
 
                     CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
                     CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
-                 //   CreateEditPolizaActualizacionRevisionAprobacionObservacion(ContratoPoliza.act) // ContratoPoliza.polizaActualiza
-                  //  CreateEdit
+                    CreateEditPolizaObservacion(ContratoPoliza.PolizaObservacion); 
                 }
                 return
                        new Respuesta
@@ -112,6 +112,14 @@ namespace asivamosffie.services
                                                                                            ConstantCommonMessages.GuaranteePolicies.ERROR
                                                                                        )
                 };
+            }
+        }
+
+        private void CreateEditPolizaObservacion(ICollection<PolizaObservacion> pListPolizaObservacion)
+        {
+            foreach (var PolizaObservacion in pListPolizaObservacion)
+            {
+
             }
         }
 
