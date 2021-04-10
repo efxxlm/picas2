@@ -48,7 +48,7 @@ export class ObservacionesSupervisorComponent {
         this.txt_pregunta_detalle = "¿Desde control y seguimiento tiene observaciones frente a el informe final que deban ser tenidas en cuenta en la liquidación?:";
       }else if(this.tipoObservacionCodigo == this.listaTipoObservacionLiquidacionContratacion.balanceFinanciero){
         this.txt_pregunta = "¿Desde la supervisión tiene observaciones frente al balance financiero que deban ser tenidas en cuenta en la liquidación?:";
-        this.txt_pregunta_detalle = "¿Desde lcontrol y seguimiento tiene observaciones frente a el balance que deban ser tenidas en cuenta en la liquidación?:";
+        this.txt_pregunta_detalle = "¿Desde control y seguimiento tiene observaciones frente a el balance que deban ser tenidas en cuenta en la liquidación?:";
       }else if(this.tipoObservacionCodigo == this.listaTipoObservacionLiquidacionContratacion.actualizacionPoliza){
       this.txt_pregunta = "¿Desde la supervisión tiene observaciones frente a la actualización de póliza que deban ser tenidas en cuenta en la liquidación?:";
       this.txt_pregunta_detalle = "¿Desde control y seguimiento tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la liquidación?";

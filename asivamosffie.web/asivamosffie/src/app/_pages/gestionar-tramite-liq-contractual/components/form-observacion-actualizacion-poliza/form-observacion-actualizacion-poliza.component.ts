@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +15,7 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() contratoPolizaActualizacionId: number;
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
 
   observaciones: FormGroup = this.fb.group({
     liquidacionContratacionObservacionId: [null, Validators.required],
@@ -101,7 +102,7 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.ngOnInit();
+                this.callOnInitParent.emit();
                 return;
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )

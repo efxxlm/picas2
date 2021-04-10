@@ -344,4 +344,4 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [esVerDetalle] = "esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion"></app-form-observacion-actualizacion-poliza>
+<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [esVerDetalle] = "esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="getContratoPoliza()"></app-form-observacion-actualizacion-poliza>

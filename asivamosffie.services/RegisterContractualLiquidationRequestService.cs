@@ -259,19 +259,19 @@ namespace asivamosffie.services
             if (contratoPoliza != null)
             {
                 //contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
-                //if (contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault() != null)
-                //{
-                //    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion
-                //              .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                //              && r.MenuId == pMenuId
-                //              && r.IdPadre == contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault().ContratoPolizaActualizacionId
-                //              && r.Eliminado != true
-                //              && r.RegistroCompleto == true
-                //              && r.Archivado != true
-                //              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Actualizacion_de_poliza).FirstOrDefault();
-                //    //USAR PARA EL SEMAFORO
-                //    contratoPoliza.RegistroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false;
-                //}
+                if (contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault() != null)
+                {
+                    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion
+                              .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                              && r.MenuId == pMenuId
+                              && r.IdPadre == contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault().ContratoPolizaActualizacionId
+                              && r.Eliminado != true
+                              && r.RegistroCompleto == true
+                              && r.Archivado != true
+                              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Actualizacion_de_poliza).FirstOrDefault();
+                    //USAR PARA EL SEMAFORO
+                    contratoPoliza.RegistroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false;
+                }
             }
 
             return contratoPoliza;
@@ -472,7 +472,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
                             EstadoTramiteLiquidacion = blRegistroCompleto ? ConstantCodigoEstadoVerificacionLiquidacion.Con_verificacion : ConstantCodigoEstadoVerificacionLiquidacion.En_proceso_de_verificacion,
-                            RegistroCompletoAprobacionLiquidacion = blRegistroCompleto
+                            RegistroCompletoTramiteLiquidacion = blRegistroCompleto
                         });
                         break;
                 }
@@ -599,7 +599,7 @@ namespace asivamosffie.services
         private async Task<bool> SendMailToSupervision(int pContratacionProyectoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_supervisor_registro_liquidacion_contractual));
-            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+            string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -613,7 +613,7 @@ namespace asivamosffie.services
         private async Task<bool> SendMailToNovedades(int pContratacionProyectoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_grupo_novedades_aprobar_liquidacion_contractual));
-            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+            string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -627,7 +627,7 @@ namespace asivamosffie.services
         private async Task<bool> SendEmailToFinalLiquidation(int pContratacionProyectoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Notificacion_liquidacion_contractual_5_1_8));
-            string strContenido = ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
+            string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, pContratacionProyectoId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -637,17 +637,114 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-        private string ReplaceVariablesContratacionProyectoLiquidacion(string template, int pContratacionProyectoId)
+        private async Task<string> ReplaceVariablesContratacionProyectoLiquidacion(string template, int pContratacionProyectoId)
         {
-            ContratacionProyecto contratacionProyecto =
-                _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
-                .Include(r => r.Contratacion)
-                    .ThenInclude(r => r.Contrato)
-                .FirstOrDefault();
+            VContratacionProyectoSolicitudLiquidacion contratacionProyecto = await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefaultAsync();
 
             template = template
-                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
+                      .Replace("[NUMERO_SOLICITUD]", contratacionProyecto.NumeroSolicitudLiquidacion)
+                      .Replace("[FECHA_POLIZA]", ((DateTime)contratacionProyecto.FechaPoliza).ToString("dd-MMM-yy"))
+                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.NumeroContrato)
+                      .Replace("[PROYECTOS_ASOCIADOS]", contratacionProyecto.ProyectosAsociados.ToString())
+                      .Replace("[VALOR]", "$ " + String.Format("{0:n0}", contratacionProyecto.ValorSolicitud).ToString())
+                      .Replace("[FECHA_VALIDACION]", contratacionProyecto.FechaValidacionLiquidacion != null ? ((DateTime)contratacionProyecto.FechaValidacionLiquidacion).ToString("dd-MMM-yy") : "")
+                      .Replace("[FECHA_APROBACION]", contratacionProyecto.FechaAprobacionLiquidacion != null ? ((DateTime)contratacionProyecto.FechaAprobacionLiquidacion).ToString("dd-MMM-yy") : "")
+                      .Replace("[FECHA_GESTION]", contratacionProyecto.FechaTramiteLiquidacion != null ? ((DateTime)contratacionProyecto.FechaTramiteLiquidacion).ToString("dd-MMM-yy") : "");
+
             return template;
+        }
+
+        #endregion
+
+        #region alertas
+
+        //pendiente tener los 3 campos
+        public async Task<bool> RegistroLiquidacionPendiente()
+        {
+            DateTime MaxDate = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+            List<VContratacionProyectoSolicitudLiquidacion> contratacionProyectos =
+                _context.VContratacionProyectoSolicitudLiquidacion
+                .Where(r => r.FechaPoliza > MaxDate
+                   && !r.FechaTramiteLiquidacion.HasValue).ToList();
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_6_registro_solicitud_liquidacion_contrato));
+
+            bool SedndIsSuccessfull = true;
+            foreach (var item in contratacionProyectos)
+            {
+                string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, item.ContratacionProyectoId);
+                List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                        {
+                                            EnumeratorPerfil.Apoyo_Supervisor,
+                                            EnumeratorPerfil.Apoyo,
+                                            EnumeratorPerfil.Supervisor
+                                        };
+
+                if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))
+                    SedndIsSuccessfull = false;
+            }
+
+            return SedndIsSuccessfull;
+        }
+
+        public async Task<bool> RegistroLiquidacionPendienteAprobacion()
+        {
+            DateTime MaxDate = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+            List<ContratacionProyecto> contratacionProyectos =
+                _context.ContratacionProyecto
+                .Where(r => r.FechaValidacionLiquidacion > MaxDate
+                   && !r.FechaAprobacionLiquidacion.HasValue
+                   && r.Eliminado == false).ToList();
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_7_aprobar_solicitud_liquidacion_contrato));
+
+            bool SedndIsSuccessfull = true;
+            foreach (var item in contratacionProyectos)
+            {
+                string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, item.ContratacionProyectoId);
+                List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                        {
+                                            EnumeratorPerfil.Apoyo_Supervisor,
+                                            EnumeratorPerfil.Apoyo,
+                                            EnumeratorPerfil.Supervisor
+                                        };
+
+                if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))
+                    SedndIsSuccessfull = false;
+            }
+
+            return SedndIsSuccessfull;
+        }
+
+        public async Task<bool> RegistroLiquidacionPendienteEnviarLiquidacion()
+        {
+            DateTime MaxDate = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+            List<ContratacionProyecto> contratacionProyectos =
+                _context.ContratacionProyecto
+                .Where(r => r.FechaAprobacionLiquidacion > MaxDate
+                   && !r.FechaTramiteLiquidacion.HasValue
+                   && r.Eliminado == false).ToList();
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_8_gestionar_solicitud_liquidacion_contrato));
+
+            bool SedndIsSuccessfull = true;
+            foreach (var item in contratacionProyectos)
+            {
+                string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, item.ContratacionProyectoId);
+                List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                        {
+                                            EnumeratorPerfil.Supervisor,
+                                            EnumeratorPerfil.Seguimiento_y_control
+                                        };
+
+                if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))
+                    SedndIsSuccessfull = false;
+            }
+
+            return SedndIsSuccessfull;
         }
 
         #endregion

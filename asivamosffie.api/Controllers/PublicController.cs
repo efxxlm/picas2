@@ -33,6 +33,7 @@ namespace asivamosffie.api.Controllers
         public readonly IPaymentRequierementsService _paymentRequierementsService;
         public readonly IJudicialDefense _judicialDefense;
         public readonly IRegisterProjectETCService _registerProjectETCService;
+        public readonly IRegisterContractualLiquidationRequestService _registerContractualLiquidationRequestService;
 
 
         public PublicController(
@@ -52,7 +53,8 @@ namespace asivamosffie.api.Controllers
                                 IVerifyFinalReportService verifyFinalReportService,
                                 IValidateFinalReportService validateFinalReportService,
                                 IValidateFulfilmentFinalReportService validateFulfilmentFinalReportService,
-                                IRegisterProjectETCService registerProjectETCService
+                                IRegisterProjectETCService registerProjectETCService,
+                                IRegisterContractualLiquidationRequestService registerContractualLiquidationRequestService
                               )
         {
             _paymentRequierementsService = paymentRequierementsService;
@@ -72,6 +74,7 @@ namespace asivamosffie.api.Controllers
             _VerifyFinalReportService = verifyFinalReportService;
             _ValidateFulfilmentFinalReportService = validateFulfilmentFinalReportService;
             _registerProjectETCService = registerProjectETCService;
+            _registerContractualLiquidationRequestService = registerContractualLiquidationRequestService;
         }
 
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
@@ -444,6 +447,47 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        #region solicitud de liquidación (5.1.6, 5.1.7, 5.1.8)
+
+        [HttpGet("GetRegistroLiquidacionPendiente")]
+        public async Task RegistroLiquidacionPendiente()
+        {
+            try
+            {
+                await _registerContractualLiquidationRequestService.RegistroLiquidacionPendiente();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [HttpGet("GetRegistroLiquidacionPendienteAprobacion")]
+        public async Task RegistroLiquidacionPendienteAprobacion()
+        {
+            try
+            {
+                await _registerContractualLiquidationRequestService.RegistroLiquidacionPendienteAprobacion();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [HttpGet("GetRegistroLiquidacionPendienteEnviarLiquidacion")]
+        public async Task RegistroLiquidacionPendienteEnviarLiquidacion()
+        {
+            try
+            {
+                await _registerContractualLiquidationRequestService.RegistroLiquidacionPendienteEnviarLiquidacion();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+
+        #endregion
     }
 
 

@@ -129,5 +129,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Notificacion_grupo_novedades_aprobar_liquidacion_contractual = 127,
         Notificacion_liquidacion_contractual_5_1_8 = 129,
 
+        Alerta_5_1_6_registro_solicitud_liquidacion_contrato = 133,
+        Alerta_5_1_7_aprobar_solicitud_liquidacion_contrato = 134,
+        Alerta_5_1_8_gestionar_solicitud_liquidacion_contrato = 135,
+
+
     }
 }
