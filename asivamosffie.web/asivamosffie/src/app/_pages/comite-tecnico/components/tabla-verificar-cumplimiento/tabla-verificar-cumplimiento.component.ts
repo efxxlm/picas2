@@ -95,6 +95,17 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         }
         console.log( respuesta[0], this.listaCompromisos );
         this.estadosArray = respuesta[1];
+        this.listaCompromisos.forEach(element => {
+          element.fechaCumplimiento = element.fechaCumplimiento
+            ? element.fechaCumplimiento.split('T')[0].split('-').reverse().join('/')
+            : '';
+          element.fechaModificacion =  element.fechaModificacion
+            ? element.fechaModificacion.split('T')[0].split('-').reverse().join('/')
+            : '';
+          element.fechaCreacion =  element.fechaCreacion
+            ? element.fechaCreacion.split('T')[0].split('-').reverse().join('/')
+            : '';
+        });
         this.dataSource = new MatTableDataSource(this.listaCompromisos);
         this.initPaginator();
 
@@ -106,6 +117,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;
@@ -118,6 +130,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   onChange ( compromiso: any, compromisoSeleccionado: string ) {
