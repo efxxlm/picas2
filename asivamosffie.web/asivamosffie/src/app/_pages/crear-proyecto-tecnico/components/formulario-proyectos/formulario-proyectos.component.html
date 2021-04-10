@@ -958,7 +958,7 @@
                 <div class="col">
                   <mat-form-field
                     class="select-width"
-                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                    [class.mat-form-field-invalid]="!predios.predio.documentoAcreditacionCodigo && estaEditando"
                   >
                     <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
@@ -995,7 +995,7 @@
                 <div class="col d-flex">
                   <mat-form-field
                     class="full-width"
-                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                    [class.mat-form-field-invalid]="!predios.predio.numeroDocumento && estaEditando"
                   >
                     <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text" />
                   </mat-form-field>
@@ -1041,7 +1041,7 @@
                 <div class="col d-flex">
                   <mat-form-field
                     class="full-width"
-                    [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                    [class.mat-form-field-invalid]="!predios.predio.cedulaCatastral && estaEditando"
                   >
                     <input
                       matInput
@@ -1110,7 +1110,7 @@
             <div class="col d-flex">
               <mat-form-field
                 class="full-width"
-                [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                [class.mat-form-field-invalid]="!proyecto.cantidadAportantes && estaEditando"
               >
                 <input
                   matInput
@@ -1530,7 +1530,7 @@
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesObra && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoMesesObra"
@@ -1564,7 +1564,7 @@
               >
                 Días
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasObra && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoDiasObra"
@@ -1610,7 +1610,7 @@
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesInterventoria && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoMesesInterventoria"
@@ -1644,7 +1644,7 @@
               >
                 Días
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasInterventoria && estaEditando">
                 <input
                   matInput
                   [(ngModel)]="proyecto.plazoDiasInterventoria"
@@ -1693,7 +1693,7 @@
           <div class="col">
             <mat-form-field
               class="select-width"
-              [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+              [class.mat-form-field-invalid]="!infraestructura.infraestructuraCodigo && estaEditando"
             >
               <!-- {{infraestructura.infraestructuraCodigo}} -->
               <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
@@ -1728,7 +1728,7 @@
               <div class="col d-flex">
                 <mat-form-field
                   class="full-width"
-                  [class.mat-form-field-invalid]="!proyecto.fechaSesionJunta && estaEditando"
+                  [class.mat-form-field-invalid]="!infraestructura.cantidad && estaEditando"
                 >
                   <input
                     matInput
