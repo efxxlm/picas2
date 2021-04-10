@@ -27,15 +27,20 @@
 
         <ng-container matColumnDef="estadoPoliza">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoPolizaNombre=='Incompleto', 'completo' : element.registroCompletoPolizaNombre=='Completo'}"></span>
-                {{element.registroCompletoPolizaNombre}} </td>
+            <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoPoliza !== true, 'completo' : element.registroCompletoPoliza === true}"></span>
+                {{element.registroCompletoPoliza === true ? 'Completo' : 'Incompleto'}}
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="contratoId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a [routerLink]="['observadaODevuelta', element.contratoId]" mat-raised-button color="accent"
-                    class="btn-table">Ver detalle/Editar </a>
+                <a  [routerLink]="[ 'observadaODevuelta', element.contratoId ]"
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table">
+                    Ver detalle/Editar
+                </a>
             </td>
         </ng-container>
 
