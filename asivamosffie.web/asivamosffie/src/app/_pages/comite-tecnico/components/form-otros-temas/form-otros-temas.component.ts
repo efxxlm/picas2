@@ -44,10 +44,6 @@ export class FormOtrosTemasComponent implements OnInit {
 
   estadosArray = []
 
-  editorStyle = {
-    height: '45px'
-  }
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
