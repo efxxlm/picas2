@@ -11,19 +11,7 @@ using System.Linq;
 using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
-{
-    /*
-     PARAMETROS:
-    
-                            //1   Administrador  - 
-                            //2   Técnica
-                            //3   Financiera - 
-                            //4   Jurídica
-                            //5   Administrativa - 
-                            //6   Miembros Comite
-                            //7   Secretario comité - 
-                            //8   Supervisor
-     */
+{ 
     public class GuaranteePolicyService : IGuaranteePolicyService
     {
         private readonly ICommonService _commonService;
@@ -38,6 +26,10 @@ namespace asivamosffie.services
         }
 
         #region Opt
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        {
+            return await _context.VGestionarGarantiasPolizas.ToListAsync(VActualizacionPolizaYgarantias );
+        }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
@@ -175,10 +167,7 @@ namespace asivamosffie.services
             if (contratoPoliza.EstadoPolizaCodigo == ConstanCodigoEstadoRevision.aprobada)
             {
                 if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
-                    return false;
-                //if (contratoPoliza.ResponsableAprobacion != null)
-                //    if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
-                //        return false;
+                    return false; 
             }
 
             if (
@@ -1508,11 +1497,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
-        {
-            return await _context.VGestionarGarantiasPolizas.ToListAsync();
-        }
-
+      
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
             List<GrillaContratoGarantiaPoliza> ListContratoGrilla = new List<GrillaContratoGarantiaPoliza>();

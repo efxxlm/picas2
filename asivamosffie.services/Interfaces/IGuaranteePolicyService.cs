@@ -8,7 +8,7 @@ namespace asivamosffie.services.Interfaces
     public interface IGuaranteePolicyService
     {
         Task<Contrato> GetContratoByContratoId(int pContratoId);
-
+        Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato);
 
         #region Old
         Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion, AppSettingsService appSettingsService);

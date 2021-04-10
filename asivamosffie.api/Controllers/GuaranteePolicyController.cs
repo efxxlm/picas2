@@ -36,8 +36,26 @@ namespace asivamosffie.api.Controllers
         {
             return await _guaranteePolicy.GetContratoByContratoId(pContratoId);
         }
-         
-         
+ 
+        [HttpPost]
+        [Route("CreateEditContratoPoliza")]
+        public async Task<IActionResult> CreateEditContratoPoliza(Contrato pContrato)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
+                 
+                respuesta = await _guaranteePolicy.CreateEditContratoPoliza(pContrato);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         #region Old
         public GuaranteePolicyController(IGuaranteePolicyService guaranteePolicy, IOptions<AppSettings> settings)
         {
