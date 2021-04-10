@@ -36,6 +36,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormDatosProponentesNuevoComponent } from './components/form-datos-proponentes-nuevo/form-datos-proponentes-nuevo.component';
 import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
+import { DialogDevolucionComponent } from './components/dialog-devolucion/dialog-devolucion.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { VerObservacionesComponent } from './components/ver-observaciones/ver-ob
     TablaCronogramaComponent,
     TablaDetalleCronogramaComponent,
     RegistrarSeguimientoCronogramaComponent,
-    FormDatosProponentesNuevoComponent
+    FormDatosProponentesNuevoComponent,
+    DialogDevolucionComponent
   ],
   imports: [
     CommonModule,
@@ -75,6 +77,6 @@ import { VerObservacionesComponent } from './components/ver-observaciones/ver-ob
     MatCardModule,
     CurrencyMaskModule,
     MatAutocompleteModule
-  ],  
+  ],
 })
 export class GestionarProcesosDeSeleccionModule { }

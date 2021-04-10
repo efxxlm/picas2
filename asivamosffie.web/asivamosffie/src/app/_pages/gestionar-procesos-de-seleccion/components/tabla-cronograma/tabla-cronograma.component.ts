@@ -13,6 +13,7 @@ import { forkJoin, from } from 'rxjs';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
 import { CommonService, Dominio, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DialogDevolucionComponent } from '../dialog-devolucion/dialog-devolucion.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EstadosSolicitud, EstadosSolicitudCronograma } from 'src/app/_interfaces/project-contracting';
 import { MatTableDataSource } from '@angular/material/table';
@@ -302,6 +303,12 @@ export class TablaCronogramaComponent implements OnInit {
     }
   }
 
+  openDialogDevolucion() {
+    this.dialog.open(DialogDevolucionComponent, {
+      width: '70em'
+    });
+  }
+  
   onDetalle(id: ProcesoSeleccionMonitoreo, tipo: number) {
     //this.editMode.valor = !this.editMode.valor;
     console.log('editar');
