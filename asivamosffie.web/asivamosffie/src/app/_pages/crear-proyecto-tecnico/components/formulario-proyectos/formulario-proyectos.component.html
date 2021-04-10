@@ -1255,7 +1255,6 @@
                   Departamento
                 </label>
               </div>
-              {{ listadoDepto[ii] | json }}
               <div class="col capitalize">
                 <mat-form-field
                   class="select-width"
@@ -1298,7 +1297,6 @@
               <div class="pr-1">
                 <label class="label-left">Municipio</label>
               </div>
-              {{ listadoMun[ii] | json }}
               <div class="col capitalize">
                 <mat-form-field class="select-width">
                   <mat-select [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event, ii)">
