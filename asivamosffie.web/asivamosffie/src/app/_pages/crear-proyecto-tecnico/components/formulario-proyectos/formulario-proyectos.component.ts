@@ -156,8 +156,17 @@ export class FormularioProyectosComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
     // ajusto latitud y longitud de predios
-    this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°'; // + this.proyecto.predioPrincipal.ubicacionLatitud2;
-    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°'; // + this.proyecto.predioPrincipal.ubicacionLongitud2;
+    this.proyecto.predioPrincipal.ubicacionLatitud =
+      this.proyecto.predioPrincipal.ubicacionLatitud.charAt(
+        this.proyecto.predioPrincipal.ubicacionLatitud.length - 1
+      ) !== '°'
+        ? this.proyecto.predioPrincipal.ubicacionLatitud + '°' // + this.proyecto.predioPrincipal.ubicacionLatitud2;
+        : this.proyecto.predioPrincipal.ubicacionLatitud; 
+    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud.charAt(
+      this.proyecto.predioPrincipal.ubicacionLongitud.length -1
+    ) !== '°'
+    ? this.proyecto.predioPrincipal.ubicacionLongitud + '°' // + this.proyecto.predioPrincipal.ubicacionLongitud2;
+    : this.proyecto.predioPrincipal.ubicacionLongitud; 
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     //voy a revisar algunos datos minimos
