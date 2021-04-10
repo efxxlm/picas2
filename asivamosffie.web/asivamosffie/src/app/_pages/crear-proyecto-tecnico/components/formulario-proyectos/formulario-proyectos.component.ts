@@ -354,8 +354,7 @@ export class FormularioProyectosComponent implements OnInit {
             respuesta.proyectoAportante.forEach(element => {
               // console.log("reviso por tipo");
               // console.log(element);
-              this.getAportanteById(element.aportante.tipoAportanteId, i);
-              this.getVigenciaById(element.aportanteId, i);
+              this.getAportanteById(element.aportante.tipoAportanteId, i);             
               i++;
             });
           },
@@ -988,18 +987,12 @@ export class FormularioProyectosComponent implements OnInit {
           } else {
             this.listaAportante[i] = respuestaok;
             this.listaNombreAportantes[i] = [];
-            let nombreApo = '';
             respuestaok.forEach(element => {
-              // console.log("evaluo");
-              // console.log(element.nombre);
-
               if (!this.listaNombreAportantes[i].includes(element.nombre)) {
-                // console.log(this.listaNombreAportantes[i]);
-                this.listaNombreAportantes[i].push(element.nombre);
-                nombreApo = element.nombre;
+                this.listaNombreAportantes[i].push(element.nombre);                
               }
             });
-            this.proyecto.proyectoAportante[i].nombreAportante = nombreApo;
+            this.getVigencia(null, i);            
           }
         }
       },
@@ -1054,7 +1047,7 @@ export class FormularioProyectosComponent implements OnInit {
 
   getVigenciaById(id: number, i: number) {
     this.commonServices.listaDocumentoByAportanteId(id).subscribe(
-      respuesta => {
+      respuesta => {        
         this.listaVigencias[i] = respuesta;
       },
       err => {
