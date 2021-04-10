@@ -10,7 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ObservacionDialogComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'fecha', 'observacion' ];
+  displayedColumns: string[] = [ 'fechaCreacion', 'observacion' ];
   dataSource = new MatTableDataSource();
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
   

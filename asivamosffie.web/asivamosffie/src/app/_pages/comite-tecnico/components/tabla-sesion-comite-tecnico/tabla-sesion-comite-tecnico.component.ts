@@ -14,7 +14,7 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
 
   estadosComite = EstadosComite;
 
-  displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
+  displayedColumns: string[] = ['fechaComite', 'numeroComite', 'estadoComite', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

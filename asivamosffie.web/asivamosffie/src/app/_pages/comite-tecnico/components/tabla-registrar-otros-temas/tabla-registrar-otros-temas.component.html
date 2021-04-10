@@ -11,12 +11,12 @@
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="tabla text-center">
     
-        <ng-container matColumnDef="responsable">
+        <ng-container matColumnDef="nombreResponsable">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
             <td mat-cell *matCellDef="let element"> <b>{{element.nombreResponsable}}</b> </td>
         </ng-container>
     
-        <ng-container matColumnDef="tiempo">
+        <ng-container matColumnDef="tiempoIntervencion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
             <td mat-cell *matCellDef="let element"> {{element.tiempoIntervencion}} minutos </td>
         </ng-container>

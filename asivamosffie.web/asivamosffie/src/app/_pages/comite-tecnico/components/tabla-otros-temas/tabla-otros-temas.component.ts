@@ -14,7 +14,7 @@ export class TablaOtrosTemasComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico 
 
-  displayedColumns: string[] = ['responsable', 'tiempo', 'temaDolicitud', 'id'];
+  displayedColumns: string[] = ['nombreResponsable', 'tiempoIntervencion', 'tema', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

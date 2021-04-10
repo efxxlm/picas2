@@ -41,8 +41,8 @@ export class DiagnosticoArtcComponent implements OnInit {
   dataSource = new MatTableDataSource();
   dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
-    'fechaRevision',
-    'observacionesSupervision'
+    'fechaCreacion',
+    'observaciones'
   ];
   estaEditando = false;
 

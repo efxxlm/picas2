@@ -19,7 +19,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   estadosComite = EstadosComite;
   listaMiembrosComite: Dominio[] = [];
 
-  displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
+  displayedColumns: string[] = ['fechaComite', 'numeroComite', 'estadoComite', 'id'];
   x = new MatTableDataSource();
   dataSource = new MatTableDataSource();
 

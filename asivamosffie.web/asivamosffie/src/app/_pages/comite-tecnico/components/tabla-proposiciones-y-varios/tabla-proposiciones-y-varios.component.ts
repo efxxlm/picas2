@@ -17,7 +17,7 @@ export class TablaProposicionesYVariosComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico;
 
-  displayedColumns: string[] = ['responsable', 'tiempo', 'tema', 'votacion', 'id'];
+  displayedColumns: string[] = ['responsableCodigo', 'tiempoIntervencion', 'tema', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

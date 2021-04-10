@@ -18,7 +18,7 @@ export class TablaCrearRolesComponent implements OnInit {
     @Output() sinRegistros = new EventEmitter<boolean>();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
-    displayedColumns: string[] = [ 'fechaCreacion', 'nombreRol', 'estadoRol', 'gestion' ];
+    displayedColumns: string[] = [ 'fechaCreacion', 'nombre', 'eliminado', 'gestion' ];
 
     constructor(
         private crearRolesSvc: CrearRolesService,

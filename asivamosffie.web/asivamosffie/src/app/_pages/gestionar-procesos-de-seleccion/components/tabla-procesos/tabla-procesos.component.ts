@@ -17,7 +17,7 @@ import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 })
 export class TablaProcesosComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'fechaCreacion', 'tipo', 'numero', 'etapa', 'estadoDelProceso', 'estadoDelRegistro', 'id'];
+  displayedColumns: string[] = [ 'fechaCreacion', 'tipoProcesoNombre', 'numeroProceso', 'etapaProcesoSeleccionNombre', 'estadoProcesoSeleccionNombre', 'esCompleto', 'id'];
   dataSource = new MatTableDataSource();
   listaProceso: ProcesoSeleccion[] = [];
   estadosProcesoSeleccion = EstadosProcesoSeleccion;

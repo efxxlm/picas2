@@ -23,11 +23,11 @@ export class TablaAprobarOrdenGiroComponent implements OnInit {
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[]  = [
-      'fechaVerificacion',
-      'numeroOrden',
+      'fechaAprobacionFinanciera',
+      'numeroSolicitudOrdenGiro',
       'modalidad',
       'numeroContrato',
-      'estadoAprobacion',
+      'estadoNombre',
       'gestion'
     ];
 

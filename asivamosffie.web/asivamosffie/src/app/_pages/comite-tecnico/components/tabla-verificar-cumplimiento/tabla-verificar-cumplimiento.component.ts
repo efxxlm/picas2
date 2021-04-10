@@ -24,10 +24,10 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
   comite: any;
   displayedColumns: string[] = [
     'tarea',
-    'responsable',
+    'nombreResponsable',
     'fechaCumplimiento',
-    'fechaReporte',
-    'estadoReportado',
+    'fechaModificacion',
+    'nombreEstado',
     'gestionRealizada',
     'id'
   ];

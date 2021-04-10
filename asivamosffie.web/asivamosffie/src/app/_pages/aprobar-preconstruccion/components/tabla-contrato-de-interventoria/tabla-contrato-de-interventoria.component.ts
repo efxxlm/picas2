@@ -22,7 +22,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     'numeroContrato',
     'cantidadProyectosAsociados',
     'cantidadProyectosRequisitosAprobados',
-    'cantidadProyectosRequisitosPendientes',
+    'cantidadProyectosConPerfilesPendientes',
     'estadoNombre',
     'gestion'
   ];

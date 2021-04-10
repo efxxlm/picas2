@@ -15,7 +15,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
 
   @Input() ObjetoComiteTecnico: ComiteTecnico;
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
+  displayedColumns: string[] = ['fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -14,7 +14,7 @@ export class TablaSolicitudesContractualesComponent implements OnInit {
 
   @Input() solicitudesContractuales: SolicitudesContractuales[];
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo'];
+  displayedColumns: string[] = ['fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

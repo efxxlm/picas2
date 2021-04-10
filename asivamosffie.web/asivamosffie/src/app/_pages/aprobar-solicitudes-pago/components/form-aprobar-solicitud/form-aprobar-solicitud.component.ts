@@ -62,9 +62,9 @@ export class FormAprobarSolicitudComponent implements OnInit {
     };
     displayedColumns: string[] = [
         'drp',
-        'numDrp',
-        'valor',
-        'saldo'
+        'numeroDrp',
+        'valorSolicitudDdp',
+        'saldoPresupuestal'
     ];
     estaEditando = false;
     constructor(

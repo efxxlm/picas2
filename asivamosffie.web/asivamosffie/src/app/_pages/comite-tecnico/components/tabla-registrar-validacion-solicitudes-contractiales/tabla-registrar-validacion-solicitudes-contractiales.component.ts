@@ -34,7 +34,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   listaMiembros: Usuario[];
   tiposSolicitud = TiposSolicitud;
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
+  displayedColumns: string[] = ['fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'requiereVotacion', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

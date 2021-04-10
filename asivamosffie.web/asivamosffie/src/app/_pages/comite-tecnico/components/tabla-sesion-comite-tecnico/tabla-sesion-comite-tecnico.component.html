@@ -11,17 +11,17 @@
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="tabla">
     
-        <ng-container matColumnDef="fecha">
+        <ng-container matColumnDef="fechaComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
             <td mat-cell *matCellDef="let element"> <b>{{element.fechaComite}}</b> </td>
         </ng-container>
     
-        <ng-container matColumnDef="numero">
+        <ng-container matColumnDef="numeroComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de comité </th>
             <td mat-cell *matCellDef="let element"> {{element.numeroComite}} </td>
         </ng-container>
     
-        <ng-container matColumnDef="estado">
+        <ng-container matColumnDef="estadoComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del comité </th>
             <td mat-cell *matCellDef="let element"> {{element.estadoComite}} </td>
         </ng-container>

@@ -39,8 +39,8 @@ export class ProgramacionObraArtcComponent implements OnInit {
   dataSource = new MatTableDataSource();
   dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
-    'fechaRevision',
-    'observacionesSupervision'
+    'fechaCreacion',
+    'observaciones'
   ];
   @Input() observacionesCompleted;
   @Input() contratoConstruccion: any;

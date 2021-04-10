@@ -12,7 +12,7 @@ import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fechaOrdenDia', 'numero', 'cantidadCompromisos', 'nivelCumplimiento', 'id'];
+  displayedColumns: string[] = ['fechaOrdenDia', 'numeroComite', 'cantidadCompromisos', 'cantidadCompromisosCumplidos', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

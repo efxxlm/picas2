@@ -33,7 +33,7 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
     'numeroContrato',
     'cantidadProyectosAsociados',
     'cantidadProyectosRequisitosAprobados',
-    'cantidadProyectosRequisitosPendientes',
+    'cantidadProyectosConPerfilesPendientes',
     'estadoNombre',
     'gestion'
   ];

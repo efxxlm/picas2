@@ -40,6 +40,11 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
     
     this.followUpDailyService.gridValidateDailyFollowUp()
       .subscribe( respuesta => {
+        respuesta.forEach(element => {
+          element.fechaUltimoSeguimientoDiario = element.fechaUltimoSeguimientoDiario
+            ? element.fechaUltimoSeguimientoDiario.split('T')[0].split('-').reverse().join('/')
+            : '';
+        });
         this.dataSource = new MatTableDataSource(respuesta);
 
         this.dataSource.sort = this.sort;

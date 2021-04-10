@@ -51,9 +51,9 @@ export class InformacionGeneralComponent implements OnInit {
     ];
     displayedColumns: string[] = [
         'drp',
-        'numDrp',
-        'valor',
-        'saldo'
+        'numeroDrp',
+        'valorSolicitudDdp',
+        'saldoPresupuestal'
     ];
     dataTable: any[] = [
         {

@@ -11,22 +11,22 @@
 <div class="table-responsive">
   <table mat-table [dataSource]="dataSource" matSort class="tabla">
 
-    <ng-container matColumnDef="fecha">
+    <ng-container matColumnDef="fechaComite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
       <td mat-cell *matCellDef="let element"> <b>{{element.fechaComite}}</b> </td>
     </ng-container>
 
-    <ng-container matColumnDef="numero">
+    <ng-container matColumnDef="numeroComite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de comité </th>
       <td mat-cell *matCellDef="let element"> {{element.numeroComite}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="estadoAprobacion">
+    <ng-container matColumnDef="estadoActa">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del aprobación del acta </th>
       <td mat-cell *matCellDef="let element"> {{element.estadoActa}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="estadoRegistro">
+    <ng-container matColumnDef="registroCompletoNombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
       <td mat-cell *matCellDef="let element">
         <div class="info-text completo" *ngIf="element.registroCompletoNombre === 'Completo'">

@@ -16,7 +16,7 @@ export class TablaGestionActasComponent implements OnInit {
 
   estadosComite = EstadosComite;
 
-  displayedColumns: string[] = ['fecha', 'numero', 'estadoAprobacion', 'estadoRegistro', 'id'];
+  displayedColumns: string[] = ['fechaComite', 'numeroComite', 'estadoActa', 'registroCompletoNombre', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -17,7 +17,7 @@ export class TablaRegistradosComponent implements OnInit {
   @Output() sinData = new EventEmitter<boolean>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
-  displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
+  displayedColumns: string[] = [ 'fechaCreacion', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
   dataTable: any[] = [];
   estadoCodigos = {
     registrado: '6'

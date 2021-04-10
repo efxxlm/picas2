@@ -20,11 +20,11 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
     'fechaAprobacion',
-    'numeroContratoObra',
-    'proyectosAsociados',
-    'proyectosAprobados',
-    'proyectosPendientes',
-    'estadoRequisito',
+    'numeroContrato',
+    'cantidadProyectosAsociados',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoNombre',
     'gestion'
   ];
 

@@ -26,9 +26,9 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
       'drp',
-      'numDrp',
-      'valor',
-      'saldo'
+      'numeroDrp',
+      'valorSolicitudDdp',
+      'saldoPresupuestal'
     ];
 
     constructor( private commonSvc: CommonService )

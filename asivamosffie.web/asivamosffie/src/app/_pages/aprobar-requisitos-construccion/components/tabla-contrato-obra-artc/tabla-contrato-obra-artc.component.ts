@@ -22,7 +22,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
     'cantidadProyectosAsociados',
     'cantidadProyectosRequisitosAprobados',
     'cantidadProyectosRequisitosPendientes',
-    'estadoCodigo',
+    'estadoNombre',
     'gestion'
   ];
   tipoContratoObra = '1';
