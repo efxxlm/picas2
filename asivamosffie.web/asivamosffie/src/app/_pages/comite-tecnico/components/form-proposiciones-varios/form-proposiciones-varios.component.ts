@@ -75,6 +75,7 @@ export class FormProposicionesVariosComponent implements OnInit {
   }
 
   crearTema() {
+    this.semaforo.emit('sin-diligenciar');
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
@@ -86,6 +87,17 @@ export class FormProposicionesVariosComponent implements OnInit {
       ],
       url: [null, [Validators.required]],
     });
+
+    //if (lista.length == 1 && cantidadIncompletos == 3) {
+      this.semaforo.emit('sin-diligenciar');
+    // }
+    // else if (!completo) {
+    //   this.semaforo.emit('en-proceso');
+    // }
+    // else if (completo) {
+    //   this.semaforo.emit('completo');
+    // }
+
   }
 
   onSubmit() {
@@ -193,6 +205,10 @@ export class FormProposicionesVariosComponent implements OnInit {
     this.technicalCommitteSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
+
+        if ( grupo.length === 0 )
+          this.semaforo.emit('completo');
+
         this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
@@ -218,6 +234,8 @@ export class FormProposicionesVariosComponent implements OnInit {
 
       this.tema.push(grupoTema)
     })
+
+    this.validarCompletos(this.objetoComiteTecnico);
 
   }
 }

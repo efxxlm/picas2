@@ -16,6 +16,7 @@
     </div>
 
     <mat-accordion>
+        
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':descripcion_class===0,'en-proceso':descripcion_class===1,'completo':descripcion_class===2}">
@@ -28,6 +29,7 @@
                 [style.pointer-events]="getStyleEvaluacion()">
             </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>
+
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
@@ -40,9 +42,11 @@
             [style.pointer-events]="getStyleEvaluacion()">
         </app-form-evaluacion>
         </mat-expansion-panel>
+        
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':orden_class===0,'en-proceso':orden_class===1,'completo':orden_class===2, 'en-alerta':orden_class===3}">
+                <mat-panel-title class="expansion-style--title " 
+                [ngClass]="{'sin-diligenciar':orden_class===0,'en-proceso':orden_class===1,'completo':orden_class===2, 'en-alerta':orden_class===3}">
                     Orden de elegibilidad
                 </mat-panel-title>
             </mat-expansion-panel-header>

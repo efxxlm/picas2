@@ -53,8 +53,13 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
   verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string, element: any) {
 
     // cuando es actualizacion de cronograma y debe mostrar la ficha de procesos de seleccion
-    if (pTablaId == '6'){
+    if (pTablaId == '6' ){
       pRegistroId = element.procesoSeleccionMonitoreo.procesoSeleccionId;
+      pTablaId = '1';
+    }
+    if (pTablaId == '7' ){
+      pRegistroId = element.procesoSeleccion.procesoSeleccionId;
+      console.log( element )
       pTablaId = '1';
     }
 
