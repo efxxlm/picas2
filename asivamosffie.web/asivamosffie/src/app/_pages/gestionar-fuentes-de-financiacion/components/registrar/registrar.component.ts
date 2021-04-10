@@ -847,7 +847,8 @@ export class RegistrarComponent implements OnInit {
             vigenciaAporteId: controlVi.get('vigenciaAporteId').value,
             fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
             tipoVigenciaCodigo: controlVi.get('vigenciaAportante').value,
-            valorAporte: controlVi.get('valorVigencia').value
+            valorAporte: controlVi.get('valorVigencia').value,
+            eliminado: false
           };
           totalaportes += controlVi.get('valorVigencia').value;
           valortotla += controlVi.get('valorVigencia').value ? controlVi.get('valorVigencia').value : 0;

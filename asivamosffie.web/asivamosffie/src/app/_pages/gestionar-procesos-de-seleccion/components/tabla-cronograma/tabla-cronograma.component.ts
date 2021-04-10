@@ -26,6 +26,7 @@ export interface ProcesosElement {
   fechaSolicitud: string;
   numeroSolicitud: string;
   estadoDelSolicitud: string;
+  observacionDevolucionRechazo?:string;
 }
 @Component({
   selector: 'app-tabla-cronograma',
@@ -190,7 +191,8 @@ export class TablaCronogramaComponent implements OnInit {
             },
             numero: proceso.procesoSeleccion.numeroProceso,
             numeroSolicitud: proceso.numeroProceso,
-            tipo: nombreTipo.nombre
+            tipo: nombreTipo.nombre,
+            observacionDevolucionRechazo: proceso['observacionDevolucionRechazo']
           });
         });
 
@@ -303,9 +305,11 @@ export class TablaCronogramaComponent implements OnInit {
     }
   }
 
-  openDialogDevolucion() {
+  openDialogDevolucion( element ) {
+    
     this.dialog.open(DialogDevolucionComponent, {
-      width: '70em'
+      width: '70em',
+      data: { observacionDevolucionRechazo: element.observacionDevolucionRechazo }
     });
   }
   

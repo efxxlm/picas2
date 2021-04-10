@@ -276,13 +276,20 @@
             Ver detalle
           </button>
 
+          
+
           <button
             mat-raised-button
             color="accent"
             class="btn-table"
-            (click)="openDialogDevolucion()"
+            (click)="openDialogDevolucion(element)"
             *ngIf="
-              true
+            
+              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario ||
+              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico ||
+              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.RechazadoPorComiteTecnico ||
+              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.RechazadoPorComiteFiduciario 
+          
             "
           >
             Motivos de la devolución

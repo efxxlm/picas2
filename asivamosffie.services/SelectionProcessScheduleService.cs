@@ -182,7 +182,41 @@ namespace asivamosffie.services
 
         public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.ProcesoSeleccionCronogramaMonitoreo).Include(x=>x.ProcesoSeleccion).ToListAsync();
+            List<ProcesoSeleccionMonitoreo> listaMonitoreo = new List<ProcesoSeleccionMonitoreo>();
+
+            
+
+            listaMonitoreo = _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x => x.ProcesoSeleccionCronogramaMonitoreo).Include(x => x.ProcesoSeleccion).ToList();
+
+            foreach (var monitoreo in listaMonitoreo)
+            {
+                List<string> listaEstadosTecnico = new List<string> { "4", "6" };
+                List<string> listaEstadosFiduciario = new List<string> { "5", "7" };
+                string observacion = "";
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                                                    .Where(x => x.SolicitudId == monitoreo.ProcesoSeleccionMonitoreoId &&
+                                                                           x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion 
+                                                                           //&&
+                                                                           //listaEstadosTecnico.Contains( x.EstadoCodigo )
+                                                                           )
+
+                                                                    ?.FirstOrDefault();
+
+                observacion = string.IsNullOrEmpty(sesionComiteSolicitud?.ObservacionesFiduciario) ? sesionComiteSolicitud?.Observaciones : sesionComiteSolicitud?.ObservacionesFiduciario;
+
+                //if ( string.IsNullOrEmpty(observacion)){
+                //    observacion = _context.SesionComiteSolicitud
+                //                                                    .Where(x => x.SolicitudId == monitoreo.ProcesoSeleccionMonitoreoId &&
+                //                                                           x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion &&
+                //                                                           listaEstadosFiduciario.Contains(x.EstadoCodigo))
+                //                                                    ?.FirstOrDefault()
+                //                                                    ?.ObservacionesFiduciario;
+                //}
+
+                monitoreo.ObservacionDevolucionRechazo = observacion;
+            }
+
+            return listaMonitoreo; 
         }
 
         public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma
