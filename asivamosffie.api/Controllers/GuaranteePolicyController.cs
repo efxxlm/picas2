@@ -279,11 +279,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListGrillaContratoGarantiaPoliza")]
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz([FromQuery] string pEstadoCodigo)
         {
             try
             {
-                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz();
+                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz(pEstadoCodigo);
             }
             catch (Exception ex)
             {

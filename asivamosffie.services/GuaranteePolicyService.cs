@@ -26,9 +26,12 @@ namespace asivamosffie.services
         }
 
         #region Opt
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
         {
-            return await _context.VGestionarGarantiasPolizas.ToListAsync();
+            if (string.IsNullOrEmpty(pEstadoCodigo))
+                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r=> r.ContratoPolizaId).ToListAsync();
+            else
+                return await _context.VGestionarGarantiasPolizas.Where(v=> v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
