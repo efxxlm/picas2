@@ -70,6 +70,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario)
         ;
 

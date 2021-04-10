@@ -96,7 +96,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   initForm() {
     this.addressForm = this.fb.group({
-      cuantosProponentes: [this.procesoSeleccion.procesoSeleccionProponente.length, Validators.compose([
+      cuantosProponentes: [this.procesoSeleccion.cantidadProponentesInvitados, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(2)])
       ],
       nombresProponentes: [null, Validators.required],
@@ -201,7 +201,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
     this.ngOnInit().then(() =>       
         { 
-          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.procesoSeleccionProponente.length );      
+          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
           let proceso:ProcesoSeleccionProponente[]=[];
           
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
@@ -231,12 +231,13 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     // console.log(this.procesoSeleccion);
+    console.log( this.procesoSeleccion.procesoSeleccionProponente);
     this.guardar.emit(null);
   }
 
   onSubmitNuevoProponente(){
     this.addressForm.get('nombresProponentes').setValue( null );
-
+    console.log( this.procesoSeleccion.procesoSeleccionProponente);
     this.guardar.emit(null);
   }
 
