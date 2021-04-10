@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadosProcesoSeleccion, ProcesoSeleccion, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { FileDownloader } from 'src/app/_helpers/file-downloader';
 
 export interface RegistrosCargados {
   id: number;
@@ -103,22 +104,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   {
     console.log(gestion);
     this.procesoSeleccionService.downloadOrdenElegibilidadFilesByName(gestion.gestion).subscribe(respuesta => {
-      let documento="documento.xlsx";
-      //console.log(documento);
-              
-        //console.log(result);
-        /*var url = window.URL.createObjectURL(result);
-        window.open(url);
-        //console.log("download result ", result);*/
-        var text = documento,
-        blob = new Blob([respuesta], { type: 'application/octet-stream' }),
-        anchor = document.createElement('a');
-        anchor.download = documento;
-        //anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
-        //console.log(anchor);
-        anchor.click();
+      FileDownloader.exportExcel("documento.xlsx", respuesta)      
     }, 
     err => {
      

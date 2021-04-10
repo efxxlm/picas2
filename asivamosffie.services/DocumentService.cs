@@ -204,15 +204,10 @@ namespace asivamosffie.services
                         Correo_electronico_del_representante_legal_de_la_UT_o_Consorcio = x.CorreoRlutoConsorcio,
                     }).ToList();
                 workSheet.Cells.LoadFromCollection(collection, true);
-                packages.Save();
-                //convert the excel package to a byte array
-                byte[] bin = packages.GetAsByteArray();
-                Stream stream = new MemoryStream(bin);                
-                //the path of the file
                 string filePath = pFilePatch + "/" + pNameFiles + "_rev.xlsx";
-
-                //write the file to the disk
-                File.WriteAllBytes(filePath, bin);
+                var xlFile = new FileInfo(filePath);
+                packages.SaveAs(xlFile);
+                
                 return filePath;
             }
             return "";
