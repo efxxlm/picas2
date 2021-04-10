@@ -52,6 +52,18 @@ namespace asivamosffie.services
 
                 foreach (var proceso in procesosSeleccion)
                 {
+                    if ( proceso.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                    {
+                        if ( 
+                                string.IsNullOrEmpty( proceso.EvaluacionDescripcion ) ||
+                                string.IsNullOrEmpty( proceso.UrlSoporteEvaluacion ) ||
+                                proceso.ProcesoSeleccionProponente.Count() == 0
+                                )
+                        {
+                            proceso.EsCompleto = false;
+                        }
+                    }
+
                     proceso.ListaContratistas = ListaContratistas.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
                 }
                 return procesosSeleccion;
