@@ -117,6 +117,43 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPoliza>()
+                        .Where(p => p.ContratoPolizaId == pContratoPoliza.ContratoPolizaId)
+                        .Update(p => new ContratoPoliza
+                        {
+                            FechaModificacion = DateTime.Now,
+                            EstadoPolizaCodigo = pContratoPoliza.EstadoPolizaCodigo
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pContratoPoliza.UsuarioModificacion, ConstantCommonMessages.GuaranteePolicies.CAMBIAR_ESTADO)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pContratoPoliza.UsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
         private void CreateEditPolizaObservacion(ICollection<PolizaObservacion> pListPolizaObservacion, string pAuthor)
         {
             foreach (var PolizaObservacion in pListPolizaObservacion)
@@ -293,45 +330,7 @@ namespace asivamosffie.services
 
             return true;
         }
-
-        public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            { 
-                _context.Set<ContratoPoliza>()
-                        .Where(p => p.ContratoPolizaId == pContratoPoliza.ContratoPolizaId)
-                        .Update(p => new ContratoPoliza
-                        { 
-                            FechaModificacion = DateTime.Now,
-                            EstadoPolizaCodigo = pContratoPoliza.EstadoPolizaCodigo 
-                        });
-               
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pContratoPoliza.UsuarioModificacion, ConstantCommonMessages.GuaranteePolicies.CAMBIAR_ESTADO)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pContratoPoliza.UsuarioModificacion, ex.InnerException.ToString())
-                };
-            }
-
-        }
-
-
+          
         #endregion
 
         #region Old
