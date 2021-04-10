@@ -170,6 +170,17 @@ export class FormularioProyectosComponent implements OnInit {
       this.openDialog('', '<b>La llave MEN es obligatoria.</b>');
       return;
     }
+    let vigenciasCorrectas=true;
+    this.proyecto.proyectoAportante.forEach(element => {
+      if(!element.aportanteId)
+      {
+        vigenciasCorrectas=false;
+      }
+    });
+    if(!vigenciasCorrectas)
+    {
+      this.openDialog('', '<b>La vigencia del acuerdo de cofinanciación es obligatoria.</b>');
+    }
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(
       respuesta => {
         if (respuesta.code == '200') {
