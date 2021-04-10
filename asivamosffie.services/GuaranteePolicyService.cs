@@ -43,6 +43,7 @@ namespace asivamosffie.services
         {
             return await _context.Contrato
                                     .Where(c => c.ContratoId == pContratoId)
+                                    .Include(c=> c.Contratacion).ThenInclude(d=> d.DisponibilidadPresupuestal)
                                     .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                     .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
                                     .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
