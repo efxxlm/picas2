@@ -8,8 +8,12 @@ namespace asivamosffie.services.Interfaces
     public interface IGuaranteePolicyService
     {
         Task<Contrato> GetContratoByContratoId(int pContratoId);
+
         Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato); 
+
         Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo);
+
+        Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza);
 
 
         #region Old
@@ -21,8 +25,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId);
 
-        Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
-
+  
         Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
 
         Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId);

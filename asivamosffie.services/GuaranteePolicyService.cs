@@ -21,7 +21,7 @@ namespace asivamosffie.services
         public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _context = context; 
+            _context = context;
         }
 
         #region Opt
@@ -40,7 +40,7 @@ namespace asivamosffie.services
                                         .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
                                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u=> u.ResponsableAprobacion)
+                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u => u.ResponsableAprobacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
                                         .FirstOrDefaultAsync();
@@ -60,6 +60,7 @@ namespace asivamosffie.services
                                  .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
                                  .UpdateAsync(c => new ContratoPoliza
                                  {
+                                     EstadoPolizaCodigo = ContratoPoliza.EstadoPolizaCodigo,
                                      UsuarioModificacion = pContrato.UsuarioCreacion,
                                      FechaModificacion = DateTime.Now,
                                      RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
@@ -146,7 +147,7 @@ namespace asivamosffie.services
                 }
             }
         }
-         
+
         private void CreateEditPolizaListaChequeo(ICollection<PolizaListaChequeo> pListpolizaListaChequeo, string usuarioCreacion)
         {
             foreach (var PolizaListaChequeo in pListpolizaListaChequeo)
@@ -292,6 +293,44 @@ namespace asivamosffie.services
 
             return true;
         }
+
+        public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+                _context.Set<ContratoPoliza>()
+                        .Where(p => p.ContratoPolizaId == pContratoPoliza.ContratoPolizaId)
+                        .Update(p => new ContratoPoliza
+                        { 
+                            FechaModificacion = DateTime.Now,
+                            EstadoPolizaCodigo = pContratoPoliza.EstadoPolizaCodigo 
+                        });
+               
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pContratoPoliza.UsuarioModificacion, ConstantCommonMessages.GuaranteePolicies.CAMBIAR_ESTADO)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pContratoPoliza.UsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
 
         #endregion
 
@@ -1002,41 +1041,6 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                ContratoPoliza contratoPoliza = _context.ContratoPoliza.Find(pContratoPolizaId);
-                contratoPoliza.UsuarioModificacion = pUsuarioModifica;
-                contratoPoliza.FechaModificacion = DateTime.Now;
-                contratoPoliza.EstadoPolizaCodigo = pCodigoNuevoEstadoPoliza;
-
-                _context.SaveChanges();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO POLIZA")
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
-                };
-            }
-
-        }
 
         //enviar correo estado devuelto
         public async Task<Respuesta> EnviarCorreoSupervisor(ContratoPoliza contratoPoliza, AppSettingsService settings)

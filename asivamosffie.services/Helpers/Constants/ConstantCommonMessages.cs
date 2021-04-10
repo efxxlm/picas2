@@ -68,6 +68,8 @@ namespace asivamosffie.services.Helpers.Constant
             public const string CREAR_EDITAR = "CREAR EDITAR GARANTIAS Y POLIZAS";
 
             public const string ERROR = "OCURRIO UN ERROR AL PROCESAR LA SOLICITUD";
+
+            public const string CAMBIAR_ESTADO = "CAMBIAR ESTADO POLIZAS Y GARANTIAS";
         }
     }
 

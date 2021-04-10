@@ -30,13 +30,13 @@ namespace asivamosffie.api.Controllers
 
         }
          
-        [Route("GetContratoByContratoId")]
         [HttpGet]
+        [Route("GetContratoByContratoId")]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             return await _guaranteePolicy.GetContratoByContratoId(pContratoId);
         }
- 
+
         [HttpPost]
         [Route("CreateEditContratoPoliza")]
         public async Task<IActionResult> CreateEditContratoPoliza(Contrato pContrato)
@@ -44,14 +44,32 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
-                 
+                pContrato.UsuarioCreacion = User.Identity.Name;
+
                 respuesta = await _guaranteePolicy.CreateEditContratoPoliza(pContrato);
                 return Ok(respuesta);
             }
             catch (Exception ex)
             {
                 respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+         
+        [HttpPost]
+        [Route("ChangeStatusEstadoPoliza")]
+        public async Task<IActionResult> ChangeStatusEstadoPoliza([FromBody] ContratoPoliza pContratoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratoPoliza.UsuarioModificacion = User.Identity.Name;
+                respuesta = await _guaranteePolicy.ChangeStatusEstadoPoliza(pContratoPoliza);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
             }
         }
@@ -215,22 +233,7 @@ namespace asivamosffie.api.Controllers
             return await _guaranteePolicy.GetNotificacionContratoPolizaByIdContratoId(pContratoId);
         }
 
-        [HttpPut]
-        [Route("CambiarEstadoPoliza")]
-        public async Task<IActionResult> CambiarEstadoPoliza([FromQuery] int pContratoPolizaId, string pCodigoNuevoEstadoPoliza)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                respuesta = await _guaranteePolicy.CambiarEstadoPoliza(pContratoPolizaId, pCodigoNuevoEstadoPoliza, HttpContext.User.FindFirst("User").Value);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
-        }
+
 
         [HttpPut]
         [Route("CambiarEstadoPolizaByContratoId")]
