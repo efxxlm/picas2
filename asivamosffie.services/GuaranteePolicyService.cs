@@ -21,8 +21,7 @@ namespace asivamosffie.services
         public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _context = context;
-            //_settings = settings;
+            _context = context; 
         }
 
         #region Opt
@@ -41,7 +40,7 @@ namespace asivamosffie.services
                                         .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
                                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
+                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u=> u.ResponsableAprobacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
                                         .FirstOrDefaultAsync();
@@ -147,8 +146,7 @@ namespace asivamosffie.services
                 }
             }
         }
-
-
+         
         private void CreateEditPolizaListaChequeo(ICollection<PolizaListaChequeo> pListpolizaListaChequeo, string usuarioCreacion)
         {
             foreach (var PolizaListaChequeo in pListpolizaListaChequeo)

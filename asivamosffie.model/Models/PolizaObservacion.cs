@@ -20,5 +20,6 @@ namespace asivamosffie.model.Models
         public int? ResponsableAprobacionId { get; set; }
 
         public virtual ContratoPoliza ContratoPoliza { get; set; }
+        public virtual Usuario ResponsableAprobacion { get; set; }
     }
 }
