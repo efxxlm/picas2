@@ -17,7 +17,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public string Eliminado { get; set; }
+        public bool? Eliminado { get; set; }
 
         public virtual ContratoPoliza ContratoPoliza { get; set; }
     }

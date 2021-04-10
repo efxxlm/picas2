@@ -258,20 +258,20 @@ namespace asivamosffie.services
 
             if (contratoPoliza != null)
             {
-                contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
-                if (contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault() != null)
-                {
-                    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion
-                              .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                              && r.MenuId == pMenuId
-                              && r.IdPadre == contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault().ContratoPolizaActualizacionId
-                              && r.Eliminado != true
-                              && r.RegistroCompleto == true
-                              && r.Archivado != true
-                              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Actualizacion_de_poliza).FirstOrDefault();
-                    //USAR PARA EL SEMAFORO
-                    contratoPoliza.RegistroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false;
-                }
+                //contratoPoliza.UserResponsableAprobacion = _context.Usuario.Find(Int32.Parse(contratoPoliza.ResponsableAprobacion));
+                //if (contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault() != null)
+                //{
+                //    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion
+                //              .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                //              && r.MenuId == pMenuId
+                //              && r.IdPadre == contratoPoliza.ContratoPolizaActualizacion.FirstOrDefault().ContratoPolizaActualizacionId
+                //              && r.Eliminado != true
+                //              && r.RegistroCompleto == true
+                //              && r.Archivado != true
+                //              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Actualizacion_de_poliza).FirstOrDefault();
+                //    //USAR PARA EL SEMAFORO
+                //    contratoPoliza.RegistroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false;
+                //}
             }
 
             return contratoPoliza;
