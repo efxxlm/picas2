@@ -12,7 +12,6 @@ namespace asivamosffie.model.Models
         public string NumeroContrato { get; set; }
         public string NumeroSolicitudContratacion { get; set; }
         public string TipoSolicitud { get; set; }
-        public string TipoSolicitudCodigo { get; set; }
         public string TipoSolicitudCodigoContratacion { get; set; }
         public string TipoSolicitudContratacion { get; set; }
         public bool? RegistroCompleto { get; set; }

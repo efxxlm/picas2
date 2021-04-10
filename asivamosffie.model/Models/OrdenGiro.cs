@@ -10,6 +10,7 @@ namespace asivamosffie.model.Models
             BalanceFinancieroTranslado = new HashSet<BalanceFinancieroTranslado>();
             OrdenGiroDetalle = new HashSet<OrdenGiroDetalle>();
             OrdenGiroObservacion = new HashSet<OrdenGiroObservacion>();
+            OrdenGiroPago = new HashSet<OrdenGiroPago>();
             OrdenGiroTercero = new HashSet<OrdenGiroTercero>();
             SolicitudPago = new HashSet<SolicitudPago>();
         }
@@ -38,6 +39,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
+        public virtual ICollection<OrdenGiroPago> OrdenGiroPago { get; set; }
         public virtual ICollection<OrdenGiroTercero> OrdenGiroTercero { get; set; }
         public virtual ICollection<SolicitudPago> SolicitudPago { get; set; }
     }

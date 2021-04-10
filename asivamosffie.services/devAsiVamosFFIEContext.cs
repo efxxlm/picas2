@@ -129,6 +129,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
         public virtual DbSet<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
         public virtual DbSet<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
+        public virtual DbSet<OrdenGiroPago> OrdenGiroPago { get; set; }
         public virtual DbSet<OrdenGiroSoporte> OrdenGiroSoporte { get; set; }
         public virtual DbSet<OrdenGiroTercero> OrdenGiroTercero { get; set; }
         public virtual DbSet<OrdenGiroTerceroChequeGerencia> OrdenGiroTerceroChequeGerencia { get; set; }
@@ -4438,6 +4439,15 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_OrdenGiroObservacion_OrdenGiro");
             });
 
+            modelBuilder.Entity<OrdenGiroPago>(entity =>
+            {
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.OrdenGiroPago)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RegistroPago_OrdenGiroPago");
+            });
+
             modelBuilder.Entity<OrdenGiroSoporte>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -6417,10 +6427,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComiteSolicitud>(entity =>
             {
-                entity.Property(e => e.DesarrolloSolicitud)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoActaCodigo)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -8301,9 +8307,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_GestionarGarantiasPolizas");
 
-                entity.Property(e => e.EstadoPoliza)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoPoliza).HasMaxLength(250);
 
                 entity.Property(e => e.EstadoPolizaCodigo)
                     .HasMaxLength(100)
@@ -8337,17 +8341,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(12)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoSolicitudCodigo)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.TipoSolicitudCodigoContratacion)
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoSolicitudContratacion)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoSolicitudContratacion).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VListCompromisosComiteTecnico>(entity =>
