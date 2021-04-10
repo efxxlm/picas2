@@ -211,6 +211,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   CambioCantidadCompromisos() {
+    if ( this.estaEditando) this.compromisos.markAllAsTouched();
     const FormGrupos = this.addressForm.value;
     if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
