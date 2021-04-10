@@ -9,6 +9,11 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IBudgetAvailabilityService
     {
+
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
+
+
+        #region Old
         string getNombreAportante(CofinanciacionAportante confinanciacion);
 
         Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id); 
@@ -38,5 +43,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateDRP(int id, string usuarioModificacion, string urlDestino, string mailServer, int mailPort, bool enableSSL, string password, string sender);
         Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal();
         Task<Byte[]> GetPDFDRP(int id, string usuarioModificacion);
+
+        #endregion
     }
 }
