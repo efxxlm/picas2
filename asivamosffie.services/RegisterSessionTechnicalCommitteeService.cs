@@ -4929,13 +4929,14 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
-                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido);
+                                                            .Replace(placeholderDominio3.Nombre, compromiso?.ResponsableSesionParticipante?.Usuario?.PrimerNombre
+                                                            + " " + compromiso?.ResponsableSesionParticipante?.Usuario.PrimerApellido);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
+
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : "");
                                                         break;
                                                 }
                                             }
@@ -5636,7 +5637,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return ex.InnerException.ToString();
+                throw ex;
             }
         }
 
