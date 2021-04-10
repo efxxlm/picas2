@@ -350,13 +350,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     console.log(this.personaNaturalForm);
     if(this.personaNaturalForm.invalid)
     {
-     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
-     return false; 
+      this.estaEditando = true;
+      this.personaNaturalForm.markAllAsTouched();
+      this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
+      return false; 
     }
-
-
-    this.estaEditando = true;
-    this.personaNaturalForm.markAllAsTouched();
 
     if(!this.noTanNuevo)
     {
