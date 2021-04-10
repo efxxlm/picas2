@@ -45,6 +45,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     contrato: any;
     contratoPolizaId = 0;
     polizaListaChequeoId = 0;
+    polizaObservacionId = 0;
     polizaActualizacionRevisionAprobacionObservacion = 0;
     realizoPeticion = false;
     estaEditando = false;
@@ -293,10 +294,10 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
         const getHistorialObservaciones = () => {
             return [
                 {
-                    polizaActualizacionRevisionAprobacionObservacion: this.polizaActualizacionRevisionAprobacionObservacion,
+                    polizaObservacionId: this.polizaObservacionId,
                     contratoPolizaId: this.contratoPolizaId,
                     fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
-                    estadoRevision: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
+                    estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
                     fechaAprobacion: this.addressForm.get( 'fechaAprob' ).value !== null ? new Date( this.addressForm.get( 'fechaAprob' ).value ).toISOString() : null,
                     responsableAprobacionId: this.addressForm.get( 'responsableAprob' ).value,
                     observacionGeneral: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : null
@@ -317,7 +318,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     estadoPolizaCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? ( this.addressForm.get( 'estadoRevision' ).value === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision ) : this.estadosPoliza.enRevision,
                     polizaGarantia: getPolizaGarantia(),
                     polizaListaChequeo: getPolizaListaChequeo(),
-                    polizaActualizacionRevisionAprobacionObservacion: getHistorialObservaciones()
+                    polizaObservacion: getHistorialObservaciones()
                 }
             ]
         }

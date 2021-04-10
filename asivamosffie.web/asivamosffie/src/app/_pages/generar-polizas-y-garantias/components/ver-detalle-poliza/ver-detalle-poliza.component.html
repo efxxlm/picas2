@@ -1,208 +1,98 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="contrato !== undefined">
   <div class="text-right">
     <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
-  <h1 class="title-menu--h1">
-    Ver detalle contrato {{this.numContrato}}
-  </h1>
+  <h1 class="title-menu--h1">Gestionar póliza contrato {{ contrato.numeroContrato }}</h1>
   <p class="info-sub-title">
-    <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
-    <span><b>{{this.tipoSolicitud}}</b></span>
+    <span> Fecha de firma del contrato <b>{{ contrato.fechaFirmaContrato | date: 'dd/MM/yyyy' }}</b> </span>
+    <span> <b>Contratación</b> </span>
     <span>Estado: <b>Con aprobación de pólizas</b></span>
   </p>
 </section>
-<section class="container">
+<section class="container" *ngIf="contrato !== undefined">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
-      <p>
-        <strong>Tipo de contrato:</strong>
-        {{this.tipoContrato}}
-      </p>
-      <p>
-        <strong>Objeto:</strong>
-      </p>
-      <p [innerHtml]="this.objeto">
-      </p>
-      <p>
-        <strong>Nombre del contratista:</strong>
-        {{this.nombreContratista}}
-      </p>
-      <p>
-        <strong>Tipo de identificación:</strong>
-        {{this.tipoIdentificacion}}
-      </p>
-      <p>
-        <strong>Número de identificación:</strong>
-        {{this.numeroIdentificacion}}
-      </p>
-      <p>
-        <strong>Valor del contrato:</strong>
-        ${{this.valorContrato}}
-      </p>
-      <p>
-        <strong>Plazo:</strong>
-        {{this.plazoContrato}}
-      </p>
+      <p> <strong>Tipo de contrato:</strong> <i> {{ getTipoSolicitud( contrato.contratacion.tipoSolicitudCodigo ) }} </i> </p>
+      <section>
+        <p> <strong>Objeto:</strong> </p>
+        <div [innerHTML]="contrato.contratacion.disponibilidadPresupuestal[ 0 ].objeto"></div>
+      </section>
+      <p><strong>Nombre del contratista:</strong> <i> {{ firstLetterUpperCase( contrato.contratacion.contratista.nombre ) }} </i> </p>
+      <p> <strong>Tipo de identificación:</strong> <i> {{ getTipoDocumento( contrato.contratacion.contratista.tipoIdentificacionCodigo ) }} </i> </p>
+      <p> <strong>Número de identificación:</strong> <i>  {{ contrato.contratacion.contratista.numeroIdentificacion }} </i> </p>
+      <p> <strong>Valor del contrato:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency: '':'symbol':'3.0' }} </i> </p>
+      <p> <strong>Plazo:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoMeses }} meses / {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoDias }} días </i> </p>
     </mat-card-content>
   </mat-card>
+
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
-      <p>
-        <strong>Nombre de la aseguradora:</strong>
-        {{this.nomAseguradora}}
-      </p>
-      <p>
-        <strong>Número de la póliza:</strong>
-        {{this.numPoliza}}
-      </p>
-      <p>
-        <strong>Número de certificado:</strong>
-        {{this.numCertificado}}
-      </p>
-      <p>
-        <strong>Fecha de expedición de la póliza:</strong>
-        {{this.fechaExpPoliza | date:'dd/MM/yyyy'}}
-      </p>
-      <p>
-        <strong>Vigencia de la póliza:</strong>
-        {{this.vigenciaPoliza| date:'dd/MM/yyyy'}}
-      </p>
-      <p>
-        <strong>Vigencia del amparo:</strong>
-        {{this.vigenciaAmparo| date:'dd/MM/yyyy'}}
-      </p>
-      <p>
-        <strong>Valor del amparo:</strong>
-        {{this.valorAmparo | currency}}
-      </p>
+      <p><strong>Nombre de la aseguradora:</strong> <i> {{ addressForm.get( 'nombre' ).value }} </i> </p>
+      <p><strong>Número de la póliza:</strong> <i> {{ addressForm.get( 'numeroPoliza' ).value }} </i> </p>
+      <p><strong>Número de certificado:</strong> <i> {{ addressForm.get( 'numeroCertificado' ).value }} </i> </p>
+      <p><strong>Fecha de expedición de la póliza:</strong> <i> {{ addressForm.get( 'fecha' ).value | date: 'dd/MM/yyyy' }} </i> </p>
+
       <h2 class="card-subTitle">Pólizas y seguros</h2>
-      <div *ngIf="this.obj1==true">
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-          Buen manejo y correcta inversión del anticipo
-        </mat-card-title>
-        <p *ngIf="this.buenManejoCorrectaInversionAnticipo==true">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          Sí
-        </p>
-        <p *ngIf="this.buenManejoCorrectaInversionAnticipo==false">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          No
-        </p>
+      <!-- Por integrar -->
+      <div class="d-flex" style="margin-left: .5em;">
+        <b>Pólizas y seguros :</b>
+        <div class="d-flex" *ngFor="let codigo of addressForm.get( 'polizasYSeguros' ).value; index as i">
+          <p style="margin-left: .3em;"> <i> {{ getSeguro( codigo ) }} </i> </p> <span *ngIf="addressForm.get( 'polizasYSeguros' ).value.length !== i + 1">,</span><span *ngIf="addressForm.get( 'polizasYSeguros' ).value.length === i + 1">.</span>
+        </div>
       </div>
-      <div *ngIf="this.obj2==true">
+      <div *ngFor="let seguro of seguros.controls">
         <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-          Garantía de estabilidad y calidad de la obra
+          {{ firstLetterUpperCase( seguro.get( 'nombre' ).value ) }}
         </mat-card-title>
-        <p *ngIf="this.estabilidadYCalidad==true">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          Sí
-        </p>
-        <p *ngIf="this.estabilidadYCalidad==false">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          No
-        </p>
+
+        <div style="margin-left: .5em;">
+          <p *ngIf="seguro.get( 'esIncluidaPoliza' ).value === true"><strong>¿Está incluida en la póliza presentada?:</strong> <i> Si </i> </p>
+          <p *ngIf="seguro.get( 'esIncluidaPoliza' ).value === false"><strong>¿Está incluida en la póliza presentada?:</strong> <i> No </i> </p>
+
+          <div *ngIf="seguro.get( 'esIncluidaPoliza' ).value === true">
+            <p><strong>Vigencia de la póliza:</strong> <i> {{ seguro.get( 'vigencia' ).value | date: 'dd/MM/yyyy' }} </i> </p>
+            <p><strong>Vigencia del amparo:</strong> <i> {{ seguro.get( 'vigenciaAmparo' ).value | date: 'dd/MM/yyyy' }} </i> </p>
+            <p><strong>Valor del amparo:</strong> <i> {{ seguro.get( 'valorAmparo' ).value | currency:'':'symbol-narrow':'.0-0' }} </i> </p>
+          </div>
+        </div>
       </div>
-      <div *ngIf="this.obj3==true">
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-          Póliza de cumplimiento
-        </mat-card-title>
-        <p *ngIf="this.polizaYCoumplimiento==true">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          Sí
-        </p>
-        <p *ngIf="this.polizaYCoumplimiento==false">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          No
-        </p>
-      </div>
-      <div *ngIf="this.obj4==true">
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-          Pólizas y seguros
-        </mat-card-title>
-        <p *ngIf="this.polizasYSegurosCompleto==true">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          Sí
-        </p>
-        <p *ngIf="this.polizasYSegurosCompleto==false">
-          <strong>¿Está incluida en la póliza presentada?:</strong>
-          No
-        </p>
-      </div>
+
       <h2 class="card-subTitle">Lista de chequeo</h2>
-      <p *ngIf="this.cumpleDatosAsegurado==true">
-        <strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong>
-        Sí
-      </p>
-      <p *ngIf="this.cumpleDatosAsegurado==false">
-        <strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong>
-        No
-      </p>
-      <p *ngIf="this.cumpleDatosBeneficiario==true">
-        <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong>
-        Sí
-      </p>
-      <p *ngIf="this.cumpleDatosBeneficiario==false">
-        <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong>
-        No
-      </p>
-      <p *ngIf="this.cumpleDatosTomador==true">
-        <strong>¿Cumple con los datos del Tomador / Afianzado?:</strong>
-        Sí
-      </p>
-      <p *ngIf="this.cumpleDatosTomador==false">
-        <strong>¿Cumple con los datos del Tomador / Afianzado?:</strong>
-        No
-      </p>
-      <p *ngIf="this.incluyeReciboPago==true">
-        <strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong>
-        Sí
-      </p>
-      <p *ngIf="this.incluyeReciboPago==false">
-        <strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong>
-        No
-      </p>
-      <p *ngIf="this.incluyeCondicionesGenerales==true">
-        <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong>
-        Sí
-      </p>
-      <p *ngIf="this.incluyeCondicionesGenerales==false">
-        <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong>
-        No
-      </p>
+      <p *ngIf="addressForm.get( 'cumpleAsegurado' ).value === true"><strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong> <i> Si </i> </p>
+      <p *ngIf="addressForm.get( 'cumpleAsegurado' ).value === false"><strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong> <i> No </i> </p>
+      <p *ngIf="addressForm.get( 'cumpleBeneficiario' ).value === true"><strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong> <i> Si </i> </p>
+      <p *ngIf="addressForm.get( 'cumpleBeneficiario' ).value === false"><strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong> <i> No </i> </p>
+      <p *ngIf="addressForm.get( 'cumpleAfianzado' ).value === true"><strong>¿Cumple con los datos del Tomador / Afianzado?:</strong> <i> Si </i> </p>
+      <p *ngIf="addressForm.get( 'cumpleAfianzado' ).value === false"><strong>¿Cumple con los datos del Tomador / Afianzado?:</strong> <i> No </i> </p>
+      <p *ngIf="addressForm.get( 'reciboDePago' ).value === true"><strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong> <i> Si </i> </p>
+      <p *ngIf="addressForm.get( 'reciboDePago' ).value === false"><strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong> <i> No </i> </p>
+      <p *ngIf="addressForm.get( 'condicionesGenerales' ).value === true"><strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong> <i> Si </i> </p>
+      <p *ngIf="addressForm.get( 'condicionesGenerales' ).value === false"><strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong> <i> No </i> </p>
     </mat-card-content>
   </mat-card>
-  <mat-card class="shipping-card var-main-gris">
+  <mat-card class="shipping-card var-main-gris" *ngIf="ultimaRevision !== undefined">
     <mat-card-header class="header-card">
       <mat-card-title class="header-card--text">
         Revisión
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>
-        <strong>Fecha de la revisión:</strong>
-        {{this.fechaRevision | date:'dd/MM/yyyy'}}
-      </p>
-      <p *ngIf="this.estadoRevision=='1'">
-        <strong>Estado de la revisión:</strong>
-        Devuelta
-      </p>
-      <p *ngIf="this.estadoRevision=='2'">
-        <strong>Estado de la revisión:</strong>
-        Aprobada
-      </p>
-      <h2 class="card-subTitle">Aprobación</h2>
-      <p>
-        <strong>Fecha de aprobación:</strong>
-        {{this.fechaAprobacion}}
-      </p>
-      <p>
-        <strong>Responsable de aprobación:</strong>
-        {{this.nomAprobado}}
-      </p>
+      <div style="margin-left: 2em;">
+        <p> <strong>Fecha de la revisión:</strong> <i> {{ ultimaRevision.fechaRevision | date: 'dd/MM/yyyy' }} </i> </p>
+        <p> <strong>Estado de la revisión:</strong> <i> {{ firstLetterUpperCase( getEstado( ultimaRevision.estadoRevisionCodigo ) ) }} </i> </p>
+      </div>
+
+      <h2 class="card-subTitle" *ngIf="ultimaRevision.estadoRevisionCodigo === estadosRevision.aprobacion">Aprobación</h2>
+
+      <div style="margin-left: 2em;" *ngIf="ultimaRevision.estadoRevisionCodigo === estadosRevision.aprobacion">
+        <p><strong>Fecha de aprobación:</strong> <i> {{ ultimaRevision.fechaAprobacion | date: 'dd/MM/yyyy' }} </i> </p>
+        <p><strong>Responsable de aprobación:</strong> <i> {{ getResponsable( ultimaRevision.responsableAprobacionId ) }} </i> </p>
+      </div>
     </mat-card-content>
   </mat-card>
+
   <mat-card class="shipping-card var-main-gris" *ngIf="contrato !== undefined">
     <mat-card-header class="header-card">
       <mat-card-title class="header-card--text">
@@ -210,9 +100,13 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-    <!--jflorez, quito esto pues ya tiene la tabla
-    <div [innerHtml]="this.observaciones"></div>-->  
-      <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+      <!--jflorez, quito esto pues ya tiene la tabla
+        <div [innerHtml]="this.observaciones"></div>
+      -->
+
+      <div class="mt-1em" *ngIf="polizaObservacion.length > 0">
+        <app-tabla-historial-observaciones-poliza [polizaObservacion]="polizaObservacion"></app-tabla-historial-observaciones-poliza>
+      </div>
     </mat-card-content>
   </mat-card>
   

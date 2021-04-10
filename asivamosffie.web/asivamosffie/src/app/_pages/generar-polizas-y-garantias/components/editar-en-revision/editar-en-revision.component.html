@@ -8,7 +8,7 @@
   <p class="info-sub-title">
     <span> Fecha de firma del contrato <b>{{ contrato.fechaFirmaContrato | date: 'dd/MM/yyyy' }}</b> </span>
     <span> <b>Contratación</b> </span>
-    <span> Estado: <b>Sin radicación de pólizas</b> </span>
+    <span> Estado: <b>En revisión de pólizas</b> </span>
   </p>
 </section>
 <section class="container" *ngIf="contrato !== undefined">
@@ -561,7 +561,7 @@
                           class="label-left"
                           for="numeroContrato"
                           [class.color-secondaryColor]="(addressForm.get('fechaRevision').invalid && addressForm.get('fechaRevision').touched) || (addressForm.get('fechaRevision').invalid && estaEditando)">
-                          Fecha de la revisión
+                          Fecha de la revisión {{ contadorRevision + 1 }}
                   </label>
                 </div>
                 <div class="col d-flex align-items-center">
@@ -605,7 +605,7 @@
                           class="label-left"
                           for="numeroContrato"
                           [class.color-secondaryColor]="(addressForm.get('estadoRevision').invalid && addressForm.get('estadoRevision').touched) || (addressForm.get('estadoRevision').invalid && estaEditando)">
-                          Estado de la revisión
+                          Estado de la revisión {{ contadorRevision + 1 }}
                   </label>
                 </div>
                 <div class="col">
@@ -731,11 +731,10 @@
       </div>
     </div>
 
-    <!--
-    <div *ngIf="contrato.polizaObservacion.length > 0">
-      <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+    <div *ngIf="polizaObservacion.length > 0">
+      <app-tabla-historial-observaciones-poliza [polizaObservacion]="polizaObservacion"></app-tabla-historial-observaciones-poliza>
     </div>
-    -->
+
     <div class="text-center mb-2em">
       <button mat-button
               color="warn"

@@ -17,10 +17,10 @@
             <ng-container matColumnDef="estadoRevisionCodigo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la revision</th>
                 <td mat-cell *matCellDef="let element">
-                    <div *ngIf="element.estadoRevisionCodigo=='1'">
+                    <div *ngIf="element.estadoRevisionCodigo === estadosRevision.devuelta">
                         Devuelta
                     </div>
-                    <div *ngIf="element.estadoRevisionCodigo=='2'">
+                    <div *ngIf="element.estadoRevisionCodigo === estadosRevision.aprobacion">
                         Aprobada
                     </div>
                 </td>
