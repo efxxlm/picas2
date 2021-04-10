@@ -80,6 +80,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
           if ( this.contratacionProyecto.tieneMonitoreoWeb !== undefined || this.contratacionProyecto.esReasignacion !== undefined ) {
             this.estaEditando = true;
+            this.addressForm.markAllAsTouched();
           }
 
         }, 1000);
