@@ -228,43 +228,43 @@ export class FormularioProyectosComponent implements OnInit {
       this.commonServices.forkProject().subscribe(listas => {
         // console.log(listas);
         this.listadoTipoIntervencion = listas[0].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listadoregion = listas[1].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listadoPredios = listas[2].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listadoDocumentoAcreditacion = listas[3].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listaTipoAportante = listas[4].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listaInfraestructura = listas[5].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listaCordinaciones = listas[6].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.listadoConvocatoria = listas[7].sort((a, b) => {
-          let textA = a.descripcion.toUpperCase();
-          let textB = b.descripcion.toUpperCase();
+          let textA = a.descripcion?.toUpperCase();
+          let textB = b.descripcion?.toUpperCase();
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         this.projectServices.getProjectById(Number(id)).subscribe(
