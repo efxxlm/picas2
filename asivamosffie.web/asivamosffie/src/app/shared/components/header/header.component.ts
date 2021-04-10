@@ -19,12 +19,12 @@ export class HeaderComponent implements OnInit {
     this.authe.actualUser$.subscribe(user => {
       this.roles="";
       this.actualUser = user;
-      if(this.actualUser.rol)
-      {        
-        this.actualUser.rol.forEach(element => {
-          this.roles+=element.perfil.nombre+" ";
-        });
-      }      
+      // if(this.actualUser)
+      // {        
+      //   this.actualUser.rol.forEach(element => {
+      //     this.roles+=element.perfil.nombre+" ";
+      //   });
+      // }      
     });
   }
 

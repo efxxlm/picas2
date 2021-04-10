@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { CreatePolizaGarantia, CreatePolizaObservacion, EditPoliza, InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
-import { isNull } from 'util';
 import { EstadoPolizaCodigo } from 'src/app/_interfaces/gestionar-polizas-garantias.interface';
+import { EstadosRevision, PerfilCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
+import humanize from 'humanize-plus';
 @Component({
   selector: 'app-editar-observada-o-devuelta',
   templateUrl: './editar-observada-o-devuelta.component.html',
@@ -30,15 +30,20 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         fechaRevision: [ null, Validators.required],
         estadoRevision: [ null, Validators.required],
         fechaAprob: [ null, Validators.required],
-        responsableAprob: [ '', Validators.required ],
+        responsableAprob: [ null, Validators.required ],
         observacionesGenerales: [ null ]
     });
-    estadosPoliza = EstadoPolizaCodigo;
+    contrato: any;
+    estadosRevision = EstadosRevision;
+    listaUsuarios: any[] = [];
+    realizoPeticion: boolean = false;
+    estaEditando = false;
+    listaPerfilCodigo = PerfilCodigo;
     polizasYSegurosArray: Dominio[] = [];
-    estadoArray: Dominio[] = []/*[
-      { name: 'Devuelta', value: '1' },
-      { name: 'Aprobada', value: '2' }
-    ];*/
+    listaTipoSolicitudContrato: Dominio[] = [];
+    listaTipoDocumento: Dominio[] = [];
+    estadosPoliza = EstadoPolizaCodigo;
+    estadoArray = [];
     minDate: Date;
     editorStyle = {
       height: '100px'
@@ -51,59 +56,38 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         [{ align: [] }],
       ]
     };
-    contrato: any;
-    // Variables que se van a eliminar
-    public tipoContrato;
-    public objeto;
-    public nombreContratista;
-    public tipoIdentificacion;
-    public numeroIdentificacion;
-    public valorContrato;
-    public plazoContrato;
-    public numContrato;
-    public observacionesOn;
-    public idContrato;
-    public idPoliza;
-    public idObservacion;
-    selected: any;
-    obj1: boolean;
-    obj2: boolean;
-    obj3: boolean;
-    obj4: boolean;
-    fechaFirmaContrato: any;
-    tipoSolicitud: any;
-    public arrayGarantias = [];
-    listaUsuarios: any[] = [];
-    observacionesHistorial: any;
-    verFormularioEstadoRevision: boolean = false;
-    ultimoEstadoRevision: any;
-    ultimaFechaRevision: any;
-    realizoPeticion: boolean = false;
-    idGarantia1: any;
-    idGarantia2: any;
-    idGarantia3: any;
-    idGarantia4: any;
-    nombreUser: any;
-    estaEditando = false;
 
     get seguros() {
         return this.addressForm.get( 'seguros' ) as FormArray;
     }
 
     constructor(
-        private router: Router,
-        private polizaService: PolizaGarantiaService,
+        private routes: Router,
+        private polizaSvc: PolizaGarantiaService,
         private fb: FormBuilder,
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
-        private common: CommonService,
-        private contratacion: ProjectContractingService ) 
+        private commonSvc: CommonService )
     {
         this.minDate = new Date();
-        this.activatedRoute.params.subscribe(param => {
-          this.loadContrato(param.id);
-          this.loadData(param.id);
-        });
+        this.minDate = new Date();
+        this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria )
+            .subscribe( getUsuariosByPerfil => this.listaUsuarios = getUsuariosByPerfil );
+        this.commonSvc.listaGarantiasPolizas()
+            .subscribe( listaGarantiasPolizas => this.polizasYSegurosArray = listaGarantiasPolizas );
+        this.commonSvc.listaTipodocumento()
+            .subscribe( listaTipodocumento => this.listaTipoDocumento = listaTipodocumento )
+        this.commonSvc.listaEstadoRevision()
+            .subscribe( estadoRevision => this.estadoArray = estadoRevision );
+        this.commonSvc.listaTipoSolicitudContrato()
+            .subscribe( response => this.listaTipoSolicitudContrato = response );
+        this.polizaSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
+            .subscribe(
+                response => {
+                    this.contrato = response;
+                    console.log( this.contrato )
+                }
+            )
     }
 
     ngOnInit(): void {
@@ -112,6 +96,32 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
             this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+        }
+    }
+
+    getTipoSolicitud( codigo: string ) {
+        if ( this.listaTipoSolicitudContrato.length > 0 ) {
+            const tipo = this.listaTipoSolicitudContrato.find( tipo => tipo.codigo === codigo );
+
+            if ( tipo !== undefined ) {
+                return tipo.nombre;
+            }
+        }
+    }
+
+    getTipoDocumento( codigo: string ) {
+        if ( this.listaTipoDocumento.length > 0 ) {
+            const documento = this.listaTipoDocumento.find( documento => documento.codigo === codigo );
+
+            if ( documento !== undefined ) {
+                return documento.nombre;
+            }
+        }
+    }
+
+    firstLetterUpperCase( texto:string ) {
+        if ( texto !== undefined ) {
+            return humanize.capitalize( String( texto ).toLowerCase() );
         }
     }
 
@@ -173,7 +183,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
                     }
                 }
             } );
-            
+
             if ( registroCompleto === this.seguros.length ) {
                 registroCompletoSeguros = true;
             }
@@ -203,136 +213,6 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         } );
     }
 
-    loadContrato(id) {
-      this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
-        this.fechaFirmaContrato = data[0].fechaFirmaContrato;
-        this.tipoSolicitud = data[0].tipoSolicitud;
-        this.numContrato = data[0].numeroContrato;
-        if (data[0].objetoContrato != undefined || data[0].objetoContrato != null) {
-          this.objeto = data[0].objetoContrato;
-        }
-        else {
-          this.objeto = '';
-        };
-        this.tipoIdentificacion = data[0].tipoDocumento;
-        this.tipoContrato = data[0].tipoContrato;
-        if (data[0].valorContrato != undefined || data[0].valorContrato != null) {
-          this.valorContrato = data[0].valorContrato;
-        }
-        else {
-          this.valorContrato = 0;
-        }
-        this.plazoContrato = data[0].plazoContrato;
-        this.loadContratacionId(data[0].contratacionId);
-      });
-      this.common.listaGarantiasPolizas().subscribe(data0 => {
-        this.polizasYSegurosArray = data0;
-      });
-      this.common.getUsuariosByPerfil(10).subscribe(resp => {
-        this.listaUsuarios = resp;
-      });
-      this.common.listaEstadoRevision().subscribe(resp=>{
-        this.estadoArray=resp;
-      })
-    }
-
-    addObservacion(){
-      this.verFormularioEstadoRevision = true;
-    }
-
-    loadData(id) {
-      this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data => {
-        this.addressForm.get('nombre').setValue(data.nombreAseguradora);
-        this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
-        this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
-        this.addressForm.get('fecha').setValue(data.fechaExpedicion);
-        this.addressForm.get('fechaAprob').setValue(data.fechaAprobacion);
-        this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
-        this.addressForm.get('cumpleBeneficiario').setValue(data.cumpleDatosBeneficiario);
-        this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
-        this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
-        this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
-        this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
-        this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
-        this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
-        this.nombreUser = data.usuarioCreacion;
-        for (let i=0; i<this.listaUsuarios.length; i++){
-          const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
-          this.addressForm.get('responsableAprob').setValue(responAprob);
-        }
-        this.contrato = data;
-        this.dataLoad2(data);
-      });
-    }
-    loadContratacionId(a) {
-      this.contratacion.getContratacionByContratacionId(a).subscribe(data => {
-        this.loadInfoContratacion(data);
-      });
-    }
-    loadInfoContratacion(data) {
-      this.nombreContratista = data.contratista.nombre;
-      this.numeroIdentificacion = data.contratista.numeroIdentificacion;
-
-    }
-    dataLoad2(data) {
-      this.idContrato = data.contratoId;
-      this.idPoliza = data.contratoPolizaId;
-      this.loadGarantia(this.idPoliza);
-      this.loadObservations(this.idPoliza);
-      this.loadEstadoRevision(this.idPoliza);
-    }
-    loadEstadoRevision(id) {
-      this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data => {
-      });
-    }
-    loadGarantia(id) {
-      this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
-        const tipoGarantiaCodigo = [];
-        this.arrayGarantias = data;
-        if (this.arrayGarantias.length > 0) {
-          const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
-          for (let i = 1; i < this.arrayGarantias.length; i++) {
-            const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
-          }
-          for (let i = 0; i < polizasListRead.length; i++) {
-            const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
-            if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
-          }
-          this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-          for (let j = 0; j < polizasListRead.length; j++) {
-            switch (polizasListRead[j]) {
-              case '1':
-                this.obj1 = true;
-                this.idGarantia1 = this.arrayGarantias[j].polizaGarantiaId;
-                this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-                break;
-              case '2':
-                this.obj2 = true;
-                this.idGarantia2 = this.arrayGarantias[j].polizaGarantiaId;
-                this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-                break;
-              case '3':
-                this.obj3 = true;
-                this.idGarantia3 = this.arrayGarantias[j].polizaGarantiaId;
-                this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-                break;
-              case '4':
-                this.obj4 = true;
-                this.idGarantia4 = this.arrayGarantias[j].polizaGarantiaId;
-                this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-                break;
-            }
-          }
-        }
-      });
-    }
-
-    loadObservations(id) {
-      this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1 => {
-        this.polizaService.loadTableObservaciones.next(data_1);
-        this.observacionesHistorial = data_1.length;
-      });
-    }
     // evalua tecla a tecla
     validateNumberKeypress(event: KeyboardEvent) {
       const alphanumeric = /[0-9]/;
@@ -422,7 +302,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
             ]
         }
 
-        return;
+        /*
         if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
           if ( this.addressForm.value.polizasYSeguros.length > 0 ) {
             polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
@@ -564,8 +444,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
             this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
     
             });
-            */
-           this.realizoPeticion = true;
+            this.realizoPeticion = true;
             this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
             this.router.navigate(['/generarPolizasYGarantias']);
           }
@@ -574,6 +453,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           }
         }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
         // console.log(this.addressForm.value);
+        */
     }
 
 }

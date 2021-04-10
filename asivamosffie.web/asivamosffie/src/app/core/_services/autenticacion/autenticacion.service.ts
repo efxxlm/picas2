@@ -122,10 +122,22 @@ export class AutenticacionService {
 
   tienePermisos(ruta: string) {
 
-    const usuario: any = JSON.parse(localStorage.getItem('actualUser'));
+    const usuario: any = JSON.parse( localStorage.getItem('actualUser') );
 
     return this.http.get<MenuPerfil>(`${environment.apiUrl}/common/tienePermisos?idPerfil=${usuario.rol[0].perfilId}&pRuta=${ruta}`);
 
+  }
+
+  checkActualUser() {
+    return new Promise<boolean>( async resolve => {
+      const usuario: any = await JSON.parse( localStorage.getItem( 'actualUser' ) );
+
+      if ( usuario !== null ) {
+        resolve( true );
+      } else {
+        resolve( false );
+      }
+    } )
   }
 
 }

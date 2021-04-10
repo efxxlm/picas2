@@ -87,7 +87,7 @@ export class CambiarContrasenaComponent implements OnInit {
 
               this.autenticacionService.IniciarSesion( respuesta.data.datausuario )
                 .subscribe( response => {
-                  if ( response.code == "200" )  
+                  if ( response.code == "200" )
                     this.router.navigate(['/home']);
                 })
 

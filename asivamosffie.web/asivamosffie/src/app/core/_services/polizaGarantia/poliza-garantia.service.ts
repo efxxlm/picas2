@@ -8,13 +8,30 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class PolizaGarantiaService implements OnInit {
+export class PolizaGarantiaService {
+
+  private apiUrl = `${ environment.apiUrl }/guaranteePolicy`
+
   loadDataItems= new Subject();
   loadTableObservaciones = new Subject();
-  constructor(private http: HttpClient) { }
-  ngOnInit(): void {
 
+  constructor(private http: HttpClient) { }
+
+  /*
+    Servicios integracion nueva --- Carlos Molero
+  */
+
+  getContratoByContratoId( pContratoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetContratoByContratoId?pContratoId=${ pContratoId }` )
   }
+
+  createEditContratoPoliza( pContrato: any ){
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditContratoPoliza`, pContrato );
+  }
+
+  /*
+    Servicios integracion vieja --- David Benitez
+  */
 
   createEditPolizaObservacion( pPolizaObservacion: any ) {
     return this.http.post( `${environment.apiUrl}/guaranteePolicy/CreateEditPolizaObservacion`, pPolizaObservacion );

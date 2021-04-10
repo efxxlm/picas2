@@ -44,19 +44,18 @@ export class HomeComponent implements OnInit {
   menu: any[]=[];
 
   constructor(private authe: AutenticacionService,private common: CommonService,private router: Router) {
-    this.actualUser = this.authe.actualUser;
+    // this.actualUser = this.authe.actualUser;
   }
 
-  actualUser: any;
+  // actualUser: any;
   ngOnInit(): void {
-    this.authe.actualUser$.subscribe(user => { 
-      console.log(user);
+    this.authe.actualUser$.subscribe(user => {
       if(user==null)
       {
         console.log("iniciando");        
       }
       else{
-        this.actualUser = user;         
+        // this.actualUser = user;         
         this.getMenu();
         if(user.fechaUltimoIngreso==null || user.cambiarContrasena)
         {        

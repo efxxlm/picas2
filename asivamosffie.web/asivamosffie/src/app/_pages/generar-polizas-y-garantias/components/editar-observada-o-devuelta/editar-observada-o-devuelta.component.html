@@ -1,29 +1,29 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="contrato !== undefined">
   <div class="text-right">
     <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
-  <h1 class="title-menu--h1">Gestionar póliza contrato {{ this.numContrato }}</h1>
+  <h1 class="title-menu--h1">Gestionar póliza contrato {{ contrato.numeroContrato }}</h1>
   <p class="info-sub-title">
-    <span> Fecha de firma del contrato <b>{{ this.fechaFirmaContrato }}</b> </span
-    >
-    <span> <b>{{ this.tipoSolicitud }}</b> </span>
-    <span> Estado: <b>Con póliza observada y devuelta</b> </span>
+    <span> Fecha de firma del contrato <b>{{ contrato.fechaFirmaContrato | date: 'dd/MM/yyyy' }}</b> </span>
+    <span> <b>Contratación</b> </span>
+    <span> Estado: <b>Sin radicación de pólizas</b> </span>
   </p>
 </section>
-<section class="container">
+<section class="container" *ngIf="contrato !== undefined">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
-      <p> <strong>Tipo de contrato:</strong> {{ this.tipoContrato }} </p>
-      <p> <strong>Objeto:</strong> </p>
-      <p [innerHtml]="this.objeto"></p>
-      <p><strong>Nombre del contratista:</strong> {{ this.nombreContratista }} </p>
-      <p> <strong>Tipo de identificación:</strong> {{ this.tipoIdentificacion }} </p>
-      <p> <strong>Número de identificación:</strong> {{ this.numeroIdentificacion }}
-      </p>
-      <p> <strong>Valor del contrato:</strong> {{ this.valorContrato | currency: '':'symbol':'3.0' }} </p>
-      <p> <strong>Plazo:</strong> {{ this.plazoContrato }} </p>
+      <p> <strong>Tipo de contrato:</strong> <i> {{ getTipoSolicitud( contrato.contratacion.tipoSolicitudCodigo ) }} </i> </p>
+      <section>
+        <p> <strong>Objeto:</strong> </p>
+        <div [innerHTML]="contrato.contratacion.disponibilidadPresupuestal[ 0 ].objeto"></div>
+      </section>
+      <p><strong>Nombre del contratista:</strong> <i> {{ firstLetterUpperCase( contrato.contratacion.contratista.nombre ) }} </i> </p>
+      <p> <strong>Tipo de identificación:</strong> <i> {{ getTipoDocumento( contrato.contratacion.contratista.tipoIdentificacionCodigo ) }} </i> </p>
+      <p> <strong>Número de identificación:</strong> <i>  {{ contrato.contratacion.contratista.numeroIdentificacion }} </i> </p>
+      <p> <strong>Valor del contrato:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency: '':'symbol':'3.0' }} </i> </p>
+      <p> <strong>Plazo:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoMeses }} meses / {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoDias }} días </i> </p>
     </mat-card-content>
   </mat-card>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
@@ -542,8 +542,11 @@
       </mat-card-content>
     </mat-card>
     <div  class="animatedDown"
-          *ngIf="addressForm.get('condicionesGenerales').value != null && addressForm.get('reciboDePago').value != null && addressForm.get('cumpleAfianzado').value != null && addressForm.get('cumpleBeneficiario').value != null && addressForm.get('cumpleAsegurado').value != null"
-    >
+          *ngIf=" addressForm.get('condicionesGenerales').value != null
+                  && addressForm.get('reciboDePago').value != null
+                  && addressForm.get('cumpleAfianzado').value != null
+                  && addressForm.get('cumpleBeneficiario').value != null
+                  && addressForm.get('cumpleAsegurado').value != null">
       <mat-card class="shipping-card">
         <mat-card-header class="header-card" style="margin-left: -27px">
           <mat-card-title class="header-card--text"> Revisión </mat-card-title>
@@ -626,7 +629,7 @@
               </div>
             </div>
           </div>
-          <div class="animatedDown" *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'">
+          <div class="animatedDown" *ngIf="addressForm.get( 'estadoRevision' ).value === estadosRevision.aprobacion">
             <h2 class="card-subTitle">Aprobación</h2>
             <div class="row">
               <div class="col-md-8">
@@ -687,8 +690,8 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="responsableAprob" required>
-                        <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
-                          {{ responsableAprob.primerNombre }} {{ responsableAprob.primerApellido }}
+                        <mat-option *ngFor="let responsable of listaUsuarios" [value]="responsable.usuarioId">
+                          {{ firstLetterUpperCase( responsable.primerNombre ) }} {{ firstLetterUpperCase( responsable.primerApellido ) }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
