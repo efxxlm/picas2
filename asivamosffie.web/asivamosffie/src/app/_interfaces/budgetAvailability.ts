@@ -22,7 +22,7 @@ export interface DisponibilidadPresupuestal{
     
     disponibilidadPresupuestalObservacion?: any[];    
     disponibilidadPresupuestalId?: number,
-    fechaSolicitud?: Date,
+    fechaSolicitud?: any,
     tipoSolicitudCodigo?: string,//tradicional, especial o administrativo
     tipoSolicitudEspecialCodigo?:string,//si es especial puede ser expensas o otros costos
     numeroSolicitud?: string,
