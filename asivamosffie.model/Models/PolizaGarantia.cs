@@ -15,6 +15,9 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public decimal? ValorAmparo { get; set; }
+        public DateTime? VigenciaAmparo { get; set; }
+        public DateTime? Vigencia { get; set; }
 
         public virtual ContratoPoliza ContratoPoliza { get; set; }
     }

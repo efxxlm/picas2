@@ -30,6 +30,16 @@ namespace asivamosffie.api.Controllers
 
         }
 
+
+
+        [Route("GetContratoByContratoId")]
+        [HttpGet]
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
+            return await _guaranteePolicy.GetContratoByContratoId(pContratoId);
+        }
+
+        #region Old
         public GuaranteePolicyController(IGuaranteePolicyService guaranteePolicy, IOptions<AppSettings> settings)
         {
             _guaranteePolicy = guaranteePolicy;
@@ -263,5 +273,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        #endregion
     }
 }

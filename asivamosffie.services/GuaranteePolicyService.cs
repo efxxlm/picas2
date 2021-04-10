@@ -37,6 +37,60 @@ namespace asivamosffie.services
             //_settings = settings;
         }
 
+        #region Opt
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
+            return await _context.Contrato
+                                    .Where(c => c.ContratoId == pContratoId)
+                                    .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                    .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
+                                    .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
+                                    .FirstOrDefaultAsync();
+        }
+
+        public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
+        {
+            if (pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId > 0)
+            {
+                _context.Set<ContratoPoliza>()
+                        .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
+                        .Update(c => new ContratoPoliza
+                        {
+                            TipoSolicitudCodigo = pContrato.ContratoPoliza.FirstOrDefault().TipoSolicitudCodigo,
+                            TipoModificacionCodigo = pContrato.ContratoPoliza.FirstOrDefault().TipoModificacionCodigo,
+                            DescripcionModificacion = pContrato.ContratoPoliza.FirstOrDefault().DescripcionModificacion,
+                            NombreAseguradora = pContrato.ContratoPoliza.FirstOrDefault().NombreAseguradora,
+                            NumeroPoliza = pContrato.ContratoPoliza.FirstOrDefault().NumeroPoliza,
+                            NumeroCertificado = pContrato.ContratoPoliza.FirstOrDefault().NumeroCertificado,
+                            FechaExpedicion = pContrato.ContratoPoliza.FirstOrDefault().FechaExpedicion,
+
+                            //Observaciones
+                            //CumpleDatosAsegurado
+                            //CumpleDatosBeneficiario
+                            //CumpleDatosTomador
+                            //IncluyeReciboPago
+                            //IncluyeCondicionesGenerales
+                            //ObservacionesRevisionGeneral
+                            //FechaAprobacion
+                            //ResponsableAprobacion
+                            //Estado
+                            //EstadoPolizaCodigo
+                            //FechaCreacion
+                            //UsuarioCreacion
+                            //RegistroCompleto
+
+                        });
+            }
+
+            return new Respuesta();
+        }
+
+
+
+        #endregion
+
+        #region Old
         public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
@@ -501,9 +555,7 @@ namespace asivamosffie.services
                         contratoPolizaBD.ResponsableAprobacion = contratoPoliza.ResponsableAprobacion;
                         contratoPolizaBD.EstadoPolizaCodigo = contratoPoliza.EstadoPolizaCodigo;
                         contratoPolizaBD.FechaExpedicion = contratoPoliza.FechaExpedicion;
-                        contratoPolizaBD.Vigencia = contratoPoliza.Vigencia;
-                        contratoPolizaBD.VigenciaAmparo = contratoPoliza.VigenciaAmparo;
-                        contratoPolizaBD.ValorAmparo = contratoPoliza.ValorAmparo;
+       
                         contratoPolizaBD.CumpleDatosAsegurado = contratoPoliza.CumpleDatosAsegurado;
                         contratoPolizaBD.CumpleDatosBeneficiario = contratoPoliza.CumpleDatosBeneficiario;
                         contratoPolizaBD.CumpleDatosTomador = contratoPoliza.CumpleDatosTomador;
@@ -1173,9 +1225,7 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(contratoPoliza.NumeroPoliza.ToString())
                 || string.IsNullOrEmpty(contratoPoliza.NumeroCertificado.ToString())
                 || string.IsNullOrEmpty(contratoPoliza.FechaExpedicion.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.Vigencia.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.VigenciaAmparo.ToString())
-                || string.IsNullOrEmpty(contratoPoliza.ValorAmparo.ToString())
+      
                 || !contratoPoliza.CumpleDatosAsegurado.HasValue
                 || !contratoPoliza.CumpleDatosBeneficiario.HasValue
                 || !contratoPoliza.CumpleDatosTomador.HasValue
@@ -1735,4 +1785,6 @@ namespace asivamosffie.services
                                   Sum(x => x.ValorUso);
         }
     }
+
+    #endregion
 }

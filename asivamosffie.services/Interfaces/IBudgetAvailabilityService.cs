@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
     public interface IBudgetAvailabilityService
     {
 
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
+   
 
 
         #region Old

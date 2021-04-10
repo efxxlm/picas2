@@ -31,14 +31,6 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("GetContratoByContratoId")]
-        [HttpGet]
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
-        {
-            var respuesta = await _budgetAvailabilityService.GetContratoByContratoId(pContratoId);
-            return respuesta;
-        }
-
 
         #region Old
         [Route("GetDisponibilidadPresupuestalByID")]

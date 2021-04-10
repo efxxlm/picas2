@@ -21,9 +21,6 @@ namespace asivamosffie.model.Models
         public string NumeroPoliza { get; set; }
         public string NumeroCertificado { get; set; }
         public DateTime? FechaExpedicion { get; set; }
-        public DateTime? Vigencia { get; set; }
-        public DateTime? VigenciaAmparo { get; set; }
-        public decimal? ValorAmparo { get; set; }
         public string Observaciones { get; set; }
         public bool? CumpleDatosAsegurado { get; set; }
         public bool? CumpleDatosBeneficiario { get; set; }

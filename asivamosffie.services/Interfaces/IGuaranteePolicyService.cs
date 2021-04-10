@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IGuaranteePolicyService
-    { 
+    {
+        Task<Contrato> GetContratoByContratoId(int pContratoId);
+
+
+        #region Old
         Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion, AppSettingsService appSettingsService);
 
         Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService);
@@ -45,5 +49,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
 
+
+        #endregion
     }
 }

@@ -1826,12 +1826,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
-                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(18, 2)");
-
-                entity.Property(e => e.Vigencia).HasColumnType("datetime");
-
-                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
-
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoPoliza)
                     .HasForeignKey(d => d.ContratoId)
@@ -4662,6 +4656,12 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(18, 0)");
+
+                entity.Property(e => e.Vigencia).HasColumnType("datetime");
+
+                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
+
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.PolizaGarantia)
                     .HasForeignKey(d => d.ContratoPolizaId)
@@ -4857,10 +4857,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionCotizacion>(entity =>
             {
-                entity.HasIndex(e => new { e.ProcesoSeleccionId, e.NombreOrganizacion, e.ValorCotizacion, e.UrlSoporte, e.Eliminado })
-                    .HasName("UK_ProcesoSeleccion")
-                    .IsUnique();
-
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");

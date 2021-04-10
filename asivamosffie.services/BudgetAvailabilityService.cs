@@ -28,22 +28,7 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         public readonly IConverter _converter;
-
-
-        #region Opt
-
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
-        { 
-            return await _context.Contrato
-                                    .Where(c => c.ContratoId == pContratoId)
-                                    .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                                    .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
-                                    .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion)
-                                    .FirstOrDefaultAsync(); 
-        }
-
-        #endregion
-
+         
 
         #region Old
         public BudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConverter converter)
