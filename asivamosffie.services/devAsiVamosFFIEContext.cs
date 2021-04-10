@@ -138,6 +138,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Plantilla> Plantilla { get; set; }
         public virtual DbSet<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual DbSet<PolizaGarantiaActualizacion> PolizaGarantiaActualizacion { get; set; }
+        public virtual DbSet<PolizaListaChequeo> PolizaListaChequeo { get; set; }
         public virtual DbSet<PolizaObservacion> PolizaObservacion { get; set; }
         public virtual DbSet<Predio> Predio { get; set; }
         public virtual DbSet<ProcesoSeleccion> ProcesoSeleccion { get; set; }
@@ -280,7 +281,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
+   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -4693,6 +4694,31 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK__PolizaGar__Contr__59662CFA");
             });
 
+            modelBuilder.Entity<PolizaListaChequeo>(entity =>
+            {
+                entity.Property(e => e.Eliminado)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ContratoPoliza)
+                    .WithMany(p => p.PolizaListaChequeo)
+                    .HasForeignKey(d => d.ContratoPolizaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContratoPolizaListaChequeo_ContratoPoliza");
+            });
+
             modelBuilder.Entity<PolizaObservacion>(entity =>
             {
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
@@ -4773,22 +4799,6 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.AlcanceParticular)
                     .HasMaxLength(5000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesAsignacionPuntaje)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesFinancierasHabilitantes)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesJuridicasHabilitantes)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesTecnicasHabilitantes)
-                    .HasMaxLength(4000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CriteriosSeleccion)

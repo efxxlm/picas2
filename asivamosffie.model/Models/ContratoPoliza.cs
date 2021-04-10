@@ -10,6 +10,7 @@ namespace asivamosffie.model.Models
             ContratoPolizaActualizacion = new HashSet<ContratoPolizaActualizacion>();
             PolizaGarantia = new HashSet<PolizaGarantia>();
             PolizaGarantiaActualizacion = new HashSet<PolizaGarantiaActualizacion>();
+            PolizaListaChequeo = new HashSet<PolizaListaChequeo>();
             PolizaObservacion = new HashSet<PolizaObservacion>();
         }
 
@@ -22,10 +23,6 @@ namespace asivamosffie.model.Models
         public string NumeroCertificado { get; set; }
         public DateTime? FechaExpedicion { get; set; }
         public string Observaciones { get; set; }
-        public bool? CumpleDatosAsegurado { get; set; }
-        public bool? CumpleDatosBeneficiario { get; set; }
-        public bool? CumpleDatosTomador { get; set; }
-        public bool? IncluyeReciboPago { get; set; }
         public bool? IncluyeCondicionesGenerales { get; set; }
         public string ObservacionesRevisionGeneral { get; set; }
         public DateTime? FechaAprobacion { get; set; }
@@ -44,6 +41,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoPolizaActualizacion> ContratoPolizaActualizacion { get; set; }
         public virtual ICollection<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual ICollection<PolizaGarantiaActualizacion> PolizaGarantiaActualizacion { get; set; }
+        public virtual ICollection<PolizaListaChequeo> PolizaListaChequeo { get; set; }
         public virtual ICollection<PolizaObservacion> PolizaObservacion { get; set; }
     }
 }
