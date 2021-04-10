@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 })
 export class PolizaGarantiaService {
 
-  private apiUrl = `${ environment.apiUrl }/guaranteePolicy`
+  private apiUrl = `${ environment.apiUrl }/guaranteePolicy`;
 
   loadDataItems= new Subject();
   loadTableObservaciones = new Subject();

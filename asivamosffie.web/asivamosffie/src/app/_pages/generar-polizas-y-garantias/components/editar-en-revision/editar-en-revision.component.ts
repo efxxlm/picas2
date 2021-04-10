@@ -34,28 +34,31 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         responsableAprob: [ null, Validators.required ],
         observacionesGenerales: [ null ]
     });
-    contrato: any;
-    estadosRevision = EstadosRevision;
-    listaUsuarios: any[] = [];
-    realizoPeticion: boolean = false;
-    estaEditando = false;
     listaPerfilCodigo = PerfilCodigo;
+    estadosRevision = EstadosRevision;
     polizasYSegurosArray: Dominio[] = [];
     listaTipoSolicitudContrato: Dominio[] = [];
     listaTipoDocumento: Dominio[] = [];
+    estadoArray: any[];
     estadosPoliza = EstadoPolizaCodigo;
-    estadoArray = [];
+    contrato: any;
+    contratoPolizaId = 0;
+    polizaListaChequeoId = 0;
+    polizaActualizacionRevisionAprobacionObservacion = 0;
+    realizoPeticion = false;
+    estaEditando = false;
+    listaUsuarios: any[] = [];
     minDate: Date;
     editorStyle = {
-      height: '100px'
+        height: '100px'
     };
     config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+        ]
     };
 
     get seguros() {
@@ -66,11 +69,10 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         private routes: Router,
         private polizaSvc: PolizaGarantiaService,
         private fb: FormBuilder,
-        private dialog: MatDialog,
+        public dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private commonSvc: CommonService )
     {
-        this.minDate = new Date();
         this.minDate = new Date();
         this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria )
             .subscribe( getUsuariosByPerfil => this.listaUsuarios = getUsuariosByPerfil );
@@ -95,9 +97,30 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.addressForm.dirty === true && this.realizoPeticion === false) {
-            this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+        if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
+            this.openDialogConfirmar( '', '<b>¿Desea guardar la información registrada?</b>' );
         }
+    };
+
+    openDialogConfirmar(modalTitle: string, modalText: string) {
+        const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+          width: '30em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        confirmarDialog.afterClosed()
+            .subscribe( response => {
+                if ( response === true ) {
+                    this.onSubmit();
+                }
+            } );
+    }
+
+    // evalua tecla a tecla
+    validateNumberKeypress(event: KeyboardEvent) {
+        const alphanumeric = /[0-9]/;
+        const inputChar = String.fromCharCode(event.charCode);
+        return alphanumeric.test(inputChar) ? true : false;
     }
 
     getTipoSolicitud( codigo: string ) {
@@ -126,18 +149,18 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         }
     }
 
-    openDialogConfirmar(modalTitle: string, modalText: string) {
-      const confirmarDialog = this.dialog.open(ModalDialogComponent, {
-        width: '30em',
-        data: { modalTitle, modalText, siNoBoton: true }
-      });
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
 
-      confirmarDialog.afterClosed()
-        .subscribe(response => {
-          if (response === true) {
-            this.onSubmit();
-          }
-        });
+    textoLimpio( evento: any, n: number ) {
+      if ( evento !== undefined ) {
+        return evento.getLength() > n ? n : evento.getLength();
+      } else {
+        return 0;
+      }
     }
 
     async getvalues( listCodigo: string[] ) {
@@ -203,14 +226,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             }
         }
 
-        if ( registroCompletoSeguros === false ) {
-            this.addressForm.get( 'cumpleAsegurado' ).setValue( null );
-            this.addressForm.get( 'cumpleBeneficiario' ).setValue( null );
-            this.addressForm.get( 'cumpleAfianzado' ).setValue( null );
-            this.addressForm.get( 'reciboDePago' ).setValue( null );
-            this.addressForm.get( 'condicionesGenerales' ).setValue( null );
-        }
-
         return registroCompletoSeguros;
     }
 
@@ -222,32 +237,11 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         }
     }
 
-    // evalua tecla a tecla
-    validateNumberKeypress(event: KeyboardEvent) {
-      const alphanumeric = /[0-9]/;
-      const inputChar = String.fromCharCode(event.charCode);
-      return alphanumeric.test(inputChar) ? true : false;
-    }
-
-    maxLength(e: any, n: number) {
-      if (e.editor.getLength() > n) {
-        e.editor.deleteText(n - 1, e.editor.getLength());
-      }
-    }
-
-    textoLimpio( evento: any, n: number ) {
-      if ( evento !== undefined ) {
-          return evento.getLength() > n ? n : evento.getLength();
-      } else {
-          return 0;
-      }
-    }
-
-    openDialog(modalTitle: string, modalText: string) {
-      this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle, modalText }
-      });
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open(ModalDialogComponent, {
+            width: '28em',
+            data: { modalTitle, modalText }
+        });
     }
 
     onSubmit() {
@@ -260,8 +254,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
                 this.seguros.controls.forEach( control => {
                     listSeguros.push(
                         {
-                            contratoPolizaId: control.get( 'contratoPolizaId' ).value,
                             polizaGarantiaId: control.get( 'polizaGarantiaId' ).value,
+                            contratoPolizaId: control.get( 'contratoPolizaId' ).value,
                             tipoGarantiaCodigo: control.get( 'tipoGarantiaCodigo' ).value,
                             esIncluidaPoliza: control.get( 'esIncluidaPoliza' ).value,
                             vigencia: control.get( 'vigencia' ).value,
@@ -274,182 +268,70 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
             return listSeguros.length > 0 ? listSeguros : null;
         }
+        const getPolizaListaChequeo = () => {
+            if (    this.addressForm.get( 'cumpleAsegurado' ).value === null
+                    && this.addressForm.get( 'cumpleBeneficiario' ).value === null
+                    && this.addressForm.get( 'cumpleAfianzado' ).value === null
+                    && this.addressForm.get( 'reciboDePago' ).value === null
+                    && this.addressForm.get( 'condicionesGenerales' ).value === null )
+            {
+                return null;
+            }
+            return [
+                {
+                    polizaListaChequeoId: this.polizaListaChequeoId,
+                    contratoPolizaId: this.contratoPolizaId,
+                    cumpleDatosAseguradoBeneficiario: this.addressForm.get( 'cumpleAsegurado' ).value,
+                    cumpleDatosBeneficiarioGarantiaBancaria: this.addressForm.get( 'cumpleBeneficiario' ).value,
+                    cumpleDatosTomadorAfianzado: this.addressForm.get( 'cumpleAfianzado' ).value,
+                    tieneReciboPagoDatosRequeridos: this.addressForm.get( 'reciboDePago' ).value,
+                    tieneCondicionesGeneralesPoliza: this.addressForm.get( 'condicionesGenerales' ).value
+                }
+            ];
+        }
         const getHistorialObservaciones = () => {
             return [
                 {
-                    polizaObservacionId: 0, 
-                    contratoPolizaId: 0,
-                    observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
+                    polizaActualizacionRevisionAprobacionObservacion: this.polizaActualizacionRevisionAprobacionObservacion,
+                    contratoPolizaId: this.contratoPolizaId,
                     fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
-                    estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision
+                    estadoRevision: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
+                    fechaAprobacion: this.addressForm.get( 'fechaAprob' ).value !== null ? new Date( this.addressForm.get( 'fechaAprob' ).value ).toISOString() : null,
+                    responsableAprobacionId: this.addressForm.get( 'responsableAprob' ).value,
+                    observacionGeneral: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : null
                 }
-            ]
+            ];
         }
 
         const pContrato = {
-            contratoId: Number( this.activatedRoute.snapshot.params.id ),
+            contratoId: this.contrato.contratoId,
             contratoPoliza: [
                 {
-                    contratoId: Number( this.activatedRoute.snapshot.params.id ),
-                    contratoPolizaId: 0,
+                    contratoId: this.contrato.contratoId,
+                    contratoPolizaId: this.contratoPolizaId,
                     nombreAseguradora: this.addressForm.get( 'nombre' ).value,
                     numeroPoliza: this.addressForm.get( 'numeroPoliza' ).value,
                     numeroCertificado: this.addressForm.get( 'numeroCertificado' ).value,
-                    observacionesRevisionGeneral: this.addressForm.get( 'observacionesGenerales' ).value,
-                    estadoPolizaCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? ( this.addressForm.get( 'estadoRevision' ).value === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision ) : this.estadosPoliza.enRevision,
                     fechaExpedicion: this.addressForm.get( 'fecha' ).value,
-                    cumpleDatosAsegurado: this.addressForm.get( 'cumpleAsegurado' ).value,
-                    cumpleDatosBeneficiario: this.addressForm.get( 'cumpleBeneficiario' ).value,
-                    cumpleDatosTomador: this.addressForm.get( 'cumpleAfianzado' ).value,
-                    incluyeReciboPago: this.addressForm.get( 'reciboDePago' ).value,
-                    incluyeCondicionesGenerales: this.addressForm.get( 'condicionesGenerales' ).value,
-                    fechaAprobacion: this.addressForm.get( 'fechaAprob' ).value,
+                    estadoPolizaCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? ( this.addressForm.get( 'estadoRevision' ).value === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision ) : this.estadosPoliza.enRevision,
                     polizaGarantia: getPolizaGarantia(),
-                    historialObservaciones: getHistorialObservaciones()
+                    polizaListaChequeo: getPolizaListaChequeo(),
+                    polizaActualizacionRevisionAprobacionObservacion: getHistorialObservaciones()
                 }
             ]
         }
-    
-        /*
-        if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
-          polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
-          for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
-            const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
-          }
-        }
-        let nombreAprobado;
-        if (this.addressForm.value.responsableAprob != undefined || this.addressForm.value.responsableAprob != null) {
-          if (!this.addressForm.value.responsableAprob.usuarioId) {
-            nombreAprobado = "pendiente";
-          }
-          else {
-            nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
-          }
-        }
-        var statePoliza = this.estadosPoliza.enRevision;
-        let revEstado;
-        if (this.addressForm.value.estadoRevision != undefined || this.addressForm.value.estadoRevision != null) {
-          revEstado = this.addressForm.value.estadoRevision.codigo;
-          if (revEstado == this.estadosPoliza.sinRadicacion ) {
-            statePoliza = this.estadosPoliza.polizaDevuelta;
-          }
-          else {
-            statePoliza = this.estadosPoliza.enRevision;
-          }
-        }
-        var completo: boolean;
-        if (this.addressForm.valid) {
-          completo = true;
-        }
-        else {
-          completo = false;
-        }
-    
-        const contratoArray = {
-          'contratoId': this.idContrato,
-          "contratoPolizaId": this.idPoliza,
-          'TipoSolicitudCodigo': "",
-          'TipoModificacionCodigo': "",
-          'DescripcionModificacion': "",
-          'NombreAseguradora': this.addressForm.value.nombre,
-          'NumeroPoliza': this.addressForm.value.numeroPoliza,
-          'NumeroCertificado': this.addressForm.value.numeroCertificado,
-          'Observaciones': "",
-          'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
-          'ResponsableAprobacion': nombreAprobado,
-          'EstadoPolizaCodigo': statePoliza,
-          //'UsuarioCreacion': "",
-          //'UsuarioModificacion': "",
-          'FechaExpedicion': this.addressForm.value.fecha,
-          'Vigencia': this.addressForm.value.vigenciaPoliza,
-          'VigenciaAmparo': this.addressForm.value.vigenciaAmparo,
-          'ValorAmparo': this.addressForm.value.valorAmparo,
-          'CumpleDatosAsegurado': this.addressForm.value.cumpleAsegurado,
-          'CumpleDatosBeneficiario': this.addressForm.value.cumpleBeneficiario,
-          'CumpleDatosTomador': this.addressForm.value.cumpleAfianzado,
-          'IncluyeReciboPago': this.addressForm.value.reciboDePago,
-          'IncluyeCondicionesGenerales': this.addressForm.value.condicionesGenerales,
-          'FechaAprobacion': this.addressForm.value.fechaAprob,
-          'Estado': false,
-          //'FechaCreacion': "",
-          'RegistroCompleto': completo,
-          //'FechaModificacion': "",
-          'Eliminado': false
-        };
-        const observacionArray = {
-          polizaObservacionId: 0,
-          contratoPolizaId: this.idPoliza,
-          observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
-          fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : null,
-          estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : null
-        }
-        let garantiaArray;
-        if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
-          for (let i = 0; i < polizasList.length; i++) {
-            switch (polizasList[i]) {
-              case '1':
-                garantiaArray = {
-                  'contratoPolizaId': this.idPoliza,
-                  'TipoGarantiaCodigo': '1',
-                  'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
-                };
-                this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
-                }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
-                break;
-              case '2':
-                garantiaArray = {
-                  'contratoPolizaId': this.idPoliza,
-                  'TipoGarantiaCodigo': '2',
-                  'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
-                };
-                this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
-                }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
-                break;
-              case '3':
-                garantiaArray = {
-                  'contratoPolizaId': this.idPoliza,
-                  'TipoGarantiaCodigo': '3',
-                  'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
-                };
-                this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
-                }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
-                break;
-              case '4':
-                garantiaArray = {
-                  'contratoPolizaId': this.idPoliza,
-                  'TipoGarantiaCodigo': '4',
-                  'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
-                };
-                this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
-                }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
-                break;
-            }
-          }
-        }
-        this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
-          if (data.isSuccessful == true) {
-            /*this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data0=>{
-    
-            });
-            this.polizaService.createEditPolizaObservacion( observacionArray )
-              .subscribe(
-                () => this.realizoPeticion = true,
-                err => this.openDialog('', `<b>${err.message}</b>`)
-              );
-            /*
-            this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
-    
-            });
 
-            this.realizoPeticion = true;
-            this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-            this.router.navigate(['/generarPolizasYGarantias']);
-          }
-          else {
-            this.openDialog('', `<b>${data.message}</b>`);
-          }
-        }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
-        */
+        this.polizaSvc.createEditContratoPoliza( pContrato )
+            .subscribe(
+                response => {
+                    this.realizoPeticion = true;
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then(
+                        () => this.routes.navigate( [ '/generarPolizasYGarantias' ] )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
