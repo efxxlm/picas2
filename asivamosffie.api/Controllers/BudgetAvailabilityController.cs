@@ -30,9 +30,7 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-
-
-        #region Old
+         
         [Route("GetDisponibilidadPresupuestalByID")]
         [HttpGet]
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int DisponibilidadPresupuestalId)
@@ -421,9 +419,7 @@ namespace asivamosffie.api.Controllers
             {
                 return BadRequest(ex.ToString());
             }
-        }
-
-        #endregion
+        } 
 
     }
 }

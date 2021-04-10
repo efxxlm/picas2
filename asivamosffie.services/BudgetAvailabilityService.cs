@@ -29,8 +29,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         public readonly IConverter _converter;
          
-
-        #region Old
+         
         public BudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConverter converter)
         {
             _context = context;
@@ -1746,7 +1745,6 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
             }
             return nombreTipoAportante;
         }
-
-        #endregion
+         
     }
 }
