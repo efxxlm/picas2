@@ -70,11 +70,15 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    let posicion = 0;    
+    if(cadena!="" && cadena !=undefined)
+    {
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias;
+        posicion += subcadena.length;
+      }
     }
+    
     return contadorConcurrencias;
   }
 
