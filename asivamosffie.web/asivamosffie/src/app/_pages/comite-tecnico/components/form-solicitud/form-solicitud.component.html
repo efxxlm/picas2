@@ -148,6 +148,7 @@
 
       <app-tabla-form-solicitud-multiple
         #solicitudMultiple
+        [estaEditando]="estaEditando"
         [sesionComiteSolicitud]="sesionComiteSolicitud"
         [style.display]="getMostrarProyectos()"
         [Estadosolicitud]="getObservableEstadoSolicitud()"

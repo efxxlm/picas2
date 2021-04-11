@@ -28,6 +28,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   @Input() Estadosolicitud: Observable<string>;
   @Input() EstadosolicitudActa: any;
   @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
+  @Input() estaEditando: boolean;
 
   cantidadProyecto: Number = 0;
   listaEstados: Dominio[] = [];
@@ -38,7 +39,6 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   proyectos: ContratacionProyecto[] = [];
   contratacion: Contratacion;
 
-  estaEditando = false;
 
   displayedColumns: string[] = [
     'idMen',

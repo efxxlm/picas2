@@ -466,7 +466,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.representanteLegal.markAllAsTouched();
     this.myControl.markAllAsTouched();
     if (this.personaNaturalForm.get('correoElectronico').invalid) {
-      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      this.openDialog('', `<b>Correo electrónico del proponente inválido</b>`);
       return
     } 
     this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -501,7 +501,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.myControl.markAllAsTouched();
 
     if (this.personaJuridicaIndividualForm.get('correoElectronico').invalid) {
-      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      this.openDialog('', `<b>Correo electrónico del proponente inválido</b>`);
       return
     } 
     console.log(this.personaJuridicaIndividualForm.get('representanteLegal').value);
@@ -558,7 +558,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.myControl.markAllAsTouched();
 
     if (this.unionTemporalForm.get('correoElectronico').invalid) {
-      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      this.openDialog('', `<b>Correo electrónico del proponente inválido</b>`);
       return
     } 
     let porcentaje: number = 0;

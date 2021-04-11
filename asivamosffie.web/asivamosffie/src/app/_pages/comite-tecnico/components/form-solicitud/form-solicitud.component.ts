@@ -378,6 +378,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         grupoCompromiso.get('sesionComiteSolicitudId').setValue(this.sesionComiteSolicitud.sesionComiteSolicitudId);
 
         this.compromisos.push(grupoCompromiso);
+        this.addressForm.markAllAsTouched();
       });
     });
 

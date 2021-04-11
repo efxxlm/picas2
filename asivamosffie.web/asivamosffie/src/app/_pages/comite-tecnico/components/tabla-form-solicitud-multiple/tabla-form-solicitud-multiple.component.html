@@ -79,10 +79,7 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-              *ngIf="
-                (!element.proyecto.estadoProyectoObraCodigo && estaEditando) ||
-                (element.proyecto.estadoProyectoInterventoriaCodigo && estaEditando)
-              "
+              *ngIf="!element.proyecto.estadoProyectoInterventoriaCodigo && estaEditando"
             />
           </span>
         </div>

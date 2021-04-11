@@ -145,6 +145,9 @@
         top: calc(50% + 0.5em);
       }
     }
+    &.sin-required::after {
+      content: none;
+    }
   }
 
   .ql-editor::before {
