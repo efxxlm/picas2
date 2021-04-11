@@ -783,7 +783,8 @@ namespace asivamosffie.services
                 return Array.Empty<byte>();
             }
             DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
-                .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
+                .Where(r => r.DisponibilidadPresupuestalId == id)
+                .Include(r => r.Contratacion).FirstOrDefaultAsync();
 
             if (disponibilidad == null)
             {
@@ -792,7 +793,7 @@ namespace asivamosffie.services
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString())
                 .Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad, false);
+            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false);
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
         }
@@ -840,7 +841,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        private string ReemplazarDatosDDP(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp)
+        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
             /*variables que pueden diferir de uno u otro tipo*/
@@ -1117,12 +1118,22 @@ namespace asivamosffie.services
                                        .NumeroALetras(totales).ToLower()));
                 }
             }
+            DateTime? fechaComitetecnico = DateTime.Now;
 
+            string numeroComiteTecnico = "";
             //contratos
             Contrato contrato = new Contrato();
             if (pDisponibilidad.ContratacionId > 0)
             {
                 contrato = _context.Contrato.Where(x => x.ContratacionId == pDisponibilidad.ContratacionId).FirstOrDefault();
+                //LCT - ajuste data plantilla DDP
+                var sesionComiteSolicitud = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pDisponibilidad.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
+                                                                          Include(x => x.ComiteTecnico).ToList();
+                if (sesionComiteSolicitud.Count() > 0)
+                {
+                    numeroComiteTecnico = sesionComiteSolicitud.FirstOrDefault().ComiteTecnico.NumeroComite;
+                    fechaComitetecnico = Convert.ToDateTime(sesionComiteSolicitud.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                }
             }
 
             //SI ES NOVEDAD
@@ -1130,6 +1141,12 @@ namespace asivamosffie.services
             var novedadtd = "";
             var objetotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_objeto).ToString()).FirstOrDefault().Contenido;
             objetotd = objetotd.Replace("[OBJETOINNER]", Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto));
+
+
+            //LCT
+            var tiporubro = pDisponibilidad.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(pDisponibilidad.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) : pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo : ConstanStringTipoSolicitudContratacion.contratacion;
+
+
             if (pDisponibilidad.EsNovedadContractual != null && Convert.ToBoolean(pDisponibilidad.EsNovedadContractual) && !drp)
             {
                 contratotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_contrato).ToString()).FirstOrDefault().Contenido;
@@ -1145,7 +1162,7 @@ namespace asivamosffie.services
                 {
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA:
                         pStrContenido = pStrContenido
-                            .Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyy"));
+                            .Replace(place.Nombre, fechaComitetecnico != null ? ((DateTime)fechaComitetecnico).ToString("dd/MM/yyyy") : "");
                         break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_SOLICITUD:
                         pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
@@ -1153,11 +1170,12 @@ namespace asivamosffie.services
                         pStrContenido =
                             pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDdp); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_RUBRO_POR_FINANCIAR:
-                        pStrContenido = pStrContenido.Replace(place.Nombre, _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
-                                && r.Codigo == pDisponibilidad.TipoSolicitudCodigo).FirstOrDefault().Descripcion); break;
+                        pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial ? tiporubro : _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
+                                         && r.Codigo == pDisponibilidad.TipoSolicitudCodigo).FirstOrDefault().Descripcion); break;
+                    
                     case ConstanCodigoVariablesPlaceHolders.DDP_TIPO_SOLICITUD:
                         pStrContenido =
-                            pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudEspecialCodigo != null ? _context.Dominio.Where(x => x.Codigo == pDisponibilidad.TipoSolicitudEspecialCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_DDP_Espacial).FirstOrDefault().Nombre :
+                            pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null ? _context.Dominio.Where(x => x.Codigo == pDisponibilidad.TipoSolicitudCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal).FirstOrDefault().Nombre :
                     //si no viene el campo puede ser contratación
                     pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
                     pDisponibilidad.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(pDisponibilidad.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual); break;
@@ -1168,8 +1186,8 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
                         pStrContenido =
                             pStrContenido.Replace(place.Nombre, limitacionEspecial); break;
 
-                    case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyyy")); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, fechaComitetecnico != null && !String.IsNullOrEmpty(numeroComiteTecnico) ? ((DateTime)fechaComitetecnico).ToString("dd/MM/yyyy") : ""); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, numeroComiteTecnico); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto)); break;
                     //case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.Objeto); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, tablaaportantes); break;
@@ -1684,7 +1702,7 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
                 return Array.Empty<byte>();
             }
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad, true);
+            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
