@@ -6,7 +6,8 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="proyecto.proyectoId"> Ver detalle / Editar </span>
+      <span *ngIf="proyecto.proyectoId && bitPuedoEditar"> Ver detalle / Editar </span>
+      <span *ngIf="proyecto.proyectoId  && !bitPuedoEditar"> Ver detalle </span>
       Infraestructura
     </h1>
   </div>
@@ -40,6 +41,7 @@
                   required
                   [max]="maxDate"
                   readonly
+                  [disabled]="!bitPuedoEditar"
                   (click)="picker.open()"
                 />
                 <mat-datepicker #picker></mat-datepicker>
@@ -85,6 +87,7 @@
                   min="1"
                   max="9999"
                   required
+                  [disabled]="!bitPuedoEditar"
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   type="number"
@@ -134,6 +137,7 @@
                   required
                   [(ngModel)]="proyecto.tipoIntervencionCodigo"
                   (selectionChange)="codigoDaneVacio()"
+                  [disabled]="!bitPuedoEditar"
                 >
                   <!-- ese campo tiene que ser de selección multiple -->
                   <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.codigo">
@@ -168,6 +172,7 @@
               <mat-form-field class="full-width" [class.mat-form-field-invalid]="!proyecto.llaveMen && estaEditando">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.llaveMen"
                   maxlength="8"
                   required
@@ -208,7 +213,8 @@
             </div>
             <div class="col capitalize">
               <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.regid && estaEditando">
-                <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid">
+                <mat-select required (selectionChange)="getDepartments($event)" [(ngModel)]="proyecto.regid"
+                [disabled]="!bitPuedoEditar">
                   <mat-option *ngFor="let listado of listadoregion" [value]="listado.localizacionId" class="capitalize">
                     {{ listado.descripcion }}
                   </mat-option>
@@ -239,7 +245,8 @@
             </div>
             <div class="col capitalize">
               <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.depid && estaEditando">
-                <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid">
+                <mat-select required (selectionChange)="getMunicipio($event)" [(ngModel)]="proyecto.depid"
+                [disabled]="!bitPuedoEditar">
                   <mat-option
                     *ngFor="let listado of listadoDepartamento"
                     [value]="listado.localizacionId"
@@ -282,6 +289,7 @@
               >
                 <mat-select
                   required
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.localizacionIdMunicipio"
                   (selectionChange)="getInstitucion()"
                 >
@@ -324,7 +332,8 @@
             class="select-width"
             [class.mat-form-field-invalid]="!proyecto.institucionEducativaId && estaEditando"
           >
-            <mat-select required [(ngModel)]="proyecto.institucionEducativaId" (selectionChange)="getSede()">
+            <mat-select required [(ngModel)]="proyecto.institucionEducativaId" (selectionChange)="getSede()"
+            [disabled]="!bitPuedoEditar">
               <mat-option *ngFor="let listado of listadoInstitucion" [value]="listado.institucionEducativaSedeId">
                 {{ listado.nombre }}
               </mat-option>
@@ -364,6 +373,7 @@
                   value="{{ CodigoDaneIE }}"
                   #codigoDane
                   readonly
+                  [disabled]="!bitPuedoEditar"
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -385,7 +395,8 @@
         </div>
         <div class="col">
           <mat-form-field class="select-width" [class.mat-form-field-invalid]="!proyecto.sedeId && estaEditando">
-            <mat-select required [(ngModel)]="proyecto.sedeId" (selectionChange)="getCodigoDane()">
+            <mat-select required [(ngModel)]="proyecto.sedeId" (selectionChange)="getCodigoDane()"
+            [disabled]="!bitPuedoEditar">
               <mat-option *ngFor="let listado of listadoSede" [value]="listado.institucionEducativaSedeId">
                 {{ listado.nombre }}
               </mat-option>
@@ -414,6 +425,7 @@
               <mat-form-field class="full-width">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   value="{{ codigoDaneSede }}"
                   maxlength="15"
                   required
@@ -447,7 +459,8 @@
             class="select-width"
             [class.mat-form-field-invalid]="!proyecto.coordinacionResponsableCodigo && estaEditando"
           >
-            <mat-select required [(ngModel)]="proyecto.coordinacionResponsableCodigo">
+            <mat-select required [(ngModel)]="proyecto.coordinacionResponsableCodigo"
+            [disabled]="!bitPuedoEditar">
               <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.codigo">
                 {{ listado.nombre }}
               </mat-option>
@@ -473,7 +486,7 @@
               <label class="label-left">¿Se encuentra dentro de una convocatoria?</label>
             </div>
             <div class="col">
-              <mat-radio-group
+              <mat-radio-group [disabled]="!bitPuedoEditar"
                 aria-labelledby="example-radio-group-label"
                 class="radioInput"
                 [(ngModel)]="proyecto.enConvocatoria"
@@ -519,7 +532,8 @@
               !proyecto.convocatoriaId && estaEditando && proyecto.enConvocatoria === true
             "
           >
-            <mat-select required [(ngModel)]="proyecto.convocatoriaId" [disabled]="proyecto.enConvocatoria === false">
+            <mat-select required [(ngModel)]="proyecto.convocatoriaId" [disabled]="proyecto.enConvocatoria === false || !bitPuedoEditar"
+            >
               <mat-option *ngFor="let listado of listadoConvocatoria" [value]="listado.dominioId">
                 {{ listado.nombre }}
               </mat-option>
@@ -557,6 +571,7 @@
               >
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.cantPrediosPostulados"
                   (keyup)="evaluopredios()"
                   maxlength="3"
@@ -608,7 +623,8 @@
                 class="select-width"
                 [class.mat-form-field-invalid]="!proyecto.tipoPredioCodigo && estaEditando"
               >
-                <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo">
+                <mat-select required [(ngModel)]="proyecto.tipoPredioCodigo"
+                [disabled]="!bitPuedoEditar">
                   <mat-option *ngFor="let listado of listadoPredios" [value]="listado.codigo">
                     {{ listado.nombre }}
                   </mat-option>
@@ -660,6 +676,7 @@
               >
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud"
                   maxlength="10"
                   min="1"
@@ -716,6 +733,7 @@
                   matInput
                   [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud"
                   maxlength="10"
+                  [disabled]="!bitPuedoEditar"
                   min="1"
                   max="99"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
@@ -768,7 +786,8 @@
             class="full-width"
             [class.mat-form-field-invalid]="!proyecto.predioPrincipal.direccion && estaEditando"
           >
-            <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text" />
+            <input matInput 
+            [disabled]="!bitPuedoEditar" [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text" />
           </mat-form-field>
           <span
             class="contador"
@@ -806,7 +825,8 @@
             class="select-width"
             [class.mat-form-field-invalid]="!proyecto.predioPrincipal.documentoAcreditacionCodigo && estaEditando"
           >
-            <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo">
+            <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo"
+            [disabled]="!bitPuedoEditar">
               <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                 {{ listado.nombre }}
               </mat-option>
@@ -842,6 +862,7 @@
               >
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.predioPrincipal.numeroDocumento"
                   maxlength="20"
                   required
@@ -901,7 +922,7 @@
                 <input
                   matInput
                   [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral"
-                  [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo != '1'"
+                  [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo != '1' || !bitPuedoEditar"
                   maxlength="20"
                   required
                   type="text"
@@ -960,7 +981,8 @@
                     class="select-width"
                     [class.mat-form-field-invalid]="!predios.predio.documentoAcreditacionCodigo && estaEditando"
                   >
-                    <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo">
+                    <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo"
+                    [disabled]="!bitPuedoEditar">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
@@ -997,7 +1019,8 @@
                     class="full-width"
                     [class.mat-form-field-invalid]="!predios.predio.numeroDocumento && estaEditando"
                   >
-                    <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text" />
+                    <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text" 
+                    [disabled]="!bitPuedoEditar"/>
                   </mat-form-field>
                   <span
                     class="contador"
@@ -1048,6 +1071,7 @@
                       [(ngModel)]="predios.predio.cedulaCatastral"
                       [disabled]="predios.predio.documentoAcreditacionCodigo != '1'"
                       maxlength="20"
+                      [disabled]="!bitPuedoEditar"
                       required
                       type="text"
                     />
@@ -1086,6 +1110,7 @@
                 type="button"
                 class="btn-eliminar"
                 (click)="deleteAportante(i)"
+                [disabled]="!bitPuedoEditar"
               >
                 <img src="assets/img/icon/menos.svg" alt="Eliminar aportante" />
                 Eliminar predio
@@ -1114,6 +1139,7 @@
               >
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.cantidadAportantes"
                   (keyup)="evaluoaportantes()"
                   maxlength="2"
@@ -1171,6 +1197,7 @@
                 >
                   <mat-select
                     required
+                    [disabled]="!bitPuedoEditar"
                     (selectionChange)="getAportante($event, ii)"
                     [(ngModel)]="aportantes.aportante.tipoAportanteId"
                   >
@@ -1218,6 +1245,7 @@
                 >
                   <mat-select
                     required
+                    [disabled]="!bitPuedoEditar"
                     [(ngModel)]="aportantes.nombreAportante"
                     (selectionChange)="getVigencia($event, ii)"
                   >
@@ -1260,7 +1288,8 @@
                   class="select-width"
                   [class.mat-form-field-invalid]="!aportantes.depto && estaEditando"
                 >
-                  <mat-select required [(ngModel)]="aportantes.depto" (selectionChange)="getMunAportante($event, ii)">
+                  <mat-select required 
+                  [disabled]="!bitPuedoEditar" [(ngModel)]="aportantes.depto" (selectionChange)="getMunAportante($event, ii)">
                     <mat-option
                       *ngFor="let listado of listadoDepto[ii]"
                       [value]="listado.localizacionId"
@@ -1299,7 +1328,8 @@
               </div>
               <div class="col capitalize">
                 <mat-form-field class="select-width">
-                  <mat-select [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event, ii)">
+                  <mat-select 
+                  [disabled]="!bitPuedoEditar" [(ngModel)]="aportantes.mun" (selectionChange)="getVigenciaByMun($event, ii)">
                     <mat-option
                       *ngFor="let listado of listadoMun[ii]"
                       [value]="listado.localizacionId"
@@ -1329,7 +1359,8 @@
                   class="select-width"
                   [class.mat-form-field-invalid]="!aportantes.aportanteId && estaEditando"
                 >
-                  <mat-select required [(ngModel)]="aportantes.aportanteId">
+                  <mat-select 
+                  [disabled]="!bitPuedoEditar" required [(ngModel)]="aportantes.aportanteId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
                       Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
                     </mat-option>
@@ -1365,6 +1396,7 @@
                 >
                   <input
                     matInput
+                    [disabled]="!bitPuedoEditar"
                     [(ngModel)]="aportantes.valorObra"
                     (keyup)="valorTotal(aportantes)"
                     maxlength="28"
@@ -1416,6 +1448,7 @@
                 >
                   <input
                     matInput
+                    [disabled]="!bitPuedoEditar"
                     [(ngModel)]="aportantes.valorInterventoria"
                     (keyup)="valorTotal(aportantes)"
                     maxlength="28"
@@ -1507,6 +1540,7 @@
             type="button"
             *ngIf="bitPuedoEditar"
             class="btn-eliminar"
+            [disabled]="!bitPuedoEditar"
             (click)="deleteAportanteAportante(ii)"
           >
             <img src="assets/img/icon/menos.svg" alt="Eliminar aportante" />
@@ -1533,6 +1567,7 @@
               <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesObra && estaEditando">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.plazoMesesObra"
                   maxlength="2"
                   min="1"
@@ -1567,6 +1602,7 @@
               <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasObra && estaEditando">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.plazoDiasObra"
                   type="number"
                   maxlength="2"
@@ -1613,6 +1649,7 @@
               <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesInterventoria && estaEditando">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.plazoMesesInterventoria"
                   maxlength="2"
                   min="1"
@@ -1647,6 +1684,7 @@
               <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasInterventoria && estaEditando">
                 <input
                   matInput
+                  [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.plazoDiasInterventoria"
                   type="number"
                   maxlength="2"
@@ -1696,7 +1734,8 @@
               [class.mat-form-field-invalid]="!infraestructura.infraestructuraCodigo && estaEditando"
             >
               <!-- {{infraestructura.infraestructuraCodigo}} -->
-              <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo">
+              <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo"
+              [disabled]="!bitPuedoEditar">
                 <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
                   {{ listado.nombre }} {{ listado.codigo }}
                 </mat-option>
@@ -1732,6 +1771,7 @@
                 >
                   <input
                     matInput
+                    [disabled]="!bitPuedoEditar"
                     [(ngModel)]="infraestructura.cantidad"
                     maxlength="4"
                     min="1"
@@ -1773,6 +1813,7 @@
             color="warn"
             type="button"
             *ngIf="bitPuedoEditar"
+            [disabled]="!bitPuedoEditar"
             class="btn-eliminar"
             (click)="deleteInfraestructura(i)"
           >
@@ -1789,6 +1830,7 @@
           type="button"
           class="btn-eliminar"
           *ngIf="bitPuedoEditar"
+          [disabled]="!bitPuedoEditar"
           (click)="addInfraestructura()"
         >
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura" />
