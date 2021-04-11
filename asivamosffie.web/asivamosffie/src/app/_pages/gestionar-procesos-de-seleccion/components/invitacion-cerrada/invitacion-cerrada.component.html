@@ -83,7 +83,9 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':proponentes_class===0,'en-proceso':proponentes_class===1,'completo':proponentes_class===2, 'en-alerta':proponentes_class===3}">
+                <mat-panel-title 
+                class="expansion-style--title" 
+                [ngClass]="{'sin-diligenciar':proponentes_class===0,'en-proceso':proponentes_class===1,'completo':proponentes_class===2, 'en-alerta':proponentes_class===3}">
                     Datos de proponentes seleccionados
                 </mat-panel-title>
             </mat-expansion-panel-header>

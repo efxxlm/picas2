@@ -24,11 +24,14 @@ import { ObservacionComponent } from '../observacion/observacion.component';
   styleUrls: ['./tabla-form-solicitud-multiple.component.scss']
 })
 export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
+
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() Estadosolicitud: Observable<string>;
   @Input() EstadosolicitudActa: any;
-  @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
   @Input() estaEditando: boolean;
+  @Input() listaEstadosSolicitud: Dominio[];
+
+  @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
 
   cantidadProyecto: Number = 0;
   listaEstados: Dominio[] = [];
@@ -65,17 +68,24 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     private router: Router,
     private projectContractingService: ProjectContractingService,
     public dialog: MatDialog
-  ) {}
+  ) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sesionComiteSolicitud) {
       this.cargarRegistro();
+
     }
+  }
+
+  cargarRegistrosInicial() {
+
   }
 
   cambiarEstados(estado: string) {
     this.onChangeEstado();
+
     if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === '1') {
-      if (estado) {
+      if (estado !== undefined) {
+        console.log('perdio')
         if (this.cantidadProyecto == 1) {
           switch (estado) {
             case EstadosSolicitud.AprobadaPorComiteTecnico:
@@ -135,28 +145,34 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
           p.proyecto.estadoProyectoInterventoriaCodigo = estadoInterventoria ? estadoInterventoria.codigo : null;
         });
       }
+      else {
+        /// esta seccion es cuando no se ha seleccionado el estado de la solictud
+        this.listaEstados = [];
+        console.log(this.listaEstadosSolicitud, EstadosSolicitud.AprobadaPorComiteTecnico, this.listaEstadosCompleta)
+        this.listaEstadosSolicitud.forEach(estadoSolicitud => {
+          switch  (estadoSolicitud.codigo){
+            case EstadosSolicitud.AprobadaPorComiteTecnico:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico));
+              break;  
+            }
+            case EstadosSolicitud.RechazadaPorComiteTecnico:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico));
+              break;  
+            }
+            case EstadosSolicitud.DevueltaPorComiteTecnico:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico));
+              break;  
+            }
+          }
+          
+        });
+      }
     } else {
       this.listaEstados = this.listaEstadosCompleta;
     }
   }
 
   ngOnInit(): void {
-
-    // this.commonService.listaEstadoProyecto()
-    //   .subscribe(estados => {
-    //     this.listaEstadosCompleta = estados;
-    //     this.listaEstados = this.listaEstadosCompleta.filter(e => this.estadosValidos.includes(e.codigo));
-
-    //     this.Estadosolicitud.subscribe(estado => {
-    //       console.log('estado', estado)
-    //       this.cambiarEstados(estado);
-
-    //     })
-
-    //   })
-
-
-
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -173,6 +189,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     };
     //this.cargarRegistro();
   }
+
   Observaciones(
     contratacionProyectoid: number,
     contratacionid: number,
