@@ -85,6 +85,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   createAportante() {
     return this.fb.group({
       nombreAportante: [],
+      fasesSelect: [ null ],
       estadoSemaforo: [null],
       saldoDisponible: [null],
       contratacionProyectoAportanteId: [],
@@ -140,6 +141,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               });
 
             this.contratacionProyecto.contratacionProyectoAportante.forEach( async apo => {
+              const listaFase = [ ...this.fasesSelect ];
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
 
@@ -178,6 +180,14 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   const listaUsos = grupoComponente.get('usos') as FormArray;
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
+                  
+                  if ( faseSeleccionada !== undefined ) {
+                    const indexFase = listaFase.findIndex( fase => fase === faseSeleccionada );
+                    
+                    if ( indexFase !== -1 ) {
+                      listaFase.splice( indexFase, 1 );
+                    }
+                  }
 
                   if (compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true) {
                     grupoAportante.get('estadoSemaforo').setValue('completo')
@@ -231,7 +241,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
                 listaComponentes.push(grupoComponente);
               }
-
+              grupoAportante.get( 'fasesSelect' ).setValue( listaFase );
               this.aportantes.push(grupoAportante);
             });
 
@@ -244,6 +254,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   changeFase(posicionAportante, posicionComponente) {
+
+    const listFase: Dominio[] = this.aportantes.controls[ posicionAportante ].get( 'fasesSelect' ).value;
+    const faseSeleccionada = this.componentes( posicionAportante ).controls[ posicionComponente ].get( 'fase' ).value;
+    const faseIndex = listFase.findIndex( fase => fase === faseSeleccionada );
+
+    if ( faseIndex !== -1 ) {
+      listFase.splice( faseIndex, 1 );
+      this.aportantes.controls[ posicionAportante ].get( 'fasesSelect' ).setValue( listFase );
+    }
 
     this.componentes(posicionAportante).controls[posicionComponente].get('componente').setValue(null);
     this.usos(posicionAportante, posicionComponente).controls.forEach(control => {
@@ -345,11 +364,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     });
   }
 
-  addComponent(i: number) {
-    let grupoComponente = this.createComponente();
-    let listaUsos = grupoComponente.get('usos') as FormArray;
-    listaUsos.push(this.createUso());
-    this.componentes(i).push(grupoComponente);
+  addComponent(i: number, j: number) {
+    if ( this.aportantes.controls[ i ].get( 'fasesSelect' ).value.length > 0 ) {
+      let grupoComponente = this.createComponente();
+      let listaUsos = grupoComponente.get('usos') as FormArray;
+      listaUsos.push(this.createUso());
+      this.componentes(i).push(grupoComponente);
+    } else {
+      this.openDialog( '', '<b>Ha seleccionado todas las fases disponibles para el aportante.</b>' );
+    }
   }
 
   createComponente(): FormGroup {
@@ -368,6 +391,14 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       .subscribe(
         value => {
           if (value === true) {
+            const listFase: Dominio[] = this.aportantes.controls[ j ].get( 'fasesSelect' ).value;
+            const faseSeleccionada = this.componentes( j ).controls[ i ].get( 'fase' ).value;
+            
+            if ( faseSeleccionada !== null ) {
+              listFase.push( faseSeleccionada );
+            }
+            this.aportantes.controls[ j ].get( 'fasesSelect' ).setValue( listFase );
+
             if (this.componentes(j).at(i).get('componenteAportanteId').value !== null) {
               this.projectContractingService.deleteComponenteAportante(this.componentes(j).at(i).get('componenteAportanteId').value)
                 .subscribe(

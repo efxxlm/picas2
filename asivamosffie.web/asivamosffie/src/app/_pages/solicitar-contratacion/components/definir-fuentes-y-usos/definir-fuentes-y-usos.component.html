@@ -181,16 +181,20 @@
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
-                              <mat-select
-                                required
-                                formControlName="fase"
-                                #faseSeleccionada
-                                (selectionChange)="changeFase(j, i)"
-                              >
-                                <mat-option *ngFor="let fase of fasesSelect" [value]="fase">
-                                  {{ fase.nombre }}
-                                </mat-option>
-                              </mat-select>
+                              <ng-container *ngIf="conponente.get('fase').value === null; else elseTemplate">
+                                <mat-select required formControlName="fase" #faseSeleccionada (selectionChange)="changeFase(j, i)">
+                                  <mat-option *ngFor="let fase of aportante.get( 'fasesSelect' ).value" [value]="fase">
+                                    {{ fase.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                              </ng-container>
+                              <ng-template #elseTemplate>
+                                <mat-select required formControlName="fase" #faseSeleccionada (selectionChange)="changeFase(j, i)">
+                                  <mat-option [value]="conponente.get('fase').value">
+                                    {{ conponente.get('fase').value.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                              </ng-template>
                             </mat-form-field>
                           </div>
                           <span class="icon-incompleto">
@@ -446,7 +450,7 @@
                         type="button"
                         class="btn-eliminar animatedOpacity"
                         *ngIf="componentes(j).controls.length === i + 1"
-                        (click)="addComponent(j)"
+                        (click)="addComponent(j, i)"
                       >
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente" />
                         Agregar otro componente
