@@ -384,6 +384,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     if(this.personaJuridicaIndividualForm.invalid)
     {
+      this.estaEditando = true;
+      this.personaJuridicaIndividualForm.markAllAsTouched();
      this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
@@ -449,6 +451,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     )
     {
+     this.estaEditando = true;
+     this.unionTemporalForm.markAllAsTouched();
      this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
