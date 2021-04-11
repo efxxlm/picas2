@@ -48,7 +48,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.comite) {
       const observacion = await this.compromisoSvc.cargarObservacionGestion(this.comite.compromisoId);
-      console.log( observacion )
+
       if (this.comite.estadoCodigo === '2' || this.comite.estadoCodigo === '3') {
         this.estaEditando = true;
         this.reporte.get( 'estadoCodigo' ).setValue( this.comite.estadoCodigo );
@@ -136,10 +136,21 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.estaEditando = true;
     this.reporte.markAllAsTouched();
-    if ( this.reporte.get( 'estadoCodigo' ).value === null || this.reporte.get( 'reporteEstado' ).value === null ) {
+    if ( this.reporte.get( 'estadoCodigo' ).value === null ) {
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
+    if ( this.reporte.get( 'reporteEstado' ).value === null ) {
+      this.openDialog('', '<b>Falta registrar información.</b>');
+      return;
+    }
+
+    if ( this.reporte.get( 'reporteEstado' ).value !== null ) {
+      if ( this.textoLimpioMessage( this.reporte.get( 'reporteEstado' ).value ).length === 0 ) {
+        this.openDialog('', '<b>Falta registrar información.</b>');
+        return;
+      }
+    }
 
     this.comite.tarea = this.reporte.get( 'reporteEstado' ).value;
     this.compromisoSvc.postCompromisos( this.comite, this.reporte.get( 'estadoCodigo' ).value )
