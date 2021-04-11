@@ -277,7 +277,7 @@ namespace asivamosffie.services
                 esCompleto = false;
             }
 
-            sesionComiteTemaOld.TemaCompromiso.ToList().ForEach(compromiso =>
+            sesionComiteTemaOld.TemaCompromiso.Where( x => x.Eliminado != true).ToList().ForEach(compromiso =>
            {
                if (
                      string.IsNullOrEmpty( compromiso.Tarea ) ||
@@ -289,7 +289,7 @@ namespace asivamosffie.services
                }
            });
 
-            listaCompromisos?.ForEach(compromiso =>
+            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
             {
                 if (
                       string.IsNullOrEmpty(compromiso.Tarea) ||
@@ -1502,7 +1502,7 @@ namespace asivamosffie.services
             }
 
             // vienen con el registro
-            sesionComiteSolicitud.SesionSolicitudCompromiso.ToList().ForEach(c =>
+            sesionComiteSolicitud.SesionSolicitudCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(c =>
            {
                if (
                      string.IsNullOrEmpty(c.Tarea) ||
@@ -1516,7 +1516,7 @@ namespace asivamosffie.services
            });
 
             // lista aparte
-            listaCompromisos?.ToList().ForEach(c =>
+            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(c =>
             {
                 if (
                       string.IsNullOrEmpty(c.Tarea) ||

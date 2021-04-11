@@ -864,6 +864,8 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.SesionSolicitudVoto)
                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .ThenInclude(r => r.ComiteTecnico)
+                   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
                    .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
@@ -3059,7 +3061,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.CantCompromisosFiduciario = pSesionComiteSolicitud.CantCompromisosFiduciario;
                 sesionComiteSolicitudOld.ObservacionesFiduciario = pSesionComiteSolicitud.ObservacionesFiduciario;
                 sesionComiteSolicitudOld.RutaSoporteVotacionFiduciario = pSesionComiteSolicitud.RutaSoporteVotacionFiduciario;
-                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
+                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld, pSesionComiteSolicitud.SesionSolicitudCompromiso.ToList());
 
                 #region Contratacion
 
@@ -3120,13 +3122,13 @@ namespace asivamosffie.services
                         CreateEdit = "EDITAR SOLICITUD COMPROMISO";
                         SesionSolicitudCompromiso sesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(SesionSolicitudCompromiso.SesionSolicitudCompromisoId);
 
-                        SesionSolicitudCompromiso.FechaModificacion = SesionSolicitudCompromiso.FechaModificacion;
-                        SesionSolicitudCompromiso.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
+                        sesionSolicitudCompromisoOld.FechaModificacion = SesionSolicitudCompromiso.FechaModificacion;
+                        sesionSolicitudCompromisoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
 
-                        SesionSolicitudCompromiso.Tarea = SesionSolicitudCompromiso.Tarea;
-                        SesionSolicitudCompromiso.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
+                        sesionSolicitudCompromisoOld.Tarea = SesionSolicitudCompromiso.Tarea;
+                        sesionSolicitudCompromisoOld.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
 
-                        SesionSolicitudCompromiso.ResponsableSesionParticipanteId = SesionSolicitudCompromiso.ResponsableSesionParticipanteId;
+                        sesionSolicitudCompromisoOld.ResponsableSesionParticipanteId = SesionSolicitudCompromiso.ResponsableSesionParticipanteId;
 
                     }
                 }
@@ -3404,8 +3406,10 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
+        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud, List<SesionSolicitudCompromiso> listaCompromisos = null)
         {
+            bool esCompleto = true;
+
             if (
                 (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)) ||
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null ||
@@ -3415,9 +3419,38 @@ namespace asivamosffie.services
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
                 )
             {
-                return false;
+                esCompleto = false;
             }
-            return true;
+
+            // vienen con el registro
+            sesionComiteSolicitud.SesionSolicitudCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(c =>
+            {
+                if (
+                      string.IsNullOrEmpty(c.Tarea) ||
+                      c.ResponsableSesionParticipanteId == null ||
+                      c.FechaCumplimiento == null
+                )
+                {
+                    esCompleto = false;
+                }
+
+            });
+
+            // lista aparte
+            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(c =>
+            {
+                if (
+                      string.IsNullOrEmpty(c.Tarea) ||
+                      c.ResponsableSesionParticipanteId == null ||
+                      c.FechaCumplimiento == null
+                )
+                {
+                    esCompleto = false;
+                }
+
+            });
+
+            return esCompleto;
         }
 
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
@@ -3454,8 +3487,10 @@ namespace asivamosffie.services
                 return ValidarRegistroCompletoSesionComiteTema(pSesionComiteTema);
             }
         }
-        private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)
+        private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld, List<TemaCompromiso> listaCompromisos = null)
         {
+            bool esCompleto = true;
+
             if (string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
@@ -3471,10 +3506,34 @@ namespace asivamosffie.services
                 )
             {
 
-                return false;
+                esCompleto = false;
             }
 
-            return true;
+            sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
+            {
+                if (
+                      string.IsNullOrEmpty(compromiso.Tarea) ||
+                      compromiso.Responsable == null ||
+                      compromiso.FechaCumplimiento == null
+                )
+                {
+                    esCompleto = false;
+                }
+            });
+
+            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
+            {
+                if (
+                      string.IsNullOrEmpty(compromiso.Tarea) ||
+                      compromiso.Responsable == null ||
+                      compromiso.FechaCumplimiento == null
+                )
+                {
+                    esCompleto = false;
+                }
+            });
+
+            return esCompleto;
 
         }
 

@@ -253,10 +253,11 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
 
               this.cambiarEstados(this.sesionComiteSolicitud.estadoCodigo);
+              console.log(this.sesionComiteSolicitud.estadoCodigo)
               //            resolve();
               //          })
 
-            })
+            }) 
 
         })
 

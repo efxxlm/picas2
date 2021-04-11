@@ -78,6 +78,7 @@ export class FormProposicionesVariosComponent {
   }
 
   crearTema() {
+    this.semaforo.emit('sin-diligenciar');
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
@@ -191,6 +192,10 @@ export class FormProposicionesVariosComponent {
     this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
+
+        if ( grupo.length === 0 )
+          this.semaforo.emit('completo');
+          
         this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
@@ -199,7 +204,7 @@ export class FormProposicionesVariosComponent {
 
   cargarRegistros(){
 
-    this.validarCompletos(this.objetoComiteTecnico);
+    
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios )
 
     lista.forEach( te => {
@@ -215,6 +220,8 @@ export class FormProposicionesVariosComponent {
 
       this.tema.push( grupoTema )
     })
+
+    this.validarCompletos(this.objetoComiteTecnico);
 
   }
 }

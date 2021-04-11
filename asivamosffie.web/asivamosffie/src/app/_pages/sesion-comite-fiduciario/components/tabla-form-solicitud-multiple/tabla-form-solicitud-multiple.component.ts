@@ -77,7 +77,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   cambiarEstados(estado: string) {
 
     this.onChangeEstado();
-    if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === "1") {
+    
+    if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === "1" || this.EstadosolicitudActa === "0")  {
       if (estado) {
         if (this.cantidadProyecto == 1) {
           switch (estado) {
@@ -116,6 +117,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               break;
             default:
               this.listaEstados = this.listaEstadosCompleta.filter(e => ["4", "6", "8"].includes(e.codigo));
+              
           }
 
         }
@@ -128,6 +130,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
       }
     } else {
       this.listaEstados = this.listaEstadosCompleta;
+      console.log('entro', this.EstadosolicitudActa)
     }
   }
 
@@ -213,26 +216,41 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   cargarRegistro() {
 
     if (this.sesionComiteSolicitud.contratacion) {
-      let promesa = new Promise<void>(resolve => {
-        this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
-          .subscribe(contra => {
-            this.contratacion = contra;
-            this.cantidadProyecto = contra.contratacionProyecto.length;
+      //let promesa = new Promise(resolve => {
+      this.commonService.listaEstadoProyecto()
+        .subscribe(estados => {
+          this.listaEstadosCompleta = estados;
+          this.listaEstados = this.listaEstadosCompleta.filter(e => this.estadosValidos.includes(e.codigo));
 
-            contra.contratacionProyecto.forEach(cp => {
-
-              cp.contratacion = JSON.parse(JSON.stringify(contra));
-              cp.contratacion.contratacionProyecto = null;
-            })
-
-            this.proyectos = contra.contratacionProyecto;
-            this.ActualizarProyectos.emit(this.proyectos);
-            this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
-            this.cambiarEstados(this.sesionComiteSolicitud.estadoCodigo);
-            resolve();
+          this.Estadosolicitud.subscribe(estado => {
+            console.log('estado', estado)
+            this.cambiarEstados(estado);
           })
 
-      })
+          this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
+            .subscribe(contra => {
+              this.contratacion = contra;
+              this.cantidadProyecto = contra.contratacionProyecto.length;
+
+              contra.contratacionProyecto.forEach(cp => {
+
+                cp.contratacion = JSON.parse(JSON.stringify(contra));
+                cp.contratacion.contratacionProyecto = null;
+              })
+
+              this.proyectos = contra.contratacionProyecto;
+              this.ActualizarProyectos.emit(this.proyectos);
+              this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
+
+              this.cambiarEstados(this.sesionComiteSolicitud.estadoCodigo);
+              //            resolve();
+              //          })
+
+            }) 
+
+        })
+
+
     }
   }
 
