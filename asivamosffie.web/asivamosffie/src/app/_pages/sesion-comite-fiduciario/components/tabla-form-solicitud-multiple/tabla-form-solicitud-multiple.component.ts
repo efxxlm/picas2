@@ -24,6 +24,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   @Input() Estadosolicitud: Observable<string>;
   @Input() EstadosolicitudActa: any;
   @Output() ActualizarProyectos: EventEmitter<ContratacionProyecto[]> = new EventEmitter();
+  @Input() listaEstadosSolicitud: Dominio[];
 
   cantidadProyecto: Number = 0;
   listaEstados: Dominio[] = [];
@@ -77,9 +78,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   cambiarEstados(estado: string) {
 
     this.onChangeEstado();
-    
+    console.log( this.EstadosolicitudActa, estado )
     if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === "1" || this.EstadosolicitudActa === "0")  {
-      if (estado) {
+      if (estado && estado !== '1') {
         if (this.cantidadProyecto == 1) {
           switch (estado) {
             case EstadosSolicitud.AprobadaPorComiteFiduciario:
@@ -126,6 +127,27 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
           let estadoInterventoria = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoInterventoriaCodigo);
           p.proyecto.estadoProyectoObraCodigo = estadoObra ? estadoObra.codigo : null;
           p.proyecto.estadoProyectoInterventoriaCodigo = estadoInterventoria ? estadoInterventoria.codigo : null;
+        });
+      }else{
+        /// esta seccion es cuando no se ha seleccionado el estado de la solictud
+        this.listaEstados = [];
+        console.log(this.listaEstadosSolicitud, EstadosSolicitud.AprobadaPorComiteTecnico, this.listaEstadosCompleta)
+        this.listaEstadosSolicitud.forEach(estadoSolicitud => {
+          switch  (estadoSolicitud.codigo){
+            case EstadosSolicitud.AprobadaPorComiteFiduciario:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteFiduciario));
+              break;  
+            }
+            case EstadosSolicitud.RechazadaPorComiteFiduciario:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteFiduciario));
+              break;  
+            }
+            case EstadosSolicitud.DevueltaPorComiteFiduciario:{
+              Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteFiduciario));
+              break;  
+            }
+          }
+          
         });
       }
     } else {
@@ -176,7 +198,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     estadoProyectoInterventoriaCodigo: number,) {
 
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
-    let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
+    let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoFiduciarioId;
 
     const dialogRef = this.dialog.open(ObservacionComponent, {
       width: '60em',

@@ -61,7 +61,9 @@ export class ObservacionComponent implements OnInit {
       this.technicalCommitteSessionService
         .getSesionSolicitudObservacionProyecto(this.data.idsesionComiteSolicitud, this.data.contratacionProyectoid)
         .subscribe(observaciones => {
+          
           this.listaObservaciones = observaciones.filter( o => o.sesionParticipante.comiteTecnicoId == this.comiteTecnicoId );
+          console.log( this.listaObservaciones )
           
           this.contratacionObservacion = this.contratacionObservacion.filter( o => o.comiteTecnicoId == this.comiteTecnicoId );
 
