@@ -11,6 +11,7 @@ import { CompromisosActasComiteService } from '../../../../core/_services/compro
   styleUrls: ['./reporte-avance-compromiso.component.scss']
 })
 export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
+
   estaEditando = false;
   reporte: FormGroup;
   estadoBoolean = false;
@@ -49,6 +50,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
       const observacion = await this.compromisoSvc.cargarObservacionGestion(this.comite.compromisoId);
       console.log( observacion )
       if (this.comite.estadoCodigo === '2' || this.comite.estadoCodigo === '3') {
+        this.estaEditando = true;
         this.reporte.get( 'estadoCodigo' ).setValue( this.comite.estadoCodigo );
       }
       if (observacion !== null) {
@@ -120,7 +122,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   crearFormulario() {
     this.reporte = this.fb.group({
       estadoCodigo: [ null, Validators.required ],
-      reporteEstado: [null, Validators.required]
+      reporteEstado: [ null, Validators.required ]
     });
   }
 
@@ -134,12 +136,12 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.estaEditando = true;
     this.reporte.markAllAsTouched();
-    if ( this.reporte.get( 'estadoCodigo' ).dirty === false ) {
+    if ( this.reporte.get( 'estadoCodigo' ).value === null || this.reporte.get( 'reporteEstado' ).value === null ) {
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
 
-    this.comite.tarea = this.reporte.get('reporteEstado').value;
+    this.comite.tarea = this.reporte.get( 'reporteEstado' ).value;
     this.compromisoSvc.postCompromisos( this.comite, this.reporte.get( 'estadoCodigo' ).value )
       .subscribe(
         resp => {

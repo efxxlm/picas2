@@ -14,7 +14,7 @@
       <h3 style="color: #174193; font-size: 1.5em">
         <b>{{ comite.compromiso }}</b>
       </h3>
-      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento }} </span>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
       <h3 style="color: #174193; font-size: 1.5em">
         <b>{{ comite.compromiso }}</b>
       </h3>
-      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento }} </span>
     </div>
   </div>
 
@@ -40,7 +40,7 @@
       <h3 style="color: #174193; font-size: 1.5em">
         <b>{{ comite.compromiso }}</b>
       </h3>
-      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <span style="font-size: 1.2em"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento }} </span>
     </div>
   </div>
 
@@ -54,7 +54,7 @@
       <div  class="text-center flex mb-2em"
             *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
         <div class="mr-right-1">
-          <label [class.color-secondaryColor]="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid)">
+          <label [class.color-secondaryColor]="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid && estaEditando === true )">
             Estado del compromiso
           </label>
         </div>
@@ -76,15 +76,15 @@
                 [matTooltipPosition]="'above'"
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
-                *ngIf="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid)">
+                *ngIf="(reporte.get('estadoCodigo').invalid && reporte.get('estadoCodigo').touched) || (reporte.get('estadoCodigo').invalid && estaEditando === true )">
         </span>
       </div>
 
       <div class="d-flex mt-2em align-items-center animatedDown">
         <div  class="text-area-quill"
-              [class.color-secondaryColor]="reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid">
+              [class.color-secondaryColor]="reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid  && estaEditando === true">
             <label  class="text-area-quill--label align-left-label header-label"
-                    [class.colorMainColor]="!(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid)">
+                    [class.colorMainColor]="!(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched || reporte.get('reporteEstado').invalid  && estaEditando === true)">
                     Gestión realizada
             </label>
             <quill-editor   class="quill-editor-style ml-1em"
@@ -109,7 +109,7 @@
                 [matTooltipPosition]="'above'"
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
-                *ngIf="(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched) || reporte.get('reporteEstado').invalid">
+                *ngIf="(reporte.get('reporteEstado').invalid && reporte.get('reporteEstado').touched) || reporte.get('reporteEstado').invalid && estaEditando === true">
         </span>
       </div>
 

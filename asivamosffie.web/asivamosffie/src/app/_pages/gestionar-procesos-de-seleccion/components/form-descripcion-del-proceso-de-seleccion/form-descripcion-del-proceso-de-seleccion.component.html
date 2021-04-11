@@ -769,6 +769,20 @@
                         500
                       </span>
                       <span class="required-quill">*</span>
+                      <span class="icon-incompleto mt-1em ml-08em">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                          *ngIf="
+                            (cronograma.get('descripcion').invalid && cronograma.get('descripcion').touched) ||
+                            (cronograma.get('descripcion').invalid && estaEditando)
+                          "
+                        />
+                      </span>
                     </div>
                     <input type="hidden" formControlName="procesoSeleccionCronogramaId" />
                     <div class="quill-ancho">
@@ -798,6 +812,22 @@
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                       </button>
                       <span class="required-form-group required-calendar">*</span>
+                      <span
+                        class="icon-incompleto transform-incompleto-fecha-maxima"
+                        *ngIf="
+                          (cronograma.get('fechaMaxima').invalid && cronograma.get('fechaMaxima').touched) ||
+                          (cronograma.get('fechaMaxima').invalid && estaEditando)
+                        "
+                      >
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                        />
+                      </span>
                     </div>
                     <mat-form-field class="example-full-width">
                       <input
@@ -813,6 +843,23 @@
                     </mat-form-field>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
+                    <div class="text-center">
+                      <span class="icon-incompleto m-0">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                          *ngIf="
+                            (cronograma.get('etapaActualProceso').invalid &&
+                              cronograma.get('etapaActualProceso').touched) ||
+                            (cronograma.get('etapaActualProceso').invalid && estaEditando)
+                          "
+                        />
+                      </span>
+                    </div>
                     <mat-form-field class="select-width">
                       <mat-select formControlName="etapaActualProceso" required>
                         <mat-option *ngFor="let tipoPresupuesto of listaetapaActualProceso" [value]="tipoPresupuesto">

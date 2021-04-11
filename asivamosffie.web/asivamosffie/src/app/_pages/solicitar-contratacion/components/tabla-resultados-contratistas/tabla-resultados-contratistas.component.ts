@@ -122,8 +122,6 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           return;
         }
 
-
-
         this.dataSource = new MatTableDataSource(response);
         setTimeout(() => {
           this.dataSource.sort = this.sort;
