@@ -1460,7 +1460,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
+        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud, List<SesionSolicitudCompromiso> listaCompromisos = null)
         {
             bool completo = true;
             if (
@@ -1474,6 +1474,34 @@ namespace asivamosffie.services
             {
                 completo = false;
             }
+
+            // vienen con el registro
+            sesionComiteSolicitud.SesionSolicitudCompromiso.ToList().ForEach(c =>
+           {
+               if (
+                     string.IsNullOrEmpty(c.Tarea) ||
+                     c.ResponsableSesionParticipanteId == null ||
+                     c.FechaCumplimiento == null
+               )
+               {
+                   completo = false;
+               }
+
+           });
+
+            // lista aparte
+            listaCompromisos?.ToList().ForEach(c =>
+            {
+                if (
+                      string.IsNullOrEmpty(c.Tarea) ||
+                      c.ResponsableSesionParticipanteId == null ||
+                      c.FechaCumplimiento == null
+                )
+                {
+                    completo = false;
+                }
+
+            });
 
             if (sesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
             {
@@ -2800,11 +2828,12 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
                 sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
                 sesionComiteSolicitudOld.DesarrolloSolicitud = pSesionComiteSolicitud.DesarrolloSolicitud;
+                sesionComiteSolicitudOld.SesionSolicitudCompromiso = new List<SesionSolicitudCompromiso>();
 
                 //para validar si los proyectos tienen estados validos
                 sesionComiteSolicitudOld.Contratacion = pSesionComiteSolicitud.Contratacion;
 
-                sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
+                sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld, pSesionComiteSolicitud.SesionSolicitudCompromiso.ToList());
 
                 #endregion actualiza con info del acta
 
@@ -2846,30 +2875,30 @@ namespace asivamosffie.services
 
                 #region compromisos
 
-                foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
+                foreach (var compromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
-                    if (SesionSolicitudCompromiso.SesionSolicitudCompromisoId == 0)
+                    if (compromiso.SesionSolicitudCompromisoId == 0)
                     {
                         CreateEdit = "CREAR SOLICITUD COMPROMISO";
-                        SesionSolicitudCompromiso.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                        SesionSolicitudCompromiso.FechaCreacion = DateTime.Now;
-                        SesionSolicitudCompromiso.Eliminado = false;
+                        compromiso.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        compromiso.FechaCreacion = DateTime.Now;
+                        compromiso.Eliminado = false;
 
-                        _context.SesionSolicitudCompromiso.Add(SesionSolicitudCompromiso);
+                        _context.SesionSolicitudCompromiso.Add(compromiso);
                     }
                     else
                     {
                         CreateEdit = "EDITAR SOLICITUD COMPROMISO";
-                        SesionSolicitudCompromiso sesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(SesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                        SesionSolicitudCompromiso sesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(compromiso.SesionSolicitudCompromisoId);
 
-                        SesionSolicitudCompromiso.FechaModificacion = SesionSolicitudCompromiso.FechaModificacion;
-                        SesionSolicitudCompromiso.UsuarioModificacion = pSesionComiteSolicitud.UsuarioModificacion;
+                        sesionSolicitudCompromisoOld.FechaModificacion = compromiso.FechaModificacion;
+                        sesionSolicitudCompromisoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-                        SesionSolicitudCompromiso.Tarea = SesionSolicitudCompromiso.Tarea;
-                        SesionSolicitudCompromiso.FechaCumplimiento = SesionSolicitudCompromiso.FechaCumplimiento;
+                        sesionSolicitudCompromisoOld.Tarea = compromiso.Tarea;
+                        sesionSolicitudCompromisoOld.FechaCumplimiento = compromiso.FechaCumplimiento;
 
-                        SesionSolicitudCompromiso.ResponsableSesionParticipanteId = SesionSolicitudCompromiso.ResponsableSesionParticipanteId;
-
+                        sesionSolicitudCompromisoOld.ResponsableSesionParticipanteId = compromiso.ResponsableSesionParticipanteId;
+                        _context.SesionSolicitudCompromiso.Update(sesionSolicitudCompromisoOld);
                     }
                 }
 

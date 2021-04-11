@@ -226,9 +226,14 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   }
 
   onSubmit() {
+    console.log( )
+    if ( this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value ){
+      this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
+      return false;
+    }
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.addressForm.get('nombresProponentes').setValue( null );
+    this.addressForm.get('nombresProponentes').setValue( null ); 
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     // console.log(this.procesoSeleccion);
     console.log( this.procesoSeleccion.procesoSeleccionProponente);
@@ -236,8 +241,20 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   }
 
   onSubmitNuevoProponente(){
+    if ( this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value ){
+
+      for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++){
+        console.log(this.procesoSeleccion.procesoSeleccionProponente[i])
+        if ( this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId !== '0')
+          this.procesoSeleccion.procesoSeleccionProponente.splice( i, 1 );
+      }
+      
+      this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
+      return false;
+    }
     this.addressForm.get('nombresProponentes').setValue( null );
     console.log( this.procesoSeleccion.procesoSeleccionProponente);
+    this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     this.guardar.emit(null);
   }
 
