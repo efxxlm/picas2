@@ -371,7 +371,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       listaUsos.push(this.createUso());
       this.componentes(i).push(grupoComponente);
     } else {
-      this.openDialog( '', '<b>Ha seleccionado todas las fases disponibles para el aportante.</b>' );
+      this.openDialog( '', '<b>Ha utilizado todas las fases disponibles. No pueden agregar más componentes.</b>' );
     }
   }
 
