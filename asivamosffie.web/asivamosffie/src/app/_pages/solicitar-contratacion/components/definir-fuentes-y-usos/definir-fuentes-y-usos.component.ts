@@ -321,7 +321,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     if ( this.componentes(j).controls[i].get('listaUsos').value !== null ) {
       this.componentes(j).controls[i].get('listaUsos').value.length
       if (this.componentes(j).controls[i].get('listaUsos').value.length === this.usos(j, i).controls.length) {
-        this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
+        this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoría' : 'Obra'}.</b>`);
         return;
       };
       const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
