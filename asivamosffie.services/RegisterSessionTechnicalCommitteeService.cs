@@ -1497,7 +1497,7 @@ namespace asivamosffie.services
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) ||
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) ||
-               (sesionComiteSolicitud.GeneraCompromiso == true && sesionComiteSolicitud.CantCompromisosFiduciario == null)
+               (sesionComiteSolicitud.GeneraCompromiso == true && sesionComiteSolicitud.CantCompromisos == null)
                 )
             {
                 completo = false;

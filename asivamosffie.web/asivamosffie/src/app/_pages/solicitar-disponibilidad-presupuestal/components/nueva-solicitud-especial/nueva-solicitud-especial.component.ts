@@ -164,7 +164,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           console.log(this.contrato);    
           this.contrato.listAportantes.forEach( contratacion => {
             let tipoapo=this.tipoAportantes.filter(x=>x.codigo==value);
-            if(tipoapo[0].nombre==contratacion.tipoAportante)
+            if(tipoapo[0]?.nombre==contratacion.tipoAportante)
             {
               this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId, 
                 nombre: contratacion.nombre,
@@ -229,7 +229,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.myFilter.setValue( disponibilidad.numeroContrato );
           this.addressForm.get( 'observacionLimiteEspecial' ).setValue( disponibilidad.limitacionEspecial ? disponibilidad.limitacionEspecial : null );
          
-          let tipoaportante=this.tipoAportantes.filter(x=>x.dominioId==disponibilidad.aportante.tipoAportanteId);
+          let tipoaportante=this.tipoAportantes.filter(x=>x.dominioId==disponibilidad.aportante?.tipoAportanteId);
           this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
           this.addressForm.get( 'url' ).setValue( disponibilidad.urlSoporte ? disponibilidad.urlSoporte : null );
           this.budgetAvailabilityService.getContratoByNumeroContrato( disponibilidad.numeroContrato )
@@ -239,7 +239,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 this.contrato.listAportantes.forEach( contratacion => {
                   this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId, nombre: contratacion.nombre, aportanteId: contratacion.cofinanciacionAportanteId } );                  
                 } );
-                this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0].codigo);
+                this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0]?.codigo);
                 console.log("############33");
                 console.log(this.nombreAportantes);
                 let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                                   
