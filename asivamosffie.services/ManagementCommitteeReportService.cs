@@ -213,26 +213,19 @@ namespace asivamosffie.services
         //Gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport(int pUserId)
         {
-            string StrSql = "SELECT ComiteTecnico.*" +
-                " FROM  dbo.ComiteTecnico " +
-                "INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId " +
-                "WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
-
-            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
-                      .Include(r => r.SesionComentario)
-                      .Include(r => r.SesionComiteTecnicoCompromiso)
-                      .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                      .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                      .Include(r => r.SesionComiteTema)
+            List<ComiteTecnico> ListComiteTecnico =
+                       await _context.ComiteTecnico
+                       .Include(s => s.SesionParticipante)
+                       .Where(s => s.SesionParticipante.Any(s => s.UsuarioId == pUserId && s.ComiteTecnico.Eliminado != true))
+                       .Include(r => r.SesionComiteTema)
                           .ThenInclude(r => r.TemaCompromiso)
                       .OrderByDescending(r => r.ComiteTecnicoId)
-                      .Distinct()
-                      .OrderByDescending(r => r.ComiteTecnicoId)
-                  .ToListAsync();
+                      .Distinct() 
+                      .ToListAsync();
 
-            ListComiteTecnico.ForEach(l =>
+           Parallel.ForEach(ListComiteTecnico ,l =>
             {
-                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)).Count() > 0 ? true : false;
+                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)).Count() > 0;
             });
             return ListComiteTecnico;
         }
@@ -689,7 +682,7 @@ namespace asivamosffie.services
                     foreach (var SesionComentarios in comiteTecnico.SesionComentario)
                     {
                         SesionComentarios.ValidacionVoto = true;
-                    } 
+                    }
                 }
 
 
