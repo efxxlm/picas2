@@ -672,9 +672,42 @@ namespace asivamosffie.services
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
             foreach (var financiacion in financiaciones)
             {
-                var valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
-                var valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
-                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
+                List<GestionFuenteFinanciacion> gestionFuenteFinanciacion = _context.GestionFuenteFinanciacion
+                                                                                    .Where(x => !(bool)x.Eliminado &&
+                                                                                           x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
+                                                                                           x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid)
+                                                                                    .ToList();
+
+                decimal valorDisponible = 0;
+
+                // cuando ya se guardó
+                if (gestionFuenteFinanciacion != null)
+                {
+                    valorDisponible = gestionFuenteFinanciacion
+                                                    .Sum(x => x.SaldoActual);
+                }
+                else
+                {
+                    valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
+                                                                                        .Where(x => !(bool)x.Eliminado &&
+                                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
+                                                                                               x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid)
+                                                                                        .Sum(x => x.ValorSolicitado);
+                }
+
+                
+
+                decimal valorsolicitado = 0;
+
+                // cuando ya se guardó
+                if ( gestionFuenteFinanciacion != null)
+                {
+                    valorsolicitado = gestionFuenteFinanciacion
+                                                    .Sum(x => x.ValorSolicitado);
+                }
+
+                 
+
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
