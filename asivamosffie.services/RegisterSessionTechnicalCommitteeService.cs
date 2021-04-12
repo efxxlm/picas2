@@ -270,6 +270,7 @@ namespace asivamosffie.services
                 || sesionComiteTemaOld.GeneraCompromiso == null
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ObservacionesDecision)
                 || sesionComiteTemaOld.EstadoTemaCodigo == null
+                || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null)
 
                 )
             {
@@ -1495,7 +1496,8 @@ namespace asivamosffie.services
                sesionComiteSolicitud.RequiereVotacion == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud)
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) ||
+               (sesionComiteSolicitud.GeneraCompromiso == true && sesionComiteSolicitud.CantCompromisosFiduciario == null)
                 )
             {
                 completo = false;
@@ -5182,13 +5184,13 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
-                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido);
+                                                            .Replace(placeholderDominio3.Nombre, compromiso?.ResponsableSesionParticipante?.Usuario?.PrimerNombre
+                                                            + " " + compromiso.ResponsableSesionParticipante?.Usuario?.PrimerApellido);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : "");
                                                         break;
                                                 }
                                             }
@@ -5484,13 +5486,13 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio5.Nombre, compromiso.ResponsableNavigation.Usuario.PrimerNombre
-                                                    + " " + compromiso.ResponsableNavigation.Usuario.PrimerApellido);
+                                                    .Replace(placeholderDominio5.Nombre, compromiso?.ResponsableNavigation?.Usuario?.PrimerNombre
+                                                    + " " + compromiso.ResponsableNavigation?.Usuario?.PrimerApellido);
                                                 break;
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio5.Nombre, compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy"));
+                                                    .Replace(placeholderDominio5.Nombre, compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : "");
                                                 break;
                                         }
                                     }

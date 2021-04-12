@@ -3416,7 +3416,8 @@ namespace asivamosffie.services
                sesionComiteSolicitud.RequiereVotacionFiduciario == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario) ||
+               (sesionComiteSolicitud.GeneraCompromisoFiduciario == true && sesionComiteSolicitud.CantCompromisosFiduciario == null )
                 )
             {
                 esCompleto = false;
@@ -3502,6 +3503,7 @@ namespace asivamosffie.services
                 || sesionComiteTemaOld.GeneraCompromiso == null
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ObservacionesDecision)
                 || sesionComiteTemaOld.EstadoTemaCodigo == null
+                || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null )
 
                 )
             {
