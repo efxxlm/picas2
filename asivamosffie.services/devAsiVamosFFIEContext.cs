@@ -264,7 +264,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VSaldoPresupuestalXcontrato> VSaldoPresupuestalXcontrato { get; set; }
         public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
-        public virtual DbSet<VSaldosContrato> VSaldosContrato { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
@@ -281,6 +280,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -7415,9 +7415,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("Temp");
 
-                entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
 
                 entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
@@ -7443,12 +7441,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoContrato)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoIntervencion)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
             });
 
             modelBuilder.Entity<TempFlujoInversion>(entity =>
@@ -8627,22 +8623,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(5000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CondicionesAsignacionPuntaje)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesFinancierasHabilitantes)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesJuridicasHabilitantes)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CondicionesTecnicasHabilitantes)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.CriteriosSeleccion)
                     .HasMaxLength(5000)
                     .IsUnicode(false);
@@ -9243,21 +9223,6 @@ namespace asivamosffie.model.Models
                     .HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(18, 0)");
-            });
-
-            modelBuilder.Entity<VSaldosContrato>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("V_SaldosContrato");
-
-                entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 3)");
-
-                entity.Property(e => e.SaldoTesoral).HasColumnType("numeric(38, 0)");
             });
 
             modelBuilder.Entity<VSesionParticipante>(entity =>

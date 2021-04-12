@@ -34,7 +34,7 @@ namespace asivamosffie.services
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
                    &&
-                  ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                   ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                    || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual
                    )
                 ).ToListAsync();
@@ -51,26 +51,24 @@ namespace asivamosffie.services
 
                             Contratacion contratacion =
                                 _context.Contratacion
-                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).Include(r => r.Contrato).FirstOrDefault();
+                                .Include(r => r.Contrato)
+                                .Include(r => r.DisponibilidadPresupuestal)
+                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && r.DisponibilidadPresupuestal.Count() > 0)
+                                .FirstOrDefault();
 
                             if (contratacion == null)
                                 break;
 
                             if (contratacion.Contrato.Count() > 0)
                             {
-                                if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
-                                {
-                                    sesionComiteSolicitud.EstaTramitado = true;
-                                }
-                                else
-                                {
-                                    sesionComiteSolicitud.EstaTramitado = false;
-                                }
+                                if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato)) 
+                                    sesionComiteSolicitud.EstaTramitado = true; 
+                                else 
+                                    sesionComiteSolicitud.EstaTramitado = false; 
                             }
-                            else
-                            {
+                            else 
                                 sesionComiteSolicitud.EstaTramitado = false;
-                            }
+                            
 
                             sesionComiteSolicitud.Contratacion = contratacion;
 
@@ -96,15 +94,9 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
                             break;
 
-                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
-
-                            // sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                            //.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                            // && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
-                            //.FirstOrDefault().Nombre;
+                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual: 
                             break;
-
-
+                             
                         default:
                             break;
                     }
@@ -375,14 +367,14 @@ namespace asivamosffie.services
                 EnumeratorPerfil.Tecnica
             };
 
-            bool blEnvioCorreo = false; 
+            bool blEnvioCorreo = false;
             string template = TemplateRecoveryPassword.Contenido
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[TIPO_CONTRATO]", pContrato?.Contratacion?.NumeroSolicitud)
                         .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
                         .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
                         .Replace("[Observaciones]", pContrato.Observaciones);
-              
+
             _commonService.EnviarCorreo(emails, template, TemplateRecoveryPassword.Asunto);
             return blEnvioCorreo;
         }
