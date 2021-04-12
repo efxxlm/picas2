@@ -128,8 +128,8 @@ export class FormProposicionesVariosComponent implements OnInit {
         .subscribe(respuesta => {
           this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200") {
-            this.validarCompletos(respuesta.data);
-
+            //this.validarCompletos(respuesta.data);
+            this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
           }
 
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])

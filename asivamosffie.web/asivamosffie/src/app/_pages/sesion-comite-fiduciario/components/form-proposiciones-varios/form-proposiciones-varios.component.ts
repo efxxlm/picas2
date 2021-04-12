@@ -119,7 +119,8 @@ export class FormProposicionesVariosComponent {
         .subscribe( respuesta => {
           this.openDialog('', `<b>${respuesta.message}</b>`)
           if ( respuesta.code == "200" )
-            this.validarCompletos(respuesta.data);
+            //this.validarCompletos(respuesta.data);
+            this.router.navigate(['/comiteFiduciario/crearActa', this.objetoComiteTecnico.comiteTecnicoId])
         })
 
     }else{

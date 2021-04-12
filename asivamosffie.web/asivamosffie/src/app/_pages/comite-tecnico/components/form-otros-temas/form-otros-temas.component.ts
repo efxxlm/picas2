@@ -245,9 +245,9 @@ export class FormOtrosTemasComponent implements OnInit {
 
     // console.log(tema)
     this.technicalCommitteSessionService.createEditTemasCompromiso(tema).subscribe(respuesta => {
-      this.openDialog('', `<b>${respuesta.message}</b>`)
+      
       this.validar.emit(respuesta.data)
-
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if (respuesta.code == '200' && !respuesta.data)
         this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
     })

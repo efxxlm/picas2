@@ -188,7 +188,7 @@ namespace asivamosffie.services
 
             listaComentarios = _context.SesionComentario
                                 .Where(sc => sc.ComiteTecnicoId == pComietTecnicoId &&
-                                             sc.EstadoActaVoto == null)
+                                             sc.EstadoActaVoto == "4")
                                 .Include(r => r.MiembroSesionParticipante)
                                 .ToList();
 
