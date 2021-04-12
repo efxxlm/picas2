@@ -348,6 +348,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   agregaTema() {
     this.tema.push(this.crearTema());
+    if (this.estaEditando) this.addressForm.markAllAsTouched();
   }
 
   crearTema() {
