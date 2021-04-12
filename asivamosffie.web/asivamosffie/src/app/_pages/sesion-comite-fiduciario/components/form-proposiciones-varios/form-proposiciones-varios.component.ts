@@ -51,8 +51,18 @@ export class FormProposicionesVariosComponent {
       })
   }
 
+  openDialogGuardar(modalTitle: string, modalText: string) {
+    let dialogRef= this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      location.reload();
+    });
+  }
+
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
@@ -117,10 +127,15 @@ export class FormProposicionesVariosComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionComiteTema( temas )
         .subscribe( respuesta => {
-          this.openDialog('', `<b>${respuesta.message}</b>`)
-          if ( respuesta.code == "200" )
-            //this.validarCompletos(respuesta.data);
-            this.router.navigate(['/comiteFiduciario/crearActa', this.objetoComiteTecnico.comiteTecnicoId])
+          
+          if ( respuesta.code == "200" ){
+            this.openDialogGuardar('', `<b>${respuesta.message}</b>`)
+          }else{
+            this.openDialog('', `<b>${respuesta.message}</b>`)
+          }
+            //this.validarCompletos(respuesta.data); 
+            //this.router.navigate(['/comiteFiduciario/registrarSesionDeComiteFiduciario', this.objetoComiteTecnico.comiteTecnicoId])
+            
         })
 
     }else{

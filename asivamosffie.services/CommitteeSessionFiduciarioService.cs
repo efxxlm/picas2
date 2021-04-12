@@ -3061,7 +3061,7 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.CantCompromisosFiduciario = pSesionComiteSolicitud.CantCompromisosFiduciario;
                 sesionComiteSolicitudOld.ObservacionesFiduciario = pSesionComiteSolicitud.ObservacionesFiduciario;
                 sesionComiteSolicitudOld.RutaSoporteVotacionFiduciario = pSesionComiteSolicitud.RutaSoporteVotacionFiduciario;
-                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld, pSesionComiteSolicitud.SesionSolicitudCompromiso.ToList());
+                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld, pSesionComiteSolicitud.SesionSolicitudCompromiso.ToList(), false);
 
                 #region Contratacion
 
@@ -3406,7 +3406,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud, List<SesionSolicitudCompromiso> listaCompromisos = null)
+        private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud, List<SesionSolicitudCompromiso> listaCompromisos = null, bool esConsulta = true)
         {
             bool esCompleto = true;
 
@@ -3450,6 +3450,32 @@ namespace asivamosffie.services
                 }
 
             });
+
+            if (sesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && esConsulta == true)
+            {
+                string[] estadosValidos = { "4", "6", "8" };
+
+                Contratacion contratacion = _context.Contratacion
+                                                        .Where(x => x.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                                        .Include(x => x.ContratacionProyecto)
+                                                            .ThenInclude(x => x.Proyecto)
+                                                        .FirstOrDefault();
+
+                contratacion.ContratacionProyecto.ToList().ForEach(cp =>
+               {
+                   if ( contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() )
+                    if ( !estadosValidos.Contains(cp.Proyecto.EstadoProyectoObraCodigo))
+                       {
+                           esCompleto = false;
+                       }
+
+                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                       if (!estadosValidos.Contains(cp.Proyecto.EstadoProyectoInterventoriaCodigo))
+                       {
+                           esCompleto = false;
+                       }
+               });
+            }
 
             return esCompleto;
         }
