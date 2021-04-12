@@ -180,7 +180,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   const listaUsos = grupoComponente.get('usos') as FormArray;
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
-                  
+
                   if ( faseSeleccionada !== undefined ) {
                     const indexFase = listaFase.findIndex( fase => fase === faseSeleccionada );
                     
@@ -208,8 +208,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
                   grupoComponente.get('componenteAportanteId').setValue(compoApo.componenteAportanteId);
                   grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.contratacionProyectoAportanteId);
-                  grupoComponente.get('fase').setValue(faseSeleccionada);
-                  grupoComponente.get('componente').setValue(componenteSeleccionado);
+                  grupoComponente.get('fase').setValue( faseSeleccionada !== undefined ? faseSeleccionada : null );
+                  grupoComponente.get('componente').setValue( componenteSeleccionado !== undefined ? componenteSeleccionado : null );
                   grupoComponente.get('listaUsos').setValue(listaDeUsos)
 
                   compoApo.componenteUso.forEach(uso => {
