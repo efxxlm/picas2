@@ -48,6 +48,9 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
         this.addressForm.get('construccionPerfilObservacionId').setValue(
           this.perfil.observacionApoyo ? this.perfil.observacionApoyo.construccionPerfilObservacionId : null
         );
+
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
     }
   }
 

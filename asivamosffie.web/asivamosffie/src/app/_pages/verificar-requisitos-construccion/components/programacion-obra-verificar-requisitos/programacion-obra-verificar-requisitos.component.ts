@@ -59,7 +59,8 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
     this.addressForm.get('observaciones').setValue(this.contratoConstruccion.observacionProgramacionObraApoyo ? this.contratoConstruccion.observacionProgramacionObraApoyo.observaciones : null)
     this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionProgramacionObraApoyo ? this.contratoConstruccion.observacionProgramacionObraApoyo.construccionObservacionId : null)
 
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     //this.validarSemaforo();
 
   }

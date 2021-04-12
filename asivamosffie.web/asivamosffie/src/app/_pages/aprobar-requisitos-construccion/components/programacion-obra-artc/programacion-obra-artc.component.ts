@@ -70,6 +70,9 @@ export class ProgramacionObraArtcComponent implements OnInit {
       .setValue(
         this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ?
         this.contratoConstruccion.observacionProgramacionObraSupervisor.construccionObservacionId : null );
+
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.getDataTable();
   }
 

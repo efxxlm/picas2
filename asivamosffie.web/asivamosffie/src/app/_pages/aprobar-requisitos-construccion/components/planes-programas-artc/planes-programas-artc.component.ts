@@ -264,6 +264,8 @@ export class PlanesProgramasArtcComponent implements OnInit {
       .setValue(  this.planesProgramas.observacionPlanesProgramasSupervisor !== undefined ?
                   this.planesProgramas.observacionPlanesProgramasSupervisor.construccionObservacionId : null);
 
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 
   validarSemaforo() {

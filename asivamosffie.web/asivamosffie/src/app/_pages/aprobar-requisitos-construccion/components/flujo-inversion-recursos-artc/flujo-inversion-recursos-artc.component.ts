@@ -75,6 +75,9 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
           this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ?
           this.contratoConstruccion.observacionFlujoInversionSupervisor.construccionObservacionId : null
         );
+
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.getDataTable();
     }
 

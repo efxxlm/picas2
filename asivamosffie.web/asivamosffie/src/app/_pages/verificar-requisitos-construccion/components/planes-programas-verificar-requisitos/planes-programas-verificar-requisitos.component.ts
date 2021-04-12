@@ -222,7 +222,8 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
     this.addressForm.get('observaciones').setValue(this.planesProgramas.observacionPlanesProgramasApoyo ? this.planesProgramas.observacionPlanesProgramasApoyo.observaciones : null)
     this.addressForm.get('construccionObservacionId').setValue(this.planesProgramas.observacionPlanesProgramasApoyo ? this.planesProgramas.observacionPlanesProgramasApoyo.construccionObservacionId : null)
 
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     //this.validarSemaforo();
   };
 

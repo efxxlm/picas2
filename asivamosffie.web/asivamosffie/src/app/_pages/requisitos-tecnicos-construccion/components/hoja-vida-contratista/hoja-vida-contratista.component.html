@@ -85,7 +85,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <span class="icon-incompleto">
+            <span class="icon-incompleto m-0">
               <img
                 class="icon-incompleto--img m-0"
                 src="assets/img/icon/incompleto.svg"
@@ -276,8 +276,8 @@
                   <label
                     class="label-left"
                     [class.color-secondaryColor]="
-                      (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
-                      (perfil.get('fechaAprobacion').invalid && estaEditando)
+                      (perfil.get('fechaAprobacion')?.invalid && perfil.get('fechaAprobacion')?.touched) ||
+                      (perfil.get('fechaAprobacion')?.invalid && estaEditando)
                     "
                   >
                     Fecha de aprobación de la totalidad de las hojas de vida

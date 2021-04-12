@@ -65,6 +65,9 @@ export class ManejoAnticipoArtcComponent implements OnInit {
       this.addressForm.get('construccionObservacionId')
         .setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ?
           this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null );
+
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     }
     this.getDataTable();
   }

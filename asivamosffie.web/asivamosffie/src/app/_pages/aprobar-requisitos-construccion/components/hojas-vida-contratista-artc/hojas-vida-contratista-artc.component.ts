@@ -58,6 +58,9 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
       this.addressForm.get('construccionPerfilObservacionId')
         .setValue( this.perfil.observacionSupervisor !== undefined
           ? this.perfil.observacionSupervisor.construccionPerfilObservacionId : null );
+
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     }
   }
 

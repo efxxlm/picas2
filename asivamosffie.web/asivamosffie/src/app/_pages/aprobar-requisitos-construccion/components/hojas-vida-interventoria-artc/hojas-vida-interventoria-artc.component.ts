@@ -52,6 +52,9 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
     this.addressForm.get('construccionPerfilObservacionId')
       .setValue( this.observacionesPerfil !== undefined
         ? this.observacionesPerfil.construccionPerfilObservacionId : null );
+
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 
   maxLength(e: any, n: number) {

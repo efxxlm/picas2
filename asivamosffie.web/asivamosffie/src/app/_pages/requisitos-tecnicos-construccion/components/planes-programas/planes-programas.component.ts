@@ -55,6 +55,8 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.proyecto);
+    
     if ( this.planesProgramas ) {
       console.log( this.planesProgramas );
       this.getDataPlanesProgramas();
