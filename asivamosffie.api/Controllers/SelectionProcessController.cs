@@ -432,6 +432,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+        
         [Route("SetValidateMassiveLoadElegibilidad/{procesoSeleccionId}")]
         [HttpPost]
         public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file, [FromRoute] int procesoSeleccionId)

@@ -80,6 +80,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     this.onChangeEstado();
     console.log( this.EstadosolicitudActa, estado )
     if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === "1" || this.EstadosolicitudActa === "0")  {
+      // se valida que no venga el estado o que no se ha cambiado en fiduciario
       if (estado && estado !== '1') {
         if (this.cantidadProyecto == 1) {
           switch (estado) {
