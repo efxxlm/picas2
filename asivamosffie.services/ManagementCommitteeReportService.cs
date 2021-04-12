@@ -223,11 +223,13 @@ namespace asivamosffie.services
                       .Distinct()
                       .ToListAsync();
 
+            List<SesionComentario> ListSesionComentario = _context.SesionComentario.ToList();
+
+
             foreach (var l in ListComiteTecnico)
             {
-                l.SesionComentario = _context.SesionComentario.Where(s => s.ComiteTecnicoId == l.ComiteTecnicoId).ToList();
+                l.SesionComentario = l.SesionComentario = ListSesionComentario.Where(s => s.ComiteTecnicoId == l.ComiteTecnicoId).ToList();
                 l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)).Count() > 0;
-
             }
 
             return ListComiteTecnico;
@@ -639,7 +641,7 @@ namespace asivamosffie.services
                      .Include(sc => sc.SesionComentario)
                      .Include(sc => sc.SesionComiteSolicitudComiteTecnico)
                      .Include(sc => sc.SesionComiteSolicitudComiteTecnicoFiduciario)
-                     .FirstOrDefaultAsync();
+                     .AsNoTracking().FirstOrDefaultAsync();
 
                 SesionComentario sesionComentario = new SesionComentario
                 {
@@ -657,9 +659,30 @@ namespace asivamosffie.services
 
                 //ValidarVotacion
                 if ((bool)ValidarTodosVotacion(comiteTecnico))
-                {
-                    comiteTecnico.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnico);
+                {       
+                    //Valida que todos votaron
+                    _context.Set<SesionComentario>()
+                            .Where(s => s.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId)
+                            .Update(s => new SesionComentario
+                            {
+                                UsuarioModificacion = pUser.Email,
+                                FechaModificacion = DateTime.Now,
+                                ValidacionVoto = true,
+                            });
+                    //Actualizar estados del comite
+                    _context.Set<ComiteTecnico>()
+                            .Where(c => c.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId)
+                            .Update(c => new ComiteTecnico
+                            {
+                                UsuarioModificacion = pUser.Email,
+                                FechaModificacion = DateTime.Now,
+                                EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnico),
+                                EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada,
+                            });
 
+                    await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                     
                     //Cambiar estado Comite Con acta aprobada y Solicitudes 
                     if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
                     {
@@ -677,20 +700,9 @@ namespace asivamosffie.services
                             {
                                 _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitudCodigo, item.EstadoCodigo);
                             }
-                        }
-
-                        comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
-                        await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                        await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-
-                    }
-                    foreach (var SesionComentarios in comiteTecnico.SesionComentario)
-                    {
-                        SesionComentarios.ValidacionVoto = true;
-                    }
-                }
-
-
+                        } 
+                    } 
+                } 
                 //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
                 if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
                 {
@@ -730,8 +742,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                _context.SaveChanges();
-
+  
                 return new Respuesta
                 {
 
@@ -769,14 +780,10 @@ namespace asivamosffie.services
 
         private bool ValidarTodosVotacion(ComiteTecnico pComiteTecnico)
         {
-            return (
-                pComiteTecnico.SesionParticipante.Count()
+            int CantidadParticipantes = pComiteTecnico.SesionParticipante.Count();
+            int CantidadDeVotos = _context.SesionComentario.Count(c => c.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId);
 
-                == pComiteTecnico.SesionComentario
-                    .Where(r => r.EstadoActaVoto != null && r.ValidacionVoto != true)
-                    .Select(r => r.MiembroSesionParticipanteId)
-                    .Distinct().Count()
-                );
+            return CantidadParticipantes == CantidadDeVotos;
         }
 
         //Actualizar estado codigo de un compromiso
@@ -959,6 +966,8 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.TemaCompromiso)
                             .ThenInclude(r => r.ResponsableNavigation)
                                 .ThenInclude(r => r.Usuario)
+
+                    .AsNoTracking()
                     .FirstOrDefault();
 
                 string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
@@ -1046,9 +1055,8 @@ namespace asivamosffie.services
 
                 ComiteTecnico comiteTecnico = _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                    .Include(r => r.SesionParticipante)
-                      .ThenInclude(r => r.Usuario)
-                         .ThenInclude(r => r.SesionComentario)
+                    .Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario).ThenInclude(r => r.SesionComentario)
+                    .AsNoTracking()
                     .FirstOrDefault();
 
                 string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
@@ -1068,17 +1076,18 @@ namespace asivamosffie.services
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
 
+
+                Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
+                string template =
+                    TemplateActaAprobada.Contenido
+                    .Replace("_LinkF_", pDominioFront)
+                    .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
+                    .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                    .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
+                    .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
+
                 foreach (var usuario in usuariosecretario)
                 {
-                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
-                    string template =
-                        TemplateActaAprobada.Contenido
-                        .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
-                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                        .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
-                        .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
-
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
