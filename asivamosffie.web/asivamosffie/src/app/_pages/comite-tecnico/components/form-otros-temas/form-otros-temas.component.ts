@@ -200,10 +200,11 @@ export class FormOtrosTemasComponent implements OnInit {
         this.openDialog(
           '',
           '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>'
-        )
-        this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length)
+          )
+          this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length)
+        }
       }
-    }
+      if (this.estaEditando) this.addressForm.markAllAsTouched();
   }
 
   openDialog(modalTitle: string, modalText: string) {
