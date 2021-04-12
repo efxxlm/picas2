@@ -237,7 +237,7 @@ namespace asivamosffie.services
             {
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                                                                               .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                                                                                    .Include(r => r.SesionComentario)
+                                                                                  //  .Include(r => r.SesionComentario)
                                                                                     .Include(r => r.SesionComiteTema)
                                                                                         .ThenInclude(r => r.TemaCompromiso)
                                                                                     .Include(r => r.SesionComiteTema)
@@ -268,6 +268,8 @@ namespace asivamosffie.services
 
                 foreach (var item in ListComiteTecnico)
                 {
+                    item.SesionComentario = _context.SesionComentario.Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
+
                     bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
 
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
@@ -964,7 +966,7 @@ namespace asivamosffie.services
 
                 foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico.Distinct())
                 {
-                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
+                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true && r.Eliminado != true).ToList();
                     foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
@@ -983,10 +985,10 @@ namespace asivamosffie.services
                     }
                 }
 
-                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Distinct())
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(s=> s.Eliminado != true).Distinct())
                 {
                     sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true).ToList();
-                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r=> r.Eliminado != true).Distinct())
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
                         {
