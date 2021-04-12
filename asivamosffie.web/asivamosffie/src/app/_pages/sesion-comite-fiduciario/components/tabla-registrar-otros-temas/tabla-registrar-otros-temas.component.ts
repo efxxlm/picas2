@@ -59,10 +59,13 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     this.commonService.listaUsuarios().then((respuesta) => {
       this.listaMiembros = respuesta;
     })
+  }
 
+  initPaginador() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
       if (length === 0 || pageSize === 0) {
         return '0 de ' + length;
@@ -75,6 +78,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
         startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
+    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   openDialogValidacionSolicitudes(elemento: SesionComiteTema) {
@@ -168,7 +172,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     this.validarResgistros( lista )
 
     this.dataSource = new MatTableDataSource(lista);
-
+    this.initPaginador();
   }
 
 }

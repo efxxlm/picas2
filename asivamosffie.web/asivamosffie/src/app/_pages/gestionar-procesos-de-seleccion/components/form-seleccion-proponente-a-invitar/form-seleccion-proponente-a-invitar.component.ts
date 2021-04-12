@@ -30,6 +30,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     ]
   });
   estaEditando = false;
+  cantidadseleccionados = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -165,15 +166,16 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       if (cantidad >= (this.listaProponentes.length + 1)) {
         this.listaProponentes.push(elemento);
       } else {
-        const c: any = document.getElementById(check.id);
+        // const c: any = document.getElementById(check.id);
         // console.log('check', c );
-        c.checked = false;
+        check.checked = false;
       }
+      this.cantidadseleccionados++;
     }
     else {
       const posicion = this.listaProponentes.indexOf(elemento);
       this.listaProponentes.splice(posicion, 1);
-
+      this.cantidadseleccionados--;
     }
     // console.log( cantidad, check, elemento, this.listaProponentes );
   }

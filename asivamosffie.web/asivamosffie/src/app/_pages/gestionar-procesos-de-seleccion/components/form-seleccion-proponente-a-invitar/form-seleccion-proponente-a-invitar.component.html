@@ -1,8 +1,4 @@
-<form
-  [formGroup]="addressForm"
-  novalidate
-  (ngSubmit)="onSubmit()"
-  *ngIf="sePuedeVer">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="sePuedeVer">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -17,8 +13,8 @@
                   (addressForm.get('cuantosProponentes').invalid && estaEditando)
                 "
               >
-                ¿Cuántos proponentes serán seleccionados en el proceso?</label
-              >
+                ¿Cuántos proponentes serán seleccionados en el proceso?
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
@@ -48,10 +44,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
                     (addressForm.get('cuantosProponentes').invalid && estaEditando)
@@ -80,11 +76,7 @@
                   {{ proponente.nombreProponente }}
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-
-                  <section
-                    class="table-checkbox"
-                    [class.invalid]="!checkbox.value"
-                  >
+                  <section class="table-checkbox" [class.invalid]="cantidadseleccionados < cuantosProponentes.value">
                     <mat-checkbox
                       type="checkbox"
                       #checkbox
@@ -123,10 +115,10 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
               (addressForm.get('url').invalid && addressForm.get('url').touched) ||
               (addressForm.get('url').invalid && estaEditando)
