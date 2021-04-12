@@ -462,8 +462,7 @@ namespace asivamosffie.services
             try
             {
                 ListContratacion = await _context.Contratacion
-                    .Where(r => !(bool)r.Eliminado)
-                    .Include(c => c.Contratista)
+                    .Where(r => !(bool)r.Eliminado) 
                     .ToListAsync();
 
                 //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
