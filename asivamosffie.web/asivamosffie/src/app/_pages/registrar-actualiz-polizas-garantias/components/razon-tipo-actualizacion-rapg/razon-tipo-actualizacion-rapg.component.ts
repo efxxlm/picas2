@@ -31,6 +31,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     polizasYSegurosArray: Dominio[] = [];
     tipoActualizacionArray: Dominio[] = [];
     estaEditando = false;
+    minDate = new Date();
 
     get seguros() {
         return this.addressForm.get( 'seguros' ) as FormArray;

@@ -152,6 +152,7 @@
                   <input  matInput
                           formControlName="fecha"
                           [matDatepicker]="pickerFecha"
+                          [min]="minDate"
                           readonly
                           (click)="pickerFecha.open()"
                           required
@@ -264,6 +265,7 @@
                           <input  matInput
                                   formControlName="vigencia"
                                   [matDatepicker]="pickerPoliza"
+                                  [min]="minDate"
                                   readonly
                                   (click)="pickerPoliza.open()"
                                   required
@@ -307,6 +309,7 @@
                           <input  matInput
                                   formControlName="vigenciaAmparo"
                                   [matDatepicker]="pickerAmparo"
+                                  [min]="minDate"
                                   readonly
                                   (click)="pickerAmparo.open()"
                                   required

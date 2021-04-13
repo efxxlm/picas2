@@ -23,6 +23,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
     estadosRevision = EstadosRevision;
     contratoPolizaActualizacion: any;
     contadorRevision = 0;
+    minDate = new Date();
     addressForm = this.fb.group({
         contratoPolizaActualizacionId: [ 0 ],
         contratoPolizaActualizacionRevisionAprobacionObservacionId: [ 0 ],

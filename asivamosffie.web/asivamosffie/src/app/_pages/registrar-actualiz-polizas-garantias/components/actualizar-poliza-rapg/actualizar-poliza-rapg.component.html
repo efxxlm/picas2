@@ -23,7 +23,7 @@
             <p><strong>Nombre de la aseguradora:</strong> <em> {{ contratoPoliza.nombreAseguradora }} </em></p>
             <p><strong>Número de certificado: </strong> <em> {{ contratoPoliza.numeroCertificado }} </em></p>
             <p><strong>Fecha de expedición de la póliza: </strong> <em> {{ contratoPoliza.fechaExpedicion | date: 'dd/MM/yyyy' }} </em></p>
-            <p><strong>Fecha de aprobación: </strong> <em> {{ contratoPoliza.fechaAprobacion | date: 'dd/MM/yyyy' }} </em></p>
+            <p><strong>Fecha de aprobación: </strong> <em> {{ ultimaRevisionAprobada.fechaAprobacion | date: 'dd/MM/yyyy' }} </em></p>
         </mat-card-content>
     </mat-card>
     <div class="table-responsive">
@@ -34,7 +34,7 @@
             </ng-container>
             <ng-container matColumnDef="responsableAprobacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Reponsable de la aprobación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ getResponsable( ) }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ getResponsable( ultimaRevisionAprobada.responsableAprobacionId ) }} </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

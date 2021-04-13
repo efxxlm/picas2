@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import humanize from 'humanize-plus';
-import { EstadosRevision } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
+import { EstadosRevision, PerfilCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
 
 @Component({
   selector: 'app-actualizar-poliza-rapg',
@@ -20,10 +20,13 @@ export class ActualizarPolizaRapgComponent implements OnInit {
     esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     estadosRevision = EstadosRevision;
+    listaPerfilCodigo = PerfilCodigo;
+    listaUsuarios: any[] = [];
     listaTipoSolicitudContrato: Dominio[] = [];
     polizasYSegurosArray: Dominio[] = [];
     responsable: any;
     dataSource = new MatTableDataSource();
+    ultimaRevisionAprobada: any;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
         'polizaYSeguros',
@@ -75,6 +78,7 @@ export class ActualizarPolizaRapgComponent implements OnInit {
             }
 
         } )
+        this.listaUsuarios = await this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria ).toPromise();
         this.polizasYSegurosArray = await this.commonSvc.listaGarantiasPolizas().toPromise();
         this.listaTipoSolicitudContrato = await this.commonSvc.listaTipoSolicitudContrato().toPromise();
         this.actualizarPolizaSvc.getContratoPoliza( this.activatedRoute.snapshot.params.id )
@@ -83,6 +87,14 @@ export class ActualizarPolizaRapgComponent implements OnInit {
                     this.contratoPoliza = response;
                     this.responsable = this.contratoPoliza.userResponsableAprobacion;
                     console.log( this.contratoPoliza );
+
+                    if ( this.contratoPoliza.polizaObservacion.length > 0 ) {
+                        const polizaAprobada: any[] = this.contratoPoliza.polizaObservacion.filter( polizaAprobada => polizaAprobada.estadoRevisionCodigo === this.estadosRevision.aprobacion );
+
+                        if ( polizaAprobada.length > 0 ) {
+                            this.ultimaRevisionAprobada = polizaAprobada[ polizaAprobada.length - 1 ];
+                        }
+                    }
 
                     if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
                         if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
@@ -235,9 +247,11 @@ export class ActualizarPolizaRapgComponent implements OnInit {
         }
     }
 
-    getResponsable() {
-        if ( this.responsable !== undefined ) {
-            return `${ this.firstLetterUpperCase( this.responsable.primerNombre ) } ${ this.firstLetterUpperCase( this.responsable.primerApellido ) }`
+    getResponsable( usuarioId: number ) {
+        const responsable = this.listaUsuarios.find( usuario => usuario.usuarioId === usuarioId );
+
+        if ( responsable !== undefined ) {
+            return `${ this.firstLetterUpperCase( responsable.primerNombre ) } ${ this.firstLetterUpperCase( responsable.primerApellido ) }`;
         }
     }
 

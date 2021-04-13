@@ -15,6 +15,7 @@ export class AccordVigenciasValorComponent implements OnInit {
 
     @Input() contratoPoliza: any;
     @Input() esVerDetalle: boolean;
+    minDate = new Date();
     contratoPolizaActualizacion: any;
     contratoPolizaActualizacionSeguro: any;
     polizasYSegurosArray : Dominio[] = [];
@@ -51,8 +52,11 @@ export class AccordVigenciasValorComponent implements OnInit {
                 if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro !== undefined ) {
                     if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro.length > 0 ) {
                         this.contratoPolizaActualizacionSeguro = this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro;
+                        const polizaGarantia: any[] = this.contratoPoliza.polizaGarantia.length > 0 ? this.contratoPoliza.polizaGarantia : [];
 
                         for ( const seguro of this.contratoPolizaActualizacionSeguro ) {
+                            const seguroPoliza = polizaGarantia.find( seguroPoliza => seguroPoliza.tipoGarantiaCodigo === seguro.tipoSeguroCodigo );
+
                             let semaforo = 'sin-diligenciar';
 
                             if ( seguro.registroCompletoSeguro === false ) {
@@ -62,19 +66,22 @@ export class AccordVigenciasValorComponent implements OnInit {
                                 semaforo = 'completo';
                             }
 
-                            this.seguros.push( this.fb.group(
-                                {
-                                    semaforo,
-                                    nombre: [ this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo ).nombre ],
-                                    codigo: [ seguro.tipoSeguroCodigo ],
-                                    tieneSeguro: [ seguro.tieneFechaSeguro ],
-                                    fechaSeguro: [ seguro.fechaSeguro !== undefined ? new Date( seguro.fechaSeguro ) : null, Validators.required ],
-                                    tieneFechaAmparo: [ seguro.tieneFechaVigenciaAmparo ],
-                                    fechaAmparo: [ seguro.fechaVigenciaAmparo !== undefined ? new Date( seguro.fechaVigenciaAmparo ) : null, Validators.required ],
-                                    tieneValorAmparo: [ seguro.tieneValorAmparo ],
-                                    valorAmparo: [ seguro.valorAmparo !== undefined ? seguro.valorAmparo : null, Validators.required ]
-                                }
-                            ) )
+                            if ( seguroPoliza !== undefined ) {
+                                this.seguros.push( this.fb.group(
+                                    {
+                                        semaforo,
+                                        seguroPoliza,
+                                        nombre: [ this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo ).nombre ],
+                                        codigo: [ seguro.tipoSeguroCodigo ],
+                                        tieneSeguro: [ seguro.tieneFechaSeguro ],
+                                        fechaSeguro: [ seguro.fechaSeguro !== undefined ? new Date( seguro.fechaSeguro ) : null, Validators.required ],
+                                        tieneFechaAmparo: [ seguro.tieneFechaVigenciaAmparo ],
+                                        fechaAmparo: [ seguro.fechaVigenciaAmparo !== undefined ? new Date( seguro.fechaVigenciaAmparo ) : null, Validators.required ],
+                                        tieneValorAmparo: [ seguro.tieneValorAmparo ],
+                                        valorAmparo: [ seguro.valorAmparo !== undefined ? seguro.valorAmparo : null, Validators.required ]
+                                    }
+                                ) )
+                            }
                         }
                     }
                 }
