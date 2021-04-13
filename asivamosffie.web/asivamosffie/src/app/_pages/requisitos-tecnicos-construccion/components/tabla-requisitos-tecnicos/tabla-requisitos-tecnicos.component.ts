@@ -13,11 +13,10 @@ import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoCo
   styleUrls: ['./tabla-requisitos-tecnicos.component.scss']
 })
 export class TablaRequisitosTecnicosComponent implements OnInit {
-
   dataSource = new MatTableDataSource();
-  @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
-  displayedColumns: string[] = [ 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  displayedColumns: string[] = [
     'fechaAprobacion',
     'numeroContrato',
     'cantidadProyectosAsociados',
@@ -27,66 +26,74 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
     'gestion'
   ];
 
-  constructor ( private routes: Router,
-                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
-                private dialog: MatDialog,
-              )
-  {
+  constructor(
+    private routes: Router,
+    private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+    private dialog: MatDialog
+  ) {
     this.cargarRegistros();
   }
 
-  cargarRegistros(){
-    this.faseUnoConstruccionSvc.getContractsGrid()
-      .subscribe( listas => {
-
-        if ( listas.length > 0 ) {
-          listas.forEach( 
-            registro =>
+  cargarRegistros() {
+    this.faseUnoConstruccionSvc.getContractsGrid().subscribe(listas => {
+      
+      if (listas.length > 0) {
+        listas.forEach(
+          registro =>
             (registro.fechaAprobacion = registro.fechaAprobacion
               ? registro.fechaAprobacion.split('T')[0].split('-').reverse().join('/')
               : '')
-              );
-        }
+        );
+      }
 
-        this.dataSource                        = new MatTableDataSource( listas );
-        this.dataSource.paginator              = this.paginator;
-        this.dataSource.sort                   = this.sort;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      } );
+      this.dataSource = new MatTableDataSource(listas);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        if (length === 0 || pageSize === 0) {
+          return '0 de ' + length;
+        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+      };
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
   }
 
-  ngOnInit(): void {
-  };
+  ngOnInit(): void {}
 
-  applyFilter ( event: Event ) {
-    const filterValue      = (event.target as HTMLInputElement).value;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
+  }
 
-  getForm ( id: number, fechaPoliza: string ) {
-    this.routes.navigate( [ '/requisitosTecnicosConstruccion/gestionarInicioContrato', id ], { state: { fechaPoliza } } )
-  };
+  getForm(id: number, fechaPoliza: string) {
+    this.routes.navigate(['/requisitosTecnicosConstruccion/gestionarInicioContrato', id], { state: { fechaPoliza } });
+  }
 
-  openDialog (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
-
-  aprobarInicio ( id: number ) {
-    this.faseUnoConstruccionSvc.aprobarInicio( id )
-      .subscribe( 
-        response => {
-          this.openDialog( '', response.message );
-          this.cargarRegistros();
-        },
-        err => this.openDialog( '', err.message )
-      );
-  };
-
-  verDetalle ( id: number ) {
-    this.routes.navigate( [ '/requisitosTecnicosConstruccion/verDetalles', id ] )
+    });
   }
 
-};
+  aprobarInicio(id: number) {
+    this.faseUnoConstruccionSvc.aprobarInicio(id).subscribe(
+      response => {
+        this.openDialog('', response.message);
+        this.cargarRegistros();
+      },
+      err => this.openDialog('', err.message)
+    );
+  }
+
+  verDetalle(id: number) {
+    this.routes.navigate(['/requisitosTecnicosConstruccion/verDetalles', id]);
+  }
+}
