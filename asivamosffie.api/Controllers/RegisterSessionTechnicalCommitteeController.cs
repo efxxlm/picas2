@@ -198,8 +198,7 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
+                throw ex;
             }
         }
 

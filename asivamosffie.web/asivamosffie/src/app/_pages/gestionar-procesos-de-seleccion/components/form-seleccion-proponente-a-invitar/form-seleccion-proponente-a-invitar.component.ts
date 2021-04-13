@@ -18,6 +18,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   @Input() editar: boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
   listaProponentes: ProcesoSeleccionProponente[] = [];
+  listaProponentesDeseleccionados: ProcesoSeleccionProponente[] = [];
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   sePuedeVer:boolean = false;
 
@@ -40,7 +41,9 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   ) {
 
   }
+  
   noGuardado=true;
+  
   ngOnDestroy(): void {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -97,10 +100,12 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     return retorno;
     
   }
+
   valida(numeroid:string)
   {
     let ret=false;
-    this.procesoSeleccion.listaContratistas.forEach(element => {
+    console.log(this.procesoSeleccion.listaContratistas)
+    this.procesoSeleccion.listaContratistas.filter(x => x.activo === true).forEach(element => {
       if (element.nombre == numeroid) {
         //console.log("valido2 "+element.nombre);
         ret= true;
@@ -158,25 +163,66 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     this.noGuardado=false;
   }
 
-  changeSeleccion(check, elemento) {
+  changeSeleccion(check, elemento: ProcesoSeleccionProponente) {
 
     const cantidad = this.addressForm.get('cuantosProponentes').value ? this.addressForm.get('cuantosProponentes').value : '';
 
+    
+
     if (check.checked) {
-      if (cantidad >= (this.listaProponentes.length + 1)) {
+      if (cantidad >= (this.listaProponentes.filter( x => x.eliminado !== true ).length + 1)) {
+        
+
+        // si ya existe lo elimina 
+        const posicion = this.listaProponentes.indexOf(elemento);
+        if ( posicion >= 0 ){
+          this.listaProponentes.splice(posicion, 1);
+        }
+        
+        elemento.eliminado = false;
         this.listaProponentes.push(elemento);
       } else {
-        // const c: any = document.getElementById(check.id);
-        // console.log('check', c );
         check.checked = false;
       }
+
       this.cantidadseleccionados++;
-    }
-    else {
+
+    }else{
       const posicion = this.listaProponentes.indexOf(elemento);
-      this.listaProponentes.splice(posicion, 1);
+      if ( posicion >= 0 ){
+        this.listaProponentes[posicion].eliminado = false;  
+      }else{
+        elemento.eliminado = true;
+        this.listaProponentes.push(elemento);
+      }
+
+      //this.listaProponentes.splice(posicion, 1);
       this.cantidadseleccionados--;
     }
+
+    console.log( this.listaProponentes, elemento )
+
+
+    // if (check.checked) {
+    //   if (cantidad >= (this.listaProponentes.length + 1)) {
+    //     elemento.eliminado = false;
+    //     this.listaProponentes.push(elemento);
+    //   } else {
+    //     // const c: any = document.getElementById(check.id);
+    //     // console.log('check', c );
+    //     check.checked = false;
+    //   }
+    //   this.cantidadseleccionados++;
+    // }
+    // else {
+    //   console.log( this.listaProponentes, elemento )
+    //   const posicion = this.listaProponentes.indexOf(elemento);
+    //   if ( posicion > 0 ){
+    //     this.listaProponentes[posicion].eliminado = false;  
+    //   }
+    //   this.listaProponentes.splice(posicion, 1);
+    //   this.cantidadseleccionados--;
+    // }
     // console.log( cantidad, check, elemento, this.listaProponentes );
   }
 

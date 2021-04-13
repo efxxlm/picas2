@@ -271,12 +271,12 @@ namespace asivamosffie.services.Helpers
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
                 SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
-                SmtpServer.EnableSsl = false;
+                SmtpServer.EnableSsl = true;
                 SmtpServer.Send(mail);
             }
             catch (Exception e)
             {
-                return false;
+                throw e;
             }
 
             return true;

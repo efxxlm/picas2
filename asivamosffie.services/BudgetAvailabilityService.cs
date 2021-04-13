@@ -499,7 +499,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDdp != null).Count();
             /*busco usuario Juridico*/
-            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).FirstOrDefault();
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).ToList();
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_presupuestal;
@@ -545,7 +545,14 @@ namespace asivamosffie.services
                 template = template.Replace("_LinkF_", urlDestino);
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
 
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
+                List<string> usuarios = new List<string>();
+
+                usuarioJuridico.ForEach(u =>
+               {
+                   usuarios.Add(u?.Usuario?.Email);
+               });
+
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreoMultipleDestinatario(usuarios, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
                 if (blEnvioCorreo)
                 {
                     return new Respuesta

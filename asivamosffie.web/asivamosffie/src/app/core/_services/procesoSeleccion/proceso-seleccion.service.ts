@@ -232,6 +232,7 @@ export interface ProcesoSeleccionProponente {
   nombreRepresentanteLegal?: string,
   cedulaRepresentanteLegal?: string,
   procesoSeleccion?: ProcesoSeleccion,
+  eliminado?: boolean,
   
 }
 

@@ -420,15 +420,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return
-               new Respuesta
-               {
-                   IsSuccessful = false,
-                   IsException = true,
-                   IsValidation = false,
-                   Code = ConstantSesionComiteTecnico.Error,
-                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pComiteTecnico.UsuarioCreacion, ex.InnerException.ToString())
-               };
+                throw ex;
             }
 
         }

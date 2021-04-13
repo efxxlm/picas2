@@ -52,11 +52,11 @@ namespace asivamosffie.services
 
                 foreach (var proceso in procesosSeleccion)
                 {
-                    if ( proceso.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                    if (proceso.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
                     {
-                        if ( 
-                                string.IsNullOrEmpty( proceso.EvaluacionDescripcion ) ||
-                                string.IsNullOrEmpty( proceso.UrlSoporteEvaluacion ) ||
+                        if (
+                                string.IsNullOrEmpty(proceso.EvaluacionDescripcion) ||
+                                string.IsNullOrEmpty(proceso.UrlSoporteEvaluacion) ||
                                 proceso.ProcesoSeleccionProponente.Count() == 0
                                 )
                         {
@@ -109,7 +109,7 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-                
+
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
 
@@ -999,10 +999,18 @@ namespace asivamosffie.services
             CronogramaSeguimiento cronogramaSeguimientoAntiguo = null;
             try
             {
+                
+            pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(p =>
+            {
+                Contratista contratista = _context.Contratista.Where(x => x.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId).FirstOrDefault();
 
-                pProcesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(p =>
+                if ( contratista != null)
                 {
-                    Contratista contratista = new Contratista();
+                    contratista.Activo = !p.Eliminado; 
+                }
+                else
+                {
+                    contratista = new Contratista();
 
                     contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
                     contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
@@ -1011,33 +1019,36 @@ namespace asivamosffie.services
                     contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
                     contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
                     contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
-                    contratista.Activo = true;
+                    contratista.Activo = !p.Eliminado;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
                     contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
 
                     _context.Contratista.Add(contratista);
+                }
 
-                });
+                
 
-                var procesosel = _context.ProcesoSeleccion.Where(x => x.NumeroProceso == pProcesoSeleccion.NumeroProceso).FirstOrDefault();
-                procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
-                procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
-                _context.ProcesoSeleccion.Update(procesosel);
+            });
+
+            var procesosel = _context.ProcesoSeleccion.Where(x => x.NumeroProceso == pProcesoSeleccion.NumeroProceso).FirstOrDefault();
+            procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
+            procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
+            _context.ProcesoSeleccion.Update(procesosel);
 
 
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = cronogramaSeguimientoAntiguo,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, pUsuarioCreo, strCrearEditar)
-                };
-            }
+            return respuesta = new Respuesta
+            {
+                IsSuccessful = true,
+                IsException = false,
+                IsValidation = false,
+                Data = cronogramaSeguimientoAntiguo,
+                Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccion, pUsuarioCreo, strCrearEditar)
+            };
+        }
             catch (Exception ex)
             {
                 return respuesta = new Respuesta
@@ -1047,9 +1058,9 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, pUsuarioCreo, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int) enumeratorMenu.CronogramaSeguimiento, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, pUsuarioCreo, ex.InnerException.ToString().Substring(0, 500))
                 };
-            }
+}
         }
 
         //Grilla Seguimiento a cronograma
@@ -1082,989 +1093,989 @@ namespace asivamosffie.services
         // }
 
         public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pProcesoSeleccion)
+{
+    int CantidadRegistrosVacios = 0;
+    int CantidadResgistrosValidos = 0;
+    int CantidadRegistrosInvalidos = 0;
+
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+    //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+    DocumentService _documentService = new DocumentService(_context, _commonService);
+
+    ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad), pProcesoSeleccion);
+
+    // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
+    if (archivoCarge != null)
+    {
+        using (var stream = new MemoryStream())
         {
-            int CantidadRegistrosVacios = 0;
-            int CantidadResgistrosValidos = 0;
-            int CantidadRegistrosInvalidos = 0;
+            await pFile.CopyToAsync(stream);
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
-            DocumentService _documentService = new DocumentService(_context, _commonService);
-
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad), pProcesoSeleccion);
-
-            // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
-            if (archivoCarge != null)
+            using var package = new ExcelPackage(stream);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.LastOrDefault();
+            //Controlar Registros
+            //Filas <=
+            //No comienza desde 0 por lo tanto el = no es necesario
+            for (int i = 2; i <= worksheet.Dimension.Rows; i++)
             {
-                using (var stream = new MemoryStream())
+                try
                 {
-                    await pFile.CopyToAsync(stream);
+                    /* Columnas Obligatorias de excel
+                     2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
+                    Campos Obligatorios Validos   */
 
-                    using var package = new ExcelPackage(stream);
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.LastOrDefault();
-                    //Controlar Registros
-                    //Filas <=
-                    //No comienza desde 0 por lo tanto el = no es necesario
-                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
+
+                    TempOrdenLegibilidad temp = new TempOrdenLegibilidad();
+                    //Auditoria
+                    temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                    temp.EstaValidado = false;
+                    temp.FechaCreacion = DateTime.Now;
+                    temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
+
+                    // #1
+                    //Tipo proponente
+                    temp.TipoProponenteId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 1].Text, (int)EnumeratorTipoDominio.Tipo_Proponente));
+
+
+                    //#2
+                    //Nombre proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
                     {
-                        try
+                        temp.NombreProponente = worksheet.Cells[i, 2].Text.ToUpper();
+                    }
+
+                    //#3
+                    //Identificacion del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text)) { temp.NumeroIddentificacionProponente = worksheet.Cells[i, 3].Text; } else { temp.NumeroIddentificacionProponente = string.Empty; }
+
+
+                    //#5
+                    //Departamento domicilio proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = 0; }
+
+                    //#5
+                    //Municipio proponente///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
+                    {
+                        int DepartamentoId = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0");
+                        temp.Minicipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 5].Text, DepartamentoId.ToString());//temp.Departamento.ToString()
+
+                    }
+                    else
+                    {
+                        temp.Minicipio = 0;
+                    }
+
+                    //#6
+                    //Direccion del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text).ToUpper(); } else { temp.Direccion = string.Empty; }
+
+                    //#7
+                    //Telefono del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 7].Text)) { temp.Telefono = Convert.ToString(worksheet.Cells[i, 7].Text); } else { temp.Telefono = string.Empty; }
+
+                    //#8
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text).ToUpper(); } else { temp.Correo = string.Empty; }
+
+                    //#9
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 9].Text)) { temp.NombreEntidad = Convert.ToString(worksheet.Cells[i, 9].Text); } else { temp.NombreEntidad = string.Empty; }
+
+                    //#10
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 10].Text))
+                    {
+                        temp.IdentificacionTributaria = Convert.ToInt32(worksheet.Cells[i, 10].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 10].Text) : 0;
+                    }
+
+                    //#11
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 11].Text))
+                    {
+                        temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text).ToUpper() : "";
+                    }
+                    else
+                    {
+                        temp.RepresentanteLegal = string.Empty;
+                    }
+
+                    //#12
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 12].Text))
+                    {
+                        temp.CedulaRepresentanteLegal = Convert.ToInt32(worksheet.Cells[i, 12].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 12].Text) : 0;
+                    }
+
+
+                    //#13
+                    //Correo del proponente
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 13].Text))
+                    {
+                        temp.DepartamentoRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
+                    }
+
+                    //#14
+                    //Municipio representante legal
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 14].Text))
+                    {
+                        int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
+                        temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
+                    }
+
+                    //#15
+                    //Direccion Representante Legal
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
+
+                    //#16
+                    //Telefono Representante Legal
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 16].Text)) { temp.TelefonoRl = worksheet.Cells[i, 16].Text; } else { temp.TelefonoRl = string.Empty; }
+
+                    //#17
+                    //Correo Representante Legal
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text.ToUpper(); } else { temp.CorreoRl = string.Empty; }
+
+                    //#18
+                    //Nombre del representante legal del la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text.ToUpper(); } else { temp.NombreOtoConsorcio = string.Empty; }
+
+                    //#19
+                    //Entiddaes que integran la union temporal
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 19].Text))
+                    {
+                        temp.EntiddaesQueIntegranLaUnionTemporal = Convert.ToInt32(worksheet.Cells[i, 19].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 19].Text) : 0;
+                    }
+
+
+                    //#20
+                    //Nombre integrante
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text.ToUpper(); } else { temp.NombreIntegrante = string.Empty; }
+
+
+                    //#21
+                    //Porcentaje participacion
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 21].Text))
+                    {
+                        temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text.Replace("%", "")) : 0;
+                    }
+
+
+                    //#22
+                    //Nombre  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
+
+                    //#23
+                    //Cedula  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
+                    {
+                        temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
+                    }
+
+
+                    //#24
+                    //Cedula  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text)) { temp.DepartamentoRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0"); }
+
+                    //#25
+                    //Municipio  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text))
+                    {
+                        int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0");
+                        temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 25].Text, DepartamentoIdConsorcio.ToString());
+                    }
+
+                    //#26
+                    //Direccion  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
+
+                    //#27
+                    //Telefono  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 27].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 27].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
+
+                    //#28
+                    //Correo  del representante legal de la UT o consorcio
+                    if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
+
+
+                    //Guarda Cambios en una tabla temporal
+                    if ((worksheet.Cells[i, 1].Text == "Persona Natural" && (
+                     !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)))
+                        ||
+                    (worksheet.Cells[i, 1].Text == "Persona Juridica - Individual" && (
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 9].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 11].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 15].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 16].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)))
+                        ||
+                    (worksheet.Cells[i, 1].Text == "Persona Juridica - Unión Temporal o Consorcio" && (
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 18].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 19].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 20].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 21].Text) |
+                        //!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
+                        //!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
+                        //!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
+                        //!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 26].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 27].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
+                        !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
+                        ))
+                    )
+                    {
+                        //worksheet.Cells[2, 2].AddComment("Es valido", "Admin");
+
+                        temp.EstaValidado = true;
+                        _context.TempOrdenLegibilidad.Add(temp);
+                        _context.SaveChanges();
+
+                        if (temp.TempOrdenLegibilidadId > 0)
                         {
-                            /* Columnas Obligatorias de excel
-                             2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
-                            Campos Obligatorios Validos   */
-
-
-                            TempOrdenLegibilidad temp = new TempOrdenLegibilidad();
-                            //Auditoria
-                            temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                            temp.EstaValidado = false;
-                            temp.FechaCreacion = DateTime.Now;
-                            temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
-
-                            // #1
-                            //Tipo proponente
-                            temp.TipoProponenteId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 1].Text, (int)EnumeratorTipoDominio.Tipo_Proponente));
-
-
-                            //#2
-                            //Nombre proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
-                            {
-                                temp.NombreProponente = worksheet.Cells[i, 2].Text.ToUpper();
-                            }
-
-                            //#3
-                            //Identificacion del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text)) { temp.NumeroIddentificacionProponente = worksheet.Cells[i, 3].Text; } else { temp.NumeroIddentificacionProponente = string.Empty; }
-
-
-                            //#5
-                            //Departamento domicilio proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = 0; }
-
-                            //#5
-                            //Municipio proponente///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
-                            {
-                                int DepartamentoId = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0");
-                                temp.Minicipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 5].Text, DepartamentoId.ToString());//temp.Departamento.ToString()
-
-                            }
-                            else
-                            {
-                                temp.Minicipio = 0;
-                            }
-
-                            //#6
-                            //Direccion del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text).ToUpper(); } else { temp.Direccion = string.Empty; }
-
-                            //#7
-                            //Telefono del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 7].Text)) { temp.Telefono = Convert.ToString(worksheet.Cells[i, 7].Text); } else { temp.Telefono = string.Empty; }
-
-                            //#8
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text).ToUpper(); } else { temp.Correo = string.Empty; }
-
-                            //#9
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 9].Text)) { temp.NombreEntidad = Convert.ToString(worksheet.Cells[i, 9].Text); } else { temp.NombreEntidad = string.Empty; }
-
-                            //#10
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 10].Text))
-                            {
-                                temp.IdentificacionTributaria = Convert.ToInt32(worksheet.Cells[i, 10].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 10].Text) : 0;
-                            }
-
-                            //#11
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 11].Text))
-                            {
-                                temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text).ToUpper() : "";
-                            }
-                            else
-                            {
-                                temp.RepresentanteLegal = string.Empty;
-                            }
-
-                            //#12
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 12].Text))
-                            {
-                                temp.CedulaRepresentanteLegal = Convert.ToInt32(worksheet.Cells[i, 12].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 12].Text) : 0;
-                            }
-
-
-                            //#13
-                            //Correo del proponente
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 13].Text))
-                            {
-                                temp.DepartamentoRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
-                            }
-
-                            //#14
-                            //Municipio representante legal
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 14].Text))
-                            {
-                                int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
-                                temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
-                            }
-
-                            //#15
-                            //Direccion Representante Legal
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
-
-                            //#16
-                            //Telefono Representante Legal
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 16].Text)) { temp.TelefonoRl = worksheet.Cells[i, 16].Text; } else { temp.TelefonoRl = string.Empty; }
-
-                            //#17
-                            //Correo Representante Legal
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text.ToUpper(); } else { temp.CorreoRl = string.Empty; }
-
-                            //#18
-                            //Nombre del representante legal del la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text.ToUpper(); } else { temp.NombreOtoConsorcio = string.Empty; }
-
-                            //#19
-                            //Entiddaes que integran la union temporal
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 19].Text))
-                            {
-                                temp.EntiddaesQueIntegranLaUnionTemporal = Convert.ToInt32(worksheet.Cells[i, 19].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 19].Text) : 0;
-                            }
-
-
-                            //#20
-                            //Nombre integrante
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text.ToUpper(); } else { temp.NombreIntegrante = string.Empty; }
-
-
-                            //#21
-                            //Porcentaje participacion
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 21].Text))
-                            {
-                                temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text.Replace("%", "")) : 0;
-                            }
-
-
-                            //#22
-                            //Nombre  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
-
-                            //#23
-                            //Cedula  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
-                            {
-                                temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
-                            }
-
-
-                            //#24
-                            //Cedula  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text)) { temp.DepartamentoRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0"); }
-
-                            //#25
-                            //Municipio  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text))
-                            {
-                                int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0");
-                                temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 25].Text, DepartamentoIdConsorcio.ToString());
-                            }
-
-                            //#26
-                            //Direccion  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
-
-                            //#27
-                            //Telefono  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 27].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 27].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
-
-                            //#28
-                            //Correo  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
-
-
-                            //Guarda Cambios en una tabla temporal
-                            if ((worksheet.Cells[i, 1].Text == "Persona Natural" && (
-                             !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 7].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)))
-                                ||
-                            (worksheet.Cells[i, 1].Text == "Persona Juridica - Individual" && (
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 9].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 10].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 11].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 12].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 13].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 14].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 15].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 16].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)))
-                                ||
-                            (worksheet.Cells[i, 1].Text == "Persona Juridica - Unión Temporal o Consorcio" && (
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 18].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 19].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 20].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 21].Text) |
-                                //!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text) |
-                                //!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text) |
-                                //!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text) |
-                                //!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 26].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 27].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 28].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 29].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 30].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 31].Text) |
-                                !string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)
-                                ))
-                            )
-                            {
-                                //worksheet.Cells[2, 2].AddComment("Es valido", "Admin");
-
-                                temp.EstaValidado = true;
-                                _context.TempOrdenLegibilidad.Add(temp);
-                                _context.SaveChanges();
-
-                                if (temp.TempOrdenLegibilidadId > 0)
-                                {
-                                    CantidadResgistrosValidos++;
-                                }
-                                else
-                                {
-                                    CantidadRegistrosInvalidos++;
-                                }
-
-                            }
-                            else
-                            {
-                                //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
-                                string strValidateCampNullsOrEmpty = "";
-                                //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
-
-                                for (int j = 1; j < 37; j++)
-                                {
-                                    strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text.Trim());
-                                }
-                                if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
-                                {
-                                    CantidadRegistrosVacios++;
-                                }
-                                else
-                                {
-                                    CantidadRegistrosInvalidos++;
-                                }
-
-                                //worksheet.Cells[2, 2].AddComment("Invalido", "Admin");
-
-                                //Auditoria
-                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                                temp.EstaValidado = false;
-                                temp.FechaCreacion = DateTime.Now;
-                                temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
-                                _context.TempOrdenLegibilidad.Add(temp);
-                                _context.SaveChanges();
-
-                            }
-
+                            CantidadResgistrosValidos++;
                         }
-                        catch (Exception ex)
+                        else
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+
+                    }
+                    else
+                    {
+                        //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
+                        string strValidateCampNullsOrEmpty = "";
+                        //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
+
+                        for (int j = 1; j < 37; j++)
+                        {
+                            strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text.Trim());
+                        }
+                        if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
                         {
                             CantidadRegistrosVacios++;
                         }
+                        else
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+
+                        //worksheet.Cells[2, 2].AddComment("Invalido", "Admin");
+
+                        //Auditoria
+                        temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                        temp.EstaValidado = false;
+                        temp.FechaCreacion = DateTime.Now;
+                        temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
+                        _context.TempOrdenLegibilidad.Add(temp);
+                        _context.SaveChanges();
+
                     }
 
-                    //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
-                    //-1 ya los registros comienzan desde esta fila
-                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
-                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
-                    _context.ArchivoCargue.Update(archivoCarge);
-
-
-                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
-                    {
-                        CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
-                        CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
-                        CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
-                        LlaveConsulta = archivoCarge.Nombre
-
-                    };
-
-                    //byte[] bin = package.GetAsByteArray();
-                    //string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
-                    //File.WriteAllBytes(pathFile, bin);
-
-                    return new Respuesta
-                    {
-                        Data = archivoCargueRespuesta,
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
-                    };
+                }
+                catch (Exception ex)
+                {
+                    CantidadRegistrosVacios++;
                 }
             }
-            else
+
+            //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
+            //-1 ya los registros comienzan desde esta fila
+            archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
+            archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
+            archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
+            _context.ArchivoCargue.Update(archivoCarge);
+
+
+            ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
             {
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
-                };
-            }
+                CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
+                CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
+                CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
+                LlaveConsulta = archivoCarge.Nombre
+
+            };
+
+            //byte[] bin = package.GetAsByteArray();
+            //string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+            //File.WriteAllBytes(pathFile, bin);
+
+            return new Respuesta
+            {
+                Data = archivoCargueRespuesta,
+                IsSuccessful = true,
+                IsException = false,
+                IsValidation = false,
+                Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
+            };
+        }
+    }
+    else
+    {
+        return new Respuesta
+        {
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.ValidarExcel, pUsuarioCreo, "VALIDAR EXCEL")
+        };
+    }
 
 
+}
+
+public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
+{
+    //depende del tipo
+    if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
+    {
+        bool esCompleto = true;
+
+        if (
+             string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+             string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+             string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+             string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+             string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+             string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
+             string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes))
+
+        )
+            esCompleto = false;
+
+        procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+        {
+            if (
+                 string.IsNullOrEmpty(psg.NombreGrupo) ||
+                 string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                 (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                 (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                 (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                 psg.PlazoMeses == null
+
+               )
+                esCompleto = false;
+        });
+
+        if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+        {
+            if (
+             string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
+             string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
+             procesoSeleccion.ProcesoSeleccionProponente == null ||
+             procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
+
+
+        )
+                esCompleto = false;
         }
 
-        public bool EsCompleto(ProcesoSeleccion procesoSeleccion)
+        return esCompleto;
+    }
+    else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
+    {
+        bool esCompleto = true;
+        if (
+         string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+         string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+         string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+         string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+         string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+         //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+         //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+         //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+         string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+         string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+         string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+
+        )
+            esCompleto = false;
+
+        if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
         {
-            //depende del tipo
-            if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
-            {
-                bool esCompleto = true;
+            esCompleto = false;
+        }
 
-                if (
-                     string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
-                     string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
-                     string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
-                     string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
-                     string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                     string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes)) 
-
-                )
-                    esCompleto = false;
-
-                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
-                {
-                    if (
-                         string.IsNullOrEmpty(psg.NombreGrupo) ||
-                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
-                         psg.PlazoMeses == null
-
-                       )
-                        esCompleto = false;
-                });
-
-                if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
-                {
-                    if (
-                     string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
-                     string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
-                     procesoSeleccion.ProcesoSeleccionProponente == null || 
-                     procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
-                     
-
-                )
-                        esCompleto = false;
-                }
-
-                return esCompleto;
-            }
-            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
-            {
-                bool esCompleto = true;
-                if (
-                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
-                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
-                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                 //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo) 
-
-                )
-                    esCompleto = false;
-
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
-                {
-                    esCompleto = false;
-                }
-
-                procesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(psp =>
-               {
-                   if ( psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio )
-                   if (
-                         string.IsNullOrEmpty(psp.NombreProponente) ||
-                         string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-
-                         //string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                         string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                         psp.LocalizacionIdMunicipio == null ||
-                         string.IsNullOrEmpty(psp.DireccionProponente) ||
-                         string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                         string.IsNullOrEmpty(psp.EmailProponente)
-                   )
-                       esCompleto = false;
-
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
-                       if (
+        procesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(psp =>
+       {
+           if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio)
+               if (
                              string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
                              string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+
+                             //string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
                              string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
                              psp.LocalizacionIdMunicipio == null ||
                              string.IsNullOrEmpty(psp.DireccionProponente) ||
                              string.IsNullOrEmpty(psp.TelefonoProponente) ||
                              string.IsNullOrEmpty(psp.EmailProponente)
                        )
-                           esCompleto = false;
+                   esCompleto = false;
 
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
-                       if (
-                             string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                             psp.LocalizacionIdMunicipio == null ||
-                             string.IsNullOrEmpty(psp.DireccionProponente) ||
-                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                             string.IsNullOrEmpty(psp.EmailProponente)
-                       )
-                           esCompleto = false;
+           if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
+               if (
+                     string.IsNullOrEmpty(psp.NombreProponente) ||
+                     string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
+                     string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
+                     string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                     string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                     psp.LocalizacionIdMunicipio == null ||
+                     string.IsNullOrEmpty(psp.DireccionProponente) ||
+                     string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                     string.IsNullOrEmpty(psp.EmailProponente)
+               )
+                   esCompleto = false;
 
-               });
+           if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
+               if (
+                     string.IsNullOrEmpty(psp.NombreProponente) ||
+                     string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                     string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                     psp.LocalizacionIdMunicipio == null ||
+                     string.IsNullOrEmpty(psp.DireccionProponente) ||
+                     string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                     string.IsNullOrEmpty(psp.EmailProponente)
+               )
+                   esCompleto = false;
 
-                procesoSeleccion.ProcesoSeleccionGrupo.Where( r => r.Eliminado != true).ToList().ForEach(psg =>
-               {
-                   if (
-                        string.IsNullOrEmpty( psg.NombreGrupo ) ||
-                        string.IsNullOrEmpty( psg.TipoPresupuestoCodigo ) ||
-                        ( psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null ) ||
-                        ( psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null ) ||
-                        ( psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
-                        psg.PlazoMeses == null
+       });
 
-                      )
-                       esCompleto = false;
-               });
+        procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+      {
+          if (
+               string.IsNullOrEmpty(psg.NombreGrupo) ||
+               string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+               (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+               (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+               (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+               psg.PlazoMeses == null
 
-                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
-               {
-                   if (
-                          string.IsNullOrEmpty(psc.NombreOrganizacion) ||
-                          psc.ValorCotizacion == null ||
-                          string.IsNullOrEmpty( psc.Descripcion ) ||
-                          string.IsNullOrEmpty( psc.UrlSoporte )
-                       )
-                       esCompleto = false;
-               });
+             )
+              esCompleto = false;
+      });
 
-                return esCompleto;
-            }
-            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
-            {
-                bool esCompleto = true;
+        procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
+       {
+           if (
+                  string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                  psc.ValorCotizacion == null ||
+                  string.IsNullOrEmpty(psc.Descripcion) ||
+                  string.IsNullOrEmpty(psc.UrlSoporte)
+               )
+               esCompleto = false;
+       });
 
-                if (
-                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
-                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
-                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
-                )
-                    esCompleto = false;
+        return esCompleto;
+    }
+    else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+    {
+        bool esCompleto = true;
 
-                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
-               {
-                   if (
-                        string.IsNullOrEmpty(psc.NombreOrganizacion) ||
-                        psc.ValorCotizacion == null ||
-                        string.IsNullOrEmpty(psc.Descripcion) ||
-                        string.IsNullOrEmpty(psc.UrlSoporte) 
-                   )
-                       esCompleto = false;
+        if (
+         string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+         string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+         string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+         string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+         string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+         string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+         string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+         string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+         string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+         string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+         string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+        )
+            esCompleto = false;
 
-               });
+        procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
+       {
+           if (
+                string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                psc.ValorCotizacion == null ||
+                string.IsNullOrEmpty(psc.Descripcion) ||
+                string.IsNullOrEmpty(psc.UrlSoporte)
+           )
+               esCompleto = false;
 
-                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
-                {
-                    if (
-                         string.IsNullOrEmpty(psg.NombreGrupo) ||
-                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
-                         psg.PlazoMeses == null
+       });
 
-                       )
-                        esCompleto = false;
-                });
-
-                return esCompleto;
-                       
-            }
-
-            return false;
-
-        }
-
-
-        public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, int procesoSeleccionId, string pUsuarioModifico)
+        procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
         {
-            Respuesta respuesta = new Respuesta();
+            if (
+                 string.IsNullOrEmpty(psg.NombreGrupo) ||
+                 string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                 (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                 (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                 (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                 psg.PlazoMeses == null
 
-            if (string.IsNullOrEmpty(pIdDocument))
-            {
-                return respuesta =
-                 new Respuesta
-                 {
-                     IsSuccessful = false,
-                     IsException = false,
-                     IsValidation = true,
-                     Code = ConstantMessagesCargueElegibilidad.CamposVacios,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.CamposVacios, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
-                 };
-            }
-            try
-            {
+               )
+                esCompleto = false;
+        });
 
-                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.OrdeELegibilidad, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+        return esCompleto;
 
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 2 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
+    }
 
-                List<TempOrdenLegibilidad> ListTempOrdenLegibilidad = await _context.TempOrdenLegibilidad.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId /*&& (bool)r.EstaValidado*/).ToListAsync();
+    return false;
 
-                if (ListTempOrdenLegibilidad.Count() > 0)
-                {
-                    foreach (var tempOrdenLegibilidad in ListTempOrdenLegibilidad)
-                    {
-
-                        //ProcesoSeleccionProponente
-                        ProcesoSeleccionProponente procesoSeleccionProponente = new ProcesoSeleccionProponente()
-                        {
-
-                            //procesoSeleccionProponente Registros 
-                            ProcesoSeleccionId = procesoSeleccionId,
-                            TipoProponenteCodigo = tempOrdenLegibilidad.TipoProponenteId.ToString(),
-                            NombreProponente = tempOrdenLegibilidad.NombreProponente,
-                            //TipoIdentificacionCodigo = tempOrdenLegibilidad.id ?
-                            NumeroIdentificacion = tempOrdenLegibilidad.NumeroIddentificacionProponente,
-                            LocalizacionIdMunicipio = tempOrdenLegibilidad.Minicipio.ToString(),
-                            DireccionProponente = tempOrdenLegibilidad.Direccion,
-                            TelefonoProponente = tempOrdenLegibilidad.Telefono,
-                            EmailProponente = tempOrdenLegibilidad.Correo,
-                            NombreRepresentanteLegal = tempOrdenLegibilidad.RepresentanteLegal,
-                            CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString(),
-                            Eliminado = false,
-                            FechaCreacion = DateTime.Now,
-                            UsuarioCreacion = pUsuarioModifico
-                        };
-
-                        _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
-                        _context.SaveChanges();
-
-                        /* no se debería crear
-                        //Cofinanciacion
-                        Cofinanciacion cofinanciacion = new Cofinanciacion
-                        {
-                            Eliminado = false,
-                            FechaCreacion = DateTime.Now,
-                            //VigenciaCofinanciacionId = tempOrdenLegibilidad. ?,
-                            UsuarioCreacion = tempOrdenLegibilidad.UsuarioCreacion
-                        };
-                        //
-                        _context.Cofinanciacion.Add(cofinanciacion);
-                        _context.SaveChanges();
-
-                        //CofinanciacionAportante 1 
-                        if (!string.IsNullOrEmpty(tempOrdenLegibilidad.TipoProponenteId.ToString()))
-                        {
-
-                            CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante
-                            {
-                                //Auditoria
-                                FechaCreacion = DateTime.Now,
-                                Eliminado = false,
-                                //Registros
-                                UsuarioCreacion = tempOrdenLegibilidad.UsuarioCreacion,
-                                CofinanciacionId = cofinanciacion.CofinanciacionId,
-                                TipoAportanteId = (int)tempOrdenLegibilidad.TipoProponenteId,
-                                //NombreAportanteId = (int)tempOrdenLegibilidad.nom ?
-                            };
-                            //
-                            _context.CofinanciacionAportante.Add(cofinanciacionAportante);
-                            _context.SaveChanges();
-
-                        }*/
-                        //Temporal proyecto update
-                        tempOrdenLegibilidad.EstaValidado = true;
-                        tempOrdenLegibilidad.FechaModificacion = DateTime.Now;
-                        tempOrdenLegibilidad.UsuarioModificacion = pUsuarioModifico;
-                        _context.TempOrdenLegibilidad.Update(tempOrdenLegibilidad);
-                        _context.SaveChanges();
-                    }
-
-                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(procesoSeleccionId);
-                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
-
-                    _context.SaveChanges();
+}
 
 
-                    return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "Cantidad de Ordenes subidas : " + ListTempOrdenLegibilidad.Count())
-                    };
-                }
-                else
-                {
-                    return respuesta =
-                        new Respuesta
-                        {
-                            IsSuccessful = false,
-                            IsException = false,
-                            IsValidation = true,
-                            Code = ConstantMessagesCargueElegibilidad.NoExitenArchivos,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.NoExitenArchivos, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
-                        };
-                }
-            }
-            catch (Exception ex)
-            {
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
-                    };
-            }
+public async Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, int procesoSeleccionId, string pUsuarioModifico)
+{
+    Respuesta respuesta = new Respuesta();
 
-        }
+    if (string.IsNullOrEmpty(pIdDocument))
+    {
+        return respuesta =
+         new Respuesta
+         {
+             IsSuccessful = false,
+             IsException = false,
+             IsValidation = true,
+             Code = ConstantMessagesCargueElegibilidad.CamposVacios,
+             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.CamposVacios, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
+         };
+    }
+    try
+    {
 
-        /*autor: jflorez
-            descripción: borra las cotizacines en editar
-            impacto: CU 3.1.3*/
-        public async Task<Respuesta> deleteProcesoSeleccionCotizacionByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+        int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.OrdeELegibilidad, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+
+        ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 2 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
+
+        List<TempOrdenLegibilidad> ListTempOrdenLegibilidad = await _context.TempOrdenLegibilidad.Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId /*&& (bool)r.EstaValidado*/).ToListAsync();
+
+        if (ListTempOrdenLegibilidad.Count() > 0)
         {
-            Respuesta respuesta = new Respuesta();
-            try
+            foreach (var tempOrdenLegibilidad in ListTempOrdenLegibilidad)
             {
-                var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
 
-                if ( procesoSeleccionCot != null)
+                //ProcesoSeleccionProponente
+                ProcesoSeleccionProponente procesoSeleccionProponente = new ProcesoSeleccionProponente()
                 {
-                    procesoSeleccionCot.Eliminado = true;
-                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                    _context.Update(procesoSeleccionCot);
-                    _context.SaveChanges();
 
-                    var procesoSeleccion = _context.ProcesoSeleccion
-                                                        .Where(r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
-                                                        .Include(r => r.ProcesoSeleccionCotizacion)
-                                                        .FirstOrDefault();
-
-                    procesoSeleccion.CantidadCotizaciones = procesoSeleccion.ProcesoSeleccionCotizacion.Where(r => r.Eliminado != true).Count();
-                }
-
-
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        /*autor: jflorez
-            descripción: borra lOS GRUPOS en editar
-            impacto: CU 3.1.3*/
-        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionGrupoId, string usuarioModificacion)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupoId);
-
-                if (procesoSeleccionCot != null)
-                {
-                    
-
-                    procesoSeleccionCot.Eliminado = true;
-                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                    _context.SaveChanges();
-
-                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion
-                                                                    .Where( r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
-                                                                    .Include( r => r.ProcesoSeleccionGrupo )
-                                                                    .FirstOrDefault();
-
-                    procesoSeleccion.CantGrupos = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).Count();
-                    _context.SaveChanges();
-                }
-                
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        /*autor: jflorez
-            descripción: borra las actividades en editar
-            impacto: CU 3.1.3*/
-        public async Task<Respuesta> deleteProcesoSeleccionActividadesByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                var procesoSeleccionCot = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCotizacionId);
-
-                if (procesoSeleccionCot != null)
-                {
-                    procesoSeleccionCot.Eliminado = true;
-                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                    _context.Update(procesoSeleccionCot);
-                    _context.SaveChanges();
-                }
-                
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION CRONOGRAMA")
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        /*jflorez
-         impacto: 3.1.3
-         resumen: trae listado de  observaciones*/
-        public async Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id)
-        {
-            //  return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
-            return _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion && !(bool)x.Eliminado && x.SolicitudId == id).Select(y => y.Observaciones).ToList();
-        }
-
-        public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
-        {
-            Respuesta respuesta = new Respuesta();
-            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = "";
-            ProcesoSeleccionMonitoreo ProcesoSeleccionAntiguo = null;
-            try
-            {
-                //si tiene relacion con algo, no lo dejo eliminar
-                /*var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
-                if (comite > 0)
-                {
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = null,
-                        Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
-                    };
-                }
-                */
-                strCrearEditar = "ELIMINAR PROCESO SELECCION CRONOGRAMA";
-                ProcesoSeleccionAntiguo = _context.ProcesoSeleccionMonitoreo.Find(pId);
-                //Auditoria
-                //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
-                ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
-
-                //Registros
-                ProcesoSeleccionAntiguo.Eliminado = true;
-
-                _context.ProcesoSeleccionMonitoreo.Update(ProcesoSeleccionAntiguo);
-
-
-
-                await _context.SaveChangesAsync();
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, usuarioCreacion, strCrearEditar)
-
+                    //procesoSeleccionProponente Registros 
+                    ProcesoSeleccionId = procesoSeleccionId,
+                    TipoProponenteCodigo = tempOrdenLegibilidad.TipoProponenteId.ToString(),
+                    NombreProponente = tempOrdenLegibilidad.NombreProponente,
+                    //TipoIdentificacionCodigo = tempOrdenLegibilidad.id ?
+                    NumeroIdentificacion = tempOrdenLegibilidad.NumeroIddentificacionProponente,
+                    LocalizacionIdMunicipio = tempOrdenLegibilidad.Minicipio.ToString(),
+                    DireccionProponente = tempOrdenLegibilidad.Direccion,
+                    TelefonoProponente = tempOrdenLegibilidad.Telefono,
+                    EmailProponente = tempOrdenLegibilidad.Correo,
+                    NombreRepresentanteLegal = tempOrdenLegibilidad.RepresentanteLegal,
+                    CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString(),
+                    Eliminado = false,
+                    FechaCreacion = DateTime.Now,
+                    UsuarioCreacion = pUsuarioModifico
                 };
+
+                _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
+                _context.SaveChanges();
+
+                /* no se debería crear
+                //Cofinanciacion
+                Cofinanciacion cofinanciacion = new Cofinanciacion
+                {
+                    Eliminado = false,
+                    FechaCreacion = DateTime.Now,
+                    //VigenciaCofinanciacionId = tempOrdenLegibilidad. ?,
+                    UsuarioCreacion = tempOrdenLegibilidad.UsuarioCreacion
+                };
+                //
+                _context.Cofinanciacion.Add(cofinanciacion);
+                _context.SaveChanges();
+
+                //CofinanciacionAportante 1 
+                if (!string.IsNullOrEmpty(tempOrdenLegibilidad.TipoProponenteId.ToString()))
+                {
+
+                    CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante
+                    {
+                        //Auditoria
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+                        //Registros
+                        UsuarioCreacion = tempOrdenLegibilidad.UsuarioCreacion,
+                        CofinanciacionId = cofinanciacion.CofinanciacionId,
+                        TipoAportanteId = (int)tempOrdenLegibilidad.TipoProponenteId,
+                        //NombreAportanteId = (int)tempOrdenLegibilidad.nom ?
+                    };
+                    //
+                    _context.CofinanciacionAportante.Add(cofinanciacionAportante);
+                    _context.SaveChanges();
+
+                }*/
+                //Temporal proyecto update
+                tempOrdenLegibilidad.EstaValidado = true;
+                tempOrdenLegibilidad.FechaModificacion = DateTime.Now;
+                tempOrdenLegibilidad.UsuarioModificacion = pUsuarioModifico;
+                _context.TempOrdenLegibilidad.Update(tempOrdenLegibilidad);
+                _context.SaveChanges();
             }
-            catch (Exception ex)
+
+            ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(procesoSeleccionId);
+            procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
+
+            _context.SaveChanges();
+
+
+            return respuesta =
+            new Respuesta
             {
-                return respuesta = new Respuesta
+                IsSuccessful = true,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "Cantidad de Ordenes subidas : " + ListTempOrdenLegibilidad.Count())
+            };
+        }
+        else
+        {
+            return respuesta =
+                new Respuesta
                 {
                     IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
-        }
-
-        public async Task<Respuesta> DeleteProcesoSeleccionIntegrante(int pId, string usuarioCreacion)
-        {
-            Respuesta respuesta = new Respuesta();
-            int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = "";
-            ProcesoSeleccionIntegrante ProcesoSeleccionAntiguo = null;
-            try
-            {
-                //si tiene relacion con algo, no lo dejo eliminar
-                /*var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
-                if (comite > 0)
-                {
-                    return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = null,
-                        Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
-                    };
-                }
-                */
-                strCrearEditar = "ELIMINAR PROCESO SELECCION INTEGRANTE";
-                ProcesoSeleccionAntiguo = _context.ProcesoSeleccionIntegrante.Find(pId);
-                //Auditoria
-                //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
-                ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
-                //Registros
-                ProcesoSeleccionAntiguo.Eliminado = true;
-
-                _context.ProcesoSeleccionIntegrante.Update(ProcesoSeleccionAntiguo);
-                await _context.SaveChangesAsync();
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, usuarioCreacion, strCrearEditar)
-
+                    IsValidation = true,
+                    Code = ConstantMessagesCargueElegibilidad.NoExitenArchivos,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoOrdenes, ConstantMessagesCargueElegibilidad.NoExitenArchivos, (int)enumeratorAccion.CargueOrdenesMasivos, pUsuarioModifico, "CARGUE MASIVO ORDENES")
                 };
-            }
-            catch (Exception ex)
-            {
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = null,
-                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
         }
+    }
+    catch (Exception ex)
+    {
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.Error,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
+            };
+    }
 
-        /*jflorez
-         impacto: 3.1.3
-         resumen: tarea programada para enviar mensaje al equipo estructurador cuando se vence una actividad*/
-        public async Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
+}
+
+/*autor: jflorez
+    descripción: borra las cotizacines en editar
+    impacto: CU 3.1.3*/
+public async Task<Respuesta> deleteProcesoSeleccionCotizacionByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+{
+    Respuesta respuesta = new Respuesta();
+    try
+    {
+        var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
+
+        if (procesoSeleccionCot != null)
         {
-            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid != null && x.CronogramaSeguimiento.Count() == 0).Select(x => new { x.ProcesoSeleccion.NumeroProceso, x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();
+            procesoSeleccionCot.Eliminado = true;
+            procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+            procesoSeleccionCot.FechaModificacion = DateTime.Now;
+            _context.Update(procesoSeleccionCot);
+            _context.SaveChanges();
 
-            foreach (var tarea in tareas.Select(x => x.ResponsableEstructuradorUsuarioid).Distinct())
-            {
-                string texto = string.Join("<br>", tareas.Where(x => x.ResponsableEstructuradorUsuarioid == tarea).Select(x => x.NumeroProceso));
-                var usuarioenvio = _context.Usuario.Find(tarea);
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
-                string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]", texto);
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
-            }
+            var procesoSeleccion = _context.ProcesoSeleccion
+                                                .Where(r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
+                                                .Include(r => r.ProcesoSeleccionCotizacion)
+                                                .FirstOrDefault();
+
+            procesoSeleccion.CantidadCotizaciones = procesoSeleccion.ProcesoSeleccionCotizacion.Where(r => r.Eliminado != true).Count();
         }
+
+
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
+            };
+
+    }
+    catch (Exception ex)
+    {
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.Error,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+            };
+    }
+}
+
+/*autor: jflorez
+    descripción: borra lOS GRUPOS en editar
+    impacto: CU 3.1.3*/
+public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionGrupoId, string usuarioModificacion)
+{
+    Respuesta respuesta = new Respuesta();
+    try
+    {
+        var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupoId);
+
+        if (procesoSeleccionCot != null)
+        {
+
+
+            procesoSeleccionCot.Eliminado = true;
+            procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+            procesoSeleccionCot.FechaModificacion = DateTime.Now;
+            _context.SaveChanges();
+
+            ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion
+                                                            .Where(r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
+                                                            .Include(r => r.ProcesoSeleccionGrupo)
+                                                            .FirstOrDefault();
+
+            procesoSeleccion.CantGrupos = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).Count();
+            _context.SaveChanges();
+        }
+
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION GRUPO")
+            };
+
+    }
+    catch (Exception ex)
+    {
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.Error,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+            };
+    }
+}
+
+/*autor: jflorez
+    descripción: borra las actividades en editar
+    impacto: CU 3.1.3*/
+public async Task<Respuesta> deleteProcesoSeleccionActividadesByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+{
+    Respuesta respuesta = new Respuesta();
+    try
+    {
+        var procesoSeleccionCot = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCotizacionId);
+
+        if (procesoSeleccionCot != null)
+        {
+            procesoSeleccionCot.Eliminado = true;
+            procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+            procesoSeleccionCot.FechaModificacion = DateTime.Now;
+            _context.Update(procesoSeleccionCot);
+            _context.SaveChanges();
+        }
+
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.OperacionExitosa, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, "ELIMINACION CRONOGRAMA")
+            };
+
+    }
+    catch (Exception ex)
+    {
+        return respuesta =
+            new Respuesta
+            {
+                IsSuccessful = false,
+                IsException = false,
+                IsValidation = true,
+                Code = ConstantMessagesCargueElegibilidad.Error,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.Crear_Editar_ProcesoSeleccion_Grupo, usuarioModificacion, ex.InnerException.ToString())
+            };
+    }
+}
+
+/*jflorez
+ impacto: 3.1.3
+ resumen: trae listado de  observaciones*/
+public async Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id)
+{
+    //  return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
+    return _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion && !(bool)x.Eliminado && x.SolicitudId == id).Select(y => y.Observaciones).ToList();
+}
+
+public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
+{
+    Respuesta respuesta = new Respuesta();
+    int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+    string strCrearEditar = "";
+    ProcesoSeleccionMonitoreo ProcesoSeleccionAntiguo = null;
+    try
+    {
+        //si tiene relacion con algo, no lo dejo eliminar
+        /*var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+        if (comite > 0)
+        {
+            return respuesta = new Respuesta
+            {
+                IsSuccessful = true,
+                IsException = false,
+                IsValidation = false,
+                Data = null,
+                Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
+            };
+        }
+        */
+        strCrearEditar = "ELIMINAR PROCESO SELECCION CRONOGRAMA";
+        ProcesoSeleccionAntiguo = _context.ProcesoSeleccionMonitoreo.Find(pId);
+        //Auditoria
+        //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+        ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+
+        //Registros
+        ProcesoSeleccionAntiguo.Eliminado = true;
+
+        _context.ProcesoSeleccionMonitoreo.Update(ProcesoSeleccionAntiguo);
+
+
+
+        await _context.SaveChangesAsync();
+
+        return respuesta = new Respuesta
+        {
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, usuarioCreacion, strCrearEditar)
+
+        };
+    }
+    catch (Exception ex)
+    {
+        return respuesta = new Respuesta
+        {
+            IsSuccessful = false,
+            IsException = true,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+        };
+    }
+}
+
+public async Task<Respuesta> DeleteProcesoSeleccionIntegrante(int pId, string usuarioCreacion)
+{
+    Respuesta respuesta = new Respuesta();
+    int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
+    string strCrearEditar = "";
+    ProcesoSeleccionIntegrante ProcesoSeleccionAntiguo = null;
+    try
+    {
+        //si tiene relacion con algo, no lo dejo eliminar
+        /*var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+        if (comite > 0)
+        {
+            return respuesta = new Respuesta
+            {
+                IsSuccessful = true,
+                IsException = false,
+                IsValidation = false,
+                Data = null,
+                Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
+                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
+            };
+        }
+        */
+        strCrearEditar = "ELIMINAR PROCESO SELECCION INTEGRANTE";
+        ProcesoSeleccionAntiguo = _context.ProcesoSeleccionIntegrante.Find(pId);
+        //Auditoria
+        //ProcesoSeleccionAntiguo.UsuarioModificacion = pUsuarioModificacion;
+        ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
+        //Registros
+        ProcesoSeleccionAntiguo.Eliminado = true;
+
+        _context.ProcesoSeleccionIntegrante.Update(ProcesoSeleccionAntiguo);
+        await _context.SaveChangesAsync();
+
+        return respuesta = new Respuesta
+        {
+            IsSuccessful = true,
+            IsException = false,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesProcesoSeleccion.OperacionExitosa,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.OperacionExitosa, idAccionCrearProcesoSeleccion, usuarioCreacion, strCrearEditar)
+
+        };
+    }
+    catch (Exception ex)
+    {
+        return respuesta = new Respuesta
+        {
+            IsSuccessful = false,
+            IsException = true,
+            IsValidation = false,
+            Data = null,
+            Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, usuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+        };
+    }
+}
+
+/*jflorez
+ impacto: 3.1.3
+ resumen: tarea programada para enviar mensaje al equipo estructurador cuando se vence una actividad*/
+public async Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
+{
+    var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid != null && x.CronogramaSeguimiento.Count() == 0).Select(x => new { x.ProcesoSeleccion.NumeroProceso, x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();
+
+    foreach (var tarea in tareas.Select(x => x.ResponsableEstructuradorUsuarioid).Distinct())
+    {
+        string texto = string.Join("<br>", tareas.Where(x => x.ResponsableEstructuradorUsuarioid == tarea).Select(x => x.NumeroProceso));
+        var usuarioenvio = _context.Usuario.Find(tarea);
+        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
+        string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]", texto);
+        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
+    }
+}
     }
 }

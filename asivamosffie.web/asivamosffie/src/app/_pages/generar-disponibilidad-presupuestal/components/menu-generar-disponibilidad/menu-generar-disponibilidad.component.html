@@ -29,10 +29,17 @@
   </div>
   <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
-      <mat-expansion-panel-header class="expansion-style--header" *ngIf="disponibilidad.nombreEstado=='Con validación presupuestal' || disponibilidad.nombreEstado=='Devuelta por coordinación financiera' ||
-      disponibilidad.nombreEstado=='Con disponibilidad presupuestal'|| disponibilidad.nombreEstado=='Con disponibilidad cancelada'">
+      <mat-expansion-panel-header 
+          class="expansion-style--header" 
+          *ngIf="
+                  disponibilidad.nombreEstado=='Con validación presupuestal' || 
+                  disponibilidad.nombreEstado=='Devuelta por coordinación financiera' ||
+                  disponibilidad.nombreEstado=='Con disponibilidad presupuestal'|| 
+                  disponibilidad.nombreEstado=='Con disponibilidad cancelada'">
         <mat-panel-title class="expansion-style--title sin-diligenciar" 
-        [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}">
+          [ngClass]="{
+                      'sin-diligenciar': disponibilidad.completo=='Incompleto', 
+                      'completo': disponibilidad.completo=='Completo'}">
           {{disponibilidad.nombreEstado}}
         </mat-panel-title>
       </mat-expansion-panel-header>
