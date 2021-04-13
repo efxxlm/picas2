@@ -30,6 +30,20 @@ namespace asivamosffie.services
         }
         #endregion
 
+        public async Task<List<dynamic>> GetListContractSettlemen()
+        {
+            List<VRegistrarLiquidacionContrato> ListRestrados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == "6").ToList();
+            List<VRegistrarLiquidacionContrato> ListLiquidacionEnProceso = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == "18").ToList();
+            List<VRegistrarLiquidacionContrato> ListLiquidados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == "19").ToList();
+
+            List<dynamic> List = new List<dynamic>
+            {
+                ListRestrados,
+                ListLiquidacionEnProceso,
+                ListLiquidados
+            };
+            return List;
+        }
 
         public async Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion)
         {
@@ -53,23 +67,25 @@ namespace asivamosffie.services
                               FechaFirmaFiduciaria = pContratacion.FechaFirmaFiduciaria,
 
                               ObservacionesLiquidacion = pContratacion.ObservacionesLiquidacion,
-                              UrlDocumentoLiquidacion = pContratacion.UrlDocumentoLiquidacion
+                              UrlDocumentoLiquidacion = pContratacion.UrlDocumentoLiquidacion,
+
+                              RegistroCompletoLiquidacion = ValidateCompleteRecordContractSettlement(pContratacion)
                           });
-                       
+
                 return
-                            new Respuesta
-                            {
-                                IsSuccessful = true,
-                                IsException = false,
-                                IsValidation = false,
-                                Code = GeneralCodes.OperacionExitosa,
-                                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                       (int)enumeratorMenu.Registrar_liquidacion_contrato,
-                                                       GeneralCodes.OperacionExitosa,
-                                                       idAccion,
-                                                       pContratacion.UsuarioModificacion,
-                                                       ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
-                            };
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                               (int)enumeratorMenu.Registrar_liquidacion_contrato,
+                                               GeneralCodes.OperacionExitosa,
+                                               idAccion,
+                                               pContratacion.UsuarioModificacion,
+                                               ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
+                    };
 
             }
             catch (Exception ex)
@@ -77,21 +93,34 @@ namespace asivamosffie.services
                 return
                      new Respuesta
                      {
-                         IsSuccessful = true,
-                         IsException = false,
+                         IsSuccessful = false,
+                         IsException = true,
                          IsValidation = false,
                          Code = GeneralCodes.Error,
-                         Message = ex.InnerException.ToString()
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                             (int)enumeratorMenu.Registrar_liquidacion_contrato,
+                             GeneralCodes.Error,
+                             idAccion,
+                             pContratacion.UsuarioModificacion,
+                             ex.InnerException.ToString())
                      };
             }
         }
 
-        public async Task<dynamic> GetListContractSettlemen(string pEstadoSolicitud)
+        private bool ValidateCompleteRecordContractSettlement(Contratacion pContratacion)
         {
-            return await _context.VRegistrarLiquidacionContrato
-                         .Where(r => r.EstadoSolicitudCodigo == pEstadoSolicitud)
-                         .OrderByDescending(r => r.ContratoId)
-                         .ToListAsync();
+            if (
+                !pContratacion.FechaTramiteLiquidacion.HasValue
+             || !pContratacion.FechaEnvioFirmaContratista.HasValue
+             || !pContratacion.FechaFirmaContratista.HasValue
+             || !pContratacion.FechaEnvioFirmaFiduciaria.HasValue
+             || !pContratacion.FechaFirmaFiduciaria.HasValue
+             || string.IsNullOrEmpty(pContratacion.ObservacionesLiquidacion)
+             || string.IsNullOrEmpty(pContratacion.UrlDocumentoLiquidacion)
+             ) return false;
+
+            return true;
         }
+
     }
 }

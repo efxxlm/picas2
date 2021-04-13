@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterContractSettlementService
     {
-        Task<dynamic> GetListContractSettlemen(string pEstadoSolicitud);
+        Task<List<dynamic>> GetListContractSettlemen();
 
         Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion);
     }
