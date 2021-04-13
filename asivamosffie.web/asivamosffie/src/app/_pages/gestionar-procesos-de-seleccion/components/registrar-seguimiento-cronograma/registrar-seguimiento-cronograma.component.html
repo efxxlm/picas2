@@ -96,11 +96,31 @@
                     />
                   </p>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
+                <td class="mat-cell cdk-cell ng-star-inserted position-relative">
                   <div *ngIf="activo[i]">
-                    <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
-                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
-                    </button>
+                    <div class="d-flex justify-content-center btn-calendario-container toptd">
+                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                      </button>
+
+                      <span class="required-calendar">*</span>
+                      <span
+                        class="icon-incompleto"
+                        *ngIf="
+                          (form.get('fechaMonitoreo').invalid && form.get('fechaMonitoreo').touched) ||
+                          (form.get('fechaMonitoreo').invalid && estaEditando)
+                        "
+                      >
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                        />
+                      </span>
+                    </div>
                     <mat-form-field class="example-full-width calendar-class">
                       <input
                         matInput
@@ -111,6 +131,7 @@
                         (click)="picker.open()"
                         placeholder="DD/MM/AAAA"
                       />
+
                       <input formControlName="procesoSeleccionCronogramaId" type="hidden" />
                       <input formControlName="estadoActividadInicialCodigo" type="hidden" />
 
@@ -121,9 +142,31 @@
                     {{ form.get('fechaMonitoreo').value | date: 'dd/MM/yyyy' }}
                   </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted" [ngClass]="{ redBackground: pasado[i] }">
-                  <mat-form-field class="select-table select-table--5">
-                    <mat-select formControlName="estadoActividad" required *ngIf="activo[i]">
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <span class="icon-incompleto mt-1em">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
+                        (form.get('estadoActividad').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                  <mat-form-field class="select-width">
+                    <mat-select
+                      formControlName="estadoActividad"
+                      required
+                      *ngIf="activo[i]"
+                      [class.invalid]="
+                        (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
+                        (form.get('estadoActividad').invalid && estaEditando)
+                      "
+                    >
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
                       </mat-option>
@@ -144,12 +187,32 @@
                       }}
                     </span>
                     <span class="contador mt-1em" *ngIf="!form.get('observacion').value && activo[i]"> 800 </span>
+                    <span class="required-quill">*</span>
+                    <span class="icon-incompleto mt-1em ml-1em">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="
+                          (form.get('observacion').invalid && form.get('observacion').touched) ||
+                          (form.get('observacion').invalid && estaEditando)
+                        "
+                      />
+                    </span>
                   </div>
                   <quill-editor
-                    class="quill-editor-style"
+                    class="quill-editor-style quill-dentro-de-la-tabla sin-required"
+                    [class.invalid]="
+                      (form.get('observacion').invalid && form.get('observacion').touched) ||
+                      (form.get('observacion').invalid && estaEditando)
+                    "
                     [styles]="editorStyle"
                     [modules]="config"
                     (onContentChanged)="maxLength($event, 800)"
+                    required
                     formControlName="observacion"
                     *ngIf="activo[i]"
                   ></quill-editor>

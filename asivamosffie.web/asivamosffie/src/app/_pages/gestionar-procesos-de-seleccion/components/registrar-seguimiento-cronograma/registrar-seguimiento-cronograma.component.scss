@@ -24,10 +24,24 @@
 .mt-1em {
   margin-top: 1em;
 }
-.redBackground{
-  background-color: red;
-}
 
 .table-form {
   border-collapse: collapse
+}
+
+.toptd {
+  position: absolute;
+  top: 0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+
+  button.btn-calendario {
+    margin-left: 0;
+  }
+
+  .icon-incompleto {
+    margin-left: 1em;
+    transform: translateY(10px);
+  }
 }
