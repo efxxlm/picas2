@@ -282,6 +282,7 @@ namespace asivamosffie.services
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
+                 
                     foreach (var SesionComiteTema in item.SesionComiteTema)
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
@@ -328,10 +329,12 @@ namespace asivamosffie.services
 
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
-                        if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
-                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
+                        //if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
+                        //    SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
+
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
-                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true).ToList();
+                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true && s.EsFiduciario == false).ToList();
+                        
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
                             SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
@@ -412,10 +415,10 @@ namespace asivamosffie.services
 
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnicoFiduciario)
                     {
-                        if (!BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
-                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
+                        //if (!BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
+                        //    SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
-                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true).ToList();
+                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true && s.EsFiduciario == true).ToList();
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
                             SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
