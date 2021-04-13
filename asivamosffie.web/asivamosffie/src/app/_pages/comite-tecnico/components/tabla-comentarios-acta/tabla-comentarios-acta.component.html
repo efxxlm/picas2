@@ -28,12 +28,21 @@
  -->
 <!-- dejo esto comentado porque falta la info de back -->
 <div *ngIf="data.length>0">
-  </span>
-</p>
-<p>
-  <b>Miembro comité:</b>
-  {{ data[0].miembroSesionParticipante.primerNombre }} {{ data[0].miembroSesionParticipante.primerApellido }}
-</p>
-</div>    </p>
+  <section *ngFor="let comentario of this.data">
+    <p>
+      <b>Fecha:</b>
+      {{ comentario.fecha | date: 'dd/MM/yyyy' }}
+    </p>
+    <p class="d-flex">
+      <b class="pr-05em">Observación:</b>
+      <span class="ml-1em text-justify">
+        {{ textoLimpioMessage( comentario.observacion ) }}
+
+      </span>
+    </p>
+    <p>
+      <b>Miembro comité:</b>
+      {{ comentario.miembroSesionParticipante.primerNombre }} {{ comentario.miembroSesionParticipante.primerApellido }}
+    </p>
   </section>
 </div>
