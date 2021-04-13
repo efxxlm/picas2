@@ -255,8 +255,10 @@ namespace asivamosffie.services
                                                                                         .ThenInclude(r => r.SesionSolicitudVoto)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                                                         .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                             .ThenInclude(r => r.ResponsableSesionParticipante)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                                                         .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                            .ThenInclude(r => r.ResponsableSesionParticipante)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                                                         .ThenInclude(r => r.SesionSolicitudVoto)
                                                                                     .ToListAsync();
