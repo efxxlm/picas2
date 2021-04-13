@@ -781,8 +781,8 @@ namespace asivamosffie.services
         private bool ValidarTodosVotacion(ComiteTecnico pComiteTecnico)
         {
             int CantidadParticipantes = pComiteTecnico.SesionParticipante.Count();
-            int CantidadDeVotos = _context.SesionComentario.Count(c => c.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId);
-
+            int CantidadDeVotos = _context.SesionComentario.Count(c => c.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId && c.ValidacionVoto != true);
+             
             return CantidadParticipantes == CantidadDeVotos;
         }
 
