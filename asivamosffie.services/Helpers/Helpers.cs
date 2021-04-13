@@ -276,7 +276,7 @@ namespace asivamosffie.services.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                return false;
             }
 
             return true;
