@@ -52,7 +52,8 @@ namespace asivamosffie.services
 
                 foreach (var proceso in procesosSeleccion)
                 {
-                    if (proceso.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                    if (proceso.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario 
+                        && proceso.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada )
                     {
                         if (
                                 string.IsNullOrEmpty(proceso.EvaluacionDescripcion) ||

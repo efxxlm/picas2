@@ -32,7 +32,7 @@ export class tablaComentariosActaComponent implements OnInit, OnChanges {
     //this.dataSource = new MatTableDataSource( this.data );
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    //this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
 
   textoLimpioMessage(texto: string) {

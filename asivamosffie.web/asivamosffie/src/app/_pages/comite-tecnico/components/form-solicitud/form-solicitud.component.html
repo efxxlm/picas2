@@ -301,6 +301,7 @@
                   (addressForm.get('tieneCompromisos').invalid && estaEditando)
                 "
               >
+                {{ this.compromisos.value | json }}
                 ¿Este tema del orden del día generó compromisos?
               </label>
             </div>
@@ -343,9 +344,10 @@
                   (addressForm.get('cuantosCompromisos').invalid && estaEditando)
                 "
               >
-                ¿Cuántos compromisos se generaron en este tema del orden del día?
+                
               </label>
             </div>
+            ¿Cuántos compromisos se generaron en este tema del orden del día?
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input
@@ -362,6 +364,7 @@
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
+              
               <span
                 class="contador"
                 [matTooltipPosition]="'above'"

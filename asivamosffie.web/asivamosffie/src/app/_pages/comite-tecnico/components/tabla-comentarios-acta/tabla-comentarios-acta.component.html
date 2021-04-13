@@ -28,18 +28,12 @@
  -->
 <!-- dejo esto comentado porque falta la info de back -->
 <div *ngIf="data.length>0">
- <p>
-  <b>Fecha:</b>
-  {{ data[0].fecha | date: 'dd/MM/yyyy' }}
-</p>
-<p class="d-flex">
-  <b class="pr-05em">Observación:</b>
-  <span class="ml-1em text-justify">
-    {{ textoLimpioMessage( data[0].observacion ) }}
   </span>
 </p>
 <p>
   <b>Miembro comité:</b>
   {{ data[0].miembroSesionParticipante.primerNombre }} {{ data[0].miembroSesionParticipante.primerApellido }}
 </p>
+</div>    </p>
+  </section>
 </div>

@@ -80,7 +80,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router
-  ) {}
+  ) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sesionComiteSolicitud.currentValue) this.cargarRegistro();
   }
@@ -194,7 +194,27 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     const FormGrupos = this.addressForm.value;
     if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
-        this.compromisos.push(this.crearCompromiso());
+        let grupoCompromiso = this.crearCompromiso();
+
+        console.log( this.sesionComiteSolicitud.sesionSolicitudCompromiso.length, this.compromisos.length )
+
+        if (this.sesionComiteSolicitud.sesionSolicitudCompromiso.length > this.compromisos.length) {
+
+          let c = this.sesionComiteSolicitud.sesionSolicitudCompromiso[0];
+
+          let responsableSeleccionado = this.listaMiembros.find(
+            m => m.sesionParticipanteId == c.responsableSesionParticipanteId
+          );
+
+          grupoCompromiso.get('tarea').setValue(c.tarea);
+          grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
+          grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
+          grupoCompromiso.get('sesionSolicitudCompromisoId').setValue(c.sesionSolicitudCompromisoId);
+          grupoCompromiso.get('sesionComiteSolicitudId').setValue(this.sesionComiteSolicitud.sesionComiteSolicitudId);
+        }
+
+        this.compromisos.push(grupoCompromiso);
+
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
       if (this.validarCompromisosDiligenciados()) {

@@ -11,6 +11,7 @@ import { forkJoin } from 'rxjs';
 import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionSecretarioComponent } from '../observacion-secretario/observacion-secretario.component';
+import { componentFactoryName } from '@angular/compiler';
 
 
 @Component({
@@ -189,7 +190,13 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     this.listaCompromisos.forEach( compromiso => {
       if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
         compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false; 
+        //compromiso.responsableSesionParticipante = null;
+        //compromiso.compromisoSeguimiento = null;
+        compromiso.fechaCreacion = new Date();
+        compromiso.fechaCumplimiento = new Date();
+        compromiso.fechaModificacion = new Date();
         comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+        console.log( compromiso )
         
       };
       if ( compromiso.temaCompromisoId !== undefined ) {

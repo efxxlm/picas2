@@ -22,19 +22,21 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="radio-color-detalle"></mat-paginator>
 </div> -->
 <div *ngIf="data.length>0">
+  <section *ngFor="let observacion of data" >
   <p>
     <b>Fecha:</b>
-    {{ data[0].fecha | date: 'dd/MM/yyyy' }}
+    {{ observacion.fecha | date: 'dd/MM/yyyy' }}
   </p>
   <p class="d-flex">
     <b class="pr-05em">Observación:</b>
     <span class="ml-1em">
-      {{ textoLimpioMessage( data[0].observacion ) }}
+      {{ textoLimpioMessage( observacion.observacion ) }}
 
     </span>
   </p>
   <p>
     <b>Miembro comité:</b>
-    {{ data[0].miembroSesionParticipante.primerNombre }} {{ data[0].miembroSesionParticipante.primerApellido }}
+    {{ observacion.miembroSesionParticipante.primerNombre }} {{ observacion.miembroSesionParticipante.primerApellido }}
   </p>
+</section>
 </div>

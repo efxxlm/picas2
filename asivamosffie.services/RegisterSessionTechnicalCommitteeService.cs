@@ -2895,6 +2895,22 @@ namespace asivamosffie.services
 
                 #region compromisos
 
+                List<SesionSolicitudCompromiso> listaCompromisos = _context.SesionSolicitudCompromiso
+                                                                                .Where(x => x.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                                                                                .ToList();
+
+                listaCompromisos.ForEach(c =>
+               {
+                   if (pSesionComiteSolicitud.SesionSolicitudCompromiso.Where( x => x.SesionSolicitudCompromisoId == c.SesionSolicitudCompromisoId ).Count() == 0)
+                   {
+                       SesionSolicitudCompromiso sesionSolicitudCompromiso = _context.SesionSolicitudCompromiso.Find(c.SesionSolicitudCompromisoId);
+
+                       sesionSolicitudCompromiso.Eliminado = true;
+
+                       _context.SesionSolicitudCompromiso.Update(sesionSolicitudCompromiso);
+                   }
+               });
+
                 foreach (var compromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
                     if (compromiso.SesionSolicitudCompromisoId == 0)
