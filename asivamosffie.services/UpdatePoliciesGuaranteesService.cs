@@ -69,8 +69,7 @@ namespace asivamosffie.services
          
             GetRemoveDeleteItems(contratoPoliza);
 
-            return contratoPoliza;
-
+            return contratoPoliza; 
         }
 
         public async Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias()

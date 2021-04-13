@@ -21,20 +21,27 @@ namespace asivamosffie.services
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-      
-        public RegisterContractSettlementService(  devAsiVamosFFIEContext context, ICommonService commonService)
+
+        public RegisterContractSettlementService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
-          
+
         }
         #endregion
-         
-        public async Task<dynamic> GetListContractSettlemen()
+
+
+        public async Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion)
         { 
-           return  await _context.VRegistrarLiquidacionContrato
-                        .OrderByDescending(r => r.ContratoId)
-                        .ToListAsync(); 
-        } 
+            return new Respuesta(); 
+        }
+
+        public async Task<dynamic> GetListContractSettlemen(string pEstadoSolicitud)
+        {
+            return await _context.VRegistrarLiquidacionContrato
+                         .Where(r => r.EstadoSolicitudCodigo == pEstadoSolicitud)
+                         .OrderByDescending(r => r.ContratoId)
+                         .ToListAsync();
+        }
     }
 }

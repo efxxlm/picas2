@@ -30,9 +30,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListContractSettlemen")]
         [HttpGet]
-        public async Task<dynamic> GetListContractSettlemen()
+        public async Task<dynamic> GetListContractSettlemen([FromQuery] string pEstadoSolicitud)
         {
-            return await _registerContractSettlementService.GetListContractSettlemen();
+            return await _registerContractSettlementService.GetListContractSettlemen(pEstadoSolicitud);
         }
          
     }

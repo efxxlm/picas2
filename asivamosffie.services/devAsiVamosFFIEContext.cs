@@ -464,8 +464,6 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
                 entity.Property(e => e.Usuario)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -1140,9 +1138,19 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaEnvioDocumentacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaEnvioFirmaContratista).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEnvioFirmaFiduciaria).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFirmaFiduciaris).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
@@ -1161,6 +1169,8 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UrlDocumentoLiquidacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -2280,10 +2290,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(800)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
