@@ -684,7 +684,7 @@ namespace asivamosffie.services
                     await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                      
                     //Cambiar estado Comite Con acta aprobada y Solicitudes 
-                    if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
+                    //if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
                     {
                         if (comiteTecnico.EsComiteFiduciario == true)
                         {

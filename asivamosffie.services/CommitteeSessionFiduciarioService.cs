@@ -3043,6 +3043,8 @@ namespace asivamosffie.services
             }
 
             #endregion novedad contractual
+
+            _context.SaveChanges();
         }
 
         public async Task<Respuesta> CreateEditActasSesionSolicitudCompromiso(SesionComiteSolicitud pSesionComiteSolicitud)
