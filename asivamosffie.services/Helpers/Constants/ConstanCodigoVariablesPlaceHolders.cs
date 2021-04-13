@@ -266,5 +266,49 @@
         public const string TITULOS_TEMAS_NUEVOS = "191";
         public const string TITULO_PROPOSICIONES_VARIOS = "192";
         #endregion
+
+        #region ficha controversia contractial
+        public const string TIPO_CONTROVERSIA = "194";
+        public const string FECHA_INICIO_CONTRATO = "195";
+        public const string FECHA_FIN_CONTRATO = "196";
+        public const string ESTADO_OBRA                 = "197";
+        public const string PROGRAMACION_OBRA           = "198";
+        public const string AVANCE_FISICO_ACUMULADO     = "199";
+        public const string FACTURACION_PROGRAMADA      = "200";
+        public const string FACTURACION_EJECUTADA = "201";
+        public const string EJECUCION_PROYECTO = "202";
+        public const string MOTIVOS_SOLICITUD                = "203";
+        public const string FECHA_COMITE_PRE_TECNICO         = "204";
+        public const string CONCLUSION_COMITE_PRE_TECNICO    = "205";
+        public const string URL_SOPORTE_SOLICITUD            = "206";
+        public const string FECHA_RADICADO_SAC               = "207";
+        public const string RESUMEN_JUSTIFICACION_SOLICITUD = "208";
+        public const string DETALLE_SOLICITUD_TAI = "209";
+        public const string DETALLE_SOLICITUD_NO_TAI = "210";
+        public const string HISTORIAL_MODIFICACIONES = "211";
+        public const string TIPO_NOVEDAD_OTRAS = "212";
+        public const string TIPO_NOVEDAD_ADICION = "213";
+        public const string TIPO_NOVEDAD_PRORROGA = "214";
+        public const string TIPO_NOVEDAD_MODIFICACION = "215";
+        public const string TP_PLAZO_SOLICITADO = "216";
+        public const string TP_APORTANTE = "217";
+        public const string TP_NUMERO_COMITE_TECNICO = "218";
+        public const string TP_NUMERO_COMITE_FIDUCIARIO = "219";
+        public const string TP_ESTADO = "220";
+        public const string TP_PLAZO_DIAS= "221";
+        public const string TP_PLAZO_MESES = "222";
+        public const string TP_FECHA_INICIO = "223";
+        public const string TP_FECHA_FIN = "224";
+        public const string TP_CLAUSULA = "225";
+        public const string TP_AJUSTE_CLAUSULA = "226";
+        public const string NOMBRE_MODIFICACION = "227";
+        public const string TP_NUMERO_APORTANTE = "228";
+        public const string TP_VALOR_APORTANTE = "229";
+        public const string TP_FUENTE         = "230";
+        public const string TP_FASE          = "231";
+        public const string TP_COMPONENTE     = "232";
+        public const string TP_USO      = "233";
+        public const string TP_VALOR_USO  = "234";
+        #endregion
     }
 }

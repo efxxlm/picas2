@@ -82,6 +82,17 @@
         Participantes_Union_Temporal_Proceso_Seleccion = 72,
 
         Tabla_Orden_Giro_Para_Tramitar = 73,
-        Registros_Orden_Giro_Para_Tramitar = 74
+        Registros_Orden_Giro_Para_Tramitar = 74,
+        Ficha_De_Controversia_Contractual = 75,
+        Ejecucion_proyecto = 76,
+        Detalle_solicitud_tai = 77,
+        Detalle_solicitud_no_tai = 78,
+        Tipo_de_novedad_adicion = 79,
+        Tipo_de_novedad_prorroga = 80,
+        Tipo_de_novedad_otras = 81,
+        Historial_de_modificaciones_controversias = 82,
+        Tipo_de_novedad_modificacion_contractual = 83,
+        Tipo_de_novedad_adicion_aportante = 84,
+
     }
 }

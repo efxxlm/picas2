@@ -63,7 +63,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
       pTablaId = '1';
     }
 
-    this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
+    this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId, this.ObjetoComiteTecnico.comiteTecnicoId)
       .subscribe(resp => {
         console.log(resp);
         const documento = `FichaSolicitud${numeroSolicitud}.pdf`;

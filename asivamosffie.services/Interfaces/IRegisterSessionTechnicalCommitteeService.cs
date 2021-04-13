@@ -55,7 +55,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
 
-        Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId);
+        Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId,int pComiteTecnicoId);
 
         Task<List<ComiteGrilla>> GetListComiteGrilla();
 
