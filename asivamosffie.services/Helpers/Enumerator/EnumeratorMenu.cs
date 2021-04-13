@@ -63,6 +63,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Aprobar_solicitud_liquidacion_contractual = 89,
         Gestionar_tramite_liquidacion_contractual = 90,
         Registrar_actualizacion_de_polizas_y_garantias = 91,
+        Registrar_liquidacion_contrato = 92,
     }
 
     public enum enumeratorAccion

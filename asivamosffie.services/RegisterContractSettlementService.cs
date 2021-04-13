@@ -32,8 +32,58 @@ namespace asivamosffie.services
 
 
         public async Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion)
-        { 
-            return new Respuesta(); 
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Liquidacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<Contratacion>()
+                          .Where(c => c.ContratacionId == pContratacion.ContratacionId)
+                          .UpdateAsync(c => new Contratacion
+                          {
+                              UsuarioModificacion = pContratacion.UsuarioModificacion,
+                              FechaModificacion = DateTime.Now,
+
+                              FechaTramiteLiquidacion = DateTime.Now,
+
+                              FechaEnvioFirmaContratista = pContratacion.FechaEnvioFirmaContratista,
+                              FechaFirmaContratista = pContratacion.FechaFirmaContratista,
+
+                              FechaEnvioFirmaFiduciaria = pContratacion.FechaFirmaContratista,
+                              FechaFirmaFiduciaria = pContratacion.FechaFirmaFiduciaria,
+
+                              ObservacionesLiquidacion = pContratacion.ObservacionesLiquidacion,
+                              UrlDocumentoLiquidacion = pContratacion.UrlDocumentoLiquidacion
+                          });
+                       
+                return
+                            new Respuesta
+                            {
+                                IsSuccessful = true,
+                                IsException = false,
+                                IsValidation = false,
+                                Code = GeneralCodes.OperacionExitosa,
+                                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                       (int)enumeratorMenu.Registrar_liquidacion_contrato,
+                                                       GeneralCodes.OperacionExitosa,
+                                                       idAccion,
+                                                       pContratacion.UsuarioModificacion,
+                                                       ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
+                            };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = ex.InnerException.ToString()
+                     };
+            }
         }
 
         public async Task<dynamic> GetListContractSettlemen(string pEstadoSolicitud)

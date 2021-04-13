@@ -1144,7 +1144,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaFiduciaris).HasColumnType("datetime");
+                entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 

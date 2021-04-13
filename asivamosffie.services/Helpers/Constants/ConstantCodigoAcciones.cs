@@ -360,5 +360,8 @@
         //5.1.6 - 5.1.7 - 5.1.8
         public const string Crear_Actualizar_Liquidacion_Contratacion_Observacion = "260";
         public const string Cambiar_estado_Contratacion_Proyecto_Liquidacion = "262";
+
+        //5.4.2
+        public const string Crear_Editar_Liquidacion_Contrato ="267";
     }
 }

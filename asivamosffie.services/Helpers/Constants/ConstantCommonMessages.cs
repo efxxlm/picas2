@@ -63,6 +63,7 @@ namespace asivamosffie.services.Helpers.Constant
 
             public const string ELIMINAR_ACTUALIZACION_POLIZA = "ELIMINAR ACTUALIZACION POLIZAS Y GARANTIAS";
         }
+
         internal static class GuaranteePolicies
         {
             public const string CREAR_EDITAR = "CREAR EDITAR GARANTIAS Y POLIZAS";
@@ -71,6 +72,11 @@ namespace asivamosffie.services.Helpers.Constant
 
             public const string CAMBIAR_ESTADO = "CAMBIAR ESTADO POLIZAS Y GARANTIAS";
         }
+
+        internal static class ContractSettlement
+        {
+            public const string CREAR_LIQUIDACION = "CREAR LIQUIDACION DE CONTRATO";
+          }
     }
 
 }

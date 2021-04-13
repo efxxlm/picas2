@@ -34,6 +34,19 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerContractSettlementService.GetListContractSettlemen(pEstadoSolicitud);
         }
-         
+        [Route("CreateEditContractSettlement")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContractSettlement([FromBody] Contratacion pContratacion)
+        {
+            try
+            {
+                pContratacion.UsuarioModificacion = User.Identity.Name;
+                return Ok(await _registerContractSettlementService.CreateEditContractSettlement(pContratacion));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            } 
+        } 
     }
 }

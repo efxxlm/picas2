@@ -39,7 +39,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaEnvioFirmaContratista { get; set; }
         public DateTime? FechaFirmaContratista { get; set; }
         public DateTime? FechaEnvioFirmaFiduciaria { get; set; }
-        public DateTime? FechaFirmaFiduciaris { get; set; }
+        public DateTime? FechaFirmaFiduciaria { get; set; }
         public string ObservacionesLiquidacion { get; set; }
         public string UrlDocumentoLiquidacion { get; set; }
 
