@@ -681,7 +681,7 @@ namespace asivamosffie.services
                 decimal valorDisponible = 0;
 
                 // cuando ya se guardó
-                if (gestionFuenteFinanciacion != null)
+                if (gestionFuenteFinanciacion.Count() > 0)
                 {
                     valorDisponible = gestionFuenteFinanciacion
                                                     .Sum(x => x.SaldoActual);
@@ -700,7 +700,7 @@ namespace asivamosffie.services
                 decimal valorsolicitado = 0;
 
                 // cuando ya se guardó
-                if ( gestionFuenteFinanciacion != null)
+                if ( gestionFuenteFinanciacion.Count() > 0)
                 {
                     valorsolicitado = gestionFuenteFinanciacion
                                                     .Sum(x => x.ValorSolicitado);
