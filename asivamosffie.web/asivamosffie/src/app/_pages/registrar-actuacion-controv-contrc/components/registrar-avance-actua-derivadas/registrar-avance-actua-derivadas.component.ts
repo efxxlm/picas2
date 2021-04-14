@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './registrar-avance-actua-derivadas.component.html',
   styleUrls: ['./registrar-avance-actua-derivadas.component.scss']
 })
-export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
+export class RegistrarAvanceActuaDerivadasComponent implements OnInit, OnDestroy {
   addressForm = this.fb.group({
     fechaActuacionDerivada: [null, Validators.required],
     proximaActuacionRequerida: [null, Validators.required],

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './verdetalleedit-avance-actua-derivadas.component.html',
   styleUrls: ['./verdetalleedit-avance-actua-derivadas.component.scss']
 })
-export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
+export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit, OnDestroy {
 
   addressForm = this.fb.group({
     fechaActuacionDerivada: [null, Validators.required],
@@ -39,6 +39,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
   controversia: any;
   actuacionDerivadaInfo: any;
   estaEditando = false;
+  realizoPeticion: boolean = false;
   constructor(private fb: FormBuilder,private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
@@ -79,6 +80,24 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
       });
     });
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -110,6 +129,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
       observaciones :this.addressForm.get("observaciones").value,}
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{
+        this.realizoPeticion = true;
         this.openDialog( '', `<b>${ response.message }</b>`,true);        
       }
     );
