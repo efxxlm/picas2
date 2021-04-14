@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-registrar-controvrs-sop-sol.component.html',
   styleUrls: ['./form-registrar-controvrs-sop-sol.component.scss']
 })
-export class FormRegistrarControvrsSopSolComponent implements OnInit {
+export class FormRegistrarControvrsSopSolComponent implements OnInit, OnDestroy {
 
   @Input() isEditable;
   @Input() idControversia;
@@ -18,6 +18,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
+  realizoPeticion: boolean = false;
   estaEditando = false;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
@@ -32,7 +33,24 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
 
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   loadSemaforo() {
 
     if (this.addressForm.value.urlSoporte != null) {  
@@ -64,12 +82,14 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
       if (resp.isSuccessful == true) {
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         if (this.isEditable == true) {
+          this.realizoPeticion = true;
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));  
         }
         else {
+          this.realizoPeticion = true;
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));  
         }
       }
       else {

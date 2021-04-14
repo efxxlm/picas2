@@ -69,7 +69,7 @@
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='2' || element.estadoActuacionCodigo=='3'"
+                        *ngIf="element.estadoActuacionCodigo=='2' || (element.estadoActuacionCodigo=='3' && element.registroCompletoActuacion=='Completo' && element.requiereComite==true)"
                         (click)="this.verDetalleActuacion(element.actuacionId)">
                         Ver detalle
                     </button>

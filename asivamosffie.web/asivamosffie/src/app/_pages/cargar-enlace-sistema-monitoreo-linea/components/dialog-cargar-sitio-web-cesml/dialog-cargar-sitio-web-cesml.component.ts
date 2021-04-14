@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './dialog-cargar-sitio-web-cesml.component.html',
   styleUrls: ['./dialog-cargar-sitio-web-cesml.component.scss']
 })
-export class DialogCargarSitioWebCesmlComponent implements OnInit {
+export class DialogCargarSitioWebCesmlComponent implements OnInit, OnDestroy {
 
   public title;
   public idProyecto;
@@ -25,7 +25,9 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     urlMonitoreo: [null, Validators.required]
   });
 
+  realizoPeticion: boolean = false;
   estaEditando = false;
+
   constructor(private services: MonitoringURLService, private fb: FormBuilder, public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarSitioWebCesmlComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
     if (data.id != undefined) {
       this.idProyecto = data.id;
@@ -56,6 +58,24 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   ngOnInit(): void {
     this.addressForm.get('urlMonitoreo').setValue(this.web);
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());

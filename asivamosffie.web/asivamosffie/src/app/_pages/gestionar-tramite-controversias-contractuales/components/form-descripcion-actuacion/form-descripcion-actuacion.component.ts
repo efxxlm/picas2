@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-descripcion-actuacion.component.html',
   styleUrls: ['./form-descripcion-actuacion.component.scss']
 })
-export class FormDescripcionActuacionComponent implements OnInit {
+export class FormDescripcionActuacionComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() idActuacionFromEdit;
   addressForm = this.fb.group({
@@ -60,9 +60,10 @@ export class FormDescripcionActuacionComponent implements OnInit {
     ]
   };
   numReclamacion: any;
-
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
   estaEditando = false;
+  realizoPeticion: boolean = false;
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
+  
 
   ngOnInit(): void {
     this.common.listaEstadosAvanceTramite().subscribe(rep => {
@@ -106,7 +107,24 @@ export class FormDescripcionActuacionComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
 
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -222,6 +240,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
 
         });
         */
+        this.realizoPeticion = true;
         this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       }

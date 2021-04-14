@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-reclamacion-aseguradora-actuacion.component.html',
   styleUrls: ['./form-reclamacion-aseguradora-actuacion.component.scss']
 })
-export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
+export class FormReclamacionAseguradoraActuacionComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() controversiaAct;
   @Input() controversiaID;
@@ -35,6 +35,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  realizoPeticion: boolean = false;
   constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -50,6 +51,24 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -108,6 +127,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         this.services.CambiarEstadoActuacionReclamacion(this.controversiaAct,'2').subscribe((data:any)=>{
           
         });
+        this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       });

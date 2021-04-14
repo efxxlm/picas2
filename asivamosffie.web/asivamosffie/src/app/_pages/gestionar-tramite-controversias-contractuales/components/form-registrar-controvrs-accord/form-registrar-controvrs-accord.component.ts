@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { ControversiaContractual, ControversiaMotivo } from 'src/app/_interfaces
   templateUrl: './form-registrar-controvrs-accord.component.html',
   styleUrls: ['./form-registrar-controvrs-accord.component.scss']
 })
-export class FormRegistrarControvrsAccordComponent implements OnInit {
+export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() contratoId;
   @Input() idControversia;
@@ -74,6 +74,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   sucessInfo: string = 'La información ha sido guardada exitosamente.';
   obj1: boolean;
 
+  realizoPeticion: boolean = false;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) {
     this.common.listaTiposDeControversiaContractual().subscribe(data => {
       this.tipoControversiaArrayDom = data;
@@ -168,6 +169,24 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       //this.loadtipoControversias();
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   loadtipoControversias() {
 
   }
@@ -292,7 +311,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(this.idControversia != 'undefined' && this.idControversia != null){
+      if(this.idControversia != 'undefined' && this.idControversia != null && this.addressForm.dirty === false){
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));  
       }else{

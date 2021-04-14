@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-actuacion-reclamacion.component.html',
   styleUrls: ['./form-actuacion-reclamacion.component.scss']
 })
-export class FormActuacionReclamacionComponent implements OnInit {
+export class FormActuacionReclamacionComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() controversiaID;
   @Input() reclamacionID;
@@ -47,6 +47,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  realizoPeticion: boolean = false;
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
@@ -75,6 +76,24 @@ export class FormActuacionReclamacionComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -139,6 +158,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     }
     this.services.CreateEditarActuacionReclamacion(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
+        this.realizoPeticion=true;
         this.openDialog("", data.message);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora',this.controversiaID,this.reclamacionID]);
       }

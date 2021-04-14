@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-registrar-mesa-de-trabajo.component.html',
   styleUrls: ['./form-registrar-mesa-de-trabajo.component.scss']
 })
-export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
+export class FormRegistrarMesaDeTrabajoComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() idControversia;
   @Input() idActuacion;
@@ -49,6 +49,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  realizoPeticion: boolean = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) {
     this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
       this.estadoAvanceTramiteArray = a;
@@ -75,6 +76,24 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -137,6 +156,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     }
     this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
+        this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.idControversia]);
       }

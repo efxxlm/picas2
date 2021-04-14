@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-registar-actuacion-notai.component.html',
   styleUrls: ['./form-registar-actuacion-notai.component.scss']
 })
-export class FormRegistarActuacionNotaiComponent implements OnInit {
+export class FormRegistarActuacionNotaiComponent implements OnInit, OnDestroy {
   @Input() isEditable;
   @Input() idActuacionFromEdit;
   addressForm = this.fb.group({
@@ -57,6 +57,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   };
   numReclamacion: any;
   estaEditando = false;
+  realizoPeticion: boolean = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
@@ -103,6 +104,24 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
