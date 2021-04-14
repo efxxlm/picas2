@@ -32,17 +32,12 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListContractSettlemen()
         {
-            List<VRegistrarLiquidacionContrato> ListRestrados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList();
-            List<VRegistrarLiquidacionContrato> ListLiquidacionEnProceso = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria).ToList();
-            List<VRegistrarLiquidacionContrato> ListLiquidados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList();
-
-            List<dynamic> List = new List<dynamic>
+            return new List<dynamic>
             {
-                ListRestrados,
-                ListLiquidacionEnProceso,
-                ListLiquidados
+                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList(),
+                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria).ToList(),
+                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList()
             };
-            return List;
         }
 
         public async Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion)
