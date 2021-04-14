@@ -8994,6 +8994,12 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RegistrarLiquidacionContrato");
 
+                entity.Property(e => e.Asdsad)
+                    .IsRequired()
+                    .HasColumnName("asdsad")
+                    .HasMaxLength(13)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
