@@ -41,6 +41,10 @@ namespace asivamosffie.model.Models
         public string CorreoRlutoConsorcio { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string NombreIntegrante2 { get; set; }
+        public decimal? PorcentajeParticipacion2 { get; set; }
+        public string NombreIntegrante3 { get; set; }
+        public decimal? PorcentajeParticipacion3 { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
     }

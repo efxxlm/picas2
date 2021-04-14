@@ -7551,6 +7551,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NombreIntegrante2).HasMaxLength(200);
+
+                entity.Property(e => e.NombreIntegrante3).HasMaxLength(200);
+
                 entity.Property(e => e.NombreOtoConsorcio)
                     .IsRequired()
                     .HasColumnName("NombreOToConsorcio")
@@ -7572,6 +7576,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.PorcentajeParticipacion).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.PorcentajeParticipacion2).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.PorcentajeParticipacion3).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.RepresentanteLegal)
                     .IsRequired()
@@ -8994,12 +9002,6 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RegistrarLiquidacionContrato");
 
-                entity.Property(e => e.Asdsad)
-                    .IsRequired()
-                    .HasColumnName("asdsad")
-                    .HasMaxLength(13)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -9014,6 +9016,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroSolicitud)
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(13)
                     .IsUnicode(false);
             });
 

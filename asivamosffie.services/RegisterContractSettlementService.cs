@@ -32,11 +32,12 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListContractSettlemen()
         {
+            List<VRegistrarLiquidacionContrato> liquidacionContratos = _context.VRegistrarLiquidacionContrato.ToList();
             return new List<dynamic>
             {
-                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList(),
-                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria).ToList(),
-                _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList()
+                liquidacionContratos.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList(),
+                liquidacionContratos.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria).ToList(),
+                liquidacionContratos.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList()
             };
         }
 
