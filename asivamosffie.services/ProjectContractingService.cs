@@ -462,7 +462,7 @@ namespace asivamosffie.services
             try
             {
                 ListContratacion = await _context.Contratacion
-                    .Where(r => !(bool)r.Eliminado) 
+                    .Where(r => !(bool)r.Eliminado)
                     .ToListAsync();
 
                 //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
@@ -605,7 +605,8 @@ namespace asivamosffie.services
                         InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                         Sede = proyecto.Sede.Nombre,
                         ProyectoId = proyecto.ProyectoId,
-                        ContratacionId =  proyecto?.ContratacionProyecto?.FirstOrDefault()?.ContratacionId
+                        ContratacionId = proyecto?.ContratacionProyecto?.FirstOrDefault()?.ContratacionId,
+                        NumeroSolicitud = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.NumeroSolicitud ?? "No asignado"
                     };
 
                     if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
@@ -1131,7 +1132,7 @@ namespace asivamosffie.services
                         return false;
 
                     foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante.Where(r => r.Eliminado != true))
-                    { 
+                    {
                         if (
                               string.IsNullOrEmpty(ComponenteAportante.TipoComponenteCodigo)
                            || string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
@@ -1141,7 +1142,7 @@ namespace asivamosffie.services
                         {
                             if (ComponenteUso.TipoUsoCodigo == null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
                                 return false;
-                        } 
+                        }
                     }
                 }
             }
