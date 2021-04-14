@@ -694,9 +694,13 @@ namespace asivamosffie.services
                 else
                 {
                     var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
-                    var departamento = _context.Localizacion.Find(municipio.IdPadre);
-                    proces.municipioString = municipio.Descripcion;
-                    proces.departamentoString = departamento.Descripcion;
+                    if ( municipio != null)
+                    {
+                        var departamento = _context.Localizacion.Find(municipio.IdPadre);
+                        proces.municipioString = municipio.Descripcion;
+                        proces.departamentoString = departamento.Descripcion;
+                    }
+                    
                 }
 
             }
@@ -1262,25 +1266,45 @@ namespace asivamosffie.services
                             }
 
 
-                            //#22
+                            //#26
                             //Nombre  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
 
-                            //#23
+                            //#27
                             //Cedula  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 27].Text))
                             {
-                                temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
+                                temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 27].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 27].Text) : 0;
                             }
 
+                            //#28
+                            //Departamento union union temporal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text))
+                            {
+                                temp.DepartamentoRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 28].Text, "0");
+                            }
 
-                            //#24
+                            //#29
                             //Nombre integrante 3
-                            //if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text))
-                            //{
-                            //    int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0");
-                            //    temp.nombre = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 25].Text, DepartamentoIdConsorcio.ToString());
-                            //}
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 29].Text))
+                            {
+                                int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 28].Text, "0");
+                                temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 29].Text, DepartamentoIdConsorcio.ToString());
+                            }
+
+                            //#30
+                            //Direccion  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 30].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 30].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
+
+                            //#31
+                            //Telefono  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 31].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 31].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
+
+                            //#32
+                            //Correo  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 32].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
+
+                            
 
                             //#28
                             //Municipio  del representante legal de la UT o consorcio
@@ -1290,17 +1314,7 @@ namespace asivamosffie.services
                             //    temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 28].Text, DepartamentoIdConsorcio.ToString());
                             //}
 
-                            //#26
-                            //Direccion  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 30].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
 
-                            //#27
-                            //Telefono  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 31].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 27].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
-
-                            //#28
-                            //Correo  del representante legal de la UT o consorcio
-                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
 
 
                             //Guarda Cambios en una tabla temporal

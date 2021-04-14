@@ -32,6 +32,21 @@ export class FormObservacionesComponent {
     ]
   };
 
+  noGuardado = true;
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty && this.noGuardado == true) {
+      let dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle: '', modalText: '¿Desea guardar la información registrada?', siNoBoton: true }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.onSubmit();
+        }
+      });
+    }
+  }
+
   seguimientoId?: number;
   @Input() observacionObjeto: SeguimientoDiarioObservaciones;
   @Input() tieneObservaciones?: boolean;
@@ -116,6 +131,7 @@ export class FormObservacionesComponent {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code == "200") {
+          this.noGuardado = true;
           this.router.navigate(['/aprobarSeguimientoDiario']);
         }
 

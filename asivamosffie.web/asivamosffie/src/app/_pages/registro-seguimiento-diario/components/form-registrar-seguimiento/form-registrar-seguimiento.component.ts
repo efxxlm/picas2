@@ -81,6 +81,20 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   causaBajaDisponibilidadEquipo = [];
   causaBajaDisponibilidadProductividad = [];
 
+  noGuardado = true;
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty && this.noGuardado == true) {
+      let dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle: '', modalText: '¿Desea guardar la información registrada?', siNoBoton: true }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.onSubmit();
+        }
+      });
+    }
+  }
 
   maxLength(e: any, n: number) {
     console.log(e.editor.getLength()+" "+n);
@@ -272,8 +286,10 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     this.dailyFollowUpService.createEditDailyFollowUp( seguimiento )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
-        if ( respuesta.code == "200" )
+        if ( respuesta.code == "200" ){
           this.router.navigate(['registroSeguimientoDiario'])
+          this.noGuardado = false;
+        }
       });
 
   }

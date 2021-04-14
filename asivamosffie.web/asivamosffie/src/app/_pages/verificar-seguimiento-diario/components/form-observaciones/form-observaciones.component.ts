@@ -47,6 +47,21 @@ export class FormObservacionesComponent implements OnInit, OnChanges {
 
   }
 
+  noGuardado = true;
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty && this.noGuardado == true) {
+      let dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle: '', modalText: '¿Desea guardar la información registrada?', siNoBoton: true }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.onSubmit();
+        }
+      });
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.observacionObjeto) {
       this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
@@ -112,6 +127,7 @@ export class FormObservacionesComponent implements OnInit, OnChanges {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code == "200") {
+          this.noGuardado = false;
           this.router.navigate(['/verificarSeguimientoDiario']);
         }
 

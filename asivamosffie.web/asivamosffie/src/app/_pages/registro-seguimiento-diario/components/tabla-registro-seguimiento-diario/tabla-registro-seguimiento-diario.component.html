@@ -85,7 +85,7 @@
                       type="button"
                       (click)="VerBitacora( element )"
                       [routerLink]="[ 'verBitacora', element.contratacionProyectoId ]"
-                      *ngIf="element.seguimientoDiarioId > 0">
+                      *ngIf="element.mostrarBitacora === true">
         Ver bitácora
         </a>
 

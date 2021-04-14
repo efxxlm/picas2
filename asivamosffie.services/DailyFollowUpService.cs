@@ -70,6 +70,14 @@ namespace asivamosffie.services
 
                     }
 
+                    if (listaSeguimientoDiario
+                            .Where( x => x.EstadoCodigo != null &&
+                                    x.EstadoCodigo != "0" &&
+                                    x.EstadoCodigo != ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro )
+                            .Count() > 0 ){
+                        p.MostrarBitacora = true;
+                    }
+
                 }
             });
 

@@ -35,6 +35,7 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool? RegistroCompletoTieneObservaciones { get; set; }
 
-        
+        [NotMapped]
+        public bool MostrarBitacora { get; set; }
     }
 }
