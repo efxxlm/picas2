@@ -282,6 +282,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -8368,7 +8369,7 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_ListaContratacionModificacionContractual");
 
                 entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoDelRegistro)
@@ -8384,12 +8385,13 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitud)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VListaProyectos>(entity =>

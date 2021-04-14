@@ -33,8 +33,7 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetListContractSettlemen()
         {
             List<VRegistrarLiquidacionContrato> ListRestrados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList();
-            List<VRegistrarLiquidacionContrato> ListLiquidacionEnProceso = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma).ToList();
-            List<VRegistrarLiquidacionContrato> ListEnfirmadelafiduciaria = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Enfirmadelafiduciaria).ToList();
+            List<VRegistrarLiquidacionContrato> ListLiquidacionEnProceso = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria).ToList();
             List<VRegistrarLiquidacionContrato> ListLiquidados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList();
 
             List<dynamic> List = new List<dynamic>
@@ -52,26 +51,30 @@ namespace asivamosffie.services
 
             try
             {
+                string estadoSolicitud = ValidarEstadoSolicitud(pContratacion);
+
                 await _context.Set<Contratacion>()
-                          .Where(c => c.ContratacionId == pContratacion.ContratacionId)
-                          .UpdateAsync(c => new Contratacion
-                          {
-                              UsuarioModificacion = pContratacion.UsuarioModificacion,
-                              FechaModificacion = DateTime.Now,
+                              .Where(c => c.ContratacionId == pContratacion.ContratacionId)
+                              .UpdateAsync(c => new Contratacion
+                              {
+                                  EstadoSolicitudCodigo = estadoSolicitud,
 
-                              FechaTramiteLiquidacion = DateTime.Now,
+                                  UsuarioModificacion = pContratacion.UsuarioModificacion,
+                                  FechaModificacion = DateTime.Now,
 
-                              FechaEnvioFirmaContratista = pContratacion.FechaEnvioFirmaContratista,
-                              FechaFirmaContratista = pContratacion.FechaFirmaContratista,
+                                  FechaTramiteLiquidacion = DateTime.Now,
 
-                              FechaEnvioFirmaFiduciaria = pContratacion.FechaFirmaContratista,
-                              FechaFirmaFiduciaria = pContratacion.FechaFirmaFiduciaria,
+                                  FechaEnvioFirmaContratista = pContratacion.FechaEnvioFirmaContratista,
+                                  FechaFirmaContratista = pContratacion.FechaFirmaContratista,
 
-                              ObservacionesLiquidacion = pContratacion.ObservacionesLiquidacion,
-                              UrlDocumentoLiquidacion = pContratacion.UrlDocumentoLiquidacion,
+                                  FechaEnvioFirmaFiduciaria = pContratacion.FechaFirmaContratista,
+                                  FechaFirmaFiduciaria = pContratacion.FechaFirmaFiduciaria,
 
-                              RegistroCompletoLiquidacion = ValidateCompleteRecordContractSettlement(pContratacion)
-                          });
+                                  ObservacionesLiquidacion = pContratacion.ObservacionesLiquidacion,
+                                  UrlDocumentoLiquidacion = pContratacion.UrlDocumentoLiquidacion,
+
+                                  RegistroCompletoLiquidacion = ValidateCompleteRecordContractSettlement(pContratacion)
+                              });
 
                 return
                     new Respuesta
@@ -106,6 +109,28 @@ namespace asivamosffie.services
                              ex.InnerException.ToString())
                      };
             }
+        }
+
+        private string ValidarEstadoSolicitud(Contratacion pContratacion)
+        {
+            string estadoSolicitud = pContratacion.EstadoSolicitudCodigo;
+            bool RegistroCompleto = ValidateCompleteRecordContractSettlement(pContratacion);
+            if (!RegistroCompleto)
+            {
+                if (
+                          pContratacion.FechaEnvioFirmaContratista.HasValue
+                      && !pContratacion.FechaEnvioFirmaFiduciaria.HasValue)
+                    estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_proceso_de_firmas;
+
+                if (
+                     pContratacion.FechaEnvioFirmaFiduciaria.HasValue)
+                    estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria;
+            }
+            else
+                estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.Liquidado;
+
+
+            return estadoSolicitud;
         }
 
         private bool ValidateCompleteRecordContractSettlement(Contratacion pContratacion)
