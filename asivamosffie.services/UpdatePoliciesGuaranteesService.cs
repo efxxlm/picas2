@@ -60,7 +60,7 @@ namespace asivamosffie.services
                 .Include(c => c.PolizaGarantiaActualizacion)
                 .Include(c => c.PolizaListaChequeo)
                 .Include(c => c.PolizaObservacion)
-                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion)
+                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c=> c.Contratista)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
