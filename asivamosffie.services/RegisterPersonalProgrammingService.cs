@@ -131,12 +131,7 @@ namespace asivamosffie.services
 
                 foreach (var SeguimientoSemanal in pListSeguimientoSemanal)
                 {
-                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal == null)
-                    {
-                        RegistroCompleto = false;
-                    }
-                    else
-                    {
+                    
                         if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
                         {
                             SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
@@ -155,8 +150,7 @@ namespace asivamosffie.services
                             SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal;
                             SeguimientoSemanalPersonalObraOld.UsuarioModificacion = proyecto.UsuarioModificacion;
                             SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
-                        }
-                    }
+                        } 
                 }
                 if (RegistroCompleto)
                     proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
