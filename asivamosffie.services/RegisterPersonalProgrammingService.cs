@@ -118,10 +118,12 @@ namespace asivamosffie.services
         public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(List<SeguimientoSemanal> pListSeguimientoSemanal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
-            bool RegistroCompleto = true;
-
+          
             try
             {
+                bool RegistroCompleto = !pListSeguimientoSemanal.Any(s => s.SeguimientoSemanalPersonalObra
+                                                                .Any(c => c.CantidadPersonal == null));
+
                 ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pListSeguimientoSemanal.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
 
                 Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
