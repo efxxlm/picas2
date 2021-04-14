@@ -19,7 +19,8 @@
         public const string RechazadoComiteFiduciario = "15";
         public const string DevueltoComiteTecnico = "16";
         public const string DevueltoComiteFiduciario = "17";
-        public const string Liquidacionenprocesodefirma = "18";
-        public const string Liquidado = "19";
+        public const string LiquidacionEnProcesoDeFirma = "18";
+        public const string Enfirmadelafiduciaria = "19";
+        public const string Liquidado = "20";
     }
 }

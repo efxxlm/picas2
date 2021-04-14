@@ -34,6 +34,7 @@ namespace asivamosffie.services
         {
             List<VRegistrarLiquidacionContrato> ListRestrados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList();
             List<VRegistrarLiquidacionContrato> ListLiquidacionEnProceso = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma).ToList();
+            List<VRegistrarLiquidacionContrato> ListEnfirmadelafiduciaria = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Enfirmadelafiduciaria).ToList();
             List<VRegistrarLiquidacionContrato> ListLiquidados = _context.VRegistrarLiquidacionContrato.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Liquidado).ToList();
 
             List<dynamic> List = new List<dynamic>
