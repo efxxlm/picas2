@@ -28,6 +28,7 @@ export class TablaResultadosComponent implements OnInit {
     'region',
     'departamento',
     'institucionEducativa',
+    'numeroSolicitud',
     'sede',
     'id'
   ];
@@ -56,7 +57,7 @@ export class TablaResultadosComponent implements OnInit {
     } else {
       lista = this.listaResultados
     }
-    console.log( lista );
+
     this.dataSource = new MatTableDataSource(lista);
 
     this.dataSource.sort = this.sort;
@@ -100,8 +101,41 @@ export class TablaResultadosComponent implements OnInit {
     const tieneObra = this.elementosSelecciondos.filter( registro => registro.tieneObra === true );
 
     if (this.esMultiproyecto === true ) {
-      if ( tieneInterventoria.length > 0 || tieneObra.length > 0 ) {
-        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes individuales en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
+      /*
+        - Se tienen que seleccionar todos los proyectos asociados a una solicitud "Para continuar con la solicitud debe seleccionar todos los proyectos relacionados a la solicitud número 'numero Solicitud' "
+        - Si se selecciono un proyecto que no esta asociado a la misma solicitud se le muestra una ventana emergente con el siguiente mensaje
+        "Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud"
+      */
+      let tieneSolicitudDistinta: boolean;
+      let contratacionIdAnterior: number;
+      let totalSolicitudRelacionada = 0;
+
+      this.elementosSelecciondos.forEach( registro => {
+        if ( contratacionIdAnterior === undefined ) {
+          contratacionIdAnterior = registro.contratacionId;
+          totalSolicitudRelacionada++;
+        } else {
+          if ( registro.contratacionId !== contratacionIdAnterior ) {
+            tieneSolicitudDistinta = true;
+            return;
+          } else {
+            totalSolicitudRelacionada++;
+          }
+          contratacionIdAnterior = registro.contratacionId;
+        }
+      } );
+
+      if ( tieneSolicitudDistinta === undefined ) {
+        const listaSolicitud = this.listaResultados.filter( registro => registro[ 'contratacionId' ] === contratacionIdAnterior );
+        console.log( totalSolicitudRelacionada, listaSolicitud.length )
+        if ( totalSolicitudRelacionada !== listaSolicitud.length ) {
+          this.openDialog( '', `<b>Para continuar con la solicitud debe seleccionar todos los proyectos relacionados a la solicitud número ${ this.elementosSelecciondos[ this.elementosSelecciondos.length -1 ].numeroSolicitud }.</b>` );
+          return;
+        }
+      }
+
+      if ( tieneSolicitudDistinta === true ) {
+        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
         return;
       }
     }

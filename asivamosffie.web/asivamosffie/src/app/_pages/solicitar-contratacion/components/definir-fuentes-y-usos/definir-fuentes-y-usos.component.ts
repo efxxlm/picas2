@@ -91,7 +91,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       contratacionProyectoAportanteId: [],
       proyectoAportanteId: [],
       listaFuenteFinanciacion: [ null ],
-      valorAportanteProyecto: [null, Validators.compose([
+      valorAportanteProyecto: [ { value: null, disabled: true }, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
       ],
       componentes: this.fb.array([])
@@ -121,8 +121,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           this.contratacionProyecto = response[3];
           this.listaFaseUsosComponentes = response[4];
           const listaFuenteTipoFinanciacion = await this.commonService.listaFuenteTipoFinanciacion().toPromise();
+          console.log( this.contratacionProyecto )
 
           setTimeout(() => {
+            const interventoria = '2';
+            let esInterventoria = true;
+
+            if ( this.contratacionProyecto['contratacion'].tipoSolicitudCodigo !== interventoria ) {
+              esInterventoria = false;
+            }
 
             if (this.componentesSelect.length > 0) {
               this.listaComponentes = this.componentesSelect.filter(value => this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === value.codigo);
@@ -144,6 +151,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               const listaFase = [ ...this.fasesSelect ];
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
+              const valorAportanteProyecto = esInterventoria === true ? apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorInterventoria : apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorObra;
 
               apo[ 'cofinanciacionAportante' ].fuenteFinanciacion.forEach( fuente => {
                 const fuenteFind = listaFuenteTipoFinanciacion.find( fuenteTipo => fuenteTipo.codigo === fuente.fuenteRecursosCodigo );
@@ -159,7 +167,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               if (apo.valorAporte !== 0) {
                 this.esSaldoPermitido = true;
               }
-              grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
+              grupoAportante.get('valorAportanteProyecto').setValue( valorAportanteProyecto );
               grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');

@@ -21,30 +21,35 @@
         <span class="info-text en-proceso">En proceso</span>
         <span class="info-text completo">Completo</span>
     </p>
-    <mat-accordion>
+    <mat-accordion *ngIf="listaAcordeonSinRegistro.length > 0 || listaAcordeonEnProcesoFirma.length > 0 || listaAcordeonLiquidado.length > 0">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
                     Sin registro de liquidación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-sin-registro-liquidacion-rlc></app-tabla-sin-registro-liquidacion-rlc>
+
+            <app-tabla-sin-registro-liquidacion-rlc *ngIf="listaAcordeonSinRegistro.length > 0" [listaAcordeonSinRegistro]="listaAcordeonSinRegistro"></app-tabla-sin-registro-liquidacion-rlc>
         </mat-expansion-panel>
+
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                     En proceso de firmas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-en-proceso-de-firmas-rlc></app-tabla-en-proceso-de-firmas-rlc>
+
+            <app-tabla-en-proceso-de-firmas-rlc *ngIf="listaAcordeonEnProcesoFirma.length > 0"></app-tabla-en-proceso-de-firmas-rlc>
         </mat-expansion-panel>
+
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                     Liquidación
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-liquidacion-rlc></app-tabla-liquidacion-rlc>
+
+            <app-tabla-liquidacion-rlc *ngIf="listaAcordeonLiquidado.length > 0"></app-tabla-liquidacion-rlc>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

@@ -371,6 +371,11 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=183`);
   }
 
+  estadosLiquidacionContrato() {
+    // Lista de estados del CU 5.4.2 "Registrar liquidacion de contratos"
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
