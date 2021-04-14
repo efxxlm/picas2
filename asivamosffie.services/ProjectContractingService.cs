@@ -605,6 +605,7 @@ namespace asivamosffie.services
                         InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                         Sede = proyecto.Sede.Nombre,
                         ProyectoId = proyecto.ProyectoId,
+                        ContratacionId =  proyecto?.ContratacionProyecto?.FirstOrDefault()?.ContratacionId
                     };
 
                     if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
