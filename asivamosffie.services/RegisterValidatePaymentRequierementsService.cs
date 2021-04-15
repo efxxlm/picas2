@@ -20,7 +20,7 @@ namespace asivamosffie.services
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService; 
+        private readonly IDocumentService _documentService;
         public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _documentService = documentService;
@@ -116,7 +116,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
 
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
@@ -220,16 +220,16 @@ namespace asivamosffie.services
                 else
                     CompleteRecord = false;
 
-                await _context.Set<SolicitudPago>()
-                                                  .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                                                                                                  .UpdateAsync(r => new SolicitudPago()
-                                                                                                  {
-                                                                                                      TieneObservacion = TieneAlgunaObservacionPendiente,
-                                                                                                      EstadoCodigo = EstadoSolicitudPago,
-                                                                                                      RegistroCompleto = CompleteRecord,
-                                                                                                      FechaRegistroCompleto = FechaRegistroCompleto,
-                                                                                                      TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
-                                                                                                  });
+                  await _context.Set<SolicitudPago>()
+                                .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                                .UpdateAsync(r => new SolicitudPago()
+                                {
+                                    TieneObservacion = TieneAlgunaObservacionPendiente,
+                                    EstadoCodigo = EstadoSolicitudPago,
+                                    RegistroCompleto = CompleteRecord,
+                                    FechaRegistroCompleto = FechaRegistroCompleto,
+                                    TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
+                                });
             }
             catch (Exception e)
             {
@@ -491,8 +491,8 @@ namespace asivamosffie.services
                             ObservacionDevolucionOrdenGiro = null,
                             UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
                             ValorFacturado = ValorFacturado,
-                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString() 
-                        }); 
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString()
+                        });
             }
             else
             {
@@ -1613,7 +1613,7 @@ namespace asivamosffie.services
                                          }).OrderByDescending(r => r.SolicitudPagoId)
                                            .ToListAsync();
 
-  
+
             List<Dominio> ListParametricas =
                 _context.Dominio
                                .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato

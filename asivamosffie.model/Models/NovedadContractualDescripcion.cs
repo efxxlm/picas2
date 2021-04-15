@@ -22,8 +22,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaInicioSuspension { get; set; }
         public DateTime? FechaFinSuspension { get; set; }
         public decimal? PresupuestoAdicionalSolicitado { get; set; }
-        public int? PlazoAdicionalDias { get; set; }
-        public int? PlazoAdicionalMeses { get; set; }
+        public decimal? PlazoAdicionalDias { get; set; }
+        public decimal? PlazoAdicionalMeses { get; set; }
         public string ClausulaModificar { get; set; }
         public string AjusteClausula { get; set; }
         public DateTime? FechaCreacion { get; set; }
