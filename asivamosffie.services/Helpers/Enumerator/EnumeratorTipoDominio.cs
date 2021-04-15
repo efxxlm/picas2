@@ -56,9 +56,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipo_Solicitud = 29,
 
         Tipo_de_Solicitud = 29,
-
-
-
+         
         Tipo_Documento = 30,
 
         Estado_Solicitud = 31,
@@ -109,9 +107,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Verificacion_Contrato = 53,
 
         Tipo_Observacion_Contrato_Perfil_Observacion = 55,
-
- 
-
+         
         Tipo_Modificacion_Contrato_Poliza = 56,
 
         Tipo_Garantia_Poliza = 58,
@@ -263,6 +259,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estados_aprobacion_liquidacion_codigo = 185,
 
         Estados_verificacion_liquidacion_codigo = 187,
-
+        	
+        Estados_Balance_Financiero = 190
     }
 }

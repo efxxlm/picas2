@@ -60,10 +60,10 @@ namespace asivamosffie.services
 
                                   FechaTramiteLiquidacion = DateTime.Now,
 
-                                  FechaEnvioFirmaContratista = pContratacion.FechaEnvioFirmaContratista,
+                                  FechaFirmaEnvioContratista = pContratacion.FechaFirmaEnvioContratista,
                                   FechaFirmaContratista = pContratacion.FechaFirmaContratista,
 
-                                  FechaEnvioFirmaFiduciaria = pContratacion.FechaFirmaContratista,
+                                  FechaFirmaEnvioFiduciaria = pContratacion.FechaFirmaEnvioFiduciaria,
                                   FechaFirmaFiduciaria = pContratacion.FechaFirmaFiduciaria,
 
                                   ObservacionesLiquidacion = pContratacion.ObservacionesLiquidacion,
@@ -114,12 +114,12 @@ namespace asivamosffie.services
             if (!RegistroCompleto)
             {
                 if (
-                          pContratacion.FechaEnvioFirmaContratista.HasValue
-                      && !pContratacion.FechaEnvioFirmaFiduciaria.HasValue)
+                          pContratacion.FechaFirmaEnvioContratista.HasValue
+                      && !pContratacion.FechaFirmaEnvioFiduciaria.HasValue)
                     estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_proceso_de_firmas;
 
                 if (
-                     pContratacion.FechaEnvioFirmaFiduciaria.HasValue)
+                     pContratacion.FechaFirmaEnvioFiduciaria.HasValue)
                     estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria;
             }
             else
@@ -133,10 +133,13 @@ namespace asivamosffie.services
         {
             if (
                 !pContratacion.FechaTramiteLiquidacion.HasValue
-             || !pContratacion.FechaEnvioFirmaContratista.HasValue
+
+             || !pContratacion.FechaFirmaEnvioContratista.HasValue
              || !pContratacion.FechaFirmaContratista.HasValue
-             || !pContratacion.FechaEnvioFirmaFiduciaria.HasValue
+
+             || !pContratacion.FechaFirmaEnvioFiduciaria.HasValue
              || !pContratacion.FechaFirmaFiduciaria.HasValue
+
              || string.IsNullOrEmpty(pContratacion.ObservacionesLiquidacion)
              || string.IsNullOrEmpty(pContratacion.UrlDocumentoLiquidacion)
              ) return false;

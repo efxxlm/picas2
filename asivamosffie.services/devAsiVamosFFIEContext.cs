@@ -512,6 +512,12 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaAnulado).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroBalance).HasMaxLength(20);
+
                 entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
 
                 entity.HasOne(d => d.ContratacionProyecto)
@@ -1138,11 +1144,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaEnvioDocumentacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioFirmaContratista).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaEnvioFirmaFiduciaria).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFirmaEnvioContratista).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFirmaEnvioFiduciaria).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
