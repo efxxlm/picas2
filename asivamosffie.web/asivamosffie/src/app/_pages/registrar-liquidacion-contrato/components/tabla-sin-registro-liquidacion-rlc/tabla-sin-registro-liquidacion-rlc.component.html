@@ -7,6 +7,7 @@
         <img src="assets/img/icon/lupa.svg" alt="Buscar">
     </button>
 </div>
+
 <div class="tabla-expansion-panel">
     <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8 text-center">
 
@@ -36,7 +37,7 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="estadoDocumento">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Esatdo del documento </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del documento </th>
             <td mat-cell *matCellDef="let element"> <em>{{ element.nombreEstado }}</em> </td>
         </ng-container>
         <ng-container matColumnDef="gestion">

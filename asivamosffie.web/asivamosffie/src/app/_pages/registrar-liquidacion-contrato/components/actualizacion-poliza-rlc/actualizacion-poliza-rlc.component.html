@@ -1,217 +1,203 @@
-<mat-card class="shipping-card mainGris">
-    <mat-card-content style="text-align: left;">
-        <p><strong>Tipo de contrato: </strong> <em>Obra</em></p>
-        <p><strong>Nombre del contratista: </strong> <em>Intervenrores S.A</em></p>
-        <p><strong>Tipo de identificación: </strong> <em>NIT</em></p>
-        <p><strong>Número de identificación: </strong> <em>900.675.987-4</em></p>
-        <p><strong>Número de la póliza: </strong> <em>0000-9868</em></p>
-        <p><strong>Nombre de la aseguradora:</strong> <em>Mapfre</em></p>
-        <p><strong>Número de certificado: </strong> <em>CER404040</em></p>
-        <p><strong>Fecha de expedición de la póliza: </strong> <em>25/06/2020</em></p>
-        <p><strong>Fecha de aprobación: </strong> <em>18/07/2020</em></p>
-    </mat-card-content>
-</mat-card>
-<div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="polizaYSeguros">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Polizas y seguros </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{element.polizaYSeguros}} </td>
-        </ng-container>
-        <ng-container matColumnDef="responsableAprobacion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Reponsable de la aprobación </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{element.responsableAprobacion}} </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-</div>
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-                Razón y tipo de actualización
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-card class="shipping-card mainGris">
-            <mat-card-content style="text-align: left;">
-                <p><strong>Razón de la actualización: </strong><em>Terminación de contrato</em></p>
-                <p><strong>Fecha de expedición de la actualización de la póliza: </strong><em>20/07/2021</em></p>
-                <p><strong>Seguros que necesitan actualización: </strong><em>Buen manejo y correcta inversión del
-                        anticipo, Garantía de estabilidad y calidad de la obra</em></p>
-                <div style="margin-top: 1em;">
-                    <mat-card-title class="header-card--text alineacion-titulos2"
-                        style="padding-left: 0px; color: #474747;">
-                        Buen manejo y correcta inversión del anticipo
-                    </mat-card-title>
-                    <p><strong>Tipo de actualización: </strong><em>Fecha, Valor</em></p>
-                </div>
-                <div style="margin-top: 1em;">
-                    <mat-card-title class="header-card--text alineacion-titulos2"
-                        style="padding-left: 0px; color: #474747;">
-                        Garantía de estabilidad y calidad de la obra
-                    </mat-card-title>
-                    <p><strong>Tipo de actualización: </strong><em>Fecha, Valor</em></p>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-                Vigencias y valor
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
-                        Seguro 1
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-card class="shipping-card mainGris">
-                    <mat-card-header class="header-card header-card--margin">
-                        <mat-card-title class="header-card--text textoGris">
-                            Garantía de estabilidad y calidad de la obra
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content style="text-align: left;">
-                        <div style="margin-top: 1em;">
-                            <p><strong>Vigencia de la póliza: </strong><em>30/03/2021</em></p>
-                            <p><strong>Vigencia actualizada de la póliza: </strong><em>30/01/2021</em></p>
-                        </div>
-                        <div style="margin-top: 1em;">
-                            <p><strong>Vigencia del amparo: </strong><em>30/03/2021</em></p>
-                            <p><strong>Vigencia actualizada del amparo: </strong><em>30/01/2021</em></p>
-                        </div>
-                        <div style="margin-top: 1em;">
-                            <p><strong>Valor del amparo: </strong><em>$60.000.000</em></p>
-                            <p><strong>Valor actualizada del amparo: </strong><em>$50.000.000</em></p>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
-                        Seguro 2
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-card class="shipping-card mainGris">
-                    <mat-card-header class="header-card header-card--margin">
-                        <mat-card-title class="header-card--text textoGris">
-                            Garantía de estabilidad y calidad de la obra
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content style="text-align: left;">
-                        <div style="margin-top: 1em;">
-                            <p><strong>Vigencia de la póliza: </strong><em>30/03/2021</em></p>
-                            <p><strong>Vigencia actualizada de la póliza: </strong><em>30/01/2021</em></p>
-                        </div>
-                        <div style="margin-top: 1em;">
-                            <p><strong>Vigencia del amparo: </strong><em>30/03/2021</em></p>
-                            <p><strong>Vigencia actualizada del amparo: </strong><em>30/01/2021</em></p>
-                        </div>
-                        <div style="margin-top: 1em;">
-                            <p><strong>Valor del amparo: </strong><em>$60.000.000</em></p>
-                            <p><strong>Valor actualizada del amparo: </strong><em>$50.000.000</em></p>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style  sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-                Observaciones especificas
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div style="text-align: center;">
-            <p><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>Sí</em></p>
-        </div>
-        <mat-card class="shipping-card mainGris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Observaciones especificas de la actualización
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><em>Es necesaria la actualización para dar finalizada la póliza, ya que no se necesita más
-                        tiempo.</em></p>
-            </mat-card-content>
-        </mat-card>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style  sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-                Lista de chequeo
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-card class="shipping-card mainGris">
-            <mat-card-content style="text-align: left;">
-                <p> <strong>¿Cumple con los datos del Asegurado/ Beneficiario?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Cumple con los datos del Tomador / Afianzado?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Se incluye el recibo de pago con los datos requeridos?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?: </strong><em>Sí</em> </p>
-            </mat-card-content>
-        </mat-card>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style  sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-                Revisión y aprobación
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Revisión
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p> <strong>Fecha de la revisión 2: </strong><em>21/01/2021</em> </p>
-                <p> <strong>Estado de la revisión 2: </strong><em>Aprobación</em> </p>
-                <h2 class="card-subTitle">Aprobación</h2>
-                <p> <strong>Fecha de aprobación: </strong><em>21/01/2021</em> </p>
-                <p> <strong>Responsable de aprobación: </strong><em>Nathalia Aranda</em> </p>
-            </mat-card-content>
-        </mat-card>
-    </mat-expansion-panel>
-</mat-accordion>
-<!-- Colocas los if's -->
-<div class="mt-2em">
+<section *ngIf="contrato !== undefined && contratoPoliza !== undefined">
     <mat-card class="shipping-card mainGris">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text textoGris">
-                Observaciones del supervisor
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content align="left">
-            <p><strong>16/11/2020</strong></p>
-            <div>
-                <p><strong>¿Desde la supervisión tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
-                    liquidación?: </strong><em>No</em></p>
-            </div>
+        <mat-card-content style="text-align: left;">
+            <p><strong>Tipo de contrato: </strong> <em> {{ getTipoSolicitudContrato( contratoPoliza.contrato.contratacion.tipoSolicitudCodigo ) }} </em></p>
+            <p><strong>Nombre del contratista: </strong> <em> {{ firstLetterUpperCase( contratoPoliza.contrato.contratacion.contratista.nombre ) }} </em></p>
+            <p><strong>Tipo de identificación: </strong> <em>{{ getTipoDocumento( contratoPoliza.contrato.contratacion.contratista.tipoIdentificacionCodigo ) }}</em></p>
+            <p><strong>Número de identificación: </strong> <em> {{ contratoPoliza.contrato.contratacion.contratista.numeroIdentificacion }} </em></p>
+            <p><strong>Número de la póliza: </strong> <em> {{ contratoPoliza.numeroPoliza }} </em></p>
+            <p><strong>Nombre de la aseguradora:</strong> <em> {{ contratoPoliza.nombreAseguradora }} </em></p>
+            <p><strong>Número de certificado: </strong> <em> {{ contratoPoliza.numeroCertificado }} </em></p>
+            <p><strong>Fecha de expedición de la póliza: </strong> <em> {{ contratoPoliza.fechaExpedicion | date: 'dd/MM/yyyy' }} </em></p>
+            <p><strong>Fecha de aprobación: </strong> <em> {{ ultimaRevisionAprobada.fechaAprobacion | date: 'dd/MM/yyyy' }} </em></p>
         </mat-card-content>
     </mat-card>
-</div>
-<div class="mt-2em">
-    <mat-card class="shipping-card mainGris">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text textoGris">
-                Observaciones de control y seguimiento
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content align="left">
-            <p><strong>17/11/2020</strong></p>
-            <div>
-                <p><strong>¿Desde control y seguimiento tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
-                    liquidación?: </strong><em>No</em></p>
-            </div>
-        </mat-card-content>
-    </mat-card>
-</div>
+    <div class="table-responsive" style="margin-bottom: 2em;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="polizaYSeguros">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Polizas y seguros </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ getPoliza( element.tipoGarantiaCodigo ) }} </td>
+            </ng-container>
+            <ng-container matColumnDef="responsableAprobacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Reponsable de la aprobación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ getResponsable( ultimaRevisionAprobada.responsableAprobacionId ) }} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Razón y tipo de actualización
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card mainGris">
+                <mat-card-content style="text-align: left;">
+                    <p><strong>Razón de la actualización: </strong><em> {{ getRazonActualizacion( detalleRazon.get('razonActualizacion').value ) }} </em></p>
+                    <p><strong>Fecha de expedición de la actualización de la póliza: </strong><em> {{ detalleRazon.get('fechaExpedicion').value | date: 'dd/MM/yyyy' }} </em></p>
+                    <p><strong>Seguros que necesitan actualización: </strong>
+                        <em *ngFor="let seguro of detalleRazon.get('polizasYSeguros').value; index as i">
+                            {{ getSeguros( seguro ) }} <span *ngIf="detalleRazon.get('polizasYSeguros').value.length !== i + 1">,</span><span *ngIf="detalleRazon.get('polizasYSeguros').value === i + 1">.</span>
+                        </em>
+                    </p>
+                    <div style="margin-top: 1em;" *ngFor="let seguro of segurosRazon.controls">
+                        <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0px; color: #474747;">
+                            {{ firstLetterUpperCase( seguro.get( 'nombre' ).value ) }}
+                        </mat-card-title>
+                        <p><strong>Tipo de actualización: </strong>
+                            <em *ngFor="let tipo of seguro.get( 'tipoActualizacion' ).value; index as  i">
+                                {{ getTipoActualizacion( tipo ) }} <span *ngIf="seguro.get( 'tipoActualizacion' ).value.length !== i + 1">,</span><span *ngIf="seguro.get( 'tipoActualizacion' ).value.length === i + 1">.</span>
+                            </em>
+                        </p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Vigencias y valor
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <section *ngIf="seguros.length > 0">
 
+                    <mat-accordion *ngFor="let seguro of seguros.controls; index as i">
+                        <mat-expansion-panel class="expansion-style sub-expansion-black">
+                            <mat-expansion-panel-header class="expansion-style--header">
+                                <mat-panel-title class="expansion-style--title">
+                                    Seguro {{ i + 1 }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                
+                            <mat-card class="shipping-card border" align="left">
+                                <mat-card-header class="header-card header-card--margin">
+                                    <mat-card-title class="header-card--text card-title-detalle">
+                                        {{ seguro.get( 'nombre' ).value }}
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <div class="mt-2em" *ngIf="seguro.get( 'tieneSeguro' ).value === true">
+                                        <p><b>Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
+                                        <p><b>Vigencia actualizada de la póliza: </b><em> {{ seguro.get( 'fechaSeguro' ).value | date: 'dd/MM/yyyy' }} </em></p>
+                                    </div>
+            
+                                    <div class="mt-2em" *ngIf="seguro.get( 'tieneFechaAmparo' ).value === true">
+                                        <p><b>Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
+                                        <p><b>Vigencia actualizada del amparo: </b><em> {{ seguro.get( 'fechaAmparo' ).value | date: 'dd/MM/yyyy' }} </em></p>
+                                    </div>
+            
+                                    <div class="mt-2em" *ngIf="seguro.get( 'tieneValorAmparo' ).value === true">
+                                        <p><b>Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+                                        <p><b>Valor del amparo: </b><em> {{ seguro.get( 'valorAmparo' ).value | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+            
+                </section>
+            </mat-accordion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style  sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Observaciones especificas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="text-align: center;">
+                <p *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === true"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>Si</em></p>
+                <p *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === false"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>No</em></p>
+            </div>
+            <mat-card class="shipping-card border" *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === true">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text card-title-detalle">
+                        Observaciones especificas de la actualización
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><em [innerHTML]="contratoPolizaActualizacion.observacionEspecifica"></em></p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style  sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card border">
+                <mat-card-content style="text-align: left;">
+                    <p *ngIf="addressForm.get( 'cumpleAsegurado' ).value === true"> <strong>¿Cumple con los datos del Asegurado/ Beneficiario?: </strong><em>Si</em> </p>
+                    <p *ngIf="addressForm.get( 'cumpleAsegurado' ).value === false"> <strong>¿Cumple con los datos del Asegurado/ Beneficiario?: </strong><em>No</em> </p>
+                    <p *ngIf="addressForm.get( 'cumpleBeneficiario' ).value === true"> <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?: </strong><em>Si</em> </p>
+                    <p *ngIf="addressForm.get( 'cumpleBeneficiario' ).value === false"> <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?: </strong><em>No</em> </p>
+                    <p *ngIf="addressForm.get( 'cumpleAfianzado' ).value === true"> <strong>¿Cumple con los datos del Tomador / Afianzado?: </strong><em>Si</em> </p>
+                    <p *ngIf="addressForm.get( 'cumpleAfianzado' ).value === false"> <strong>¿Cumple con los datos del Tomador / Afianzado?: </strong><em>No</em> </p>
+                    <p *ngIf="addressForm.get( 'reciboDePago' ).value === true"> <strong>¿Se incluye el recibo de pago con los datos requeridos?: </strong><em>Si</em> </p>
+                    <p *ngIf="addressForm.get( 'reciboDePago' ).value === false"> <strong>¿Se incluye el recibo de pago con los datos requeridos?: </strong><em>No</em> </p>
+                    <p *ngIf="addressForm.get( 'condicionesGenerales' ).value === true"> <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?: </strong><em>Si</em> </p>
+                    <p *ngIf="addressForm.get( 'condicionesGenerales' ).value === false"> <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?: </strong><em>No</em> </p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style  sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Revisión y aprobación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card border">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text card-title-detalle">
+                        Revisión
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p> <strong>Fecha de la revisión: </strong><em> {{ addressForm.get( 'fechaRevision' ).value | date: 'dd/MM/yyyy' }} </em> </p>
+                    <p> <strong>Estado de la revisión: </strong><em> {{ getEstadoRevision( addressForm.get( 'estadoRevision' ).value ) }} </em> </p>
+                    <div *ngIf="addressForm.get( 'estadoRevision' ).value === estadosRevision.aprobacion">
+                        <h2 class="card-subTitle card-subTitle-detalle">Aprobación</h2>
+                        <p> <strong>Fecha de aprobación: </strong><em> {{ addressForm.get( 'fechaAprob' ).value | date: 'dd/MM/yyyy' }} </em> </p>
+                        <p> <strong>Responsable de aprobación: </strong><em> {{ getResponsable( addressForm.get( 'responsableAprob' ).value ) }} </em> </p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <!-- Colocas los if's -->
+    <div class="mt-2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones del supervisor
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>16/11/2020</strong></p>
+                <div>
+                    <p><strong>¿Desde la supervisión tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
+                        liquidación?: </strong><em>No</em></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="mt-2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones de control y seguimiento
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>17/11/2020</strong></p>
+                <div>
+                    <p><strong>¿Desde control y seguimiento tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
+                        liquidación?: </strong><em>No</em></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>

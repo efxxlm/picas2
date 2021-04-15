@@ -16,9 +16,9 @@
     <mat-card class="shipping-card mainGris">
         <mat-card-content style="text-align: left;">
             <p><strong>Tipo de contrato: </strong> <em> {{ getTipoSolicitudContrato( contratoPoliza.contrato.contratacion.tipoSolicitudCodigo ) }} </em></p>
-            <p><strong>Nombre del contratista: </strong> <em>Intervenrores S.A</em></p>
-            <p><strong>Tipo de identificación: </strong> <em>NIT</em></p>
-            <p><strong>Número de identificación: </strong> <em>900.675.987-4</em></p>
+            <p><strong>Nombre del contratista: </strong> <em> {{ firstLetterUpperCase( contratoPoliza.contrato.contratacion.contratista.nombre ) }} </em></p>
+            <p><strong>Tipo de identificación: </strong> <em>{{ getTipoDocumento( contratoPoliza.contrato.contratacion.contratista.tipoIdentificacionCodigo ) }}</em></p>
+            <p><strong>Número de identificación: </strong> <em> {{ contratoPoliza.contrato.contratacion.contratista.numeroIdentificacion }} </em></p>
             <p><strong>Número de la póliza: </strong> <em> {{ contratoPoliza.numeroPoliza }} </em></p>
             <p><strong>Nombre de la aseguradora:</strong> <em> {{ contratoPoliza.nombreAseguradora }} </em></p>
             <p><strong>Número de certificado: </strong> <em> {{ contratoPoliza.numeroCertificado }} </em></p>

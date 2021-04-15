@@ -4,3 +4,8 @@ export enum EstadoLiquidacionCodigo {
     enProcesoFirmasFiduciaria = '19',
     liquidado = '20'
 }
+
+export enum TipoSolicitudCodigo {
+    obra = '1',
+    interventoria = '2'
+}

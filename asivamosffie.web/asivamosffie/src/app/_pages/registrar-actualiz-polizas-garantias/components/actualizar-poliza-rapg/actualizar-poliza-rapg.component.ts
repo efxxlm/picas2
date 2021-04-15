@@ -24,6 +24,7 @@ export class ActualizarPolizaRapgComponent implements OnInit {
     listaUsuarios: any[] = [];
     listaTipoSolicitudContrato: Dominio[] = [];
     polizasYSegurosArray: Dominio[] = [];
+    listaTipoDocumento: Dominio[] = [];
     responsable: any;
     dataSource = new MatTableDataSource();
     ultimaRevisionAprobada: any;
@@ -81,6 +82,8 @@ export class ActualizarPolizaRapgComponent implements OnInit {
         this.listaUsuarios = await this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria ).toPromise();
         this.polizasYSegurosArray = await this.commonSvc.listaGarantiasPolizas().toPromise();
         this.listaTipoSolicitudContrato = await this.commonSvc.listaTipoSolicitudContrato().toPromise();
+        this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
+
         this.actualizarPolizaSvc.getContratoPoliza( this.activatedRoute.snapshot.params.id )
             .subscribe(
                 response => {
@@ -243,6 +246,16 @@ export class ActualizarPolizaRapgComponent implements OnInit {
 
             if ( poliza !== undefined ) {
                 return poliza.nombre;
+            }
+        }
+    }
+
+    getTipoDocumento( codigo: string ) {
+        if ( this.listaTipoDocumento.length > 0 ) {
+            const documento = this.listaTipoDocumento.find( documento => documento.codigo === codigo );
+
+            if ( documento !== undefined ) {
+                return documento.nombre;
             }
         }
     }

@@ -40,8 +40,4 @@ export class TablaSinRegistroLiquidacionRlcComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    gestionSolicitud(id){
-        this.routes.navigate(['/registrarLiquidacionContrato/gestionarSolicitud', id]);
-    }
-
 }

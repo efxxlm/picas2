@@ -47,6 +47,9 @@ export class TablaFaseInicioComponent implements OnInit {
             } );
 
             this.dataSource = new MatTableDataSource( this.registros.controls );
+            // this.dataSource.filterPredicate = (data: any, filter) => {
+            //     return Object.values( data.value ).toString().trim().toLowerCase().indexOf( filter ) !== -1;
+            // }
             setTimeout(() => {
                 this.renderer.setStyle( this.heightAside.nativeElement, 'height', `${ this.table.nativeElement.querySelector('tbody').offsetHeight }px` );
             }, 5);
