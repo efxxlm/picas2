@@ -75,8 +75,8 @@
                                 </div>
                             </div>
                             <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="ensayo.value.tieneObservaciones == true" align="left">
-                                <div class="text-area-quill"
-                                [class.color-secondaryColor]="ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid">
+                                <div    class="text-area-quill"
+                                        [class.color-secondaryColor]="ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid)">
                                             Observaciones al ensayo de laboratorio {{ i + 1 }}
@@ -95,6 +95,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="ensayo.get('observacionEnsayo').value === null">
                                   1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid">
                                 </span>
                             </div>
                             <div class="text-center mt-1em">
@@ -179,8 +188,8 @@
                     </div>
                 </div>
                 <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formGestionCalidad.value.tieneObservaciones == true" align="left">
-                    <div class="text-area-quill"
-                    [class.color-secondaryColor]="formGestionCalidad.get('observaciones').invalid && formGestionCalidad.get('observaciones').touched || formGestionCalidad.get('observaciones').invalid">
+                    <div    class="text-area-quill"
+                            [class.color-secondaryColor]="formGestionCalidad.get('observaciones').invalid && formGestionCalidad.get('observaciones').touched || formGestionCalidad.get('observaciones').invalid">
                         <label  class="text-area-quill--label align-left-label"
                                 [class.colorMainColor]="!(formGestionCalidad.get('observaciones').invalid && formGestionCalidad.get('observaciones').touched || formGestionCalidad.get('observaciones').invalid)">
                                 Observaciones a la gestión de calidad
@@ -199,6 +208,15 @@
                     </span>
                     <span class="contador miles" *ngIf="formGestionCalidad.get('observaciones').value === null">
                       1000
+                    </span>
+                    <span class="icon-incompleto">
+                        <img    class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="formGestionCalidad.get('observaciones').invalid && formGestionCalidad.get('observaciones').touched || formGestionCalidad.get('observaciones').invalid">
                     </span>
                 </div>
                 <div class="text-center mt-1em">

@@ -92,8 +92,8 @@
             </div>
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formGestionSocial.value.tieneObservaciones == true" align="left">
-            <div class="text-area-quill"
-            [class.color-secondaryColor]="formGestionSocial.get('observaciones').invalid && formGestionSocial.get('observaciones').touched || formGestionSocial.get('observaciones').invalid">
+            <div    class="text-area-quill"
+                    [class.color-secondaryColor]="formGestionSocial.get('observaciones').invalid && formGestionSocial.get('observaciones').touched || formGestionSocial.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formGestionSocial.get('observaciones').invalid && formGestionSocial.get('observaciones').touched || formGestionSocial.get('observaciones').invalid)">
                         Observaciones a la gestión social
@@ -112,6 +112,15 @@
             </span>
             <span class="contador miles" *ngIf="formGestionSocial.get('observaciones').value === null">
               1000
+            </span>
+            <span class="icon-incompleto">
+                <img    class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="formGestionSocial.get('observaciones').invalid && formGestionSocial.get('observaciones').touched || formGestionSocial.get('observaciones').invalid">
             </span>
         </div>
         <div class="text-center mt-1em">

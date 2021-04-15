@@ -51,8 +51,8 @@
                     </div>
                 </div>
                 <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formActividadesRealizadas.value.tieneObservaciones == true" align="left">
-                    <div class="text-area-quill"
-                    [class.color-secondaryColor]="formActividadesRealizadas.get('observaciones').invalid && formActividadesRealizadas.get('observaciones').touched || formActividadesRealizadas.get('observaciones').invalid">
+                    <div  class="text-area-quill"
+                          [class.color-secondaryColor]="formActividadesRealizadas.get('observaciones').invalid && formActividadesRealizadas.get('observaciones').touched || formActividadesRealizadas.get('observaciones').invalid">
                         <label  class="text-area-quill--label align-left-label"
                                 [class.colorMainColor]="!(formActividadesRealizadas.get('observaciones').invalid && formActividadesRealizadas.get('observaciones').touched || formActividadesRealizadas.get('observaciones').invalid)">
                                 Observaciones a las actividades realizadas
@@ -71,6 +71,15 @@
                     </span>
                     <span class="contador miles" *ngIf="formActividadesRealizadas.get('observaciones').value === null">
                       1000
+                    </span>
+                    <span class="icon-incompleto">
+                      <img    class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="formActividadesRealizadas.get('observaciones').invalid && formActividadesRealizadas.get('observaciones').touched || formActividadesRealizadas.get('observaciones').invalid">
                     </span>
                 </div>
                 <div class="text-center mt-1em">
@@ -171,8 +180,8 @@
                     </div>
                 </div>
                 <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formActividadesRealizadasSiguienteSemana.value.tieneObservaciones == true" align="left">
-                    <div class="text-area-quill"
-                    [class.color-secondaryColor]="formActividadesRealizadasSiguienteSemana.get('observaciones').invalid && formActividadesRealizadasSiguienteSemana.get('observaciones').touched || formActividadesRealizadasSiguienteSemana.get('observaciones').invalid">
+                    <div  class="text-area-quill"
+                          [class.color-secondaryColor]="formActividadesRealizadasSiguienteSemana.get('observaciones').invalid && formActividadesRealizadasSiguienteSemana.get('observaciones').touched || formActividadesRealizadasSiguienteSemana.get('observaciones').invalid">
                         <label  class="text-area-quill--label align-left-label"
                                 [class.colorMainColor]="!(formActividadesRealizadasSiguienteSemana.get('observaciones').invalid && formActividadesRealizadasSiguienteSemana.get('observaciones').touched || formActividadesRealizadasSiguienteSemana.get('observaciones').invalid)">
                                 Observaciones a las actividades a realizar la siguiente semana
@@ -191,6 +200,15 @@
                     </span>
                     <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('observaciones').value === null">
                       1000
+                    </span>
+                    <span class="icon-incompleto">
+                      <img    class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="formActividadesRealizadasSiguienteSemana.get('observaciones').invalid && formActividadesRealizadasSiguienteSemana.get('observaciones').touched || formActividadesRealizadasSiguienteSemana.get('observaciones').invalid">
                     </span>
                 </div>
                 <div class="text-center mt-1em">

@@ -75,8 +75,8 @@
             </div>
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formAlertasRelevantes.value.tieneObservaciones == true" align="left">
-            <div class="text-area-quill"
-            [class.color-secondaryColor]="formAlertasRelevantes.get('observaciones').invalid && formAlertasRelevantes.get('observaciones').touched || formAlertasRelevantes.get('observaciones').invalid">
+            <div    class="text-area-quill"
+                    [class.color-secondaryColor]="formAlertasRelevantes.get('observaciones').invalid && formAlertasRelevantes.get('observaciones').touched || formAlertasRelevantes.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formAlertasRelevantes.get('observaciones').invalid && formAlertasRelevantes.get('observaciones').touched || formAlertasRelevantes.get('observaciones').invalid)">
                         Observaciones a las alertas relevantes
@@ -95,6 +95,15 @@
             </span>
             <span class="contador miles" *ngIf="formAlertasRelevantes.get('observaciones').value === null">
               1000
+            </span>
+            <span class="icon-incompleto">
+                <img    class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="formAlertasRelevantes.get('observaciones').invalid && formAlertasRelevantes.get('observaciones').touched || formAlertasRelevantes.get('observaciones').invalid">
             </span>
         </div>
         <div class="text-center mt-1em">

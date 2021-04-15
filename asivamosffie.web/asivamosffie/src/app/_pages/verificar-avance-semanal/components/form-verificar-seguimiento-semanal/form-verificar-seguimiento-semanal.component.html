@@ -56,7 +56,11 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico" [estadoSemaforo]="semaforoAvanceFisico"></app-verificar-avance-fisico>
+
+                <app-verificar-avance-fisico    [seguimientoSemanal]="seguimientoSemanal"
+                                                [avanceFisicoObs]="tipoObservaciones.avanceFisico"
+                                                [estadoSemaforo]="semaforoAvanceFisico">
+                </app-verificar-avance-fisico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -66,7 +70,10 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
+                <app-avance-financiero  [seguimientoSemanal]="seguimientoSemanal"
+                                        *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"
+                                        [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero">
+                </app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -76,7 +83,11 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [esVerDetalle]="false" [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforo)="valuePendingSemaforo( 'gestionObra', $event, 5 )"></app-gestion-de-obra>
+                <app-gestion-de-obra    [esVerDetalle]="false"
+                                        [seguimientoSemanal]="seguimientoSemanal"
+                                        [tipoObservaciones]="tipoObservaciones"
+                                        (estadoSemaforo)="valuePendingSemaforo( 'gestionObra', $event, 5 )">
+                </app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -86,7 +97,9 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoObservaciones.reporteActividades" (estadoSemaforo)="valuePendingSemaforo( 'reporteActividad', $event, 3 )"></app-reporte-actividades>
+                <app-reporte-actividades    [seguimientoSemanal]="seguimientoSemanal"
+                                            [tipoReporteActividad]="tipoObservaciones.reporteActividades"
+                                            (estadoSemaforo)="valuePendingSemaforo( 'reporteActividad', $event, 3 )"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -96,7 +109,9 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
+                <app-registro-fotografico   [seguimientoSemanal]="seguimientoSemanal"
+                                            [tipoRegistroFotografico]="tipoObservaciones.registroFotografico">
+                </app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -106,7 +121,9 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
+                <app-comite-obra    [seguimientoSemanal]="seguimientoSemanal"
+                                    [tipoComiteObra]="tipoObservaciones.comiteObra">
+                </app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

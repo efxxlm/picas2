@@ -81,8 +81,8 @@
             </div>
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formAvanceFinanciero.value.tieneObservaciones == true" align="left">
-            <div class="text-area-quill"
-            [class.color-secondaryColor]="formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid">
+            <div    class="text-area-quill"
+                    [class.color-secondaryColor]="formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid)">
                         Observaciones al avance financiero
@@ -101,6 +101,15 @@
             </span>
             <span class="contador miles" *ngIf="formAvanceFinanciero.get('observaciones').value === null">
               1000
+            </span>
+            <span class="icon-incompleto">
+                <img    class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid">
             </span>
         </div>
         <div class="text-center mt-1em">

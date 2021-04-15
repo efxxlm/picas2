@@ -105,8 +105,8 @@
             </div>
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formAvanceFisico.value.tieneObservaciones == true" align="left">
-            <div class="text-area-quill"
-            [class.color-secondaryColor]="formAvanceFisico.get('observaciones').invalid && formAvanceFisico.get('observaciones').touched || formAvanceFisico.get('observaciones').invalid">
+            <div  class="text-area-quill"
+                  [class.color-secondaryColor]="formAvanceFisico.get('observaciones').invalid && formAvanceFisico.get('observaciones').touched || formAvanceFisico.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formAvanceFisico.get('observaciones').invalid && formAvanceFisico.get('observaciones').touched || formAvanceFisico.get('observaciones').invalid)">
                         Observaciones al avance físico
@@ -125,6 +125,15 @@
             </span>
             <span class="contador miles" *ngIf="formAvanceFisico.get('observaciones').value === null">
               1000
+            </span>
+            <span class="icon-incompleto">
+              <img    class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="formAvanceFisico.get('observaciones').invalid && formAvanceFisico.get('observaciones').touched || formAvanceFisico.get('observaciones').invalid">
             </span>
         </div>
         <div class="text-center mt-1em">

@@ -81,8 +81,8 @@
 							</div>
 						</div>
 						<div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formReporteActividades.value.tieneObservaciones == true" align="left">
-							<div class="text-area-quill"
-							[class.color-secondaryColor]="formReporteActividades.get('observaciones').invalid && formReporteActividades.get('observaciones').touched || formReporteActividades.get('observaciones').invalid">
+							<div 	class="text-area-quill"
+									[class.color-secondaryColor]="formReporteActividades.get('observaciones').invalid && formReporteActividades.get('observaciones').touched || formReporteActividades.get('observaciones').invalid">
 								<label  class="text-area-quill--label align-left-label"
 										[class.colorMainColor]="!(formReporteActividades.get('observaciones').invalid && formReporteActividades.get('observaciones').touched || formReporteActividades.get('observaciones').invalid)">
 										Observaciones al resumen general del estado del contrato
@@ -101,6 +101,15 @@
 							</span>
 							<span class="contador miles" *ngIf="formReporteActividades.get('observaciones').value === null">
 							  1000
+							</span>
+							<span class="icon-incompleto">
+								<img    class="icon-incompleto--img"
+										src="assets/img/icon/incompleto.svg"
+										alt="este campo es requerido"
+										[matTooltipPosition]="'above'"
+										matTooltip="Debe ingresar la información en el campo para continuar"
+										matTooltipClass="info-tooltip"
+										*ngIf="formReporteActividades.get('observaciones').invalid && formReporteActividades.get('observaciones').touched || formReporteActividades.get('observaciones').invalid">
 							</span>
 						</div>
 						<div class="text-center mt-1em">

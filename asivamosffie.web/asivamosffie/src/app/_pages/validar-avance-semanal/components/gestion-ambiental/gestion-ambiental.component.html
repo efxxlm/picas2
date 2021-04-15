@@ -72,8 +72,8 @@
                     </div>
                 </div>
                 <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formGestionAmbientalObservacion.value.tieneObservaciones == true" align="left">
-                    <div class="text-area-quill"
-                    [class.color-secondaryColor]="formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid">
+                    <div    class="text-area-quill"
+                            [class.color-secondaryColor]="formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid">
                         <label  class="text-area-quill--label align-left-label"
                                 [class.colorMainColor]="!(formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid)">
                                 Observaciones a la gestión ambiental
@@ -92,6 +92,15 @@
                     </span>
                     <span class="contador miles" *ngIf="formGestionAmbientalObservacion.get('observaciones').value === null">
                       1000
+                    </span>
+                    <span class="icon-incompleto">
+                        <img    class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid">
                     </span>
                 </div>
                 <div class="text-center mt-1em">
@@ -254,8 +263,8 @@
                                 </div>
                             </div>
                             <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formMaterialObservacion.value.tieneObservaciones == true" align="left">
-                                <div class="text-area-quill"
-                                [class.color-secondaryColor]="formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid">
+                                <div    class="text-area-quill"
+                                        [class.color-secondaryColor]="formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid)">
                                             Observaciones al manejo de materiales e insumos
@@ -274,6 +283,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="formMaterialObservacion.get('observaciones').value === null">
                                   1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid">
                                 </span>
                             </div>
                             <div class="text-center mt-1em">
@@ -386,8 +404,8 @@
                                 </div>
                             </div>
                             <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formResiduosConstruccion.value.tieneObservaciones == true" align="left">
-                                <div class="text-area-quill"
-                                [class.color-secondaryColor]="formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid">
+                                <div    class="text-area-quill"
+                                        [class.color-secondaryColor]="formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid)">
                                             Observaciones a los residuos de construcción y demolición
@@ -406,6 +424,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="formResiduosConstruccion.get('observaciones').value === null">
                                   1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid">
                                 </span>
                             </div>
                             <div class="text-center mt-1em">
@@ -518,8 +545,8 @@
                                 </div>
                             </div>
                             <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formResiduosPeligrosos.value.tieneObservaciones == true" align="left">
-                                <div class="text-area-quill"
-                                [class.color-secondaryColor]="formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid">
+                                <div    class="text-area-quill"
+                                        [class.color-secondaryColor]="formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid)">
                                             Observaciones al manejo de residuos peligrosos y especiales
@@ -538,6 +565,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="formResiduosPeligrosos.get('observaciones').value === null">
                                   1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid">
                                 </span>
                             </div>
                             <div class="text-center mt-1em">
@@ -651,8 +687,8 @@
                                 </div>
                             </div>
                             <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formManejoOtra.value.tieneObservaciones == true" align="left">
-                                <div class="text-area-quill"
-                                [class.color-secondaryColor]="formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid">
+                                <div    class="text-area-quill"
+                                        [class.color-secondaryColor]="formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid)">
                                             Observaciones a otra
@@ -671,6 +707,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="formManejoOtra.get('observaciones').value === null">
                                   1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid">
                                 </span>
                             </div>
                             <div class="text-center mt-1em">

@@ -76,8 +76,8 @@
             </div>
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formComiteObra.value.tieneObservaciones == true" align="left">
-            <div class="text-area-quill"
-            [class.color-secondaryColor]="formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid">
+            <div    class="text-area-quill"
+                    [class.color-secondaryColor]="formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid)">
                         Observaciones al comité de obra
@@ -96,6 +96,15 @@
             </span>
             <span class="contador miles" *ngIf="formComiteObra.get('observaciones').value === null">
               1000
+            </span>
+            <span class="icon-incompleto">
+                <img    class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid">
             </span>
         </div>
         <div class="text-center mt-1em">
