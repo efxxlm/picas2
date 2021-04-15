@@ -32,7 +32,7 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListContractSettlemen()
         {
-            List<VRegistrarLiquidacionContrato> liquidacionContratos = _context.VRegistrarLiquidacionContrato.ToList();
+            List<VRegistrarLiquidacionContrato> liquidacionContratos =await _context.VRegistrarLiquidacionContrato.ToListAsync();
             return new List<dynamic>
             {
                 liquidacionContratos.Where(r => r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados).ToList(),
