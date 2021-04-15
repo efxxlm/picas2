@@ -38,11 +38,14 @@
                         <div align="left" class="mt-1em">
                             <mat-card>
                                 <mat-card-content>
-                                    <div class="row" style="width: 99%;">
+                                    <div class="row" style="width: 100%;">
                                         <div class="col-md-12">
                                           <div class="row">
                                             <div class="pr-1">
-                                              <label class="label-left">Fecha de entrega de la muestra</label>
+                                                <label  class="label-left"
+                                                        [class.color-secondaryColor]="( muestra.get('fechaEntregaResultado').invalid && muestra.get('fechaEntregaResultado').touched)">
+                                                        Fecha de entrega de la muestra
+                                                </label>
                                             </div>
                                             <div class="col d-flex">
                                                 <mat-form-field>
@@ -65,6 +68,15 @@
                                                               src="assets/img/icon/calendarioCirculo.svg"
                                                               alt="Abrir Calendario">
                                                 </button>
+                                                <span class="icon-incompleto" style="margin-top: .2em;">
+                                                    <img  class="icon-incompleto--img"
+                                                          src="assets/img/icon/incompleto.svg"
+                                                          alt="este campo es requerido"
+                                                          [matTooltipPosition]="'above'"
+                                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                                          matTooltipClass="info-tooltip"
+                                                          *ngIf="( muestra.get('fechaEntregaResultado').invalid && muestra.get('fechaEntregaResultado').touched)">
+                                                </span>
                                             </div>
                                           </div>
                                         </div>
@@ -73,16 +85,28 @@
                                         <div class="col-md-12">
                                           <div class="row">
                                             <div class="pr-1">
-                                              <label class="label-left">Nombre de la muestra</label>
+                                                <label  class="label-left"
+                                                        [class.color-secondaryColor]="( muestra.get('nombreMuestra').invalid && muestra.get('nombreMuestra').touched)">
+                                                        Nombre de la muestra
+                                                </label>
                                             </div>
                                             <div class="col d-flex">
-                                                <section style="width: 94%;">
+                                                <section style="width: 95%;">
                                                     <mat-form-field>
                                                         <input matInput type="text" maxlength="50" formControlName="nombreMuestra" required>
                                                     </mat-form-field>
                                                 </section>
                                                 <span class="contador">{{50 - muestra.get( 'nombreMuestra' ).value.length}}</span>
                                             </div>
+                                            <span class="icon-incompleto">
+                                                <img  class="icon-incompleto--img"
+                                                      src="assets/img/icon/incompleto.svg"
+                                                      alt="este campo es requerido"
+                                                      [matTooltipPosition]="'above'"
+                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                      matTooltipClass="info-tooltip"
+                                                      *ngIf="( muestra.get('nombreMuestra').invalid && muestra.get('nombreMuestra').touched)">
+                                            </span>
                                           </div>
                                         </div>
                                     </div>
@@ -90,7 +114,10 @@
                                         <div class="col-md-12">
                                           <div>
                                             <div class="pr-1">
-                                              <label class="label-left">Observaciones frente a los resultados</label>
+                                                <label  class="label-left"
+                                                        [class.color-secondaryColor]="( muestra.get('observacion').invalid && muestra.get('observacion').touched)">
+                                                        Observaciones frente a los resultados
+                                                </label>
                                             </div>
                                             <div class="col d-flex">
                                                 <quill-editor   class="quill-editor-style card position-relative"
@@ -107,6 +134,15 @@
                                                 </span>
                                                 <span class="contador miles" *ngIf="muestra.get('observacion').value === null" style="margin-top: 3.5em;">
                                                     600
+                                                </span>
+                                                <span class="icon-incompleto" style="margin-top: 3.6em;">
+                                                    <img  class="icon-incompleto--img"
+                                                          src="assets/img/icon/incompleto.svg"
+                                                          alt="este campo es requerido"
+                                                          [matTooltipPosition]="'above'"
+                                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                                          matTooltipClass="info-tooltip"
+                                                          *ngIf="( muestra.get('observacion').invalid && muestra.get('observacion').touched)">
                                                 </span>
                                             </div>
                                           </div>

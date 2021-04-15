@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class GestionSSTComponent implements OnInit {
 
+    @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionSst: any;

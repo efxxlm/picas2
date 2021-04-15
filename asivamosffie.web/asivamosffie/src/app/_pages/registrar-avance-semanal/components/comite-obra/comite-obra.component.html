@@ -12,7 +12,9 @@
                         <div class="col-md-6">
                           <div class="row">
                             <div class="pr-1">
-                              <label class="label-left">Fecha de comité de obra</label>
+                                <label  class="label-left"
+                                        [class.color-secondaryColor]="( formComiteObra.get('fechaComite').invalid && formComiteObra.get('fechaComite').touched) || ( formComiteObra.get('fechaComite').invalid && esRegistroNuevo === false )">
+                                        Fecha de comité de obra</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field>
@@ -35,6 +37,15 @@
                                               src="assets/img/icon/calendarioCirculo.svg"
                                               alt="Abrir Calendario">
                                 </button>
+                                <span class="icon-incompleto" style="margin-top: .2em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formComiteObra.get('fechaComite').invalid && formComiteObra.get('fechaComite').touched) || ( formComiteObra.get('fechaComite').invalid && esRegistroNuevo === false )">
+                                </span>
                             </div>
                           </div>
                         </div>

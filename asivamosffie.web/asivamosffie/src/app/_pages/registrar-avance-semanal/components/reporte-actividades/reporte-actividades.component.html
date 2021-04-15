@@ -8,10 +8,10 @@
             </mat-expansion-panel-header>
             <form autocomplete="off" [formGroup]="formResumenGeneral" (ngSubmit)="guardar()">
                 <div class="d-flex mt-2em align-items-center animatedDown" align="left">
-                    <div class="text-area-quill"
-                    [class.color-secondaryColor]="formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || formResumenGeneral.get('resumenEstadoContrato').invalid">
+                    <div    class="text-area-quill"
+                            [class.color-secondaryColor]="formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || ( formResumenGeneral.get('resumenEstadoContrato').invalid && esRegistroNuevo === false )">
                         <label  class="text-area-quill--label align-left-label"
-                                [class.colorMainColor]="!(formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || formResumenGeneral.get('resumenEstadoContrato').invalid)">
+                                [class.colorMainColor]="!(formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || ( formResumenGeneral.get('resumenEstadoContrato').invalid && esRegistroNuevo === false ) )">
                                 Resumen general del estado del contrato
                         </label>
                         <quill-editor   class="quill-editor-style ml-1em"
@@ -30,15 +30,13 @@
                       2000
                     </span>
                     <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="( formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched ) || ( formResumenGeneral.get('resumenEstadoContrato').invalid )"
-                        />
+                        <img    class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="( formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched ) || ( formResumenGeneral.get('resumenEstadoContrato').invalid && esRegistroNuevo === false )">
                       </span>
                 </div>
                 <div class="text-center" style="margin-top: 2em;">
@@ -93,7 +91,14 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoReporteActividad" [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId" [esSiguienteSemana]="false" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas    [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId"
+                                                        [esSiguienteSemana]="false"
+                                                        [reporteActividad]="reporteActividad"
+                                                        [esRegistroNuevo]="esRegistroNuevo"
+                                                        (reporteDeActividades)="guardar( $event )">
+            </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -103,7 +108,14 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoReporteActividad" [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId" [esSiguienteSemana]="true" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas    [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId"
+                                                        [esSiguienteSemana]="true"
+                                                        [reporteActividad]="reporteActividad"
+                                                        [esRegistroNuevo]="esRegistroNuevo"
+                                                        (reporteDeActividades)="guardar( $event )">
+            </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

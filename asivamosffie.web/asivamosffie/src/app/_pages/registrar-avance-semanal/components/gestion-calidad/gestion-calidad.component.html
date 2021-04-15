@@ -156,7 +156,10 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left">Número de muestras</label>
+                                            <label  class="label-left"
+                                                    [class.color-secondaryColor]="( ensayo.get('numeroMuestras').invalid && ensayo.get('numeroMuestras').touched) || ( ensayo.get('numeroMuestras').invalid && esRegistroNuevo === false )">
+                                                    Número de muestras
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <section style="width: 100%;">
@@ -171,6 +174,15 @@
                                             </section>
                                             <span class="contador">{{2 - ensayo.get( 'numeroMuestras' ).value.length}}</span>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img  class="icon-incompleto--img"
+                                                  src="assets/img/icon/incompleto.svg"
+                                                  alt="este campo es requerido"
+                                                  [matTooltipPosition]="'above'"
+                                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                                  matTooltipClass="info-tooltip"
+                                                  *ngIf="( ensayo.get('numeroMuestras').invalid && ensayo.get('numeroMuestras').touched) || ( ensayo.get('numeroMuestras').invalid && esRegistroNuevo === false )">
+                                        </span>
                                       </div>
                                     </div>
                                 </div>
@@ -178,7 +190,10 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left">Fecha de toma</label>
+                                            <label  class="label-left"
+                                                    [class.color-secondaryColor]="( ensayo.get('fechaTomaMuestras').invalid && ensayo.get('fechaTomaMuestras').touched) || ( ensayo.get('fechaTomaMuestras').invalid && esRegistroNuevo === false )">
+                                                    Fecha de toma
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <mat-form-field>
@@ -202,6 +217,15 @@
                                                           src="assets/img/icon/calendarioCirculo.svg"
                                                           alt="Abrir Calendario">
                                             </button>
+                                            <span class="icon-incompleto" style="margin-top: .2em;">
+                                                <img  class="icon-incompleto--img"
+                                                      src="assets/img/icon/incompleto.svg"
+                                                      alt="este campo es requerido"
+                                                      [matTooltipPosition]="'above'"
+                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                      matTooltipClass="info-tooltip"
+                                                      *ngIf="( ensayo.get('fechaTomaMuestras').invalid && ensayo.get('fechaTomaMuestras').touched) || ( ensayo.get('fechaTomaMuestras').invalid && esRegistroNuevo === false )">
+                                            </span>
                                         </div>
                                       </div>
                                     </div>
@@ -210,7 +234,10 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left">Entrega proyectada de resultados</label>
+                                            <label  class="label-left"
+                                                    [class.color-secondaryColor]="( ensayo.get('fechaEntregaResultados').invalid && ensayo.get('fechaEntregaResultados').touched) || ( ensayo.get('fechaEntregaResultados').invalid && esRegistroNuevo === false )">
+                                                    Entrega proyectada de resultados
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <mat-form-field>
@@ -233,6 +260,15 @@
                                                           src="assets/img/icon/calendarioCirculo.svg"
                                                           alt="Abrir Calendario">
                                             </button>
+                                            <span class="icon-incompleto" style="margin-top: .2em;">
+                                                <img  class="icon-incompleto--img"
+                                                      src="assets/img/icon/incompleto.svg"
+                                                      alt="este campo es requerido"
+                                                      [matTooltipPosition]="'above'"
+                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                      matTooltipClass="info-tooltip"
+                                                      *ngIf="( ensayo.get('fechaEntregaResultados').invalid && ensayo.get('fechaEntregaResultados').touched) || ( ensayo.get('fechaEntregaResultados').invalid && esRegistroNuevo === false )">
+                                            </span>
                                         </div>
                                       </div>
                                     </div>
@@ -241,7 +277,11 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left" style="margin-top: 1.5em;">¿Se realizó control a los equipos de medición durante la semana?</label>
+                                            <label  class="label-left"
+                                                    style="margin-top: 1.5em;"
+                                                    [class.color-secondaryColor]="( ensayo.get('realizoControlMedicion').invalid && ensayo.get('realizoControlMedicion').touched) || ( ensayo.get('realizoControlMedicion').invalid && esRegistroNuevo === false )">
+                                                    ¿Se realizó control a los equipos de medición durante la semana?
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <section style="width: 95%;">
@@ -254,6 +294,15 @@
                                                 </mat-form-field>
                                               </section>
                                         </div>
+                                        <span class="icon-incompleto" style="margin-top: .5em;">
+                                            <img  class="icon-incompleto--img"
+                                                  src="assets/img/icon/incompleto.svg"
+                                                  alt="este campo es requerido"
+                                                  [matTooltipPosition]="'above'"
+                                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                                  matTooltipClass="info-tooltip"
+                                                  *ngIf="( ensayo.get('realizoControlMedicion').invalid && ensayo.get('realizoControlMedicion').touched) || ( ensayo.get('realizoControlMedicion').invalid && esRegistroNuevo === false )">
+                                        </span>
                                       </div>
                                     </div>
                                 </div>
@@ -261,7 +310,10 @@
                                     <div class="col-md-12">
                                       <div>
                                         <div class="pr-1">
-                                          <label class="label-left">Observaciones</label>
+                                            <label  class="label-left"
+                                                    [class.color-secondaryColor]="( ensayo.get('observacion').invalid && ensayo.get('observacion').touched) || ( ensayo.get('observacion').invalid && esRegistroNuevo === false )">
+                                                    Observaciones
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <quill-editor   class="quill-editor-style card position-relative"
@@ -278,6 +330,15 @@
                                             </span>
                                             <span class="contador miles" *ngIf="ensayo.get('observacion').value === null" style="margin-top: 3.5em;">
                                                 400
+                                            </span>
+                                            <span class="icon-incompleto" style="margin-top: 3.6em;">
+                                                <img  class="icon-incompleto--img"
+                                                      src="assets/img/icon/incompleto.svg"
+                                                      alt="este campo es requerido"
+                                                      [matTooltipPosition]="'above'"
+                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                      matTooltipClass="info-tooltip"
+                                                      *ngIf="( ensayo.get('observacion').invalid && ensayo.get('observacion').touched) || ( ensayo.get('observacion').invalid && esRegistroNuevo === false )">
                                             </span>
                                         </div>
                                       </div>

@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ReporteActividadesComponent implements OnInit {
 
+    @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoReporteActividad: any;

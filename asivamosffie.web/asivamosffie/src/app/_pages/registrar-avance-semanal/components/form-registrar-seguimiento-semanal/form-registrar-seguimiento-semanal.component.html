@@ -95,7 +95,11 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoObservaciones.reporteActividades" (estadoSemaforoReporte)="valuePendingSemaforo( $event, 'reporteActividad' )"></app-reporte-actividades>
+                <app-reporte-actividades    [seguimientoSemanal]="seguimientoSemanal"
+                                            [tipoReporteActividad]="tipoObservaciones.reporteActividades"
+                                            [esRegistroNuevo]="esRegistroNuevo"
+                                            (estadoSemaforoReporte)="valuePendingSemaforo( $event, 'reporteActividad' )">
+                </app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -105,7 +109,10 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
+                <app-registro-fotografico   [seguimientoSemanal]="seguimientoSemanal"
+                                            [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"
+                                            [esRegistroNuevo]="esRegistroNuevo">
+                </app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -115,7 +122,10 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
+                <app-comite-obra    [seguimientoSemanal]="seguimientoSemanal"
+                                    [tipoComiteObra]="tipoObservaciones.comiteObra"
+                                    [esRegistroNuevo]="esRegistroNuevo">
+                </app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

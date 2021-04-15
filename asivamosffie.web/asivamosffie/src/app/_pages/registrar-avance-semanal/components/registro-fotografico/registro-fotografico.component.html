@@ -26,7 +26,10 @@
                         <div class="col-md-12">
                           <div class="row">
                             <div class="pr-1">
-                              <label class="label-left">URL con soporte</label>
+                                <label  class="label-left"
+                                        [class.color-secondaryColor]="( formRegistroFotografico.get('urlSoporteFotografico').invalid && formRegistroFotografico.get('urlSoporteFotografico').touched) || ( formRegistroFotografico.get('urlSoporteFotografico').invalid && esRegistroNuevo === false )">
+                                        URL con soporte
+                                </label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field style="width: 97.5%;">
@@ -37,6 +40,15 @@
                                             required>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img  class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="( formRegistroFotografico.get('urlSoporteFotografico').invalid && formRegistroFotografico.get('urlSoporteFotografico').touched) || ( formRegistroFotografico.get('urlSoporteFotografico').invalid && esRegistroNuevo === false )">
+                            </span>
                             <div class="d-flex justify-content-center size-text-descriptivo">
                                 <p class="color-text-descriptivo">
                                     <i> 
@@ -52,7 +64,10 @@
                         <div class="col-md-12">
                           <div>
                             <div class="pr-1">
-                              <label class="label-left">Descripción</label>
+                                <label  class="label-left"
+                                        [class.color-secondaryColor]="( formRegistroFotografico.get('descripcion').invalid && formRegistroFotografico.get('descripcion').touched) || ( formRegistroFotografico.get('descripcion').invalid && esRegistroNuevo === false )">
+                                        Descripción
+                                </label>
                             </div>
                             <div class="col d-flex">
                                 <quill-editor   class="quill-editor-style card position-relative"
@@ -69,6 +84,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="formRegistroFotografico.get('descripcion').value === null" style="margin-top: 3.5em;">
                                     2000
+                                </span>
+                                <span class="icon-incompleto" style="margin-top: 3.6em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formRegistroFotografico.get('descripcion').invalid && formRegistroFotografico.get('descripcion').touched) || ( formRegistroFotografico.get('descripcion').invalid && esRegistroNuevo === false )">
                                 </span>
                             </div>
                           </div>

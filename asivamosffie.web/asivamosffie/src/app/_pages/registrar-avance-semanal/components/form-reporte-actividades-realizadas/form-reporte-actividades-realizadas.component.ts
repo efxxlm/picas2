@@ -12,6 +12,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
 
     @Input() esSiguienteSemana: boolean;
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     @Input() reporteActividad: any;
     @Input() tipoReporteActividad: any;
     @Input() seguimientoSemanal: any;

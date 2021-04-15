@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class GestionSocialComponent implements OnInit {
 
+    @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionSocial: any;

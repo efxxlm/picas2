@@ -32,7 +32,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionSst]="tipoObservaciones.gestionSst"></app-gestion-sst>
+        <app-gestion-sst    [seguimientoSemanal]="seguimientoSemanal"
+                            [tipoObservacionSst]="tipoObservaciones.gestionSst"
+                            [esRegistroNuevo]="esRegistroNuevo">
+        </app-gestion-sst>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -42,7 +45,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionSocial]="tipoObservaciones.gestionSocial"></app-gestion-social>
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal"
+                            [tipoObservacionSocial]="tipoObservaciones.gestionSocial"
+                            [esRegistroNuevo]="esRegistroNuevo">
+        </app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -52,7 +58,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"></app-alertas-relevantes>
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal"
+                                [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"
+                                [esRegistroNuevo]="esRegistroNuevo">
+        </app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>
 
