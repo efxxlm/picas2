@@ -47,7 +47,7 @@
             <td mat-cell *matCellDef="let element">                
                 <button mat-raised-button color="accent" class="btn-table"
                 (click)="finalizarActuacion(element.defensaJudicialSeguimientoId)"
-                    *ngIf="element.esCompleto">
+                    *ngIf="element.esCompleto && element.estadoProcesoCodigo!=3">
                     Finalizar actuación
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
@@ -57,7 +57,7 @@
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                 (click)="eliminarActuacion(element.defensaJudicialSeguimientoId)"
-                    *ngIf="!element.esCompleto">
+                    *ngIf="element.estadoProcesoCodigo!=3">
                     Eliminar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
