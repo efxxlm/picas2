@@ -131,10 +131,8 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordContractSettlement(Contratacion pContratacion)
         {
-            if (
-                !pContratacion.FechaTramiteLiquidacion.HasValue
-
-             || !pContratacion.FechaFirmaEnvioContratista.HasValue
+            if (  
+                !pContratacion.FechaFirmaEnvioContratista.HasValue
              || !pContratacion.FechaFirmaContratista.HasValue
 
              || !pContratacion.FechaFirmaEnvioFiduciaria.HasValue
