@@ -1244,7 +1244,7 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
-                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado;
+                solicitudPagoOld.ValorFacturado = pSolicitudPago?.SolicitudPagoExpensas?.FirstOrDefault()?.ValorFacturado;
                 solicitudPagoOld.FechaModificacion = DateTime.Now;
                 solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(pSolicitudPago);
@@ -1319,8 +1319,16 @@ namespace asivamosffie.services
             return true;
         }
 
-        private bool ValidateCompleteRecordSolicitudPagoExpensas(SolicitudPago pSolicitudPago)
+        private bool ValidateCompleteRecordSolicitudPagoExpensas(SolicitudPago pSolicitudPagos)
         {
+            SolicitudPago pSolicitudPago = _context.SolicitudPago
+                .Where(r => r.SolicitudPagoId == pSolicitudPagos.SolicitudPagoId)
+                .Include(r => r.SolicitudPagoSoporteSolicitud)
+                .Include(r => r.SolicitudPagoExpensas)
+                .Include(r => r.SolicitudPagoListaChequeo)
+                .AsNoTracking()
+                .FirstOrDefault();
+
             if (
                    pSolicitudPago.SolicitudPagoExpensas.Count() == 0
                 || pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
@@ -1603,15 +1611,15 @@ namespace asivamosffie.services
                                              s.TieneNoCumpleListaChequeo,
                                              RegistroCompleto = s.RegistroCompleto ?? false
                                          }).OrderByDescending(r => r.SolicitudPagoId)
-                                                                                    .ToListAsync();
+                                           .ToListAsync();
 
-            List<dynamic> grind = new List<dynamic>();
+  
             List<Dominio> ListParametricas =
                 _context.Dominio
                                .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
                                    || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago)
                                .ToList();
-
+            List<dynamic> grind = new List<dynamic>();
             result.ForEach(r =>
             {
                 grind.Add(new
