@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 
 @Component({
   selector: 'app-tabla-liquidacion-rlc',
@@ -20,6 +21,8 @@ export class TablaLiquidacionRlcComponent implements OnInit {
     constructor(private router: Router) { }
 
     ngOnInit(): void {
+        this.listaAcordeonLiquidado.forEach( registro => registro.fechaSolicitud = moment( registro.fechaSolicitud ).format( 'DD/MM/YYYY' ) );
+
         this.dataSource = new MatTableDataSource( this.listaAcordeonLiquidado );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
