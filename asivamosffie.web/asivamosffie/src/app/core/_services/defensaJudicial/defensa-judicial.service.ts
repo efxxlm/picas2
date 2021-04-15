@@ -59,9 +59,9 @@ export class DefensaJudicialService {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDemandadoConvocado`, defensaJudicial );
   }
 
-  GetPlantillaDefensaJudicial(pContratoId:number)//file
+  GetPlantillaDefensaJudicial(pContratoId:number,tipoArchivo: number)//file
   {
-    return this.http.get(`${this.url}/JudicialDefense/GetPlantillaDefensaJudicial?pContratoId=${ pContratoId }`, { responseType: "blob" } );
+    return this.http.get(`${this.url}/JudicialDefense/GetPlantillaDefensaJudicial?pContratoId=${ pContratoId }&tipoArchivo=${ tipoArchivo }`, { responseType: "blob" } );
   }    
 
   GetDefensaJudicialById(controlJudicialId: any) {

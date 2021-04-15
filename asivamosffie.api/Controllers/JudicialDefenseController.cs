@@ -66,9 +66,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetPlantillaDefensaJudicial")]
-        public async Task<FileResult> GetPlantillaDefensaJudicial(int pContratoId)
+        public async Task<FileResult> GetPlantillaDefensaJudicial(int pContratoId, int tipoArchivo)
         {
-            return File(await _judicialDefense.GetPlantillaDefensaJudicial(pContratoId), "application/pdf");
+            return File(await _judicialDefense.GetPlantillaDefensaJudicial(pContratoId, tipoArchivo), "application/pdf");
         }
 
         [HttpGet]

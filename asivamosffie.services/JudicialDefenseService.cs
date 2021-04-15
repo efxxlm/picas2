@@ -15,6 +15,7 @@ using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Z.EntityFramework.Plus;
+using asivamosffie.services.Helpers;
 
 namespace asivamosffie.services
 {
@@ -645,27 +646,29 @@ namespace asivamosffie.services
             return defensaJudicial1;
         }
 
-        public async Task<byte[]> GetPlantillaDefensaJudicial(int pDefensaJudicialId)
+        public async Task<byte[]> GetPlantillaDefensaJudicial(int pDefensaJudicialId, int tipoArchivo)
         {
             if (pDefensaJudicialId == 0)
             {
                 return Array.Empty<byte>();
             }
+            string TipoPlantilla;
 
+            //ficha de estudio
+            if (tipoArchivo == 1)
+            {
+                TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial).ToString();
+            }
+            else
+            {
+                //proceso de defensa judicial
+               TipoPlantilla = ((int)ConstanCodigoPlantillas.Proceso_defensa_judicial_4_2_2).ToString();
+            }
 
-            Plantilla plantilla = null;
+            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(Plantilla.Contenido, pDefensaJudicialId);
+            return PDF.Convertir(Plantilla);
 
-
-            //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-
-            plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-
-
-            //Plantilla plantilla = new Plantilla();
-            //plantilla.Contenido = "";
-            if (plantilla != null)
-                plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(plantilla.Contenido, pDefensaJudicialId);
-            return ConvertirPDF(plantilla);
         }
 
 
@@ -737,6 +740,11 @@ namespace asivamosffie.services
 
             var plantillatrContratos = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_estudio_tr_contratos).ToString()).FirstOrDefault().Contenido;
 
+            //ACTUACIONES
+            List<DefensaJudicialSeguimiento> actuaciones = _context.DefensaJudicialSeguimiento.Where(x => x.DefensaJudicialId == prmdefensaJudicialID).ToList();//diferente a finalizado
+
+            var plantillatrActuaciones = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Tabla_actuaciones).ToString()).FirstOrDefault().Contenido;
+
             var ListaLocalizaciones = _context.Localizacion.ToList();
             var ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
             var ListaParametricas = _context.Dominio.ToList();
@@ -783,19 +791,15 @@ namespace asivamosffie.services
 
                     plantillatrContratos = plantillatrContratos.Replace("_Nombre_Contratista_", contratacion.Contratista.Nombre);
 
-                    plantillatrContratos = plantillatrContratos.Replace("_Estado_obra_", "PENDIENTE");
-                    plantillatrContratos = plantillatrContratos.Replace("_Programacion_obra_acumulada_", "PENDIENTE");  //??
-                    plantillatrContratos = plantillatrContratos.Replace("_Avance_físico_acumulado_ejecutado_", "PENDIENTE");
-                    plantillatrContratos = plantillatrContratos.Replace("Facturacion_programada_acumulada_", "PENDIENTE");
-                    plantillatrContratos = plantillatrContratos.Replace("_Facturacion_ejecutada_acumulada_", "PENDIENTE");
+                    plantillatrContratos = plantillatrContratos.Replace("_Estado_obra_", defcontratac.ContratacionProyecto.EstadoObraCodigo != null ? ListaParametricas.Where(r => r.Codigo == defcontratac.ContratacionProyecto.EstadoObraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).FirstOrDefault().Nombre : "Sin registro de avance semanal"); 
+                     plantillatrContratos = plantillatrContratos.Replace("_Programacion_obra_acumulada_", defcontratac.ContratacionProyecto.ProgramacionSemanal != null ? defcontratac.ContratacionProyecto.ProgramacionSemanal + " %" : "0%");  //??
+                    plantillatrContratos = plantillatrContratos.Replace("_Avance_físico_acumulado_ejecutado_", defcontratac.ContratacionProyecto.AvanceFisicoSemanal != null ? defcontratac.ContratacionProyecto.AvanceFisicoSemanal + " %" : "0%");
+                    plantillatrContratos = plantillatrContratos.Replace("Facturacion_programada_acumulada_", "");
+                    plantillatrContratos = plantillatrContratos.Replace("_Facturacion_ejecutada_acumulada_", "");
                     contador++;
 
                 }
                 strContenido = strContenido.Replace("_trplantillacontratacion_", plantillatrContratos);
-
-
-
-
             }
 
 
@@ -838,9 +842,20 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Abogado_elabora_estudio_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().Abogado);
 
             //Historial de Actuaciones
-            /*var controversiaActuaciones = defPrincial.DefensaJudicialSeguimiento.ToList();
+            int contadorActuacion = 1;
+            foreach (var actuacion in actuaciones)
+            {
+                plantillatrActuaciones = plantillatrActuaciones.Replace("_contador_", contadorActuacion.ToString());
+                plantillatrActuaciones = plantillatrActuaciones.Replace("_Fecha_Actualizacion_Actuacion_", actuacion.FechaModificacion == null ? Convert.ToDateTime(actuacion.FechaCreacion).ToString("dd/MM/yyyy") : Convert.ToDateTime(actuacion.FechaModificacion).ToString("dd/MM/yyyy"));
+                plantillatrActuaciones = plantillatrActuaciones.Replace("_Numero_Actuacion_", actuacion.NumeroActuacion);
+                plantillatrActuaciones = plantillatrActuaciones.Replace("_Actuacion_", actuacion.ActuacionAdelantada);
 
-            strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
+                contadorActuacion++;
+
+            }
+            strContenido = strContenido.Replace("_plantillaActuaciones_", plantillatrActuaciones);
+
+            /*strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
             strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
             strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);
 
@@ -853,7 +868,7 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
             strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
             strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean(actuacionSeguimiento.EsResultadoDefinitivo).ToString());
-
+            
 
             //datos exclusivos interventoria
 

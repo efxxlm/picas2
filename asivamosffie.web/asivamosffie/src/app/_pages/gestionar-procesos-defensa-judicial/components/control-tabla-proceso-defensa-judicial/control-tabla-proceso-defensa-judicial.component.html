@@ -68,14 +68,14 @@
                     Actualizar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="GetPlantillaDefensaJudicial(element.defensaJudicialId)"
+                    (click)="GetPlantillaDefensaJudicial(element.defensaJudicialId,1)"
                     *ngIf="(element.estadoProcesoCodigo === '2' && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '6' && element.registroCompletoNombre=='Completo')
                     || (element.estadoProcesoCodigo === '3' && element.cuantiaPerjuicios==null && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '9' && element.esprocesoResultadoDefinitivo==false)">
                     Descargar ficha de estudio
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.estadoProcesoCodigo === '5' || element.estadoProcesoCodigo === '8' || element.estadoProcesoCodigo === '10'"
-                    (click)="GetPlantillaDefensaJudicial(element.defensaJudicialId)">
+                    (click)="GetPlantillaDefensaJudicial(element.defensaJudicialId,2)">
                     Descargar proceso de defensa judicial
                 </button>
             </td>

@@ -50,9 +50,9 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
   actualizarProceso(id){
     this.router.navigate(['/gestionarProcesoDefensaJudicial/actualizarProceso',id]);
   }
-  GetPlantillaDefensaJudicial(id)
+  GetPlantillaDefensaJudicial(id,tipoArchivo)
   {
-    this.defensaServices.GetPlantillaDefensaJudicial(id)
+    this.defensaServices.GetPlantillaDefensaJudicial(id,tipoArchivo)
     .subscribe(respuesta => {
       const documento = 'ficha.pdf';
       const text = documento,
