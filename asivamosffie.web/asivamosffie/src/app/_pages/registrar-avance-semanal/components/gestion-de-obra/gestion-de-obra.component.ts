@@ -8,6 +8,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 export class GestionDeObraComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservaciones: any;
     @Output() estadoSemaforoGestionObra = new EventEmitter();

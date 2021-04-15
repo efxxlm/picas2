@@ -6,7 +6,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
+        <app-gestion-ambiental  [seguimientoSemanal]="seguimientoSemanal"
+                                [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"
+                                [esRegistroNuevo]="esRegistroNuevo">
+        </app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -16,7 +19,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"></app-gestion-calidad>
+        <app-gestion-calidad    [seguimientoSemanal]="seguimientoSemanal"
+                                [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"
+                                [esRegistroNuevo]="esRegistroNuevo">
+        </app-gestion-calidad>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">

@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AvanceFinancieroComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     @Input() seguimientoSemanal: any;
     @Input() avanceFinancieroObs: string;
     formAvanceFinanciero: FormGroup;

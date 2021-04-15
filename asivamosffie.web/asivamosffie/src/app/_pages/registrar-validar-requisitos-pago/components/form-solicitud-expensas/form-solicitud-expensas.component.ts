@@ -154,12 +154,17 @@ export class FormSolicitudExpensasComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     if ( this.solicitudPagoId > 0 ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate(
-                                [
-                                    '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
-                                ]
-                            )
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoId )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () => this.routes.navigate(
+                                        [
+                                            '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
+                                        ]
+                                    )
+                                );
+                            }
                         );
                     } else {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} )

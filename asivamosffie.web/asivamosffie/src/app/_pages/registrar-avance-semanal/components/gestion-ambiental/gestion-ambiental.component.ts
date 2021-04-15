@@ -16,6 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class GestionAmbientalComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionAmbiental: any;
     @Output() seRealizoPeticion = new EventEmitter<boolean>();

@@ -3,10 +3,14 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" style="margin-top: 1.5em;">¿Los RCD fueron cuantificados en toneladas, clasificados, acopiados y protegidos correctamente?</label>
+              <label  class="label-left"
+                      style="margin-top: 1.5em;"
+                      [class.color-secondaryColor]="( formManejoResiduosConstruccion.get('estaCuantificadoRCD').invalid && formManejoResiduosConstruccion.get('estaCuantificadoRCD').touched) || ( formManejoResiduosConstruccion.get('estaCuantificadoRCD').invalid && esRegistroNuevo === false )">
+                      ¿Los RCD fueron cuantificados en toneladas, clasificados, acopiados y protegidos correctamente?
+              </label>
             </div>
             <div class="col d-flex">
-                <section style="width: 100%;">
+                <section style="width: 93%;">
                     <mat-form-field appearance="fill">
                       <mat-select class="padding-left" formControlName="estaCuantificadoRCD" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
@@ -16,6 +20,15 @@
                     </mat-form-field>
                   </section>
             </div>
+            <span class="icon-incompleto" style="margin-top: .5em;">
+              <img  class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="( formManejoResiduosConstruccion.get('estaCuantificadoRCD').invalid && formManejoResiduosConstruccion.get('estaCuantificadoRCD').touched) || ( formManejoResiduosConstruccion.get('estaCuantificadoRCD').invalid && esRegistroNuevo === false )">
+            </span>
           </div>
         </div>
     </div>
@@ -24,10 +37,14 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" style="margin-top: 1.5em;">¿Requiere hacer una observación acerca del manejo de los residuos de construcción y demolición?</label>
+              <label  class="label-left"
+                      style="margin-top: 1.5em;"
+                      [class.color-secondaryColor]="( formManejoResiduosConstruccion.get('requiereObservacion').invalid && formManejoResiduosConstruccion.get('requiereObservacion').touched) || ( formManejoResiduosConstruccion.get('requiereObservacion').invalid && esRegistroNuevo === false )">
+                      ¿Requiere hacer una observación acerca del manejo de los residuos de construcción y demolición?
+              </label>
             </div>
             <div class="col d-flex">
-                <section style="width: 100%;">
+                <section style="width: 93%;">
                     <mat-form-field appearance="fill">
                       <mat-select class="padding-left" formControlName="requiereObservacion" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
@@ -37,6 +54,15 @@
                     </mat-form-field>
                   </section>
             </div>
+            <span class="icon-incompleto" style="margin-top: .5em;">
+              <img  class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="( formManejoResiduosConstruccion.get('requiereObservacion').invalid && formManejoResiduosConstruccion.get('requiereObservacion').touched) || ( formManejoResiduosConstruccion.get('requiereObservacion').invalid && esRegistroNuevo === false )">
+            </span>
           </div>
         </div>
     </div>
@@ -45,7 +71,10 @@
         <div class="col-md-12">
           <div>
             <div class="pr-1">
-              <label class="label-left">Observaciones</label>
+              <label  class="label-left"
+                      [class.color-secondaryColor]="( formManejoResiduosConstruccion.get('observacion').invalid && formManejoResiduosConstruccion.get('observacion').touched) || ( formManejoResiduosConstruccion.get('observacion').invalid && esRegistroNuevo === false )">
+                      Observaciones
+              </label>
             </div>
             <div class="col d-flex" style="width: 100%;">
                 <quill-editor   class="quill-editor-style card position-relative"
@@ -62,6 +91,15 @@
                 </span>
                 <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacion').value === null" style="margin-top: 3.5em;">
                     400
+                </span>
+                <span class="icon-incompleto" style="margin-top: 3.6em;">
+                  <img  class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="( formManejoResiduosConstruccion.get('observacion').invalid && formManejoResiduosConstruccion.get('observacion').touched) || ( formManejoResiduosConstruccion.get('observacion').invalid && esRegistroNuevo === false )">
                 </span>
             </div>
           </div>
@@ -81,7 +119,10 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left">Gestor de residuos de construcción y demolición</label>
+                        <label  class="label-left"
+                                [class.color-secondaryColor]="( residuo.get('nombreGestorResiduos').invalid && residuo.get('nombreGestorResiduos').touched) || ( residuo.get('nombreGestorResiduos').invalid && esRegistroNuevo === false )">
+                                Gestor de residuos de construcción y demolición
+                        </label>
                     </div>
                     <div class="col d-flex">
                         <section style="width: 100%;">
@@ -91,6 +132,15 @@
                         </section>
                         <span class="contador">{{50 - residuo.get( 'nombreGestorResiduos' ).value.length}}</span>
                     </div>
+                    <span class="icon-incompleto">
+                      <img  class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( residuo.get('nombreGestorResiduos').invalid && residuo.get('nombreGestorResiduos').touched) || ( residuo.get('nombreGestorResiduos').invalid && esRegistroNuevo === false )">
+                    </span>
                 </div>
             </div>
         </div>
@@ -99,10 +149,14 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" style="margin-top: 1.5em;">¿El gestor presenta permiso ambiental o soporte válido?</label>
+                  <label  class="label-left"
+                          style="margin-top: 1.5em;"
+                          [class.color-secondaryColor]="( residuo.get('tienePermisoAmbiental').invalid && residuo.get('tienePermisoAmbiental').touched) || ( residuo.get('tienePermisoAmbiental').invalid && esRegistroNuevo === false )">
+                          ¿El gestor presenta permiso ambiental o soporte válido?
+                  </label>
                 </div>
                 <div class="col d-flex">
-                    <section style="width: 100%;">
+                    <section style="width: 96%;">
                         <mat-form-field appearance="fill">
                           <mat-select class="padding-left" formControlName="tienePermisoAmbiental" required>
                             <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
@@ -112,6 +166,15 @@
                         </mat-form-field>
                       </section>
                 </div>
+                <span class="icon-incompleto" style="margin-top: .5em;">
+                  <img  class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="( residuo.get('tienePermisoAmbiental').invalid && residuo.get('tienePermisoAmbiental').touched) || ( residuo.get('tienePermisoAmbiental').invalid && esRegistroNuevo === false )">
+                </span>
               </div>
             </div>
         </div>
@@ -123,7 +186,7 @@
                   <label class="label-left">URL con soporte</label>
                 </div>
                 <div class="col d-flex">
-                    <mat-form-field style="width: 98%;">
+                    <mat-form-field style="width: 95.5%;">
                         <input  matInput
                                 type="text"
                                 maxlength="400"
@@ -172,11 +235,14 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-                <label class="label-left" style="margin-top: 1.5em;">¿Se reutilizaron temporal o permanente los residuos de construcción y demolición para el porcentaje de aprovechamiento obligatorio?
+                <label  class="label-left"
+                        style="margin-top: 1.5em;"
+                        [class.color-secondaryColor]="( formManejoResiduosConstruccion.get('seReutilizadorResiduos').invalid && formManejoResiduosConstruccion.get('seReutilizadorResiduos').touched) || ( formManejoResiduosConstruccion.get('seReutilizadorResiduos').invalid && esRegistroNuevo === false )">
+                        ¿Se reutilizaron temporal o permanente los residuos de construcción y demolición para el porcentaje de aprovechamiento obligatorio?
                 </label>
             </div>
-            <div class="col d-flex" style="width: 15%;">
-                <section style="width: 100%;">
+            <div class="col d-flex" style="width: 10%;">
+                <section style="width: 80%;">
                     <mat-form-field appearance="fill">
                       <mat-select class="padding-left" formControlName="seReutilizadorResiduos" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
@@ -186,6 +252,15 @@
                     </mat-form-field>
                   </section>
             </div>
+            <span class="icon-incompleto" style="margin-top: .5em;">
+              <img  class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="( formManejoResiduosConstruccion.get('seReutilizadorResiduos').invalid && formManejoResiduosConstruccion.get('seReutilizadorResiduos').touched) || ( formManejoResiduosConstruccion.get('seReutilizadorResiduos').invalid && esRegistroNuevo === false )">
+            </span>
           </div>
         </div>
     </div>
@@ -194,7 +269,10 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="pr-1">
-                    <label class="label-left">Cantidad (Toneladas)</label>
+                    <label  class="label-left"
+                            [class.color-secondaryColor]="( formManejoResiduosConstruccion.get('cantidadToneladas').invalid && formManejoResiduosConstruccion.get('cantidadToneladas').touched) || ( formManejoResiduosConstruccion.get('cantidadToneladas').invalid && esRegistroNuevo === false )">
+                            Cantidad (Toneladas)
+                    </label>
                 </div>
                 <div class="col d-flex">
                     <section style="width: 100%;">
@@ -209,6 +287,15 @@
                     </section>
                     <span class="contador">{{3 - formManejoResiduosConstruccion.get( 'cantidadToneladas' ).value.length}}</span>
                 </div>
+                <span class="icon-incompleto">
+                  <img  class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="( formManejoResiduosConstruccion.get('cantidadToneladas').invalid && formManejoResiduosConstruccion.get('cantidadToneladas').touched) || ( formManejoResiduosConstruccion.get('cantidadToneladas').invalid && esRegistroNuevo === false )">
+                </span>
             </div>
         </div>
     </div>

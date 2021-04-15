@@ -66,7 +66,12 @@
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
+
+                <app-avance-financiero  [seguimientoSemanal]="seguimientoSemanal"
+                                        *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"
+                                        [esRegistroNuevo]="esRegistroNuevo"
+                                        [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero">
+                </app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -76,7 +81,11 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
+                <app-gestion-de-obra    [seguimientoSemanal]="seguimientoSemanal"
+                                        [tipoObservaciones]="tipoObservaciones"
+                                        [esRegistroNuevo]="esRegistroNuevo"
+                                        (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )">
+                </app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

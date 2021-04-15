@@ -14,6 +14,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
     @Input() formManejoMaterialInsumo: FormGroup;
     @Input() materialInsumo: any;
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     manejoMaterialInsumo: any;
     editorStyle = {
         height: '45px'

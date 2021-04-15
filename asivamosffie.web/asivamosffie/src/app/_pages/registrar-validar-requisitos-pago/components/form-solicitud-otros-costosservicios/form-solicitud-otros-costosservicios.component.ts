@@ -141,17 +141,21 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     if ( this.esUnEditar === false ) {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ]
-                            )
+                            () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ] )
                         );
                     }
                     if ( this.esUnEditar === true ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate(
-                                [
-                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
-                                ]
-                            )
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () => this.routes.navigate(
+                                        [
+                                            '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
+                                        ]
+                                    )
+                                );
+                            }
                         );
                     }
                 },

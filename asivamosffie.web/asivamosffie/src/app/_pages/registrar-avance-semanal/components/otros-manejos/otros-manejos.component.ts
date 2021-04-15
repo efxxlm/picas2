@@ -11,6 +11,7 @@ export class OtrosManejosComponent implements OnInit {
     @Input() formOtrosManejos: FormGroup;
     @Input() otrosManejos: any;
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     otros: any;
     editorStyle = {
         height: '45px'

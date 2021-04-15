@@ -9,10 +9,14 @@
                         <div class="col-md-12">
                           <div class="row">
                             <div class="pr-1">
-                              <label class="label-left" style="margin-top: 1.5em;">¿Se realizaron ensayos de laboratorio durante la semana?</label>
+                              <label  class="label-left"
+                                      style="margin-top: 1.5em;"
+                                      [class.color-secondaryColor]="( formGestionCalidad.get('seRealizaronEnsayosLaboratorio').invalid && formGestionCalidad.get('seRealizaronEnsayosLaboratorio').touched) || ( formGestionCalidad.get('seRealizaronEnsayosLaboratorio').invalid && esRegistroNuevo === false )">
+                                      ¿Se realizaron ensayos de laboratorio durante la semana?
+                              </label>
                             </div>
                             <div class="col d-flex">
-                                <section style="width: 90%;">
+                                <section style="width: 95%;">
                                     <mat-form-field class="w-50" appearance="fill">
                                       <mat-select class="padding-left" formControlName="seRealizaronEnsayosLaboratorio" required>
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
@@ -20,49 +24,29 @@
                                         </mat-option>
                                       </mat-select>
                                     </mat-form-field>
-                                  </section>
+                                </section>
                             </div>
+                            <span class="icon-incompleto" style="margin-top: .5em;">
+                              <img  class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="( formGestionCalidad.get('seRealizaronEnsayosLaboratorio').invalid && formGestionCalidad.get('seRealizaronEnsayosLaboratorio').touched) || ( formGestionCalidad.get('seRealizaronEnsayosLaboratorio').invalid && esRegistroNuevo === false )">
+                            </span>
                           </div>
                         </div>
                     </div>
-
-                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false && esVerDetalle === false">
-                      <table mat-table [dataSource]="tablaHistorial" matSort>
-                    
-                          <ng-container matColumnDef="fechaRevision">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
-                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
-                          </ng-container>
-                    
-                          <ng-container matColumnDef="responsable">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
-                              <td mat-cell *matCellDef="let element" align="center" class="color-text">
-                                  <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
-                                      <p>Supervisor</p>
-                                  </ng-container>
-                                  <ng-template #noEsSupervisor>
-                                      <p>Apoyo a la supervisión</p>
-                                  </ng-template> 
-                              </td>
-                          </ng-container>
-                    
-                          <ng-container matColumnDef="historial">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
-                            <td mat-cell *matCellDef="let element" align="center" class="color-text">
-                                <section [innerHTML]="element.observacion"></section>
-                            </td>
-                          </ng-container>
-                      
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
-                      </table>
-                    </section>
 
                     <div class="row" *ngIf="formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === true">
                         <div class="col-md-12">
                           <div class="row">
                             <div class="pr-1">
-                              <label class="label-left">Cantidad de ensayos de laboratorio realizados en la semana:</label>
+                              <label    class="label-left"
+                                        [class.color-secondaryColor]="( formGestionCalidad.get('cantidadEnsayos').invalid && formGestionCalidad.get('cantidadEnsayos').touched) || ( formGestionCalidad.get('cantidadEnsayos').invalid && esRegistroNuevo === false )">
+                                        Cantidad de ensayos de laboratorio realizados en la semana:
+                              </label>
                             </div>
                             <div class="col d-flex">
                                 <section style="width: 90%;">
@@ -75,16 +59,57 @@
                                                 required>
                                     </mat-form-field>
                                   </section>
+                                  <span class="icon-incompleto" style="margin-left: 2em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formGestionCalidad.get('cantidadEnsayos').invalid && formGestionCalidad.get('cantidadEnsayos').touched) || ( formGestionCalidad.get('cantidadEnsayos').invalid && esRegistroNuevo === false )">
+                                  </span>
                             </div>
                           </div>
                         </div>
                     </div>
                 </mat-card-content>
             </mat-card>
+
+            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false && esVerDetalle === false">
+                <table mat-table [dataSource]="tablaHistorial" matSort>
+              
+                    <ng-container matColumnDef="fechaRevision">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                      <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="responsable">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                        <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                            <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                <p>Supervisor</p>
+                            </ng-container>
+                            <ng-template #noEsSupervisor>
+                                <p>Apoyo a la supervisión</p>
+                            </ng-template> 
+                        </td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="historial">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                      <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                          <section [innerHTML]="element.observacion"></section>
+                      </td>
+                    </ng-container>
+                
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                </table>
+            </section>
         </div>
         <div *ngIf="formGestionCalidad.get( 'cantidadEnsayos' ).value.length > 0 && convertToNumber( formGestionCalidad.get( 'cantidadEnsayos' ).value ) > 0">
             <mat-accordion formArrayName="ensayosLaboratorio" *ngFor="let ensayo of ensayosLaboratorio.controls; index as i">
-                <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="ensayo">
+                <mat-expansion-panel class="expansion-style sub-expansion-black animatedDown" [formGroup]="ensayo">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title" [ngClass]="ensayo.get( 'semaforoEnsayo' ).value">
                             Ensayo de laboratorio {{ i+1 }}
@@ -98,7 +123,11 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left" style="margin-top: 1.5em;">Tipo de ensayo</label>
+                                            <label  class="label-left"
+                                                    style="margin-top: 1.5em;"
+                                                    [class.color-secondaryColor]="( ensayo.get('tipoEnsayoCodigo').invalid && ensayo.get('tipoEnsayoCodigo').touched) || ( ensayo.get('tipoEnsayoCodigo').invalid && esRegistroNuevo === false )">
+                                                    Tipo de ensayo
+                                            </label>
                                         </div>
                                         <div class="col d-flex">
                                             <section style="width: 97%;">
@@ -111,6 +140,15 @@
                                                 </mat-form-field>
                                             </section>
                                         </div>
+                                        <span class="icon-incompleto" style="margin-top: .5em;">
+                                            <img  class="icon-incompleto--img"
+                                                  src="assets/img/icon/incompleto.svg"
+                                                  alt="este campo es requerido"
+                                                  [matTooltipPosition]="'above'"
+                                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                                  matTooltipClass="info-tooltip"
+                                                  *ngIf="( ensayo.get('tipoEnsayoCodigo').invalid && ensayo.get('tipoEnsayoCodigo').touched) || ( ensayo.get('tipoEnsayoCodigo').invalid && esRegistroNuevo === false )">
+                                        </span>
                                       </div>
                                     </div>
                                 </div>

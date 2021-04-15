@@ -11,6 +11,7 @@ export class ManejoResiduosPeligrososComponent implements OnInit {
     @Input() formManejoResiduosPeligrosos: FormGroup;
     @Input() residuosPeligrosos: any;
     @Input() esVerDetalle = false;
+    @Input() esRegistroNuevo: boolean;
     manejoResiduosPeligrosos: any;
     editorStyle = {
         height: '45px'
