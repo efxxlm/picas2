@@ -253,7 +253,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               this.aportantes.push(grupoAportante);
             });
 
-          }, 1000);
+          }, 1300);
         });
 
 
