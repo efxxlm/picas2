@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './ver-detalle-editar-actuacion-proceso.component.html',
   styleUrls: ['./ver-detalle-editar-actuacion-proceso.component.scss']
 })
-export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
+export class VerDetalleEditarActuacionProcesoComponent implements OnInit, OnDestroy {
   editorStyle = {
     height: '50px'
   };
@@ -42,7 +42,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
   defensaJudicialId: number;
   //defensaJudicial: DefensaJudicial={};
   defensaJudicial: any;
-
+  realizoPeticion: boolean = false;
   estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
@@ -85,6 +85,24 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
       });*/
     });
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -133,6 +151,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
     console.log("Modelo: ",defensaJudicial);
     this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial)    
     .subscribe((respuesta: Respuesta) => {
+        this.realizoPeticion = true;
         this.openDialog('', respuesta.message);
         //this.ngOnInit();
         return; 

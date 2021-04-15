@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './registrar-actuacion-proceso.component.html',
   styleUrls: ['./registrar-actuacion-proceso.component.scss']
 })
-export class RegistrarActuacionProcesoComponent implements OnInit {
+export class RegistrarActuacionProcesoComponent implements OnInit, OnDestroy {
 
   editorStyle = {
     height: '50px'
@@ -41,6 +41,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   ];
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  realizoPeticion: boolean = false;
   estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
@@ -61,6 +62,24 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       }
     );
   }
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -116,6 +135,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       //this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial.defensaJudicialSeguimiento[0]).subscribe(
       this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicialSeguimiento).subscribe(
         response=>{
+          this.realizoPeticion = true;
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }
       );
