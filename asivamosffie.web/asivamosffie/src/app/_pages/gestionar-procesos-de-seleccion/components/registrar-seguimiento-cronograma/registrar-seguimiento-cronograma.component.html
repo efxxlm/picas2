@@ -44,16 +44,213 @@
       </div>
 
       <div class="text-center">
-        <!-- <div class="busqueda mt-1em">
+        <div class="busqueda mt-1em">
           <mat-form-field appearance="outline" class="busqueda--input">
             <mat-label>Buscador / Filtro</mat-label>
-            <input matInput #filtro />
+            <input matInput #filtro (keyup)="applyFilter($event)" />
           </mat-form-field>
           <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
             <img src="assets/img/icon/lupa.svg" alt="Buscar" />
           </button>
-        </div> -->
-        <div class="table-responsive">
+        </div>
+
+        <div class="table-responsive mb-2em">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <!-- actividad Column -->
+            <ng-container matColumnDef="actividad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Actividad
+              </th>
+              <td mat-cell *matCellDef="let element; index as i">
+                <textarea
+                    [formControl]="element.get('descripcion')"
+                    readOnly="true"
+                    hidden="hidden"
+                    style="margin: 0px; width: 162px; border: none; height: 15em"
+                  >
+                  </textarea>
+                  <div [innerHtml]="descripciones[i]"></div>
+              </td>
+            </ng-container>
+        
+            <!-- fechaMaxima Column -->
+            <ng-container matColumnDef="fechaMaxima">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Fecha máxima
+              </th>
+              <td mat-cell *matCellDef="let element; index as i">
+                <input [formControl]="element.get('fechaMaxima')" matInput readonly />
+                <mat-datepicker #picker></mat-datepicker>
+              </td>
+            </ng-container>
+        
+            <!-- etapaActualProceso Column -->
+            <ng-container matColumnDef="etapaActualProceso">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Etapa actual del proceso
+              </th>
+              <td mat-cell *matCellDef="let element; index as i">
+                <p>
+                  <input
+                    type="text"
+                    [formControl]="element.get('etapaActualProceso')"
+                    readonly
+                    style="border: 0; color: #174193; text-align: center; width: 100%; min-width: 6.5em"
+                  />
+                </p>
+              </td>
+            </ng-container>
+        
+            <!-- fechaMonitoreo Column -->
+            <ng-container matColumnDef="fechaMonitoreo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Fecha de monitoreo
+              </th>
+              <td mat-cell *matCellDef="let element; index as i" class="position-relative">
+                <div *ngIf="activo[i]">
+                  <div class="d-flex justify-content-center btn-calendario-container toptd">
+                    <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
+                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                    </button>
+
+                    <span class="required-calendar">*</span>
+                    <span
+                      class="icon-incompleto"
+                      *ngIf="
+                        (element.get('fechaMonitoreo').invalid && element.get('fechaMonitoreo').touched) ||
+                        (element.get('fechaMonitoreo').invalid && estaEditando)
+                      "
+                    >
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                      />
+                    </span>
+                  </div>
+                  <mat-form-field class="example-full-width calendar-class">
+                    <input
+                      matInput
+                      [matDatepicker]="picker"
+                      [formControl]="element.get('fechaMonitoreo')"
+                      [max]="maxDate"
+                      readonly
+                      (click)="picker.open()"
+                      placeholder="DD/MM/AAAA"
+                    />
+
+                    <input [formControl]="element.get('procesoSeleccionCronogramaId')" type="hidden" />
+                    <input [formControl]="element.get('estadoActividadInicialCodigo')" type="hidden" />
+
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="!activo[i]">
+                  {{ element.get('fechaMonitoreo').value | date: 'dd/MM/yyyy' }}
+                </div>
+              </td>
+            </ng-container>
+        
+            <!-- estadoActividad Column -->
+            <ng-container matColumnDef="estadoActividad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Estado de la actividad
+              </th>
+              <td mat-cell *matCellDef="let element; index as i">
+                <span class="icon-incompleto mt-1em">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) ||
+                      (element.get('estadoActividad').invalid && estaEditando)
+                    "
+                  />
+                </span>
+                <div class="select-width-2">
+                  <mat-form-field class="field">
+                    <mat-select
+                      [formControl]="element.get('estadoActividad')"
+                      required
+                      *ngIf="activo[i]"
+                      [class.invalid]="
+                        (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) ||
+                        (element.get('estadoActividad').invalid && estaEditando)
+                      "
+                    >
+                      <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
+                        {{ tipo.nombre }}
+                      </mat-option>
+                    </mat-select>
+                    <div *ngIf="!activo[i]">
+                      {{ element.get('estadoActividad').value.nombre }}
+                    </div>
+                  </mat-form-field>
+                </div>
+              </td>
+            </ng-container>
+        
+            <!-- observacion Column -->
+            <ng-container matColumnDef="observacion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Observación
+              </th>
+              <td mat-cell *matCellDef="let element; index as i">
+                <div class="d-flex justify-content-center">
+                  <span class="contador mt-1em" *ngIf="element.get('observacion').value && activo[i]">
+                    {{
+                      800 -
+                        (textoLimpio(element.get('observacion').value) > 800
+                          ? 800
+                          : textoLimpio(element.get('observacion').value))
+                    }}
+                  </span>
+                  <span class="contador mt-1em" *ngIf="!element.get('observacion').value && activo[i]"> 800 </span>
+                  <span class="required-quill">*</span>
+                  <span class="icon-incompleto mt-1em ml-1em">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (element.get('observacion').invalid && element.get('observacion').touched) ||
+                        (element.get('observacion').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+                <quill-editor
+                  class="quill-editor-style quill-dentro-de-la-tabla sin-required"
+                  [class.invalid]="
+                    (element.get('observacion').invalid && element.get('observacion').touched) ||
+                    (element.get('observacion').invalid && estaEditando)
+                  "
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  (onContentChanged)="maxLength($event, 800)"
+                  required
+                  [formControl]="element.get('observacion')"
+                  *ngIf="activo[i]"
+                ></quill-editor>
+                <div *ngIf="!activo[i]" [innerHtml]="element.get('observacion').value"></div>
+              </td>
+            </ng-container>
+
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          </table>
+        </div>
+        <!-- <div class="table-responsive">
           <table
             formGroupName="actividades"
             class="mat-table cdk-table mat-sort mat-table-style table-form table-form--3"
@@ -157,24 +354,26 @@
                       "
                     />
                   </span>
-                  <mat-form-field class="select-width">
-                    <mat-select
-                      formControlName="estadoActividad"
-                      required
-                      *ngIf="activo[i]"
-                      [class.invalid]="
-                        (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
-                        (form.get('estadoActividad').invalid && estaEditando)
-                      "
-                    >
-                      <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
-                        {{ tipo.nombre }}
-                      </mat-option>
-                    </mat-select>
-                    <div *ngIf="!activo[i]">
-                      {{ form.get('estadoActividad').value.nombre }}
-                    </div>
-                  </mat-form-field>
+                  <div class="select-width-2">
+                    <mat-form-field class="field">
+                      <mat-select
+                        formControlName="estadoActividad"
+                        required
+                        *ngIf="activo[i]"
+                        [class.invalid]="
+                          (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
+                          (form.get('estadoActividad').invalid && estaEditando)
+                        "
+                      >
+                        <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
+                          {{ tipo.nombre }}
+                        </mat-option>
+                      </mat-select>
+                      <div *ngIf="!activo[i]">
+                        {{ form.get('estadoActividad').value.nombre }}
+                      </div>
+                    </mat-form-field>
+                  </div>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <div class="d-flex justify-content-center">
@@ -221,7 +420,7 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
       </div>
     </mat-card-content>
   </mat-card>

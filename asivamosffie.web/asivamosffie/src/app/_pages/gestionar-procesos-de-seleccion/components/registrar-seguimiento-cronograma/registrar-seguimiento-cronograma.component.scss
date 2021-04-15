@@ -45,3 +45,16 @@
     transform: translateY(10px);
   }
 }
+
+.select-width-2 {
+  width: 8em;
+  display: flex;
+  .field {
+    max-width: calc(100% - 2em);
+    margin-right: auto;
+  }
+}
+
+.position-relative {
+  position: relative;
+}

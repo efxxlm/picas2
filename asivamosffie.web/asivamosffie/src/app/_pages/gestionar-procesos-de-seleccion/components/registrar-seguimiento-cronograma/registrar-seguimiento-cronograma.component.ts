@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Dominio, CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { mergeMap, tap, toArray } from 'rxjs/operators';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-registrar-seguimiento-cronograma',
@@ -59,6 +61,17 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   activo: boolean[] = [];
   pasado: boolean[] = [];
   estaEditando = false;
+  
+  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = [ 
+    'actividad',
+    'fechaMaxima',
+    'etapaActualProceso',
+    'fechaMonitoreo',
+    'estadoActividad',
+    'observacion'
+   ];
+  dataSource = new MatTableDataSource();
 
   constructor(
     private fb: FormBuilder,
@@ -157,8 +170,19 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
           listaActividades.push(grupo);
           i++;
         });
+
+        this.dataSource = new MatTableDataSource( this.actividades.controls );
+        this.dataSource.filterPredicate = (data: any, filter) => {
+          return Object.values( data.value ).toString().trim().toLowerCase().indexOf( filter ) !== -1;
+        }
+        
       });
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   get actividades() {
