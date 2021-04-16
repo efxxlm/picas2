@@ -47,9 +47,10 @@
         <p class="text-center color-mainColor departamento">
           {{ proyecto.localizacionIdMunicipio }} 
           <strong>Plazo Meses:</strong>
-          {{ objetoDisponibilidad?.contratacion?.tipoSolicitudCodigo === '2' ? proyecto.plazoMesesObra : proyecto.plazoMesesInterventoria }} 
+          {{ tipoSolicitudCodigo === '1' ? proyecto.plazoMesesObra : proyecto.plazoMesesInterventoria }} 
           <strong>Plazo Días:</strong>
-          {{ objetoDisponibilidad?.contratacion?.tipoSolicitudCodigo === '1' ? proyecto.plazoDiasObra : proyecto.plazoDiasInterventoria }}
+          {{ tipoSolicitudCodigo === '1' ? proyecto.plazoDiasObra : proyecto.plazoDiasInterventoria }}
+
         </p>
         <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em">
           <mat-card-header class="header-card header-card--margin-1">
@@ -116,7 +117,6 @@
                 min="1"
                 max="999"
                 maxlength="3"
-                required
                 formControlName="plazoMeses"
                 name="plazoMeses"
                 (keypress)="validateNumberKeypress($event)"
@@ -125,14 +125,7 @@
                 readonly
               />
             </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 3 - plazoMeses.value.length }}
-            </span>
+            
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
@@ -173,7 +166,6 @@
                 min="1"
                 max="99"
                 maxlength="2"
-                required
                 formControlName="plazoDias"
                 name="plazoDias"
                 (change)="validatenomore30()"
@@ -183,14 +175,7 @@
                 readonly
               />
             </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 2 - plazoDias.value.length }}
-            </span>
+            
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"

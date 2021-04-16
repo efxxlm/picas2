@@ -130,16 +130,38 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
 
             this.listaProyectos.push(cp.proyecto);
-            /*this.projectService.getProjectById(cp.proyectoId)
-              .subscribe(proyecto => {
-                let aporntantes=cp.contratacionProyectoAportante;
-                cp.proyecto = proyecto;
-                cp.proyecto.apo
-                console.log(proyecto);
-          
-                
-          
-              })*/
+            
+            let plazoMesesObra = 0;
+              let plazoMesesInterventoria = 0;
+              let plazoDiasObra = 0;
+              let plazoDiasInterventoria = 0;
+
+            // obra
+            if (this.tipoSolicitudCodigo === '1') {
+
+              contratacion.contratacionProyecto.forEach(cp => {
+                if (plazoDiasObra < cp.proyecto.plazoDiasObra)
+                  plazoDiasObra = cp.proyecto.plazoDiasObra;
+
+                if (plazoMesesObra < cp.proyecto.plazoMesesObra)
+                  plazoMesesObra = cp.proyecto.plazoMesesObra;
+              });
+
+              this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
+              this.addressForm.get("plazoDias").setValue(plazoDiasObra);
+            } else {
+              
+              contratacion.contratacionProyecto.forEach(cp => {
+                if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
+                  plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
+
+                if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
+                  plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
+              });
+
+              this.addressForm.get("plazoMeses").setValue(plazoMesesInterventoria);
+              this.addressForm.get("plazoDias").setValue(plazoDiasInterventoria);
+            }
 
             if (this.objetoDisponibilidad.tipoSolicitudCodigo == '2')//modificacionContractual
             {
