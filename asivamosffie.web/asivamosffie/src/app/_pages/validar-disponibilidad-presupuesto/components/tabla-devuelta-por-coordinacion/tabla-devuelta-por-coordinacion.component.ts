@@ -68,7 +68,7 @@ export class TablaDevueltaPorCoordinacionComponent implements OnInit {
 
   verDetalle(id: number) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/enValidacionPresupuestal', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/enValidacionPresupuestal', id, false,0 ]);
   }
 
 }
