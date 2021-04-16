@@ -3,7 +3,7 @@
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         {{
-        novedadDescripcion.tipoNovedadCodigo == "1" ? 'Suspension' :
+        novedadDescripcion.tipoNovedadCodigo == "1" ? 'Suspensión' :
         novedadDescripcion.tipoNovedadCodigo == "2" ? 'Prórroga a la Suspensión' :
         novedadDescripcion.tipoNovedadCodigo == "3" ? 'Adición' :
         novedadDescripcion.tipoNovedadCodigo == "4" ? 'Prorroga' :
@@ -183,7 +183,7 @@
         </div>
       </div>
 
-      <section *ngIf="novedadDescripcion.tipoNovedadCodigo == '5'">
+      <section *ngIf="novedadDescripcion.tipoNovedadCodigo === '5'">
         <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
           <div [formGroupName]="i">
             <div class="mb-05em">

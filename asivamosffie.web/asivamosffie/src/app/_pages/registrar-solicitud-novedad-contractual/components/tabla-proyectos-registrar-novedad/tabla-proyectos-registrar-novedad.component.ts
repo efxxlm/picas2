@@ -54,7 +54,10 @@ export class TablaProyectosRegistrarNovedadComponent implements AfterViewInit, O
   dataSource = new MatTableDataSource();
 
   @Input() listaProyectos: any[] = [];
+  @Input() proyectoId: number;
+
   @Output() Proyecto = new EventEmitter();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -62,7 +65,8 @@ export class TablaProyectosRegistrarNovedadComponent implements AfterViewInit, O
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.listaProyectos){
       this.dataSource = new MatTableDataSource( this.listaProyectos );
-    this.dataSource.sort = this.sort;  
+      this.dataSource.sort = this.sort;  
+      console.log( this.listaProyectos );
     }
   }
 

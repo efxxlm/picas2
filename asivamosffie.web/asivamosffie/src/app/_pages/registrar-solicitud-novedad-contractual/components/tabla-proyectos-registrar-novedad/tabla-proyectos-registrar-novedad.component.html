@@ -37,7 +37,9 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
         <td mat-cell *matCellDef="let element">
           <section class="table-checkbox radio">
-            <mat-radio-button name="check" (change)="seleccionarProyecto(element)"></mat-radio-button>
+            <mat-radio-button name="check" 
+            (change)="seleccionarProyecto(element)"
+            [checked]="element.proyectoId === proyectoId"></mat-radio-button>
           </section>
         </td>
       </ng-container>

@@ -30,84 +30,102 @@ export class RegistrarSolicitudComponent implements OnInit {
     private contractualNoveltyService: ContractualNoveltyService,
     private activatedRoute: ActivatedRoute,
 
-    ) 
-    
-  { 
-    
+  ) {
+
   }
   numeroContratoSeleccionado: any;
-  proyectos=[];
-  proyecto:any;
-  contratos=[];
-  contrato:any;
-  novedad:NovedadContractual = {};
+  proyectos = [];
+  proyecto: any;
+  contratos = [];
+  contrato: any;
+  novedad: NovedadContractual = {};
 
   ngOnInit() {
 
-    this.activatedRoute.params.subscribe( parametros => {
-      this.contractualNoveltyService.getNovedadContractualById( parametros.id )
-        .subscribe( novedad => {
-          console.log( novedad );
-          
-          this.novedad = novedad;
-          this.numeroContrato.setValue( novedad.contrato.numeroContrato );
-          this.numeroContratoSeleccionado=novedad.contrato.numeroContrato;
-          this.novedadAplicada.setValue( novedad.esAplicadaAcontrato );
-          this.proyecto = novedad['proyectosSeleccionado'];
-          this.contrato = novedad.contrato;
-          
-        });
+    this.activatedRoute.params.subscribe(parametros => {
 
+      //traigo contratos
+      this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta => {
+
+        this.contratos = respuesta.filter(c => c.contratacion.tipoSolicitudCodigo === '1'); // obra
+        //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
+        this.options = respuesta.filter(c => c.contratacion.tipoSolicitudCodigo === '1'); // obra
+
+        this.contractualNoveltyService.getNovedadContractualById(parametros.id)
+          .subscribe(novedad => {
+            console.log(novedad);
+
+            if (novedad.novedadContractualId !== 0) {
+              this.novedad = novedad;
+              this.numeroContrato.setValue(novedad.contrato.numeroContrato);
+              this.numeroContratoSeleccionado = novedad.contrato; 
+              this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
+              this.proyecto = novedad['proyectosSeleccionado'];
+              this.contrato = novedad.contrato;
+
+              if (this.novedadAplicada.value == false) {
+                this.contractualNoveltyService.getProyectosContrato(this.contrato.contratoId).subscribe(
+                  response => {
+                    this.proyectos = response;
+                    console.log(this.proyectos);
+
+                  }
+                );
+              } else {
+                this.proyecto = null;
+              }
+
+              if (this.contrato !== undefined) {
+                this.contratos.push(this.contrato)
+                this.options.push(this.contrato)
+              }
+
+            }
+          });
+        console.log(this.options)
+      });
     });
 
-    //traigo contratos
-    this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
-      this.contratos=respuesta.filter( c => c.contratacion.tipoSolicitudCodigo === '1' ); // obra
-      //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
-      this.options=respuesta.filter( c => c.contratacion.tipoSolicitudCodigo === '1' ); // obra
-      console.log( this.options )
-    });
     this.filteredOptions = this.numeroContrato.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
-    
+
   }
 
   private _filter(value: string): string[] {
-    console.log( typeof value )
+    console.log(typeof value)
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option => option.numeroContrato.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  public seleccionAutocomplete(numeroContrato)
-  {
-    this.numeroContratoSeleccionado=numeroContrato;
+  public seleccionAutocomplete(numeroContrato) {
+    this.numeroContratoSeleccionado = numeroContrato;
+    //console.log(numeroContrato);
   }
 
-  public changeNovedadAplicada()
-  {
-    this.novedad.esAplicadaAcontrato = this.novedadAplicada.value;
+  public changeNovedadAplicada() {
     console.log(this.novedadAplicada.value);
-    if(this.novedadAplicada.value == false)
-    {
+    this.novedad.esAplicadaAcontrato = this.novedadAplicada.value;
+
+    if (this.novedadAplicada.value == false) {
       this.contractualNoveltyService.getProyectosContrato(this.numeroContratoSeleccionado.contratoId).subscribe(
-        response=>
-        {
-          this.proyectos=response;
+        response => {
+          this.proyectos = response;
           console.log(this.proyectos);
 
         }
       );
-    }else{
+    } else {
       this.proyecto = null;
     }
-    this.contrato=this.contratos.filter(x=>x.numeroContrato==this.numeroContratoSeleccionado.numeroContrato)[0];
+    console.log(this.numeroContratoSeleccionado, this.contratos, this.contratos.filter(x => x.numeroContrato == this.numeroContratoSeleccionado.numeroContrato));
+    this.contrato = this.contratos.filter(x => x.numeroContrato == this.numeroContratoSeleccionado.numeroContrato)[0];
     console.log(this.contrato, this.proyecto);
   }
 
-  seleccionarProyecto( proy ){
+  seleccionarProyecto(proy) {
     console.log(proy, this.contrato)
     this.proyecto = proy;
   }

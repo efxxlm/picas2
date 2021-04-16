@@ -116,47 +116,47 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
   }
 
+  cargarRegistro() {
+    this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
+
+      response.forEach(n => {
+        let novedadContractualDescripcion: NovedadContractualDescripcion = {
+          tipoNovedadCodigo: n.codigo,
+          nombreTipoNovedad: n.nombre,
+
+        }
+
+        this.tipoNovedadArray.push(novedadContractualDescripcion);
+      });
+
+      this.addressForm.get('novedadContractualId').setValue(this.novedad.novedadContractualId);
+      this.addressForm.get('fechaSolicitudNovedad').setValue(this.novedad.fechaSolictud);
+      this.addressForm.get('instanciaPresentoSolicitud').setValue(this.novedad.instanciaCodigo);
+      this.addressForm.get('fechaSesionInstancia').setValue(this.novedad.fechaSesionInstancia);
+
+      this.novedadContractual = this.novedad;
+
+      let listaDescripcion: NovedadContractualDescripcion[] = [];
+
+      if (this.novedad.novedadContractualDescripcion) {
+        this.novedad.novedadContractualDescripcion.forEach(n => {
+
+          let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
+          this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
+          this.tipoNovedadArray.push(n);
+          listaDescripcion.push(n);
+
+        });
+      }
+
+      this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.novedad) {
 
-      
-
-      this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
-
-        response.forEach(n => {
-          let novedadContractualDescripcion: NovedadContractualDescripcion = {
-            tipoNovedadCodigo: n.codigo,
-            nombreTipoNovedad: n.nombre,
-
-          }
-
-          this.tipoNovedadArray.push(novedadContractualDescripcion);
-        });
-
-          this.addressForm.get('novedadContractualId').setValue(this.novedad.novedadContractualId);
-          this.addressForm.get('fechaSolicitudNovedad').setValue(this.novedad.fechaSolictud);
-          this.addressForm.get('instanciaPresentoSolicitud').setValue(this.novedad.instanciaCodigo);
-          this.addressForm.get('fechaSesionInstancia').setValue(this.novedad.fechaSesionInstancia);
-
-          this.novedadContractual = this.novedad;
-
-          let listaDescripcion: NovedadContractualDescripcion[] = [];
-
-          if ( this.novedad.novedadContractualDescripcion){
-            this.novedad.novedadContractualDescripcion.forEach(n => {
-
-              let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
-              this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
-              this.tipoNovedadArray.push( n );
-              listaDescripcion.push( n );
-              
-            });
-          }
-          
-          this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
-      });
-
-
+      this.cargarRegistro();
     }
   }
 
@@ -238,7 +238,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     if (this.addressForm.get('tipoNovedad').value)
       this.novedadContractual.novedadContractualDescripcion = this.addressForm.get('tipoNovedad').value;
 
-    }
+  }
 
   onSubmit() {
 
@@ -263,7 +263,12 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === '200')
-          this.router.navigate(['/registrarSolicitudNovedadContractual']);
+        //console.log( novedad.novedadContractualId )
+          //if (novedad.novedadContractualId === 0)
+            this.router.navigate(['/registrarSolicitudNovedadContractual/registrarSolicitud', respuesta.data.novedadContractualId]);
+          //else
+          //  this.cargarRegistro();
+
       });
 
   }

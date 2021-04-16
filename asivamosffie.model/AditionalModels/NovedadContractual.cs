@@ -54,6 +54,15 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool? RegistroCompletoRevisionJuridica { get; set; }
 
+        [NotMapped]
+        public bool? RegistroCompletoInformacionBasica { get; set; }
+
+        [NotMapped]
+        public bool? RegistroCompletoSoporte { get; set; }
+
+        [NotMapped]
+        public bool? RegistroCompletoDescripcion { get; set; }
+
     }
 
 }

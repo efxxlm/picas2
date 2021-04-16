@@ -43,6 +43,9 @@ export interface NovedadContractual{
         razonesNoContinuaProceso?: string,
 
         instanciaNombre?: string,
+        registroCompletoInformacionBasica?: boolean,
+        registroCompletoSoporte?: boolean,
+        registroCompletoDescripcion?: boolean,
 
         novedadContractualDescripcion?: NovedadContractualDescripcion[],
         contrato?: Contrato,

@@ -200,82 +200,91 @@ namespace asivamosffie.services
                                                                             .ThenInclude( r => r.ComponenteUsoNovedad )
                                                                 .FirstOrDefault();
 
-            novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
+            if ( novedadContractual != null)
+            {
+                novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)
                                                                 .ToList();
 
-            novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
-                                                                    .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId)
-                                                                    .FirstOrDefault();
+                novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
+                                                                        .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId)
+                                                                        .FirstOrDefault();
 
-            novedadContractual.InstanciaNombre = listDominioInstancias
-                                                        .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
-                                                        ?.FirstOrDefault()
-                                                        ?.Nombre;
+                novedadContractual.InstanciaNombre = listDominioInstancias
+                                                            .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
 
+                novedadContractual.RegistroCompletoInformacionBasica = RegistroCompletoInformacionBasica(novedadContractual);
+                novedadContractual.RegistroCompletoSoporte = RegistroCompletoSoporte(novedadContractual);
+                novedadContractual.RegistroCompletoDescripcion = RegistroCompletoDescripcion(novedadContractual);
 
-
-            foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
-            {
-                novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
-                                                                        .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
-                                                                        ?.FirstOrDefault()
-                                                                        ?.Nombre;
-                foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
-                    motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
-                }
-
-
-            }
-
-            foreach ( NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
-            {
-                //novedadContractualAportante.NombreAportante = 
-
-                foreach( ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
-                {
-                    componenteAportanteNovedad.NombreTipoComponente = listDominioComponente
-                                                                            .Where(r => r.Codigo == componenteAportanteNovedad.TipoComponenteCodigo)
-                                                                            .FirstOrDefault()
-                                                                            .Nombre;
-
-                    componenteAportanteNovedad.Nombrefase = listDominioFase
-                                                                            .Where(r => r.Codigo == componenteAportanteNovedad.FaseCodigo)
-                                                                            .FirstOrDefault()
-                                                                            .Nombre;
-
-                    foreach ( ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
+                    novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
+                                                                            .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
+                                                                            ?.FirstOrDefault()
+                                                                            ?.Nombre;
+                    foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
                     {
-
-                        foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
-                        {
-                            componenteUsoNovedad.NombreUso = listDominioUso
-                                                                        .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
-                                                                        .FirstOrDefault()
-                                                                        .Nombre;
-                        }
+                        motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
                     }
 
-                    
+
                 }
-            }
 
-            if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
+                foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
+                {
+                    //novedadContractualAportante.NombreAportante = 
+
+                    foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
+                    {
+                        componenteAportanteNovedad.NombreTipoComponente = listDominioComponente
+                                                                                .Where(r => r.Codigo == componenteAportanteNovedad.TipoComponenteCodigo)
+                                                                                .FirstOrDefault()
+                                                                                .Nombre;
+
+                        componenteAportanteNovedad.Nombrefase = listDominioFase
+                                                                                .Where(r => r.Codigo == componenteAportanteNovedad.FaseCodigo)
+                                                                                .FirstOrDefault()
+                                                                                .Nombre;
+
+                        foreach (ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
+                        {
+
+                            foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
+                            {
+                                componenteUsoNovedad.NombreUso = listDominioUso
+                                                                            .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
+                                                                            .FirstOrDefault()
+                                                                            .Nombre;
+                            }
+                        }
+
+
+                    }
+                }
+
+                if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
+                {
+                    novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
+                    novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                    //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                }
+
+                novedadContractual.ObservacionApoyo = getObservacion(novedadContractual, false, null);
+                novedadContractual.ObservacionSupervisor = getObservacion(novedadContractual, true, null);
+                novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
+
+                novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
+                novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
+
+                novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
+            }
+            else
             {
-                novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
-                novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
-                //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                novedadContractual = new NovedadContractual();
             }
-
-            novedadContractual.ObservacionApoyo = getObservacion(novedadContractual, false, null);
-            novedadContractual.ObservacionSupervisor = getObservacion(novedadContractual, true, null);
-            novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
-
-            novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
-            novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
-
-            novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
 
             return novedadContractual;
         }
@@ -429,6 +438,8 @@ namespace asivamosffie.services
                         novedadContractualOld.FechaModificacion = DateTime.Now;
                         novedadContractualOld.UsuarioModificacion = novedadContractual.UsuarioCreacion;
 
+                        novedadContractualOld.ProyectoId = novedadContractual.ProyectoId;
+                        novedadContractualOld.EsAplicadaAcontrato = novedadContractual.EsAplicadaAcontrato;
                         novedadContractualOld.FechaSolictud = novedadContractual.FechaSolictud;
                         novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
                         novedadContractualOld.FechaSesionInstancia = novedadContractual.FechaSesionInstancia;
@@ -1678,63 +1689,82 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        private bool Registrocompleto(NovedadContractual pNovedadContractual)
+        private bool? RegistroCompletoInformacionBasica(NovedadContractual pNovedadContractual)
         {
-            bool esCompleto = true;
+            bool? esCompleto = true;
 
             if (
+                   pNovedadContractual.FechaSolictud == null &&
+                    string.IsNullOrEmpty(pNovedadContractual.InstanciaCodigo) &&
+                    pNovedadContractual.FechaSesionInstancia == null &&
+                    //pNovedadContractual.NovedadContractualDescripcion == null
+                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0 
+                )
+            {
+                esCompleto = null;
+            }
+            else
+            {
+                if (
                     pNovedadContractual.FechaSolictud == null ||
                     string.IsNullOrEmpty(pNovedadContractual.InstanciaCodigo) ||
                     pNovedadContractual.FechaSesionInstancia == null ||
                     pNovedadContractual.NovedadContractualDescripcion == null ||
-                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0 ||
+                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0
+
+                )
+                {
+                    esCompleto = false;
+                }
+            }
+
+            return esCompleto;
+        }
+
+        private bool RegistroCompletoSoporte(NovedadContractual pNovedadContractual)
+        {
+            bool esCompleto = true;
+
+            if (
                     string.IsNullOrEmpty(pNovedadContractual.UrlSoporte)
                 )
             {
                 esCompleto = false;
             }
 
+            return esCompleto;
+        }
+
+        private bool? RegistroCompletoDescripcion(NovedadContractual pNovedadContractual)
+        {
+            bool? esCompleto = true;
+
+            if (pNovedadContractual.NovedadContractualDescripcion == null || pNovedadContractual.NovedadContractualDescripcion.Count() == 0)
+            {
+                esCompleto = null;
+            }
+
             foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
             {
                 // Suspension - Prórroga a la Suspensión -Reinicio
-                if (descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2" || descripcion.TipoNovedadCodigo == "6")
-                {
-                    if (
-                            descripcion.FechaInicioSuspension == null ||
-                            descripcion.FechaFinSuspension == null
-                        )
-                    {
-                        esCompleto = false;
-                    }
 
-                }
-
-                // adicion
-                if (descripcion.TipoNovedadCodigo == "3")
-                {
-                    if (
-                            descripcion.PresupuestoAdicionalSolicitado == null
-                        )
-                    {
-                        esCompleto = false;
-                    }
-
-                }
-
-                // Prorroga
-                if (descripcion.TipoNovedadCodigo == "4")
-                {
-                    if (
-                            descripcion.PlazoAdicionalDias == null ||
-                            descripcion.PlazoAdicionalMeses == null
-                        )
-                    {
-                        esCompleto = false;
-                    }
-
-                }
+                descripcion.RegistroCompleto = true;
 
                 if (
+                        descripcion.NovedadContractualDescripcionMotivo.Count() == 0 &&
+                        string.IsNullOrEmpty(descripcion.ResumenJustificacion) &&
+                        descripcion.EsDocumentacionSoporte == null &&
+                        string.IsNullOrEmpty(descripcion.ConceptoTecnico) &&
+                        descripcion.FechaConcepto == null &&
+                        string.IsNullOrEmpty(descripcion.NumeroRadicado)
+
+                    )
+                {
+                    descripcion.RegistroCompleto = null;
+                    esCompleto = null;
+                }else
+                {
+                    if (
                         descripcion.NovedadContractualDescripcionMotivo == null ||
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
@@ -1744,24 +1774,78 @@ namespace asivamosffie.services
                         string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )
-                {
-                    esCompleto = false;
-                }
+                    {
+                        descripcion.RegistroCompleto = false;
+                        esCompleto = false;
+                    }
 
-                //Modificación de Condiciones Contractuales
-                if (descripcion.TipoNovedadCodigo == "5")
-                {
-                    descripcion.NovedadContractualClausula.ToList().ForEach(c =>
-                   {
-                       if (
-                            string.IsNullOrEmpty(c.ClausulaAmodificar) ||
-                            string.IsNullOrEmpty(c.AjusteSolicitadoAclausula)
-                       )
-                       {
+                    switch (descripcion.TipoNovedadCodigo)
+                    {
+                        case ConstanTiposNovedades.Suspensión:
+                        case ConstanTiposNovedades.Prórroga_a_las_Suspensión:
+                        case ConstanTiposNovedades.Reinicio:
+                            if (
+                                descripcion.FechaInicioSuspension == null ||
+                                descripcion.FechaFinSuspension == null
+                            )
+                            {
+                                descripcion.RegistroCompleto = false;
+                                esCompleto = false;
+                            }
+                            break;
 
-                       }
-                   });
+                        case ConstanTiposNovedades.Adición:
+                            if (
+                                   descripcion.PresupuestoAdicionalSolicitado == null
+                               )
+                            {
+                                descripcion.RegistroCompleto = false;
+                                esCompleto = false;
+                            }
+                            break;
+                        case ConstanTiposNovedades.Prórroga:
+                            if (
+                                descripcion.PlazoAdicionalDias == null ||
+                                descripcion.PlazoAdicionalMeses == null
+                            )
+                            {
+                                descripcion.RegistroCompleto = false;
+                                esCompleto = false;
+                            }
+                            break;
+                        case ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales:
+                            descripcion.NovedadContractualClausula.ToList().ForEach(c =>
+                            {
+                                if (
+                                     string.IsNullOrEmpty(c.ClausulaAmodificar) ||
+                                     string.IsNullOrEmpty(c.AjusteSolicitadoAclausula)
+                                )
+                                {
+                                    descripcion.RegistroCompleto = false;
+                                    esCompleto = false;
+                                }
+                            });
+                            break;
+                    }
                 }
+            }
+
+            return esCompleto;
+        }
+
+        private bool Registrocompleto(NovedadContractual pNovedadContractual)
+        {
+            bool esCompleto = true;
+
+            if (
+                    RegistroCompletoInformacionBasica(pNovedadContractual) == false ||
+                    RegistroCompletoInformacionBasica(pNovedadContractual) == null ||
+                    RegistroCompletoSoporte(pNovedadContractual) == false ||
+                    RegistroCompletoDescripcion(pNovedadContractual) == false ||
+                    RegistroCompletoDescripcion(pNovedadContractual) == null
+                )
+            {
+                esCompleto = false;
             }
 
             return esCompleto;

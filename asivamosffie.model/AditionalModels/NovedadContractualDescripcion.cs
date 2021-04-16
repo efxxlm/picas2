@@ -24,6 +24,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public List<Dominio> MotivosNovedad { get; set; }
 
+        //[NotMapped]
+        //public bool? RegistroCompleto { get; set; }
+
     }
 
 }
