@@ -51,7 +51,7 @@
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '4' || element.estadoProcesoCodigo === '7' 
-                    || (element.estadoProcesoCodigo === '11' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo')""
+                    || (element.estadoProcesoCodigo === '11' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo')"
                     (click)="this.editProceso(element.defensaJudicialId)">
                     Ver detalle/Editar
                 </button>
