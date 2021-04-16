@@ -96,6 +96,7 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit, OnDestroy {
     this.estaEditando = true;
     this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
       if(resp.code=="200"){
+        this.realizoPeticion = true;
         this.openDialog( '', `<b>${ resp.message }</b>` );
         this.close();
       }
