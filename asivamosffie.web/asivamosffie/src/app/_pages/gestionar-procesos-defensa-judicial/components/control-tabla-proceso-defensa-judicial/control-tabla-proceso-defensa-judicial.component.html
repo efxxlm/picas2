@@ -45,11 +45,13 @@
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table"
                     (click)="enviarAComite(element.defensaJudicialId)"
-                    *ngIf="element.estadoProcesoCodigo === '1' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo'">
+                    *ngIf="(element.estadoProcesoCodigo === '1' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo')
+                    || (element.estadoProcesoCodigo === '11' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo')">
                     Enviar proceso a comité técnico
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '4' || element.estadoProcesoCodigo === '7'"
+                    *ngIf="element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '4' || element.estadoProcesoCodigo === '7' 
+                    || (element.estadoProcesoCodigo === '11' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo')""
                     (click)="this.editProceso(element.defensaJudicialId)">
                     Ver detalle/Editar
                 </button>
