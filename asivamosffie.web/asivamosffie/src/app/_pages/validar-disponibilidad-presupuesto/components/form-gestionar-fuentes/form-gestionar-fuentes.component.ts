@@ -103,6 +103,8 @@ export class FormGestionarFuentesComponent implements OnInit {
               let fuent = this.crearFuente();
               //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
 
+              
+
               fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
               fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
               fuent.get('valorSolicitado').setValue(element.valor_solicitado_de_la_fuente);
@@ -235,8 +237,21 @@ export class FormGestionarFuentesComponent implements OnInit {
     this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.controls.fuentes.value);
     let mensaje = "";
+    let valorSolicitado: number = 0;
     console.log(this.addressForm.controls.fuentes.value);
+
     this.addressForm.controls.fuentes.value.forEach(fuente => {
+      valorSolicitado = valorSolicitado + fuente.valorSolicitado;  
+    });
+
+    console.log( valorSolicitado, this.valorAportante )
+    if ( valorSolicitado != this.valorAportante ){
+      this.openDialog('', '<b>El valor solicitado es diferente al valor del aportante.</b>', false);
+      return false;
+    }
+
+    this.addressForm.controls.fuentes.value.forEach(fuente => {
+
       let CreateFinancialFundingGestion = {
         FuenteFinanciacionId: fuente.fuentecampo,
         ValorSolicitado: fuente.valorSolicitado,
@@ -251,7 +266,7 @@ export class FormGestionarFuentesComponent implements OnInit {
         mensaje = result.message
       });
     });
-    this.openDialog('', '<b>La información a sido guardada exitosamente.</b>', true);
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>', true);
 
   }
 }

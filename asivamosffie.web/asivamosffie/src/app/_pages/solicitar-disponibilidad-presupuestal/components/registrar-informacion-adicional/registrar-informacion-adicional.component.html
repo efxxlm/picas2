@@ -45,7 +45,11 @@
 
       <section style="width: 80%; margin: auto">
         <p class="text-center color-mainColor departamento">
-          {{ proyecto.localizacionIdMunicipio }}
+          {{ proyecto.localizacionIdMunicipio }} 
+          <strong>Plazo Meses:</strong>
+          {{ objetoDisponibilidad?.contratacion?.tipoSolicitudCodigo === '2' ? proyecto.plazoMesesObra : proyecto.plazoMesesInterventoria }} 
+          <strong>Plazo Días:</strong>
+          {{ objetoDisponibilidad?.contratacion?.tipoSolicitudCodigo === '1' ? proyecto.plazoDiasObra : proyecto.plazoDiasInterventoria }}
         </p>
         <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em">
           <mat-card-header class="header-card header-card--margin-1">
@@ -118,7 +122,7 @@
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                [readonly]="ddpsolicitud"
+                readonly
               />
             </mat-form-field>
             <span
@@ -176,7 +180,7 @@
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                [readonly]="ddpsolicitud"
+                readonly
               />
             </mat-form-field>
             <span
