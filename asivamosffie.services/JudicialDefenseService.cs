@@ -399,7 +399,7 @@ namespace asivamosffie.services
                     //vuelve a empezar el ciclo
                     if (defensaJudicialBD.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Devuelta_por_comite_tecnico || defensaJudicialBD.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario)
                     {
-                        defensaJudicialBD.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.En_analisis_juridico;
+                        defensaJudicialBD.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Modificado_devolucion_comite;
                     }
 
                     defensaJudicialBD.EsCompleto = ValidarRegistroCompleto(defensaJudicialBD);
@@ -2128,6 +2128,26 @@ namespace asivamosffie.services
             }
         }
         #endregion
+        public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
+        {
+            List<Contrato> ListContratos = new List<Contrato>();
+            try
+            {
+                ListContratos = await _context.Contrato
+                .Include(c => c.Contratacion)
+                         .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                  //&& c.ModalidadCodigo == pModalidadContrato
+                                  //&& c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                  && c.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados
+                               //&& c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                               ).ToListAsync();
+                return ListContratos.OrderByDescending(r => r.ContratoId).ToList();
+            }
+            catch (Exception ex)
+            {
+                return ListContratos;
+            }
+        }
 
     }
 }

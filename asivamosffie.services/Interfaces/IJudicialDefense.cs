@@ -21,6 +21,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarDefensaJudicial(int pDefensaJudicialId, string pUsuarioModifica);
         Task<List<ProyectoGrilla>> GetListProyects( int pProyectoId);
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
+        Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato);
         Task<List<Contrato>> GetListContract();
         Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId);
         Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId);

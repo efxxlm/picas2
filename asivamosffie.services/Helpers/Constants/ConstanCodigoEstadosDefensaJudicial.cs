@@ -13,7 +13,7 @@
         public const string Rechazado_por_comite_fiduciario = "8";
         public const string En_desarrollo = "9";
         public const string Cerrado = "10";
-
+        public const string Modificado_devolucion_comite = "11";
 
 
     }
