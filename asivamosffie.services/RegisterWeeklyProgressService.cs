@@ -930,8 +930,15 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Gestion Obra Calidad Ensayo Laboratorio".ToUpper())
+                    Code = ConstantSesionComiteTecnico.EliminacionExitosa,
+                    Message = await 
+                    _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                        (int)enumeratorMenu.Registrar_Avance_Semanal,
+                                                                        ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                                                                        idAccion,
+                                                                        pUsuarioModificacion,
+                                                                        "Eliminar Gestion Obra Calidad Ensayo Laboratorio".ToUpper()
+                                                                        )
                 };
 
             }
