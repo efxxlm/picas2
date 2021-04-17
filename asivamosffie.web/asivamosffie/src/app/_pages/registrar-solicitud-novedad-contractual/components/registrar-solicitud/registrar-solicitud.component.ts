@@ -25,6 +25,7 @@ export class RegistrarSolicitudComponent implements OnInit {
     { name: 'Contrato', value: true },
     { name: 'Proyecto', value: false }
   ];
+  estaEditando = false;
 
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
@@ -79,7 +80,9 @@ export class RegistrarSolicitudComponent implements OnInit {
                 this.contratos.push(this.contrato)
                 this.options.push(this.contrato)
               }
-
+              this.estaEditando = true;
+              this.numeroContrato.markAllAsTouched();
+              this.novedadAplicada.markAllAsTouched();
             }
           });
         console.log(this.options)

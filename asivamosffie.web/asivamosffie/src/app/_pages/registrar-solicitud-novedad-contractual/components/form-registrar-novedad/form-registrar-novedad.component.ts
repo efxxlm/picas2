@@ -2,7 +2,12 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonService, Dominio, InstanciasSeguimientoTecnico, TiposNovedadModificacionContractual } from 'src/app/core/_services/common/common.service';
+import {
+  CommonService,
+  Dominio,
+  InstanciasSeguimientoTecnico,
+  TiposNovedadModificacionContractual
+} from 'src/app/core/_services/common/common.service';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { Proyecto } from 'src/app/core/_services/project/project.service';
@@ -15,6 +20,7 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
   styleUrls: ['./form-registrar-novedad.component.scss']
 })
 export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
+  @Input() estaEditando: boolean;
 
   addressForm = this.fb.group({
     novedadContractualId: [],
@@ -28,8 +34,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     plazoSolicitado: this.fb.array([
       this.fb.group({
         fechaInicio: [null, Validators.required],
-        fechaFinal: [null, Validators.required],
-
+        fechaFinal: [null, Validators.required]
       })
     ]),
 
@@ -43,16 +48,15 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     documentacionSuficiente: [null, Validators.required],
     conceptoTecnico: [null, Validators.required],
     fechaConceptoTecnico: [null, Validators.required],
-    numeroRadicadoSolicitud: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(20)])
+    numeroRadicadoSolicitud: [
+      null,
+      Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     ]
   });
 
   instanciaSeguimientoTecnico = InstanciasSeguimientoTecnico;
   tiposNovedadModificacionContractual = TiposNovedadModificacionContractual;
-  novedadContractual: NovedadContractual = {
-
-  }
+  novedadContractual: NovedadContractual = {};
 
   get plazoSolicitadoField() {
     return this.addressForm.get('plazoSolicitado') as FormArray;
@@ -62,7 +66,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     return this.addressForm.get('clausula') as FormArray;
   }
 
-  estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
   motivosNovedadArray = [];
@@ -77,15 +80,29 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
+      [{ align: [] }]
     ]
   };
 
   textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
     if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -112,21 +129,16 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     public commonServices: CommonService,
     public contractualNoveltyService: ContractualNoveltyService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-
-  ) {
-
-  }
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   cargarRegistro() {
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
-
       response.forEach(n => {
         let novedadContractualDescripcion: NovedadContractualDescripcion = {
           tipoNovedadCodigo: n.codigo,
-          nombreTipoNovedad: n.nombre,
-
-        }
+          nombreTipoNovedad: n.nombre
+        };
 
         this.tipoNovedadArray.push(novedadContractualDescripcion);
       });
@@ -142,39 +154,50 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
       if (this.novedad.novedadContractualDescripcion) {
         this.novedad.novedadContractualDescripcion.forEach(n => {
-
-          let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
-          this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
+          let tipoNovedadseleccionada = this.tipoNovedadArray
+            .filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo)
+            .shift();
+          this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo);
           this.tipoNovedadArray.push(n);
           listaDescripcion.push(n);
-
         });
       }
 
       this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
+      if (this.estaEditando) this.addressForm.markAllAsTouched();
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.novedad) {
-
       this.cargarRegistro();
     }
   }
 
   ngOnInit(): void {
-
     // this.addressForm.valueChanges
     //   .subscribe(value => {
     //     //console.log(value);
     //   });
 
-
     this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response => {
       this.instanciaPresentoSolicitudArray = response;
     });
 
+    this.addressForm.get('instanciaPresentoSolicitud').valueChanges.subscribe((value: number) => {
+      this.onChange(value);
+    });
+  }
 
+  onChange(value: number) {
+    const fechaSesionInstancia = this.addressForm.get('fechaSesionInstancia');
+    if (value == 3) {
+      fechaSesionInstancia.setValue(null);
+      fechaSesionInstancia.clearValidators();
+    } else {
+      fechaSesionInstancia.setValidators(Validators.required);
+    }
+    fechaSesionInstancia.updateValueAndValidity();
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -222,7 +245,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-
       if (result === true) {
         this.deleteTema(e);
       }
@@ -239,11 +261,9 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   changeTipoNovedad() {
     if (this.addressForm.get('tipoNovedad').value)
       this.novedadContractual.novedadContractualDescripcion = this.addressForm.get('tipoNovedad').value;
-
   }
 
   onSubmit() {
-
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
@@ -257,8 +277,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       esAplicadaAcontrato: this.novedad.esAplicadaAcontrato,
       urlSoporte: this.novedad.urlSoporte,
 
-      novedadContractualDescripcion: this.novedadContractual.novedadContractualDescripcion,
-
+      novedadContractualDescripcion: this.novedadContractual.novedadContractualDescripcion
     };
 
     this.contractualNoveltyService.createEditNovedadContractual(novedad)

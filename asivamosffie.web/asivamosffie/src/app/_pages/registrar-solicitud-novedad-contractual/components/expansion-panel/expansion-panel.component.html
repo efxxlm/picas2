@@ -19,6 +19,7 @@
                                 [proyecto]=proyecto
                                 [contrato]=contrato
                                 [novedad]=novedad
+                                [estaEditando]="estaEditando"
                                 (guardar)="cargarRegistro()">
     </app-form-registrar-novedad>
 
@@ -33,6 +34,7 @@
     </mat-expansion-panel-header>
     <app-form-soporte-solicitud
                                 [novedad]=novedad
+                                [estaEditando]="estaEditando"
                                 (guardar)="formRegistrarNovedad.onSubmit()"
     >
     </app-form-soporte-solicitud>

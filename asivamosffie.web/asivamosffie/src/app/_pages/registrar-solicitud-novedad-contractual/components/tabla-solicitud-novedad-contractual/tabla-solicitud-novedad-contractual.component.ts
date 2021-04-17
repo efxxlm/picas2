@@ -55,6 +55,11 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
 
     this.contractualNoveltyService.getListGrillaNovedadContractualObra()
       .subscribe(resp => {
+      resp.forEach(element => {
+        element.fechaSolictud = element.fechaSolictud
+          ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
+          : '';
+      });
         this.dataSource = new MatTableDataSource(resp);
 
         this.dataSource.sort = this.sort;

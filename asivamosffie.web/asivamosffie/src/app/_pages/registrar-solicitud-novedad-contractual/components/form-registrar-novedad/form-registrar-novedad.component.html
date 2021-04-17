@@ -1,26 +1,43 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
-
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaSolicitudNovedad" [class.color-secondaryColor]="
-                addressForm.get('fechaSolicitudNovedad').invalid && addressForm.get('fechaSolicitudNovedad').touched ||
-                addressForm.get('fechaSolicitudNovedad').invalid && estaEditando">
+              <label
+                class="label-left"
+                for="fechaSolicitudNovedad"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaSolicitudNovedad').invalid &&
+                    addressForm.get('fechaSolicitudNovedad').touched) ||
+                  (addressForm.get('fechaSolicitudNovedad').invalid && estaEditando)
+                "
+              >
                 Fecha de solicitud de la novedad
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerSolicitudNovedad" formControlName="fechaSolicitudNovedad"
-                  readonly (click)="pickerSolicitudNovedad.open()" placeholder="DD/MM/AAAA" required>
+                <input
+                  matInput
+                  [matDatepicker]="pickerSolicitudNovedad"
+                  formControlName="fechaSolicitudNovedad"
+                  readonly
+                  (click)="pickerSolicitudNovedad.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
                 <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
               </mat-form-field>
-              <button mat-button color="primary" type="button" (click)="pickerSolicitudNovedad.open()"
-                class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerSolicitudNovedad.open()"
+                class="btn-calendario"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
             </div>
           </div>
@@ -30,9 +47,15 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="instanciaPresentoSolicitud" [class.color-secondaryColor]="
-                addressForm.get('instanciaPresentoSolicitud').invalid && addressForm.get('instanciaPresentoSolicitud').touched ||
-                addressForm.get('instanciaPresentoSolicitud').invalid && estaEditando">
+              <label
+                class="label-left"
+                for="instanciaPresentoSolicitud"
+                [class.color-secondaryColor]="
+                  (addressForm.get('instanciaPresentoSolicitud').invalid &&
+                    addressForm.get('instanciaPresentoSolicitud').touched) ||
+                  (addressForm.get('instanciaPresentoSolicitud').invalid && estaEditando)
+                "
+              >
                 Instancia donde se presentó la solicitud
               </label>
             </div>
@@ -48,27 +71,50 @@
           </div>
         </div>
       </div>
-      <div class="row animatedDown" *ngIf="
-      addressForm.get('instanciaPresentoSolicitud').value !== null &&
-      addressForm.get('instanciaPresentoSolicitud').value !== instanciaSeguimientoTecnico.NoAplica"> 
+      <div
+        class="row animatedDown"
+        *ngIf="
+          addressForm.get('instanciaPresentoSolicitud').value !== null &&
+          addressForm.get('instanciaPresentoSolicitud').value !== instanciaSeguimientoTecnico.NoAplica
+        "
+      >
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaSesionInstancia" [class.color-secondaryColor]="
-                addressForm.get('fechaSesionInstancia').invalid && addressForm.get('fechaSesionInstancia').touched ||
-                addressForm.get('fechaSesionInstancia').invalid && estaEditando" required>
+              <label
+                class="label-left"
+                for="fechaSesionInstancia"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaSesionInstancia').invalid &&
+                    addressForm.get('fechaSesionInstancia').touched) ||
+                  (addressForm.get('fechaSesionInstancia').invalid && estaEditando)
+                "
+              >
                 Fecha de la sesión de la instancia
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerSesionInstancia" formControlName="fechaSesionInstancia" readonly
-                  (click)="pickerSesionInstancia.open()" placeholder="DD/MM/AAAA">
+                <input
+                  matInput
+                  [matDatepicker]="pickerSesionInstancia"
+                  formControlName="fechaSesionInstancia"
+                  readonly
+                  (click)="pickerSesionInstancia.open()"
+                  placeholder="DD/MM/AAAA"
+                  [disabled]="addressForm.get('instanciaPresentoSolicitud').value == 3"
+                />
                 <mat-datepicker #pickerSesionInstancia></mat-datepicker>
               </mat-form-field>
-              <button mat-button color="primary" type="button" (click)="pickerSesionInstancia.open()"
-                class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerSesionInstancia.open()"
+                class="btn-calendario"
+                [disabled]="addressForm.get('instanciaPresentoSolicitud').value == 3"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
             </div>
           </div>
@@ -78,15 +124,26 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="tipoNovedad" [class.color-secondaryColor]="
-                addressForm.get('tipoNovedad').invalid && addressForm.get('tipoNovedad').touched ||
-                addressForm.get('tipoNovedad').invalid && estaEditando">
+              <label
+                class="label-left"
+                for="tipoNovedad"
+                [class.color-secondaryColor]="
+                  (addressForm.get('tipoNovedad').invalid && addressForm.get('tipoNovedad').touched) ||
+                  (addressForm.get('tipoNovedad').invalid && estaEditando)
+                "
+              >
                 Tipo de novedad
               </label>
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple (selectionChange)="changeTipoNovedad()">
+                <mat-select
+                  required
+                  formControlName="tipoNovedad"
+                  #tipoNovedad
+                  multiple
+                  (selectionChange)="changeTipoNovedad()"
+                >
                   <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad">
                     {{ tnovedad.nombreTipoNovedad }}
                   </mat-option>
@@ -100,16 +157,16 @@
   </mat-card>
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
 <div class="animatedDown" *ngIf="addressForm.controls.tipoNovedad.value">
-  <app-accordion-novedades 
-                          [tiposNovedadModificacionContractual]="tiposNovedadModificacionContractual"
-                          [novedadeContractual]="novedadContractual"
-                          (guardar)="onSubmit()"
-                          >
+  <app-accordion-novedades
+    [tiposNovedadModificacionContractual]="tiposNovedadModificacionContractual"
+    [novedadeContractual]="novedadContractual"
+    [estaEditando]="estaEditando"
+    (guardar)="onSubmit()"
+  >
   </app-accordion-novedades>
-
 </div>

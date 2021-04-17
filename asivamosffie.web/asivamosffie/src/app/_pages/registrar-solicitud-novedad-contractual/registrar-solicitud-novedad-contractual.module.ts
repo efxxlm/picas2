@@ -17,6 +17,7 @@ import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.compon
 import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proyectos-registrar-novedad/tabla-proyectos-registrar-novedad.component';
 import { FormRegistrarNovedadContratoComponent } from './components/form-registrar-novedad-contrato/form-registrar-novedad-contrato.component';
 import { AccordionNovedadesComponent } from './components/accordion-novedades/accordion-novedades.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { AccordionNovedadesComponent } from './components/accordion-novedades/ac
     RegistrarSolicitudNovedadContractualRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    CurrencyMaskModule
   ]
 })
 export class RegistrarSolicitudNovedadContractualModule { }

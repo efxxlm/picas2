@@ -11,6 +11,7 @@ export class ExpansionPanelComponent implements OnInit {
   @Input() proyecto:any;
   @Input() contrato:any;
   @Input() novedad:NovedadContractual;
+  @Input() estaEditando: boolean;
 
   @Output() guardar = new EventEmitter();
 

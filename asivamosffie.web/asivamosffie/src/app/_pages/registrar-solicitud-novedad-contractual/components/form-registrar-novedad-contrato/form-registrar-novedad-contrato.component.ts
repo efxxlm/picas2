@@ -14,6 +14,7 @@ import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContr
 export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges {
   @Input() tiposNovedadModificacionContractual;
   @Input() novedadDescripcion: NovedadContractualDescripcion;
+  @Input() estaEditando: boolean;
 
   @Output() guardar = new EventEmitter();
 
@@ -56,7 +57,6 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     return this.addressForm.get('clausula') as FormArray;
   }
 
-  estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
   motivosNovedadArray: Dominio[] = [];
@@ -76,10 +76,24 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   };
 
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -154,6 +168,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
           this.clausulaField.push(grupo);
         }
       }
+      if (this.estaEditando) this.addressForm.markAllAsTouched();
     }
   }
 
@@ -232,7 +247,8 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let listaClausulas: NovedadContractualClausula[] = [];
     let listaMotivos: NovedadContractualDescripcionMotivo[] = [];
 
@@ -273,8 +289,6 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.novedadDescripcion.novedadContractualClausula = listaClausulas;
     this.novedadDescripcion.novedadContractualDescripcionMotivo = listaMotivos;
     this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value;
-
-    this.estaEditando = true;
 
     this.guardar.emit(true);
 

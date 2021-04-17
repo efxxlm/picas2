@@ -13,8 +13,7 @@ export class FormSoporteSolicitudComponent implements OnChanges {
 
   @Output() guardar = new EventEmitter();
   @Input() novedad:NovedadContractual;
-
-  estaEditando = false;
+  @Input() estaEditando: boolean;
 
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
@@ -28,6 +27,7 @@ export class FormSoporteSolicitudComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes.novedad ){
       this.addressForm.get('urlSoporte').setValue(this.novedad.urlSoporte);
+      if (this.estaEditando) this.addressForm.markAllAsTouched();
     }
   }
 
