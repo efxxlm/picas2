@@ -1,5 +1,5 @@
 import { ActivatedRoute, UrlSegment, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -12,12 +12,13 @@ import { LiquidacionContratoService } from 'src/app/core/_services/liquidacionCo
   templateUrl: './gestionar-solicitud-rlc.component.html',
   styleUrls: ['./gestionar-solicitud-rlc.component.scss']
 })
-export class GestionarSolicitudRlcComponent implements OnInit {
+export class GestionarSolicitudRlcComponent implements OnInit, OnDestroy {
 
     estaEditando = false;
     esVerDetalle = false;
     tipoSolicitudCodigo = TipoSolicitudCodigo;
     contrato: any;
+    realizoPeticion = false;
     addressForm = this.fb.group({
         fechaEnvioFirmaContratista: [ null, Validators.required ],
         fechaFirmaParteContratista: [ null, Validators.required ],
@@ -58,6 +59,12 @@ export class GestionarSolicitudRlcComponent implements OnInit {
             }
         } );
         this.getContrato();
+    }
+
+    ngOnDestroy(): void {
+        if ( this.addressForm.dirty === true && this.realizoPeticion === false ) {
+            this.openDialogConfirmar( '', '<b>¿Desea guardar la información registrada?</b>' );
+        }
     }
 
     ngOnInit(): void {
@@ -110,6 +117,22 @@ export class GestionarSolicitudRlcComponent implements OnInit {
         } );
     }
 
+    openDialogConfirmar( modalTitle: string, modalText: string ) {
+        const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+          width: '30em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        confirmarDialog.afterClosed()
+            .subscribe(
+                response => {
+                    if ( response === true ) {
+                        this.onSubmit();
+                    }
+                } 
+            );
+    }
+
     onSubmit() {
         this.estaEditando = true;
         const pContratacion = {
@@ -125,6 +148,7 @@ export class GestionarSolicitudRlcComponent implements OnInit {
         this.liquidacionContratoSvc.createEditContractSettlement( pContratacion )
             .subscribe(
                 response => {
+                    this.realizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate( [ '/registrarLiquidacionContrato' ] )

@@ -59,7 +59,7 @@ const routes: Routes = [
     component: DetalleTrasladoRlcComponent
   },
   {
-    path: 'detalleInformeFinal/:id',
+    path: 'detalleInformeFinal/:id/:idContratacionProyecto',
     component: DetalleInformeFinalRlcComponent
   },
   {

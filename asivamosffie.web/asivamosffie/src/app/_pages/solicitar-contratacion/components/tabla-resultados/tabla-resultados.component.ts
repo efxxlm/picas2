@@ -43,7 +43,6 @@ export class TablaResultadosComponent implements OnInit {
   constructor ( public dialog: MatDialog ) { }
 
   ngOnInit(): void {
-    console.log('lista', this.esMultiproyecto );
     let lista = [];
     if ( this.elementosSelecciondos.length > 0 ) {
       this.elementosSelecciondos.forEach( seleccionados => {
@@ -125,9 +124,9 @@ export class TablaResultadosComponent implements OnInit {
         }
       } );
 
-      if ( tieneSolicitudDistinta === undefined ) {
+      if ( tieneSolicitudDistinta === undefined && contratacionIdAnterior !== undefined ) {
         const listaSolicitud = this.listaResultados.filter( registro => registro[ 'contratacionId' ] === contratacionIdAnterior );
-        console.log( totalSolicitudRelacionada, listaSolicitud.length )
+
         if ( totalSolicitudRelacionada !== listaSolicitud.length ) {
           this.openDialog( '', `<b>Para continuar con la solicitud debe seleccionar todos los proyectos relacionados a la solicitud número ${ this.elementosSelecciondos[ this.elementosSelecciondos.length -1 ].numeroSolicitud }.</b>` );
           return;
