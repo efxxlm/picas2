@@ -133,7 +133,26 @@ export class AlertasRelevantesComponent implements OnInit {
                 ]
             }
         ];
-        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+
+        if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraAlerta = [
+                    {
+                        seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                        seguimientoSemanalGestionObraAlertaId: this.seguimientoSemanalGestionObraAlertaId,
+                        seIdentificaronAlertas: this.formAlertasRelevantes.get( 'seIdentificaronAlertas' ).value !== null ?
+                                                this.formAlertasRelevantes.get( 'seIdentificaronAlertas' ).value : null,
+                        alerta: this.formAlertasRelevantes.get( 'alerta' ).value !== null ?
+                                this.formAlertasRelevantes.get( 'alerta' ).value : null
+                    }
+                ]
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
+        } else {
+            pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        }
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {

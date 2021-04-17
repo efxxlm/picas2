@@ -100,6 +100,7 @@ export class ComiteObraComponent implements OnInit {
                                     this.formComiteObra.get( 'urlSoporteComite' ).value : null
             }
         ];
+
         pSeguimientoSemanal.seguimientoSemanalRegistrarComiteObra = seguimientoSemanalRegistrarComiteObra;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(

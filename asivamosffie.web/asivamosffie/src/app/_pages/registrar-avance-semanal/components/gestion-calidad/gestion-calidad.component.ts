@@ -472,8 +472,24 @@ export class GestionCalidadComponent implements OnInit {
             }
         ];
 
-        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
-        console.log( pSeguimientoSemanal );
+        if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraCalidad = [
+                    {
+                        seguimientoSemanalGestionObraCalidadId: this.SeguimientoSemanalGestionObraCalidadId,
+                        seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                        seRealizaronEnsayosLaboratorio: this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value,
+                        gestionObraCalidadEnsayoLaboratorio: this.formGestionCalidad.get( 'ensayosLaboratorio' ).dirty === true ?
+                        this.formGestionCalidad.get( 'ensayosLaboratorio' ).value : null
+                    }
+                ]
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
+        } else {
+            pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        }
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {

@@ -120,7 +120,7 @@ export class RegistroFotograficoComponent implements OnInit {
                 this.formRegistroFotografico.get( 'descripcion' ).value : null
             }
         ];
-        console.log( seguimientoSemanalRegistroFotografico );
+
         pSeguimientoSemanal.seguimientoSemanalRegistroFotografico = seguimientoSemanalRegistroFotografico;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(

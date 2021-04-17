@@ -219,7 +219,36 @@ export class GestionSocialComponent implements OnInit {
                 ]
             }
         ];
-        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+
+        if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraSocial = [
+                    {
+                        seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                        seguimientoSemanalGestionObraSocialId: this.seguimientoSemanalGestionObraSocialId,
+                        cantidadEmpleosDirectos:    this.formGestionSocial.get( 'cantidadEmpleosDirectos' ).value.length > 0 ?
+                                                    this.formGestionSocial.get( 'cantidadEmpleosDirectos' ).value : '',
+                        cantidadEmpleosIndirectos:  this.formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value.length > 0 ?
+                                                    this.formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value : '',
+                        cantidadTotalEmpleos:   this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value.length > 0 ?
+                                                this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value : '',
+                        seRealizaronReuniones:  this.formGestionSocial.get( 'seRealizaronReuniones' ).value !== null ?
+                                                this.formGestionSocial.get( 'seRealizaronReuniones' ).value : null,
+                        temaComunidad:  this.formGestionSocial.get( 'temaComunidad' ).value !== null ?
+                                        this.formGestionSocial.get( 'temaComunidad' ).value : null,
+                        conclusion: this.formGestionSocial.get( 'conclusion' ).value !== null ?
+                                    this.formGestionSocial.get( 'conclusion' ).value : null,
+                        urlSoporteGestion:  this.formGestionSocial.get( 'urlSoporteGestion' ).value.length > 0 ?
+                                            this.formGestionSocial.get( 'urlSoporteGestion' ).value : '',
+                    }
+                ]
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
+        } else {
+            pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        }
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {

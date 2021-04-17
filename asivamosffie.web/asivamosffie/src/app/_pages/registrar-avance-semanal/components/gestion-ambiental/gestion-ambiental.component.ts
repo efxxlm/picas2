@@ -720,9 +720,33 @@ export class GestionAmbientalComponent implements OnInit {
                     ]
                 }
             ];
+
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+                if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                    pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraAmbiental = [
+                        {
+                            seguimientoSemanalGestionObraAmbientalId:   gestionObra.length > 0 ?
+                                                                        gestionObra[0].seguimientoSemanalGestionObraAmbientalId : 0,
+                            seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value,
+                            manejoMaterialesInsumo: manejoMaterialInsumo(),
+                            manejoResiduosConstruccionDemolicion: manejoResiduosConstruccionDemolicion(),
+                            manejoResiduosPeligrososEspeciales: manejoResiduosPeligrososEspeciales(),
+                            manejoOtro: manejoOtro(),
+                            tieneManejoMaterialesInsumo: manejoMaterialInsumo() !== null ? true : false,
+                            tieneManejoResiduosPeligrososEspeciales: manejoResiduosPeligrososEspeciales() !== null ? true : false,
+                            tieneManejoResiduosConstruccionDemolicion: manejoResiduosConstruccionDemolicion() !== null ? true : false,
+                            tieneManejoOtro: manejoOtro() !== null ? true : false
+                        }
+                    ]
+                } else {
+                    pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+                }
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
         }
-        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
-        console.log( pSeguimientoSemanal );
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {

@@ -231,8 +231,39 @@ export class GestionSSTComponent implements OnInit {
                 ]
             }
         ];
-        console.log( seguimientoSemanalGestionObra );
-        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+
+        if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraSeguridadSalud = [
+                    {
+                        seguimientoSemanalGestionObraSeguridadSaludId: this.seguimientoSemanalGestionObraSeguridadSaludId,
+                        seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                        cantidadAccidentes: this.formSst.get( 'cantidadAccidentes' ).value.length > 0 ?
+                                            this.formSst.get( 'cantidadAccidentes' ).value : '',
+                        seguridadSaludCausaAccidente: causas,
+                        seRealizoCapacitacion:  this.formSst.get( 'seRealizoCapacitacion' ).value !== null ?
+                                                this.formSst.get( 'seRealizoCapacitacion' ).value : null,
+                        temaCapacitacion:   this.formSst.get( 'temaCapacitacion' ).value !== null ?
+                                            this.formSst.get( 'temaCapacitacion' ).value : null,
+                        seRealizoRevisionElementosProteccion:   this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value !== null ?
+                                                                this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value : null,
+                        cumpleRevisionElementosProyeccion:  this.formSst.get( 'cumpleRevisionElementosProyeccion' ).value !== null ?
+                                                            this.formSst.get( 'cumpleRevisionElementosProyeccion' ).value : null,
+                        seRealizoRevisionSenalizacion:  this.formSst.get( 'seRealizoRevisionSenalizacion' ).value !== null ?
+                                                        this.formSst.get( 'seRealizoRevisionSenalizacion' ).value : null,
+                        cumpleRevisionSenalizacion: this.formSst.get( 'cumpleRevisionSenalizacion' ).value !== null ?
+                                                    this.formSst.get( 'cumpleRevisionSenalizacion' ).value : null,
+                        urlSoporteGestion:  this.formSst.get( 'urlSoporteGestion' ).value.length > 0 ?
+                                            this.formSst.get( 'urlSoporteGestion' ).value : null
+                    }
+                ];
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
+        } else {
+            pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        }
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {

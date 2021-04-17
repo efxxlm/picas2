@@ -187,7 +187,6 @@ export class ReporteActividadesComponent implements OnInit {
                 .actividadAdministrativaFinanciera = reporte.reporteActividad.actividadAdministrativaFinanciera;
         }
 
-        console.log( seguimientoSemanalReporteActividad );
         pSeguimientoSemanal.seguimientoSemanalReporteActividad = seguimientoSemanalReporteActividad;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
