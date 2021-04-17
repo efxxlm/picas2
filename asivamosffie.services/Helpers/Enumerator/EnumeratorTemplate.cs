@@ -132,10 +132,14 @@ namespace asivamosffie.services.Helpers.Enumerator
         Alerta_5_1_6_registro_solicitud_liquidacion_contrato = 133,
         Alerta_5_1_7_aprobar_solicitud_liquidacion_contrato = 134,
         Alerta_5_1_8_gestionar_solicitud_liquidacion_contrato = 135,
+
+        // novedades
         EnviarNovedadAApoyo = 137,
         EnviarNovedadRechazo = 139,
         EnviarNovedadASupervisor = 140,
-
+        EnviarNovedadRechazoSupervisor = 141,
+        EnviarNovedadDevuelta = 142,
+        EnviarNovedadTramitar = 144,
 
     }
 }

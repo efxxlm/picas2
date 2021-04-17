@@ -6,11 +6,11 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
+      <span *ngIf="novedad.estadoCodigo === '5'">
+        Ver detalle/Editar 
+      </span>
       <span *ngIf="true">
         Verificar
-      </span>
-      <span *ngIf="false">
-        Ver detalle/Editar validación de
       </span>
       solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
@@ -66,13 +66,13 @@
       <p>
         <strong>Fecha de inicio de contrato:</strong>
         <span>
-          
+          {{ (novedad.contrato?.fechaActaInicioFase2 ? novedad.contrato?.fechaActaInicioFase2 : novedad.contrato?.fechaActaInicioFase1) | date:'dd/MM/yyyy'}}  
         </span>
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
         <span>
-
+          {{ (novedad.contrato?.fechaTerminacionFase2 ? novedad.contrato?.fechaTerminacionFase2 : novedad.contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
         </span>
       </p>
 
@@ -82,31 +82,31 @@
           <strong>
             Llave MEN:
           </strong>
-          LY886643
+          {{ novedad.proyectosSeleccionado.llaveMen }}
         </p>
         <p>
           <strong>
             Departamento:
           </strong>
-          Antioquia
+          {{ novedad.proyectosSeleccionado.departamento }}
         </p>
         <p>
           <strong>
             Municipio:
           </strong>
-          Bello
+          {{ novedad.proyectosSeleccionado.municipio }}
         </p>
         <p>
           <strong>
             Institución educativa:
           </strong>
-          I.E. José Cuervo
+          {{ novedad.proyectosSeleccionado.institucionEducativa }}
         </p>
         <p>
           <strong>
             Sede:
           </strong>
-          Única sede
+          {{ novedad.proyectosSeleccionado.sede }}
         </p>
       </div>
     </mat-card-content>

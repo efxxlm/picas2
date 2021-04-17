@@ -1008,7 +1008,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pNovedadContractual.UsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, GeneralCodes.OperacionExitosa, idAccion, pNovedadContractual.UsuarioCreacion, CreateEdit)
                     };
 
             }
@@ -1425,6 +1425,8 @@ namespace asivamosffie.services
 
                     _context.SaveChanges();
 
+                    EnviarNotificacionRechazoSupervisor(novedadContractual);
+
                 }
 
                 return respuesta = new Respuesta
@@ -1480,6 +1482,8 @@ namespace asivamosffie.services
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();
+
+                    EnviarNotificacionATramitador(novedadContractual);
 
                 }
 
@@ -1566,7 +1570,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-
+                EnviarNotificacionDevolucion(novedadContractual);
 
                 return respuesta = new Respuesta
                 {
@@ -2141,6 +2145,113 @@ namespace asivamosffie.services
             //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
             List<string> listaMails = new List<string> { contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente};
             _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Rechazada");
+
+
+        }
+
+        private async void EnviarNotificacionRechazoSupervisor(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Interventor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadRechazoSupervisor && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+                                                      ;
+
+            
+            List<string> listaMails = new List<string> { contrato?.Apoyo?.Email, contrato?.Interventor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Rechazada por supervisor");
+
+
+        }
+        
+        private async void EnviarNotificacionDevolucion(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Interventor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadDevuelta && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+                                                      ;
+
+            List<string> listaMails = new List<string>();
+            
+            if ( proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+            {
+                listaMails.Add(contrato?.Interventor?.Email);
+            }
+
+            if (proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+            {
+                listaMails.Add(contrato?.Apoyo?.Email);
+            }
+
+            _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual devuelta por supervisor");
+
+
+        }
+
+        private async void EnviarNotificacionATramitador(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadTramitar && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+
+            //.Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+            //.Replace("[SEDE]", proyecto.Sede)
+            //.Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+
+            ;
+            List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Seguimiento_y_control);
+            List<string> listaMails = new List<string>();
+
+            ListUsuarios.ForEach(u =>
+           {
+               listaMails.Add(u.Email);
+           });
+
+            if ( listaMails.Count() > 0 )
+                _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual enviada");
 
 
         }

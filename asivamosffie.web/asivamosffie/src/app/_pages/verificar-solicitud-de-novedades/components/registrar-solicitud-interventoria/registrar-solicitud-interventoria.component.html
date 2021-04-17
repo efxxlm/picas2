@@ -6,7 +6,8 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Registrar solicitud de novedad contractual
+      {{ novedad.novedadContractualId === undefined ? 'Registrar' : 'Ver detalle/Editar registro' }}
+       solicitud de novedad contractual {{ novedad.novedadContractualId === undefined ? '' : novedad.numeroSolicitud }}
     </h1>
   </div>
 
@@ -163,8 +164,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-
-  <div *ngIf="false">
+  <div *ngIf="novedad?.novedadContractualObservaciones?.length > 1" >
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -180,15 +180,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let observacion of listaObservaciones">
+        <tr *ngFor="let observacion of novedad.novedadContractualObservaciones ">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.fecha }}
+            {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.responsable }}
+            {{ observacion.usuarioCreacion }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.historial }}
+            <section 
+                  [innerHTML]="observacion.observaciones"
+                  style="margin-left: 2em"
+          ></section>
           </td>
         </tr>
       </tbody>

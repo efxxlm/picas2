@@ -79,7 +79,9 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
         .subscribe( respuesta => {
           this.novedad = respuesta;
 	  
-	        this.addressForm.get('observaciones').setValue(this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.observaciones : null);
+          let observacion = this.novedad.observacionApoyo ? this.novedad.observacionApoyo.observaciones : "";
+
+	        this.addressForm.get('observaciones').setValue(this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.observaciones : observacion);
           this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesSupervisor);
         });
 
