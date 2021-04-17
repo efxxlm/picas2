@@ -53,20 +53,26 @@
       <p>
         <strong>Plazo:</strong>
         <span>
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias }} Días 
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses }} Meses 
+          {{
+          novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias
+          }} Días
+          {{
+          novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses
+          }} Meses
         </span>
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
         <span>
-          
+          {{ (novedad.contrato?.fechaActaInicioFase2 ? novedad.contrato?.fechaActaInicioFase2 :
+          novedad.contrato?.fechaActaInicioFase1) | date:'dd/MM/yyyy'}}
         </span>
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
         <span>
-
+          {{ (novedad.contrato?.fechaTerminacionFase2 ? novedad.contrato?.fechaTerminacionFase2 :
+          novedad.contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
         </span>
       </p>
 
@@ -76,31 +82,31 @@
           <strong>
             Llave MEN:
           </strong>
-          LY886643
+          {{ novedad.proyectosSeleccionado.llaveMen }}
         </p>
         <p>
           <strong>
             Departamento:
           </strong>
-          Antioquia
+          {{ novedad.proyectosSeleccionado.departamento }}
         </p>
         <p>
           <strong>
             Municipio:
           </strong>
-          Bello
+          {{ novedad.proyectosSeleccionado.municipio }}
         </p>
         <p>
           <strong>
             Institución educativa:
           </strong>
-          I.E. José Cuervo
+          {{ novedad.proyectosSeleccionado.institucionEducativa }}
         </p>
         <p>
           <strong>
             Sede:
           </strong>
-          Única sede
+          {{ novedad.proyectosSeleccionado.sede }}
         </p>
       </div>
 
@@ -147,7 +153,8 @@
         </mat-card-content>
       </mat-card>
       <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
               Novedad {{ 1 + i }}
@@ -160,28 +167,42 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <strong>Motivos de la novedad :</strong> 
-                  <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
-              
+              <strong>Motivos de la novedad :</strong>
+              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{
+                motivo.nombreMotivo}}, </section>
+
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-                <section 
-                        [innerHTML]="descripcion.resumenJustificacion"
-                        style="margin-left: 2em"
-                ></section>
+              <section [innerHTML]="descripcion.resumenJustificacion" style="margin-left: 2em"></section>
               <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
-              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{
+                descripcion.plazoAdicionalMeses }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{
+                descripcion.plazoAdicionalDias }}</p>
+
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de
+                  inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha
+                  final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+
+              <p *ngIf="descripcion.tipoNovedadCodigo == '3'"><strong>Presupuesto adicional solicitado: </strong> {{
+                descripcion.presupuestoAdicionalSolicitado }} </p>
+
+              <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
+                <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
+                  <h3> <strong> CLAUSULA </strong> {{ i + 1 }} </h3>
+                  <p><strong>Cláusula a modificar: </strong> </p>
+                  <section [innerHTML]="clausula.clausulaAmodificar" style="margin-left: 2em"></section>
+                  <p><strong>Ajuste solicitado a la cláusula: </strong> </p>
+                  <section [innerHTML]="clausula.ajusteSolicitadoAclausula" style="margin-left: 2em"></section>
+                </section>
+              </section>
+
+              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{
+                descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
               <p><strong>Concepto técnico: </strong></p>
-              <section 
-                        [innerHTML]="descripcion.conceptoTecnico"
-                        style="margin-left: 2em"
-                ></section>
+              <section [innerHTML]="descripcion.conceptoTecnico" style="margin-left: 2em"></section>
               <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
               <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
             </mat-card-content>
@@ -208,8 +229,7 @@
             <strong>
               URL con soporte:
             </strong>
-            <a [href]="novedad.urlSoporte"
-              target="_blank" rel="noopener noreferrer">
+            <a [href]="novedad.urlSoporte" target="_blank" rel="noopener noreferrer">
               {{ novedad.urlSoporte }}
             </a>
           </p>
@@ -234,11 +254,7 @@
         </strong>
       </p>
       <div>
-          <section 
-            [innerHTML]="novedad.causaRechazo"
-            style="margin-left: 2em"
-            
-    ></section>
+        <section [innerHTML]="novedad.causaRechazo" style="margin-left: 2em"></section>
       </div>
     </mat-card-content>
   </mat-card>
@@ -257,10 +273,7 @@
             {{ novedad.observacionDevolucion.fechaCreacion | date: 'dd/MM/yyyy' }}
           </strong>
         </p>
-          <section 
-                  [innerHTML]="novedad.observacionDevolucion.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+        <section [innerHTML]="novedad.observacionDevolucion.observaciones" style="margin-left: 2em"></section>
       </mat-card-content>
     </mat-card>
   </div>

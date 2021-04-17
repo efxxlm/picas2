@@ -144,6 +144,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("EliminarNovedadClausula")]
+        public async Task<IActionResult> EliminarNovedadClausula([FromQuery] int pNovedadContractuaClausulalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarNovedadClausula(pNovedadContractuaClausulalId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPut]
         [Route("AprobarSolicitud")]
         public async Task<IActionResult> AprobarSolicitud([FromQuery] int pNovedaContractual)

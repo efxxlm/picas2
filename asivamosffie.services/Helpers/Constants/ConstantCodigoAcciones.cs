@@ -363,5 +363,8 @@
 
         //5.4.2
         public const string Crear_Editar_Liquidacion_Contrato ="267";
+
+        public const string EliminarNovedadContractual = "268";
+        public const string EliminarNovedadContractualClausula = "269";
     }
 }

@@ -18,13 +18,15 @@
     <app-form-registrar-novedad #formRegistrarNovedad
                                 [proyecto]=proyecto
                                 [contrato]=contrato
-                                [novedad]=novedad>
+                                [novedad]=novedad
+                                (guardar)="cargarRegistro()">
     </app-form-registrar-novedad>
 
   </mat-expansion-panel>
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title {{ novedad.registroCompletoSoporte == false ? 'sin-diligenciar' : 'completo' }}"
+      <mat-panel-title class="expansion-style--title 
+      {{ novedad.registroCompletoSoporte === undefined ? 'sin-diligenciar' : novedad.registroCompletoSoporte === false ? 'sin-diligenciar' : 'completo' }}"
         >
         Soporte de la solicitud
       </mat-panel-title>

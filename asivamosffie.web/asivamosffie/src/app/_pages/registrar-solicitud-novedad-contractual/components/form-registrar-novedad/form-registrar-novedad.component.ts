@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -103,6 +103,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   @Input() proyecto: any;
   @Input() contrato: any;
   @Input() novedad: NovedadContractual;
+
+  @Output() guardar = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -262,12 +264,13 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     this.contractualNoveltyService.createEditNovedadContractual(novedad)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code === '200')
-        //console.log( novedad.novedadContractualId )
-          //if (novedad.novedadContractualId === 0)
+        if (respuesta.code === '200'){
+          //console.log(novedad.novedadContractualId )
+          if (novedad.novedadContractualId === undefined)
             this.router.navigate(['/registrarSolicitudNovedadContractual/registrarSolicitud', respuesta.data.novedadContractualId]);
-          //else
-          //  this.cargarRegistro();
+          else
+            this.guardar.emit(true);
+        }
 
       });
 

@@ -116,7 +116,12 @@ namespace asivamosffie.services
                                         .ToList();
 
             List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
-                                                                        .Where(x => x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente).ToList();
+                                                                        .Where(x => ( 
+                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
+                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor
+                                                                                    ) &&
+                                                                               x.Eliminado != true)
+                                                                        .ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
 
@@ -229,6 +234,10 @@ namespace asivamosffie.services
                     {
                         motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
                     }
+
+                    novedadContractualDescripcion.NovedadContractualClausula = novedadContractualDescripcion.NovedadContractualClausula
+                                                                                                                .Where(x => x.Eliminado != true)
+                                                                                                                .ToList();
 
 
                 }
@@ -558,6 +567,14 @@ namespace asivamosffie.services
                     novedadDescripcionOld.NumeroRadicado = novedadContractualDescripcion.NumeroRadicado;
 
                     _context.NovedadContractualDescripcion.Update(novedadDescripcionOld);
+                }
+
+                if ( novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales &&
+                    (novedadContractualDescripcion.NovedadContractualClausula == null || novedadContractualDescripcion.NovedadContractualClausula.Count() == 0) 
+                    )
+                {
+                    NovedadContractualClausula novedadContractualClausula = new NovedadContractualClausula();
+                    novedadContractualDescripcion.NovedadContractualClausula.Add(novedadContractualClausula);
                 }
 
                 foreach (NovedadContractualClausula clausula in novedadContractualDescripcion.NovedadContractualClausula)
@@ -1105,7 +1122,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> EliminarNovedadContractual(int pNovedadContractualId, string pUsuario)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EliminarNovedadContractual, (int)EnumeratorTipoDominio.Acciones);
             string strCrearEditar = string.Empty;
             NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractualId);
 
@@ -1131,10 +1148,10 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = novedadContractual,
                     Code = ConstantMessagesContractualControversy.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
                     ConstantMessagesContractualControversy.EliminacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1152,7 +1169,63 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> EliminarNovedadClausula(int pNovedadContractuaClausulalId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EliminarNovedadContractualClausula, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractualClausula novedadContractualClausula = _context.NovedadContractualClausula.Find(pNovedadContractuaClausulalId);
+
+            try
+            {
+
+                if (novedadContractualClausula != null)
+                {
+                    strCrearEditar = "Eliminar NOVEDAD CONTRACTUAL";
+                    novedadContractualClausula.FechaModificacion = DateTime.Now;
+                    novedadContractualClausula.UsuarioModificacion = pUsuario;
+                    novedadContractualClausula.Eliminado = true;
+                    _context.NovedadContractualClausula.Update(novedadContractualClausula);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractualClausula,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.EliminacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractualClausula,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1178,6 +1251,7 @@ namespace asivamosffie.services
 
                     _context.SaveChanges();
 
+                    EnviarNotificacionAApoyo(novedadContractual);
                 }
 
                 return respuesta = new Respuesta
@@ -1190,7 +1264,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1208,7 +1282,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1234,6 +1308,8 @@ namespace asivamosffie.services
 
                     _context.SaveChanges();
 
+                    EnviarNotificacionASupervisor(novedadContractual);
+
                 }
 
                 return respuesta = new Respuesta
@@ -1246,7 +1322,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,//controversiaActuacion.UsuarioCreacion,
                     strCrearEditar)
 
                 };
@@ -1264,7 +1340,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1291,6 +1367,7 @@ namespace asivamosffie.services
 
                     _context.SaveChanges();
 
+                    EnviarNotificacionRechazo(novedadContractual);
                 }
 
                 return respuesta = new Respuesta
@@ -1303,7 +1380,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1321,7 +1398,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1360,7 +1437,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1378,7 +1455,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1416,7 +1493,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1434,7 +1511,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1501,7 +1578,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1519,7 +1596,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1558,7 +1635,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.OperacionExitosa,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion,
+                    pUsuario,
                     strCrearEditar)
 
                 };
@@ -1576,7 +1653,7 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
-                    "",//controversiaActuacion.UsuarioCreacion, 
+                    pUsuario,
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
@@ -1708,7 +1785,7 @@ namespace asivamosffie.services
                 if (
                     pNovedadContractual.FechaSolictud == null ||
                     string.IsNullOrEmpty(pNovedadContractual.InstanciaCodigo) ||
-                    pNovedadContractual.FechaSesionInstancia == null ||
+                    ( pNovedadContractual.InstanciaCodigo != "3" && pNovedadContractual.FechaSesionInstancia == null) || // opcion no aplica
                     pNovedadContractual.NovedadContractualDescripcion == null ||
                     pNovedadContractual.NovedadContractualDescripcion.Count() == 0
 
@@ -1969,6 +2046,105 @@ namespace asivamosffie.services
 
             return esCompleto;
         }
+
+        private async void EnviarNotificacionAApoyo(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadAApoyo && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+                                                      
+            //.Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+            //.Replace("[SEDE]", proyecto.Sede)
+            //.Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+
+            ;
+            //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
+            List<string> listaMails = new List<string> { contrato?.Apoyo?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual enviada");
+
+
+        }
+
+        private async void EnviarNotificacionASupervisor(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Supervisor)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadAApoyo && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+
+            //.Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+            //.Replace("[SEDE]", proyecto.Sede)
+            //.Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+
+            ;
+            //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
+            List<string> listaMails = new List<string> { contrato?.Supervisor?.Email };
+            _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual enviada");
+
+
+        }
+
+        private async void EnviarNotificacionRechazo(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Contratacion)
+                                                .ThenInclude( x => x.Contratista )
+                                                    .ThenInclude( x => x.ProcesoSeleccionProponente)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadRechazo && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+
+            //.Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa)
+            //.Replace("[SEDE]", proyecto.Sede)
+            //.Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
+
+            ;
+            //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
+            List<string> listaMails = new List<string> { contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente};
+            _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Rechazada");
+
+
+        }
+        
 
 
         #endregion private 

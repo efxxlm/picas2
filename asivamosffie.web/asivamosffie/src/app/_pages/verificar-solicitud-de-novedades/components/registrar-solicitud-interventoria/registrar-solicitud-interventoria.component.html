@@ -51,11 +51,11 @@
       </div>
     </div>
   </div>
-
   <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === false && proyectos" >
     <app-tabla-proyectos-registrar-novedad
                                             [listaProyectos]="proyectos"
                                             (Proyecto)="seleccionarProyecto($event)"
+                                            [proyectoId]="proyecto?.proyectoId"
                                             >
   </app-tabla-proyectos-registrar-novedad>
   </div>
@@ -91,7 +91,7 @@
       </p> -->
       <p>
         <strong>Valor del contrato:</strong>
-        {{contrato?.valor|currency:'':'symbol':'3.0'}}
+        {{ (novedad?.proyectosContrato ? novedad?.proyectosContrato[0]?.valorTotal : 0 ) | currency:'':'symbol':'3.0'}}
       </p>
       <p>
         <strong>Plazo:</strong>
@@ -99,11 +99,11 @@
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
-        {{contrato?.fechaActaInicioFase1| date:'dd/MM/yyyy'}}
+        {{ (contrato?.fechaActaInicioFase2 ? contrato?.fechaActaInicioFase2 : contrato?.fechaActaInicioFase1) | date:'dd/MM/yyyy'}}
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
-        {{contrato?.fechaTerminacion| date:'dd/MM/yyyy'}}
+        {{ (contrato?.fechaTerminacionFase2 ? contrato?.fechaTerminacionFase2 : contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
       </p>
 
       <div class="animatedDown" *ngIf="novedadAplicada.value === false && proyecto">

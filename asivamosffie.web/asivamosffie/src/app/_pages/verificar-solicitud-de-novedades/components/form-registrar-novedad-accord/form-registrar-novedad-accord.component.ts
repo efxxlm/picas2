@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { Validators, FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
 
@@ -96,7 +98,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public commonServices: CommonService
+    public commonServices: CommonService,
+    private contractualNoveltyService: ContractualNoveltyService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -228,8 +231,16 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
   deleteTema(i: number) {
     const tema = this.clausulaField.controls[i];
 
-    this.borrarArray(this.clausulaField, i);
-    this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+    this.contractualNoveltyService.eliminarNovedadClausula( this.clausulaField.value[i].novedadContractualClausulaId )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if ( respuesta.code === '200' )    
+          this.borrarArray(this.clausulaField, i);
+      });
+    
+    console.log( this.clausulaField.value[i].novedadContractualClausulaId );
+
+    
   }
 
   onSubmit() {

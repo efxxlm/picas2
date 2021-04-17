@@ -144,7 +144,8 @@
         <app-expansion-panel
                             [proyecto]=proyecto
                             [contrato]=contrato
-                            [novedad]=novedad>
+                            [novedad]=novedad
+                            (guardar)="ngOnInit()">
         </app-expansion-panel>
   </div>
   <div *ngIf="novedad.observacionDevolucion">

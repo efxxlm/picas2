@@ -46,6 +46,10 @@ export class ContractualNoveltyService {
     return this.http.delete<Respuesta>( `${ this.urlApi }/eliminarNovedadContractual?pNovedaContractual=${ id }` ); 
   }
 
+  eliminarNovedadClausula(id) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadClausula?pNovedadContractuaClausulalId=${ id }` ); 
+  }
+
   getNovedadContractualById(id) {
     return this.http.get<NovedadContractual>( `${ this.urlApi }/getNovedadContractualById?pId=${ id }` ); 
   }

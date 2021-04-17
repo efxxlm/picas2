@@ -16,4 +16,24 @@ export class ExpansionPanelInterventoriaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  validarRegistroCompletoBasico(){
+    if ( this.novedad === undefined ){
+      return null;
+    }else{
+      if (
+          this.novedad.registroCompletoInformacionBasica === undefined && 
+          this.novedad.registroCompletoDescripcion === undefined){
+        return null
+      }else if (
+                this.novedad.registroCompletoInformacionBasica === false || 
+                this.novedad.registroCompletoInformacionBasica === undefined ||
+                this.novedad.registroCompletoDescripcion === false ||
+                this.novedad.registroCompletoDescripcion === undefined){
+        return false;
+      }else{
+        return true;
+      }
+    }
+  }
+
 }

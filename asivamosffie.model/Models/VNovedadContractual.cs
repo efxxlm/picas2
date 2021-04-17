@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoCodigoNombre { get; set; }
+        public string EstadoDescripcion { get; set; }
         public bool? TieneObservacionesApoyo { get; set; }
         public bool? TieneObservacionesSupervisor { get; set; }
         public string NovedadesSeleccionadas { get; set; }

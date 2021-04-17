@@ -49,12 +49,33 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
         .subscribe( novedad => {
           console.log( novedad );
           
-          this.novedad = novedad;
-          this.numeroContrato.setValue( novedad.contrato.numeroContrato );
-          this.numeroContratoSeleccionado=novedad.contrato.numeroContrato;
-          this.novedadAplicada.setValue( novedad.esAplicadaAcontrato );
-          this.proyecto = novedad['proyectosSeleccionado'];
-          this.contrato = novedad.contrato;
+          if (novedad.novedadContractualId !== 0) {
+
+            this.novedad = novedad;
+            this.numeroContrato.setValue(novedad.contrato.numeroContrato);
+            this.numeroContratoSeleccionado = novedad.contrato; 
+            this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
+            this.proyecto = novedad['proyectosSeleccionado'];
+            this.contrato = novedad.contrato;
+
+            if (this.novedadAplicada.value == false) {
+              this.contractualNoveltyService.getProyectosContrato(this.contrato.contratoId).subscribe(
+                response => {
+                  this.proyectos = response;
+                  console.log(this.proyectos);
+
+                }
+              );
+            } else {
+              this.proyecto = null;
+            }
+
+            if (this.contrato !== undefined) {
+              this.contratos.push(this.contrato)
+              this.options.push(this.contrato)
+            }
+
+          }
           
         });
 
