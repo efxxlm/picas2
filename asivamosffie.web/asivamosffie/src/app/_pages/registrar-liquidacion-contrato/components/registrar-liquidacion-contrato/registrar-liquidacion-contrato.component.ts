@@ -25,7 +25,6 @@ export class RegistrarLiquidacionContratoComponent implements OnInit {
     {
         this.liquidacionContratoSvc.getListContractSettlemen()
             .subscribe( getListContractSettlemen => {
-                console.log( getListContractSettlemen );
                 this.listaAcordeonSinRegistro = getListContractSettlemen[ 0 ];
                 this.listaAcordeonEnProcesoFirma = getListContractSettlemen[ 1 ];
                 this.listaAcordeonLiquidado = getListContractSettlemen[ 2 ];
