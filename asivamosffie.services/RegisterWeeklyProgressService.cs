@@ -544,6 +544,283 @@ namespace asivamosffie.services
         #endregion
 
         #region Save Edit
+
+        #region delete
+        public async Task<Respuesta> DeleteGestionObraCalidadEnsayoLaboratorio(int GestionObraCalidadEnsayoLaboratorioId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld = await _context.GestionObraCalidadEnsayoLaboratorio
+                    .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorioId).Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefaultAsync();
+
+                if (GestionObraCalidadEnsayoLaboratorioOld == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "GestionObraCalidadEnsayoLaboratorio no encontrado".ToUpper())
+                    };
+                }
+                if (GestionObraCalidadEnsayoLaboratorioOld.EnsayoLaboratorioMuestra != null && GestionObraCalidadEnsayoLaboratorioOld.EnsayoLaboratorioMuestra.Where(r => !(bool)r.Eliminado).Count() > 0)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.NoEliminarLaboratorio,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.NoEliminarLaboratorio, idAccion, pUsuarioModificacion, "El registro tiene información que depende de él, no se puede eliminar".ToUpper())
+                    };
+                }
+                GestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pUsuarioModificacion;
+                GestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
+                GestionObraCalidadEnsayoLaboratorioOld.Eliminado = true;
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.EliminacionExitosa,
+                    Message = await
+                    _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                        (int)enumeratorMenu.Registrar_Avance_Semanal,
+                                                                        ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                                                                        idAccion,
+                                                                        pUsuarioModificacion,
+                                                                        "Eliminar Gestion Obra Calidad Ensayo Laboratorio".ToUpper()
+                                                                        )
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
+        }
+
+        public async Task<Respuesta> DeleteResiduosConstruccionDemolicionGestor(int ResiduosConstruccionDemolicionGestorId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Residuos_Construccion_Demolicion_Gestor, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ManejoResiduosConstruccionDemolicionGestor ManejoResiduosConstruccionDemolicionGestorOld = _context.ManejoResiduosConstruccionDemolicionGestor.Find(ResiduosConstruccionDemolicionGestorId);
+
+                if (ManejoResiduosConstruccionDemolicionGestorOld == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "ManejoResiduosConstruccionDemolicionGestor no encontrado".ToUpper())
+                    };
+                }
+                ManejoResiduosConstruccionDemolicionGestorOld.UsuarioModificacion = pUsuarioModificacion;
+                ManejoResiduosConstruccionDemolicionGestorOld.FechaModificacion = DateTime.Now;
+                ManejoResiduosConstruccionDemolicionGestorOld.Eliminado = true;
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
+        }
+
+        public async Task<Respuesta> DeleteManejoMaterialesInsumosProveedor(int ManejoMaterialesInsumosProveedorId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Manejo_Materiales_Insumo_Proveedor, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedorDelete = _context.ManejoMaterialesInsumosProveedor.Find(ManejoMaterialesInsumosProveedorId);
+
+                if (manejoMaterialesInsumosProveedorDelete == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "ManejoMaterialesInsumosProveedor no encontrado".ToUpper())
+                    };
+                }
+                manejoMaterialesInsumosProveedorDelete.UsuarioModificacion = pUsuarioModificacion;
+                manejoMaterialesInsumosProveedorDelete.FechaModificacion = DateTime.Now;
+                manejoMaterialesInsumosProveedorDelete.Eliminado = true;
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
+        }
+
+        private void EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(int pSeguimientoSemanalGestionObraCalidadId, int pSeguimientoSemanalGestionObraId)
+        {
+            GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio = _context.GestionObraCalidadEnsayoLaboratorio
+                                              .Where(r => r.SeguimientoSemanalGestionObraCalidadId == pSeguimientoSemanalGestionObraCalidadId)
+                                              .Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefault();
+
+            if (gestionObraCalidadEnsayoLaboratorio != null)
+            {
+                gestionObraCalidadEnsayoLaboratorio.Eliminado = true;
+
+                foreach (var EnsayoLaboratorioMuestra in gestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
+                {
+                    EnsayoLaboratorioMuestra.Eliminado = true;
+                }
+            }
+
+            //Pasar Registro Completo Ensayo Laboratorio Muestras
+            // Y estado Muestras = sin muestras
+            int SeguimientoSemanalId = _context.SeguimientoSemanalGestionObra.Find(pSeguimientoSemanalGestionObraId).SeguimientoSemanalId;
+
+            _context.Set<SeguimientoSemanal>()
+                                .Where(s => s.SeguimientoSemanalId == SeguimientoSemanalId)
+                                                                                            .Update(s => new SeguimientoSemanal
+                                                                                            {
+                                                                                                EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras,
+                                                                                                RegistroCompletoMuestras = true
+                                                                                            });
+
+
+
+
+        }
+
+        #endregion
+
+        #region validate 
+        private string ValidarEstadoDeObraBySeguimientoSemanalId(int SeguimientoSemanalId)
+        {
+
+            //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
+            ///Validar Estado De obra 
+            //Actualizar estado obra 
+
+
+            SeguimientoSemanal seguimientoSemanal =
+                _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == SeguimientoSemanalId)
+                        .Include(c => c.ContratacionProyecto)
+                        .Include(s => s.SeguimientoSemanalAvanceFisico)
+                            .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
+                            .ThenInclude(r => r.Programacion)
+                            .FirstOrDefault();
+
+            decimal? ProgramacionAcumuladaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.ProgramacionSemanal);
+            decimal? ProgramacionEjecutadaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.AvanceFisicoSemanal); ;
+
+
+            int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList().Count();
+            decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
+            decimal SegundoTercio = PrimerTercio * 2;
+
+            if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
+            {
+                /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
+                if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra)
+                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_normal;
+
+                /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
+                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra)
+                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_avanzada;
+
+                /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
+                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra)
+                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_retrazada;
+
+                //primer tercio  => avance del proyecto no debe ser menor al 20%   = critico
+                if (seguimientoSemanal.NumeroSemana >= PrimerTercio && seguimientoSemanal.NumeroSemana < SegundoTercio)
+                    if (ProgramacionEjecutadaObra < 20)
+                        return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
+
+                //segunto tercio  => avance del proyecto no debe ser menor al 60%   critico
+                if (seguimientoSemanal.NumeroSemana >= SegundoTercio)
+                    if (ProgramacionEjecutadaObra < 60)
+                        return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
+
+                return ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
+            }
+            else
+            {
+                return ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
+            }
+        }
+
+        private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
+        {
+            bool EsCompleto = true;
+            Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
+            {
+                if (item.AvanceFisicoCapitulo == null)
+                    EsCompleto = false;
+            });
+            return EsCompleto;
+        }
+
+
+        #endregion
+
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
@@ -887,232 +1164,7 @@ namespace asivamosffie.services
                 };
             }
         }
-
-        public async Task<Respuesta> DeleteGestionObraCalidadEnsayoLaboratorio(int GestionObraCalidadEnsayoLaboratorioId, string pUsuarioModificacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld = await _context.GestionObraCalidadEnsayoLaboratorio
-                    .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorioId).Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefaultAsync();
-
-                if (GestionObraCalidadEnsayoLaboratorioOld == null)
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "GestionObraCalidadEnsayoLaboratorio no encontrado".ToUpper())
-                    };
-                }
-                if (GestionObraCalidadEnsayoLaboratorioOld.EnsayoLaboratorioMuestra != null && GestionObraCalidadEnsayoLaboratorioOld.EnsayoLaboratorioMuestra.Where(r => !(bool)r.Eliminado).Count() > 0)
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = ConstanMessagesRegisterWeeklyProgress.NoEliminarLaboratorio,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.NoEliminarLaboratorio, idAccion, pUsuarioModificacion, "El registro tiene información que depende de él, no se puede eliminar".ToUpper())
-                    };
-                }
-                GestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pUsuarioModificacion;
-                GestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
-                GestionObraCalidadEnsayoLaboratorioOld.Eliminado = true;
-
-                await _context.SaveChangesAsync();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.EliminacionExitosa,
-                    Message = await 
-                    _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                                        (int)enumeratorMenu.Registrar_Avance_Semanal,
-                                                                        ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                                                                        idAccion,
-                                                                        pUsuarioModificacion,
-                                                                        "Eliminar Gestion Obra Calidad Ensayo Laboratorio".ToUpper()
-                                                                        )
-                };
-
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
-                };
-            }
-
-
-        }
-
-        public async Task<Respuesta> DeleteResiduosConstruccionDemolicionGestor(int ResiduosConstruccionDemolicionGestorId, string pUsuarioModificacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Residuos_Construccion_Demolicion_Gestor, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                ManejoResiduosConstruccionDemolicionGestor ManejoResiduosConstruccionDemolicionGestorOld = _context.ManejoResiduosConstruccionDemolicionGestor.Find(ResiduosConstruccionDemolicionGestorId);
-
-                if (ManejoResiduosConstruccionDemolicionGestorOld == null)
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "ManejoResiduosConstruccionDemolicionGestor no encontrado".ToUpper())
-                    };
-                }
-                ManejoResiduosConstruccionDemolicionGestorOld.UsuarioModificacion = pUsuarioModificacion;
-                ManejoResiduosConstruccionDemolicionGestorOld.FechaModificacion = DateTime.Now;
-                ManejoResiduosConstruccionDemolicionGestorOld.Eliminado = true;
-
-                await _context.SaveChangesAsync();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
-                };
-
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
-                };
-            }
-
-
-        }
-
-        public async Task<Respuesta> DeleteManejoMaterialesInsumosProveedor(int ManejoMaterialesInsumosProveedorId, string pUsuarioModificacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Manejo_Materiales_Insumo_Proveedor, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedorDelete = _context.ManejoMaterialesInsumosProveedor.Find(ManejoMaterialesInsumosProveedorId);
-
-                if (manejoMaterialesInsumosProveedorDelete == null)
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "ManejoMaterialesInsumosProveedor no encontrado".ToUpper())
-                    };
-                }
-                manejoMaterialesInsumosProveedorDelete.UsuarioModificacion = pUsuarioModificacion;
-                manejoMaterialesInsumosProveedorDelete.FechaModificacion = DateTime.Now;
-                manejoMaterialesInsumosProveedorDelete.Eliminado = true;
-
-                await _context.SaveChangesAsync();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
-                };
-
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
-                };
-            }
-
-
-        }
-
-        private string ValidarEstadoDeObraBySeguimientoSemanalId(int SeguimientoSemanalId)
-        {
-
-            //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
-            ///Validar Estado De obra 
-            //Actualizar estado obra 
-
-
-            SeguimientoSemanal seguimientoSemanal =
-                _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == SeguimientoSemanalId)
-                        .Include(c => c.ContratacionProyecto)
-                        .Include(s => s.SeguimientoSemanalAvanceFisico)
-                            .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
-                            .ThenInclude(r => r.Programacion)
-                            .FirstOrDefault();
-
-            decimal? ProgramacionAcumuladaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.ProgramacionSemanal);
-            decimal? ProgramacionEjecutadaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.AvanceFisicoSemanal); ;
-
-
-            int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList().Count();
-            decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
-            decimal SegundoTercio = PrimerTercio * 2;
-
-            if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
-            {
-                /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
-                if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra)
-                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_normal;
-
-                /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
-                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra)
-                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_avanzada;
-
-                /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
-                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra)
-                    return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_retrazada;
-
-                //primer tercio  => avance del proyecto no debe ser menor al 20%   = critico
-                if (seguimientoSemanal.NumeroSemana >= PrimerTercio && seguimientoSemanal.NumeroSemana < SegundoTercio)
-                    if (ProgramacionEjecutadaObra < 20)
-                        return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
-
-                //segunto tercio  => avance del proyecto no debe ser menor al 60%   critico
-                if (seguimientoSemanal.NumeroSemana >= SegundoTercio)
-                    if (ProgramacionEjecutadaObra < 60)
-                        return ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
-
-                return ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
-            }
-            else
-            {
-                return ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
-            }
-        }
-
+          
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
@@ -1145,18 +1197,7 @@ namespace asivamosffie.services
 
             }
         }
-
-        private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
-        {
-            bool EsCompleto = true;
-            Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
-            {
-                if (item.AvanceFisicoCapitulo == null)
-                    EsCompleto = false;
-            });
-            return EsCompleto;
-        }
-
+         
         private void CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(ICollection<SeguimientoSemanalAvanceFisicoProgramacion> List, string strUsuario)
         {
             foreach (var item in List)
@@ -1864,40 +1905,7 @@ namespace asivamosffie.services
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
         }
-
-        private void EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(int pSeguimientoSemanalGestionObraCalidadId, int pSeguimientoSemanalGestionObraId)
-        {
-            GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio = _context.GestionObraCalidadEnsayoLaboratorio
-                                              .Where(r => r.SeguimientoSemanalGestionObraCalidadId == pSeguimientoSemanalGestionObraCalidadId)
-                                              .Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefault();
-
-            if (gestionObraCalidadEnsayoLaboratorio != null)
-            {
-                gestionObraCalidadEnsayoLaboratorio.Eliminado = true;
-
-                foreach (var EnsayoLaboratorioMuestra in gestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
-                {
-                    EnsayoLaboratorioMuestra.Eliminado = true;
-                }
-            }
-
-            //Pasar Registro Completo Ensayo Laboratorio Muestras
-            // Y estado Muestras = sin muestras
-            int SeguimientoSemanalId = _context.SeguimientoSemanalGestionObra.Find(pSeguimientoSemanalGestionObraId).SeguimientoSemanalId;
-
-            _context.Set<SeguimientoSemanal>()
-                                .Where(s => s.SeguimientoSemanalId == SeguimientoSemanalId)
-                                                                                            .Update(s => new SeguimientoSemanal
-                                                                                            {
-                                                                                                EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras,
-                                                                                                RegistroCompletoMuestras = true
-                                                                                            });
-
-
-
-
-        }
-
+         
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             if (pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId == 0)
@@ -2300,7 +2308,7 @@ namespace asivamosffie.services
                 .Where(ss => ss.SeguimientoSemanalId == pSeguimientoSemanalId)
                 .Include(cp => cp.ContratacionProyecto).ThenInclude(c => c.Contratacion).ThenInclude(ctr => ctr.Contrato)
                 .Include(cp => cp.ContratacionProyecto).ThenInclude(p => p.Proyecto).ThenInclude(id => id.InstitucionEducativa)
-                .Include(cp => cp.ContratacionProyecto).ThenInclude(p => p.Proyecto).ThenInclude(id => id.Sede).FirstOrDefault();
+                .Include(cp => cp.ContratacionProyecto).ThenInclude(p => p.Proyecto).ThenInclude(id => id.Sede).AsNoTracking().FirstOrDefault();
 
             template = template
                       .Replace("[LLAVE_MEN]", seguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen)
@@ -2396,12 +2404,14 @@ namespace asivamosffie.services
 
             List<SeguimientoSemanal> ListSeguimientoSemanal =
                 _context.SeguimientoSemanal
-                                        .Where(
-                                                 r => r.RegistroCompleto == true
-                                                 && r.FechaRegistroCompletoInterventor.HasValue
-                                                 && r.RegistroCompletoVerificar == false
-                                                 && r.FechaRegistroCompletoInterventor > dateTimeOneWeeklyOverdue
-                                               ).OrderByDescending(r => r.SeguimientoSemanalId).ToList();
+                                            .Where(
+                                                     r => r.RegistroCompleto == true
+                                                     && r.FechaRegistroCompletoInterventor.HasValue
+                                                     && r.RegistroCompletoVerificar == false
+                                                     && r.FechaRegistroCompletoInterventor > dateTimeOneWeeklyOverdue
+                                                   )
+                                            .OrderByDescending(r => r.SeguimientoSemanalId)
+                                            .ToList();
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                               new List<EnumeratorPerfil>{
