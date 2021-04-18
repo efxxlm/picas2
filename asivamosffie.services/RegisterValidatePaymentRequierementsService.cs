@@ -1564,13 +1564,13 @@ namespace asivamosffie.services
         {
             List<VProyectosXcontrato> ListProyectos =
                                              await _context.VProyectosXcontrato
-                                            .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
-                                            (
-                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
-                                            (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
-                                             && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                            )) 
+                                                .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
+                                                (
+                                                 (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                 && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                                                (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                 && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                                )) 
                                             .ToListAsync();
 
             List<VSaldoPresupuestalXproyecto> LVSaldoPresupuestalXproyecto = _context.VSaldoPresupuestalXproyecto.ToList();
@@ -1578,10 +1578,9 @@ namespace asivamosffie.services
             List<dynamic> dynamics = new List<dynamic>();
 
             List<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.ToList();
- 
+            
             foreach (var item in ListProyectos)
-            {
-
+            { 
                 VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
 
                 if (VSaldoPresupuestalXproyecto != null && DisponibilidadPresupuestalProyecto.Any(d => d.ProyectoId == item.ProyectoId))
