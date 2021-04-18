@@ -31,5 +31,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> RechazarPorSupervisor(NovedadContractual pNovedadContractual, string pUsuario);
         Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId);
         Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId);
+        Task<Respuesta> CancelarNovedad(int pNovedadContractualId, string pUsuario);
     }
 }

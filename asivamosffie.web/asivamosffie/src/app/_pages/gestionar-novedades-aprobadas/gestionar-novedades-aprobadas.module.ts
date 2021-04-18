@@ -17,6 +17,7 @@ import { RegistrarRevisionNovedadComponent } from './components/registrar-revisi
 import { RegistrarFirmasComponent } from './components/registrar-firmas/registrar-firmas.component';
 import { VerDetalleTramiteComponent } from './components/ver-detalle-tramite/ver-detalle-tramite.component';
 import { FormDetallarSolicitudNovedadComponent } from './components/form-detallar-solicitud-novedad/form-detallar-solicitud-novedad.component';
+import { DialogRechazarSolicitudComponent } from './components/dialog-rechazar-solicitud/dialog-rechazar-solicitud.component'
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { FormDetallarSolicitudNovedadComponent } from './components/form-detalla
     RegistrarRevisionNovedadComponent,
     RegistrarFirmasComponent,
     VerDetalleTramiteComponent,
-    FormDetallarSolicitudNovedadComponent
+    FormDetallarSolicitudNovedadComponent,
+    DialogRechazarSolicitudComponent
   ],
   imports: [
     CommonModule,

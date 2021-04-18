@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { pid } from 'process';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { environment } from 'src/environments/environment';
@@ -108,6 +109,10 @@ export class ContractualNoveltyService {
   GetFuentesByAportante(pId)
   {
     return this.http.get<FuenteFinanciacion[]>( `${ this.urlApi }/GetFuentesByAportante?pConfinanciacioAportanteId=${pId}` ); 
+  }
+
+  CancelarNovedad( pId ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/CancelarNovedad?pNovedadContractualId=${pId}`, null ); 
   }
 
 }

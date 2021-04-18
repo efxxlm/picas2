@@ -361,5 +361,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("CancelarNovedad")]
+        public async Task<IActionResult> CancelarNovedad([FromQuery] int pNovedadContractualId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.CancelarNovedad(pNovedadContractualId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

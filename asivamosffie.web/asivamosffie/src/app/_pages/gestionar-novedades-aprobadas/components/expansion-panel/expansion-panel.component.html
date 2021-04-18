@@ -81,7 +81,7 @@
     >
   </app-registrar-revision-novedad>
   </mat-expansion-panel>
-  <mat-expansion-panel class="expansion-style">
+  <mat-expansion-panel class="expansion-style" *ngIf="novedad.estadoCodigo === '17'">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
         'sin-diligenciar':true,

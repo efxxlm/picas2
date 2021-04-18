@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-tabla-novedades-aprobadas',
@@ -83,5 +84,14 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
   }
 
   
+  cancelarNovedad(id){
+
+    this.contractualNoveltyService.CancelarNovedad( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }  
 
 }
