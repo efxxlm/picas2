@@ -84,7 +84,8 @@
                 <app-gestion-de-obra    [seguimientoSemanal]="seguimientoSemanal"
                                         [tipoObservaciones]="tipoObservaciones"
                                         [esRegistroNuevo]="esRegistroNuevo"
-                                        (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )">
+                                        (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"
+                                        (dataGestionAmbiental)="dataGestionAmbiental = $event">
                 </app-gestion-de-obra>
             </mat-expansion-panel>
 

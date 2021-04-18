@@ -2,18 +2,19 @@ import { RegistrarAvanceSemanalService } from './../../../../core/_services/regi
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialog-avance-acumulado.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import * as moment from 'moment';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
   templateUrl: './tabla-avance-fisico.component.html',
   styleUrls: ['./tabla-avance-fisico.component.scss']
 })
-export class TablaAvanceFisicoComponent implements OnInit {
+export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
@@ -25,6 +26,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     dataHistorial: any[] = [];
     avanceFisico: any[];
     seRealizoCambio = false;
+    seRealizoPeticion = false;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFisicoId: number;
     displayedColumns: string[]  = [
@@ -47,8 +49,17 @@ export class TablaAvanceFisicoComponent implements OnInit {
         private dialog: MatDialog,
         private datePipe: DatePipe,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     { }
+
+    ngOnDestroy(): void {
+        if ( this.seRealizoCambio === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataAvanceFisico( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataAvanceFisico( undefined );
+        }
+    }
 
     ngOnInit(): void {
         this.getDataTable();
@@ -306,12 +317,13 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 avanceFisicoSemanal: this.tablaAvanceFisico.data[ 0 ][ 'avanceFisicoSemana' ]
             }
         ];
+
         pSeguimientoSemanal.seguimientoSemanalAvanceFisico = seguimientoSemanalAvanceFisico;
-        console.log( pSeguimientoSemanal );
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.seRealizoPeticion = true;
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
                                     [
@@ -322,6 +334,39 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        const getSeguimientoSemanalAvanceFisicoProgramacion = () => {
+            const seguimientoSemanalAvanceFisicoProgramacion = [];
+            for (const flujoInversion of this.seguimientoSemanal.flujoInversion ) {
+                const programacion: any[] = this.tablaAvanceFisico.data[ 0 ][ 'avancePorCapitulo' ].filter( programacion => programacion.programacionId === flujoInversion.programacionId );
+
+                if ( programacion.length > 0 ) {
+                    seguimientoSemanalAvanceFisicoProgramacion.push(
+                        {
+                            seguimientoSemanalAvanceFisicoProgramacionId: flujoInversion.seguimientoSemanalAvanceFisicoProgramacionId,
+                            seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
+                            programacionId: flujoInversion.programacionId,
+                            avanceFisicoCapitulo: programacion[0].avanceFisicoCapitulo
+                        }
+                    );
+                }
+            }
+            
+            return seguimientoSemanalAvanceFisicoProgramacion;
+        }
+        const seguimientoSemanalAvanceFisico = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanalId,
+                seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
+                seguimientoSemanalAvanceFisicoProgramacion: getSeguimientoSemanalAvanceFisicoProgramacion(),
+                programacionSemanal: this.avanceFisico[ 0 ].programacionSemana,
+                avanceFisicoSemanal: this.tablaAvanceFisico.data[ 0 ][ 'avanceFisicoSemana' ]
+            }
+        ];
+
+        return seguimientoSemanalAvanceFisico;
     }
 
 }

@@ -1,18 +1,19 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-gestion-calidad',
   templateUrl: './gestion-calidad.component.html',
   styleUrls: ['./gestion-calidad.component.scss']
 })
-export class GestionCalidadComponent implements OnInit {
+export class GestionCalidadComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
@@ -53,12 +54,27 @@ export class GestionCalidadComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private commonSvc: CommonService,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.commonSvc.listaTipoEnsayos()
             .subscribe( tipo => this.tipoEnsayos = tipo );
         this.crearFormulario();
         this.getCantidadEnsayos();
+    }
+
+    ngOnDestroy(): void {
+        if ( this.seRealizoPeticion === false ) {
+            if ( this.formGestionCalidad.dirty === true || this.ensayosLaboratorio.dirty === true ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
+            }
+
+            if ( this.formGestionCalidad.dirty === false && this.ensayosLaboratorio.dirty === false ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
+            }
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -119,7 +135,6 @@ export class GestionCalidadComponent implements OnInit {
                     this.SeguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
                     this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( `${ this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length }` );
                     this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).setValue( this.gestionObraCalidad.seRealizaronEnsayosLaboratorio );
-                    this.formGestionCalidad.markAsDirty();
 
                     if ( this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false ) {
                         if ( this.esVerDetalle === false ) {
@@ -455,7 +470,6 @@ export class GestionCalidadComponent implements OnInit {
             );
         } );
         const pSeguimientoSemanal = this.seguimientoSemanal;
-        this.seRealizoPeticion = true;
         const seguimientoSemanalGestionObra = [
             {
                 seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
@@ -493,8 +507,8 @@ export class GestionCalidadComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    console.log( this.routes.url );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
                                     [
@@ -505,6 +519,29 @@ export class GestionCalidadComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        this.ensayosLaboratorio.controls.forEach( value => {
+            value.get( 'fechaEntregaResultados' ).setValue(
+                value.get( 'fechaEntregaResultados' ).value !== null ?
+                new Date( value.get( 'fechaEntregaResultados' ).value ).toISOString() : null
+            );
+            value.get( 'fechaTomaMuestras' ).setValue(
+                value.get( 'fechaTomaMuestras' ).value !== null ?
+                new Date( value.get( 'fechaTomaMuestras' ).value ).toISOString() : null
+            );
+        } )
+
+        return  [
+            {
+                seguimientoSemanalGestionObraCalidadId: this.SeguimientoSemanalGestionObraCalidadId,
+                seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                seRealizaronEnsayosLaboratorio: this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value,
+                gestionObraCalidadEnsayoLaboratorio: this.formGestionCalidad.get( 'ensayosLaboratorio' ).dirty === true ?
+                this.formGestionCalidad.get( 'ensayosLaboratorio' ).value : null
+            }
+        ]
     }
 
 }

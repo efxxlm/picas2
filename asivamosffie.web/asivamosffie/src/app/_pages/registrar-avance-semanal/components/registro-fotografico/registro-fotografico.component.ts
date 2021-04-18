@@ -1,22 +1,24 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-registro-fotografico',
   templateUrl: './registro-fotografico.component.html',
   styleUrls: ['./registro-fotografico.component.scss']
 })
-export class RegistroFotograficoComponent implements OnInit {
+export class RegistroFotograficoComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoRegistroFotografico: any;
+    seRealizoPeticion = false;
     verAyuda = false;
     formRegistroFotografico: FormGroup;
     seguimientoSemanalId: number;
@@ -45,9 +47,17 @@ export class RegistroFotograficoComponent implements OnInit {
         private dialog: MatDialog,
         private fb: FormBuilder,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
+    }
+    ngOnDestroy(): void {
+        if ( this.formRegistroFotografico.dirty === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataRegistroFotografico( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataRegistroFotografico( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -108,7 +118,6 @@ export class RegistroFotograficoComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formRegistroFotografico.value );
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalRegistroFotografico = [
             {
@@ -125,6 +134,7 @@ export class RegistroFotograficoComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -136,6 +146,21 @@ export class RegistroFotograficoComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        const seguimientoSemanalRegistroFotografico = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                seguimientoSemanalRegistroFotograficoId: this.seguimientoSemanalRegistroFotograficoId,
+                urlSoporteFotografico:  this.formRegistroFotografico.get( 'urlSoporteFotografico' ).value !== null ?
+                                        this.formRegistroFotografico.get( 'urlSoporteFotografico' ).value : null,
+                descripcion:    this.formRegistroFotografico.get( 'descripcion' ).value !== null ?
+                this.formRegistroFotografico.get( 'descripcion' ).value : null
+            }
+        ];
+
+        return seguimientoSemanalRegistroFotografico
     }
 
 }

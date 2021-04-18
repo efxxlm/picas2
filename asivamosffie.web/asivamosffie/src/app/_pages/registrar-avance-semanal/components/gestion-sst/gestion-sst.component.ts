@@ -2,23 +2,25 @@ import { Router } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-gestion-sst',
   templateUrl: './gestion-sst.component.html',
   styleUrls: ['./gestion-sst.component.scss']
 })
-export class GestionSSTComponent implements OnInit {
+export class GestionSSTComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionSst: any;
     formSst: FormGroup;
+    seRealizoPeticion = false;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraSeguridadSaludId = 0;
@@ -51,9 +53,17 @@ export class GestionSSTComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
+    }
+    ngOnDestroy(): void {
+        if ( this.formSst.dirty === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionSst( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionSst( undefined );
+        }
     }
 
     ngOnInit(): void {
@@ -93,7 +103,6 @@ export class GestionSSTComponent implements OnInit {
                     if ( this.gestionObraSst.cantidadAccidentes !== undefined ) {
                         this.seguimientoSemanalGestionObraSeguridadSaludId = this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId;
                         this.formSst.get( 'cantidadAccidentes' ).setValue( this.gestionObraSst.cantidadAccidentes !== undefined ? `${ this.gestionObraSst.cantidadAccidentes }` : '' );
-                        this.formSst.markAsDirty();
                     }
                     this.formSst.patchValue(
                         {
@@ -267,6 +276,7 @@ export class GestionSSTComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -278,6 +288,45 @@ export class GestionSSTComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        const causas = [];
+        const causaSeleccionadas = this.formSst.get( 'seguridadSaludCausaAccidente' ).value;
+        if ( causaSeleccionadas !== null && causaSeleccionadas.length > 0 ) {
+            for ( const causa of causaSeleccionadas ) {
+                causas.push(
+                    {
+                        seguimientoSemanalGestionObraSeguridadSaludId: this.seguimientoSemanalGestionObraSeguridadSaludId,
+                        causaAccidenteCodigo: causa.codigo
+                    }
+                );
+            }
+        }
+
+        return [
+            {
+                seguimientoSemanalGestionObraSeguridadSaludId: this.seguimientoSemanalGestionObraSeguridadSaludId,
+                seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                cantidadAccidentes: this.formSst.get( 'cantidadAccidentes' ).value.length > 0 ?
+                                    this.formSst.get( 'cantidadAccidentes' ).value : '',
+                seguridadSaludCausaAccidente: causas,
+                seRealizoCapacitacion:  this.formSst.get( 'seRealizoCapacitacion' ).value !== null ?
+                                        this.formSst.get( 'seRealizoCapacitacion' ).value : null,
+                temaCapacitacion:   this.formSst.get( 'temaCapacitacion' ).value !== null ?
+                                    this.formSst.get( 'temaCapacitacion' ).value : null,
+                seRealizoRevisionElementosProteccion:   this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value !== null ?
+                                                        this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value : null,
+                cumpleRevisionElementosProyeccion:  this.formSst.get( 'cumpleRevisionElementosProyeccion' ).value !== null ?
+                                                    this.formSst.get( 'cumpleRevisionElementosProyeccion' ).value : null,
+                seRealizoRevisionSenalizacion:  this.formSst.get( 'seRealizoRevisionSenalizacion' ).value !== null ?
+                                                this.formSst.get( 'seRealizoRevisionSenalizacion' ).value : null,
+                cumpleRevisionSenalizacion: this.formSst.get( 'cumpleRevisionSenalizacion' ).value !== null ?
+                                            this.formSst.get( 'cumpleRevisionSenalizacion' ).value : null,
+                urlSoporteGestion:  this.formSst.get( 'urlSoporteGestion' ).value.length > 0 ?
+                                    this.formSst.get( 'urlSoporteGestion' ).value : null
+            }
+        ]
     }
 
 }

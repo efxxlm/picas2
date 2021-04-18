@@ -1,22 +1,24 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-gestion-social',
   templateUrl: './gestion-social.component.html',
   styleUrls: ['./gestion-social.component.scss']
 })
-export class GestionSocialComponent implements OnInit {
+export class GestionSocialComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionSocial: any;
+    seRealizoPeticion = false;
     formGestionSocial: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
@@ -52,11 +54,20 @@ export class GestionSocialComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
         this.totalEmpleos();
 
+    }
+
+    ngOnDestroy(): void {
+        if ( this.formGestionSocial.dirty === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionSocial( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionSocial( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -191,7 +202,6 @@ export class GestionSocialComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formGestionSocial.value );
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalGestionObra = [
             {
@@ -252,6 +262,7 @@ export class GestionSocialComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -263,6 +274,29 @@ export class GestionSocialComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        return [
+            {
+                seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                seguimientoSemanalGestionObraSocialId: this.seguimientoSemanalGestionObraSocialId,
+                cantidadEmpleosDirectos:    this.formGestionSocial.get( 'cantidadEmpleosDirectos' ).value.length > 0 ?
+                                            this.formGestionSocial.get( 'cantidadEmpleosDirectos' ).value : '',
+                cantidadEmpleosIndirectos:  this.formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value.length > 0 ?
+                                            this.formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value : '',
+                cantidadTotalEmpleos:   this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value.length > 0 ?
+                                        this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value : '',
+                seRealizaronReuniones:  this.formGestionSocial.get( 'seRealizaronReuniones' ).value !== null ?
+                                        this.formGestionSocial.get( 'seRealizaronReuniones' ).value : null,
+                temaComunidad:  this.formGestionSocial.get( 'temaComunidad' ).value !== null ?
+                                this.formGestionSocial.get( 'temaComunidad' ).value : null,
+                conclusion: this.formGestionSocial.get( 'conclusion' ).value !== null ?
+                            this.formGestionSocial.get( 'conclusion' ).value : null,
+                urlSoporteGestion:  this.formGestionSocial.get( 'urlSoporteGestion' ).value.length > 0 ?
+                                    this.formGestionSocial.get( 'urlSoporteGestion' ).value : '',
+            }
+        ]
     }
 
 }

@@ -336,8 +336,7 @@
                         <button mat-button
                                 color="warn"
                                 class="btn-guardar"
-                                type="submit"
-                                [disabled]="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).dirty === false">
+                                type="submit">
                                 <img  src="assets/img/icon/guardar.svg">
                         </button>
                     </div>
@@ -348,7 +347,7 @@
                       color="warn"
                       class="btn-guardar"
                       type="submit"
-                      [disabled]="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).dirty === false">
+                      [disabled]="formGestionAmbiental.dirty === false">
                       <img  src="assets/img/icon/guardar.svg">
               </button>
             </div>

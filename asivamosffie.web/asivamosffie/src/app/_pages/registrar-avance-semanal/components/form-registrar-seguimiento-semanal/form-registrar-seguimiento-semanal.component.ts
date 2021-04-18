@@ -1,14 +1,15 @@
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-form-registrar-seguimiento-semanal',
   templateUrl: './form-registrar-seguimiento-semanal.component.html',
   styleUrls: ['./form-registrar-seguimiento-semanal.component.scss']
 })
-export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
+export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestroy {
 
   seguimientoSemanal: any;
   tipoObservaciones: any;
@@ -18,10 +19,12 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
   semaforoRegistroFotografico = 'sin-diligenciar';
   semaforoComiteObra = 'sin-diligenciar';
   esRegistroNuevo: any;
+  dataGestionAmbiental: any;
 
   constructor(
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
     private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+    private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService,
     private activatedRoute: ActivatedRoute )
   {
     this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -74,6 +77,10 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
             } );
         }
       );
+  }
+
+  ngOnDestroy() {
+    this.guardadoParcialAvanceSemanalSvc.getGuardadoParcial( this.seguimientoSemanal )
   }
 
   ngOnInit(): void {

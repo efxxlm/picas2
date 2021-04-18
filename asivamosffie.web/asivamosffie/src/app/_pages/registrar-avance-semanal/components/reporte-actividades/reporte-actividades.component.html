@@ -97,7 +97,9 @@
                                                         [esSiguienteSemana]="false"
                                                         [reporteActividad]="reporteActividad"
                                                         [esRegistroNuevo]="esRegistroNuevo"
-                                                        (reporteDeActividades)="guardar( $event )">
+                                                        [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
+                                                        [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
+                                                        (reporteDeActividades)="guardar()">
             </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
@@ -114,7 +116,9 @@
                                                         [esSiguienteSemana]="true"
                                                         [reporteActividad]="reporteActividad"
                                                         [esRegistroNuevo]="esRegistroNuevo"
-                                                        (reporteDeActividades)="guardar( $event )">
+                                                        [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
+                                                        [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
+                                                        (reporteDeActividades)="guardar()">
             </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>

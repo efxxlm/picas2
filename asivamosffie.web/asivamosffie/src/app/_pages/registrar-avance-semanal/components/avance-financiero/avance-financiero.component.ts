@@ -1,22 +1,24 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-avance-financiero',
   templateUrl: './avance-financiero.component.html',
   styleUrls: ['./avance-financiero.component.scss']
 })
-export class AvanceFinancieroComponent implements OnInit {
+export class AvanceFinancieroComponent implements OnInit, OnDestroy {
 
     @Input() esVerDetalle = false;
     @Input() esRegistroNuevo: boolean;
     @Input() seguimientoSemanal: any;
     @Input() avanceFinancieroObs: string;
+    seRealizoPeticion = false;
     formAvanceFinanciero: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFinancieroId: number;
@@ -43,9 +45,17 @@ export class AvanceFinancieroComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
+    }
+    ngOnDestroy(): void {
+        if ( this.formAvanceFinanciero.dirty === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataAvanceFinanciero( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataAvanceFinanciero( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -128,6 +138,7 @@ export class AvanceFinancieroComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -139,6 +150,22 @@ export class AvanceFinancieroComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        const seguimientoSemanalAvanceFinanciero = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                seguimientoSemanalAvanceFinancieroId: this.seguimientoSemanalAvanceFinancieroId,
+                requiereObservacion:    this.formAvanceFinanciero.get( 'requiereObservacion' ).value !== null ?
+                                        this.formAvanceFinanciero.get( 'requiereObservacion' ).value : null,
+                observacion:    this.formAvanceFinanciero.get( 'observacion' ).value !== null ?
+                                this.formAvanceFinanciero.get( 'observacion' ).value : null,
+                generarAlerta:  this.formAvanceFinanciero.get( 'generarAlerta' ).value !== null ?
+                                this.formAvanceFinanciero.get( 'generarAlerta' ).value : null
+            }
+        ];
+        return seguimientoSemanalAvanceFinanciero;
     }
 
 }

@@ -1,23 +1,25 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-reporte-actividades',
   templateUrl: './reporte-actividades.component.html',
   styleUrls: ['./reporte-actividades.component.scss']
 })
-export class ReporteActividadesComponent implements OnInit {
+export class ReporteActividadesComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoReporteActividad: any;
     @Output() estadoSemaforoReporte = new EventEmitter();
+    seRealizoPeticion = false;
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
@@ -48,9 +50,24 @@ export class ReporteActividadesComponent implements OnInit {
        private fb: FormBuilder,
        private dialog: MatDialog,
        private routes: Router,
-       private avanceSemanalSvc: RegistrarAvanceSemanalService )
+       private avanceSemanalSvc: RegistrarAvanceSemanalService,
+       private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
+    }
+
+    ngOnDestroy(): void {
+        if ( this.seRealizoPeticion === false ) {
+            if ( this.formResumenGeneral.dirty === true || this.formResumenGeneral.get( 'formActividadesRealizadas' ).dirty === true || this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).dirty === true ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataReporteActividades( this.guardadoParcial(), this.seRealizoPeticion )
+            }
+
+            if ( this.formResumenGeneral.dirty === false && this.formResumenGeneral.get( 'formActividadesRealizadas' ).dirty === false && this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).dirty === false ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataReporteActividades( undefined )
+            }
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataReporteActividades( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -75,12 +92,7 @@ export class ReporteActividadesComponent implements OnInit {
                             }
                         );
                 }
-                this.formResumenGeneral.setValue(
-                    {
-                        resumenEstadoContrato:  this.reporteActividad.resumenEstadoContrato !== undefined ?
-                                                this.reporteActividad.resumenEstadoContrato : null
-                    }
-                );
+                this.formResumenGeneral.get( 'resumenEstadoContrato' ).setValue( this.reporteActividad.resumenEstadoContrato !== undefined ? this.reporteActividad.resumenEstadoContrato : null );
                 // Semaforo reporte
                 if ( this.reporteActividad.registroCompletoEstadoContrato === true ) {
                     this.semaforoReporte = 'completo';
@@ -141,7 +153,17 @@ export class ReporteActividadesComponent implements OnInit {
 
     crearFormulario() {
         this.formResumenGeneral = this.fb.group({
-            resumenEstadoContrato: [ null ]
+            resumenEstadoContrato: [ null ],
+            formActividadesRealizadas: this.fb.group({
+                actividadTecnica: [ null ],
+                actividadLegal: [ null ],
+                actividadAdministrativaFinanciera: [ null ]
+            }),
+            formActividadesRealizadasSiguienteSemana: this.fb.group({
+                actividadTecnicaSiguiente: [ null ],
+                actividadLegalSiguiente: [ null ],
+                actividadAdministrativaFinancieraSiguiente: [ null ]
+            })
         });
     }
 
@@ -166,31 +188,27 @@ export class ReporteActividadesComponent implements OnInit {
         });
     }
 
-    guardar( reporte?: any ) {
+    guardar( ) {
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalReporteActividad: any = [
             {
                 seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
                 seguimientoSemanalReporteActividadId: this.seguimientoSemanalReporteActividadId,
-                resumenEstadoContrato:  this.formResumenGeneral.get( 'resumenEstadoContrato' ).value !== null ?
-                                        this.formResumenGeneral.get( 'resumenEstadoContrato' ).value : null
+                resumenEstadoContrato:  this.formResumenGeneral.get( 'resumenEstadoContrato' ).value !== null ? this.formResumenGeneral.get( 'resumenEstadoContrato' ).value : null,
+                actividadTecnica: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadTecnica' ).value,
+                actividadLegal: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadLegal' ).value,
+                actividadAdministrativaFinanciera: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadAdministrativaFinanciera' ).value,
+                actividadTecnicaSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadTecnicaSiguiente' ).value,
+                actividadLegalSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadLegalSiguiente' ).value,
+                actividadAdministrativaFinancieraSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadAdministrativaFinancieraSiguiente' ).value
             }
-        ];
-        if ( reporte !== undefined ) {
-            seguimientoSemanalReporteActividad[0].actividadTecnicaSiguiente = reporte.reporteActividadSiguiente.actividadTecnicaSiguiente;
-            seguimientoSemanalReporteActividad[0].actividadLegalSiguiente = reporte.reporteActividadSiguiente.actividadLegalSiguiente;
-            seguimientoSemanalReporteActividad[0]
-                .actividadAdministrativaFinancieraSiguiente = reporte.reporteActividadSiguiente.actividadAdministrativaFinancieraSiguiente;
-            seguimientoSemanalReporteActividad[0].actividadTecnica = reporte.reporteActividad.actividadTecnica;
-            seguimientoSemanalReporteActividad[0].actividadLegal = reporte.reporteActividad.actividadLegal;
-            seguimientoSemanalReporteActividad[0]
-                .actividadAdministrativaFinanciera = reporte.reporteActividad.actividadAdministrativaFinanciera;
-        }
+        ]
 
         pSeguimientoSemanal.seguimientoSemanalReporteActividad = seguimientoSemanalReporteActividad;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -202,6 +220,24 @@ export class ReporteActividadesComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial( ) {
+        const seguimientoSemanalReporteActividad: any = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                seguimientoSemanalReporteActividadId: this.seguimientoSemanalReporteActividadId,
+                resumenEstadoContrato:  this.formResumenGeneral.get( 'resumenEstadoContrato' ).value !== null ? this.formResumenGeneral.get( 'resumenEstadoContrato' ).value : null,
+                actividadTecnica: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadTecnica' ).value,
+                actividadLegal: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadLegal' ).value,
+                actividadAdministrativaFinanciera: this.formResumenGeneral.get( 'formActividadesRealizadas' ).get( 'actividadAdministrativaFinanciera' ).value,
+                actividadTecnicaSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadTecnicaSiguiente' ).value,
+                actividadLegalSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadLegalSiguiente' ).value,
+                actividadAdministrativaFinancieraSiguiente: this.formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' ).get( 'actividadAdministrativaFinancieraSiguiente' ).value
+            }
+        ]
+
+        return seguimientoSemanalReporteActividad
     }
 
 }

@@ -10,6 +10,8 @@ import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarA
 })
 export class FormReporteActividadesRealizadasComponent implements OnInit {
 
+    @Input() formActividadesRealizadas: FormGroup;
+    @Input() formActividadesRealizadasSiguienteSemana: FormGroup;
     @Input() esSiguienteSemana: boolean;
     @Input() esVerDetalle = false;
     @Input() esRegistroNuevo: boolean;
@@ -18,8 +20,6 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() seguimientoSemanal: any;
     @Input() seguimientoSemanalReporteActividadId = 0;
     @Output() reporteDeActividades = new EventEmitter();
-    formActividadesRealizadas: FormGroup;
-    formActividadesRealizadasSiguienteSemana: FormGroup;
     tablaHistorial = new MatTableDataSource();
     tablaHistorialSiguiente = new MatTableDataSource();
     dataHistorial: any[] = [];
@@ -45,8 +45,6 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         private fb: FormBuilder,
         private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService )
     {
-        this.crearFormulario();
-        this.crearFormularioSiguienteSemana();
     }
 
     ngOnInit(): void {
@@ -126,23 +124,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.esSiguienteSemana === true ) {
-            this.reporteDeActividades.emit(
-                {
-                    esSiguienteSemana: this.esSiguienteSemana,
-                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
-                    reporteActividad: this.formActividadesRealizadas.value
-                }
-            );
-        } else {
-            this.reporteDeActividades.emit(
-                {
-                    esSiguienteSemana: this.esSiguienteSemana,
-                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
-                    reporteActividad: this.formActividadesRealizadas.value
-                }
-            );
-        }
+        this.reporteDeActividades.emit()
     }
 
 }

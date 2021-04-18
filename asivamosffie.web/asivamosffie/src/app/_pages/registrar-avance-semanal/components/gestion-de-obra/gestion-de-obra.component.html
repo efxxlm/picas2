@@ -74,7 +74,10 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
+        <app-gestion-ambiental  [seguimientoSemanal]="seguimientoSemanal"
+                                [esVerDetalle]="true"
+                                [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"
+                                (dataGestionAmbiental)="dataGestionAmbiental.emit( $event )"></app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">

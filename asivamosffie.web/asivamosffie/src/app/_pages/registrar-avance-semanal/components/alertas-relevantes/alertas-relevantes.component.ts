@@ -1,22 +1,24 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 
 @Component({
   selector: 'app-alertas-relevantes',
   templateUrl: './alertas-relevantes.component.html',
   styleUrls: ['./alertas-relevantes.component.scss']
 })
-export class AlertasRelevantesComponent implements OnInit {
+export class AlertasRelevantesComponent implements OnInit, OnDestroy {
 
     @Input() esRegistroNuevo: boolean;
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionAlertas: any;
+    seRealizoPeticion = false;
     formAlertasRelevantes: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
@@ -49,9 +51,18 @@ export class AlertasRelevantesComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
+    }
+
+    ngOnDestroy(): void {
+        if ( this.formAlertasRelevantes.dirty === true && this.seRealizoPeticion === false ) {
+            this.guardadoParcialAvanceSemanalSvc.getDataAlertasRelevantes( this.guardadoParcial(), this.seRealizoPeticion )
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataAlertasRelevantes( undefined )
+        }
     }
 
     ngOnInit(): void {
@@ -156,6 +167,7 @@ export class AlertasRelevantesComponent implements OnInit {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
+                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
@@ -167,6 +179,19 @@ export class AlertasRelevantesComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        return [
+            {
+                seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                seguimientoSemanalGestionObraAlertaId: this.seguimientoSemanalGestionObraAlertaId,
+                seIdentificaronAlertas: this.formAlertasRelevantes.get( 'seIdentificaronAlertas' ).value !== null ?
+                                        this.formAlertasRelevantes.get( 'seIdentificaronAlertas' ).value : null,
+                alerta: this.formAlertasRelevantes.get( 'alerta' ).value !== null ?
+                        this.formAlertasRelevantes.get( 'alerta' ).value : null
+            }
+        ]
     }
 
 }

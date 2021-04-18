@@ -1,9 +1,10 @@
+import { GuardadoParcialAvanceSemanalService } from './../../../../core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 import { delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -13,13 +14,14 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './gestion-ambiental.component.html',
   styleUrls: ['./gestion-ambiental.component.scss']
 })
-export class GestionAmbientalComponent implements OnInit {
+export class GestionAmbientalComponent implements OnInit, OnDestroy {
 
     @Input() esVerDetalle = false;
     @Input() esRegistroNuevo: boolean;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionAmbiental: any;
-    @Output() seRealizoPeticion = new EventEmitter<boolean>();
+    seRealizoPeticion = false;
+    @Output() dataGestionAmbiental = new EventEmitter<any>();
     formGestionAmbiental: FormGroup;
     tipoActividades: Dominio[] = [];
     seguimientoSemanalId: number;
@@ -71,11 +73,25 @@ export class GestionAmbientalComponent implements OnInit {
         private commonSvc: CommonService,
         private dialog: MatDialog,
         private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
         this.getListaActividades();
         this.getCantidadActividades();
+    }
+    ngOnDestroy(): void {
+        if ( this.seRealizoPeticion === false ) {
+            if ( this.actividades.dirty === true || this.formGestionAmbiental.dirty === true ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionAmbiental( this.guardadoParcial(), this.seRealizoPeticion );
+            }
+
+            if ( this.actividades.dirty === false && this.formGestionAmbiental.dirty === false ) {
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionAmbiental( undefined );
+            }
+        } else {
+            this.guardadoParcialAvanceSemanalSvc.getDataGestionAmbiental( undefined );
+        }
     }
 
     ngOnInit(): void {
@@ -89,7 +105,6 @@ export class GestionAmbientalComponent implements OnInit {
 
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
                     this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).setValue( this.gestionObraAmbiental.seEjecutoGestionAmbiental );
-                    this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).markAsDirty();
                     this.gestionAmbiental = true;
                 } else {
                     this.gestionAmbiental = false;
@@ -576,6 +591,22 @@ export class GestionAmbientalComponent implements OnInit {
                     ]
                 }
             ];
+
+            if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
+                if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
+                    pSeguimientoSemanal.seguimientoSemanalGestionObra[ 0 ].seguimientoSemanalGestionObraAmbiental = [
+                        {
+                            seguimientoSemanalGestionObraAmbientalId:   gestionObra.length > 0 ?
+                                                                        gestionObra[0].seguimientoSemanalGestionObraAmbientalId : 0,
+                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value
+                        }
+                    ]
+                } else {
+                    pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+                }
+            } else {
+                pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+            }
         }
         if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && this.actividades.length > 0 ) {
 
@@ -751,7 +782,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.seRealizoPeticion.emit( true );
+                    this.seRealizoPeticion = true;
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
                                     [
@@ -762,6 +793,162 @@ export class GestionAmbientalComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    guardadoParcial() {
+        if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false ) {
+            const gestionObra =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+            this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental
+            : [];
+           
+            return [
+                {
+                    seguimientoSemanalGestionObraAmbientalId:   gestionObra.length > 0 ?
+                                                                gestionObra[0].seguimientoSemanalGestionObraAmbientalId : 0,
+                    seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value
+                }
+            ]
+        }
+        if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && this.actividades.length > 0 ) {
+
+            // GET metodo actividades seleccionadas en cada acordeon
+            const actividadSeleccionada = ( tipoActividad ) => {
+                const selectActividad = this.actividades.controls.filter(
+                    actividad =>    actividad.get( 'tipoActividad' ).value !== null
+                                    && actividad.get( 'tipoActividad' ).value.codigo === tipoActividad
+                );
+                return selectActividad.length > 0 ? selectActividad[0] : null;
+            };
+
+            // GET gestion de obra ambiental
+            const gestionObra =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+                                    this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental
+                                    : [];
+
+            // GET reactive form "Manejo de materiales e insumos"
+            const manejoMaterialInsumo = () => {
+
+                const manejoMaterial =  actividadSeleccionada( this.tipoActividadesCodigo.manejoMaterialInsumo ) !== null ?
+                                        actividadSeleccionada( this.tipoActividadesCodigo.manejoMaterialInsumo )
+                                        .get( 'manejoMaterialInsumo' )
+                                        : null;
+
+                if ( manejoMaterial !== null ) {
+                    if ( manejoMaterial.dirty === true ) {
+                        return {
+                            ManejoMaterialesInsumosId: manejoMaterial.get( 'manejoMaterialesInsumosId' ).value,
+                            manejoMaterialesInsumosProveedor: manejoMaterial.get( 'proveedores' ).value,
+                            estanProtegidosDemarcadosMateriales: manejoMaterial.get( 'estanProtegidosDemarcadosMateriales' ).value,
+                            requiereObservacion: manejoMaterial.get( 'requiereObservacion' ).value,
+                            observacion:    manejoMaterial.get( 'requiereObservacion' ).value === true
+                                            ?  manejoMaterial.get( 'observacion' ).value : null,
+                            url:  manejoMaterial.get( 'url' ).value
+                        };
+                    }   else {
+                        return  gestionObra.length > 0
+                                && gestionObra[0].manejoMaterialesInsumo !== undefined
+                                ? gestionObra[0].manejoMaterialesInsumo : manejoMaterial.value;
+                    }
+                } else {
+                    return  gestionObra.length > 0
+                            && gestionObra[0].manejoMaterialesInsumo !== undefined ? gestionObra[0].manejoMaterialesInsumo : null;
+                }
+            };
+            // GET reactive form "Residuos de construccion y demolicion"
+            const manejoResiduosConstruccionDemolicion = () => {
+
+                const residuoConstruccion =
+                    actividadSeleccionada( this.tipoActividadesCodigo.manejoResiduosConstruccion ) !== null ?
+                    actividadSeleccionada( this.tipoActividadesCodigo.manejoResiduosConstruccion )
+                    .get( 'manejoResiduosConstruccion' )
+                    : null;
+
+                if ( residuoConstruccion !== null ) {
+                    if ( residuoConstruccion.dirty === true ) {
+                        console.log( 'condicion 1' );
+                        return {
+                            manejoResiduosConstruccionDemolicionId: residuoConstruccion.get('manejoResiduosConstruccionDemolicionId').value,
+                            estaCuantificadoRCD: residuoConstruccion.get( 'estaCuantificadoRCD' ).value,
+                            requiereObservacion: residuoConstruccion.get( 'requiereObservacion' ).value,
+                            observacion: residuoConstruccion.get( 'observacion' ).value,
+                            manejoResiduosConstruccionDemolicionGestor: residuoConstruccion.get( 'manejoResiduosConstruccionDemolicionGestor' ).value,
+                            seReutilizadorResiduos: residuoConstruccion.get( 'seReutilizadorResiduos' ).value,
+                            cantidadToneladas: residuoConstruccion.get( 'cantidadToneladas' ).value
+                        };
+                    } else {
+                        return  gestionObra.length > 0 && gestionObra[0].manejoResiduosConstruccionDemolicion !== undefined
+                        ? gestionObra[0].manejoResiduosConstruccionDemolicion : residuoConstruccion.value;
+                    }
+                } else {
+                    return  gestionObra.length > 0
+                            && gestionObra[0].manejoResiduosConstruccionDemolicion !== undefined
+                    ? gestionObra[0].manejoResiduosConstruccionDemolicion : null;
+                }
+            };
+            // GET reactive form "Residuos peligrosos y especiales"
+            const manejoResiduosPeligrososEspeciales = () => {
+                const residuosPeligrosos =  actividadSeleccionada( this.tipoActividadesCodigo.manejoResiduosPeligrosos ) !== null ?
+                                            actividadSeleccionada( this.tipoActividadesCodigo.manejoResiduosPeligrosos )
+                                            .get( 'manejoResiduosPeligrosos' )
+                                            : null;
+                if ( residuosPeligrosos !== null ) {
+                    if ( residuosPeligrosos.dirty === true ) {
+                        return {
+                            manejoResiduosPeligrososEspecialesId: residuosPeligrosos.get( 'manejoResiduosPeligrososEspecialesId' ).value,
+                            estanClasificados: residuosPeligrosos.get( 'estanClasificados' ).value,
+                            requiereObservacion: residuosPeligrosos.get( 'requiereObservacion' ).value,
+                            observacion: residuosPeligrosos.get( 'observacion' ).value,
+                            urlRegistroFotografico: residuosPeligrosos.get( 'urlRegistroFotografico' ).value,
+                        };
+                    } else {
+                        return  gestionObra.length > 0 && gestionObra[0].manejoResiduosPeligrososEspeciales !== undefined
+                        ? gestionObra[0].manejoResiduosPeligrososEspeciales : residuosPeligrosos.value;
+                    }
+                } else {
+                    return  gestionObra.length > 0 && gestionObra[0].manejoResiduosPeligrososEspeciales !== undefined
+                            ? gestionObra[0].manejoResiduosPeligrososEspeciales : null;
+                }
+            };
+            // GET reactive form "Otra"
+            const manejoOtro = () => {
+                const otros =   actividadSeleccionada( this.tipoActividadesCodigo.otra ) !== null ?
+                                actividadSeleccionada( this.tipoActividadesCodigo.otra )
+                                .get( 'otra' )
+                                : null;
+                if ( otros !== null ) {
+                    if ( otros.dirty === true ) {
+                        return {
+                            manejoOtroId: otros.get( 'manejoOtroId' ).value,
+                            fechaActividad: otros.get( 'fechaActividad' ).value,
+                            actividad: otros.get( 'actividad' ).value,
+                            urlSoporteGestion: otros.get( 'urlSoporteGestion' ).value
+                        };
+                    } else {
+                        return gestionObra.length > 0 && gestionObra[0].manejoOtro !== undefined ? gestionObra[0].manejoOtro : otros.value;
+                    }
+                } else {
+                    return gestionObra.length > 0 && gestionObra[0].manejoOtro !== undefined ? gestionObra[0].manejoOtro : null;
+                }
+            }
+
+            return [
+                {
+                    seguimientoSemanalGestionObraAmbientalId:   gestionObra.length > 0 ?
+                                                                gestionObra[0].seguimientoSemanalGestionObraAmbientalId : 0,
+                    seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                    seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value,
+                    manejoMaterialesInsumo: manejoMaterialInsumo(),
+                    manejoResiduosConstruccionDemolicion: manejoResiduosConstruccionDemolicion(),
+                    manejoResiduosPeligrososEspeciales: manejoResiduosPeligrososEspeciales(),
+                    manejoOtro: manejoOtro(),
+                    tieneManejoMaterialesInsumo: manejoMaterialInsumo() !== null ? true : false,
+                    tieneManejoResiduosPeligrososEspeciales: manejoResiduosPeligrososEspeciales() !== null ? true : false,
+                    tieneManejoResiduosConstruccionDemolicion: manejoResiduosConstruccionDemolicion() !== null ? true : false,
+                    tieneManejoOtro: manejoOtro() !== null ? true : false
+                }
+            ]
+        }
+
     }
 
 }
