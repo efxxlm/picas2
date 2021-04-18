@@ -527,9 +527,9 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.ObservacionApoyo)
                        .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
                            .ThenInclude(r => r.ObservacionSupervisor)
+                      .AsNoFilter()
                       .FirstOrDefaultAsync();
-
-
+                 
                 List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
                 List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();

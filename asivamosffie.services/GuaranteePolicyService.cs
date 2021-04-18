@@ -28,7 +28,7 @@ namespace asivamosffie.services
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
         {
             if (string.IsNullOrEmpty(pEstadoCodigo))
-                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync(); 
             else
                 return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
         }
@@ -64,6 +64,7 @@ namespace asivamosffie.services
                                      UsuarioModificacion = pContrato.UsuarioCreacion,
                                      FechaModificacion = DateTime.Now,
                                      RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
+                                     FechaAprobacion = ContratoPoliza.FechaAprobacion,
                                      NombreAseguradora = ContratoPoliza.NombreAseguradora,
                                      NumeroPoliza = ContratoPoliza.NumeroPoliza,
                                      NumeroCertificado = ContratoPoliza.NumeroCertificado,

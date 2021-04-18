@@ -220,16 +220,16 @@ namespace asivamosffie.services
                 else
                     CompleteRecord = false;
 
-                  await _context.Set<SolicitudPago>()
-                                .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                                .UpdateAsync(r => new SolicitudPago()
-                                {
-                                    TieneObservacion = TieneAlgunaObservacionPendiente,
-                                    EstadoCodigo = EstadoSolicitudPago,
-                                    RegistroCompleto = CompleteRecord,
-                                    FechaRegistroCompleto = FechaRegistroCompleto,
-                                    TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
-                                });
+                await _context.Set<SolicitudPago>()
+                              .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                              .UpdateAsync(r => new SolicitudPago()
+                              {
+                                  TieneObservacion = TieneAlgunaObservacionPendiente,
+                                  EstadoCodigo = EstadoSolicitudPago,
+                                  RegistroCompleto = CompleteRecord,
+                                  FechaRegistroCompleto = FechaRegistroCompleto,
+                                  TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
+                              });
             }
             catch (Exception e)
             {
@@ -1562,24 +1562,29 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
         {
-            List<VProyectosXcontrato> ListProyectos = await _context.VProyectosXcontrato
+            List<VProyectosXcontrato> ListProyectos =
+                                             await _context.VProyectosXcontrato
                                             .Where(r => r.LlaveMen.Contains(pLlaveMen) &&
                                             (
                                              (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
                                              && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
                                             (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                              && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                            )).ToListAsync();
+                                            )) 
+                                            .ToListAsync();
 
             List<VSaldoPresupuestalXproyecto> LVSaldoPresupuestalXproyecto = _context.VSaldoPresupuestalXproyecto.ToList();
 
             List<dynamic> dynamics = new List<dynamic>();
 
+            List<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.ToList();
+ 
             foreach (var item in ListProyectos)
             {
+
                 VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
 
-                if (VSaldoPresupuestalXproyecto != null)
+                if (VSaldoPresupuestalXproyecto != null && DisponibilidadPresupuestalProyecto.Any(d => d.ProyectoId == item.ProyectoId))
                 {
                     dynamics.Add(new
                     {
