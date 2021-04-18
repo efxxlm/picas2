@@ -301,7 +301,7 @@ namespace asivamosffie.services
 
             if (
                   pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario == false
-               || pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria == false
+            //   || pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria == false
                || pPolizaListaChequeo.CumpleDatosTomadorAfianzado == false
                || pPolizaListaChequeo.TieneReciboPagoDatosRequeridos == false
                || pPolizaListaChequeo.TieneCondicionesGeneralesPoliza == false

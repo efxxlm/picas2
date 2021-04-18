@@ -1262,7 +1262,7 @@ namespace asivamosffie.services
                 pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 pSolicitudPago.Eliminado = false;
-                pSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(pSolicitudPago);
+                //pSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(pSolicitudPago);
 
                 _context.SolicitudPago.Add(pSolicitudPago);
                 _context.SaveChanges();
@@ -1330,9 +1330,9 @@ namespace asivamosffie.services
                 .FirstOrDefault();
 
             if (
-                   pSolicitudPago.SolicitudPagoExpensas.Count() == 0
-                || pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
-                || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
+                   pSolicitudPago?.SolicitudPagoExpensas?.Count() == 0
+                || pSolicitudPago?.SolicitudPagoSoporteSolicitud?.Count() == 0
+                || pSolicitudPago?.SolicitudPagoListaChequeo?.Count() == 0)
                 return false;
 
             foreach (var SolicitudPagoExpensas in pSolicitudPago.SolicitudPagoExpensas)
@@ -1578,7 +1578,7 @@ namespace asivamosffie.services
             List<dynamic> dynamics = new List<dynamic>();
 
             List<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.ToList();
-            
+             
             foreach (var item in ListProyectos)
             { 
                 VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
