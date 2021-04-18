@@ -99,6 +99,25 @@
       
     </mat-card-content>
   </mat-card>
+  <div class="d-flex align-items-center mt-1em" *ngIf="addressForm.get('estadoProcesoCodigo').value === '3'">
+        
+    <div class="text-area-quill">
+      <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
+              !(addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched ||
+              addressForm.get('observacionDevolver').invalid && estaEditando)">
+      Observaciones de la novedad
+    </label>
+      <quill-editor class="quill-editor-style" [modules]="config"
+        (onContentChanged)="maxLength($event, 1000)" formControlName="observacionDevolver" required>
+      </quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value !== null">
+      {{1000 - (textoLimpio(addressForm.get('observacionDevolver').value)>1000?1000:textoLimpio(addressForm.get('observacionDevolver').value))}}
+    </span>
+    <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value === null">
+      1000
+    </span>
+  </div>
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">

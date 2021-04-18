@@ -366,5 +366,6 @@
 
         public const string EliminarNovedadContractual = "268";
         public const string EliminarNovedadContractualClausula = "269";
+        public const string Devolver_Novedad_Contractual_a_supervisor = "270";
     }
 }

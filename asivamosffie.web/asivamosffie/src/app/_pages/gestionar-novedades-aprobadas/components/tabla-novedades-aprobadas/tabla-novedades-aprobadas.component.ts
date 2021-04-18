@@ -73,4 +73,15 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
       })
   }
 
+  devolverSolicitud(id){
+    this.contractualNoveltyService.devolverSolicitudASupervisor( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }
+
+  
+
 }

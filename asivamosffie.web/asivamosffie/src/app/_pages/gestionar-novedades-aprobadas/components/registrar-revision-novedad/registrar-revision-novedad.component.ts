@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ConsoleReporter } from 'jasmine';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractual, NovedadContractualObservaciones } from 'src/app/_interfaces/novedadContractual';
@@ -16,6 +17,8 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
     estadoProcesoCodigo: [null, Validators.required],
     fechaAprobacionGestionContractual: [null, Validators.required],
     abogadoRevisionId: [null, Validators.required],
+    observacionDevolver: [],
+    novedadContractualObservacionesId: [],
   });
 
   estaEditando = false;
@@ -39,25 +42,56 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
 
   ) {
     commonService.listaEstadoProcesoNovedades()
-      .subscribe( respuesta => {
+      .subscribe(respuesta => {
         this.estadoDelProcesoArray = respuesta;
       });
 
     commonService.listaAbogadoRevisionNovedades()
-      .subscribe( respuesta => {
+      .subscribe(respuesta => {
         this.nombreAbogadoPresentoSolicitudArray = respuesta;
       });
-   }
+  }
   ngOnChanges(changes: SimpleChanges): void {
-    if ( changes.novedad ){
-      this.addressForm.get('fechaEnvioGestionContractual').setValue( this.novedad.fechaEnvioGestionContractual )
-      this.addressForm.get('estadoProcesoCodigo').setValue( this.novedad.estadoProcesoCodigo )
-      this.addressForm.get('fechaAprobacionGestionContractual').setValue( this.novedad.fechaAprobacionGestionContractual )
-      this.addressForm.get('abogadoRevisionId').setValue( this.novedad.abogadoRevisionId )
+    if (changes.novedad) {
+      this.addressForm.get('fechaEnvioGestionContractual').setValue(this.novedad.fechaEnvioGestionContractual)
+      this.addressForm.get('estadoProcesoCodigo').setValue(this.novedad.estadoProcesoCodigo)
+      this.addressForm.get('fechaAprobacionGestionContractual').setValue(this.novedad.fechaAprobacionGestionContractual)
+      this.addressForm.get('abogadoRevisionId').setValue(this.novedad.abogadoRevisionId)
+
+      if (this.novedad.observacionTramite) {
+        console.log(this.novedad.observacionTramite)
+        this.addressForm.get('novedadContractualObservacionesId').setValue(this.novedad.observacionTramite.novedadContractualObservacionesId);
+        this.addressForm.get('observacionDevolver').setValue(this.novedad.observacionTramite.observaciones);
+      }
+
     }
   }
 
   ngOnInit(): void {
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    if (cadena) {
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias;
+        posicion += subcadena.length;
+      }
+    }
+    return contadorConcurrencias;
+  }
+
+  textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if (texto) {
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -76,6 +110,22 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
     this.novedad.estadoProcesoCodigo = this.addressForm.get('estadoProcesoCodigo').value;
     this.novedad.fechaAprobacionGestionContractual = this.addressForm.get('fechaAprobacionGestionContractual').value;
     this.novedad.abogadoRevisionId = this.addressForm.get('abogadoRevisionId').value;
+
+    //if ( this.novedad.estadoProcesoCodigo === '3' )
+    {
+
+      let novedadContractualObservaciones: NovedadContractualObservaciones = {
+        esTramiteNovedades: true,
+        novedadContractualId: this.novedad.novedadContractualId,
+        novedadContractualObservacionesId: this.addressForm.get('novedadContractualObservacionesId').value,
+        observaciones: this.addressForm.get('observacionDevolver').value
+      }
+
+      this.novedad.novedadContractualObservaciones = [],
+        this.novedad.novedadContractualObservaciones.push(novedadContractualObservaciones);
+    }
+
+
 
     this.guardar.emit(true);
 

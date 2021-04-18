@@ -257,6 +257,22 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
+        [Route("DevolverSolicitudASupervisor")]
+        public async Task<IActionResult> DevolverSolicitudASupervisor([FromQuery] int pNovedaContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.DevolverSolicitudASupervisor(pNovedaContractual, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPut]
         [Route("EnviarAComite")]
         public async Task<IActionResult> EnviarAComite([FromQuery] int pNovedaContractual)
         {

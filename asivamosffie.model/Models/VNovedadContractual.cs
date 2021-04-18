@@ -30,5 +30,7 @@ namespace asivamosffie.model.Models
         public string NombreContratista { get; set; }
         public int ContratacionProyectoId { get; set; }
         public int ProyectoId { get; set; }
+        public DateTime? FechaValidacion { get; set; }
+        public DateTime? FechaVerificacion { get; set; }
     }
 }

@@ -82,8 +82,35 @@ namespace asivamosffie.services
             try
             {
                 ListNovedades = await _context.VNovedadContractual
-                                                    .Where(r => r.RegistroCompletoValidacion == true)
+                                                    //.Where(r => r.RegistroCompletoValidacion == true)
                                                     .ToListAsync();
+
+                foreach( var novedad in ListNovedades)
+                {
+                    NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                        .Where( x => x.NovedadContractualId == novedad.NovedadContractualId)
+                                                                        .Include( x => x.NovedadContractualObservaciones)
+                                                                        .FirstOrDefault();
+
+                    if (novedadContractual.EstadoProcesoCodigo == "3")
+                    {
+                        novedadContractual.RegistroCompletoDevolucionTramite = true;
+                        
+                        novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
+
+                        if (
+                                novedadContractual.ObservacionTramite == null ||
+                                string.IsNullOrEmpty(novedadContractual?.ObservacionTramite.Observaciones)
+                            )
+                        {
+                            novedadContractual.RegistroCompletoDevolucionTramite = false;
+                        }
+                    }
+
+                    novedad.novedadContractual = novedadContractual;
+                }
+
+                
 
                 return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
             }
@@ -288,6 +315,22 @@ namespace asivamosffie.services
                 novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
                 novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
 
+                if ( novedadContractual.EstadoProcesoCodigo == "3")
+                {
+                    novedadContractual.RegistroCompletoDevolucionTramite = true;
+                    if (
+                            novedadContractual.ObservacionTramite == null ||
+                            string.IsNullOrEmpty( novedadContractual?.ObservacionTramite.Observaciones )
+                        )
+                    {
+                        novedadContractual.RegistroCompletoDevolucionTramite = false;
+                    }
+                }
+
+                
+
+                
+
                 novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
             }
             else
@@ -367,7 +410,7 @@ namespace asivamosffie.services
             foreach ( var fuente in listaFuentes )
             {
                 fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
-                fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente.CofinanciacionDocumento.VigenciaAporte); 
+                fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente?.CofinanciacionDocumento?.VigenciaAporte); 
 
                 listaFuentes.Add(fuente);
             }
@@ -930,7 +973,18 @@ namespace asivamosffie.services
 
                 if (esTramite == true)
                 {
+                    if (novedadContractual.EstadoProcesoCodigo == "3")
+                    {
 
+                        await CreateEditObservacionSeguimientoDiario(pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault(), pNovedadContractual.UsuarioCreacion);
+                    }
+                    else
+                    {
+                        NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
+
+                        if (observacionDelete != null)
+                            observacionDelete.Eliminado = true;
+                    }
                 }
                 else
                 {
@@ -1075,6 +1129,8 @@ namespace asivamosffie.services
                 novedadContractualOld.RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractualOld);
 
                 _context.SaveChanges();
+
+                await CreateEditObservacion(novedadContractual, null, true);
 
                 return
                     new Respuesta
@@ -1304,6 +1360,9 @@ namespace asivamosffie.services
                     novedadContractual.FechaModificacion = DateTime.Now;
                     novedadContractual.UsuarioModificacion = pUsuario;
                     novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_validar;
+                    novedadContractual.FechaVerificacion = DateTime.Now;
+
+
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();
@@ -1479,6 +1538,8 @@ namespace asivamosffie.services
                     novedadContractual.FechaModificacion = DateTime.Now;
                     novedadContractual.UsuarioModificacion = pUsuario;
                     novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_tramite;
+                    novedadContractual.FechaValidacion = DateTime.Now;
+
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();
@@ -1571,6 +1632,76 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 EnviarNotificacionDevolucion(novedadContractual);
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = ex,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> DevolverSolicitudASupervisor(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Devolver_Novedad_Contractual_a_supervisor, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "DEVOLVER NOVEDAD CONTRACTUAL A SUPERVISOR";
+
+            try
+            {
+
+                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                    .Where(r => r.NovedadContractualId == pNovedadContractualId)
+                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                    .FirstOrDefault();
+
+                novedadContractual.UsuarioModificacion = pUsuario;
+                novedadContractual.FechaModificacion = DateTime.Now;
+
+
+                    NovedadContractualObservaciones observaciones = getObservacion(novedadContractual, null, true);
+
+                    if (observaciones != null)
+                    {
+                        observaciones.Archivado = true;
+                        novedadContractual.ObservacionesDevolucionId = observaciones.NovedadContractualObservacionesId;
+                    }
+
+
+                novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Devuelta_para_ajustes_de_supervisión;
+                novedadContractual.TieneObservacionesApoyo = null;
+                novedadContractual.TieneObservacionesSupervisor = null;
+                novedadContractual.RegistroCompletoValidacion = null;
+
+                _context.SaveChanges();
+
+                //EnviarNotificacionDevolucion(novedadContractual);
 
                 return respuesta = new Respuesta
                 {
@@ -2242,12 +2373,22 @@ namespace asivamosffie.services
             //.Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
 
             ;
-            List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Seguimiento_y_control);
+
+            List<UsuarioPerfil> ListUsuarios = _context.UsuarioPerfil
+                                                            .Where( x => x.PerfilId == (int)EnumeratorPerfil.Seguimiento_y_control)
+                                                            .ToList();
+
             List<string> listaMails = new List<string>();
 
             ListUsuarios.ForEach(u =>
            {
-               listaMails.Add(u.Email);
+               Usuario usuario = _context.Usuario.Find(u.UsuarioId);
+
+               if ( usuario != null)
+               {
+                   listaMails.Add(usuario.Email);
+               }
+               
            });
 
             if ( listaMails.Count() > 0 )
