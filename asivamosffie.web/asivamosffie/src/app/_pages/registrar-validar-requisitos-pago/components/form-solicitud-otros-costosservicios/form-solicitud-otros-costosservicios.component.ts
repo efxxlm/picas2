@@ -54,7 +54,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
                     const solicitudPagoOtrosCostosServicios = this.solicitudPago.solicitudPagoOtrosCostosServicios[0];
                     this.solicitudPagosOtrosCostosServiciosId = solicitudPagoOtrosCostosServicios.solicitudPagoOtrosCostosServiciosId;
                     this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
-                    this.saldoPresupuestal = this.solicitudPago.saldoPresupuestal;
+                    this.saldoPresupuestal = solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura + this.solicitudPago.saldoPresupuestal : 0 + this.solicitudPago.saldoPresupuestal;
                     this.addressForm.setValue(
                         {
                             numeroContrato: this.contrato.numeroContrato,
@@ -69,7 +69,9 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     }
 
     seleccionAutocomplete( contrato: any ){
-        this.saldoPresupuestal = contrato.saldoPresupuestal;
+        if ( this.esUnEditar === false ) {
+            this.saldoPresupuestal = contrato.saldoPresupuestal;
+        }
         this.contratoId = contrato.contratoId;
     }
 

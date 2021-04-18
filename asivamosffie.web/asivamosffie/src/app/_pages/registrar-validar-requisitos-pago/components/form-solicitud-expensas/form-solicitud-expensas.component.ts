@@ -57,7 +57,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
                             this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
                             const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                             this.solicitudPagoExpensasId = solicitudPagoExpensas.solicitudPagoExpensasId;
-                            this.saldoPresupuestal = this.solicitudPago.saldoPresupuestal;
+                            this.saldoPresupuestal = solicitudPagoExpensas.valorFacturado !== undefined ? solicitudPagoExpensas.valorFacturado + this.solicitudPago.saldoPresupuestal : 0 + this.solicitudPago.saldoPresupuestal;
                             this.addressForm.setValue(
                                 {
                                     llaveMen: this.solicitudPago.contratacionProyecto.proyecto.llaveMen,
@@ -79,7 +79,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
     }
 
     seleccionAutocomplete( llaveMen ){
-        this.saldoPresupuestal = llaveMen.saldoPresupuestal;
+        this.saldoPresupuestal = this.addressForm.get( 'valorFacturado' ).value !== null ? this.saldoPresupuestal = this.addressForm.get( 'valorFacturado' ).value + llaveMen.saldoPresupuestal : 0 + llaveMen.saldoPresupuestal;
         this.addressForm.get( 'llaveMenSeleccionada' ).setValue( llaveMen );
     }
 
