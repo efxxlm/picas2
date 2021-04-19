@@ -132,6 +132,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   ngOnInit(): void {
     this.cargarRol();
+
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
