@@ -88,7 +88,7 @@
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         [routerLink]="[ 'verDetalle', element.novedadContractualId ]"
-        *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' ">
+        *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' && element.estadoCodigo !== '17' ">
         Ver detalle
       </a>
       
@@ -100,7 +100,10 @@
       
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
       (click)="cancelarNovedad(element.novedadContractualId)"
-      *ngIf="element.estadoCodigo === '17' && element.novedadContractual.deseaContinuar === false">
+      *ngIf="
+              element.estadoCodigo === '17' && 
+              element.novedadContractual.deseaContinuar === false && 
+              element.novedadContractual.razonesNoContinuaProceso">
         Cancelar novedad
       </button>
       </td>

@@ -251,6 +251,10 @@ namespace asivamosffie.services
                 novedadContractual.RegistroCompletoSoporte = RegistroCompletoSoporte(novedadContractual);
                 novedadContractual.RegistroCompletoDescripcion = RegistroCompletoDescripcion(novedadContractual);
 
+                novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
+                novedadContractual.RegistroCompletoFirmas = RegistrocompletoFirmas(novedadContractual);
+                novedadContractual.RegistroCompletoDetallar = RegistrocompletoDetallar(novedadContractual);
+
                 foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
                     novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
@@ -266,7 +270,6 @@ namespace asivamosffie.services
                                                                                                                 .Where(x => x.Eliminado != true)
                                                                                                                 .ToList();
 
-
                 }
 
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
@@ -277,13 +280,13 @@ namespace asivamosffie.services
                     {
                         componenteAportanteNovedad.NombreTipoComponente = listDominioComponente
                                                                                 .Where(r => r.Codigo == componenteAportanteNovedad.TipoComponenteCodigo)
-                                                                                .FirstOrDefault()
-                                                                                .Nombre;
+                                                                                ?.FirstOrDefault()
+                                                                                ?.Nombre;
 
                         componenteAportanteNovedad.Nombrefase = listDominioFase
                                                                                 .Where(r => r.Codigo == componenteAportanteNovedad.FaseCodigo)
-                                                                                .FirstOrDefault()
-                                                                                .Nombre;
+                                                                                ?.FirstOrDefault()
+                                                                                ?.Nombre;
 
                         foreach (ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
                         {
@@ -292,8 +295,8 @@ namespace asivamosffie.services
                             {
                                 componenteUsoNovedad.NombreUso = listDominioUso
                                                                             .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
-                                                                            .FirstOrDefault()
-                                                                            .Nombre;
+                                                                            ?.FirstOrDefault()
+                                                                            ?.Nombre;
                             }
                         }
 
@@ -326,12 +329,6 @@ namespace asivamosffie.services
                         novedadContractual.RegistroCompletoDevolucionTramite = false;
                     }
                 }
-
-
-
-
-
-                novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
             }
             else
             {
@@ -392,30 +389,17 @@ namespace asivamosffie.services
             List<Dominio> listaDominio = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
 
             List<FuenteFinanciacion> listaFuentes = _context.FuenteFinanciacion
-                                                                .Where(x => x.AportanteId == pConfinanciacioAportanteId)
-                                                                .Include(x => x.CofinanciacionDocumento)
+                                                                .Where(x => x.AportanteId == pConfinanciacioAportanteId && 
+                                                                       x.Eliminado != true)
+                                                                .Include(x => x.Aportante)
                                                                 .ToList();
-
-            //var listaFuentesAgrupadas =
-            //    from fuente in _context.FuenteFinanciacion
-            //    where fuente.AportanteId == pConfinanciacioAportanteId
-            //    group fuente by new { fuente.AportanteId, fuente.FuenteRecursosCodigo } into newGroup
-
-            //    select new FuenteFinanciacion()
-            //    {
-            //        AportanteId = newGroup.Key.AportanteId,
-            //        FuenteRecursosCodigo = newGroup.Key.FuenteRecursosCodigo
-            //    };
 
             foreach (var fuente in listaFuentes)
             {
                 fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
-                fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente?.CofinanciacionDocumento?.VigenciaAporte);
+                fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente?.Aportante?.CofinanciacionId);
 
-                listaFuentes.Add(fuente);
             }
-
-
 
             return listaFuentes;
         }
@@ -1117,6 +1101,8 @@ namespace asivamosffie.services
                 novedadContractualOld.FechaEnvioActaSupervisor = novedadContractual.FechaEnvioActaSupervisor;
                 novedadContractualOld.FechaFirmaSupervisor = novedadContractual.FechaFirmaSupervisor;
                 novedadContractualOld.UrlSoporteFirmas = novedadContractual.UrlSoporteFirmas;
+
+                novedadContractualOld.RazonesNoContinuaProceso = novedadContractual.RazonesNoContinuaProceso;
 
                 switch (novedadContractualOld.EstadoProcesoCodigo)
                 {
@@ -1952,16 +1938,25 @@ namespace asivamosffie.services
             return novedadContractualObservaciones;
         }
 
-        private bool RegistrocompletoRevisionJuridica(NovedadContractual pNovedadContractual)
+        private bool? RegistrocompletoRevisionJuridica(NovedadContractual pNovedadContractual)
         {
-            bool esCompleto = true;
+            bool? esCompleto = true;
 
             if (
-                    pNovedadContractual.FechaEnvioGestionContractual == null ||
-                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
-                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.FechaAprobacionGestionContractual == null) ||
-                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.AbogadoRevisionId == null)
+                    pNovedadContractual.FechaEnvioGestionContractual == null &&
+                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) &&
+                    pNovedadContractual.FechaAprobacionGestionContractual == null &&
+                    pNovedadContractual.AbogadoRevisionId == null
                 )
+            {
+                esCompleto = null;
+            }
+            else if (
+                   pNovedadContractual.FechaEnvioGestionContractual == null ||
+                   string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
+                   (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.FechaAprobacionGestionContractual == null) ||
+                   (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.AbogadoRevisionId == null)
+               )
             {
                 esCompleto = false;
             }
@@ -1970,20 +1965,113 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        private bool RegistrocompletoFirmas(NovedadContractual pNovedadContractual)
+        private bool? RegistrocompletoDetallar(NovedadContractual pNovedadContractual)
         {
-            bool esCompleto = true;
+            bool? esCompleto = true;
+
+            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
+            {
+                // adicion
+                if (descripcion.TipoNovedadCodigo == "3")
+                {
+                    if (
+                            pNovedadContractual.NovedadContractualAportante == null ||
+                            pNovedadContractual.NovedadContractualAportante.Count() == 0
+                       )
+                    {
+                        esCompleto = null;
+                    }
+                    else
+                    {
+                        pNovedadContractual.NovedadContractualAportante.ToList().ForEach(na =>
+                        {
+                            if (
+                                 na.CofinanciacionAportanteId == null ||
+                                 na.ValorAporte == null
+                             )
+                            {
+                                esCompleto = false;
+                            }
+
+                            na.ComponenteAportanteNovedad.ToList().ForEach(ca =>
+                            {
+                                if (
+                                  ca.FaseCodigo == null ||
+                                  ca.TipoComponenteCodigo == null
+                              )
+                                {
+                                    esCompleto = false;
+                                }
+
+                                ca.ComponenteFuenteNovedad.ToList().ForEach(cf =>
+                                {
+                                    if (
+                                           cf.FuenteFinanciacionId == null
+                                       )
+                                    {
+                                        esCompleto = false;
+                                    }
+
+                                    cf.ComponenteUsoNovedad.ToList().ForEach(cu =>
+                                    {
+                                        if (
+                                               cu.TipoUsoCodigo == null ||
+                                               cu.ValorUso == null
+                                           )
+                                        {
+                                            esCompleto = false;
+                                        }
+                                    });
+                                });
+
+                            });
+
+                        });
+                    }
+                }
+            }
+
+            return esCompleto;
+        }
+
+        private bool? RegistrocompletoFirmas(NovedadContractual pNovedadContractual)
+        {
+            bool? esCompleto = true;
 
             if (
-                    pNovedadContractual.FechaEnvioGestionContractual == null ||
-                    string.IsNullOrEmpty(pNovedadContractual.EstadoProcesoCodigo) ||
-                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.FechaAprobacionGestionContractual == null) ||
-                    (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.AbogadoRevisionId == null)
+                    pNovedadContractual.DeseaContinuar == null &&
+                    pNovedadContractual.FechaEnvioActaContratistaObra == null &&
+                    pNovedadContractual.FechaFirmaActaContratistaObra == null &&
+                    pNovedadContractual.FechaEnvioActaContratistaInterventoria == null &&
+                    pNovedadContractual.FechaFirmaContratistaInterventoria == null &&
+                    pNovedadContractual.FechaEnvioActaApoyo == null &&
+                    pNovedadContractual.FechaFirmaApoyo == null &&
+                    pNovedadContractual.FechaEnvioActaSupervisor == null &&
+                    pNovedadContractual.FechaFirmaSupervisor == null &&
+                    string.IsNullOrEmpty(pNovedadContractual.UrlSoporteFirmas)
                 )
+            {
+                esCompleto = null;
+            }
+            else
+                if (
+                   pNovedadContractual.DeseaContinuar == null ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaContratistaObra == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaActaContratistaObra == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaContratistaInterventoria == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaContratistaInterventoria == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaApoyo == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaApoyo == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaSupervisor == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaSupervisor == null) ||
+                   (pNovedadContractual.DeseaContinuar == true && string.IsNullOrEmpty(pNovedadContractual.UrlSoporteFirmas)) ||
+
+                   (pNovedadContractual.DeseaContinuar == false && string.IsNullOrEmpty(pNovedadContractual.RazonesNoContinuaProceso)) 
+
+               )
             {
                 esCompleto = false;
             }
-
 
             return esCompleto;
         }
@@ -2151,80 +2239,20 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        private bool RegistrocompletoTramite(NovedadContractual pNovedadContractual)
+        private bool? RegistrocompletoTramite(NovedadContractual pNovedadContractual)
         {
-            bool esCompleto = true;
-
-            esCompleto = RegistrocompletoRevisionJuridica(pNovedadContractual);
+            bool? esCompleto = true;
 
             if (
-                    pNovedadContractual.DeseaContinuar == null ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaContratistaObra == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaActaContratistaObra == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaContratistaInterventoria == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaContratistaInterventoria == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaApoyo == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaApoyo == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaEnvioActaSupervisor == null) ||
-                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaSupervisor == null) ||
-                    string.IsNullOrEmpty(pNovedadContractual.UrlSoporteFirmas)
+                RegistrocompletoRevisionJuridica(pNovedadContractual) == null ||
+                RegistrocompletoRevisionJuridica(pNovedadContractual) == false ||
+                RegistrocompletoFirmas(pNovedadContractual) == null ||
+                RegistrocompletoFirmas(pNovedadContractual) == false ||
+                RegistrocompletoDetallar(pNovedadContractual) == null ||
+                RegistrocompletoDetallar(pNovedadContractual) == false 
                 )
             {
                 esCompleto = false;
-            }
-
-            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
-            {
-                // adicion
-                if (descripcion.TipoNovedadCodigo == "3")
-                {
-                    pNovedadContractual.NovedadContractualAportante.ToList().ForEach(na =>
-                   {
-                       if (
-                            na.CofinanciacionAportanteId == null ||
-                            na.ValorAporte == null
-                        )
-                       {
-                           esCompleto = false;
-                       }
-
-                       na.ComponenteAportanteNovedad.ToList().ForEach(ca =>
-                      {
-                          if (
-                            ca.FaseCodigo == null ||
-                            ca.TipoComponenteCodigo == null
-                        )
-                          {
-                              esCompleto = false;
-                          }
-
-                          ca.ComponenteFuenteNovedad.ToList().ForEach(cf =>
-                         {
-                             if (
-                                    cf.FuenteRecursosCodigo == null
-                                )
-                             {
-                                 esCompleto = false;
-                             }
-
-                             cf.ComponenteUsoNovedad.ToList().ForEach(cu =>
-                             {
-                                 if (
-                                        cu.TipoUsoCodigo == null ||
-                                        cu.ValorUso == null
-                                    )
-                                 {
-                                     esCompleto = false;
-                                 }
-                             });
-                         });
-
-                      });
-
-                   });
-
-                }
-
             }
 
             return esCompleto;

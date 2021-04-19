@@ -49,9 +49,9 @@
   <mat-expansion-panel class="expansion-style" *ngIf="tieneAdicion">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false, 
+        'sin-diligenciar':novedad.registroCompletoDetallar === undefined,
+        'en-proceso':novedad.registroCompletoDetallar === false,
+        'completo':novedad.registroCompletoDetallar ,
         'en-alerta':false
       }">
       Detallar solicitud
@@ -84,9 +84,9 @@
   <mat-expansion-panel class="expansion-style" *ngIf="novedad.estadoCodigo === '17'">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false,
+        'sin-diligenciar':novedad.registroCompletoFirmas === undefined,
+        'en-proceso':novedad.registroCompletoFirmas === false,
+        'completo':novedad.registroCompletoFirmas ,
         'en-alerta':false
       }">
         Registrar firmas

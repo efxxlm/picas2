@@ -55,7 +55,7 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
       this.addressForm.get('fechaEnvioGestionContractual').setValue(this.novedad.fechaEnvioGestionContractual)
       this.addressForm.get('estadoProcesoCodigo').setValue(this.novedad.estadoProcesoCodigo)
       this.addressForm.get('fechaAprobacionGestionContractual').setValue(this.novedad.fechaAprobacionGestionContractual)
-      this.addressForm.get('abogadoRevisionId').setValue(this.novedad.abogadoRevisionId)
+      this.addressForm.get('abogadoRevisionId').setValue(this.novedad.abogadoRevisionId.toString())
 
       if (this.novedad.observacionTramite) {
         console.log(this.novedad.observacionTramite)

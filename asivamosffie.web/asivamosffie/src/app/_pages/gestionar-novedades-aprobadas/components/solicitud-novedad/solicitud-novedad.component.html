@@ -44,15 +44,11 @@
     </p>
     <p>
       <strong>Fecha de inicio de contrato:</strong>
-      <span>
-        
-      </span>
+      {{ (novedad.contrato?.fechaActaInicioFase2 ? novedad.contrato?.fechaActaInicioFase2 : novedad.contrato?.fechaActaInicioFase1) | date:'dd/MM/yyyy'}}
     </p>
     <p>
       <strong>Fecha de finalización de contrato:</strong>
-      <span>
-
-      </span>
+      {{ (novedad.contrato?.fechaTerminacionFase2 ? novedad.contrato?.fechaTerminacionFase2 : novedad.contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
     </p>
 
     <div *ngIf="novedad.esAplicadaAcontrato !== true">
@@ -79,21 +75,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let observacion of listaObservaciones">
+          <tr>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              {{ observacion.llaveMEN }}
+              {{ novedad.proyectosSeleccionado.llaveMen }}
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              {{ observacion.departamento }}
+              {{ novedad.proyectosSeleccionado.departamento }}
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              {{ observacion.municipio }}
+              {{ novedad.proyectosSeleccionado.municipio }}
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              {{ observacion.institucionEducativa }}
+              {{ novedad.proyectosSeleccionado.institucionEducativa }}
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              {{ observacion.sede }}
+              {{ novedad.proyectosSeleccionado.sede }}
             </td>
           </tr>
         </tbody>
@@ -166,9 +162,22 @@
         </mat-card-title>
         <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
         <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
+
         <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
         <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+
         <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
+
+        <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
+          <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
+            <h3> <strong> CLAUSULA </strong> {{ i + 1 }} </h3>
+            <p><strong>Cláusula a modificar: </strong> </p>
+            <section [innerHTML]="clausula.clausulaAmodificar" style="margin-left: 2em"></section>
+            <p><strong>Ajuste solicitado a la cláusula: </strong> </p>
+            <section [innerHTML]="clausula.ajusteSolicitadoAclausula" style="margin-left: 2em"></section>
+          </section>
+        </section>
+
         <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
         <p><strong>Concepto técnico: </strong></p>
         <section 

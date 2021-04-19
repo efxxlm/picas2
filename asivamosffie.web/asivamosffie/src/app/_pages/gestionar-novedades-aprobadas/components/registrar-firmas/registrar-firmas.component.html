@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaEnvioActaFirmaContratistaObra').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -70,7 +70,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaFirmaContratistaObra').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -97,7 +97,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -122,7 +122,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaFirmaContratistaInterventoria').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -147,7 +147,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaEnvioActaFirmaApoyoSupervision').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -172,7 +172,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaFirmaApoyoSupervision').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -197,7 +197,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="addressForm.get('fechaEnvioFirmaSupervisor').value">
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
@@ -225,7 +225,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="animateDown" *ngIf="addressForm.get('continuarProceso').value !== false">
+  <div class="animateDown" *ngIf="addressForm.get('continuarProceso').value !== false && addressForm.get('fechaFirmaSupervisor').value">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
