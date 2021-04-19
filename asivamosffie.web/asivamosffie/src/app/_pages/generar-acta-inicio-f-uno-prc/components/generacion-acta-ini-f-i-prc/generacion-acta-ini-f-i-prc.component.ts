@@ -73,7 +73,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     .subscribe(
       value => {
         this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( null );
-        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( null );
+        // this.addressForm.get( 'diasPlazoEjFase1' ).setValue( null );
         if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null ) {
           let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
           newdate.setDate( newdate.getDate() + ( Number( value ) * 30 ) );
