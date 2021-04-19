@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DialogRechazarSolicitudComponent } from '../dialog-rechazar-solicitud/dialog-rechazar-solicitud.component'
+import { DialogRechazarSolicitudComponent } from '../dialog-rechazar-solicitud/dialog-rechazar-solicitud.component';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { DialogRechazarSolicitudInterventorComponent } from '../dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component';
@@ -27,7 +27,7 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
     numeroContrato: 'A887654344',
     tipoNovedad: 'Modificación de Condiciones Contractuales',
     estadoNovedad: 'Sin verificar',
-    estadoRegistro: 'Incompleto',
+    estadoRegistro: 'Incompleto'
   },
   {
     id: '2',
@@ -36,8 +36,8 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
     numeroContrato: 'A887654344',
     tipoNovedad: 'Suspensión',
     estadoNovedad: 'Sin verificar',
-    estadoRegistro: 'Incompleto',
-  },
+    estadoRegistro: 'Incompleto'
+  }
 ];
 
 @Component({
@@ -46,7 +46,6 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
   styleUrls: ['./tabla-novedad-contratos-obra.component.scss']
 })
 export class TablaNovedadContratosObraComponent implements AfterViewInit {
-
   displayedColumns: string[] = [
     'fecha',
     'numeroSolicitud',
@@ -61,25 +60,25 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private contractualNoveltyService: ContractualNoveltyService,
-    public dialog: MatDialog,
-
-  ) { }
+  constructor(private contractualNoveltyService: ContractualNoveltyService, public dialog: MatDialog) {}
 
   ngAfterViewInit() {
-    this.contractualNoveltyService.getListGrillaNovedadContractualObra()
-      .subscribe(resp => {
-        this.dataSource = new MatTableDataSource(resp);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
-  });
+    this.contractualNoveltyService.getListGrillaNovedadContractualObra().subscribe(resp => {
+      resp.forEach(element => {
+        element.fechaSolictud = element.fechaSolictud
+          ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
+          : '';
+      });
+      this.dataSource = new MatTableDataSource(resp);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        return (page + 1).toString() + ' de ' + length.toString();
+      };
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
   }
 
   applyFilter(event: Event) {
@@ -94,26 +93,21 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
   rechazarSolicitud(id: number, numeroSolicitud, tipoNovedad) {
     const dialogCargarProgramacion = this.dialog.open(DialogRechazarSolicitudInterventorComponent, {
       width: '75em',
-       data: { numeroSolicitud, tipoNovedad }
+      data: { numeroSolicitud, tipoNovedad }
     });
-    dialogCargarProgramacion.afterClosed()
-      .subscribe(response => {
+    dialogCargarProgramacion.afterClosed().subscribe(response => {
+      if (response) {
+        let novedad: NovedadContractual = {
+          novedadContractualId: id,
+          causaRechazo: response.causaRechazo
+        };
 
-        if (response) {
-          let novedad : NovedadContractual = {
-            novedadContractualId: id,
-            causaRechazo: response.causaRechazo
-          };
-  
-           this.contractualNoveltyService.rechazarPorSupervisor( novedad )
-              .subscribe( respuesta => {
-               this.openDialog('', `<b>${respuesta.message}</b>`);
-               if ( respuesta.code === '200' )
-                 this.ngAfterViewInit();
-              });
-        }
-        
-      })
+        this.contractualNoveltyService.rechazarPorSupervisor(novedad).subscribe(respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
+          if (respuesta.code === '200') this.ngAfterViewInit();
+        });
+      }
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -123,22 +117,17 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
     });
   }
 
-  tramitar(id){
-    this.contractualNoveltyService.tramitarSolicitud( id )
-      .subscribe( respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        if ( respuesta.code === '200' )
-          this.ngAfterViewInit();
-      })
+  tramitar(id) {
+    this.contractualNoveltyService.tramitarSolicitud(id).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      if (respuesta.code === '200') this.ngAfterViewInit();
+    });
   }
 
-  devolver(id){
-    this.contractualNoveltyService.devolverSolicitud( id )
-      .subscribe( respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        if ( respuesta.code === '200' )
-          this.ngAfterViewInit();
-      })
+  devolver(id) {
+    this.contractualNoveltyService.devolverSolicitud(id).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      if (respuesta.code === '200') this.ngAfterViewInit();
+    });
   }
-
 }

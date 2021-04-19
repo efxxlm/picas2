@@ -3,10 +3,10 @@
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         {{
-        novedadDescripcion.tipoNovedadCodigo == "1" ? 'Suspension' :
+        novedadDescripcion.tipoNovedadCodigo == "1" ? 'Suspensión' :
         novedadDescripcion.tipoNovedadCodigo == "2" ? 'Prórroga a la Suspensión' :
         novedadDescripcion.tipoNovedadCodigo == "3" ? 'Adición' :
-        novedadDescripcion.tipoNovedadCodigo == "4" ? 'Prorroga' :
+        novedadDescripcion.tipoNovedadCodigo == "4" ? 'Prórroga' :
         novedadDescripcion.tipoNovedadCodigo == "5" ? 'Modificación de Condiciones Contractuales' :
         novedadDescripcion.tipoNovedadCodigo == "6" ? 'Reinicio' : ''
         }}
@@ -71,9 +71,19 @@
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput type="text" formControlName="presupuestoAdicional" #presupuestoAdicional maxlength="20"
-                  required>
+              <mat-form-field class="full-width input-center">
+                  <input
+                    matInput
+                    formControlName="presupuestoAdicional"
+                    #presupuestoAdicional
+                    id="numAportes"
+                    maxlength="20"
+                    min="1"
+                    max="99999999999999999999"
+                    required
+                    currencyMask
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  />
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip">
@@ -143,13 +153,23 @@
               <label class="label-left" for="plazoAdicionalMeses" [class.color-secondaryColor]="
                   addressForm.get('plazoAdicionalMeses').invalid && addressForm.get('plazoAdicionalMeses').touched ||
                   addressForm.get('plazoAdicionalMeses').invalid && estaEditando">
-                  plazo Adicional Meses
+                  Plazo adicional meses
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput type="text" formControlName="plazoAdicionalMeses" #plazoAdicionalMeses
-                  maxlength="20" required>
+              <mat-form-field class="full-width input-center">
+                  <input
+                    matInput
+                    formControlName="plazoAdicionalMeses"
+                    #plazoAdicionalMeses
+                    id="numAportes"
+                    maxlength="20"
+                    min="1"
+                    max="99999999999999999999"
+                    required
+                    currencyMask
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  />
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip">
@@ -166,13 +186,23 @@
               <label class="label-left" for="plazoAdicionalDias" [class.color-secondaryColor]="
                   addressForm.get('plazoAdicionalDias').invalid && addressForm.get('plazoAdicionalDias').touched ||
                   addressForm.get('plazoAdicionalDias').invalid && estaEditando">
-                  plazo Adicional Días
+                  Plazo adicional días
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput type="text" formControlName="plazoAdicionalDias" #plazoAdicionalDias
-                  maxlength="20" required>
+              <mat-form-field class="full-width input-center">
+                  <input
+                    matInput
+                    formControlName="plazoAdicionalDias"
+                    #plazoAdicionalDias
+                    id="numAportes"
+                    maxlength="20"
+                    min="1"
+                    max="99999999999999999999"
+                    required
+                    currencyMask
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  />
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip">
@@ -249,7 +279,7 @@
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarClausula(i)"
               *ngIf="clausulaField.controls.length > 1">
               <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-              Eliminar tema
+              Eliminar clausula
             </button>
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarClausula()"
               *ngIf="i + 1 === clausulaField.controls.length">

@@ -97,7 +97,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    // console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
@@ -130,13 +130,13 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     if (this.router.getCurrentNavigation().extras.state)
       this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
 
-    console.log( this.proyecto )
+    // console.log( this.proyecto )
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
-      console.log(this.seguimientoId, this.router.getCurrentNavigation());
+      // console.log(this.seguimientoId, this.router.getCurrentNavigation());
 
       forkJoin(
         this.commonServcie.listaDisponibilidadMaterial(),
@@ -174,10 +174,9 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       .subscribe( seguimiento => {
 
         this.seguimiento = seguimiento;
-        
         this.addressForm.setValue(
           {
-            fechaSeguimiento:  seguimiento.fechaSeguimiento,    
+            fechaSeguimiento:  new Date(seguimiento.fechaSeguimiento),    
             
             disponibilidadPersonal:               seguimiento.disponibilidadPersonal !== undefined ? seguimiento.disponibilidadPersonal : null,
             cantidadPersonalOperativoProgramado:  seguimiento.cantidadPersonalProgramado !== undefined ? seguimiento.cantidadPersonalProgramado : null,
@@ -205,9 +204,9 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
             ProductividadObservaciones:           seguimiento.productividadObservaciones !== undefined ? seguimiento.productividadObservaciones : null,
           }
         )
-        console.log(this.diasPermitidos, new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString());
+        // console.log(this.diasPermitidos, new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString());
         this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
-
+        this.addressForm.get('fechaSeguimiento').updateValueAndValidity();
       });
   }
 
@@ -281,7 +280,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
     } 
 
-    console.log(seguimiento);
+    // console.log(seguimiento);
 
     this.dailyFollowUpService.createEditDailyFollowUp( seguimiento )
       .subscribe( respuesta => {

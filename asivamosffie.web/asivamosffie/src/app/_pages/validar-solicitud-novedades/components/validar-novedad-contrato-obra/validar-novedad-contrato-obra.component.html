@@ -169,10 +169,7 @@
                   <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
               
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-                <section 
-                        [innerHTML]="descripcion.resumenJustificacion"
-                        style="margin-left: 2em"
-                ></section>
+                <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
               <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
@@ -196,10 +193,7 @@
 
               <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
               <p><strong>Concepto técnico: </strong></p>
-              <section 
-                        [innerHTML]="descripcion.conceptoTecnico"
-                        style="margin-left: 2em"
-                ></section>
+              <section class="text-justify" [innerHTML]="descripcion.conceptoTecnico"></section>
               <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
               <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
             </mat-card-content>
@@ -256,10 +250,7 @@
         </strong>
         Sí
       </p>
-      <section 
-                  [innerHTML]="novedad.observacionApoyo.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+      <section class="text-justify" [innerHTML]="novedad.observacionApoyo.observaciones"></section>
     </mat-card-content>
   </mat-card>
 

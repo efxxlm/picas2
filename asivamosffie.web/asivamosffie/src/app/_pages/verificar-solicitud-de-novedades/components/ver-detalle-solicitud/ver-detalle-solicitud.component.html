@@ -162,15 +162,12 @@
                   <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
               
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-                <section 
-                        [innerHTML]="descripcion.resumenJustificacion"
-                        style="margin-left: 2em"
-                ></section>
+                <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
               <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>Plazo adicional meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
               <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
@@ -181,18 +178,15 @@
                 <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
                   <h3> <strong> CLAUSULA </strong> {{ i + 1 }} </h3>
                   <p><strong>Cláusula a modificar: </strong> </p>
-                  <section [innerHTML]="clausula.clausulaAmodificar" style="margin-left: 2em"></section>
+                  <section class="text-justify" [innerHTML]="clausula.clausulaAmodificar"></section>
                   <p><strong>Ajuste solicitado a la cláusula: </strong> </p>
-                  <section [innerHTML]="clausula.ajusteSolicitadoAclausula" style="margin-left: 2em"></section>
+                  <section class="text-justify" [innerHTML]="clausula.ajusteSolicitadoAclausula"></section>
                 </section>
               </section>
 
               <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
               <p><strong>Concepto técnico: </strong></p>
-              <section 
-                        [innerHTML]="descripcion.conceptoTecnico"
-                        style="margin-left: 2em"
-                ></section>
+              <section class="text-justify" [innerHTML]="descripcion.conceptoTecnico"></section>
               <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
               <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
             </mat-card-content>
@@ -243,11 +237,7 @@
         </strong>
       </p>
       <div>
-          <section 
-            [innerHTML]="novedad.causaRechazo"
-            style="margin-left: 2em"
-            
-    ></section>
+          <section class="text-justify" [innerHTML]="novedad.causaRechazo"></section>
       </div>
     </mat-card-content>
   </mat-card>
@@ -271,10 +261,7 @@
         </strong>
         Sí
       </p>
-      <section 
-                  [innerHTML]="novedad.observacionApoyo.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+      <section class="text-justify" [innerHTML]="novedad.observacionApoyo.observaciones"></section>
     </mat-card-content>
   </mat-card>
 
@@ -292,10 +279,7 @@
             {{ novedad.observacionDevolucion.fechaCreacion | date: 'dd/MM/yyyy' }}
           </strong>
         </p>
-          <section 
-                  [innerHTML]="novedad.observacionDevolucion.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+          <section class="text-justify" [innerHTML]="novedad.observacionDevolucion.observaciones"></section>
       </mat-card-content>
     </mat-card>
   </div>

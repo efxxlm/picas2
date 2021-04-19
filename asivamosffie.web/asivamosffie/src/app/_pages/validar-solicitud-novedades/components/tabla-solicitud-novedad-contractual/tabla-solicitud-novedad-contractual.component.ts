@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DialogRechazarSolicitudInterventorComponent } from '../dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component'
-import { DialogDevolverSolicitudInterventorComponent } from '../dialog-devolver-solicitud-interventor/dialog-devolver-solicitud-interventor.component'
+import { DialogRechazarSolicitudInterventorComponent } from '../dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component';
+import { DialogDevolverSolicitudInterventorComponent } from '../dialog-devolver-solicitud-interventor/dialog-devolver-solicitud-interventor.component';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { DialogRechazarSolicitudComponent } from '../dialog-rechazar-solicitud/dialog-rechazar-solicitud.component';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
@@ -28,7 +28,7 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
     numeroSolicitud: 'NOV-001',
     tipoNovedad: 'Modificación de Condiciones Contractuales',
     estadoNovedad: 'En proceso de registro',
-    estadoRegistro: 'Completo',
+    estadoRegistro: 'Completo'
   }
 ];
 
@@ -37,9 +37,7 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
   templateUrl: './tabla-solicitud-novedad-contractual.component.html',
   styleUrls: ['./tabla-solicitud-novedad-contractual.component.scss']
 })
-
 export class TablaSolicitudNovedadContractualComponent implements AfterViewInit {
-
   displayedColumns: string[] = [
     'fechaSolictud',
     'numeroSolicitud',
@@ -58,24 +56,27 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute
   ) {
-    console.log( this.activatedRoute.snapshot.data );
+    console.log(this.activatedRoute.snapshot.data);
   }
 
   ngAfterViewInit() {
-
-    this.contractualNoveltyService.getListGrillaNovedadContractualInterventoria()
-      .subscribe(resp => {
-        this.dataSource = new MatTableDataSource(resp);
-
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.nextPageLabel = 'Siguiente';
-        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-          return (page + 1).toString() + ' de ' + length.toString();
-        };
-        this.paginator._intl.previousPageLabel = 'Anterior';
+    this.contractualNoveltyService.getListGrillaNovedadContractualInterventoria().subscribe(resp => {
+      resp.forEach(element => {
+        element.fechaSolictud = element.fechaSolictud
+          ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
+          : '';
       });
+      this.dataSource = new MatTableDataSource(resp);
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        return (page + 1).toString() + ' de ' + length.toString();
+      };
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
   }
 
   applyFilter(event: Event) {
@@ -90,67 +91,53 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   rechazarSolicitud(id: number, numeroSolicitud, tipoNovedad) {
     const dialogCargarProgramacion = this.dialog.open(DialogRechazarSolicitudInterventorComponent, {
       width: '75em',
-       data: { numeroSolicitud, tipoNovedad }
+      data: { numeroSolicitud, tipoNovedad }
     });
-    dialogCargarProgramacion.afterClosed()
-      .subscribe(response => {
+    dialogCargarProgramacion.afterClosed().subscribe(response => {
+      if (response) {
+        let novedad: NovedadContractual = {
+          novedadContractualId: id,
+          causaRechazo: response.causaRechazo
+        };
 
-        if (response) {
-          let novedad : NovedadContractual = {
-            novedadContractualId: id,
-            causaRechazo: response.causaRechazo
-          };
-  
-           this.contractualNoveltyService.rechazarPorSupervisor( novedad )
-              .subscribe( respuesta => {
-               this.openDialog('', `<b>${respuesta.message}</b>`);
-               if ( respuesta.code === '200' )
-                 this.ngAfterViewInit();
-              });
-        }
-        
-      })
+        this.contractualNoveltyService.rechazarPorSupervisor(novedad).subscribe(respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
+          if (respuesta.code === '200') this.ngAfterViewInit();
+        });
+      }
+    });
   }
-
-  
 
   devolverSolicitud(id: string) {
     const dialogCargarProgramacion = this.dialog.open(DialogDevolverSolicitudInterventorComponent, {
-      width: '75em',
+      width: '75em'
       // data: { }
     });
-    dialogCargarProgramacion.afterClosed()
-      .subscribe(response => {
-        if (response) {
-          console.log(response);
-        };
-      })
+    dialogCargarProgramacion.afterClosed().subscribe(response => {
+      if (response) {
+        console.log(response);
+      }
+    });
   }
-  
-    openDialog(modalTitle: string, modalText: string) {
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
   }
 
-  tramitar(id){
-    this.contractualNoveltyService.tramitarSolicitud( id )
-      .subscribe( respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        if ( respuesta.code === '200' )
-          this.ngAfterViewInit();
-      })
+  tramitar(id) {
+    this.contractualNoveltyService.tramitarSolicitud(id).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      if (respuesta.code === '200') this.ngAfterViewInit();
+    });
   }
 
-  devolver(id){
-    this.contractualNoveltyService.devolverSolicitud( id )
-      .subscribe( respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        if ( respuesta.code === '200' )
-          this.ngAfterViewInit();
-      })
+  devolver(id) {
+    this.contractualNoveltyService.devolverSolicitud(id).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      if (respuesta.code === '200') this.ngAfterViewInit();
+    });
   }
-
-
 }

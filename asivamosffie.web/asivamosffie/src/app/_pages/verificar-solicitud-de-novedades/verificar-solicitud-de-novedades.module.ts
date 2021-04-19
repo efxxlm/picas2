@@ -22,6 +22,7 @@ import { ExpansionPanelInterventoriaComponent } from './components/expansion-pan
 import { AccordionNovedadesComponent } from './components/accordion-novedades/accordion-novedades.component';
 import { FormRegistrarNovedadAccordComponent } from './components/form-registrar-novedad-accord/form-registrar-novedad-accord.component';
 import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proyectos-registrar-novedad/tabla-proyectos-registrar-novedad.component'
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 
 
@@ -47,7 +48,8 @@ import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proy
     VerificarSolicitudDeNovedadesRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    CurrencyMaskModule
   ]
 })
 export class VerificarSolicitudDeNovedadesModule { }

@@ -10,6 +10,8 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class RegistrarSolicitudComponent implements OnInit {
 
+  verAyuda = false
+
   numeroContrato = new FormControl();
   novedadAplicada = new FormControl();
   filteredOptions: Observable<string[]>;

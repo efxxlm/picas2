@@ -12,9 +12,8 @@ import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNov
   styleUrls: ['./tabla-novedad-contratos-obra.component.scss']
 })
 export class TablaNovedadContratosObraComponent implements AfterViewInit {
-
   displayedColumns: string[] = [
-    'fecha',
+    'fechaSolictud',
     'numeroSolicitud',
     'numeroContrato',
     'tipoNovedad',
@@ -27,25 +26,25 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private contractualNoveltyService: ContractualNoveltyService,
-    public dialog: MatDialog,
-
-  ) { }
+  constructor(private contractualNoveltyService: ContractualNoveltyService, public dialog: MatDialog) {}
 
   ngAfterViewInit() {
-    this.contractualNoveltyService.getListGrillaNovedadContractualObra()
-      .subscribe(resp => {
-        this.dataSource = new MatTableDataSource(resp);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
-  });
+    this.contractualNoveltyService.getListGrillaNovedadContractualObra().subscribe(resp => {
+      resp.forEach(element => {
+        element.fechaSolictud = element.fechaSolictud
+          ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
+          : '';
+      });
+      this.dataSource = new MatTableDataSource(resp);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        return (page + 1).toString() + ' de ' + length.toString();
+      };
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
   }
 
   applyFilter(event: Event) {
@@ -58,20 +57,17 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
   }
 
   verificarSolicitud(id: string) {
-    this.contractualNoveltyService.enviarAlSupervisor( id )
-      .subscribe( respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        if ( respuesta.code === '200' )
-          this.ngAfterViewInit();
-      });
-   console.log(`Aprobar solicitud ${id}`);
- }
+    this.contractualNoveltyService.enviarAlSupervisor(id).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      if (respuesta.code === '200') this.ngAfterViewInit();
+    });
+    console.log(`Aprobar solicitud ${id}`);
+  }
 
- openDialog(modalTitle: string, modalText: string) {
-  this.dialog.open(ModalDialogComponent, {
-    width: '28em',
-    data: { modalTitle, modalText }
-  });
-}
-
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
 }

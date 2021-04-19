@@ -2,12 +2,18 @@
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="/.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
-    <h1 class="title-menu--h1">
-      Registrar solicitud de novedad contractual
-    </h1>
+    <h1 class="title-menu--h1">Registrar solicitud de novedad contractual</h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+      <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+        <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda" />
+      </button>
+      Seleccione el proyecto para el cual va a registrar la novedad contractual
+    </div>
   </div>
 
   <div class="mt-3em row justify-content-center">
@@ -18,15 +24,22 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="example-full-width">
-            <input #buscar type="text" aria-label="Number" matInput [formControl]="numeroContrato"
-              [matAutocomplete]="auto" required>
+            <input
+              #buscar
+              type="text"
+              aria-label="Number"
+              matInput
+              [formControl]="numeroContrato"
+              [matAutocomplete]="auto"
+              required
+            />
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               <mat-option class="autocomplete" *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option}}
+                {{ option }}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <img src="assets/img/icon/lupa.svg" alt="Buscar" class="buscar" (click)="buscar.focus()">
+          <img src="assets/img/icon/lupa.svg" alt="Buscar" class="buscar" (click)="buscar.focus()" />
         </div>
       </div>
     </div>
@@ -52,85 +65,57 @@
 
   <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Datos del contrato
-      </mat-card-title>
+      <mat-card-title class="header-card--text"> Datos del contrato </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <p>
-        <strong>
-          Nombre del contratista:
-        </strong>
+        <strong> Nombre del contratista: </strong>
         Constructora Colpatria SAS
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
-        <span>
-          NIT
-        </span>
+        <span> NIT </span>
       </p>
       <p>
-        <strong>
-          Número de identificación
-        </strong>
+        <strong> Número de identificación </strong>
         900.879.989
       </p>
       <p>
         <strong>Tipo de intervención:</strong>
-        <span >
-          Remodelación
-        </span>
+        <span> Remodelación </span>
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        <span >
-          $ 130.000.000
-        </span>
+        <span> $ 130.000.000 </span>
       </p>
       <p>
         <strong>Plazo:</strong>
-        <span >
-          24 meses / 25 días
-        </span>
+        <span> 24 meses / 25 días </span>
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
-        <span >
-          25/06/2020
-        </span>
+        <span> 25/06/2020 </span>
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
-        <span >
-          20/07/2022
-        </span>
+        <span> 20/07/2022 </span>
       </p>
-
     </mat-card-content>
   </mat-card>
 
   <!-- <app-expansion-panel class="animatedDown" *ngIf="novedadAplicada.value" -->
-  <app-expansion-panel class="animatedDown"
-  ></app-expansion-panel>
+  <app-expansion-panel class="animatedDown"></app-expansion-panel>
 
   <div *ngIf="true">
     <mat-card class="shipping-card var-main-gris">
       <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text">
-          Observaciones del supervisor
-        </mat-card-title>
+        <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-
         <p>
-          <strong>
-            20/10/2020
-          </strong>
+          <strong> 20/10/2020 </strong>
         </p>
-        <p>
-          No es posible acceder a la ruta de soporte, verificar la URL.
-        </p>
-
+        <p>No es posible acceder a la ruta de soporte, verificar la URL.</p>
       </mat-card-content>
     </mat-card>
   </div>
@@ -139,15 +124,9 @@
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Fecha de revisión
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Responsable de la observación
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Historial de observaciones
-          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de revisión</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Responsable de la observación</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Historial de observaciones</th>
         </tr>
       </thead>
       <tbody>
@@ -165,5 +144,4 @@
       </tbody>
     </table>
   </div>
-
 </section>

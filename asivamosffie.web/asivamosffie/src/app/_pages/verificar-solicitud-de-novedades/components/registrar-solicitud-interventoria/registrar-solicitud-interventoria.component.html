@@ -1,7 +1,7 @@
 <section class="container">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink=".." mat-button color="primary" class="btn-regresar">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
@@ -157,10 +157,7 @@
             {{ novedad.observacionDevolucion.fechaCreacion | date: 'dd/MM/yyyy' }}
           </strong>
         </p>
-          <section 
-                  [innerHTML]="novedad.observacionDevolucion.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+          <section class="text-justify" [innerHTML]="novedad.observacionDevolucion.observaciones"></section>
       </mat-card-content>
     </mat-card>
   </div>
@@ -188,10 +185,7 @@
             {{ observacion.usuarioCreacion }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            <section 
-                  [innerHTML]="observacion.observaciones"
-                  style="margin-left: 2em"
-          ></section>
+            <section class="text-justify"[innerHTML]="observacion.observaciones"></section>
           </td>
         </tr>
       </tbody>
