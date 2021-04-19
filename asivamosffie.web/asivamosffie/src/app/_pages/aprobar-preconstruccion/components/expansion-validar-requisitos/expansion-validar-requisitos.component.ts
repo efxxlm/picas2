@@ -61,8 +61,6 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
           this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
           .subscribe( contrato => {
             this.contrato = contrato;
-            const observacionTipo2 = [];
-            const observacionTipo3 = [];
             for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
 
               let sinDiligenciar = 0;
@@ -70,6 +68,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
               let completo = 0;
 
               for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+                const observacionTipo2 = [];
+                const observacionTipo3 = [];
                 // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
                 // tslint:disable-next-line: no-string-literal
