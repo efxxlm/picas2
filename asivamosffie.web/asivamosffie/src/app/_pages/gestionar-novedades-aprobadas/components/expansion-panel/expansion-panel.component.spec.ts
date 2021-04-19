@@ -6,6 +6,8 @@ describe('ExpansionPanelComponent', () => {
   let component: ExpansionPanelComponent;
   let fixture: ComponentFixture<ExpansionPanelComponent>;
 
+
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ExpansionPanelComponent ]
