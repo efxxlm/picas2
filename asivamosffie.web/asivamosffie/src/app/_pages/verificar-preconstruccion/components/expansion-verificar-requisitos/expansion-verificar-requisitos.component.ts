@@ -72,10 +72,8 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
         this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
           .subscribe( contrato => {
             this.contrato = contrato;
-            console.log( this.contrato );
-            const observacionTipo2 = [];
             for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
-
+              const observacionTipo2 = [];
               let sinDiligenciar = 0;
               let enProceso = 0;
               let completo = 0;
