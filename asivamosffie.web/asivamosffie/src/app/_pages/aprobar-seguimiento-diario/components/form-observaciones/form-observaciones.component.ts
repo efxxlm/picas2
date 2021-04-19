@@ -131,7 +131,7 @@ export class FormObservacionesComponent {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code == "200") {
-          this.noGuardado = true;
+          this.noGuardado = false;
           this.router.navigate(['/aprobarSeguimientoDiario']);
         }
 

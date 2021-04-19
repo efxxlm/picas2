@@ -82,7 +82,15 @@ namespace asivamosffie.services
             try
             {
                 ListNovedades = await _context.VNovedadContractual
-                                                    //.Where(r => r.RegistroCompletoValidacion == true)
+                                                    .Where(
+                                                            r => r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion   &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Sin_validar &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_validacion &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_supervisor &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor
+                                                           )
                                                     .ToListAsync();
 
                 foreach (var novedad in ListNovedades)
@@ -1830,7 +1838,7 @@ namespace asivamosffie.services
 
                     _context.SaveChanges();
 
-                    //EnviarNotificacionRechazo(novedadContractual);
+                    EnviarNotificacionCancelar(novedadContractual);
                 }
 
                 return respuesta = new Respuesta
@@ -2513,7 +2521,56 @@ namespace asivamosffie.services
 
         }
 
+        private async void EnviarNotificacionCancelar(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
 
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include( x => x.Supervisor )
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Contratacion)
+                                                .ThenInclude(x => x.Contratista)
+                                                    .ThenInclude(x => x.ProcesoSeleccionProponente)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadCancelar && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+                                                      .Replace("[JUSTIFICACION]", novedadContractual.NumeroSolicitud)
+
+            ;
+
+            List<string> listaMails = new List<string>();
+
+
+            if ( !string.IsNullOrEmpty(contrato?.Supervisor?.Email) )
+            {
+                listaMails.Add(contrato?.Supervisor?.Email);
+            }
+
+            if ( !string.IsNullOrEmpty( contrato?.Apoyo?.Email ) )
+            {
+                listaMails.Add(contrato?.Apoyo?.Email);
+            }
+
+            if (!string.IsNullOrEmpty(contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente))
+            {
+                listaMails.Add(contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente);
+            }
+
+            if (listaMails.Count() > 0)
+                _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Canceladad");
+
+
+        }
 
         #endregion private 
 

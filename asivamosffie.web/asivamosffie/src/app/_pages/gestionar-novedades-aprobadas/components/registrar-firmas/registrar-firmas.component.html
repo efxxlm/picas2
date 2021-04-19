@@ -57,9 +57,14 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="fechaFirmaContratistaObraPicker"
-                    formControlName="fechaFirmaContratistaObra" readonly
-                    (click)="fechaFirmaContratistaObraPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <input matInput 
+                    [matDatepicker]="fechaFirmaContratistaObraPicker"
+                    formControlName="fechaFirmaContratistaObra" 
+                    readonly
+                    (click)="fechaFirmaContratistaObraPicker.open()" 
+                    placeholder="DD/MM/AAAA" 
+                    required
+                    [min]="addressForm.get('fechaEnvioActaFirmaContratistaObra').value">
                   <mat-datepicker #fechaFirmaContratistaObraPicker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button"
@@ -109,9 +114,15 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="fechaFirmaContratistaInterventoriaPicker"
-                    formControlName="fechaFirmaContratistaInterventoria" readonly
-                    (click)="fechaFirmaContratistaInterventoriaPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <input matInput 
+                    [matDatepicker]="fechaFirmaContratistaInterventoriaPicker"
+                    formControlName="fechaFirmaContratistaInterventoria" 
+                    readonly
+                    (click)="fechaFirmaContratistaInterventoriaPicker.open()" 
+                    placeholder="DD/MM/AAAA" 
+                    required
+                    [min]="addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').value"
+                    >
                   <mat-datepicker #fechaFirmaContratistaInterventoriaPicker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button"
@@ -159,9 +170,15 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="fechaFirmaApoyoSupervisionPicker"
-                    formControlName="fechaFirmaApoyoSupervision" readonly
-                    (click)="fechaFirmaApoyoSupervisionPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <input matInput 
+                    [matDatepicker]="fechaFirmaApoyoSupervisionPicker"
+                    formControlName="fechaFirmaApoyoSupervision" 
+                    readonly
+                    (click)="fechaFirmaApoyoSupervisionPicker.open()" 
+                    placeholder="DD/MM/AAAA" 
+                    required
+                    [min]="addressForm.get('fechaEnvioActaFirmaApoyoSupervision').value"
+                    >
                   <mat-datepicker #fechaFirmaApoyoSupervisionPicker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="fechaFirmaApoyoSupervisionPicker.open()"
@@ -209,8 +226,15 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="fechaFirmaSupervisorPicker" formControlName="fechaFirmaSupervisor"
-                    readonly (click)="fechaFirmaSupervisorPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <input matInput 
+                    [matDatepicker]="fechaFirmaSupervisorPicker" 
+                    formControlName="fechaFirmaSupervisor"
+                    readonly 
+                    (click)="fechaFirmaSupervisorPicker.open()" 
+                    placeholder="DD/MM/AAAA" 
+                    required
+                    [min]="addressForm.get('fechaEnvioFirmaSupervisor').value"
+                    >
                   <mat-datepicker #fechaFirmaSupervisorPicker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="fechaFirmaSupervisorPicker.open()"

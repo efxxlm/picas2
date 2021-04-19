@@ -140,6 +140,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarNovedadRechazoSupervisor = 141,
         EnviarNovedadDevuelta = 142,
         EnviarNovedadTramitar = 144,
+        EnviarNovedadCancelar = 145,
 
     }
 }

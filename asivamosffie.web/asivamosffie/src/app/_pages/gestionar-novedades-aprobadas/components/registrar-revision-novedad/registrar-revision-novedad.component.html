@@ -105,7 +105,7 @@
       <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
               !(addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched ||
               addressForm.get('observacionDevolver').invalid && estaEditando)">
-      Observaciones de la novedad
+      Observaciones de la devolución
     </label>
       <quill-editor class="quill-editor-style" [modules]="config"
         (onContentChanged)="maxLength($event, 1000)" formControlName="observacionDevolver" required>
