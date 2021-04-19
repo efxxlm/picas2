@@ -50,7 +50,7 @@
                   </p>
                   <p>
                     <b>Valor total del proyecto:</b>
-                    {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+                    {{ contrato.contratacion.tipoSolicitudCodigo === tipoSolicitud.interventoria ? ( contratoProyecto.proyecto.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) : ( contratoProyecto.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) }}
                   </p>
               </mat-card-content>
           </mat-card>
