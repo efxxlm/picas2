@@ -62,9 +62,8 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
           this.faseUnoVerificarPreconstruccionSvc.getContratacionByContratoId( pContratoId )
           .subscribe( contrato => {
             this.contrato = contrato;
-            const observacionTipo3 = [];
             for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
-
+              const observacionTipo3 = [];
               let sinDiligenciar = 0;
               let completo = 0;
 
