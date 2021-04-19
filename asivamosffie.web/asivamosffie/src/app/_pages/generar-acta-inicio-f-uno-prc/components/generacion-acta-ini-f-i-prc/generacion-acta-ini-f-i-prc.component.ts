@@ -146,11 +146,11 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
 
   getValueDias( value: number ) {
-    if ( value !== null && this.diasPlazoIni !== undefined ) {
-      if ( value > this.diasPlazoIni ) {
-        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
-      }
-    }
+    // if ( value !== null && this.diasPlazoIni !== undefined ) {
+    //   if ( value > this.diasPlazoIni ) {
+    //     this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
+    //   }
+    // }
   }
 
   getSizeInput( value: any ) {
