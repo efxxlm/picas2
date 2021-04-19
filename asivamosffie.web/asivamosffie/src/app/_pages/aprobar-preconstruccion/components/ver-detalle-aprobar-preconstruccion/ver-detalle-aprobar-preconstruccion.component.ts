@@ -17,6 +17,10 @@ export class VerDetalleAprobarPreconstruccionComponent implements OnInit {
     observacionAPoyo: '2',
     observacionSupervisor: '3'
   };
+  tipoSolicitud = {
+    obra: '1',
+    interventoria: '2'
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,

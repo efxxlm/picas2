@@ -50,12 +50,12 @@
                   </p>
                   <p>
                     <b>Valor total del proyecto:</b>
-                    <i> {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </i>
+                    <i> {{ esInterventoria === true ? ( contratoProyecto.proyecto.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) : ( contratoProyecto.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) }} </i>
                   </p>
               </mat-card-content>
           </mat-card>
 
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center" *ngIf="esInterventoria === true">
             <b style="margin-right: .3em;">¿En qué estado de la fase 1 - Preconstrucción se encuentra el proyecto?:</b>
             <p *ngIf="contratoProyecto.proyecto[ 'tieneEstadoFase1EyD' ] === true"> <i> Estudios y diseños </i> </p>
             <span *ngIf="contratoProyecto.proyecto[ 'tieneEstadoFase1Diagnostico' ] === true">,</span>
