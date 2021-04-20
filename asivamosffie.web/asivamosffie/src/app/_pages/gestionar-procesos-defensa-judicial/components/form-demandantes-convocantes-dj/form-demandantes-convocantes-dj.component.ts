@@ -118,8 +118,6 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     });
     this.formContratista.get('numeroContratos').valueChanges
     .subscribe(value => {
-      console.log(this.perfiles.length);
-      console.log(value);
       if (this.perfiles.length < Number(value)) {
         for (let i = this.perfiles.length; i < Number(value); i++) {
           this.perfiles.push(
@@ -345,10 +343,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
                 });
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             } else {
-              this.perfiles.removeAt( numeroPerfil );
-              this.formContratista.patchValue({
-                numeroContratos: `${ this.perfiles.length }`
-              });
+                this.perfiles.removeAt( numeroPerfil );
                 this.defensaService.deleteDemandanteConvocante( demandanteConvocadoId , this.perfiles.length)
                     .subscribe(
                         response => {

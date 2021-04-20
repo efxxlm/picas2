@@ -406,10 +406,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
                 });
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             } else {
-              this.perfiles.removeAt( numeroPerfil );
-              this.formContratista.patchValue({
-                numeroContratos: `${ this.perfiles.length }`
-              });
+                this.perfiles.removeAt( numeroPerfil );
                 this.defensaService.deleteDemandadoConvocado( demandadoConvocadoId , this.perfiles.length)
                     .subscribe(
                         response => {

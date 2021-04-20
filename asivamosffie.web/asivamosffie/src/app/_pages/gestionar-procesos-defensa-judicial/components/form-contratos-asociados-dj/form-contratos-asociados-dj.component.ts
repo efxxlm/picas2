@@ -65,7 +65,8 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.estaEditando = true;
       this.formContratista.markAllAsTouched();
       this.formContratista.get('numeroContratos').setValue(this.defensaJudicial.cantContratos);
-      
+      console.log("carga data: ",this.defensaJudicial.cantContratos);
+
       let listaContratos: any[] = [];
 
       this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
@@ -104,6 +105,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("mirame y no me toques");
     this.defensaService.GetListContract().subscribe(response => {
       //this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos = response;

@@ -165,6 +165,14 @@ namespace asivamosffie.services
                         defConvocado.FechaCreacion = DateTime.Now;
                         defConvocado.Eliminado = false;
                     }
+
+                    foreach (var defDemandante in defensaJudicial.DemandanteConvocante)
+                    {
+                        defDemandante.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                        defDemandante.FechaCreacion = DateTime.Now;
+                        defDemandante.Eliminado = false;
+                    }
+
                     foreach (var defFicha in defensaJudicial.FichaEstudio)
                     {
                         defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
