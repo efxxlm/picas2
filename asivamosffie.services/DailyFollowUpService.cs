@@ -97,86 +97,59 @@ namespace asivamosffie.services
             listaInfoProyectos.ForEach(p =>
             {
                 // Estados se puede editar
-                List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
                                                                 .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
                                                                        s.Eliminado != true &&
                                                                            (s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado ||
                                                                              s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.RevisadoApoyo
                                                                            )
                                                                         )
-                                                                .OrderByDescending(r => r.FechaSeguimiento).ToList();
+                                                                .OrderBy(r => r.FechaSeguimiento)
+                                                                .FirstOrDefault();
 
                 // Estados mostrar ultimo sin editar
-                //List<SeguimientoDiario> ListaSeguimientoDiarioEnviado = _context.SeguimientoDiario
-                //                                                .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
-                //                                                       s.Eliminado != true &&
-                //                                                       s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.EnviadoAsupervisor
-                //                                                        )
-                //                                                .OrderByDescending(r => r.FechaSeguimiento).ToList();
+                SeguimientoDiario seguimientoDiarioEnviado = _context.SeguimientoDiario
+                                                                .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
+                                                                       s.Eliminado != true &&
+                                                                       s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.EnviadoAsupervisor
+                                                                        )
+                                                                .OrderByDescending(r => r.FechaSeguimiento)
+                                                                .FirstOrDefault();
 
 
-                if (listaSeguimientoDiario != null)
+
+                if (seguimientoDiario != null)
                 {
-                    listaSeguimientoDiario.ForEach(seguimientoDiario =>
-                   {
-                       VProyectosXcontrato proyecto = new VProyectosXcontrato()
-                       {
-                           ContratacionId = p.ContratacionId,
-                           ContratacionProyectoId = p.ContratacionProyectoId,
-                           ContratoId = p.ContratoId,
-                           Departamento = p.Departamento,
-                           EstadoActaFase2 = p.EstadoActaFase2,
-                           FechaActaInicioFase2 = p.FechaActaInicioFase2,
-                           FechaRegistroProyecto = p.FechaRegistroProyecto,
-                           InstitucionEducativa = p.InstitucionEducativa,
-                           LlaveMen = p.LlaveMen,
-                           Municipio = p.Municipio,
-                           NumeroContrato = p.NumeroContrato,
-                           ProyectoId = p.ProyectoId,
-                           RegistroCompletoTieneObservaciones = p.RegistroCompletoTieneObservaciones,
-                           Sede = p.Sede,
-                           TieneObservaciones = p.TieneObservaciones,
-                           TipoIntervencion = p.TipoIntervencion,
-                           TipoSolicitudCodigo = p.TipoSolicitudCodigo,
-                           ValorTotal = p.ValorTotal,
-                           
-                           FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento,
-                           SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId,
-                           RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false,
-                           EstadoCodigo = seguimientoDiario.EstadoCodigo,
-                           EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
-                                                                    r.Codigo == seguimientoDiario.EstadoCodigo)
-                                                         .FirstOrDefault()?.Descripcion,
+                    p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
+                    p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
+                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false;
+                    p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+                    p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
+                                                             r.Codigo == seguimientoDiario.EstadoCodigo)
+                                                      .FirstOrDefault()?.Descripcion;
 
-                           TieneAlertas = VerificarAlertas(seguimientoDiario),
-                       };
-
-
-
-                       listaSeguimientos.Add(proyecto);
-                   });
-
+                    p.TieneAlertas = VerificarAlertas(seguimientoDiario);
                 }
-                //else if (seguimientoDiarioEnviado != null)
-                //{
-                //    p.FechaUltimoSeguimientoDiario = seguimientoDiarioEnviado.FechaSeguimiento;
-                //    p.SeguimientoDiarioId = seguimientoDiarioEnviado.SeguimientoDiarioId;
-                //    p.RegistroCompleto = seguimientoDiarioEnviado.RegistroCompleto.HasValue ? seguimientoDiarioEnviado.RegistroCompleto.Value : false;
-                //    p.EstadoCodigo = seguimientoDiarioEnviado.EstadoCodigo;
-                //    p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
-                //                                             r.Codigo == seguimientoDiarioEnviado.EstadoCodigo)
-                //                                      .FirstOrDefault()?.Descripcion;
+                else if (seguimientoDiarioEnviado != null)
+                {
+                    p.FechaUltimoSeguimientoDiario = seguimientoDiarioEnviado.FechaSeguimiento;
+                    p.SeguimientoDiarioId = seguimientoDiarioEnviado.SeguimientoDiarioId;
+                    p.RegistroCompleto = seguimientoDiarioEnviado.RegistroCompleto.HasValue ? seguimientoDiarioEnviado.RegistroCompleto.Value : false;
+                    p.EstadoCodigo = seguimientoDiarioEnviado.EstadoCodigo;
+                    p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
+                                                             r.Codigo == seguimientoDiarioEnviado.EstadoCodigo)
+                                                      .FirstOrDefault()?.Descripcion;
 
-                //    p.TieneAlertas = VerificarAlertas(seguimientoDiarioEnviado);
-                //}
+                    p.TieneAlertas = VerificarAlertas(seguimientoDiarioEnviado);
+                }
             });
 
             // filtro los que tiene registros
-            //listaInfoProyectos = listaInfoProyectos.Where(p => p.SeguimientoDiarioId > 0).ToList();
+            listaInfoProyectos = listaInfoProyectos.Where(p => p.SeguimientoDiarioId > 0).ToList();
 
-            listaSeguimientos = listaSeguimientos.OrderBy(r => r.ProyectoId).OrderBy(r => r.FechaUltimoSeguimientoDiario).ToList();
+            //listaSeguimientos = listaSeguimientos.OrderBy(r => r.ProyectoId).OrderBy(r => r.FechaUltimoSeguimientoDiario).ToList();
 
-            return listaSeguimientos;
+            return listaInfoProyectos;
         }
 
         public async Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp(int usuarioId)
