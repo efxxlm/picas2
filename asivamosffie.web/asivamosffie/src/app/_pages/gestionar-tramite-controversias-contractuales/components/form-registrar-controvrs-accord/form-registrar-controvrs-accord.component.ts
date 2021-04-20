@@ -417,7 +417,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
           "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
-          "ControversiaMotivo": controversiaContractual.controversiaMotivo
+          "ControversiaMotivo": controversiaContractual.controversiaMotivo,
+          "ControversiaContractualId": parseInt(this.idControversia),
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe((resp_0: any) => {

@@ -1881,8 +1881,8 @@ namespace asivamosffie.services
                         ObjetoContrato = contratoObjeto,
                         NombreContratista = strContratistaNombre,
                         TipoDocumento = strTipoDocumentoContratista,
-                        PlazoMeses = disponibilidadPresupuestal.PlazoMeses,
-                        PlazoDias = disponibilidadPresupuestal.PlazoDias,
+                        PlazoMeses = plazoMeses,
+                        PlazoDias = plazoDias,
                         PlazoContrato = PlazoContratoFormat,
                         //Nit  
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
