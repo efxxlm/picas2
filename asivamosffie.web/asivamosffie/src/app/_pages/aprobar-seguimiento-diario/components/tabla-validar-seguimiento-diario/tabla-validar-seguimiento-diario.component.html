@@ -69,7 +69,7 @@
           >
           Validar seguimiento diario
         </a>
-        
+
         <a mat-button 
                       color="warn" 
                       mat-raised-button 
@@ -112,10 +112,10 @@
                       color="accent" 
                       class="btn-table" 
                       type="button"
-                      (click)="Registrar( element )"
-                      *ngIf="element.estadoCodigo == '6' || element.estadoCodigo == '7'"
+                      (click)="VerBitacora( element )"
+                      *ngIf="element.mostrarBitacora === true"
           >
-          Ver detalle
+          Ver bitácora
         </a>
         
       </td>

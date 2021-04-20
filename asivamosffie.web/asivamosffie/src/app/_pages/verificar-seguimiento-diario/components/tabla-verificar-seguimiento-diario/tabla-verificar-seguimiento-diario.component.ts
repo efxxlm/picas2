@@ -74,6 +74,10 @@ export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
     });
   }
 
+  VerBitacora( proyecto ){
+    this.router.navigate( [ '/verificarSeguimientoDiario/verBitacora', proyecto.contratacionProyectoId ], { state: { proyecto } } )
+  }
+
   Enviar( proyecto ){
     this.followUpDailyService.sendToSupervision( proyecto.seguimientoDiarioId )
       .subscribe( respuesta => {

@@ -11,6 +11,8 @@ import { TablaVerificarSeguimientoDiarioComponent } from './components/tabla-ver
 import { VerificarSeguimientoComponent } from './components/verificar-seguimiento/verificar-seguimiento.component';
 import { FormObservacionesComponent } from './components/form-observaciones/form-observaciones.component';
 import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
+import { VerBitacoraComponent } from './components/ver-bitacora/ver-bitacora.component';
+import { VerDetalleRegistroComponent } from './components/ver-detalle-registro/ver-detalle-registro.component'
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { VerObservacionesComponent } from './components/ver-observaciones/ver-ob
     TablaVerificarSeguimientoDiarioComponent,
     VerificarSeguimientoComponent,
     FormObservacionesComponent,
-    VerObservacionesComponent
+    VerObservacionesComponent,
+    VerBitacoraComponent,
+    VerDetalleRegistroComponent
   ],
   imports: [
     CommonModule,

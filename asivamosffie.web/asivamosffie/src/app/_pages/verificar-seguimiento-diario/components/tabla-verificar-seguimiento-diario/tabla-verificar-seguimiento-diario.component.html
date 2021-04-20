@@ -79,11 +79,19 @@
         </a>
         
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="VerBitacora( element )"
+          *ngIf="element.mostrarBitacora === true"
+          >
+          Ver bitácora
+        </a>
+
+        <!-- <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="Verificar( element )"
           *ngIf="element.estadoCodigo == '4'"
           >
           Ver detalle
-        </a>
+        </a> -->
+
         <!-- <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           [routerLink]="[ 'verDetalle', element.id ]">
           Ver detalle

@@ -99,4 +99,8 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
 
   }
 
+  VerBitacora( proyecto ){
+    this.router.navigate( [ '/aprobarSeguimientoDiario/verBitacora', proyecto.contratacionProyectoId ], { state: { proyecto } } )
+  }
+
 }

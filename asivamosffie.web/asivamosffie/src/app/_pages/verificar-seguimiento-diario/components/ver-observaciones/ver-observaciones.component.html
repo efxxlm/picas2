@@ -18,7 +18,11 @@
       Observaciones al seguimiento diario
     </label>
     <div class="divObservaciones">
-      <p>{{ observacionObjeto.observaciones }}</p>
+      <section
+        
+        [innerHTML]="observacionObjeto.observaciones"
+        style="margin-left: 2em"
+      ></section>
     </div>
   </div>
 </div>

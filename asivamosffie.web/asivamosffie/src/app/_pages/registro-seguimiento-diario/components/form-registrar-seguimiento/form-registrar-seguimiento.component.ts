@@ -205,7 +205,11 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
           }
         )
         // console.log(this.diasPermitidos, new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString());
-        this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
+        if (this.addressForm.value.fechaSeguimiento !== undefined){
+          this.diasPermitidos = [];
+          this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
+        }
+        
         this.addressForm.get('fechaSeguimiento').updateValueAndValidity();
       });
   }
@@ -247,6 +251,12 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     let values = this.addressForm.value;
+
+    console.log(values)
+    if (values.fechaSeguimiento === undefined || values.fechaSeguimiento === null){
+      this.openDialog('', 'Debe seleccionar la fecha de seguimiento')
+      return false;
+    }
 
     let seguimiento: SeguimientoDiario = {
       fechaSeguimiento:                     values.fechaSeguimiento,
