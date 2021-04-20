@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-reporte-actividades',
@@ -19,6 +20,8 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
     @Input() seguimientoSemanal: any;
     @Input() tipoReporteActividad: any;
     @Output() estadoSemaforoReporte = new EventEmitter();
+    obsApoyo: any;
+    obsSupervisor: any;
     seRealizoPeticion = false;
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
@@ -51,6 +54,7 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
        private dialog: MatDialog,
        private routes: Router,
        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+       private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
        private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
@@ -81,17 +85,6 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
-                if ( this.esVerDetalle === false ) {
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
-                        .subscribe(
-                            response => {
-                                if ( response.length > 0 ) {
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
-                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                }
-                            }
-                        );
-                }
                 this.formResumenGeneral.get( 'resumenEstadoContrato' ).setValue( this.reporteActividad.resumenEstadoContrato !== undefined ? this.reporteActividad.resumenEstadoContrato : null );
                 // Semaforo reporte
                 if ( this.reporteActividad.registroCompletoEstadoContrato === true ) {
@@ -144,6 +137,25 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
                 }
                 if ( totalAcordeones > completo && completo > 0 ) {
                     this.estadoSemaforoReporte.emit( 'en-proceso' );
+                }
+
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
+                        .subscribe(
+                            response => {
+                                if ( response.length > 0 ) {
+                                    this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                    this.dataHistorial = response;
+
+                                    if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                        this.estadoSemaforoReporte.emit( 'en-proceso' );
+                                    }
+
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            }
+                        );
                 }
             } else {
                 this.estadoSemaforoReporte.emit( 'sin-diligenciar' );
@@ -207,7 +219,16 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
         pSeguimientoSemanal.seguimientoSemanalReporteActividad = seguimientoSemanalReporteActividad;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
-                response => {
+                async response => {
+                    if ( this.obsApoyo !== undefined ) {
+                        this.obsApoyo.archivada = !this.obsApoyo.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+                    }
+                    if ( this.obsSupervisor !== undefined ) {
+                        this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+                    }
+
                     this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

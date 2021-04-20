@@ -210,7 +210,7 @@ export class GestionAmbientalComponent implements OnInit {
                             response => {
                                 this.obsApoyoManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                console.log( obsSupervisorManejoMateriales );
+
                                 this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
                                 if ( obsSupervisorManejoMateriales.length > 0 ) {

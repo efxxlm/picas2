@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-form-reporte-actividades-realizadas',
@@ -20,6 +21,11 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() seguimientoSemanal: any;
     @Input() seguimientoSemanalReporteActividadId = 0;
     @Output() reporteDeActividades = new EventEmitter();
+    @Output() tieneObservacion = new EventEmitter();
+    obsApoyo: any;
+    obsSupervisor: any;
+    obsApoyoSiguienteSemana: any;
+    obsSupervisorSiguienteSemana: any;
     tablaHistorial = new MatTableDataSource();
     tablaHistorialSiguiente = new MatTableDataSource();
     dataHistorial: any[] = [];
@@ -43,6 +49,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService )
     {
     }
@@ -75,7 +82,14 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                this.dataHistorial = response;
+
+                                if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                    this.tieneObservacion.emit();
+                                }
+
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                             }
                         }
@@ -84,7 +98,14 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
+                                this.obsApoyoSiguienteSemana = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                this.obsSupervisorSiguienteSemana  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                this.dataHistorialSiguiente = response;
+
+                                if ( this.obsApoyoSiguienteSemana !== undefined || this.obsSupervisorSiguienteSemana !== undefined ) {
+                                    this.tieneObservacion.emit();
+                                }
+
                                 this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
                             }
                         }
@@ -123,7 +144,29 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         }
     }
 
-    guardar() {
+    async guardar() {
+        if ( this.formActividadesRealizadas.dirty === true ) {
+            if ( this.obsApoyo !== undefined ) {
+                this.obsApoyo.archivada = !this.obsApoyo.archivada;
+                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+            }
+            if ( this.obsSupervisor !== undefined ) {
+                this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
+                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+            }
+        }
+
+        if ( this.formActividadesRealizadasSiguienteSemana.dirty === true ) {
+            if ( this.obsApoyoSiguienteSemana !== undefined ) {
+                this.obsApoyoSiguienteSemana.archivada = !this.obsApoyoSiguienteSemana.archivada;
+                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyoSiguienteSemana ).toPromise();
+            }
+            if ( this.obsSupervisorSiguienteSemana !== undefined ) {
+                this.obsSupervisorSiguienteSemana.archivada = !this.obsSupervisorSiguienteSemana.archivada;
+                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisorSiguienteSemana ).toPromise();
+            }
+        }
+
         this.reporteDeActividades.emit()
     }
 

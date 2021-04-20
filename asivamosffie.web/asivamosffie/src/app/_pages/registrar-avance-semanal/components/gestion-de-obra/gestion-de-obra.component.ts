@@ -13,11 +13,17 @@ export class GestionDeObraComponent implements OnInit {
     @Input() tipoObservaciones: any;
     @Output() estadoSemaforoGestionObra = new EventEmitter();
     @Output() dataGestionAmbiental = new EventEmitter<any>();
+    tieneObservacionAmbiental = false;
+    tieneObservacionCalidad = false;
+    tieneObservacionSst = false;
+    tieneObservacionSocial = false;
+    tieneObservacionAlerta = false;
     semaforoAmbiental = 'sin-diligenciar';
     semaforoCalidad = 'sin-diligenciar';
     semaforoSst = 'sin-diligenciar';
     semaforoSocial = 'sin-diligenciar';
     semaforoAlertas = 'sin-diligenciar';
+    
 
     constructor() { }
 

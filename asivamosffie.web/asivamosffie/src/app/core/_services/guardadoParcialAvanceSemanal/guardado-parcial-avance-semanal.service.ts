@@ -27,7 +27,6 @@ export class GuardadoParcialAvanceSemanalService {
     { }
 
     getDataAvanceFisico( avanceFisico: any, seRealizoPeticion?: boolean ) {
-        console.log( 1, seRealizoPeticion )
         this.dataAvanceFisico = avanceFisico;
         
         if ( seRealizoPeticion !== undefined ) {
@@ -36,7 +35,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataAvanceFinanciero( avanceFinanciero: any, seRealizoPeticion?: boolean ) {
-        console.log( 2, seRealizoPeticion )
         this.dataAvanceFinanciero = avanceFinanciero;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -45,7 +43,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataGestionAmbiental( gestionAmbiental: any, seRealizoPeticion?: boolean ) {
-        console.log( 3, seRealizoPeticion )
       this.dataGestionAmbiental = gestionAmbiental;
       
       if ( seRealizoPeticion !== undefined ) {
@@ -54,7 +51,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataGestionCalidad( gestionCalidad: any, seRealizoPeticion?: boolean ) {
-        console.log( 4, seRealizoPeticion )
         this.dataGestionCalidad = gestionCalidad;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -63,7 +59,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataGestionSst( gestionSst: any, seRealizoPeticion?: boolean ) {
-        console.log( 5, seRealizoPeticion )
         this.dataGestionSst = gestionSst;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -72,7 +67,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataGestionSocial( gestionSocial: any, seRealizoPeticion?: boolean ) {
-        console.log( 6, seRealizoPeticion )
         this.dataGestionSocial = gestionSocial;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -81,7 +75,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataAlertasRelevantes( alertasRelevantes: any, seRealizoPeticion?: boolean ) {
-        console.log( 7, seRealizoPeticion )
         this.dataAlertasRelevantes = alertasRelevantes;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -90,7 +83,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataReporteActividades( reporteActividades: any, seRealizoPeticion?: boolean ) {
-        console.log( 8, seRealizoPeticion )
         this.dataReporteActividades = reporteActividades;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -99,7 +91,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataRegistroFotografico( registroFotoGrafico: any, seRealizoPeticion?: boolean ) {
-        console.log( 9, seRealizoPeticion )
         this.dataRegistroFotografico = registroFotoGrafico;
 
         if ( seRealizoPeticion !== undefined ) {
@@ -108,7 +99,6 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataComiteObra( comiteObra: any, seRealizoPeticion?: boolean ) {
-        console.log( 10, seRealizoPeticion )
         this.dataComiteObra = comiteObra;
 
         if ( seRealizoPeticion !== undefined ) {

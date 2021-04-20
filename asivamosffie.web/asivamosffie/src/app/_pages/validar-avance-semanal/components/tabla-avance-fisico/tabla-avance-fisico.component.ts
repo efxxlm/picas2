@@ -151,7 +151,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     if ( seguimientoSemanalAvanceFisico !== undefined ) {
                         const seguimientoSemanalAvanceFisicoProgramacion = seguimientoSemanalAvanceFisico.seguimientoSemanalAvanceFisicoProgramacion.filter( programacion => programacion.programacionId === flujo.programacionId );
 
-                        console.log( seguimientoSemanalAvanceFisicoProgramacion );
                         if ( seguimientoSemanalAvanceFisicoProgramacion.length > 0 ) {
                             flujo.seguimientoSemanalAvanceFisicoProgramacionId = seguimientoSemanalAvanceFisicoProgramacion[0].seguimientoSemanalAvanceFisicoProgramacionId;
                             flujo.programacion.avanceFisicoCapitulo = seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo !== undefined ? seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo : null;

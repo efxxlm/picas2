@@ -2,11 +2,12 @@ import { Router } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-gestion-sst',
@@ -19,6 +20,9 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionSst: any;
+    @Output() tieneObservacion = new EventEmitter();
+    obsApoyo: any;
+    obsSupervisor: any;
     formSst: FormGroup;
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
@@ -54,6 +58,7 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
         private commonSvc: CommonService,
         private routes: Router,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
@@ -94,7 +99,14 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                         this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
                             .subscribe(
                                 response => {
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                    this.dataHistorial = response;
+
+                                    if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                        this.tieneObservacion.emit();
+                                    }
+
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 }
                             );
@@ -275,7 +287,16 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
 
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
-                response => {
+                async response => {
+                    if ( this.obsApoyo !== undefined ) {
+                        this.obsApoyo.archivada = !this.obsApoyo.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+                    }
+                    if ( this.obsSupervisor !== undefined ) {
+                        this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+                    }
+
                     this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

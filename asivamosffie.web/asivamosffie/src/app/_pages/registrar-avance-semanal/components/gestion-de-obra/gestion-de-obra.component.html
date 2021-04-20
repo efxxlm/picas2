@@ -1,66 +1,71 @@
 <mat-accordion *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAmbiental">
+            <mat-panel-title class="expansion-style--title" [ngClass]="tieneObservacionAmbiental === true ? 'en-proceso' : semaforoAmbiental">
                 Gestión ambiental
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-gestion-ambiental  [seguimientoSemanal]="seguimientoSemanal"
                                 [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"
-                                [esRegistroNuevo]="esRegistroNuevo">
+                                [esRegistroNuevo]="esRegistroNuevo"
+                                (tieneObservacion)="tieneObservacionAmbiental = true; this.estadoSemaforoGestionObra.emit( 'en-proceso' )">
         </app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoCalidad">
+            <mat-panel-title class="expansion-style--title" [ngClass]="tieneObservacionCalidad === true ? 'en-proceso' : semaforoCalidad">
                 Gestión de calidad
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-gestion-calidad    [seguimientoSemanal]="seguimientoSemanal"
                                 [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"
-                                [esRegistroNuevo]="esRegistroNuevo">
+                                [esRegistroNuevo]="esRegistroNuevo"
+                                (tieneObservacion)="tieneObservacionCalidad = true; this.estadoSemaforoGestionObra.emit( 'en-proceso' )">
         </app-gestion-calidad>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoSst">
+            <mat-panel-title class="expansion-style--title" [ngClass]="tieneObservacionSst === true ? 'en-proceso' : semaforoSst">
                 Gestión de seguridad y salud en el trabajo
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-gestion-sst    [seguimientoSemanal]="seguimientoSemanal"
                             [tipoObservacionSst]="tipoObservaciones.gestionSst"
-                            [esRegistroNuevo]="esRegistroNuevo">
+                            [esRegistroNuevo]="esRegistroNuevo"
+                            (tieneObservacion)="tieneObservacionSst = true; this.estadoSemaforoGestionObra.emit( 'en-proceso' )">
         </app-gestion-sst>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoSocial">
+            <mat-panel-title class="expansion-style--title" [ngClass]="tieneObservacionSocial === true ? 'en-proceso' : semaforoSocial">
                 Gestión social
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-gestion-social [seguimientoSemanal]="seguimientoSemanal"
                             [tipoObservacionSocial]="tipoObservaciones.gestionSocial"
-                            [esRegistroNuevo]="esRegistroNuevo">
+                            [esRegistroNuevo]="esRegistroNuevo"
+                            (tieneObservacion)="tieneObservacionSocial = true; this.estadoSemaforoGestionObra.emit( 'en-proceso' )">
         </app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAlertas">
+            <mat-panel-title class="expansion-style--title" [ngClass]="tieneObservacionAlerta === true ? 'en-proceso' : semaforoAlertas">
                 Alertas relevantes
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal"
                                 [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"
-                                [esRegistroNuevo]="esRegistroNuevo">
+                                [esRegistroNuevo]="esRegistroNuevo"
+                                (tieneObservacion)="tieneObservacionAlerta = true; this.estadoSemaforoGestionObra.emit( 'en-proceso' )">
         </app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>

@@ -8,6 +8,7 @@ import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialo
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import * as moment from 'moment';
 import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -20,11 +21,14 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
     @Input() seguimientoSemanal: any;
     @Input() avanceFisicoObs: string;
     @Output() estadoSemaforoAlerta = new EventEmitter<string>();
+    @Output() tieneObservacion = new EventEmitter();
     sinRegistros = false;
     tablaAvanceFisico = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
     dataHistorial: any[] = [];
     avanceFisico: any[];
+    obsApoyo: any;
+    obsSupervisor: any;
     seRealizoCambio = false;
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
@@ -50,6 +54,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
         private datePipe: DatePipe,
         private routes: Router,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     { }
 
@@ -109,7 +114,14 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                 this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
                     .subscribe(
                         response => {
-                            this.dataHistorial = response.filter( obs => obs.archivada === true );
+                            this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                            this.obsSupervisor = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                            this.dataHistorial = response;
+
+                            if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                this.tieneObservacion.emit();
+                            }
+
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                         }
                     );
@@ -321,7 +333,16 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
         pSeguimientoSemanal.seguimientoSemanalAvanceFisico = seguimientoSemanalAvanceFisico;
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
-                response => {
+                async response => {
+                    if ( this.obsApoyo !== undefined ) {
+                        this.obsApoyo.archivada = !this.obsApoyo.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+                    }
+                    if ( this.obsSupervisor !== undefined ) {
+                        this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+                    }
+
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.seRealizoPeticion = true;
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

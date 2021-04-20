@@ -62,15 +62,16 @@
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="valuePending( seguimientoSemanal.numeroSemana )">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="tieneObsAvanceFinanciero === true ? 'en-proceso' : valuePending( seguimientoSemanal.numeroSemana )">
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <app-avance-financiero  [seguimientoSemanal]="seguimientoSemanal"
-                                        *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"
                                         [esRegistroNuevo]="esRegistroNuevo"
-                                        [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero">
+                                        [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"
+                                        (tieneObservacion)="tieneObsAvanceFinanciero = true"
+                                        *ngIf="seguimientoSemanal.numeroSemana % 5 === 0">
                 </app-avance-financiero>
             </mat-expansion-panel>
 
@@ -112,7 +113,8 @@
 
                 <app-registro-fotografico   [seguimientoSemanal]="seguimientoSemanal"
                                             [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"
-                                            [esRegistroNuevo]="esRegistroNuevo">
+                                            [esRegistroNuevo]="esRegistroNuevo"
+                                            (tieneObservacion)="semaforoRegistroFotografico = 'en-proceso'">
                 </app-registro-fotografico>
             </mat-expansion-panel>
 

@@ -226,7 +226,7 @@ export class GestionCalidadComponent implements OnInit {
             tieneObservacion: this.formGestionCalidad.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -264,7 +264,7 @@ export class GestionCalidadComponent implements OnInit {
             tieneObservacion: ensayo.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

@@ -1,12 +1,13 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-gestion-calidad',
@@ -19,6 +20,9 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoObservacionCalidad: any;
+    @Output() tieneObservacion = new EventEmitter();
+    obsApoyo: any;
+    obsSupervisor: any;
     formGestionCalidad: FormGroup;
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
@@ -55,6 +59,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
         private routes: Router,
         private commonSvc: CommonService,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.commonSvc.listaTipoEnsayos()
@@ -141,7 +146,14 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                             this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.SeguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
                                 .subscribe(
                                     response => {
-                                        this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                        this.obsApoyo  = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                        this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                        this.dataHistorial = response;
+
+                                        if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                            this.tieneObservacion.emit();
+                                        }
+
                                         this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     }
                                 );
@@ -166,12 +178,14 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     getCantidadEnsayos() {
         this.formGestionCalidad.get( 'cantidadEnsayos' ).valueChanges
             .subscribe(
-                value => {
+                async value => {
                     if ( this.gestionObraCalidad !== undefined && this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 ) {
                         this.ensayosLaboratorio.clear();
                         for ( const ensayo of this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio ) {
                             let semaforoEnsayo: string;
                             let historial = [];
+                            let obsApoyo: any;
+                            let obsSupervisor: any;
                             if ( ensayo.registroCompleto === true ) {
                                 semaforoEnsayo = 'completo';
                             }
@@ -187,28 +201,33 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                 semaforoEnsayo = 'en-proceso';
                             }
                             if ( this.esVerDetalle === false ) {
-                                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
-                                    .subscribe(
-                                        response => {
-                                            historial = response.filter( obs => obs.archivada === true );
-                                        }
-                                    );
+                                const response = await this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio ).toPromise();
+                                obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                obsSupervisor = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                historial = response;
+
+                                if ( obsApoyo !== undefined || obsSupervisor !== undefined ) {
+                                    semaforoEnsayo = 'en-proceso';
+                                    this.tieneObservacion.emit();
+                                }
                             }
                             this.ensayosLaboratorio.push(
                                 this.fb.group(
                                     {
-                                        registroCompletoMuestras: ensayo.registroCompletoMuestras !== undefined ? ensayo.registroCompletoMuestras : null,
-                                        semaforoEnsayo: semaforoEnsayo !== undefined ? semaforoEnsayo : 'sin-diligenciar',
-                                        gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
-                                        seguimientoSemanalGestionObraCalidadId: ensayo.seguimientoSemanalGestionObraCalidadId,
-                                        tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo !== undefined ? ensayo.tipoEnsayoCodigo : null,
-                                        numeroMuestras: ensayo.numeroMuestras !== undefined ? String( ensayo.numeroMuestras ) : '',
-                                        fechaTomaMuestras:  ensayo.fechaTomaMuestras !== undefined ? new Date( ensayo.fechaTomaMuestras ) : null,
-                                        fechaEntregaResultados: ensayo.fechaEntregaResultados !== undefined ? new Date( ensayo.fechaEntregaResultados ) : null,
-                                        realizoControlMedicion: ensayo.realizoControlMedicion !== undefined ? ensayo.realizoControlMedicion : null,
-                                        observacion: ensayo.observacion !== undefined ? ensayo.observacion : null,
-                                        urlSoporteGestion: ensayo.urlSoporteGestion !== undefined ? ensayo.urlSoporteGestion : '',
-                                        registroCompleto: ensayo.registroCompleto,
+                                        registroCompletoMuestras: [ ensayo.registroCompletoMuestras !== undefined ? ensayo.registroCompletoMuestras : null ],
+                                        semaforoEnsayo: [ semaforoEnsayo !== undefined ? semaforoEnsayo : 'sin-diligenciar' ],
+                                        obsApoyo: [ obsApoyo !== undefined ? obsApoyo : null ],
+                                        obsSupervisor: [ obsSupervisor !== undefined ? obsSupervisor : null ],
+                                        gestionObraCalidadEnsayoLaboratorioId: [ ensayo.gestionObraCalidadEnsayoLaboratorioId ],
+                                        seguimientoSemanalGestionObraCalidadId: [ ensayo.seguimientoSemanalGestionObraCalidadId ],
+                                        tipoEnsayoCodigo: [ ensayo.tipoEnsayoCodigo !== undefined ? ensayo.tipoEnsayoCodigo : null ],
+                                        numeroMuestras: [ ensayo.numeroMuestras !== undefined ? String( ensayo.numeroMuestras ) : '' ],
+                                        fechaTomaMuestras:  [ ensayo.fechaTomaMuestras !== undefined ? new Date( ensayo.fechaTomaMuestras ) : null ],
+                                        fechaEntregaResultados: [ ensayo.fechaEntregaResultados !== undefined ? new Date( ensayo.fechaEntregaResultados ) : null ],
+                                        realizoControlMedicion: [ ensayo.realizoControlMedicion !== undefined ? ensayo.realizoControlMedicion : null ],
+                                        observacion: [ ensayo.observacion !== undefined ? ensayo.observacion : null ],
+                                        urlSoporteGestion: [ ensayo.urlSoporteGestion !== undefined ? ensayo.urlSoporteGestion : '' ],
+                                        registroCompleto: [ ensayo.registroCompleto ],
                                         historial: [ historial ]
                                     }
                                 )
@@ -229,6 +248,8 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                 this.fb.group({
                                     registroCompletoMuestras: [ null ],
                                     semaforoEnsayo: [ 'sin-diligenciar' ],
+                                    obsApoyo: [ null ],
+                                    obsSupervisor: [ null ],
                                     gestionObraCalidadEnsayoLaboratorioId : [ 0 ],
                                     seguimientoSemanalGestionObraCalidadId: [ this.SeguimientoSemanalGestionObraCalidadId ],
                                     tipoEnsayoCodigo: [ null ],
@@ -267,6 +288,8 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                         this.fb.group({
                                             registroCompletoMuestras: [ null ],
                                             semaforoEnsayo: [ 'sin-diligenciar' ],
+                                            obsApoyo: [ null ],
+                                            obsSupervisor: [ null ],
                                             gestionObraCalidadEnsayoLaboratorioId : [ 0 ],
                                             seguimientoSemanalGestionObraCalidadId: [ this.SeguimientoSemanalGestionObraCalidadId ],
                                             tipoEnsayoCodigo: [ null ],
@@ -288,6 +311,8 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                         this.fb.group({
                                             registroCompletoMuestras: [ null ],
                                             semaforoEnsayo: [ 'sin-diligenciar' ],
+                                            obsApoyo: [ null ],
+                                            obsSupervisor: [ null ],
                                             gestionObraCalidadEnsayoLaboratorioId : [ 0 ],
                                             seguimientoSemanalGestionObraCalidadId: [ this.SeguimientoSemanalGestionObraCalidadId ],
                                             tipoEnsayoCodigo: [ null ],
@@ -305,6 +330,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                             }
                         }
                     }
+
                     if ( this.gestionObraCalidad === undefined ) {
                         if ( Number( value ) < 0 ) {
                             this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '0' );
@@ -324,6 +350,8 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                         this.fb.group({
                                             registroCompletoMuestras: [ null ],
                                             semaforoEnsayo: [ 'sin-diligenciar' ],
+                                            obsApoyo: [ null ],
+                                            obsSupervisor: [ null ],
                                             gestionObraCalidadEnsayoLaboratorioId : [ 0 ],
                                             seguimientoSemanalGestionObraCalidadId: [ this.SeguimientoSemanalGestionObraCalidadId ],
                                             tipoEnsayoCodigo: [ null ],
@@ -345,6 +373,8 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                                         this.fb.group({
                                             registroCompletoMuestras: [ null ],
                                             semaforoEnsayo: [ 'sin-diligenciar' ],
+                                            obsApoyo: [ null ],
+                                            obsSupervisor: [ null ],
                                             gestionObraCalidadEnsayoLaboratorioId : [ 0 ],
                                             seguimientoSemanalGestionObraCalidadId: [ this.SeguimientoSemanalGestionObraCalidadId ],
                                             tipoEnsayoCodigo: [ null ],
@@ -458,7 +488,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
         this.routes.navigate( [ `${ this.routes.url }/verDetalleMuestras`, gestionObraCalidadEnsayoLaboratorioId ] );
     }
 
-    guardar() {
+    async guardar() {
         this.ensayosLaboratorio.controls.forEach( value => {
             value.get( 'fechaEntregaResultados' ).setValue(
                 value.get( 'fechaEntregaResultados' ).value !== null ?
@@ -485,6 +515,36 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                 ]
             }
         ];
+
+        if ( this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value !== null ) {
+            if ( this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false ) {
+                if ( this.obsApoyo !== undefined ) {
+                    this.obsApoyo.archivada = !this.obsApoyo.archivada;
+                    await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+                }
+                if ( this.obsSupervisor !== undefined ) {
+                    this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
+                    await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+                }
+            }
+        }
+
+        if ( this.ensayosLaboratorio.length > 0 ) {
+            this.ensayosLaboratorio.controls.forEach( async control => {
+                if ( control.dirty === true ) {
+                    if ( control.get( 'obsApoyo' ).value !== null ) {
+                        control.get( 'obsApoyo' ).value.archivada = !control.get( 'obsApoyo' ).value.archivada;
+
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( control.get( 'obsApoyo' ).value ).toPromise();
+                    }
+                    if ( control.get( 'obsSupervisor' ).value !== null ) {
+                        control.get( 'obsSupervisor' ).value.archivada = !control.get( 'obsSupervisor' ).value.archivada;
+
+                        await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( control.get( 'obsSupervisor' ).value ).toPromise();
+                    }
+                }
+            } )
+        }
 
         if ( pSeguimientoSemanal.seguimientoSemanalGestionObra !== undefined ) {
             if ( pSeguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {

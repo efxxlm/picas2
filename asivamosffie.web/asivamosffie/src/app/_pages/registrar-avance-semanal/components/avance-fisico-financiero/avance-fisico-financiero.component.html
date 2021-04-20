@@ -42,7 +42,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.flujoInversion.length > 0" (estadoSemaforoAlerta)="semaforoAvanceFisico = $event;estadoSemaforoAvanceFisico.emit( $event )"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico    [seguimientoSemanal]="seguimientoSemanal"
+                                        *ngIf="seguimientoSemanal.flujoInversion.length > 0"
+                                        (estadoSemaforoAlerta)="semaforoAvanceFisico = $event; estadoSemaforoAvanceFisico.emit( $event )"
+                                        (tieneObservacion)="semaforoAvanceFisico = 'en-proceso'; estadoSemaforoAvanceFisico.emit( 'en-proceso' )">
+            </app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

@@ -99,7 +99,8 @@
                                                         [esRegistroNuevo]="esRegistroNuevo"
                                                         [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
                                                         [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
-                                                        (reporteDeActividades)="guardar()">
+                                                        (reporteDeActividades)="guardar()"
+                                                        (tieneObservacion)="semaforoActividad = 'en-proceso'; estadoSemaforoReporte.emit( 'en-proceso' )">
             </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
@@ -118,7 +119,8 @@
                                                         [esRegistroNuevo]="esRegistroNuevo"
                                                         [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
                                                         [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
-                                                        (reporteDeActividades)="guardar()">
+                                                        (reporteDeActividades)="guardar()"
+                                                        (tieneObservacion)="semaforoActividadSiguiente = 'en-proceso'; estadoSemaforoReporte.emit( 'en-proceso' )">
             </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>

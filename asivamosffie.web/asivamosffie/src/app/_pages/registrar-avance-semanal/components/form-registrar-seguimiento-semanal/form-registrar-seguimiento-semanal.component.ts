@@ -20,6 +20,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
   semaforoComiteObra = 'sin-diligenciar';
   esRegistroNuevo: any;
   dataGestionAmbiental: any;
+  tieneObsAvanceFinanciero = false;
 
   constructor(
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
