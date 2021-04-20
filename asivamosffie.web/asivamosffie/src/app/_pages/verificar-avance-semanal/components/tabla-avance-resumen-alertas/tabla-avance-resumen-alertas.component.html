@@ -43,7 +43,7 @@
           <div class="sub-item-table" *ngFor="let resumen of element.resumenAlertas">
             <button mat-raised-button
                     color="accent" 
-                    class="btn-table expansion-style--title btn-color h-2em"
+                    class="btn-table"
                     style="width: 90%;"
                     [disabled]="resumen.disponibilidadPersonalObservaciones === undefined"
                     (click)="openDialogObservaciones( resumen )">

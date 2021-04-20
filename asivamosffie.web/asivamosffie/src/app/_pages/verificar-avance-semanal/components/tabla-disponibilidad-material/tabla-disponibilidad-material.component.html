@@ -60,7 +60,7 @@
             <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
                 <button mat-raised-button
                         color="accent" 
-                        class="btn-table expansion-style--title btn-color h-2em"
+                        class="btn-table"
                         style="width: 90%;"
                         [disabled]="resumen.disponibilidadMaterialObservaciones === undefined && resumen.disponibilidadEquipoObservaciones === undefined && resumen.productividadObservaciones === undefined"
                         (click)="openDialogObservaciones( resumen )">

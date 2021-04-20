@@ -27,6 +27,7 @@ export class GuardadoParcialAvanceSemanalService {
     { }
 
     getDataAvanceFisico( avanceFisico: any, seRealizoPeticion?: boolean ) {
+        // console.log( 1, seRealizoPeticion )
         this.dataAvanceFisico = avanceFisico;
         
         if ( seRealizoPeticion !== undefined ) {

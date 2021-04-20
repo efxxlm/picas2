@@ -97,6 +97,8 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 })
             );
         }
+
+        if(!this.esRegistroNuevo) this.formManejoMaterialInsumo.markAllAsTouched();
     }
 
     maxLength(e: any, n: number) {
@@ -142,7 +144,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
 
     deleteProveedor( index: number ) {
         if ( this.proveedores.at( index ).get( 'manejoMaterialesInsumosProveedorId' ).value === 0 ) {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
                 .subscribe(
                     value => {
                         if ( value === true ) {
@@ -152,7 +154,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                     }
                 );
         } else {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
                 .subscribe(
                     value => {
                         if ( value === true ) {

@@ -30,7 +30,7 @@
         <strong>
           Disponibilidad de personal:
         </strong>
-        {{ seguimiento.disponibilidadPersonal === true ? 'Si' : 'No' }}
+        {{ seguimiento.disponibilidadPersonal === true ? 'suficiente' : 'insuficiente' }}
       </p>
       <p *ngIf="seguimiento.disponibilidadPersonal === false">
         <strong>

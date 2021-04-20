@@ -16,59 +16,81 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./tabla-registrar-avance-semanal.component.scss']
 })
 export class TablaRegistrarAvanceSemanalComponent implements OnInit {
+  tablaRegistro = new MatTableDataSource();
+  dataTable: any = [];
+  estadoAvanceSemanal: any;
+  primeraSemana = 1;
+  permisos: MenuPerfil;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  displayedColumns: string[] = [
+    'llaveMen',
+    'numeroContrato',
+    'tipoIntervencion',
+    'institucionEducativa',
+    'sede',
+    'fechaUltimoReporte',
+    'estadoObra',
+    'gestion'
+  ];
 
-    tablaRegistro = new MatTableDataSource();
-    dataTable: any = [];
-    estadoAvanceSemanal: any;
-    primeraSemana = 1;
-    permisos: MenuPerfil;
-    @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-    @ViewChild( MatSort, { static: true } ) sort: MatSort;
-    displayedColumns: string[]  = [
-      'llaveMen',
-      'numeroContrato',
-      'tipoIntervencion',
-      'institucionEducativa',
-      'sede',
-      'fechaUltimoReporte',
-      'estadoObra',
-      'gestion'
-    ];
+  constructor(
+    private avanceSemanalSvc: RegistrarAvanceSemanalService,
+    private autenticacionSvc: AutenticacionService,
+    private dialog: MatDialog,
+    private routes: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.avanceSemanalSvc.estadosAvanceSemanal().subscribe(estados => {
+      this.estadoAvanceSemanal = estados;
+    });
+    this.getDataTable();
+    this.permisos = {
+      tienePermisoCrear:
+        this.activatedRoute.snapshot.data.tienePermisoCrear !== undefined
+          ? this.activatedRoute.snapshot.data.tienePermisoCrear
+          : false,
+      tienePermisoLeer:
+        this.activatedRoute.snapshot.data.tienePermisoLeer !== undefined
+          ? this.activatedRoute.snapshot.data.tienePermisoLeer
+          : false,
+      tienePermisoEditar:
+        this.activatedRoute.snapshot.data.tienePermisoEditar !== undefined
+          ? this.activatedRoute.snapshot.data.tienePermisoEditar
+          : false,
+      tienePermisoEliminar:
+        this.activatedRoute.snapshot.data.tienePermisoEliminar !== undefined
+          ? this.activatedRoute.snapshot.data.tienePermisoEliminar
+          : false
+    };
+  }
 
-    constructor(
-        private avanceSemanalSvc: RegistrarAvanceSemanalService,
-        private autenticacionSvc: AutenticacionService,
-        private dialog: MatDialog,
-        private routes: Router,
-        private activatedRoute: ActivatedRoute )
-    {
-        this.avanceSemanalSvc.estadosAvanceSemanal()
-            .subscribe( estados => {
-                this.estadoAvanceSemanal = estados;
-            } );
-        this.getDataTable();
-        this.permisos = {
-            tienePermisoCrear: this.activatedRoute.snapshot.data.tienePermisoCrear !== undefined ? this.activatedRoute.snapshot.data.tienePermisoCrear : false,
-            tienePermisoLeer: this.activatedRoute.snapshot.data.tienePermisoLeer !== undefined ? this.activatedRoute.snapshot.data.tienePermisoLeer : false,
-            tienePermisoEditar: this.activatedRoute.snapshot.data.tienePermisoEditar !== undefined ? this.activatedRoute.snapshot.data.tienePermisoEditar : false,
-            tienePermisoEliminar: this.activatedRoute.snapshot.data.tienePermisoEliminar !== undefined ? this.activatedRoute.snapshot.data.tienePermisoEliminar : false
+  ngOnInit(): void {}
+
+  getDataTable() {
+    this.avanceSemanalSvc.getVRegistrarAvanceSemanal().subscribe(listas => {
+      // console.log( this.permisos, listas );
+      this.dataTable = listas;
+      this.dataTable.sort(function (a, b) {
+        if (a.fechaUltimoReporte > b.fechaUltimoReporte) {
+          return 1;
         }
-    }
-
-    ngOnInit(): void {
-    }
-
-    getDataTable() {
-        this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
-            .subscribe(
-                listas => {
-                    console.log( this.permisos, listas );
-                    this.dataTable = listas;
-                    this.tablaRegistro = new MatTableDataSource( this.dataTable );
-                    this.tablaRegistro.sort = this.sort;
-                    this.tablaRegistro.paginator = this.paginator;
-                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                    /*
+        if (a.fechaUltimoReporte < b.fechaUltimoReporte) {
+          return -1;
+        }
+        return 0;
+      });
+      this.dataTable.forEach(element => {
+        element.fechaUltimoReporte =
+          element.fechaUltimoReporte !== 'Sin registro'
+            ? element.fechaUltimoReporte.split('T')[0].split('-').reverse().join('/')
+            : 'Sin registro';
+      });
+      this.tablaRegistro = new MatTableDataSource(this.dataTable);
+      this.tablaRegistro.sort = this.sort;
+      this.tablaRegistro.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      /*
                     if ( this.permisos.tienePermisoCrear === false ) {
                         document.getElementsByName( 'crearBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
                     }
@@ -79,40 +101,36 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
                         document.getElementsByName( 'leerBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
                     }
                     */
-                }
-            );
-    }
+    });
+  }
 
-    applyFilter( event: Event ) {
-        const filterValue      = (event.target as HTMLInputElement).value;
-        this.tablaRegistro.filter = filterValue.trim().toLowerCase();
-    }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tablaRegistro.filter = filterValue.trim().toLowerCase();
+  }
 
-    openDialog(modalTitle: string, modalText: string) {
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
-          width: '28em',
-          data: { modalTitle, modalText }
-        });
-    }
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
 
-    openDialogCargarActa( registro: any ) {
-        this.dialog.open( DialogCargarActaComponent, {
-          width: '70em',
-          data : { registro }
-        });
-    }
+  openDialogCargarActa(registro: any) {
+    this.dialog.open(DialogCargarActaComponent, {
+      width: '70em',
+      data: { registro }
+    });
+  }
 
-    enviarVerificacion( contratacionProyectoId: number ) {
-        this.avanceSemanalSvc
-            .changueStatusSeguimientoSemanal( contratacionProyectoId, this.estadoAvanceSemanal.enviadoAVerificacion.codigo )
-                .subscribe(
-                    response => {
-                        this.openDialog( '', `<b>${ response.message }</b>` );
-                        this.dataTable = [];
-                        this.tablaRegistro = new MatTableDataSource();
-                        this.getDataTable();
-                    }
-                );
-    }
-
+  enviarVerificacion(contratacionProyectoId: number) {
+    this.avanceSemanalSvc
+      .changueStatusSeguimientoSemanal(contratacionProyectoId, this.estadoAvanceSemanal.enviadoAVerificacion.codigo)
+      .subscribe(response => {
+        this.openDialog('', `<b>${response.message}</b>`);
+        this.dataTable = [];
+        this.tablaRegistro = new MatTableDataSource();
+        this.getDataTable();
+      });
+  }
 }

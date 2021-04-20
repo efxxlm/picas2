@@ -443,7 +443,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     }
 
     eliminarEnsayo( gestionObraCalidadEnsayoLaboratorioId: number, numeroEnsayo: number ) {
-        this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
           .subscribe( value => {
             if ( value === true ) {
                 if ( gestionObraCalidadEnsayoLaboratorioId === 0 ) {

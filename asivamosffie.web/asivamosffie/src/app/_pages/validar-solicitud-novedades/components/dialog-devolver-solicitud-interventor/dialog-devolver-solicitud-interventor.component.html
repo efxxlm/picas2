@@ -36,6 +36,14 @@
       <span class="contador miles" *ngIf="formObservacion.get('causaRechazo').value === null">
         1000
       </span>
+      <span class="icon-incompleto">
+        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+          [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip" *ngIf="
+            (formObservacion.get('causaRechazo').invalid && formObservacion.get('causaRechazo').touched)
+          "
+        />
+      </span>
     </div>
 
     <div class="text-center">

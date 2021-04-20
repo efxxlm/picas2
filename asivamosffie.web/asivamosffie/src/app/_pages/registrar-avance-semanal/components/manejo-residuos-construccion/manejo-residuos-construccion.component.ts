@@ -97,6 +97,8 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                 )
             );
         }
+
+        if (!this.esRegistroNuevo) this.formManejoResiduosConstruccion.markAllAsTouched();
     }
 
     validateNumber( value: string, campoForm: string ) {
@@ -150,7 +152,7 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
 
     deleteGestor( index: number ) {
         if ( this.gestorResiduos.at( index ).get( 'manejoResiduosConstruccionDemolicionGestorId' ).value === 0 ) {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
                 .subscribe(
                     value => {
                         if ( value === true ) {
@@ -160,7 +162,7 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                     }
                 );
         } else {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
                 .subscribe(
                     value => {
                         if ( value === true ) {

@@ -187,6 +187,8 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        if(!this.esRegistroNuevo) this.formGestionAmbiental.markAllAsTouched();
     }
 
     getCantidadActividades() {
@@ -591,6 +593,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                     }
                     }, 1500);
                 }
+                if(!this.esRegistroNuevo) this.formGestionAmbiental.markAllAsTouched()
             } );
     }
 
@@ -624,6 +627,8 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        if(!this.esRegistroNuevo) this.formGestionAmbiental.markAllAsTouched();
     }
 
     valuePendingTipoActividad( actividad: Dominio ) {

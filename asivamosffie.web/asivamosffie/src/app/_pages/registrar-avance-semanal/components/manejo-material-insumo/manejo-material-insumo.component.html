@@ -80,7 +80,7 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Campo URL</label>
+                  <label class="label-left">URL con soporte</label>
                 </div>
                 <div class="col d-flex">
                     <mat-form-field style="width: 94%;">
@@ -274,7 +274,7 @@
     <p><b>Proveedor</b>: {{ proveedor.get( 'proveedor' ).value }} </p>
     <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === true"><b>¿Requiere permisos ambientales y/o mineros?</b>: Si</p>
     <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === false"><b>¿Requiere permisos ambientales y/o mineros?</b>: No</p>
-    <p *ngIf="proveedor.get( 'urlRegistroFotografico' ).value.length > 0"><b>Campo URL</b>: {{ proveedor.get( 'urlRegistroFotografico' ).value }} </p>
+    <p *ngIf="proveedor.get( 'urlRegistroFotografico' ).value.length > 0"><b>URL con soporte</b>: {{ proveedor.get( 'urlRegistroFotografico' ).value }} </p>
   </div>
   <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === true"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: Si</p>
   <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === false"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: No</p>
