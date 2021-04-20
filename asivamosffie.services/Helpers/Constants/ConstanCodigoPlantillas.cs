@@ -94,7 +94,7 @@
         Tipo_de_novedad_modificacion_contractual = 83,
         Tipo_de_novedad_adicion_aportante = 84,
         Tabla_actuaciones = 85,
-        Proceso_defensa_judicial_4_2_2 = 86
-
+        Proceso_defensa_judicial_4_2_2 = 86,
+        Reclamaciones_4_2_1 = 87,
     }
 }

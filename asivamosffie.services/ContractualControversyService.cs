@@ -4211,6 +4211,9 @@ namespace asivamosffie.services
             {
                 ControversiaContractual controversiaContractual = _context.ControversiaContractual
                    .Where(r => r.ControversiaContractualId == pControversiaContractualId).Include(x => x.Contrato).FirstOrDefault();
+                
+                List<ControversiaActuacion> controversiasActuacion = _context.ControversiaActuacion.
+                    Where(r => !(bool)r.Eliminado && r.ControversiaContractualId == pControversiaContractualId).Include(r => r.ActuacionSeguimiento).Distinct().ToList();
 
                 List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
 
@@ -4243,6 +4246,17 @@ namespace asivamosffie.services
                 string TipoPlantillaHistorialModifcaciones = ((int)ConstanCodigoPlantillas.Historial_de_modificaciones_controversias).ToString();
                 string HistorialModificaciones = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaHistorialModifcaciones).Select(r => r.Contenido).FirstOrDefault();
                 string Historiales = "";
+
+                //historial actuaciones
+                string TipoPlantillaHistorialActModifcaciones = ((int)ConstanCodigoPlantillas.Tabla_actuaciones).ToString();
+                string HistorialActuaciones = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaHistorialActModifcaciones).Select(r => r.Contenido).FirstOrDefault();
+                string HistorialesAct = "";
+
+                //historial reclamaciones
+                string TipoPlantillaHistorialReclamaciones = ((int)ConstanCodigoPlantillas.Reclamaciones_4_2_1).ToString();
+                string HistorialReclamaciones = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaHistorialReclamaciones).Select(r => r.Contenido).FirstOrDefault();
+                string HistorialesRec = "";
+
                 //tipos de novedad en el historial
 
                 //adicion
@@ -4680,6 +4694,45 @@ namespace asivamosffie.services
                 }
 
                 #endregion
+
+                #region Historial actuaciones
+
+                //Historial de Actuaciones
+                int contadorActuacion = 1;
+                List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+
+                foreach (var actuacion in controversiasActuacion)
+                {
+                    HistorialesAct += HistorialActuaciones;
+
+                    HistorialesAct = HistorialesAct.Replace("_contador_", contadorActuacion.ToString());
+                    HistorialesAct = HistorialesAct.Replace("_Fecha_Actualizacion_Actuacion_", actuacion.FechaActuacion != null ? Convert.ToDateTime(actuacion.FechaActuacion).ToString("dd/MM/yyyy") : "");
+                    HistorialesAct = HistorialesAct.Replace("_Numero_Actuacion_", string.IsNullOrEmpty(actuacion.NumeroActuacion) ? "" : actuacion.NumeroActuacion);
+                    HistorialesAct = HistorialesAct.Replace("_Actuacion_", string.IsNullOrEmpty(actuacion.ActuacionAdelantadaCodigo) ? "" : listaDominioActuacionActualizada.Where(r => r.Codigo == actuacion.ActuacionAdelantadaCodigo)?.FirstOrDefault()?.Nombre);
+
+                    #region Historial Reclamaciones                
+                    int contadorReclamacion = 1;
+
+                    foreach (var reclamacion in actuacion.ActuacionSeguimiento)
+                    {
+                        HistorialesRec += HistorialReclamaciones;
+
+                        HistorialesRec = HistorialesRec.Replace("_contador_", contadorReclamacion.ToString());
+                        HistorialesRec = HistorialesRec.Replace("_Fecha_Actualizacion_Actuacion_", reclamacion.FechaActuacionAdelantada != null ? Convert.ToDateTime(reclamacion.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : "");
+                        HistorialesRec = HistorialesRec.Replace("_Numero_Actuacion_", string.IsNullOrEmpty(reclamacion.NumeroActuacionReclamacion) ? "" : reclamacion.NumeroActuacionReclamacion);
+                        HistorialesRec = HistorialesRec.Replace("_Actuacion_", string.IsNullOrEmpty(reclamacion.ActuacionAdelantada) ? "" : reclamacion.ActuacionAdelantada);
+                        //historial de reclamaciones * controversia
+                        contadorReclamacion++;
+
+                    }
+
+                    #endregion
+                    contadorActuacion++;
+
+                }
+
+                #endregion
+                
                 #region fuentes usos
 
                 foreach (Dominio placeholderDominio in placeholders)
@@ -4736,6 +4789,14 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.HISTORIAL_MODIFICACIONES:
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, Historiales);
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.HISTORIAL_ACTUACIONES:
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, controversiasActuacion.Count() > 0 ? HistorialesAct : "");
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.HISTORIAL_RECLAMACIONES:
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, controversiasActuacion.FirstOrDefault().ActuacionSeguimiento.Count() > 0 ? HistorialesRec : "");
                             break;
                     }
                 }

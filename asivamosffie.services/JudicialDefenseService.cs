@@ -856,7 +856,15 @@ namespace asivamosffie.services
                 contadorActuacion++;
 
             }
-            strContenido = strContenido.Replace("_plantillaActuaciones_", plantillatrActuaciones);
+            if (actuaciones.Count() > 0)
+            {
+                strContenido = strContenido.Replace("_plantillaActuaciones_", plantillatrActuaciones);
+
+            }
+            else
+            {
+                strContenido = strContenido.Replace("_plantillaActuaciones_", "");
+            }
 
             /*strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
             strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);

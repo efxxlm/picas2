@@ -309,6 +309,9 @@
         public const string TP_COMPONENTE     = "232";
         public const string TP_USO      = "233";
         public const string TP_VALOR_USO  = "234";
+        public const string HISTORIAL_ACTUACIONES = "235";
+        public const string HISTORIAL_RECLAMACIONES = "236";
+
         #endregion
     }
 }
