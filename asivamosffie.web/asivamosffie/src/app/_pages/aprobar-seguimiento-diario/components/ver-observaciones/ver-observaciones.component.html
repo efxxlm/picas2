@@ -1,36 +1,26 @@
-<div class="d-flex align-items-center var-main-gris mt-2em animatedDown" 
-     *ngIf="observacionObjeto === undefined ">
-  <div class="text-area-quill">
-    <label for="observacion" class="text-area-quill--label header">
-      Observaciones al seguimiento diario
-    </label>
-    <div class="row">
-      <div class="pr-1">
-        <label class="label-left">
-          ¿Tiene observaciones al registro del seguimiento diario?
-        </label>
-      </div>
-      <span class="spanObservaciones">No</span>
-    </div>
-  </div>
-</div>
+<mat-card class="shipping-card var-main-gris" *ngIf="observacionObjeto === undefined">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text"> Observaciones al seguimiento diario </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong> ¿Tiene observaciones al registro del seguimiento diario? </strong>
+      No
+    </p>
+  </mat-card-content>
+</mat-card>
 
-<div class="d-flex align-items-center var-main-gris mt-2em animatedDown" 
-     *ngIf="observacionObjeto !== undefined ">
-  <div class="text-area-quill">
-    <label for="observacion" class="text-area-quill--label header">
-      Observaciones al seguimiento diario
-    </label>
-    <div class="row">
-      <div class="pr-1">
-        <label class="label-left">
-          ¿Tiene observaciones al registro del seguimiento diario?
-        </label>
-      </div>
-      <span class="spanObservaciones">{{ observacionObjeto !== undefined ? 'Si' : 'No' }}</span>
-    </div>
+<mat-card class="shipping-card var-main-gris" *ngIf="observacionObjeto !== undefined">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text"> Observaciones al seguimiento diario </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong> ¿Tiene observaciones al registro del seguimiento diario? </strong>
+      {{ observacionObjeto !== undefined ? 'Si' : 'No' }}
+    </p>
     <div class="divObservaciones">
       <p>{{ observacionObjeto.observaciones }}</p>
     </div>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

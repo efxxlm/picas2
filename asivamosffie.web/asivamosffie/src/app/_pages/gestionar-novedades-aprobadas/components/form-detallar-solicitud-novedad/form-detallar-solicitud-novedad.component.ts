@@ -235,7 +235,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                   }
 
                   this.aportantes.push(grupoAportante);
-
+                  this.estaEditando = true;
+                  this.addressForm.markAllAsTouched();
                 });
 
 

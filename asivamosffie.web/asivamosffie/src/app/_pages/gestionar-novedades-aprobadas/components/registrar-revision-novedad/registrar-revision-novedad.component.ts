@@ -62,7 +62,8 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
         this.addressForm.get('novedadContractualObservacionesId').setValue(this.novedad.observacionTramite.novedadContractualObservacionesId);
         this.addressForm.get('observacionDevolver').setValue(this.novedad.observacionTramite.observaciones);
       }
-
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     }
   }
 

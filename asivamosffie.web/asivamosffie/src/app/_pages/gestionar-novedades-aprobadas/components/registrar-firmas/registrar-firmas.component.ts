@@ -78,6 +78,11 @@ export class RegistrarFirmasComponent implements OnInit, OnChanges {
       this.addressForm.get('fechaFirmaSupervisor').setValue(this.novedad.fechaFirmaSupervisor);
       this.addressForm.get('razones').setValue(this.novedad.razonesNoContinuaProceso);
       this.addressForm.get('urlFirmas').setValue(this.novedad.urlSoporteFirmas);
+
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+      this.addressForm.get('fechaFirmaContratistaInterventoria').updateValueAndValidity();
+      this.addressForm.get('fechaFirmaApoyoSupervision').updateValueAndValidity();
     }
 
 

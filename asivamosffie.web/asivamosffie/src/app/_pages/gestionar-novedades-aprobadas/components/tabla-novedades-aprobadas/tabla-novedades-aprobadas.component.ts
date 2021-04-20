@@ -15,12 +15,12 @@ import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 export class TablaNovedadesAprobadasComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaValidacionNovedad',
+    'fechaValidacion',
     'numeroSolicitud',
     'numeroContrato',
-    'tipoNovedad',
-    'estadoNovedad',
-    'estadoRegistro',
+    'novedadesSeleccionadas',
+    'estadoDescripcion',
+    'registroCompletoTramiteNovedades',
     'id'
   ];
   dataSource = new MatTableDataSource();
@@ -36,6 +36,11 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.contractualNoveltyService.getListGrillaNovedadContractualGestionar()
       .subscribe(respuesta => {
+        respuesta.forEach(element => {
+          element.fechaValidacion = element.fechaValidacion
+            ? element.fechaValidacion.split('T')[0].split('-').reverse().join('/')
+            : '';
+        });
         this.dataSource = new MatTableDataSource( respuesta );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;

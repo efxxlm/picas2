@@ -10,12 +10,12 @@
   </h1>
   <p class="colorMainColor mt-05em">
     <span class="mx-1em" *ngIf="seguimiento" >{{ seguimiento.fechaSeguimiento | date: 'dd/MM/yyyy' }}</span>
-    <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
-    <span class="mx-1em">{{ proyecto.departamento }}</span>
-    <span class="mx-1em">{{ proyecto.municipio }}</span>
-    <span class="mx-1em">{{ proyecto.institucionEducativa }}</span>
+    <b class="mx-1em">{{ proyecto.tipoIntervencion }}</b>
+    <b class="mx-1em">{{ proyecto.departamento }}</b>
+    <b class="mx-1em">{{ proyecto.municipio }}</b>
+    <b class="mx-1em">{{ proyecto.institucionEducativa }}</b>
     <!-- <span class="mx-1em">Inmaculada</span> -->
-    <span class="mx-1em">{{ proyecto.sede }}</span>
+    <b class="mx-1em">{{ proyecto.sede }}</b>
   </p>
 
 </section>

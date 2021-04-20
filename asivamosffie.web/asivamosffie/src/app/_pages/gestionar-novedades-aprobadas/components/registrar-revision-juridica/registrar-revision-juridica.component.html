@@ -6,7 +6,13 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Registrar revisión jurídica solicitud de novedad {{ novedad.numeroSolicitud }}
+      <span *ngIf="novedad.abogadoRevisionId">
+        Ver detalle/ Editar
+      </span>
+      <span *ngIf="!novedad.abogadoRevisionId">
+        Registrar
+      </span>
+      revisión jurídica solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
       Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
