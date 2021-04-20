@@ -2,16 +2,12 @@
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      <span *ngIf="novedad.estadoCodigo === '5'">
-        Ver detalle/Editar 
-      </span>
-      <span *ngIf="true">
-        Verificar
-      </span>
+      <span *ngIf="novedad.estadoCodigo === '5'"> Ver detalle/Editar </span>
+      <span *ngIf="true"> Verificar </span>
       solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
@@ -21,15 +17,11 @@
 
   <mat-card class="shipping-card var-main-gris">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Datos del contrato
-      </mat-card-title>
+      <mat-card-title class="header-card--text"> Datos del contrato </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <p>
-        <strong>
-          Nombre del contratista:
-        </strong>
+        <strong> Nombre del contratista: </strong>
         {{ novedad.contrato.contratacion.contratista.nombre }}
       </p>
       <p>
@@ -39,9 +31,7 @@
         </span>
       </p>
       <p>
-        <strong>
-          Número de identificación
-        </strong>
+        <strong> Número de identificación </strong>
         {{ novedad.contrato.contratacion.contratista.numeroIdentificacion }}
       </p>
       <p>
@@ -59,53 +49,63 @@
       <p>
         <strong>Plazo:</strong>
         <span>
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias }} Días 
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses }} Meses 
+          {{
+            novedad.contrato.contratacion.disponibilidadPresupuestal[
+              novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
+            ].plazoDias
+          }}
+          Días
+          {{
+            novedad.contrato.contratacion.disponibilidadPresupuestal[
+              novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
+            ].plazoMeses
+          }}
+          Meses
         </span>
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
         <span>
-          {{ (novedad.contrato?.fechaActaInicioFase2 ? novedad.contrato?.fechaActaInicioFase2 : novedad.contrato?.fechaActaInicioFase1) | date:'dd/MM/yyyy'}}  
+          {{
+            (novedad.contrato?.fechaActaInicioFase2
+              ? novedad.contrato?.fechaActaInicioFase2
+              : novedad.contrato?.fechaActaInicioFase1
+            ) | date: 'dd/MM/yyyy'
+          }}
         </span>
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
         <span>
-          {{ (novedad.contrato?.fechaTerminacionFase2 ? novedad.contrato?.fechaTerminacionFase2 : novedad.contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
+          {{
+            (novedad.contrato?.fechaTerminacionFase2
+              ? novedad.contrato?.fechaTerminacionFase2
+              : novedad.contrato?.fechaTerminacion
+            ) | date: 'dd/MM/yyyy'
+          }}
         </span>
       </p>
 
       <div *ngIf="novedad.esAplicadaAcontrato !== true">
         <h2 class="card-subTitle">Proyecto asociado</h2>
         <p>
-          <strong>
-            Llave MEN:
-          </strong>
+          <strong> Llave MEN: </strong>
           {{ novedad.proyectosSeleccionado.llaveMen }}
         </p>
         <p>
-          <strong>
-            Departamento:
-          </strong>
+          <strong> Departamento: </strong>
           {{ novedad.proyectosSeleccionado.departamento }}
         </p>
         <p>
-          <strong>
-            Municipio:
-          </strong>
+          <strong> Municipio: </strong>
           {{ novedad.proyectosSeleccionado.municipio }}
         </p>
         <p>
-          <strong>
-            Institución educativa:
-          </strong>
+          <strong> Institución educativa: </strong>
           {{ novedad.proyectosSeleccionado.institucionEducativa }}
         </p>
         <p>
-          <strong>
-            Sede:
-          </strong>
+          <strong> Sede: </strong>
           {{ novedad.proyectosSeleccionado.sede }}
         </p>
       </div>
@@ -115,31 +115,23 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Registrar novedad
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> Registrar novedad </mat-panel-title>
       </mat-expansion-panel-header>
 
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
           <p>
-            <strong>
-              Fecha de solicitud de la novedad :
-            </strong>
+            <strong> Fecha de solicitud de la novedad : </strong>
             {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
           </p>
           <p>
-            <strong>
-              Instancia donde se presentó la solicitud :
-            </strong>
+            <strong> Instancia donde se presentó la solicitud : </strong>
             <span>
               {{ novedad.instanciaNombre }}
             </span>
           </p>
           <p>
-            <strong>
-              Fecha de la sesión de la instancia :
-            </strong>
+            <strong> Fecha de la sesión de la instancia : </strong>
             {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
           <!-- <p>
@@ -148,15 +140,15 @@
             </strong>
             Modificación de Condiciones Contractuales
           </p> -->
-
         </mat-card-content>
       </mat-card>
-	        <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
+      <mat-accordion>
+        <mat-expansion-panel
+          class="expansion-style sub-expansion"
+          *ngFor="let descripcion of novedad.novedadContractualDescripcion; let i = index"
+        >
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-              Novedad {{ 1 + i }}
-            </mat-panel-title>
+            <mat-panel-title class="expansion-style--title"> Novedad {{ 1 + i }} </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
@@ -165,33 +157,51 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <strong>Motivos de la novedad :</strong> 
-                  <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
-              
+              <strong>Motivos de la novedad :</strong>
+              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo">
+                {{ motivo.nombreMotivo }},
+              </section>
+
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-                <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
+              <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
               <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'">
+                <strong>Plazo adicional meses: </strong> {{ descripcion.plazoAdicionalMeses }}
+              </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'">
+                <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
+              </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+                <strong>Fecha de inicio de la suspensión: </strong>
+                {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+                <strong>Fecha final de la suspensión: </strong>
+                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
+              </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '3'">
+                <strong>Presupuesto adicional solicitado: </strong>
+                {{ descripcion.presupuestoAdicionalSolicitado | currency: ' ':'symbol-narrow':'.0-0' }}
+              </p>
 
               <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
-                <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
-                  <h3> <strong> CLAUSULA </strong> {{ i + 1 }} </h3>
-                  <p><strong>Cláusula a modificar: </strong> </p>
+                <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index">
+                  <h3><strong> CLAUSULA </strong> {{ i + 1 }}</h3>
+                  <p><strong>Cláusula a modificar: </strong></p>
                   <section [innerHTML]="clausula.clausulaAmodificar" style="margin-left: 2em"></section>
-                  <p><strong>Ajuste solicitado a la cláusula: </strong> </p>
+                  <p><strong>Ajuste solicitado a la cláusula: </strong></p>
                   <section [innerHTML]="clausula.ajusteSolicitadoAclausula" style="margin-left: 2em"></section>
                 </section>
               </section>
 
-              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
+              <p>
+                <strong>¿Cuenta con la documentación soporte suficiente?: </strong>
+                {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}
+              </p>
               <p><strong>Concepto técnico: </strong></p>
               <section class="text-justify" [innerHTML]="descripcion.conceptoTecnico"></section>
               <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
@@ -203,51 +213,37 @@
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Soporte de la solicitud
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> Soporte de la solicitud </mat-panel-title>
       </mat-expansion-panel-header>
 
       <mat-card class="shipping-card var-main-gris">
         <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text">
-            Soporte del registro del proceso
-          </mat-card-title>
+          <mat-card-title class="header-card--text"> Soporte del registro del proceso </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-
           <p>
-            <strong>
-              URL con soporte:
-            </strong>
-            <a [href]="novedad.urlSoporte"
-              target="_blank" rel="noopener noreferrer">
+            <strong> URL con soporte: </strong>
+            <a [href]="novedad.urlSoporte" target="_blank" rel="noopener noreferrer">
               {{ novedad.urlSoporte }}
             </a>
           </p>
-
         </mat-card-content>
       </mat-card>
-
     </mat-expansion-panel>
   </mat-accordion>
 
   <mat-card class="shipping-card var-main-gris" *ngIf="novedad.observacionApoyo !== undefined">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Verificación del apoyo a la supervisión
-      </mat-card-title>
+      <mat-card-title class="header-card--text"> Verificación del apoyo a la supervisión </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p> 
+      <p>
         <strong>
           {{ novedad.observacionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }}
         </strong>
       </p>
       <p>
-        <strong>
-          ¿Tiene observaciones a la solicitud de novedad?:
-        </strong>
+        <strong> ¿Tiene observaciones a la solicitud de novedad?: </strong>
         Sí
       </p>
       <section class="text-justify" [innerHTML]="novedad.observacionApoyo.observaciones"></section>
@@ -257,9 +253,14 @@
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="row justify-content-center mt-2em">
       <div class="pr-1">
-        <label class="label-left" for="tieneObservaciones" [class.color-secondaryColor]="
-            addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched ||
-            addressForm.get('tieneObservaciones').invalid && estaEditando">
+        <label
+          class="label-left"
+          for="tieneObservaciones"
+          [class.color-secondaryColor]="
+            (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+            (addressForm.get('tieneObservaciones').invalid && estaEditando)
+          "
+        >
           ¿Desde la supervisión tiene observaciones a la solicitud de novedad?
         </label>
       </div>
@@ -272,48 +273,85 @@
       </div>
     </div>
 
-    <div class="d-flex mt-2em align-items-center animatedDown"
-      *ngIf="addressForm.get('tieneObservaciones').value === true">
-      <div class="text-area-quill" [class.color-secondaryColor]="
-      addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched ||
-      addressForm.get('observaciones').invalid && estaEditando">
-        <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
-                  !(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched ||
-                  addressForm.get('observaciones').invalid && estaEditando)">
+    <div
+      class="d-flex mt-2em align-items-center animatedDown"
+      *ngIf="addressForm.get('tieneObservaciones').value === true"
+    >
+      <div
+        class="text-area-quill"
+        [class.color-secondaryColor]="
+          (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+          (addressForm.get('observaciones').invalid && estaEditando)
+        "
+      >
+        <label
+          class="text-area-quill--label align-left-label"
+          [class.colorMainColor]="
+            !(
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            )
+          "
+        >
           Observaciones a la solicitud de novedad
         </label>
-        <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-          (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+        <quill-editor
+          class="quill-editor-style ml-1em"
+          [styles]="editorStyle"
+          [modules]="config"
+          (onContentChanged)="maxLength($event, 1000)"
+          formControlName="observaciones"
+          required
+        >
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-        {{1000 -
-        (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
+        {{
+          1000 -
+            (textoLimpio(addressForm.get('observaciones').value) > 1000
+              ? 1000
+              : textoLimpio(addressForm.get('observaciones').value))
+        }}
       </span>
-      <span class="contador miles" *ngIf="!addressForm.get('observaciones').value">
-        1000
+      <span class="contador miles" *ngIf="!addressForm.get('observaciones').value"> 1000 </span>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          [matTooltipPosition]="'above'"
+          matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip"
+          *ngIf="
+            (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+            (addressForm.get('observaciones').invalid && estaEditando)
+          "
+        />
       </span>
     </div>
     <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="
-        addressForm.get('tieneObservaciones').invalid ||
-        addressForm.get('tieneObservaciones').value === true && addressForm.get('observaciones').invalid">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      <button
+        mat-button
+        color="warn"
+        class="btn-guardar"
+        type="submit"
+        [disabled]="
+          addressForm.get('tieneObservaciones').invalid ||
+          (addressForm.get('tieneObservaciones').value === true && addressForm.get('observaciones').invalid)
+        "
+      >
+        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
       </button>
     </div>
   </form>
 
   <mat-card class="shipping-card var-main-gris" *ngIf="false">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Causa del rechazo por el supervisor
-      </mat-card-title>
+      <mat-card-title class="header-card--text"> Causa del rechazo por el supervisor </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <p>
-        <strong>
-          26/10/2020
-        </strong>
+        <strong> 26/10/2020 </strong>
       </p>
       <div>
         <ol>
@@ -322,5 +360,4 @@
       </div>
     </mat-card-content>
   </mat-card>
-
 </section>

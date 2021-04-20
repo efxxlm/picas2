@@ -12,7 +12,6 @@ import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNov
   styleUrls: ['./validar-novedad-contrato-obra.component.scss']
 })
 export class ValidarNovedadContratoObraComponent implements OnInit {
-
   detalleId: number;
   estaEditando = false;
   novedad: NovedadContractual;
@@ -31,7 +30,7 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
+      [{ align: [] }]
     ]
   };
 
@@ -40,7 +39,7 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
@@ -67,27 +66,29 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private contractualNoveltyService: ContractualNoveltyService,
-  ) { }
+    private contractualNoveltyService: ContractualNoveltyService
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.detalleId = params.id;
       //console.log(this.detalleId);
 
-      this.contractualNoveltyService.getNovedadContractualById( this.detalleId )
-        .subscribe( respuesta => {
-          this.novedad = respuesta;
-	  
-          let observacion = this.novedad.observacionApoyo ? this.novedad.observacionApoyo.observaciones : "";
+      this.contractualNoveltyService.getNovedadContractualById(this.detalleId).subscribe(respuesta => {
+        this.novedad = respuesta;
+        if(this.novedad) this.estaEditando = true;
 
-	        this.addressForm.get('observaciones').setValue(this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.observaciones : observacion);
-          this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesSupervisor);
-        });
+        let observacion = this.novedad.observacionApoyo ? this.novedad.observacionApoyo.observaciones : '';
 
+        this.addressForm
+          .get('observaciones')
+          .setValue(
+            this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.observaciones : observacion
+          );
+        this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesSupervisor);
+      });
     });
   }
-
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -101,30 +102,28 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
-	let novedad: NovedadContractual = {
+    let novedad: NovedadContractual = {
       novedadContractualId: this.detalleId,
       tieneObservacionesSupervisor: this.addressForm.value.tieneObservaciones,
 
       novedadContractualObservaciones: [
         {
-          novedadContractualObservacionesId: this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.novedadContractualObservacionesId : 0,
+          novedadContractualObservacionesId: this.novedad.observacionSupervisor
+            ? this.novedad.observacionSupervisor.novedadContractualObservacionesId
+            : 0,
           novedadContractualId: this.detalleId,
           esSupervision: true,
           esTramiteNovedades: null,
           observaciones: this.addressForm.value.observaciones
         }
       ]
-    }
+    };
 
-    this.contractualNoveltyService.createEditObservacion(novedad, true)
-      .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
-        if (respuesta.code == "200") {
-          this.router.navigate(['/validarSolicitudDeNovedades']);
-        }
-
-
-      });
+    this.contractualNoveltyService.createEditObservacion(novedad, true).subscribe(respuesta => {
+      this.openDialog('', respuesta.message);
+      if (respuesta.code == '200') {
+        this.router.navigate(['/validarSolicitudDeNovedades']);
+      }
+    });
   }
-
 }
