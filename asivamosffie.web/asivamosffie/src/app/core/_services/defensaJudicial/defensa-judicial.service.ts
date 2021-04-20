@@ -88,11 +88,16 @@ export class DefensaJudicialService {
     return this.http.get<any[]>(`${this.url}/JudicialDefense/getDefensaJudicialSeguimiento?defensaJudicialSeguimientoId=${ defensaJudicialSeguimientoId }` );    
   }
 
-  deleteDemandadoConvocado( demandadoConvocadoId: number ) {
-    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandadoConvocado?demandadoConvocadoId=${ demandadoConvocadoId }`, '' );
+  deleteDemandadoConvocado( demandadoConvocadoId: number , numeroDemandados: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandadoConvocado?demandadoConvocadoId=${ demandadoConvocadoId }&numeroDemandados=${numeroDemandados}`, '' );
   }
-  deleteDefensaJudicialContratacionProyecto( contratacionId: number , defensaJudicialId: number) {
-    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDefensaJudicialContratacionProyecto?contratacionId=${ contratacionId }&defensaJudicialId=${defensaJudicialId}`, null );
+
+  deleteDefensaJudicialContratacionProyecto( contratacionId: number , defensaJudicialId: number, cantContratos: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDefensaJudicialContratacionProyecto?contratacionId=${ contratacionId }&defensaJudicialId=${defensaJudicialId}&cantContratos=${cantContratos}`, null );
+  }
+
+  deleteDemandanteConvocante( demandanteConvocadoId: number , numeroDemandantes:number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandanteConvocante?demandanteConvocadoId=${ demandanteConvocadoId }&numeroDemandantes=${numeroDemandantes}`, '' );
   }
 }
 

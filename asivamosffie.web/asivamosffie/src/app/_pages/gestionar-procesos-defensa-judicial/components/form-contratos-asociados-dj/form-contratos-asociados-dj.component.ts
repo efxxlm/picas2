@@ -21,6 +21,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormContratosAsociadosDjComponent implements OnInit {
   displayedColumns: string[] = ['nombreContratista', 'institucionEducativa', 'codigoDane', 'sede', 'sedeCodigo', 'contratacionProyectoId'];
   dataSource = new MatTableDataSource([]);
+  dataSourceClone = new MatTableDataSource([]);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -60,16 +61,11 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   }
 
   cargarRegistro() {
-    //this.ngOnInit().then(() => {
-    console.log("form");
-    console.log(this.defensaJudicial);
-    console.log(this.legitimacion);
-    console.log(this.tipoProceso);
     if (Object.keys(this.defensaJudicial).length > 0) {
       this.estaEditando = true;
       this.formContratista.markAllAsTouched();
       this.formContratista.get('numeroContratos').setValue(this.defensaJudicial.cantContratos);
-
+      
       let listaContratos: any[] = [];
 
       this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
@@ -78,7 +74,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       });
 
       let i = 0;
-      console.log(listaContratos);
       listaContratos.forEach(c => {
         //this.myControl.controls[i].setValue(c.numeroContrato);
         this.perfiles.value.contrato = c.contratoId;
@@ -113,37 +108,14 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       //this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos = response;
     });
-    this.formContratista.get('numeroContratos').valueChanges
-      .subscribe(value => {
-        this.perfiles.clear();
-        for (let i = 0; i < Number(value); i++) {
-          this.perfiles.push(
-            this.fb.group(
-              {
-                contrato: [null]
-              }
-            )
-          )
-          let control = new FormControl();
-          let contratoList = new FormControl();
-
-          this.filteredName = control.valueChanges.pipe(
-            startWith(''),
-            map(values => this._filter(values))
-          );
-          this.myControl.push(control);
-          this.contratacionList.push(contratoList);
-
-        }
-      });
-
-
   };
 
   getNumeroContratos() {
     this.formContratista.get( 'numeroContratos' ).valueChanges
         .subscribe(
             value => {
+              this.formContratista.markAllAsTouched();
+              this.estaEditando = true;
                 if (this.defensaJudicial !== undefined)
                 {
                     if ( Number( value ) < 0 ) {
@@ -169,9 +141,19 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                                     }
                                   )
                                 );
+                                let control = new FormControl();
+                                let contratoList = new FormControl();
+                            
+                                this.filteredName = control.valueChanges.pipe(
+                                  startWith(''),
+                                  map(values => this._filter(values))
+                                );
+                                this.myControl.push(control);
+                                this.contratacionList.push(contratoList);
                             }
                         } else {
                             this.perfiles.clear();
+                            this.dataSource = new MatTableDataSource([]);
                             for ( let i = 0; i < Number( value ); i++ ) {
                                 this.perfiles.push(
                                   this.fb.group(
@@ -180,6 +162,15 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                                     }
                                   )
                                 );
+                                let control = new FormControl();
+                                let contratoList = new FormControl();
+                            
+                                this.filteredName = control.valueChanges.pipe(
+                                  startWith(''),
+                                  map(values => this._filter(values))
+                                );
+                                this.myControl.push(control);
+                                this.contratacionList.push(contratoList);
                             }
                         }
                     }
@@ -205,9 +196,19 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                                     }
                                   )
                                 );
+                                let control = new FormControl();
+                                let contratoList = new FormControl();
+                            
+                                this.filteredName = control.valueChanges.pipe(
+                                  startWith(''),
+                                  map(values => this._filter(values))
+                                );
+                                this.myControl.push(control);
+                                this.contratacionList.push(contratoList);
                             }
                         } else {
                             this.perfiles.clear();
+                            this.dataSource = new MatTableDataSource([]);
                             for ( let i = 0; i < Number( value ); i++ ) {
                                 this.perfiles.push(
                                   this.fb.group(
@@ -216,6 +217,15 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                                     }
                                   )
                                 );
+                                let control = new FormControl();
+                                let contratoList = new FormControl();
+                            
+                                this.filteredName = control.valueChanges.pipe(
+                                  startWith(''),
+                                  map(values => this._filter(values))
+                                );
+                                this.myControl.push(control);
+                                this.contratacionList.push(contratoList);
                             }
                         }
                     }
@@ -223,6 +233,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                   this.formContratista.get('numeroContratos').valueChanges
                   .subscribe(value => {
                     this.perfiles.clear();
+                    this.dataSource = new MatTableDataSource([]);
                     for (let i = 0; i < Number(value); i++) {
                       this.perfiles.push(
                         this.fb.group(
@@ -231,12 +242,22 @@ export class FormContratosAsociadosDjComponent implements OnInit {
                           }
                         )
                       )
+                      let control = new FormControl();
+                      let contratoList = new FormControl();
+                  
+                      this.filteredName = control.valueChanges.pipe(
+                        startWith(''),
+                        map(values => this._filter(values))
+                      );
+                      this.myControl.push(control);
+                      this.contratacionList.push(contratoList);
                     }
                   });
                 }
             }
         );
   }
+
 
   get perfiles() {
     return this.formContratista.get('perfiles') as FormArray;
@@ -255,7 +276,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   private _filter(value: string): string[] {
-    console.log("intentnado filtrar" + value);
     const filterValue = value.toLowerCase();
     if (value != "") {
       let filtroportipo: string[] = [];
@@ -275,7 +295,8 @@ export class FormContratosAsociadosDjComponent implements OnInit {
 
   }
   getContratos(trigger: MatAutocompleteTrigger, i:number) {
-    if (this.formContratista.get('perfiles').value[i].contrato !== null) {
+    if(i < this.perfiles.length){
+      if (this.formContratista.get('perfiles').value[i].contrato !== null && this.formContratista.get('perfiles').value[i].contrato !== 'undefined') {
         this.defensaService.GetListContractAutoComplete(this.formContratista.get('perfiles').value[i].contrato)
           .subscribe(response => {
             this.contratosArray[i] = response;
@@ -283,6 +304,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
               trigger.openPanel();
             }
           });
+      }
     }
   }
   seleccionAutocomplete(id: any, i: number) {
@@ -294,7 +316,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.dataSource[i].paginator = this.paginator;
       this.dataSource[i].sort = this.sort;
       this.listContrattoscompletos[i] = false;
-      console.log(this.dataSource);
     });
   }
   textoLimpio(texto: string) {
@@ -337,14 +358,37 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       .subscribe( value => {
         if ( value === true ) {
             if ( this.contratacionList && this.contratacionList.controls[numeroPerfil].value == null ) {
+                let i = 0;
+                this.dataSourceClone = new MatTableDataSource([]);
+                for (let index = 0; index < this.perfiles.length; index++) {
+                  if(index != numeroPerfil){
+                    if(this.dataSource[index]?.filterPredicate?.length > 0 && this.dataSource[index]?.data != null){
+                      this.dataSourceClone[i] = new MatTableDataSource(this.dataSource[index].data);
+                    }else{
+                      this.dataSourceClone[i] = new MatTableDataSource(this.dataSource[index]);
+                    }
+                    this.dataSourceClone[i].paginator = this.paginator;
+                    this.dataSourceClone[i].sort = this.sort;
+                    i++;
+                  }
+                }
                 this.perfiles.removeAt(numeroPerfil);
                 this.formContratista.patchValue({
                   numeroContratos: `${this.perfiles.length}`
                 });
-                this.dataSource[numeroPerfil] = new MatTableDataSource(null);
+                this.dataSource = this.dataSourceClone;
+                for (let index = 0; index < this.perfiles.controls.length; index++) {
+                  if(this.dataSourceClone[index]?.filterPredicate?.length > 0 && this.dataSourceClone[index]?.data != null){
+                    this.getContratoTest(index);
+                  }
+                }
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             } else {
-                this.defensaService.deleteDefensaJudicialContratacionProyecto(this.contratacionList.controls[numeroPerfil].value, this.defensaJudicial.defensaJudicialId)
+              this.perfiles.removeAt(numeroPerfil);
+              this.formContratista.patchValue({
+                numeroContratos: `${this.perfiles.length}`
+              });
+                this.defensaService.deleteDefensaJudicialContratacionProyecto(this.contratacionList.controls[numeroPerfil].value, this.defensaJudicial.defensaJudicialId,this.perfiles.length)
                     .subscribe(
                         response => {
                             this.openDialog( '', `<b>${ response.message }</b>` );
@@ -392,8 +436,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   guardar() {
     this.estaEditando = true;
     this.formContratista.markAllAsTouched();
-    console.log(this.formContratista);
-    console.log(this.listProyectos);
     let defContraProyecto: DefensaJudicialContratacionProyecto[] = [];
     this.listProyectos.forEach(element => {
       defContraProyecto.push({
@@ -466,8 +508,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   }
 
   addProject(idproyecto: any) {
-
-    console.log(idproyecto);
     if (this.listProyectos.includes(idproyecto)) {
       var index = this.listProyectos.indexOf(idproyecto);
       if (index !== -1) {
@@ -477,7 +517,29 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     else {
       this.listProyectos.push({ contratacionProyectoId: idproyecto });
     }
+  }
 
-    console.log(this.listProyectos);
+  onChangeDemo(event:any, i: number, idContratacionProyecto:number){
+    this.dataSource[i].data.forEach(element => {
+      if (element.contratacionProyectoId == idContratacionProyecto) {
+        if(event.checked == true){
+          element.checked = true;
+        }else{
+          element.false = true;
+        }
+      }
+    });
+  }
+
+  getContratoTest(i:number) {
+    if(i < this.perfiles.length){
+      if (this.formContratista.get('perfiles').value[i].contrato !== null && this.formContratista.get('perfiles').value[i].contrato !== 'undefined') {
+        this.defensaService.GetListContractAutoComplete(this.formContratista.get('perfiles').value[i].contrato)
+          .subscribe(response => {
+            this.perfiles.controls[i].get('contrato').setValue(this.dataSource[i].data[0].numeroContrato != 'undefined' && this.dataSource[i].data[0].numeroContrato != null ? this.dataSource[i].data[0].numeroContrato : "");        
+            this.contratosArray[i] = response;
+          });
+      }
+    }
   }
 }

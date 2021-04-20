@@ -524,7 +524,7 @@ namespace asivamosffie.services
                     && r.DefensaJudicialId == pDefensaJudicialId).
                     //Include(x=>x.DefensaJudicialContratacionProyecto).
                     //Include(x => x.DemandadoConvocado).
-                    Include(x => x.DemandanteConvocante).
+                    //Include(x => x.DemandanteConvocante).
                     Include(x => x.DefensaJudicialSeguimiento).
                     Include(x => x.FichaEstudio).
                     Distinct().
@@ -534,6 +534,9 @@ namespace asivamosffie.services
                     {
                         List<DemandadoConvocado> demandadoConvocado = _context.DemandadoConvocado.Where(r => (bool)r.Eliminado == false && r.DefensaJudicialId == defensaJudicialItem.DefensaJudicialId).ToList();
                         defensaJudicialItem.DemandadoConvocado = demandadoConvocado;
+
+                        List<DemandanteConvocante> demandanteConvocantes = _context.DemandanteConvocante.Where(r => (bool)r.Eliminado == false && r.DefensaJucicialId == defensaJudicialItem.DefensaJudicialId).ToList();
+                        defensaJudicialItem.DemandanteConvocante = demandanteConvocantes;
                     });
 
                     List<VDefensaJudicialContratacionProyecto> ListVD =
@@ -1793,7 +1796,7 @@ namespace asivamosffie.services
             return defensaJudicialSeguimiento;
         }
 
-        public async Task<Respuesta> DeleteDemandadoConvocado(int demandadoConvocadoId, string pUsuarioModificacion)
+        public async Task<Respuesta> DeleteDemandadoConvocado(int demandadoConvocadoId, string pUsuarioModificacion, int numeroDemandados)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Demandado_Convocado, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1822,7 +1825,7 @@ namespace asivamosffie.services
                                    {
                                        FechaModificacion = DateTime.Now,
                                        UsuarioModificacion = demandadoConvocadoOld.UsuarioCreacion,
-                                       NumeroDemandados = r.NumeroDemandados > 0 ? r.NumeroDemandados - 1 : r.NumeroDemandados
+                                       NumeroDemandados = numeroDemandados
                                    });
 
                 await _context.SaveChangesAsync();
@@ -1852,7 +1855,66 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion)
+
+        public async Task<Respuesta> DeleteDemandanteConvocante(int demandanteConvocadoId, string pUsuarioModificacion, int numeroDemandantes)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Demandante_Convocante, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                DemandanteConvocante demandanteConvocanteOld = await _context.DemandanteConvocante.FindAsync(demandanteConvocadoId);
+
+                if (demandanteConvocanteOld == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "Demandante Convocante no encontrado".ToUpper())
+                    };
+                }
+
+                demandanteConvocanteOld.UsuarioModificacion = pUsuarioModificacion;
+                demandanteConvocanteOld.FechaModificacion = DateTime.Now;
+                demandanteConvocanteOld.Eliminado = true;
+
+                _context.Set<DefensaJudicial>().Where(r => r.DefensaJudicialId == demandanteConvocanteOld.DefensaJucicialId)
+                                   .Update(r => new DefensaJudicial()
+                                   {
+                                       FechaModificacion = DateTime.Now,
+                                       UsuarioModificacion = demandanteConvocanteOld.UsuarioCreacion,
+                                       NumeroDemandantes = numeroDemandantes
+                                   });
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR DEMANDADO CONVOCADO".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
+        }
+        public async Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion, int cantContratos)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Defensa_Judicial_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1880,7 +1942,7 @@ namespace asivamosffie.services
                                    {
                                        FechaModificacion = DateTime.Now,
                                        UsuarioModificacion = pUsuarioModificacion,
-                                       CantContratos = r.CantContratos > 0 ? r.CantContratos - 1 : r.CantContratos
+                                       CantContratos = cantContratos
                                    });
 
                 await _context.SaveChangesAsync();

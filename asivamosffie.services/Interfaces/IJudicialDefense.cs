@@ -31,9 +31,10 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CerrarProceso(int pDefensaJudicialId, string pUsuarioModifico);
         Task<Respuesta> CreateOrEditDefensaJudicialSeguimiento(DefensaJudicialSeguimiento defensaJudicialSeguimiento);
         Task<DefensaJudicialSeguimiento> GetDefensaJudicialSeguimiento(int defensaJudicialSeguimientoId);
-        Task<Respuesta> DeleteDemandadoConvocado(int demandadoConvocadoId, string pUsuarioModificacion);
-        Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion);
+        Task<Respuesta> DeleteDemandadoConvocado(int demandadoConvocadoId, string pUsuarioModificacion, int numeroDemandados);
+        Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion, int cantContratos);
         Task VencimientoTerminosDefensaJudicial();
+        Task<Respuesta> DeleteDemandanteConvocante(int demandanteConvocadoId, string pUsuarioModificacion, int numeroDemandantes);
 
     }
 }

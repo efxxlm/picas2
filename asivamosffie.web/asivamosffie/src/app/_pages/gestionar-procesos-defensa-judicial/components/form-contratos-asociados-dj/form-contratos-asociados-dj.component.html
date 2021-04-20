@@ -110,7 +110,7 @@
                                 <section class="example-section">
                                     <mat-checkbox 
                                     (click)="addProject(element.contratacionProyectoId)"
-                                    [checked]="element.checked"></mat-checkbox>
+                                    [checked]="element.checked" (change)="onChangeDemo($event,i,element.contratacionProyectoId)"></mat-checkbox>
                                   </section>
                             </td>
                         </ng-container>

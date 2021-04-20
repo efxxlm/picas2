@@ -352,12 +352,30 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("DeleteDemandadoConvocado")]
-        public async Task<IActionResult> DeleteDemandadoConvocado([FromQuery] int demandadoConvocadoId)
+        public async Task<IActionResult> DeleteDemandadoConvocado([FromQuery] int demandadoConvocadoId, int numeroDemandados)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _judicialDefense.DeleteDemandadoConvocado(demandadoConvocadoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _judicialDefense.DeleteDemandadoConvocado(demandadoConvocadoId, HttpContext.User.FindFirst("User").Value, numeroDemandados);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteDemandanteConvocante")]
+        public async Task<IActionResult> DeleteDemandanteConvocante([FromQuery] int demandanteConvocadoId, int numeroDemandantes)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _judicialDefense.DeleteDemandanteConvocante(demandanteConvocadoId, HttpContext.User.FindFirst("User").Value, numeroDemandantes);
 
                 return Ok(respuesta);
             }
@@ -370,12 +388,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("DeleteDefensaJudicialContratacionProyecto")]
-        public async Task<IActionResult> DeleteDefensaJudicialContratacionProyecto([FromQuery] int contratacionId, [FromQuery] int defensaJudicialId)
+        public async Task<IActionResult> DeleteDefensaJudicialContratacionProyecto([FromQuery] int contratacionId, [FromQuery] int defensaJudicialId, int cantContratos)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _judicialDefense.DeleteDefensaJudicialContratacionProyecto(contratacionId, defensaJudicialId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _judicialDefense.DeleteDefensaJudicialContratacionProyecto(contratacionId, defensaJudicialId, HttpContext.User.FindFirst("User").Value, cantContratos);
 
                 return Ok(respuesta);
             }

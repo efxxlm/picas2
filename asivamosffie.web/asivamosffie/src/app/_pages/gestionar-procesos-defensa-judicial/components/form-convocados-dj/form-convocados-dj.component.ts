@@ -290,7 +290,6 @@ export class FormConvocadosDjComponent implements OnInit {
   }
 
   eliminarPerfil( demandadoConvocadoId: number, numeroPerfil: number ) {
-    console.log(demandadoConvocadoId);
     this.openDialogSiNo( '', '¿Está seguro de eliminar esta información?' )
       .subscribe( value => {
         if ( value === true ) {
@@ -301,7 +300,9 @@ export class FormConvocadosDjComponent implements OnInit {
                 });
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             } else {
-                this.defensaService.deleteDemandadoConvocado( demandadoConvocadoId )
+                this.perfiles.removeAt( numeroPerfil );
+                console.log(this.perfiles.length);
+                this.defensaService.deleteDemandadoConvocado( demandadoConvocadoId,this.perfiles.length )
                     .subscribe(
                         response => {
                             this.openDialog( '', `<b>${ response.message }</b>` );

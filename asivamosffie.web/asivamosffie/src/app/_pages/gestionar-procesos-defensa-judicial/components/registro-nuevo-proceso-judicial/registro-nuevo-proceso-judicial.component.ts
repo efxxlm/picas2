@@ -308,11 +308,14 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           listaContratos.push(element.contratacionProyecto.contratacionId);
       });
     }
-
-      if(listaContratos.length >= num_contratos){
-        retorno = 2;
-      }else if(listaContratos.length > 0 && listaContratos.length < num_contratos ){
-        retorno = 1;
+      if(num_contratos > 0){
+        if(listaContratos.length >= num_contratos){
+          retorno = 2;
+        }else if(listaContratos.length > 0 && listaContratos.length < num_contratos ){
+          retorno = 1;
+        }
+      }else{
+        retorno = 0;
       }
 
     return retorno;

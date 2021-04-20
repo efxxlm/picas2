@@ -1,5 +1,5 @@
 import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -31,6 +31,7 @@ export class FormDemandadosDjComponent implements OnInit {
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
     this.crearFormulario();
+    this.getNumeroContratos();
   }
 
   @Input() legitimacion:boolean;
@@ -71,24 +72,138 @@ export class FormDemandadosDjComponent implements OnInit {
     this.commonService.listaTipodocumento().subscribe(response=>{
       this.tiposIdentificacionArray=response;
     });
-    this.formContratista.get( 'numeroContratos' ).valueChanges
-      .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push( 
-            this.fb.group(
-              {
-                demandadoConvocadoId: [ null ],
-                nomConvocado: [ null ],
-                tipoIdentificacion: [ null ],
-                numIdentificacion: [ null ],
-                registroCompleto: [ null ]
-              }
-            ) 
-          )
-        }
-      } )
   };
+
+  getNumeroContratos() {
+    this.formContratista.get( 'numeroContratos' ).valueChanges
+        .subscribe(
+            value => {
+                if ( this.defensaJudicial !== undefined && this.defensaJudicial.demandadoConvocado.length > 0 ) {
+                    this.perfiles.clear();
+                    for (const demandadoConvocado of this.defensaJudicial.demandadoConvocado ) {
+                        this.perfiles.push(
+                            this.fb.group(
+                                {
+                                    demandadoConvocadoId:  demandadoConvocado.demandadoConvocadoId !== undefined ? demandadoConvocado.demandadoConvocadoId : null,
+                                    nomConvocado:  demandadoConvocado.nombre !== undefined ? demandadoConvocado.nombre : null,
+                                    tipoIdentificacion:  demandadoConvocado.tipoIdentificacionCodigo !== undefined ? demandadoConvocado.tipoIdentificacionCodigo : null,
+                                    numIdentificacion:  demandadoConvocado.numeroIdentificacion !== undefined ? demandadoConvocado.numeroIdentificacion : null,
+                                    registroCompleto:  demandadoConvocado.registroCompleto !== undefined ? demandadoConvocado.registroCompleto : null,
+                                  }
+                            )
+                        );
+                    }
+                    this.formContratista.get( 'numeroContratos' ).setValidators( Validators.min( this.perfiles.length ) );
+                    const nuevosConvocados = Number( value ) - this.perfiles.length;
+                    if ( Number( value ) < this.perfiles.length && Number( value ) > 0 ) {
+                      console.log("1");
+                      this.openDialog(
+                        '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                      );
+                      this.formContratista.get( 'numeroContratos' ).setValue( String( this.perfiles.length ) );
+                      return;
+                    }
+                    for ( let i = 0; i < nuevosConvocados; i++ ) {
+                        this.perfiles.push(
+                            this.fb.group({
+                              demandadoConvocadoId: [ null ],
+                              nomConvocado: [ null ],
+                              tipoIdentificacion: [ null ],
+                              numIdentificacion: [ null ],
+                              registroCompleto: [ null ]
+                            })
+                        );
+                    }
+                }else if (this.defensaJudicial !== undefined && this.defensaJudicial.demandadoConvocado.length === 0 )
+                {
+                    if ( Number( value ) < 0 ) {
+                        this.formContratista.get( 'numeroContratos' ).setValue( '0' );
+                    }
+                    if ( Number( value ) > 0 ) {
+                        if ( this.formContratista.dirty === true ) {
+                            this.formContratista.get( 'numeroContratos' )
+                            .setValidators( Validators.min( this.perfiles.length ) );
+                            const nuevosConvocados = Number( value ) - this.perfiles.length;
+                            if ( Number( value ) < this.perfiles.length && Number( value ) > 0 ) {
+                              console.log("2");
+                              this.openDialog(
+                                '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                              );
+                              this.formContratista.get( 'numeroContratos' ).setValue( String( this.perfiles.length ) );
+                              return;
+                            }
+                            for ( let i = 0; i < nuevosConvocados; i++ ) {
+                                this.perfiles.push(
+                                    this.fb.group({
+                                      demandadoConvocadoId: [ null ],
+                                      nomConvocado: [ null ],
+                                      tipoIdentificacion: [ null ],
+                                      numIdentificacion: [ null ],
+                                      registroCompleto: [ null ]
+                                    })
+                                );
+                            }
+                        } else {
+                            this.perfiles.clear();
+                            for ( let i = 0; i < Number( value ); i++ ) {
+                                this.perfiles.push(
+                                    this.fb.group({
+                                      demandadoConvocadoId: [ null ],
+                                      nomConvocado: [ null ],
+                                      tipoIdentificacion: [ null ],
+                                      numIdentificacion: [ null ],
+                                      registroCompleto: [ null ]
+                                    })
+                                );
+                            }
+                        }
+                    }
+                }else if ( this.defensaJudicial === undefined ) {
+                    if ( Number( value ) < 0 ) {
+                        this.formContratista.get( 'numeroContratos' ).setValue( '0' );
+                    }
+                    if ( Number( value ) > 0 ) {
+                        if ( this.perfiles.dirty === true ) {
+                            this.formContratista.get( 'numeroContratos' )
+                            .setValidators( Validators.min( this.perfiles.length ) );
+                            const nuevosConvocados = Number( value ) - this.perfiles.length;
+                            if ( Number( value ) < this.perfiles.length && Number( value ) > 0 ) {
+                              console.log("3");
+                              this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                              this.formContratista.get( 'numeroContratos' ).setValue( String( this.perfiles.length ) );
+                              return;
+                            }
+                            for ( let i = 0; i < nuevosConvocados; i++ ) {
+                                this.perfiles.push(
+                                    this.fb.group({
+                                      demandadoConvocadoId: [ null ],
+                                      nomConvocado: [ null ],
+                                      tipoIdentificacion: [ null ],
+                                      numIdentificacion: [ null ],
+                                      registroCompleto: [ null ]
+                                    })
+                                );
+                            }
+                        } else {
+                            this.perfiles.clear();
+                            for ( let i = 0; i < Number( value ); i++ ) {
+                                this.perfiles.push(
+                                    this.fb.group({
+                                      demandadoConvocadoId: [ null ],
+                                      nomConvocado: [ null ],
+                                      tipoIdentificacion: [ null ],
+                                      numIdentificacion: [ null ],
+                                      registroCompleto: [ null ]
+                                    })
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        );
+  }
+
 
 	  get perfiles () {
 		return this.formContratista.get( 'perfiles' ) as FormArray;
@@ -132,13 +247,46 @@ export class FormDemandadosDjComponent implements OnInit {
     });
   };
 
-  eliminarPerfil ( numeroPerfil: number ) {
-    this.perfiles.removeAt( numeroPerfil );
-    this.formContratista.patchValue({
-      numeroContratos: `${ this.perfiles.length }`
+  openDialogSiNo(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
     });
-  };
 
+    return dialogRef.afterClosed();
+  }
+
+  eliminarPerfil( demandadoConvocadoId: number, numeroPerfil: number ) {
+    this.openDialogSiNo( '', '¿Está seguro de eliminar esta información?' )
+      .subscribe( value => {
+        if ( value === true ) {
+            if ( demandadoConvocadoId === 0 || demandadoConvocadoId == null) {
+                this.perfiles.removeAt( numeroPerfil );
+                this.formContratista.patchValue({
+                  numeroContratos: `${ this.perfiles.length }`
+                });
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            } else {
+              this.perfiles.removeAt( numeroPerfil );
+                this.defensaService.deleteDemandadoConvocado( demandadoConvocadoId ,this.perfiles.length)
+                    .subscribe(
+                        response => {
+                            this.openDialog( '', `<b>${ response.message }</b>` );
+                            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                () =>   this.router.navigate(
+                                            [
+                                                '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                                                this.defensaJudicial.defensaJudicialId
+                                            ]
+                                        )
+                            );
+                        },
+                        err => this.openDialog( '', `<b>${ err.message }</b>` )
+                    );
+            }
+        }
+      } );
+}
   agregarNumeroRadicado () {
     this.numeroRadicado.push( this.fb.control( '' ) )
   }
