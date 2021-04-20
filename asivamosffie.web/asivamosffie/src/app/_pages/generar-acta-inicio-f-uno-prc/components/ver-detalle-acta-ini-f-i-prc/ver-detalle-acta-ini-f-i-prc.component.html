@@ -97,7 +97,7 @@
             <mat-card-content>
                 <p><strong>Fecha del acta de inicio de la fase 1 - Preconstrucción:
                     </strong>{{ this.fechaActaFase1Prc | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Fecha prevista de terminación: </strong>{{this.fechaTermPrevista | date:'dd/MM/yyyy' }}</p>
+                <p><strong>Fecha prevista de terminación fase 1 – Preconstrucción: </strong>{{this.fechaTermPrevista | date:'dd/MM/yyyy' }}</p>
                 <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.mesesFase1}} <strong>Días:
                     </strong>{{this.diasFase1}}</p>
                 <div *ngIf="this.valorFDos!=0">
@@ -123,7 +123,7 @@
             </mat-card>
         </div>
         -->
-        <div *ngIf="obsSupervisor !== undefined">
+        <div *ngIf="obsSupervisor !== undefined && this.tipoCodigo == '1' && ( this.opcion == 1 || opcion === 2 )">
             <mat-card class="shipping-card mainGris">
                 <mat-card-header class="header-card">
                     <mat-card-title class="header-card--text textoGris">

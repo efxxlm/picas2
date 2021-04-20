@@ -728,14 +728,14 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                     if ( manejoMaterial.dirty === true ) {
                         // obsApoyoMaterialInsumo
                         // obsSupervisorMaterialInsumo
-                        // if ( this.obsApoyoMaterialInsumo !== undefined ) {
-                        //     this.obsApoyoMaterialInsumo.archivada = !this.obsApoyoMaterialInsumo.archivada;
-                        //     await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyoMaterialInsumo ).toPromise();
-                        // }
-                        // if ( this.obsSupervisorMaterialInsumo !== undefined ) {
-                        //     this.obsSupervisorMaterialInsumo.archivada = !this.obsSupervisorMaterialInsumo.archivada;
-                        //     await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisorMaterialInsumo ).toPromise();
-                        // }
+                        if ( this.obsApoyoMaterialInsumo !== undefined ) {
+                            this.obsApoyoMaterialInsumo.archivada = !this.obsApoyoMaterialInsumo.archivada;
+                            await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyoMaterialInsumo ).toPromise();
+                        }
+                        if ( this.obsSupervisorMaterialInsumo !== undefined ) {
+                            this.obsSupervisorMaterialInsumo.archivada = !this.obsSupervisorMaterialInsumo.archivada;
+                            await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisorMaterialInsumo ).toPromise();
+                        }
 
                         return {
                             ManejoMaterialesInsumosId: manejoMaterial.get( 'manejoMaterialesInsumosId' ).value,
