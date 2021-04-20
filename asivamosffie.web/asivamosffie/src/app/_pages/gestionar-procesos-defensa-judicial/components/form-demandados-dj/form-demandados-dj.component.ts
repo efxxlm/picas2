@@ -72,6 +72,24 @@ export class FormDemandadosDjComponent implements OnInit {
     this.commonService.listaTipodocumento().subscribe(response=>{
       this.tiposIdentificacionArray=response;
     });
+    this.formContratista.get('numeroContratos').valueChanges
+    .subscribe(value => {
+      if (this.perfiles.length < Number(value)) {
+        for (let i = this.perfiles.length; i < Number(value); i++) {
+          this.perfiles.push(
+            this.fb.group(
+              {
+                demandadoConvocadoId: [ null ],
+                nomConvocado: [ null ],
+                tipoIdentificacion: [ null ],
+                numIdentificacion: [ null ],
+                registroCompleto: [ null ]
+              }
+            )
+          )
+        }
+      }
+    });
   };
 
   getNumeroContratos() {

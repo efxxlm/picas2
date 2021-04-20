@@ -118,6 +118,33 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
     this.commonService.listaEtapaJudicial().subscribe(response=>{
       this.intanciasArray=response;
     });
+    this.formContratista.get('numeroContratos').valueChanges
+    .subscribe(value => {
+      if (this.perfiles.length < Number(value)) {
+        for (let i = this.perfiles.length; i < Number(value); i++) {
+          this.perfiles.push(
+            this.fb.group(
+              {
+                demandadoConvocadoId: [ null ],
+                nomConvocado: [ null ],
+                tipoIdentificacion: [ null ],
+                numIdentificacion: [ null ],
+                conocimientoParteAutoridad: [ null ],
+                despacho: [ null ],
+                departamento: [ null ],
+                municipio: [ null ],
+                radicadoDespacho: [ null ],
+                fechaRadicadoDespacho: [ null ],
+                accionAEvitar: [ null ],
+                etapaProcesoFFIE: [ null ],
+                caducidad: [ null ],
+                registroCompleto: [ null ],
+              }
+            )
+          )
+        }
+      }
+    });
   };
 
   getNumeroContratos() {
