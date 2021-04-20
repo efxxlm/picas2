@@ -116,7 +116,10 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       else {
         this.service.LoadActa(pContrato)
           .subscribe(
-            response => this.openDialog( '', `<b>${ response.message }</b>` ),
+            response => {
+              this.close();
+              this.openDialog( '', `<b>${ response.message }</b>` )
+            },
             err => this.openDialog( '', `<b>${ err.message }</b>` )
           );
       }

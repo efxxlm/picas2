@@ -111,16 +111,16 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
     /*this.service.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
     });*/
   }
-  enviarInterventor(id){
-    if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
-      this.service.CambiarEstadoActa(id,"18").subscribe(data=>{
+  enviarInterventor(registro: any){
+    if(registro.estadoActa === "Con revisión sin observaciones"){
+      this.service.CambiarEstadoActa(registro.contratoId,"18").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
         );
       });
     }
     else{
-      this.service.CambiarEstadoActa(id,"17").subscribe(data=>{
+      this.service.CambiarEstadoActa(registro.contratoId,"17").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
         );
