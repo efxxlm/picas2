@@ -5,7 +5,7 @@ using System.Text;
 namespace asivamosffie.services.Helpers.Constants
 {
 	
-    public static class ConstanCodigoEstadoAvanceTramite
+    public static class ConstanCodigoActuacionAdelantada
     {
 
         public const string Proyeccion_Comunicacion_Inicio_TAI = "1";
@@ -23,5 +23,6 @@ namespace asivamosffie.services.Helpers.Constants
         public const string RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalcontratista = "13";
         public const string RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora= "14";
         public const string EnviodedecisionesComunicadasalaUGPAFFIE= "15";
+        public const string Otra = "16";
     }
 }

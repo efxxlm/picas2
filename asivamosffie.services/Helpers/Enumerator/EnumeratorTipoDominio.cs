@@ -260,6 +260,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estados_verificacion_liquidacion_codigo = 187,
         	
-        Estados_Balance_Financiero = 190
+        Estados_Balance_Financiero = 190,
+
+        Estados_Actuacion_No_TAI = 191,
+
+        Estados_Avance_Tramite = 192,
     }
 }

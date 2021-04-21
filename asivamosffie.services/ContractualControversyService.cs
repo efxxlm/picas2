@@ -271,13 +271,21 @@ namespace asivamosffie.services
                     ThenInclude(x => x.Contrato).
                 Include(x => x.SeguimientoActuacionDerivada).FirstOrDefault();
             controversiaActuacion.NumeroActuacionFormat = controversiaActuacion.NumeroActuacion;
+
             if (!String.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo))
             {
-                controversiaActuacion.ActuacionAdelantadaString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Actuacion_adelantada);
+                if (controversiaActuacion.ControversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                {
+                    controversiaActuacion.ActuacionAdelantadaString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                }
+                else
+                {
+                    controversiaActuacion.ActuacionAdelantadaString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI);
+                }
             }
-
+            
             var estado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
-            var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+            var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
             controversiaActuacion.NumeroContrato = controversiaActuacion.ControversiaContractual.Contrato.NumeroContrato;
 
             controversiaActuacion.TipoControversia = vTipoControversiaCodigo == null ? "" : vTipoControversiaCodigo.Nombre;
@@ -314,7 +322,7 @@ namespace asivamosffie.services
             actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" : actuacionSeguimiento.NumeroActuacionReclamacion;
             //actuacionSeguimiento.NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000");
             //    NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
-            var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+            var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
             actuacionSeguimiento.NumeroContrato = actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.Contrato.NumeroContrato;
 
             actuacionSeguimiento.TipoControversia = vTipoControversiaCodigo == null ? "" : vTipoControversiaCodigo.Nombre;
@@ -479,7 +487,7 @@ namespace asivamosffie.services
 
             Dominio TipoControversiaCodigo;
 
-            TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+            TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
             if (TipoControversiaCodigo != null)
             {
                 strTipoControversia = TipoControversiaCodigo.Nombre;
@@ -792,15 +800,22 @@ namespace asivamosffie.services
 
             if (controversiaActuacion != null)
             {
-                EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Avance_Tramite);
                 if (EstadoAvanceTramiteCodigo != null)
                 {
                     //strTipoControversia = MotivoSolicitudCodigo.Nombre;
                     EstadoAvanceTramiteCodigoNombre = EstadoAvanceTramiteCodigo.Nombre;
 
                 }
+                if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                {
+                    ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                }
+                else
+                {
+                    ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI);
+                }
 
-                ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
                 if (ActuacionAdelantadaCodigo != null)
                 {
                     ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Nombre;
@@ -1115,10 +1130,10 @@ namespace asivamosffie.services
                 {
                     actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
                 }
-                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
+                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
                 {
                     int consecutivo = _context.ControversiaActuacion
-                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && r.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
+                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                                     .Count();
                     actuacionSeguimientoOld.NumeroActuacionReclamacion = "REC " + (consecutivo).ToString("000");
                 }
@@ -1963,7 +1978,7 @@ namespace asivamosffie.services
                 Dominio TipoControversiaCodigo;
 
 
-                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
                 if (TipoControversiaCodigo != null)
                 {
                     strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
@@ -2657,7 +2672,7 @@ namespace asivamosffie.services
             List<GrillaControversiaActuacionEstado> ListControversiaContractualGrilla = new List<GrillaControversiaActuacionEstado>();
             List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.
                 Where(r => !(bool)r.Eliminado).Include(r => r.ActuacionSeguimiento).Distinct().ToListAsync();
-
+            ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(pControversiaContractualId);
             List<ControversiaActuacion> lstControversiaActuacionCruce = new List<ControversiaActuacion>();
 
             List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.
@@ -2743,7 +2758,7 @@ namespace asivamosffie.services
 
                     }
 
-                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Avance_Tramite);
                     if (EstadoAvanceCodigo != null)
                     {
                         strEstadoAvanceTramite = EstadoAvanceCodigo.Nombre;
@@ -2790,8 +2805,22 @@ namespace asivamosffie.services
                     if (lstActuacionSeguimientoId.Count() > 0)
                         ActuacionSeguimientoIdTmp = lstActuacionSeguimientoId[0];
 
-                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
-                    List<Dominio> listaDominioAvanceTramiteActuacion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+                    //List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+
+                    List<Dominio> listaDominioActuacionActualizada = new List<Dominio>();
+
+                    if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+                    }
+                    else
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI).ToList();
+                    }
+
+                    //List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                    
+                    List<Dominio> listaDominioAvanceTramiteActuacion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Avance_Tramite).ToList();
 
 
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
@@ -2815,7 +2844,7 @@ namespace asivamosffie.services
                         EstadoAvanceTramiteCodigo = controversia.EstadoAvanceTramiteCodigo,
                         RequiereMesaTrabajo = controversia.EsRequiereMesaTrabajo,
                         RequiereComite = controversia.EsRequiereComite,
-
+                        ActuacionAdelantadaCodigo = controversia.ActuacionAdelantadaCodigo
                     };
 
                     if (lstActuacionSeguimientoId.Count() > 0)
@@ -2906,7 +2935,17 @@ namespace asivamosffie.services
                                 //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
                             }
-                            var dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Actuacion_adelantada);
+                            Dominio dmActuacion = new Dominio();
+
+                            if (controversia.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                            {
+                                dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                            }
+                            else
+                            {
+                                dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI);
+                            }
+
                             var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigoActuacionDerivada, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                             var dmReclamacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
 
@@ -3199,6 +3238,8 @@ namespace asivamosffie.services
             List<GrillaControversiaActuacionEstado> ListControversiaContractualGrilla = new List<GrillaControversiaActuacionEstado>();
             List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.
                 Where(r => !(bool)r.Eliminado && r.ControversiaContractualId == id).Include(r => r.ActuacionSeguimiento).Distinct().ToListAsync();
+            
+            ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(id);
 
             foreach (var controversia in lstControversiaActuacion)
             {
@@ -3231,7 +3272,7 @@ namespace asivamosffie.services
 
                     }
 
-                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Avance_Tramite);
                     if (EstadoAvanceCodigo != null)
                     {
                         strEstadoAvanceTramite = EstadoAvanceCodigo.Nombre;
@@ -3265,7 +3306,18 @@ namespace asivamosffie.services
                     }
 
                     int ActuacionSeguimientoIdTmp = 0;
-                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                    //List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+
+                    List<Dominio> listaDominioActuacionActualizada = new List<Dominio>();
+
+                    if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+                    }
+                    else
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI).ToList();
+                    }
 
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
@@ -3342,11 +3394,11 @@ namespace asivamosffie.services
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
                     controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
 
-                    if (string.IsNullOrEmpty(controversiaActuacionActual.NumeroActuacionReclamacion) && controversiaActuacionActual.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
+                    if (string.IsNullOrEmpty(controversiaActuacionActual.NumeroActuacionReclamacion) && controversiaActuacionActual.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                     {
                         int consecutivo = _context.ControversiaActuacion
                                         .Where(r => r.ControversiaContractualId == controversiaActuacionActual.ControversiaContractualId
-                                        && controversiaActuacionActual.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
+                                        && controversiaActuacionActual.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                                         .Count();
                         controversiaActuacionActual.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
                     }
@@ -3720,6 +3772,7 @@ namespace asivamosffie.services
             List<GrillaControversiaActuacionEstado> ListControversiaContractualGrilla = new List<GrillaControversiaActuacionEstado>();
             List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.
                 Where(r => !(bool)r.Eliminado && r.ControversiaContractualId == id).Include(r => r.ActuacionSeguimiento).Distinct().ToListAsync();
+            ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(id);
 
             foreach (var controversia in lstControversiaActuacion)
             {
@@ -3762,7 +3815,7 @@ namespace asivamosffie.services
 
                     }
 
-                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Avance_Tramite);
                     if (EstadoAvanceCodigo != null)
                     {
                         strEstadoAvanceTramite = EstadoAvanceCodigo.Nombre;
@@ -3794,7 +3847,18 @@ namespace asivamosffie.services
                         stadomesa = EstadoActuacionMesa == null ? "" : EstadoActuacionMesa.Nombre;
                     }
 
-                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                    //List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+
+                    List<Dominio> listaDominioActuacionActualizada = new List<Dominio>();
+
+                    if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+                    }
+                    else
+                    {
+                        listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI).ToList();
+                    }
 
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
@@ -4195,7 +4259,7 @@ namespace asivamosffie.services
 
             if (derivada != null)
             {
-                Dominio TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(derivada.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                Dominio TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(derivada.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
 
                String strContenido =  template.Contenido
                             .Replace("[NUMERO_CONTRATO]", derivada.ControversiaActuacion.ControversiaContractual.Contrato.NumeroContrato)
@@ -4705,7 +4769,17 @@ namespace asivamosffie.services
 
                 //Historial de Actuaciones
                 int contadorActuacion = 1;
-                List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                //List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                List<Dominio> listaDominioActuacionActualizada = new List<Dominio>();
+
+                if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
+                {
+                    listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+                }
+                else
+                {
+                    listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI).ToList();
+                }
 
                 foreach (var actuacion in controversiasActuacion)
                 {
@@ -4757,7 +4831,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TIPO_CONTROVERSIA:
-                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ListaParametricas.Where(r => r.Codigo == controversiaContractual.TipoControversiaCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_controversia).FirstOrDefault().Nombre);
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, ListaParametricas.Where(r => r.Codigo == controversiaContractual.TipoControversiaCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipos_Controversia).FirstOrDefault().Nombre);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.CANTIDAD_DE_PROYECTOS_ASOCIADOS:
