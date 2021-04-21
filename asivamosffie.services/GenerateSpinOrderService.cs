@@ -62,7 +62,9 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
+            { 
+                decimal? ValorNetoGiro = pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
+               
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.ConsecutivoOrigen = await _commonService.EnumeradorOrigenOrdenGiro();
@@ -71,10 +73,10 @@ namespace asivamosffie.services
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
+                    pOrdenGiro.ValorNetoGiro = ValorNetoGiro;
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
-
-
+                     
                     await _context.Set<SolicitudPago>()
                                     .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
                                                                                         .UpdateAsync(r => new SolicitudPago()
@@ -91,6 +93,7 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(o => new OrdenGiro
                             {
+                                ValorNetoGiro = ValorNetoGiro,
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
@@ -724,7 +727,6 @@ namespace asivamosffie.services
             }
             return SolicitudPago;
         }
-
 
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
