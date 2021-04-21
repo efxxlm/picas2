@@ -733,7 +733,7 @@ namespace asivamosffie.services
             String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
-            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0;
+            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0 ;
 
 
             List<VRpsPorContratacion> vRpsPorContratacion =

@@ -116,7 +116,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
@@ -554,11 +554,13 @@ namespace asivamosffie.services
                 }
 
                 CreateEditListaChequeoRespuesta(pSolicitudPago.SolicitudPagoListaChequeo, pSolicitudPago.UsuarioCreacion);
+                _context.SaveChanges();
                 return
                      new Respuesta
                      {
                          IsSuccessful = true,
                          IsException = false,
+                         Data = pSolicitudPago,
                          IsValidation = false,
                          Code = GeneralCodes.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
@@ -1208,12 +1210,14 @@ namespace asivamosffie.services
 
                 if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                     CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
-
+                 
+                _context.SaveChanges(); 
                 return
                      new Respuesta
                      {
                          IsSuccessful = true,
                          IsException = false,
+                         Data = pSolicitudPago,
                          IsValidation = false,
                          Code = GeneralCodes.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
@@ -1452,10 +1456,13 @@ namespace asivamosffie.services
                 }
                 if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                     CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
+                
 
+                _context.SaveChanges();
                 return
                      new Respuesta
                      {
+                         Data = pSolicitudPago,
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
@@ -1780,13 +1787,13 @@ namespace asivamosffie.services
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
-            decimal ValorFacturado = 
+            decimal ValorFacturado =
                                     _context.SolicitudPago
                                     .Where(r => r.ContratoId == contrato.ContratoId && r.TipoSolicitudCodigo == strTipoSolicitud)
                                     .Sum(r => r.ValorFacturado) ?? 0;
-  
 
-            List<VRpsPorContratacion> vRpsPorContratacion = 
+
+            List<VRpsPorContratacion> vRpsPorContratacion =
                                                            _context.VRpsPorContratacion
                                                            .Where(c => c.ContratacionId == contrato.ContratacionId)
                                                            .OrderBy(C => C.ContratacionId)
@@ -1801,13 +1808,13 @@ namespace asivamosffie.services
                 {
                     Enum = Enum,
                     NumeroDRP = DPR.NumeroDrp,
-                    Valor ='$'+ String.Format("{0:n0}", DPR.ValorSolicitud),
-                    Saldo ='$'+ String.Format("{0:n0}", ValorFacturado)
+                    Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
+                    Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
                 });
                 Enum++;
             }
 
-             
+
             return ListTablaDrp;
         }
 
