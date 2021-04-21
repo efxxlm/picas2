@@ -376,6 +376,16 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
   }
 
+  listaActuacionesAdelantadasNoTAI() {
+    // Lista de estados del CU 4.2.1 No tai en actuacion adelantada 
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=191`);
+  }
+
+  listaEstadosAvanceTramiteNuevaNoTAI() {
+    // Lista de estados del CU 4.2.1 para estados de avance de tramite
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=192`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

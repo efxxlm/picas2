@@ -61,13 +61,13 @@ export class FormRegistarActuacionNotaiComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
-    this.common.listaEstadosControversiaNoTAI().subscribe(rep => {
+    this.common.listaEstadosAvanceTramiteNuevaNoTAI().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
-    this.common.listaActuacionAdelantada().subscribe(rep1 => {
+    this.common.listaActuacionesAdelantadasNoTAI().subscribe(rep1 => {
       this.actuacionAdelantadaArrayDom = rep1;
     });
-    this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
+    this.common.listaActuacionesAdelantadasNoTAI().subscribe(rep2 => {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
     if (this.isEditable == true) {

@@ -66,13 +66,13 @@ export class FormDescripcionActuacionComponent implements OnInit, OnDestroy {
   
 
   ngOnInit(): void {
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+    this.common.listaEstadosAvanceTramiteNuevaNoTAI().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
-    this.common.listaActuacionAdelantada().subscribe(rep1 => {
+    this.common.listaEstadosAvanceTramite().subscribe(rep1 => {
       this.actuacionAdelantadaArrayDom = rep1;
     });
-    this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
+    this.common.listaEstadosAvanceTramite().subscribe(rep2 => {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
     if (this.isEditable == true) {
