@@ -155,7 +155,10 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog('', `<b>${response.message}</b>`);
-                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then( () => this.routes.navigate(['/registrarValidarRequisitosPago']) );
+
+                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
+                        () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditar', response.data.contratoId, response.data.solicitudPagoId ] )
+                    );
                 },
                 err => this.openDialog('', `<b>${err.message}</b>`)
             );

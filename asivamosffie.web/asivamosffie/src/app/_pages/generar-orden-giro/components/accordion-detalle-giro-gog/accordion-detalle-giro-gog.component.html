@@ -32,7 +32,7 @@
             <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
+    <mat-accordion *ngIf="tieneDescuentosDireccionTecnica === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : '' ) : ''">

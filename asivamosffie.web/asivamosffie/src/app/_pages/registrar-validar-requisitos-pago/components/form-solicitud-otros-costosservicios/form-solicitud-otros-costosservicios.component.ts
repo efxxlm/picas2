@@ -142,23 +142,24 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     if ( this.esUnEditar === false ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ] )
-                        );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( response.data.solicitudPagoId )
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditar', response.data.contratoId, response.data.solicitudPagoId ] )
+                                    );
+                                }
+                            );
                     }
                     if ( this.esUnEditar === true ) {
                         this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-                        .subscribe(
-                            () => {
-                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                    () => this.routes.navigate(
-                                        [
-                                            '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
-                                        ]
-                                    )
-                                );
-                            }
-                        );
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditar', response.data.contratoId, response.data.solicitudPagoId ] )
+                                    );
+                                }
+                            );
                     }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )

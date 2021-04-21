@@ -82,6 +82,7 @@
                         Devolver orden de giro
                 </button>
 
+                <!--
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
@@ -89,6 +90,7 @@
                                 && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro">
                         Descargar orden de giro
                 </button>
+                -->
             </ng-container>
             <ng-template #noEsExpensas>
                 <button mat-raised-button
@@ -125,13 +127,14 @@
                 </button>
 
                 <button mat-raised-button
-                        color="accent" 
+                        color="accent"
                         class="btn-table"
                         (click)="devolverOrdenGiro( element )"
                         *ngIf="element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro && element.registroCompletoVerificar === true && element.tieneObservacion === true">
                         Devolver orden de giro
                 </button>
 
+                <!--
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
@@ -139,6 +142,7 @@
                                 && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoVerificacionOrdenGiro">
                         Descargar orden de giro
                 </button>
+                -->
             </ng-template>
 
         </td>

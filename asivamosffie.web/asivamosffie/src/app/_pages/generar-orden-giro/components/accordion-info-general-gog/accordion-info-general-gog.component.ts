@@ -82,7 +82,7 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
                 }
             }
     
-            this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
+            this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDRP );
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         }

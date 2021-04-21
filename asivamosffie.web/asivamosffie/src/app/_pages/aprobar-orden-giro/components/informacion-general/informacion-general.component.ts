@@ -98,7 +98,8 @@ export class InformacionGeneralComponent implements OnInit {
             this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
         this.getDataTerceroGiro();
-        this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
+
+        this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDRP );
     }
 
     getDataTerceroGiro() {

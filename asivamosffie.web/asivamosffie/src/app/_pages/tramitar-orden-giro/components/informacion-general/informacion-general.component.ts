@@ -50,9 +50,9 @@ export class InformacionGeneralComponent implements OnInit {
     ];
     displayedColumns: string[] = [
         'drp',
-        'numDrp',
-        'valor',
-        'saldo'
+        'numeroDrp',
+        'valorSolicitudDdp',
+        'saldoPresupuestal'
     ];
     editorStyle = {
         height: '100px'
@@ -87,7 +87,7 @@ export class InformacionGeneralComponent implements OnInit {
 
         this.getDataTerceroGiro();
 
-        this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.valorFacturadoContrato );
+        this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDRP );
     }
 
     getDataTerceroGiro() {

@@ -155,20 +155,25 @@ export class FormSolicitudExpensasComponent implements OnInit {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     if ( this.solicitudPagoId > 0 ) {
                         this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoId )
-                        .subscribe(
-                            () => {
-                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                    () => this.routes.navigate(
-                                        [
-                                            '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
-                                        ]
-                                    )
-                                );
-                            }
-                        );
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate(
+                                            [
+                                                '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
+                                            ]
+                                        )
+                                    );
+                                }
+                            );
                     } else {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} )
-                            .then( () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ] ) );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( response.data.solicitudPagoId )
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                                    .then( () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditarExpensas', response.data.solicitudPagoId ] ) );
+                                }
+                            )
                     }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
