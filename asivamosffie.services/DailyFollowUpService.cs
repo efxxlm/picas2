@@ -211,7 +211,7 @@ namespace asivamosffie.services
                     p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
                     p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
                                                              r.Codigo == seguimientoDiario.EstadoCodigo)
-                                                      .FirstOrDefault()?.Descripcion;
+                                                      .FirstOrDefault()?.Nombre;
 
                     p.TieneAlertas = VerificarAlertas(seguimientoDiario);
                     p.TieneObservaciones = seguimientoDiario.TieneObservacionSupervisor;
@@ -224,7 +224,7 @@ namespace asivamosffie.services
                     p.EstadoCodigo = seguimientoDiarioEnviado.EstadoCodigo;
                     p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
                                                              r.Codigo == seguimientoDiarioEnviado.EstadoCodigo)
-                                                      .FirstOrDefault()?.Descripcion;
+                                                      .FirstOrDefault()?.Nombre;
 
                     p.TieneAlertas = VerificarAlertas(seguimientoDiarioEnviado);
                 }
