@@ -140,15 +140,13 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
           const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
           this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
           this.plazoMesesFase2 = value;
-          if ( this.plazoMesesFase1 > 0 ) {
-            this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
-              .subscribe(
-                response => {
-                  this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
-                  this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
-                }
-              );
-          }
+          this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+            .subscribe(
+              response => {
+                this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+              }
+            );
         }
       }
     );
