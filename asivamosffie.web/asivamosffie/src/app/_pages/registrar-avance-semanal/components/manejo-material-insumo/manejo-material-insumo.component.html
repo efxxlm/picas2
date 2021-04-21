@@ -207,6 +207,10 @@
             </div>
             <div class="col d-flex" style="width: 100%;">
                 <quill-editor   class="quill-editor-style card position-relative"
+                                [class.invalid]="
+                                  ( formManejoMaterialInsumo.get('observacion').invalid && formManejoMaterialInsumo.get('observacion').touched) ||
+                                  ( formManejoMaterialInsumo.get('observacion').invalid && esRegistroNuevo === false )
+                                "
                                 [styles]="editorStyle"
                                 [modules]="config"
                                 style="width: 100%;"

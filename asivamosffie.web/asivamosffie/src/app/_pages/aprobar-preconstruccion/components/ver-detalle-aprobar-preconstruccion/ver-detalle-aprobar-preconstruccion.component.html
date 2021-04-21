@@ -126,8 +126,8 @@
                         <b style="margin-bottom: .5em;margin-left: 2em;">
                           {{ perfil['observacionSupervisor'].fechaCreacion | date: 'dd/MM/yyyy' }}
                         </b>
-                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de visa?:</b> Si</p>
-                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de visa?:</b> No</p>
+                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida?:</b> Si</p>
+                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida?:</b> No</p>
                         <section style="margin-left: 2em;" *ngIf="perfil[ 'tieneObservacionSupervisor' ] === true" [innerHTML]="innerObservacion( perfil['observacionSupervisor'].observacion )"></section>
                       </mat-card-content>
                     </mat-card>
