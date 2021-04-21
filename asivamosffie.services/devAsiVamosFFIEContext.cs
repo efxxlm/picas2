@@ -283,6 +283,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -4167,6 +4169,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.RegistroCompletoVerificar).HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.TieneBalance).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.TieneObservacion).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UrlSoporteFirmadoAprobar).HasMaxLength(500);
@@ -4182,6 +4186,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.ValorNetoGiroBalance).HasColumnType("decimal(25, 3)");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>
