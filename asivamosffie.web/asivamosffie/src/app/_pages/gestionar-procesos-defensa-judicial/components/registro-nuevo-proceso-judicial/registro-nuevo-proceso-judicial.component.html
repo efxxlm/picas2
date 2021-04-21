@@ -82,16 +82,13 @@
         </p>
     </div>
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" (afterExpand)="descripcion.cargarRegistro()">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title"
-                    [ngClass]="{'sin-diligenciar':contratos_class===0,'en-proceso':contratos_class===1,'completo':contratos_class===2}"
-                    (click)="descripcion.cargarRegistro()">
+                    [ngClass]="{'sin-diligenciar':contratos_class===0,'en-proceso':contratos_class===1,'completo':contratos_class===2}">
                     Contratos asociados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
-                id="botonDescripcion"></button>
             <app-form-contratos-asociados-dj #descripcion [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial">
             </app-form-contratos-asociados-dj>
@@ -117,11 +114,10 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" (afterExpand)="convocado.cargarRegistro()">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
-                    [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}"
-                    (click)="convocado.cargarRegistro()">
+                    [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}">
                     Convocados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -131,11 +127,10 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" (afterExpand)="demandantes.cargarRegistro()">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
-                    [ngClass]="{'sin-diligenciar':demandantes_class===0,'en-proceso':demandantes_class===1,'completo':demandantes_class===2}"
-                    (click)="demandantes.cargarRegistro()">
+                    [ngClass]="{'sin-diligenciar':demandantes_class===0,'en-proceso':demandantes_class===1,'completo':demandantes_class===2}">
                     Demandantes/Convocantes
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -173,11 +168,10 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" (afterExpand)="soporte.cargarRegistro()">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
-                    [ngClass]="{'sin-diligenciar':soporte_class===0,'en-proceso':soporte_class===1,'completo':soporte_class===2}"
-                    (click)="soporte.cargarRegistro()">
+                    [ngClass]="{'sin-diligenciar':soporte_class===0,'en-proceso':soporte_class===1,'completo':soporte_class===2}">
                     Soporte del registro del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -216,7 +210,7 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <div [innerHtml]="defensaJudicial.observacionesComiteTecnico"></div> 
+                <div [innerHtml]="defensaJudicial.observacionesComiteTecnico"></div>
             </mat-card-content>
         </mat-card>
     </div>
@@ -230,7 +224,7 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <div [innerHtml]="defensaJudicial.obversacionesComiteFiduciario"></div> 
+                <div [innerHtml]="defensaJudicial.obversacionesComiteFiduciario"></div>
             </mat-card-content>
         </mat-card>
     </div>
