@@ -86,15 +86,15 @@
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="full-width">
-                                <input matInput #numeroRadicadoSAC type="text" maxlength="10"
+                                <input matInput #numeroRadicadoSAC type="text" maxlength="20"
                                     formControlName="numeroRadicadoSAC" required>
                             </mat-form-field>
                             <span class="contador" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
-                                {{10 -
+                                {{20 -
                                 (addressForm.get('numeroRadicadoSAC').value?addressForm.get('numeroRadicadoSAC').value.toString().length:0)}}
                             </span>
                             <span class="contador" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
-                                10
+                                20
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"

@@ -25,7 +25,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)" formControlName="antecedentes"
+                                    required (onContentChanged)="maxLength($event, 5000)" formControlName="antecedentes"
                                     #antecedentes [class.invalid]="
                                     (addressForm.get('antecedentes').invalid && addressForm.get('antecedentes').touched) ||
                                   (addressForm.get('antecedentes').invalid && estaEditando)
@@ -33,10 +33,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.antecedentes.value">
-                                {{2000 - (textoLimpio(antecedentes.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(antecedentes.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.antecedentes.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -70,7 +70,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="hechosRelevantes" #hechosRelevantes [class.invalid]="
                                     (addressForm.get('hechosRelevantes').invalid && addressForm.get('hechosRelevantes').touched) ||
                                   (addressForm.get('hechosRelevantes').invalid && estaEditando)
@@ -78,10 +78,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.hechosRelevantes.value">
-                                {{2000 - (textoLimpio(hechosRelevantes.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(hechosRelevantes.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.hechosRelevantes.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -104,7 +104,7 @@
                                 'color-secondaryColor':
                                   (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
                                   (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
-                              }">Jurisprudencia - Doctrina</label>
+                              }">Jurisprudencia - Doctrina - Fundamentos de derecho</label>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="jurisprudenciaDoctrina" #jurisprudenciaDoctrina [class.invalid]="
                                     (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
                                   (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
@@ -123,10 +123,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.jurisprudenciaDoctrina.value">
-                                {{2000 - (textoLimpio(jurisprudenciaDoctrina.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(jurisprudenciaDoctrina.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.jurisprudenciaDoctrina.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -161,7 +161,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="decisionComite" #decisionComite [class.invalid]="
                                     (addressForm.get('decisionComite').invalid && addressForm.get('decisionComite').touched) ||
                                   (addressForm.get('decisionComite').invalid && estaEditando)
@@ -169,10 +169,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.decisionComite.value">
-                                {{2000 - (textoLimpio(decisionComite.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(decisionComite.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.decisionComite.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -206,7 +206,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="analisisJuridico" #analisisJuridico [class.invalid]="
                                     (addressForm.get('analisisJuridico').invalid && addressForm.get('analisisJuridico').touched) ||
                                   (addressForm.get('analisisJuridico').invalid && estaEditando)
@@ -214,10 +214,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.analisisJuridico.value">
-                                {{2000 - (textoLimpio(analisisJuridico.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(analisisJuridico.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.analisisJuridico.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -251,7 +251,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="recomendaciones" #recomendaciones [class.invalid]="
                                     (addressForm.get('recomendaciones').invalid && addressForm.get('recomendaciones').touched) ||
                                   (addressForm.get('recomendaciones').invalid && estaEditando)
@@ -259,10 +259,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.recomendaciones.value">
-                                {{2000 - (textoLimpio(recomendaciones.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(recomendaciones.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.recomendaciones.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
@@ -285,7 +285,7 @@
                                 'color-secondaryColor':
                                   (addressForm.get('procesoFichaComite').invalid && addressForm.get('procesoFichaComite').touched) ||
                                   (addressForm.get('procesoFichaComite').invalid && estaEditando)
-                              }">¿Este proceso y su ficha se presentaron ante el comité de defensa del FFIE?</label>
+                              }">¿Este proceso y su ficha se presentaron ante el comité de asesores del FFIE?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="procesoFichaComite" required>
@@ -314,7 +314,7 @@
                         'color-secondaryColor':
                           (addressForm.get('fechaComiteDefensa').invalid && addressForm.get('fechaComiteDefensa').touched) ||
                           (addressForm.get('fechaComiteDefensa').invalid && estaEditando)
-                      }">Fecha de comité de defensa</label>
+                      }">Fecha de comité de asesores</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
@@ -347,7 +347,7 @@
                                 'color-secondaryColor':
                                   (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
                                   (addressForm.get('recomendacionFinal').invalid && estaEditando)
-                              }">Recomendación final del comité de defensa judicial</label>
+                              }">Recomendación final del comité de asesores</label>
                         </div>
                     </div>
                 </div>
@@ -358,7 +358,7 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    required (onContentChanged)="maxLength($event, 5000)"
                                     formControlName="recomendacionFinal" #recomendacionFinal [class.invalid]="
                                     (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
                                   (addressForm.get('recomendacionFinal').invalid && estaEditando)
@@ -366,10 +366,10 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.recomendacionFinal.value">
-                                {{2000 - (textoLimpio(recomendacionFinal.quillEditor,2000))}}
+                                {{5000 - (textoLimpio(recomendacionFinal.quillEditor,5000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.recomendacionFinal.value">
-                                2000
+                                5000
                             </span>
                             <span class="icon-incompleto">
                                 <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
