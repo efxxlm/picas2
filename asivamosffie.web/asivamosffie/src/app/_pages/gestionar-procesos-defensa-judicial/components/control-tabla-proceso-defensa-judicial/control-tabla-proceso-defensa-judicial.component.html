@@ -65,7 +65,8 @@
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="(element.vaAProcesoJudicial && element.estadoProcesoCodigo === '6') || (!element.vaAProcesoJudicial && (element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '3'  || element.estadoProcesoCodigo === '6')) && element.registroCompletoNombre=='Completo'
-                    || (element.estadoProcesoCodigo === '3' && element.cuantiaPerjuicios==null && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '6' && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '9' && element.esprocesoResultadoDefinitivo==false)"
+                    || (element.estadoProcesoCodigo === '3' && element.cuantiaPerjuicios==null && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '6' && element.registroCompletoNombre=='Completo') || (element.estadoProcesoCodigo === '9' && element.esprocesoResultadoDefinitivo==false)
+                    || (element.estadoProcesoCodigo === '9' && element.esprocesoResultadoDefinitivo==true)"
                     (click)="this.actualizarProceso(element.defensaJudicialId)">
                     Actualizar proceso
                 </button>

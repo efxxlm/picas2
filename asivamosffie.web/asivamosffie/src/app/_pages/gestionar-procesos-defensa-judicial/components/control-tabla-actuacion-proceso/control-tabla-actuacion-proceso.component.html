@@ -1,5 +1,5 @@
 <div class="tabs--actions">
-    <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irNuevo()" [disabled]="this.longitudActuaciones.length==1">
+    <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irNuevo()">
         Registrar actuación del proceso
     </button>
 </div>
@@ -62,7 +62,7 @@
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.estadoProcesoCodigo==3"
-                    (click)="this.verDetalleEditar(element.defensaJudicialSeguimientoId)">
+                    (click)="this.verDetalle(element.defensaJudicialSeguimientoId)">
                     Ver detalle
                 </button>
             </td>
