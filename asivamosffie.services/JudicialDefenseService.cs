@@ -1287,9 +1287,19 @@ namespace asivamosffie.services
                 try
                 {
                     string TipoAccionNombre = "";
-                    DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId).FirstOrDefault();
+                    bool esprocesoResultadoDefinitivo = false;
+                    //DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId).FirstOrDefault();
+                    int totalActuacionesFinalizadas = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId && r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && (r.Eliminado == false || r.Eliminado == true)).Count();
+                    int totalActuaciones = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId && (r.Eliminado == false || r.Eliminado == true)).Count();
 
-
+                    if (totalActuacionesFinalizadas >= totalActuaciones)
+                    {
+                        int contEsprocesoResultadoDefinitivo = _context.DefensaJudicialSeguimiento.Where(r => r.DefensaJudicialId == defensaJudicial.DefensaJudicialId && r.EsprocesoResultadoDefinitivo == true && r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && (r.Eliminado == false || r.Eliminado == true)).Count();
+                        if (contEsprocesoResultadoDefinitivo > 0)
+                        {
+                            esprocesoResultadoDefinitivo = true;
+                        }
+                    }
                     Dominio TipoAccion;
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
@@ -1319,7 +1329,7 @@ namespace asivamosffie.services
                         VaAProcesoJudicial = defensaJudicial.FichaEstudio.Count() == 0 ? false : defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite,
                         FechaCreacion = defensaJudicial.FechaCreacion,
                         CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios,
-                        EsprocesoResultadoDefinitivo = defensaJudicialSeguimiento != null ? defensaJudicialSeguimiento.EsprocesoResultadoDefinitivo : false,
+                        EsprocesoResultadoDefinitivo = esprocesoResultadoDefinitivo,
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
