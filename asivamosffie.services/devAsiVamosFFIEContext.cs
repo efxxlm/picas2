@@ -4182,6 +4182,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>

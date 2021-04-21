@@ -35,6 +35,7 @@ namespace asivamosffie.model.Models
         public string ConsecutivoOrigen { get; set; }
         public string UrlSoporteFirmadoVerificar { get; set; }
         public string UrlSoporteFirmadoAprobar { get; set; }
+        public decimal? ValorNetoGiro { get; set; }
 
         public virtual ICollection<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }

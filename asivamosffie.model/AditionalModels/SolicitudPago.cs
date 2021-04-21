@@ -18,5 +18,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public decimal? SaldoPresupuestal { get; set; }
+         
+        [NotMapped]
+        public List<TablaDRP> TablaDRP { get; set; } 
     }
+    
 }

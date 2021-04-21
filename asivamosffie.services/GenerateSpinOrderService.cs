@@ -94,7 +94,7 @@ namespace asivamosffie.services
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
-                            });  
+                            });
                 }
                 if (pOrdenGiro?.OrdenGiroTercero.Count() > 0)
                     CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
@@ -715,11 +715,48 @@ namespace asivamosffie.services
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
+
+
+                SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
             }
             catch (Exception ex)
             {
             }
             return SolicitudPago;
+        }
+
+
+        private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
+        {
+            String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
+            List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
+
+            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0;
+
+
+            List<VRpsPorContratacion> vRpsPorContratacion =
+                                                           _context.VRpsPorContratacion
+                                                           .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
+                                                           .OrderBy(C => C.ContratacionId)
+                                                           .ToList();
+
+            int Enum = 1;
+            foreach (var DPR in vRpsPorContratacion)
+            {
+                ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
+
+                ListTablaDrp.Add(new TablaDRP
+                {
+                    Enum = Enum,
+                    NumeroDRP = DPR.NumeroDrp,
+                    Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
+                    Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
+                });
+                Enum++;
+            }
+
+
+            return ListTablaDrp;
         }
         #endregion
 
@@ -808,7 +845,7 @@ namespace asivamosffie.services
                 || pOrdenGiro.OrdenGiroTercero == null
                 ) return false;
 
-            if(pOrdenGiro.OrdenGiroDetalle.Count() == 0 
+            if (pOrdenGiro.OrdenGiroDetalle.Count() == 0
                 || pOrdenGiro.OrdenGiroTercero.Count() == 0
                 ) return false;
 

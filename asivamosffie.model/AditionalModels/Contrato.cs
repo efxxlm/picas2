@@ -70,12 +70,6 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public List<TablaDRP> TablaDRP { get; set; }
     }
-     
-    public partial class TablaDRP
-    { 
-        public int Enum { get; set; }
-        public string NumeroDRP { get; set; }
-        public string Valor { get; set; }
-        public string Saldo { get; set; } 
-    }
+
+    
 }
