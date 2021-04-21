@@ -231,6 +231,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VActualizacionPolizaYgarantias> VActualizacionPolizaYgarantias { get; set; }
         public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
+        public virtual DbSet<VComponenteUsoNovedad> VComponenteUsoNovedad { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VConfinanciacionReporte> VConfinanciacionReporte { get; set; }
         public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
@@ -262,6 +263,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
+        public virtual DbSet<VRpsPorContratacion> VRpsPorContratacion { get; set; }
         public virtual DbSet<VSaldoPresupuestalXcontrato> VSaldoPresupuestalXcontrato { get; set; }
         public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
@@ -280,6 +282,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8047,6 +8051,29 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_AportantesXCriterio");
             });
 
+            modelBuilder.Entity<VComponenteUsoNovedad>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ComponenteUsoNovedad");
+
+                entity.Property(e => e.FaseCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoComponenteCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 9)");
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
             modelBuilder.Entity<VCompromisoSeguimiento>(entity =>
             {
                 entity.HasNoKey();
@@ -9228,6 +9255,22 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VRpsPorContratacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RpsPorContratacion");
+
+                entity.Property(e => e.EsNovedad).HasColumnName("esNovedad");
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VSaldoPresupuestalXcontrato>(entity =>

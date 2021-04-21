@@ -116,8 +116,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
+         
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
@@ -1570,7 +1569,7 @@ namespace asivamosffie.services
                                                  && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
                                                 (r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                                  && r.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                                )) 
+                                                ))
                                             .ToListAsync();
 
             List<VSaldoPresupuestalXproyecto> LVSaldoPresupuestalXproyecto = _context.VSaldoPresupuestalXproyecto.ToList();
@@ -1578,9 +1577,9 @@ namespace asivamosffie.services
             List<dynamic> dynamics = new List<dynamic>();
 
             List<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.ToList();
-             
+
             foreach (var item in ListProyectos)
-            { 
+            {
                 VSaldoPresupuestalXproyecto VSaldoPresupuestalXproyecto = LVSaldoPresupuestalXproyecto.Where(v => v.ProyectoId == item.ProyectoId && v.SaldoPresupuestal > 0).FirstOrDefault();
 
                 if (VSaldoPresupuestalXproyecto != null && DisponibilidadPresupuestalProyecto.Any(d => d.ProyectoId == item.ProyectoId))
@@ -1744,6 +1743,7 @@ namespace asivamosffie.services
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
+                        .AsNoTracking()
                         .FirstOrDefaultAsync();
 
                 if (contrato.SolicitudPago.Count() > 0)
@@ -1764,6 +1764,9 @@ namespace asivamosffie.services
                        .Where(v => v.ContratoId == pContratoId)
                        .ToList();
 
+                contrato.TablaDRP = GetDrpContrato(contrato);
+
+
                 return contrato;
             }
             catch (Exception ex)
@@ -1771,6 +1774,43 @@ namespace asivamosffie.services
                 return new Contrato();
             }
         }
+
+        private List<TablaDRP> GetDrpContrato(Contrato contrato)
+        {
+            String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
+            List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
+
+            decimal ValorFacturado = 
+                                    _context.SolicitudPago
+                                    .Where(r => r.ContratoId == contrato.ContratoId && r.TipoSolicitudCodigo == strTipoSolicitud)
+                                    .Sum(r => r.ValorFacturado) ?? 0;
+  
+
+            List<VRpsPorContratacion> vRpsPorContratacion = 
+                                                           _context.VRpsPorContratacion
+                                                           .Where(c => c.ContratacionId == contrato.ContratacionId)
+                                                           .OrderBy(C => C.ContratacionId)
+                                                           .ToList();
+
+            int Enum = 1;
+            foreach (var DPR in vRpsPorContratacion)
+            {
+                ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
+
+                ListTablaDrp.Add(new TablaDRP
+                {
+                    Enum = Enum,
+                    NumeroDRP = DPR.NumeroDrp,
+                    Valor ='$'+ String.Format("{0:n0}", DPR.ValorSolicitud),
+                    Saldo ='$'+ String.Format("{0:n0}", ValorFacturado)
+                });
+                Enum++;
+            }
+
+             
+            return ListTablaDrp;
+        }
+
 
         private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
         {

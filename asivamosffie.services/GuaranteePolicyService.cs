@@ -28,9 +28,26 @@ namespace asivamosffie.services
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
         {
             if (string.IsNullOrEmpty(pEstadoCodigo))
-                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync(); 
+                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
             else
+            {
+                if (pEstadoCodigo == ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza)
+                {
+                    List<ContratoPoliza> contratoPolizas = _context.ContratoPoliza.ToList();
+
+                    List<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas = await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                    List<VGestionarGarantiasPolizas> Return = new List<VGestionarGarantiasPolizas>();
+                   
+                    foreach (var item in VGestionarGarantiasPolizas)
+                    {
+                        if (contratoPolizas.Any(c => c.ContratoId == item.ContratoId))
+                            Return.Add(item);
+                    }
+
+                    return Return;
+                }
                 return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+            }
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -331,7 +348,7 @@ namespace asivamosffie.services
 
             return true;
         }
-          
+
         #endregion
 
         #region Old
