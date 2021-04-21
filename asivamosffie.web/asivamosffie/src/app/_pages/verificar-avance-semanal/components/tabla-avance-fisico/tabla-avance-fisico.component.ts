@@ -117,6 +117,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
                     .subscribe(
                         response => {
+                            console.log( response )
                             const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                             this.dataHistorial = response.filter( obs => obs.archivada === true );
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
@@ -145,7 +146,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     if ( seguimientoSemanalAvanceFisico !== undefined ) {
                         const seguimientoSemanalAvanceFisicoProgramacion = seguimientoSemanalAvanceFisico.seguimientoSemanalAvanceFisicoProgramacion.filter( programacion => programacion.programacionId === flujo.programacionId );
 
-                        console.log( seguimientoSemanalAvanceFisicoProgramacion );
                         if ( seguimientoSemanalAvanceFisicoProgramacion.length > 0 ) {
                             flujo.seguimientoSemanalAvanceFisicoProgramacionId = seguimientoSemanalAvanceFisicoProgramacion[0].seguimientoSemanalAvanceFisicoProgramacionId;
                             flujo.programacion.avanceFisicoCapitulo = seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo !== undefined ? seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo : null;
@@ -248,7 +248,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

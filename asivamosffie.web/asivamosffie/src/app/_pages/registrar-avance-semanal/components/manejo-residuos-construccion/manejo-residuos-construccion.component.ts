@@ -53,19 +53,34 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                     )
                 );
             } else {
-                for ( const gestor of this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionGestor ) {
+                if ( this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionGestor.length > 0 ) {
+                    for ( const gestor of this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionGestor ) {
+                        this.gestorResiduos.push(
+                            this.fb.group(
+                                {
+                                    manejoResiduosConstruccionDemolicionGestorId: gestor.manejoResiduosConstruccionDemolicionGestorId,
+                                    manejoResiduosConstruccionDemolicionId: gestor.manejoResiduosConstruccionDemolicionId,
+                                    nombreGestorResiduos: gestor.nombreGestorResiduos !== undefined ? gestor.nombreGestorResiduos : '',
+                                    tienePermisoAmbiental: gestor.tienePermisoAmbiental !== undefined ? gestor.tienePermisoAmbiental : null,
+                                    url: gestor.url !== undefined ? gestor.url : ''
+                                }
+                            )
+                        );
+                    }
+                } else {
                     this.gestorResiduos.push(
                         this.fb.group(
                             {
-                                manejoResiduosConstruccionDemolicionGestorId: gestor.manejoResiduosConstruccionDemolicionGestorId,
-                                manejoResiduosConstruccionDemolicionId: gestor.manejoResiduosConstruccionDemolicionId,
-                                nombreGestorResiduos: gestor.nombreGestorResiduos !== undefined ? gestor.nombreGestorResiduos : '',
-                                tienePermisoAmbiental: gestor.tienePermisoAmbiental !== undefined ? gestor.tienePermisoAmbiental : null,
-                                url: gestor.url !== undefined ? gestor.url : ''
+                                manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
+                                manejoResiduosConstruccionDemolicionId: [ 0 ],
+                                nombreGestorResiduos: [ '' ],
+                                tienePermisoAmbiental: [ null ],
+                                url: [ '' ]
                             }
                         )
                     );
                 }
+
                 this.formManejoResiduosConstruccion.patchValue(
                     {
                         manejoResiduosConstruccionDemolicionId: this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionId,

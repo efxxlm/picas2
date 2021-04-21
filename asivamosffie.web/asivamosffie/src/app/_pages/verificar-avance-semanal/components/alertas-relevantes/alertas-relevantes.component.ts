@@ -123,7 +123,7 @@ export class AlertasRelevantesComponent implements OnInit {
             tieneObservacion: this.formAlertasRelevantes.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

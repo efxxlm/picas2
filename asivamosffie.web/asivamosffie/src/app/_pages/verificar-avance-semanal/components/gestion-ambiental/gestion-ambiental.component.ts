@@ -649,7 +649,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

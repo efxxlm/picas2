@@ -122,7 +122,7 @@ export class ComiteObraComponent implements OnInit {
             tieneObservacion: this.formComiteObra.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

@@ -143,13 +143,12 @@ export class GestionCalidadComponent implements OnInit {
                                     registroCompletoMuestras: ensayo.registroCompletoMuestras,
                                     gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
                                     tieneObservaciones: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
-                                    observacionEnsayo: [ observacionApoyo !== undefined ? ( observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null ) : null],
+                                    observacionEnsayo: [ observacionApoyo !== undefined ? ( observacionApoyo.observacion !== undefined ? ( observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null ) : null ) : null],
                                     fechaCreacion: observacionApoyo !== undefined ? observacionApoyo.fechaCreacion : null,
                                     seguimientoSemanalObservacionId: ensayo.observacionApoyoId !== undefined ? ensayo.observacionApoyoId : 0,
                                     historial: [ historial ]
                                 }
                             ) );
-                            console.log( this.ensayos );
                         }, 1500);
                     }
                 }

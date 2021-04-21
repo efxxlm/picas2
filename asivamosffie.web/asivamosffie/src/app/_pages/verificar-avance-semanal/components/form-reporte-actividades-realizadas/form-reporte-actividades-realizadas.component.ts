@@ -139,7 +139,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             tieneObservacion: this.formActividadesRealizadas.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -175,7 +175,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             tieneObservacion: this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
