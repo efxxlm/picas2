@@ -6,8 +6,9 @@
         Proyectos asociados contrato {{ contrato.numeroContrato }}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de firma del contrato: <b> {{ contrato.fechaAprobacion | date: 'dd/MM/yyyy' }} </b></span>
-        <span>Plazo: <b>{{ contrato.plazoMeses }} Meses {{ contrato.plazoDias }} Días</b></span>
+        <span>Fecha de inicio del contrato: <b> {{ contrato.fechaAprobacion | date: 'dd/MM/yyyy' }} </b></span>
+        <span *ngIf="contrato.plazoFase1PreDias !== undefined">Plazo: <b>{{ ( this.data.contrato.plazoFase2ConstruccionMeses !== undefined ? this.data.contrato.plazoFase2ConstruccionMeses : 0 ) + this.data.contrato.plazoFase1PreMeses }} Meses {{ this.data.contrato.plazoFase1PreDias + ( this.data.contrato.plazoFase2ConstruccionDias !== undefined ? this.data.contrato.plazoFase2ConstruccionDias : 0 ) }} Días</b></span>
+        <span *ngIf="contrato.plazoFase1PreDias === undefined">Plazo: <b>{{ this.data.contrato.plazoFase2ConstruccionMeses }} Meses {{ this.data.contrato.plazoFase2ConstruccionDias }} Días</b></span>
     </p>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

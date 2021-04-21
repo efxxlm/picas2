@@ -48,8 +48,6 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
                     this.obsMultipleSvc.getListSolicitudPago( listaMenuId.aprobarSolicitudPagoId )
                         .subscribe(
                             getListSolicitudPago => {
-                                console.log( getListSolicitudPago );
-
                                 if ( getListSolicitudPago.length > 0 ) {
                                     getListSolicitudPago.forEach( registro => registro.fechaCreacion = registro.fechaCreacion !== undefined ? moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' )
                                 }

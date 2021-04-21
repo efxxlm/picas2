@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
@@ -44,7 +45,8 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
                     this.obsMultipleSvc.getListSolicitudPago( listaMenuId.validarFinancieramenteId )
                         .subscribe(
                             getListSolicitudPago => {
-                                console.log( getListSolicitudPago );
+                                getListSolicitudPago.forEach( registro => registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) )
+
                                 this.dataSource = new MatTableDataSource(getListSolicitudPago);
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;

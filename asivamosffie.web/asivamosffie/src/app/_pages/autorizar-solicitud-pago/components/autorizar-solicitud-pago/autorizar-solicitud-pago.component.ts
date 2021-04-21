@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -45,7 +46,10 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
                     this.obsMultipleSvc.getListSolicitudPago( listaMenuId.autorizarSolicitudPagoId )
                         .subscribe(
                             getListSolicitudPago => {
-                                console.log( getListSolicitudPago );
+                                if ( getListSolicitudPago.length > 0 ) {
+                                    getListSolicitudPago.forEach( registro => registro.fechaCreacion = registro.fechaCreacion !== undefined ? moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' )
+                                }
+
                                 this.dataSource = new MatTableDataSource(getListSolicitudPago);
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;

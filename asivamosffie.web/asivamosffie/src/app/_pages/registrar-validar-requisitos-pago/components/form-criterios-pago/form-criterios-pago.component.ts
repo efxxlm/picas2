@@ -644,9 +644,16 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         if ( verifyValorTotalConceptos === false ) {
             if ( this.contratacionProyectoId === 0 ) {
+                let valorTotalConceptos = 0;
+
                 this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
                 this.criterios.controls.forEach( control => {
                     const criterio = control.value;
+
+                    if ( control.get( 'valorFacturado' ).value !== null ) {
+                        valorTotalConceptos += control.get( 'valorFacturado' ).value;
+                    }
+
                     this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
                         {
                             tipoCriterioCodigo: criterio.tipoCriterioCodigo,
@@ -659,6 +666,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                     );
                 } );
+
+                if ( this.montoMaximoPendiente.montoMaximo !== valorTotalConceptos ) {
+                    this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )
+                    return;
+                }
 
                 this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
                     .subscribe(
@@ -684,6 +696,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                         err => this.openDialog( '', `<b>${ err.message }</b>` )
                     );
             } else {
+                let valorTotalConceptos = 0;
+
                 this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
                 this.criterios.controls.forEach( control => {
                     const criterio = control.value;
@@ -695,6 +709,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                             valorFacturado: criterio.valorFacturado
                         }
                     );
+                    
+                    if ( control.get( 'valorFacturado' ).value !== null ) {
+                        valorTotalConceptos += control.get( 'valorFacturado' ).value;
+                    }
+
                     this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
                         {
                             tipoCriterioCodigo: criterio.tipoCriterioCodigo,
@@ -707,7 +726,12 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                     );
                 } );
-                console.log( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio );
+
+                if ( this.montoMaximoPendiente.montoMaximo !== valorTotalConceptos ) {
+                    this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )
+                    return;
+                }
+
                 this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
                     .subscribe(
                         response => {

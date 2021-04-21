@@ -27,6 +27,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     formDescuentos: FormGroup;
     valorFacturado = 0;
     tiposDescuentoArray: Dominio[] = [];
+    listaTipoDescuento: Dominio[] = [];
     solicitudPagoFaseFacturaDescuento: any[] = [];
     solicitudPagoFaseFacturaId = 0;
     solicitudPagoFaseFactura: any;
@@ -42,9 +43,8 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
         private commonSvc: CommonService,
         private routes: Router,
         private obsMultipleSvc: ObservacionesMultiplesCuService,
-        private registrarPagosSvc: RegistrarRequisitosPagoService ) {
-        this.commonSvc.tiposDescuento()
-            .subscribe(response => this.tiposDescuentoArray = response);
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
+    {
         this.crearFormulario();
     }
 
@@ -60,7 +60,9 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
         this.getDatosFactura();
     }
 
-    getDatosFactura() {
+    async getDatosFactura() {
+        this.tiposDescuentoArray = await this.commonSvc.tiposDescuento().toPromise();
+        this.listaTipoDescuento = [ ...this.tiposDescuentoArray ];
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
         if (this.solicitudPagoFaseFactura !== undefined) {
@@ -144,51 +146,25 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
             .subscribe(
                 value => {
                     value = Number(value);
-                    if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
-                        if (value > 0) {
-                            this.descuentos.clear();
-                            for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
-                                this.estaEditando = true;
-                                this.descuentos.markAllAsTouched();
-                                this.descuentos.push(
-                                    this.fb.group(
-                                        {
-                                            solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
-                                            solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
-                                            tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
-                                            valorDescuento: [descuento.valorDescuento]
-                                        }
-                                    )
-                                );
-                            }
-
-                            this.formDescuentos.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
-                            const nuevosDescuentos = value - this.descuentos.length;
-                            if (value < this.descuentos.length) {
-                                this.openDialog(
-                                    '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                                );
-                                this.formDescuentos.get('numeroDescuentos').setValue(String(this.descuentos.length));
-                                return;
-                            }
-                            for (let i = 0; i < nuevosDescuentos; i++) {
-                                this.estaEditando = true;
-                                this.descuentos.markAllAsTouched();
-                                this.descuentos.push(
-                                    this.fb.group(
-                                        {
-                                            solicitudPagoFaseFacturaDescuentoId: [0],
-                                            solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                                            tipoDescuentoCodigo: [null],
-                                            valorDescuento: [null]
-                                        }
-                                    )
-                                );
-                            }
-                        }
-                    } else {
-                        if (value > 0) {
-                            if (this.descuentos.dirty === true) {
+                    if ( value <= this.listaTipoDescuento.length ) {
+                        if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
+                            if (value > 0) {
+                                this.descuentos.clear();
+                                for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
+                                    this.estaEditando = true;
+                                    this.descuentos.markAllAsTouched();
+                                    this.descuentos.push(
+                                        this.fb.group(
+                                            {
+                                                solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
+                                                solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                                                tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
+                                                valorDescuento: [descuento.valorDescuento]
+                                            }
+                                        )
+                                    );
+                                }
+    
                                 this.formDescuentos.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
                                 const nuevosDescuentos = value - this.descuentos.length;
                                 if (value < this.descuentos.length) {
@@ -213,24 +189,55 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
                                     );
                                 }
                             }
-                            if (this.descuentos.dirty === false) {
-                                this.descuentos.clear();
-                                for (let i = 0; i < value; i++) {
-                                    this.estaEditando = true;
-                                    this.descuentos.markAllAsTouched();
-                                    this.descuentos.push(
-                                        this.fb.group(
-                                            {
-                                                solicitudPagoFaseFacturaDescuentoId: [0],
-                                                solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                                                tipoDescuentoCodigo: [null],
-                                                valorDescuento: [null]
-                                            }
-                                        )
-                                    );
+                        } else {
+                            if (value > 0) {
+                                if (this.descuentos.dirty === true) {
+                                    this.formDescuentos.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+                                    const nuevosDescuentos = value - this.descuentos.length;
+                                    if (value < this.descuentos.length) {
+                                        this.openDialog(
+                                            '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                                        );
+                                        this.formDescuentos.get('numeroDescuentos').setValue(String(this.descuentos.length));
+                                        return;
+                                    }
+                                    for (let i = 0; i < nuevosDescuentos; i++) {
+                                        this.estaEditando = true;
+                                        this.descuentos.markAllAsTouched();
+                                        this.descuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseFacturaDescuentoId: [0],
+                                                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                                                    tipoDescuentoCodigo: [null],
+                                                    valorDescuento: [null]
+                                                }
+                                            )
+                                        );
+                                    }
+                                }
+                                if (this.descuentos.dirty === false) {
+                                    this.descuentos.clear();
+                                    for (let i = 0; i < value; i++) {
+                                        this.estaEditando = true;
+                                        this.descuentos.markAllAsTouched();
+                                        this.descuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseFacturaDescuentoId: [0],
+                                                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                                                    tipoDescuentoCodigo: [null],
+                                                    valorDescuento: [null]
+                                                }
+                                            )
+                                        );
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        this.formDescuentos.get('numeroDescuentos').setValue( String( this.listaTipoDescuento.length ) );
+                        this.openDialog( '', `<b>Tiene parametrizados ${ this.listaTipoDescuento.length } descuentos para aplicar al pago.</b>` )
                     }
                 }
             );
@@ -243,6 +250,14 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
             valorAPagarDespues: [{ value: null, disabled: true }],
             descuentos: this.fb.array([])
         });
+    }
+
+    getCodigoTipoDescuento( codigo: string ) {
+        const descuentoIndex = this.tiposDescuentoArray.findIndex( descuento => descuento.codigo === codigo );
+
+        if ( descuentoIndex !== -1 ) {
+            this.tiposDescuentoArray.splice( descuentoIndex, 1 );
+        }
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -321,18 +336,22 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     }
 
     addDescuento() {
-        this.descuentos.push(
-            this.fb.group(
-                {
-                    solicitudPagoFaseFacturaDescuentoId: [0],
-                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                    tipoDescuentoCodigo: [null],
-                    valorDescuento: [null]
-                }
-            )
-        );
-        this.formDescuentos.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
-        this.formDescuentos.get('numeroDescuentos').setValue(String(this.descuentos.length));
+        if ( this.tiposDescuentoArray.length > 0 ) {
+            this.descuentos.push(
+                this.fb.group(
+                    {
+                        solicitudPagoFaseFacturaDescuentoId: [0],
+                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        tipoDescuentoCodigo: [null],
+                        valorDescuento: [null]
+                    }
+                )
+            );
+            this.formDescuentos.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+            this.formDescuentos.get('numeroDescuentos').setValue(String(this.descuentos.length));
+        } else {
+            this.openDialog( '', '<b>No tiene parametrizados más descuentos para aplicar al pago.</b>' )
+        }
     }
 
     deleteDescuento(index: number, descuentoId: number) {
@@ -341,6 +360,13 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
                 response => {
                     if (response === true) {
                         if (descuentoId === 0) {
+                            const codigo: string = this.descuentos.controls[ index ].get( 'tipoDescuentoCodigo' ).value;
+                            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+                            if ( descuento !== undefined ) {
+                                this.tiposDescuentoArray.push( descuento );
+                            }
+
                             this.descuentos.removeAt(index);
                             this.formDescuentos.get('numeroDescuentos').setValue(`${this.descuentos.length}`);
                             this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');

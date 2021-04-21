@@ -48,6 +48,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     solicitudPagoCargarFormaPago: any;
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoFase: any;
+    manejoAnticipoRequiere: boolean;
     
 
     get criterios() {
@@ -113,6 +114,8 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                                 }
                             }
                             this.contrato = response;
+
+                            this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
                             if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
                                 if ( this.contrato.solicitudPago.length > 1 ) {
                                     this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];

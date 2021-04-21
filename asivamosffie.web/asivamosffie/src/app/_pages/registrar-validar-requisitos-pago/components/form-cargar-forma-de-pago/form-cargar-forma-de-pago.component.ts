@@ -43,23 +43,44 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService)
     {
-        this.registrarPagosSvc.getFormaPagoCodigoByFase( 'False' )
-            .subscribe( getFormaPagoCodigoByFase => this.formaPagoArrayPreconstruccion = getFormaPagoCodigoByFase );
-        this.registrarPagosSvc.getFormaPagoCodigoByFase( 'True' )
-            .subscribe( getFormaPagoCodigoByFase => this.formaPagoArrayConstruccion = getFormaPagoCodigoByFase );
     }
 
-    ngOnInit(): void {
-        setTimeout(() => {
-            if (this.contrato.plazoFase1PreDias !== undefined) {
-                this.tieneFase1 = true;
+    async ngOnInit() {
+        this.formaPagoArrayPreconstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'False' ).toPromise();
+        this.formaPagoArrayConstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'True' ).toPromise();
+        if (this.contrato.plazoFase1PreDias !== undefined) {
+            this.tieneFase1 = true;
+        }
+
+        if ( this.contrato.solicitudPago.length > 1 ) {
+            const solicitudPago = this.contrato.solicitudPago[0];
+            this.solicitudPagoCargarFormaPago = solicitudPago.solicitudPagoCargarFormaPago[0];
+            this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
+
+            // Get values seleccionados
+            if (this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined) {
+                this.estaEditando = true;
+                this.addressForm.markAllAsTouched();
+                const formaPreConstruccionSeleccionada = this.formaPagoArrayPreconstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo);
+                this.addressForm.get('formaPagoPreconstruccion').setValue(formaPreConstruccionSeleccionada !== undefined ? formaPreConstruccionSeleccionada : null);
+                if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
+                    this.addressForm.get('formaPagoPreconstruccion').disable();
+                }
             }
-    
-            if ( this.contrato.solicitudPago.length > 1 ) {
-                const solicitudPago = this.contrato.solicitudPago[0];
-                this.solicitudPagoCargarFormaPago = solicitudPago.solicitudPagoCargarFormaPago[0];
+
+            if (this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined) {
+                const formaConstruccionSeleccionada = this.formaPagoArrayConstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo);
+                this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada !== undefined ? formaConstruccionSeleccionada : null);
+                if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
+                    this.addressForm.get('formaPagoConstruccion').disable();
+                }
+            }
+        } else {
+            if (this.contrato.solicitudPagoOnly !== undefined) {
+
+                this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
+                this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                 this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
-    
                 // Get values seleccionados
                 if (this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined) {
                     this.estaEditando = true;
@@ -70,41 +91,18 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                         this.addressForm.get('formaPagoPreconstruccion').disable();
                     }
                 }
-    
+
                 if (this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined) {
                     const formaConstruccionSeleccionada = this.formaPagoArrayConstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo);
+                    console.log( formaConstruccionSeleccionada )
+
                     this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada !== undefined ? formaConstruccionSeleccionada : null);
                     if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
                         this.addressForm.get('formaPagoConstruccion').disable();
                     }
                 }
-            } else {
-                if (this.contrato.solicitudPagoOnly !== undefined) {
-    
-                    this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
-                    this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
-                    this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
-                    // Get values seleccionados
-                    if (this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined) {
-                        this.estaEditando = true;
-                        this.addressForm.markAllAsTouched();
-                        const formaPreConstruccionSeleccionada = this.formaPagoArrayPreconstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo);
-                        this.addressForm.get('formaPagoPreconstruccion').setValue(formaPreConstruccionSeleccionada !== undefined ? formaPreConstruccionSeleccionada : null);
-                        if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
-                            this.addressForm.get('formaPagoPreconstruccion').disable();
-                        }
-                    }
-    
-                    if (this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined) {
-                        const formaConstruccionSeleccionada = this.formaPagoArrayConstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo);
-                        this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada !== undefined ? formaConstruccionSeleccionada : null);
-                        if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
-                            this.addressForm.get('formaPagoConstruccion').disable();
-                        }
-                    }
-                }
             }
-        }, 500);
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {

@@ -129,28 +129,32 @@
                                             <div class="pr-1">
                                                 <label class="label-left" for="tipoDescuento" [ngClass]="{
                                             'color-secondaryColor':
-                                              (descuento.get('tipoDescuento')?.invalid && descuento.get('tipoDescuento').touched) ||
-                                              (descuento.get('tipoDescuento')?.invalid && estaEditando)
+                                              (descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) ||
+                                              (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando)
                                           }">Tipo de descuento</label>
                                             </div>
                                             <div class="col">
                                                 <mat-form-field class="select-width">
-                                                    <mat-select formControlName="tipoDescuentoCodigo" required>
-                                                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray"
-                                                            [value]="tipoDescuento.codigo">
+                                                    <mat-select formControlName="tipoDescuentoCodigo" required *ngIf="descuento.get('tipoDescuentoCodigo').value === null" (ngModelChange)="getCodigoTipoDescuento( $event )">
+                                                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.codigo">
+                                                            {{ tipoDescuento.nombre }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-select formControlName="tipoDescuentoCodigo" required *ngIf="descuento.get('tipoDescuentoCodigo').value !== null">
+                                                        <mat-option *ngFor="let tipoDescuento of listaTipoDescuento" [value]="tipoDescuento.codigo">
                                                             {{ tipoDescuento.nombre }}
                                                         </mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
                                             <span class="icon-incompleto">
-                                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                                    matTooltipClass="info-tooltip" *ngIf="
-                                              (descuento.get('tipoDescuento')?.invalid && descuento.get('tipoDescuento').touched) ||
-                                              (descuento.get('tipoDescuento')?.invalid && estaEditando)
-                                              " />
+                                                <img    class="icon-incompleto--img"
+                                                        src="assets/img/icon/incompleto.svg"
+                                                        alt="este campo es requerido"
+                                                        [matTooltipPosition]="'above'"
+                                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                                        matTooltipClass="info-tooltip"
+                                                        *ngIf="(descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) || (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando)">
                                             </span>
                                         </div>
                                     </div>

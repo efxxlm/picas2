@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/dialog-devolver-solicitud.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-registrar-validar-requisitos-pago',
@@ -45,7 +46,8 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         this.registrarPagosSvc.getListSolicitudPago()
             .subscribe(
                 response => {
-                    console.log( response );
+                    response.forEach( registro => registro.fechaCreacion !== undefined ? registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' );
+
                     this.dataSource = new MatTableDataSource( response );
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
