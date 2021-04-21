@@ -13,6 +13,8 @@ import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/
 export class DetalleActuacionProcesoComponent implements OnInit {
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  defensaJudicialId: number;
+
   constructor(private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -23,6 +25,7 @@ export class DetalleActuacionProcesoComponent implements OnInit {
       this.controlJudicialId = param['id'];    
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
+        this.defensaJudicialId = this.defensaJudicial.defensaJudicialId;
       });
     });
   }

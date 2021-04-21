@@ -171,7 +171,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
   }
   ngOnDestroy(): void {
     if (this.addressForm.dirty === true && this.realizoPeticion === false) {
-      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
+      //comentada por andres/Fredy
+      //this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
     }
   }
   openDialogConfirmar(modalTitle: string, modalText: string) {
@@ -397,7 +398,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           "ControversiaContractualId": parseInt(this.idControversia),
-          "ControversiaMotivo": controversiaContractual.controversiaMotivo
+          "ControversiaMotivo": controversiaContractual.controversiaMotivo,
         };
       }
       else {
@@ -510,7 +511,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
           "FechaComitePreTecnico": '',
           "EsProcede": true,
           "EsRequiereComite": true,
-          "ControversiaMotivo": controversiaContractual.controversiaMotivo
+          "ControversiaMotivo": controversiaContractual.controversiaMotivo,
+          "ControversiaContractualId": parseInt(this.idControversia),
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayNoTaiContratista).subscribe((resp_0: any) => {
@@ -601,7 +603,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
           "FechaComitePreTecnico": '',
           "EsProcede": true,
           "EsRequiereComite": true,
-          "ControversiaMotivo": controversiaContractual.controversiaMotivo
+          "ControversiaMotivo": controversiaContractual.controversiaMotivo,
+          "ControversiaContractualId": parseInt(this.idControversia),
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayNoTaiContratante).subscribe((resp_0: any) => {
