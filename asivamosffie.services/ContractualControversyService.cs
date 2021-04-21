@@ -3347,6 +3347,7 @@ namespace asivamosffie.services
                         EstadoActuacionGeneral = strEstadoActuacionGeneral,
                         EstadoActuacionCodigoGeneral = strEstadoActuacionCodigoGeneral,
                         EsRequiereComiteReclamacion = controversia.EsRequiereComiteReclamacion,
+                        ActuacionAdelantadaCodigo = controversia.ActuacionAdelantadaCodigo
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);
                 }
