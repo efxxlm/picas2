@@ -54,7 +54,7 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleActuacion/:id',
-    component: DetalleActuacionProcesoComponent
+    component: VerDetalleEditarActuacionProcesoComponent
   },
 ];
 

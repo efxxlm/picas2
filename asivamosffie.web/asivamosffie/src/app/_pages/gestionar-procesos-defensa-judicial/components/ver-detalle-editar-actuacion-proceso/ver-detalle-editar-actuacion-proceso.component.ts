@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial, DefensaJudicialSeguimiento, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -23,6 +23,9 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit, OnDest
       [{ align: [] }],
     ]
   };
+
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
  
   addressForm = this.fb.group({
     defensaJudicialSeguimientoId: [null, Validators.required],
@@ -40,6 +43,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit, OnDest
   ];
   controlJudicialId: any;
   defensaJudicialId: number;
+  estadoProceso: string;
   //defensaJudicial: DefensaJudicial={};
   defensaJudicial: any;
   realizoPeticion: boolean = false;
@@ -53,6 +57,17 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit, OnDest
           this.estadoAvanceProcesoArray=response;
         }
       );
+      this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+        if ( urlSegment.path === 'verDetalleEditarActuacionProceso' ) {
+            this.esVerDetalle = false;
+            this.esRegistroNuevo = false;
+            return;
+        }
+        if ( urlSegment.path === 'verDetalleActuacion' ) {
+            this.esVerDetalle = true;
+            return;
+        }
+      });
      }
 
   ngOnInit(): void {
@@ -70,6 +85,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit, OnDest
         for (let i = 0; i < this.estadoAvanceProcesoArray.length; i++) {
           const estadoProcesoSelected = this.estadoAvanceProcesoArray.find(t => t.codigo === this.defensaJudicial.estadoProcesoCodigo);
           this.addressForm.get('estadoAvanceProceso').setValue(estadoProcesoSelected);
+          this.estadoProceso = estadoProcesoSelected.nombre;
         }
         this.addressForm.get('actuacionAdelantada').setValue(this.defensaJudicial.actuacionAdelantada);
         this.addressForm.get('proximaActuacionRequerida').setValue(this.defensaJudicial.proximaActuacion);

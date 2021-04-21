@@ -2753,6 +2753,13 @@ namespace asivamosffie.services
 
                     string strEstadoActuacion = string.Empty;
                     string strEstadoActuacionCodigo = string.Empty;
+
+                    //provisionaaaal
+                    if (!string.IsNullOrEmpty(controversia.EstadoCodigo) && controversia.EstadoCodigo != ConstantCodigoEstadoControversiaActuacion.Finalizada && controversia.EstadoCodigo != ConstantCodigoEstadoControversiaActuacion.En_proceso_de_registro)
+                    {
+                        controversia.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico;
+                    }
+
                     //var EstadoActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                     var EstadoActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
 
@@ -2760,7 +2767,6 @@ namespace asivamosffie.services
                     {
                         strEstadoActuacion = EstadoActuacion.Nombre;
                         strEstadoActuacionCodigo = EstadoActuacion.Codigo;
-
                     }
 
 

@@ -25,7 +25,7 @@ export class DetalleActuacionProcesoComponent implements OnInit {
       this.controlJudicialId = param['id'];    
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
-        this.defensaJudicialId = this.defensaJudicial.defensaJudicialId;
+        //this.defensaJudicialId = this.defensaJudicial.defensaJudicialId;
       });
     });
   }
