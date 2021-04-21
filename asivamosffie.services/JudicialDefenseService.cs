@@ -823,6 +823,14 @@ namespace asivamosffie.services
 
             Localizacion Municipioproceso = ListaLocalizaciones.Where(r => r.LocalizacionId == defPrincial.LocalizacionIdMunicipio.ToString()).FirstOrDefault();
             Localizacion DepartamentoProceso = new Localizacion();
+            Usuario abogado = new Usuario();
+            if (defPrincial.FichaEstudio.Count() > 0)
+            {
+                if (!string.IsNullOrEmpty(defPrincial.FichaEstudio.FirstOrDefault().UsuarioCreacion))
+                {
+                    abogado = _context.Usuario.Where(r => r.Email.ToUpper() == defPrincial.FichaEstudio.FirstOrDefault().UsuarioCreacion.ToUpper()).FirstOrDefault();
+                }
+            }
 
             if (Municipioproceso != null)
             {
@@ -887,7 +895,7 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Analisis_juridico_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().AnalisisJuridico);
             strContenido = strContenido.Replace("_URL_material_probatorio_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().RutaSoporte);
             strContenido = strContenido.Replace("_Recomendaciones_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().Recomendaciones);
-            strContenido = strContenido.Replace("_Abogado_elabora_estudio_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().Abogado);
+            strContenido = strContenido.Replace("_Abogado_elabora_estudio_", abogado != null ? abogado.PrimerNombre + " " + abogado.PrimerApellido : "");
 
             //Historial de Actuaciones
             int contadorActuacion = 1;
