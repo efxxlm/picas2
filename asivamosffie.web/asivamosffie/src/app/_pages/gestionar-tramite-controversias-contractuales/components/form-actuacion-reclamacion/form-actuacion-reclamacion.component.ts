@@ -158,9 +158,9 @@ export class FormActuacionReclamacionComponent implements OnInit, OnDestroy {
     }
     this.services.CreateEditarActuacionReclamacion(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
-        this.realizoPeticion=true;
+        this.realizoPeticion = true;
         this.openDialog("", data.message);
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora',this.controversiaID,this.reclamacionID]);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora', this.controversiaID, this.reclamacionID]);
       }
       else {
         this.openDialog("", data.message);

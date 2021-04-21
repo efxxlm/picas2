@@ -244,6 +244,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit, OnDestroy {
       if (data.isSuccessful == true) {
         this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
         });
+        this.realizoPeticion = true;
         this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       }
