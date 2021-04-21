@@ -751,10 +751,15 @@ namespace asivamosffie.services
 
             var plantillatrContratos = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_estudio_tr_contratos).ToString()).FirstOrDefault().Contenido;
 
+            //historial modificaciones
+            string TipoPlantillaHistorialActuaciones = ((int)ConstanCodigoPlantillas.Tabla_actuaciones).ToString();
+            string HistorialActuaciones = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaHistorialActuaciones).Select(r => r.Contenido).FirstOrDefault();
+            string plantillatrActuaciones = "";
+
             //ACTUACIONES
             List<DefensaJudicialSeguimiento> actuaciones = _context.DefensaJudicialSeguimiento.Where(x => x.DefensaJudicialId == prmdefensaJudicialID).ToList();//diferente a finalizado
 
-            var plantillatrActuaciones = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Tabla_actuaciones).ToString()).FirstOrDefault().Contenido;
+            //var plantillatrActuaciones = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Tabla_actuaciones).ToString()).FirstOrDefault().Contenido;
 
             var ListaLocalizaciones = _context.Localizacion.ToList();
             var ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
@@ -794,16 +799,16 @@ namespace asivamosffie.services
                     //Plazo de Interventoría
                     plantillatrContratos = plantillatrContratos.Replace("_Meses_", defcontratac.ContratacionProyecto.Proyecto.PlazoDiasInterventoria.ToString());
                     plantillatrContratos = plantillatrContratos.Replace("_Dias_", defcontratac.ContratacionProyecto.Proyecto.PlazoMesesInterventoria.ToString());
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_obra_", (defcontratac.ContratacionProyecto.Proyecto.ValorObra != null) ? defcontratac.ContratacionProyecto.Proyecto.ValorObra.ToString() : "0");
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Interventoria_", "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorInterventoria));
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Total_proyecto_", "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorTotal));
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_obra_", (defcontratac.ContratacionProyecto.Proyecto.ValorObra != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorObra) : "0");
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Interventoria_", (defcontratac.ContratacionProyecto.Proyecto.ValorInterventoria != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorInterventoria) : "0");
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Total_proyecto_", (defcontratac.ContratacionProyecto.Proyecto.ValorTotal != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorTotal) : "0");
                     plantillatrContratos = plantillatrContratos.Replace("_contador_", contador.ToString());
                     plantillatrContratos = plantillatrContratos.Replace("_Numero_Contrato_", defcontratac.numeroContrato);
 
                     plantillatrContratos = plantillatrContratos.Replace("_Nombre_Contratista_", contratacion.Contratista.Nombre);
 
-                    plantillatrContratos = plantillatrContratos.Replace("_Estado_obra_", defcontratac.ContratacionProyecto.EstadoObraCodigo != null ? ListaParametricas.Where(r => r.Codigo == defcontratac.ContratacionProyecto.EstadoObraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).FirstOrDefault().Nombre : "Sin registro de avance semanal"); 
-                     plantillatrContratos = plantillatrContratos.Replace("_Programacion_obra_acumulada_", defcontratac.ContratacionProyecto.ProgramacionSemanal != null ? defcontratac.ContratacionProyecto.ProgramacionSemanal + " %" : "0%");  //??
+                    plantillatrContratos = plantillatrContratos.Replace("_Estado_obra_", defcontratac.ContratacionProyecto.EstadoObraCodigo != null ? ListaParametricas.Where(r => r.Codigo == defcontratac.ContratacionProyecto.EstadoObraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).FirstOrDefault().Nombre : "Sin registro de avance semanal");
+                    plantillatrContratos = plantillatrContratos.Replace("_Programacion_obra_acumulada_", defcontratac.ContratacionProyecto.ProgramacionSemanal != null ? defcontratac.ContratacionProyecto.ProgramacionSemanal + " %" : "0%");  //??
                     plantillatrContratos = plantillatrContratos.Replace("_Avance_físico_acumulado_ejecutado_", defcontratac.ContratacionProyecto.AvanceFisicoSemanal != null ? defcontratac.ContratacionProyecto.AvanceFisicoSemanal + " %" : "0%");
                     plantillatrContratos = plantillatrContratos.Replace("Facturacion_programada_acumulada_", "");
                     plantillatrContratos = plantillatrContratos.Replace("_Facturacion_ejecutada_acumulada_", "");
@@ -817,16 +822,48 @@ namespace asivamosffie.services
             //strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
 
             Localizacion Municipioproceso = ListaLocalizaciones.Where(r => r.LocalizacionId == defPrincial.LocalizacionIdMunicipio.ToString()).FirstOrDefault();
-            Localizacion DepartamentoProceso = ListaLocalizaciones.Where(r => r.LocalizacionId == Municipioproceso.IdPadre).FirstOrDefault();
+            Localizacion DepartamentoProceso = new Localizacion();
+
+            if (Municipioproceso != null)
+            {
+                DepartamentoProceso = ListaLocalizaciones.Where(r => r.LocalizacionId == Municipioproceso.IdPadre).FirstOrDefault();
+            }
             var demandadoConvocado = defPrincial.DemandadoConvocado.FirstOrDefault();
+            var demandanteConvocante = defPrincial.DemandanteConvocante.FirstOrDefault();
+            string demandadosConvocados = "";
+            string demandantesConvocantes = "";
+
+            foreach (var demandado in defPrincial.DemandadoConvocado)
+            {
+                if (string.IsNullOrEmpty(demandadosConvocados))
+                {
+                    demandadosConvocados += demandado.Nombre ;
+                }
+                else
+                {
+                    demandadosConvocados += "," + demandado.Nombre;
+                }
+            }
+
+            foreach (var demandante in defPrincial.DemandanteConvocante)
+            {
+                if (string.IsNullOrEmpty(demandantesConvocantes))
+                {
+                    demandantesConvocantes += demandante.Nombre;
+                }
+                else
+                {
+                    demandantesConvocantes += "," + demandante.Nombre;
+                }
+            }
 
             strContenido = strContenido.Replace("_Departamento_inicio_proceso_", DepartamentoProceso.Descripcion);
 
             strContenido = strContenido.Replace("_Municipio_inicio_proceso_", Municipioproceso.Descripcion);
             strContenido = strContenido.Replace("_Autoridad_despacho_conocimiento_", demandadoConvocado.ConvocadoAutoridadDespacho);
             strContenido = strContenido.Replace("_Fecha_radicado_despacho_conocimiento_", demandadoConvocado.RadicadoDespacho);
-            strContenido = strContenido.Replace("_Nombre_convocante_demandante_", demandadoConvocado.Nombre);
-            strContenido = strContenido.Replace("_Nombre_convocado_demandado_", demandadoConvocado.Nombre);
+            strContenido = strContenido.Replace("_Nombre_convocante_demandante_", demandantesConvocantes);
+            strContenido = strContenido.Replace("_Nombre_convocado_demandado_", demandadosConvocados);
             strContenido = strContenido.Replace("_Fecha_radicado_FFIE_", defPrincial.FechaRadicadoFfie != null ? Convert.ToDateTime(defPrincial.FechaRadicadoFfie).ToString("dd/MM/yyyy") : defPrincial.FechaRadicadoFfie.ToString());
 
             strContenido = strContenido.Replace("_Numero_radicado_FFIE_", defPrincial.NumeroRadicadoFfie);
@@ -838,7 +875,7 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Caducidad_o_Prescripcion_", demandadoConvocado.CaducidadPrescripcion != null ? Convert.ToDateTime(demandadoConvocado.CaducidadPrescripcion).ToString("dd/MM/yyyy") : demandadoConvocado.CaducidadPrescripcion.ToString());
 
             strContenido = strContenido.Replace("_Pretensiones_", defPrincial.Pretensiones);
-            strContenido = strContenido.Replace("_Cuantia_Perjuicios_", (defPrincial.CuantiaPerjuicios != null) ? defPrincial.CuantiaPerjuicios.ToString() : "0");
+            strContenido = strContenido.Replace("_Cuantia_Perjuicios_", (defPrincial.CuantiaPerjuicios != null) ? "$" + String.Format("{0:n0}", defPrincial.CuantiaPerjuicios) : "0");
             strContenido = strContenido.Replace("_Antecedentes_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().Antecedentes);
             strContenido = strContenido.Replace("_Hechos_relevantes_", defPrincial.FichaEstudio.Count() == 0 ? "" : defPrincial.FichaEstudio.FirstOrDefault().HechosRelevantes);
 
@@ -854,8 +891,12 @@ namespace asivamosffie.services
 
             //Historial de Actuaciones
             int contadorActuacion = 1;
+
+
             foreach (var actuacion in actuaciones)
             {
+                plantillatrActuaciones += HistorialActuaciones;
+
                 plantillatrActuaciones = plantillatrActuaciones.Replace("_contador_", contadorActuacion.ToString());
                 plantillatrActuaciones = plantillatrActuaciones.Replace("_Fecha_Actualizacion_Actuacion_", actuacion.FechaModificacion == null ? Convert.ToDateTime(actuacion.FechaCreacion).ToString("dd/MM/yyyy") : Convert.ToDateTime(actuacion.FechaModificacion).ToString("dd/MM/yyyy"));
                 plantillatrActuaciones = plantillatrActuaciones.Replace("_Numero_Actuacion_", actuacion.NumeroActuacion);
