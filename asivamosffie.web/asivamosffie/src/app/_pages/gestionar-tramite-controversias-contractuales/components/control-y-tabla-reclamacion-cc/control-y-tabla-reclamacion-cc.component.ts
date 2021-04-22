@@ -30,7 +30,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   ngOnInit(): void {
     this.services.GetListGrillaControversiaReclamacion(this.controversiaID).subscribe((data:any)=>{
       for (let reclm of data){
-        if(reclm.estadoActuacionCodigoGeneral!='1' && reclm.estadoActuacionCodigo == '14'){
+        if(reclm.estadoActuacionCodigoGeneral!='1' && reclm.actuacionAdelantadaCodigo == '14'){
           this.dataTable.push(reclm);
         }
       }
