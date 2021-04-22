@@ -2215,11 +2215,17 @@ namespace asivamosffie.services
                                                                                 .Where(r => r.ControversiaContractualId == controversia.ControversiaContractualId)
                                                                                 .ToList();
 
-                    #region diferentes a TAI
 
                     // diferente a TAI
                     if (controversia.TipoControversiaCodigo != "1")
                     {
+                        #region diferentes a TAI
+
+                        //Actuaciones
+                        int totalActuacionesFinalizadas = _context.ControversiaActuacion.Where(r => r.ControversiaContractualId == controversia.ControversiaContractualId && r.EstadoCodigo == "2" && (r.Eliminado == false || r.Eliminado == true)).Count();
+                        int totalActuaciones = _context.ControversiaActuacion.Where(r => r.ControversiaContractualId == controversia.ControversiaContractualId && (r.Eliminado == false || r.Eliminado == true)).Count();
+
+
                         // obtengo las mesas asociadas a las actuaciones
                         List<ControversiaActuacionMesa> listaMesas = new List<ControversiaActuacionMesa>();
                         listaActuaciones.ForEach(actuacion =>
@@ -2227,6 +2233,10 @@ namespace asivamosffie.services
                             List<ControversiaActuacionMesa> controversiaActuacionMesa = _context.ControversiaActuacionMesa
                                                                  .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId)?.ToList();
 
+                            if (controversiaActuacionMesa != null)
+                            {
+                                listaMesas.AddRange(controversiaActuacionMesa);
+                            }
                             if (controversiaActuacionMesa != null)
                             {
                                 listaMesas.AddRange(controversiaActuacionMesa);
@@ -2243,35 +2253,62 @@ namespace asivamosffie.services
                         // cantidad de registros con marca cerrada
                         int cantidadMesasCerradas = listaMesas.Where(r => r.ResultadoDefinitivo == true && r.EstadoRegistroCodigo == "2").Count();
 
+                        int totalSeguimiento = 0;
+                        int totalFinalizadaSeguimiento = 0;
+                        int resultadosDefinitivoCheck = 0;
+
+                        foreach (var mesaSeguimiento in listaMesas)
+                        {
+                            List<ControversiaActuacionMesaSeguimiento> controversiaActuacionMesaSeguimiento = _context.ControversiaActuacionMesaSeguimiento
+                                            .Where(ca => ca.ControversiaActuacionMesaId == mesaSeguimiento.ControversiaActuacionMesaId)?.ToList();
+                            totalSeguimiento = totalSeguimiento + _context.ControversiaActuacionMesaSeguimiento.Where(ca => ca.ControversiaActuacionMesaId == mesaSeguimiento.ControversiaActuacionMesaId && (ca.Eliminado == false || ca.Eliminado == null)).Count();
+                            totalFinalizadaSeguimiento = totalFinalizadaSeguimiento + _context.ControversiaActuacionMesaSeguimiento.Where(ca => ca.ControversiaActuacionMesaId == mesaSeguimiento.ControversiaActuacionMesaId && (ca.Eliminado == false || ca.Eliminado == null) && ca.EstadoRegistroCodigo == "2").Count();
+                            resultadosDefinitivoCheck = resultadosDefinitivoCheck + _context.ControversiaActuacionMesaSeguimiento.Where(ca => ca.ControversiaActuacionMesaId == mesaSeguimiento.ControversiaActuacionMesaId && (ca.Eliminado == false || ca.Eliminado == null) && ca.EstadoRegistroCodigo == "2" && ca.ResultadoDefinitivo == true).Count();
+
+                        }
+
+
                         // se validad si la controversia se puede cerrar 
-                        if (cantidadMesasCerradas > 0 || cantidadActuacionesCerradas > 0)
+                        if (totalActuacionesFinalizadas >= totalActuaciones)
+                        {
+                            if (totalFinalizadaSeguimiento >= totalSeguimiento && resultadosDefinitivoCheck > 0)
+                            {
+                                sePuedeCerrar = true;
+                            }
+                            if (cantidadMesasCerradas > 0 || cantidadActuacionesCerradas > 0)
+                            {
+                                sePuedeCerrar = true;
+                            }
+                        }
+                        #endregion diferentes a TAI
+
+                    }
+                    else
+                    {
+                        #region TAI
+
+                        // obtengo las mesas asociadas a las actuaciones
+                        List<ActuacionSeguimiento> listaSeguimiento = new List<ActuacionSeguimiento>();
+                        listaActuaciones.ForEach(actuacion =>
+                        {
+                            listaSeguimiento.AddRange(_context.ActuacionSeguimiento
+                                                                 .Where(ac => ac.ControversiaActuacionId == actuacion.ControversiaActuacionId)
+                                                                 .ToList());
+                        });
+
+                        int cantidadSeguimientoCerradas = listaSeguimiento.Where(r => r.EsResultadoDefinitivo == true && r.EstadoDerivadaCodigo == "2").Count();
+
+                        // se validad si la controversia se puede cerrar 
+                        if (cantidadSeguimientoCerradas > 0)
                         {
                             sePuedeCerrar = true;
                         }
+
+                        #endregion TAI
+
                     }
 
-                    #endregion diferentes a TAI
 
-                    #region TAI
-
-                    // obtengo las mesas asociadas a las actuaciones
-                    List<ActuacionSeguimiento> listaSeguimiento = new List<ActuacionSeguimiento>();
-                    listaActuaciones.ForEach(actuacion =>
-                    {
-                        listaSeguimiento.AddRange(_context.ActuacionSeguimiento
-                                                             .Where(ac => ac.ControversiaActuacionId == actuacion.ControversiaActuacionId)
-                                                             .ToList());
-                    });
-
-                    int cantidadSeguimientoCerradas = listaSeguimiento.Where(r => r.EsResultadoDefinitivo == true && r.EstadoDerivadaCodigo == "2").Count();
-
-                    // se validad si la controversia se puede cerrar 
-                    if (cantidadSeguimientoCerradas > 0)
-                    {
-                        sePuedeCerrar = true;
-                    }
-
-                    #endregion TAI
 
                     GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual
                     {
