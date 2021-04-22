@@ -400,6 +400,16 @@ namespace asivamosffie.services
                         });
                     });
 
+                    // valor de la fase de construccion
+                    VValorConstruccionXproyectoContrato vValorConstruccionXproyectoContrato = _context.VValorConstruccionXproyectoContrato
+                                                                                                            .Where(x => x.ProyectoId == ContratacionProyecto.ProyectoId &&
+                                                                                                                    x.ContratoId == contrato.ContratoId)
+                                                                                                            .FirstOrDefault();
+
+                    if (vValorConstruccionXproyectoContrato != null)
+                    {
+                        ContratacionProyecto.Proyecto.ValorFaseConstruccion = vValorConstruccionXproyectoContrato.ValorConstruccion;
+                    }
 
                 }
 
@@ -1725,8 +1735,8 @@ namespace asivamosffie.services
 
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
-                    pConstruccion.InventarioArboreoFechaRadicado == null ||
-                    pConstruccion.InventarioArboreoFechaAprobacion == null ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaRadicado == null) ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null)  ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||
@@ -1809,45 +1819,9 @@ namespace asivamosffie.services
         {
             Proyecto proyecto = _context.Proyecto
                                             .Where(p => p.ProyectoId == pProyectoId)
-                                            //    .Include( r => r.ContratacionProyecto )
-                                            //        .ThenInclude( r => r.Contratacion )
-                                            //            .ThenInclude( r => r.Contrato )
-                                            //                .ThenInclude( r => r.ContratoPoliza )
-                                            //    .Include( r => r.ContratacionProyecto )
-                                            //        .ThenInclude( r => r.Contratacion )
-                                            //            .ThenInclude( r => r.DisponibilidadPresupuestal )
                                             .FirstOrDefault();
 
-            //Contrato contrato = new Contrato();
-            //if ( proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.Contrato?.FirstOrDefault() != null )
-            //    contrato = proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault();
-
-            //// obtengo información de las fechas de las polizas y DRP
-            //DateTime? fechaInicioContrato = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp;
-            //DateTime? fechaPoliza = contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion;
-
-            //VRequisitosTecnicosInicioConstruccion proyectoInfo = _context.VRequisitosTecnicosInicioConstruccion
-            //                                                                    .Where(r => r.ContratoId == contrato.ContratoId)
-            //                                                                    .FirstOrDefault();
-
-            //// valida la fecha mayor 
-            //if (fechaInicioContrato != null && fechaPoliza != null)
-            //{
-
-            //    if (fechaPoliza >= fechaInicioContrato)
-            //        proyecto.FechaInicioEtapaObra = fechaPoliza.Value;
-            //    else
-            //        proyecto.FechaInicioEtapaObra = fechaInicioContrato.Value;
-
-            //}
-
-
-            //// agrega el plazo de preconstruccion si tiene esta fase
-            //if (proyectoInfo.TieneFasePreconstruccion > 0)
-            //{
-            //    proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesInterventoria.Value);
-            //    proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoDiasInterventoria.Value + 1);
-            //}
+            
 
             proyecto.FechaInicioEtapaObra = pFechaInicioObra.HasValue ? pFechaInicioObra.Value : DateTime.MinValue;
 
@@ -3612,6 +3586,21 @@ namespace asivamosffie.services
             //Proyecto proyecto = CalcularFechaInicioContrato(pContratoConstruccionId);
             Proyecto proyecto = CalcularFechasContrato(pProyectoId, contratoConstruccion.FechaInicioObra);
 
+            // valor de la fase de construccion
+            VValorConstruccionXproyectoContrato vValorConstruccionXproyectoContrato = _context.VValorConstruccionXproyectoContrato
+                                                                                                    .Where(x => x.ProyectoId == contratoConstruccion.ProyectoId &&
+                                                                                                            x.ContratoId == contratoConstruccion.ContratoId)
+                                                                                                    .FirstOrDefault();
+
+            if (vValorConstruccionXproyectoContrato != null)
+            {
+                proyecto.ValorObra = vValorConstruccionXproyectoContrato.ValorConstruccion;
+            }
+            else
+            {
+                proyecto.ValorObra = 0;
+            }
+
             //Numero semanas
             int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
             if (Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0)
@@ -3748,10 +3737,10 @@ namespace asivamosffie.services
 
                                 string valorTemp = worksheet.Cells[i, k].Text;
 
-                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "");
+                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "").Replace("-","");
 
                                 //Valor
-                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(valorTemp);
+                                temp.Valor = string.IsNullOrEmpty(valorTemp) ? 0 : decimal.Parse(valorTemp);
                                 sumaTotal += temp.Valor.Value;
 
                                 //Guarda Cambios en una tabla temporal
@@ -3781,11 +3770,11 @@ namespace asivamosffie.services
 
                     if (proyecto.ValorObra != sumaTotal && worksheet.Cells[1, 1].Comment == null)
                     {
-                        worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
+                        worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor de la fase de construcción del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                         estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "La suma de los valores no es igual al valor total de obra del proyecto";
+                        mensajeRespuesta = "La suma de los valores no es igual al valor de la fase de construcción del proyecto";
                     }
 
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
