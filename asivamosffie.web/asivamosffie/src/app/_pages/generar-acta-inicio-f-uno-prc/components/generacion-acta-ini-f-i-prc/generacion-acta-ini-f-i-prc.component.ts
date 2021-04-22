@@ -100,6 +100,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     )
     .subscribe(
       value => {
+        if ( this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+          if ( this.addressForm.get( 'mesPlazoEjFase1' ).value === 0 && value === 0 ) {
+            this.addressForm.get( 'diasPlazoEjFase1' ).setValue( 1 );
+            this.openDialog( '', '<b>No se puede tener 0 meses y 0 días de ejecución, para continuar verifique por favor.</b>' )
+          }
+        }
         if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null && this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
           let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
           newdate.setDate(newdate.getDate() + ( ( this.addressForm.get( 'mesPlazoEjFase1' ).value * 30 ) + Number( value ) ));

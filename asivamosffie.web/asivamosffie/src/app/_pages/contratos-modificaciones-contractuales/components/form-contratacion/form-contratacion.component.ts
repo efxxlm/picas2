@@ -139,7 +139,6 @@ export class FormContratacionComponent implements OnInit {
     }
     
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
-    
   };
 
   getDocumento ( nombreDocumento: string ) {
