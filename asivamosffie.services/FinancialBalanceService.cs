@@ -32,7 +32,7 @@ namespace asivamosffie.services
             {
                 return (
                     _context.VOrdenGiro
-                    .Where(v => v.TipoSolicitudCodigo == pTipoSolicitudCodigo && v.RegistroCompletoTramitar.HasValue)
+                    .Where(v => v.TipoSolicitudCodigo == pTipoSolicitudCodigo && v.RegistroCompletoTramitar)
                     .Select(v => new
                     {
                      
@@ -47,7 +47,7 @@ namespace asivamosffie.services
             {
                 return (
                     _context.VOrdenGiro
-                    .Where(v => v.NumeroSolicitudOrdenGiro == pNumeroOrdenGiro && v.RegistroCompletoTramitar.HasValue)
+                    .Where(v => v.NumeroSolicitudOrdenGiro == pNumeroOrdenGiro && v.RegistroCompletoTramitar)
                     .Select(v => new
                     {
                         v.NumeroSolicitudOrdenGiro,

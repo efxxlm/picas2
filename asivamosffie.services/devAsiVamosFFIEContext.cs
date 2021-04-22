@@ -8599,6 +8599,7 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_OrdenGiro");
 
                 entity.Property(e => e.EstadoCodigo)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -8606,7 +8607,9 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.EstadoNombre2).HasMaxLength(250);
+                entity.Property(e => e.EstadoNombre2)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.FechaAprobacionFinanciera).HasColumnType("datetime");
 
