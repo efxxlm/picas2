@@ -4,7 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import humanize from 'humanize-plus';
-import { Dominio } from 'src/app/core/_services/common/common.service';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
@@ -89,8 +89,11 @@ export class TerceroCausacionComponent implements OnInit {
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private ordenGiroSvc: OrdenPagoService,
+        private commonSvc: CommonService,
         private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
+        this.commonSvc.listaDescuentosOrdenGiro()
+            .subscribe( listaDescuentosOrdenGiro => this.tipoDescuentoArray = listaDescuentosOrdenGiro );
         this.crearFormulario();
     }
 

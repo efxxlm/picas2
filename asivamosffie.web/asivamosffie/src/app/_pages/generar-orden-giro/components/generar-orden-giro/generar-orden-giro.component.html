@@ -82,7 +82,18 @@
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
-                            (click)="devolverSolicitud( element )"
+                            (click)="devolverSolicitud( element, true )"
+                            *ngIf=" element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion
+                                    || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
+                            Anular orden de giro
+                    </button>
+
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table"
+                            (click)="devolverSolicitud( element, false )"
                             *ngIf=" element.estadoCodigo === estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
                                     || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
                                     || element.estadoCodigo === estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorAprobacion

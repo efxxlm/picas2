@@ -12,9 +12,9 @@
                                 <p><strong>Tipo de aportante: </strong> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
                                 <p><strong>Nombre del aportante: </strong> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
                                 <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
-                                <p><b>Nombre de la Cuenta: </b> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                             </div>
                             <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
+                                <p><b>Nombre de la Cuenta: </b> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                 <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
                                     <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
                                     <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>

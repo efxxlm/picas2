@@ -436,7 +436,7 @@
                                 <mat-card-content>
                                     <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsTramitar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
                                     <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
-                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                    <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
                                     <section [innerHTML]="criterio.get( 'obsTramitar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"></section>
                                 </mat-card-content>
                             </mat-card>

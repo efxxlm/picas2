@@ -81,7 +81,7 @@
                 <mat-card-content>
                     <p style="margin-left: 2em;"><b> {{ obsTramitar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
                     <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones a la Estrategia de pagos?</b>: Si</p>
-                    <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones a la Estrategia de pagos?</b>: No</p>
+                    <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones a la Estrategia de pagos?</b>: No</p>
                     <section [innerHTML]="obsTramitar.observacion" style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"></section>
                 </mat-card-content>
             </mat-card>

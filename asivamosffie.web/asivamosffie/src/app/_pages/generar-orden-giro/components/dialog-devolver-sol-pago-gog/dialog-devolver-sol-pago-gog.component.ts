@@ -41,7 +41,6 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log( this.registro );
     }
 
     crearFormulario() {
@@ -73,8 +72,8 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
 
     onSubmit() {
         const pSolicitudPago = {
-            solicitudPagoId: this.registro.solicitudPagoId,
-            estadoCodigo: this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion,
+            solicitudPagoId: this.registro.registro.solicitudPagoId,
+            estadoCodigo: this.registro.esAnular === true ? this.listaEstadoSolicitudPago.ordenGiroAnulada : this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion,
             observacionDevolucionOrdenGiro: this.addressForm.get( 'observaciones' ).value
         };
 

@@ -62,10 +62,10 @@ export class GenerarOrdenGiroComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    devolverSolicitud( registro: any ){
+    devolverSolicitud( registro: any, esAnular: boolean ){
         this.dialog.open( DialogDevolverSolPagoGogComponent, {
             width: '80em',
-            data: registro
+            data: { registro, esAnular }
         });
     }
 
