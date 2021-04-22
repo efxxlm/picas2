@@ -240,6 +240,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
+        public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
         public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
@@ -8308,6 +8309,23 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FuentesUsoXContratoId");
+
+                entity.Property(e => e.FuenteFinanciacion).HasMaxLength(250);
+
+                entity.Property(e => e.NombreUso).HasMaxLength(250);
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>

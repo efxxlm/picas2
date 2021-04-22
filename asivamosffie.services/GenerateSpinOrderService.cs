@@ -21,10 +21,12 @@ namespace asivamosffie.services
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly IBudgetAvailabilityService _budgetAvailabilityService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePayment;
 
-        public GenerateSpinOrderService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
+        public GenerateSpinOrderService(IBudgetAvailabilityService budgetAvailabilityService, IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _budgetAvailabilityService = budgetAvailabilityService;
             _commonService = commonService;
             _context = context;
             _registerValidatePayment = registerValidatePaymentRequierementsService;
@@ -62,9 +64,9 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 decimal? ValorNetoGiro = pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
-               
+
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.ConsecutivoOrigen = await _commonService.EnumeradorOrigenOrdenGiro();
@@ -76,7 +78,7 @@ namespace asivamosffie.services
                     pOrdenGiro.ValorNetoGiro = ValorNetoGiro;
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
-                     
+
                     await _context.Set<SolicitudPago>()
                                     .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
                                                                                         .UpdateAsync(r => new SolicitudPago()
@@ -718,9 +720,8 @@ namespace asivamosffie.services
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
                 }
-
-
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
+                SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
             }
             catch (Exception ex)
             {
@@ -728,12 +729,89 @@ namespace asivamosffie.services
             return SolicitudPago;
         }
 
+        private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
+        {
+            List<VFuentesUsoXcontratoId> List =
+                                               _context.VFuentesUsoXcontratoId
+                                               .Where(c => c.ContratoId == solicitudPago.ContratoSon.ContratoId)
+                                               .ToList();
+
+            TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
+            {
+                Usos = List
+                           .ConvertAll(x => new Usos
+                           {
+                               NombreUso = x.NombreUso,
+                               TipoUsoCodigo = x.TipoUsoCodigo
+                           }).Distinct().ToList()
+            };
+
+            foreach (var usos in tabla.Usos)
+            {
+                usos.Fuentes = List
+                                   .ConvertAll(x => new Fuentes
+                                   {
+                                       TipoUsoCodigo = usos.TipoUsoCodigo,
+                                       FuenteFinanciacionId = x.FuenteFinanciacionId,
+                                       NombreFuente = x.FuenteFinanciacion
+                                   })
+                                   .Where(r => r.TipoUsoCodigo == usos.TipoUsoCodigo)
+                                   .Distinct()
+                                   .ToList();
+
+                foreach (var Fuentes in usos.Fuentes)
+                {
+                    Fuentes.Aportante = List
+                                           .ConvertAll(x => new Aportante
+                                           {
+                                               FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                               AportanteId = x.AportanteProyecto
+                                           })
+                                           .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId)
+                                           .Distinct()
+                                           .ToList();
+
+                    foreach (var Aportante in Fuentes.Aportante)
+                    {
+                        decimal ValorUso = List.Where(r => r.AportanteProyecto == Aportante.AportanteId).Select(r => r.ValorUso).FirstOrDefault();
+                        decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+                        Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+                        Aportante.ValorUso = List
+                                                   .ConvertAll(x => new ValorUso
+                                                   {
+                                                       AportanteId = Aportante.AportanteId,
+                                                       Valor = String.Format("{0:n0}", x.ValorUso)
+                                                   })
+                                                   .Where(r => r.AportanteId == Aportante.AportanteId)
+                                                   .Distinct()
+                                                   .ToList();
+
+                        Aportante.SaldoActualUso = new List<SaldoActualUso>
+                        {
+                            new SaldoActualUso
+                            {
+                                AportanteId = Aportante.AportanteId,
+                                Valor = String.Format("{0:n0}", ValorUso - Descuento)
+                            }
+                        }; 
+                    }
+                }
+
+
+            }
+
+
+            return tabla;
+        }
+
+
+
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
             String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
-            decimal ValorFacturado =  SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0 ;
+            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0;
 
 
             List<VRpsPorContratacion> vRpsPorContratacion =
@@ -756,10 +834,9 @@ namespace asivamosffie.services
                 });
                 Enum++;
             }
-
-
             return ListTablaDrp;
         }
+
         #endregion
 
         #region validate 
