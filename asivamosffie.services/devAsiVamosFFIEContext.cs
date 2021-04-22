@@ -23,7 +23,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
-        public virtual DbSet<AvanceFisicoFinanciero> AvanceFisicoFinanciero { get; set; }
         public virtual DbSet<BalanceFinanciero> BalanceFinanciero { get; set; }
         public virtual DbSet<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
@@ -482,31 +481,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.MensajesValidacionesId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_MensajesValidaciones_MensajesValidacionesId");
-            });
-
-            modelBuilder.Entity<AvanceFisicoFinanciero>(entity =>
-            {
-                entity.Property(e => e.Causa).HasMaxLength(500);
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaReporte).HasColumnType("datetime");
-
-                entity.Property(e => e.Observaciones).HasMaxLength(500);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.VariableCodigo)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<BalanceFinanciero>(entity =>
