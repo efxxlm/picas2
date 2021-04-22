@@ -36,34 +36,35 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
         </div>
         <div style="margin-top: 3em;" *ngIf="projects.length > 0">
-            <mat-card class="shipping-card var-main-gris" *ngFor="let project of projects.controls; index as i" [formGroup]="project">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text">
-                        {{ project.get( 'llaveMen' ).value }}
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ project.get( 'valorMaximoProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-                    <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ project.get( 'valorPendienteProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-                    <br>
-                    <br>
-                    <div class="d-flex">
-                        <strong>Criterios:</strong>
-                        <p *ngFor="let criterio of project.get( 'criterioPago' ).value; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="project.get( 'criterioPago' ).value.length - 1 !== i">,</span><span *ngIf="project.get( 'criterioPago' ).value.length - 1 === i">.</span> </p>
-                    </div>
-                    <section formArrayName="criteriosProyecto" *ngIf="criteriosProyecto( i ).length > 0">
-                        <div  class="mt-1em" *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
-                            <h2>
-                                <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
-                            </h2>
-                            <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterioProyecto.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+            <div *ngFor="let project of projects.controls; index as i">
+                <mat-card *ngIf="project.get( 'check' ).value === true" class="shipping-card var-main-gris" [formGroup]="project">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text">
+                            {{ project.get( 'llaveMen' ).value }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ project.get( 'valorMaximoProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                        <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ project.get( 'valorPendienteProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                        <br>
+                        <br>
+                        <div class="d-flex">
+                            <strong>Criterios:</strong>
+                            <p *ngFor="let criterio of project.get( 'criterioPago' ).value; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="project.get( 'criterioPago' ).value.length - 1 !== i">,</span><span *ngIf="project.get( 'criterioPago' ).value.length - 1 === i">.</span> </p>
                         </div>
-                    </section>
-                </mat-card-content>
-            </mat-card>
+                        <section formArrayName="criteriosProyecto" *ngIf="criteriosProyecto( i ).length > 0">
+                            <div  class="mt-1em" *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
+                                <h2>
+                                    <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
+                                </h2>
+                                <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterioProyecto.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                            </div>
+                        </section>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
     </ng-container>
     <ng-template #noEsVerDetalle>
