@@ -35,6 +35,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     observacion: any;
     solicitudPagoObservacionId = 0;
     estaEditando = false;
+    minDate = new Date();
+
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,

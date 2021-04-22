@@ -211,10 +211,11 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             }
                         } );
 
-                        if ( total === listaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                        if ( total === listaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
                             sinDiligenciar++;
                         }
                     } );
+
                     if ( sinDiligenciar !== solicitudPagoListaChequeo.length ) {
 
                         if ( enProceso > 0 && enProceso < solicitudPagoListaChequeo.length ) {

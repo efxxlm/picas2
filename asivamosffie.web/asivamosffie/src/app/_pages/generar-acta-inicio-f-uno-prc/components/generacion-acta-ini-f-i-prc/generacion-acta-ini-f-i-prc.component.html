@@ -220,7 +220,7 @@
                     min="1"
                     max="99"
                     required
-                    (ngModelChange)="getValueMeses($event)"
+                    (ngModelChange)="getValueMeses($event); getMonth( $event )"
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -269,10 +269,11 @@
                     matInput
                     maxlength="2"
                     min="1"
-                    max="31"
+                    max="99"
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                    (ngModelChange)="getDays( $event )"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase1"

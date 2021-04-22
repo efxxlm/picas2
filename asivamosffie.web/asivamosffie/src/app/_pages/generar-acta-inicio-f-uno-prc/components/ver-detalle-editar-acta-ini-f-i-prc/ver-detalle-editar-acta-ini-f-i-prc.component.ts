@@ -97,7 +97,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.idContrato = param.id;
     });
 
-    this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
+    /*this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
     .pipe(
       delay( 1000 )
     )
@@ -155,7 +155,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
             );
         }
       }
-    );
+    );*/
   }
   ngOnInit(): void {
   }
@@ -280,6 +280,55 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       if ( value > this.diasPlazoIni ) {
         this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
       }
+    }
+  }
+
+  getMonth( value: number ) {
+    this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( null );
+    if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null ) {
+      let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+      newdate.setDate( newdate.getDate() + ( Number( value ) * 30 ) );
+      this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+    }
+    if ( this.contrato !== undefined && value !== null ) {
+      const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+      const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+      this.plazoMesesFase1 = value;
+      this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
+      this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+        .subscribe(
+          response => {
+            this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+            this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+          }
+        );
+    }
+  }
+
+  getDays( value: number ) {
+    if ( this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+      if ( this.addressForm.get( 'mesPlazoEjFase1' ).value === 0 && value === 0 ) {
+        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( 1 );
+        this.openDialog( '', '<b>No se puede tener 0 meses y 0 días de ejecución, para continuar verifique por favor.</b>' )
+      }
+    }
+    if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null && this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+      let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+      newdate.setDate(newdate.getDate() + ( ( this.addressForm.get( 'mesPlazoEjFase1' ).value * 30 ) + Number( value ) ));
+      this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+    }
+    if ( this.contrato !== undefined && value !== null ) {
+      const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+      const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+      this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
+      this.plazoMesesFase2 = value;
+      this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+        .subscribe(
+          response => {
+            this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+            this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+          }
+        );
     }
   }
 
@@ -432,8 +481,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         fechaTerminacion: this.fechaSesionString2,
         plazoFase1PreMeses: this.addressForm.get( 'mesPlazoEjFase1' ).value,
         plazoFase1PreDias: this.addressForm.get( 'diasPlazoEjFase1' ).value,
-        plazoFase2ConstruccionMeses: this.addressForm.get( 'mesPlazoEjFase2' ).value,
-        plazoFase2ConstruccionDias: this.addressForm.get( 'diasPlazoEjFase2' ).value,
+        plazoFase2ConstruccionMeses: this.valorFDos !== 0 ? this.addressForm.get( 'mesPlazoEjFase2' ).value : null,
+        plazoFase2ConstruccionDias: this.valorFDos !== 0 ? this.addressForm.get( 'diasPlazoEjFase2' ).value : null,
         observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
         conObervacionesActa: true,
         registroCompleto: false,
