@@ -25,31 +25,6 @@ namespace asivamosffie.services
         }
 
         #region Opt
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
-        {
-            if (string.IsNullOrEmpty(pEstadoCodigo))
-                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
-            else
-            {
-                if (pEstadoCodigo == ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza)
-                {
-                    List<ContratoPoliza> contratoPolizas = _context.ContratoPoliza.ToList();
-
-                    List<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas = await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
-                    List<VGestionarGarantiasPolizas> Return = new List<VGestionarGarantiasPolizas>();
-                   
-                    foreach (var item in VGestionarGarantiasPolizas)
-                    {
-                        if (contratoPolizas.Any(c => c.ContratoId == item.ContratoId))
-                            Return.Add(item);
-                    }
-
-                    return Return;
-                }
-                return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
-            }
-        }
-
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             return await _context.Contrato
@@ -63,113 +38,29 @@ namespace asivamosffie.services
                                         .FirstOrDefaultAsync();
         }
 
-        public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
-
-            try
+            if (string.IsNullOrEmpty(pEstadoCodigo))
+                return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+            else
             {
-                foreach (var ContratoPoliza in pContrato.ContratoPoliza)
+                if (pEstadoCodigo == ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza)
                 {
-                    if (ContratoPoliza.ContratoPolizaId > 0)
+                    List<ContratoPoliza> contratoPolizas = _context.ContratoPoliza.ToList();
+
+                    List<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas = await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                    List<VGestionarGarantiasPolizas> Return = new List<VGestionarGarantiasPolizas>();
+
+                    foreach (var item in VGestionarGarantiasPolizas)
                     {
-                        await _context.Set<ContratoPoliza>()
-                                 .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
-                                 .UpdateAsync(c => new ContratoPoliza
-                                 {
-                                     EstadoPolizaCodigo = ContratoPoliza.EstadoPolizaCodigo,
-                                     UsuarioModificacion = pContrato.UsuarioCreacion,
-                                     FechaModificacion = DateTime.Now,
-                                     RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
-                                     FechaAprobacion = ContratoPoliza.FechaAprobacion,
-                                     NombreAseguradora = ContratoPoliza.NombreAseguradora,
-                                     NumeroPoliza = ContratoPoliza.NumeroPoliza,
-                                     NumeroCertificado = ContratoPoliza.NumeroCertificado,
-                                     FechaExpedicion = ContratoPoliza.FechaExpedicion
-                                 });
-                    }
-                    else
-                    {
-                        ContratoPoliza.FechaCreacion = DateTime.Now;
-                        ContratoPoliza.Eliminado = false;
-                        _context.ContratoPoliza.Add(ContratoPoliza);
+                        if (!contratoPolizas.Any(c => c.ContratoId == item.ContratoId))
+                            Return.Add(item);
                     }
 
-                    CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
-                    CreateEditPolizaObservacion(ContratoPoliza.PolizaObservacion, pContrato.UsuarioCreacion);
-                    CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
+                    return Return;
                 }
-                return
-                       new Respuesta
-                       {
-                           IsSuccessful = true,
-                           IsException = false,
-                           IsValidation = false,
-                           Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                           Message =
-                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                                                           (int)enumeratorMenu.GestionarGarantias,
-                                                                                           ConstantMessagesContratoPoliza.OperacionExitosa,
-                                                                                           idAccion,
-                                                                                           pContrato.UsuarioCreacion,
-                                                                                           ConstantCommonMessages.GuaranteePolicies.CREAR_EDITAR
-                                                                                       )
-                       };
+                return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
             }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
-                    Message =
-                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                                                           (int)enumeratorMenu.GestionarGarantias,
-                                                                                           ConstantMessagesContratoPoliza.ErrorInterno,
-                                                                                           idAccion,
-                                                                                           pContrato.UsuarioCreacion,
-                                                                                           ConstantCommonMessages.GuaranteePolicies.ERROR
-                                                                                       )
-                };
-            }
-        }
-
-        public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                _context.Set<ContratoPoliza>()
-                        .Where(p => p.ContratoPolizaId == pContratoPoliza.ContratoPolizaId)
-                        .Update(p => new ContratoPoliza
-                        {
-                            FechaModificacion = DateTime.Now,
-                            EstadoPolizaCodigo = pContratoPoliza.EstadoPolizaCodigo
-                        });
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pContratoPoliza.UsuarioModificacion, ConstantCommonMessages.GuaranteePolicies.CAMBIAR_ESTADO)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantMessagesContratoPoliza.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pContratoPoliza.UsuarioModificacion, ex.InnerException.ToString())
-                };
-            }
-
         }
 
         private void CreateEditPolizaObservacion(ICollection<PolizaObservacion> pListPolizaObservacion, string pAuthor)
@@ -264,6 +155,115 @@ namespace asivamosffie.services
                     _context.PolizaGarantia.Add(PolizaGarantia);
                 }
             }
+        }
+
+        public async Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                foreach (var ContratoPoliza in pContrato.ContratoPoliza)
+                {
+                    if (ContratoPoliza.ContratoPolizaId > 0)
+                    {
+                        await _context.Set<ContratoPoliza>()
+                                 .Where(c => c.ContratoPolizaId == pContrato.ContratoPoliza.FirstOrDefault().ContratoPolizaId)
+                                 .UpdateAsync(c => new ContratoPoliza
+                                 {
+                                     EstadoPolizaCodigo = ContratoPoliza.EstadoPolizaCodigo,
+                                     UsuarioModificacion = pContrato.UsuarioCreacion,
+                                     FechaModificacion = DateTime.Now,
+                                     RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza),
+                                     FechaAprobacion = ContratoPoliza.FechaAprobacion,
+                                     NombreAseguradora = ContratoPoliza.NombreAseguradora,
+                                     NumeroPoliza = ContratoPoliza.NumeroPoliza,
+                                     NumeroCertificado = ContratoPoliza.NumeroCertificado,
+                                     FechaExpedicion = ContratoPoliza.FechaExpedicion
+                                 });
+                    }
+                    else
+                    {
+                        ContratoPoliza.FechaCreacion = DateTime.Now;
+                        ContratoPoliza.Eliminado = false;
+                        _context.ContratoPoliza.Add(ContratoPoliza);
+                    }
+
+                    CreateEditPolizaGarantia(ContratoPoliza.PolizaGarantia, pContrato.UsuarioCreacion);
+                    CreateEditPolizaObservacion(ContratoPoliza.PolizaObservacion, pContrato.UsuarioCreacion);
+                    CreateEditPolizaListaChequeo(ContratoPoliza.PolizaListaChequeo, pContrato.UsuarioCreacion);
+                }
+                return
+                       new Respuesta
+                       {
+                           IsSuccessful = true,
+                           IsException = false,
+                           IsValidation = false,
+                           Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                           Message =
+                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                           (int)enumeratorMenu.GestionarGarantias,
+                                                                                           ConstantMessagesContratoPoliza.OperacionExitosa,
+                                                                                           idAccion,
+                                                                                           pContrato.UsuarioCreacion,
+                                                                                           ConstantCommonMessages.GuaranteePolicies.CREAR_EDITAR
+                                                                                       )
+                       };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
+                    Message =
+                           await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                           (int)enumeratorMenu.GestionarGarantias,
+                                                                                           ConstantMessagesContratoPoliza.ErrorInterno,
+                                                                                           idAccion,
+                                                                                           pContrato.UsuarioCreacion,
+                                                                                           ConstantCommonMessages.GuaranteePolicies.ERROR
+                                                                                       )
+                };
+            }
+        }
+         
+        public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<ContratoPoliza>()
+                        .Where(p => p.ContratoPolizaId == pContratoPoliza.ContratoPolizaId)
+                        .Update(p => new ContratoPoliza
+                        {
+                            FechaModificacion = DateTime.Now,
+                            EstadoPolizaCodigo = pContratoPoliza.EstadoPolizaCodigo
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pContratoPoliza.UsuarioModificacion, ConstantCommonMessages.GuaranteePolicies.CAMBIAR_ESTADO)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pContratoPoliza.UsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
         }
 
         public bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
