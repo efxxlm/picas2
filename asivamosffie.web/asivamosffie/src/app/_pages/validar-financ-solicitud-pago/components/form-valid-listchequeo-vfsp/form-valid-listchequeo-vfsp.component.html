@@ -15,7 +15,11 @@
                     </ng-container>
                     <ng-container matColumnDef="documento">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Documento </th>
-                        <td mat-cell *matCellDef="let element" align="left"  class="detalle"> {{ element.get( 'listaChequeoItemNombre' ).value }} </td>
+                        <td mat-cell *matCellDef="let element" align="left"  class="detalle">
+                            <div class="h-modal scroll">
+                                {{ element.get( 'listaChequeoItemNombre' ).value }}
+                            </div>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="revTecnica">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Verificación financiera </th>
@@ -50,7 +54,11 @@
                         </ng-container>
                         <ng-container matColumnDef="documento">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle" style="width: 40%;"> Documento </th>
-                            <td mat-cell *matCellDef="let element" align="left"  class="detalle"> {{ element.get( 'listaChequeoItemNombre' ).value }} </td>
+                            <td mat-cell *matCellDef="let element" align="left"  class="detalle">
+                                <div class="h-modal scroll">
+                                    {{ element.get( 'listaChequeoItemNombre' ).value }}
+                                </div>
+                            </td>
                         </ng-container>
                         <ng-container matColumnDef="revTecnica">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Verificación financiera </th>

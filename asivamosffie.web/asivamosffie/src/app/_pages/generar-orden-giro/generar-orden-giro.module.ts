@@ -31,11 +31,15 @@ import { DetalleDescDirTecnicaGogComponent } from './components/detalle-desc-dir
 import { DetalleTerceroCausacionGogComponent } from './components/detalle-tercero-causacion-gog/detalle-tercero-causacion-gog.component';
 import { FormDescuentosGogComponent } from './components/form-descuentos-gog/form-descuentos-gog.component';
 import { FormOrigenComponent } from './components/form-origen/form-origen.component';
+import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
+import { DetalleGiroComponent } from './components/detalle-giro/detalle-giro.component';
+import { FormExpensasOtrosCostosComponent } from './components/form-expensas-otros-costos/form-expensas-otros-costos.component';
+import { FormTerceroGiroComponent } from './components/form-tercero-giro/form-tercero-giro.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent, VerDetalleEditOrdenGiroGogComponent, DialogDevolverSolPagoGogComponent, DetalleOrdenGiroGogComponent, DetalleDescDirTecnicaGogComponent, DetalleTerceroCausacionGogComponent, FormDescuentosGogComponent, FormOrigenComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent, VerDetalleEditOrdenGiroGogComponent, DialogDevolverSolPagoGogComponent, DetalleOrdenGiroGogComponent, DetalleDescDirTecnicaGogComponent, DetalleTerceroCausacionGogComponent, FormDescuentosGogComponent, FormOrigenComponent, InformacionGeneralComponent, DetalleGiroComponent, FormExpensasOtrosCostosComponent, FormTerceroGiroComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,

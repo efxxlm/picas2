@@ -1,0 +1,70 @@
+<section class="container text-center" *ngIf="solicitudPago !== undefined && contrato !== undefined">
+    <div class="text-right">
+        <a routerLink="/generarOrdenDeGiro" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <h1 class="title-menu--h1">
+            Ver detalle orden de giro
+        </h1>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <ng-container *ngIf="esRegistroNuevo === true; else elseTemplate">
+            <h1 class="title-menu--h1">
+                Generar orden de giro
+            </h1>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <h1 class="title-menu--h1">
+                Ver detalle/Editar orden de giro
+            </h1>
+        </ng-template>
+        
+    </ng-template>
+    
+
+    <p class="info-sub-title">
+        <span>Número de contrato <b> {{ contrato.numeroContrato }} </b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Fecha de solicitud de pago:</strong> {{ solicitudPago.fechaCreacion | date: 'dd/MM/yyyy' }} </p>
+            <p><strong>Fecha de validación financiera:</strong> {{ solicitudPago.fechaRegistroCompletoValidacionFinanciera | date: 'dd/MM/yyyy' }} </p>
+            <p><strong>Número de solicitud:</strong> {{ solicitudPago.numeroSolicitud }} </p>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoInfoGeneral : ''">
+                    Información general
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-informacion-general    [solicitudPago]="solicitudPago"
+                                        [esVerDetalle]="esVerDetalle"
+                                        [esExpensas]="esExpensas"
+                                        (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'">
+            </app-informacion-general>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?semaforoDetalle : ''">
+                    Detalle del giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-detalle-giro></app-detalle-giro>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

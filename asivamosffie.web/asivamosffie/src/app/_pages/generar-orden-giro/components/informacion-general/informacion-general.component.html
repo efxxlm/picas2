@@ -1,0 +1,85 @@
+<section *ngIf="solicitudPago !== undefined">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                    Datos de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                <mat-card-content style="text-align: left;">
+                    <p><strong>Código SIFI:</strong> 357233</p>
+                    <p><strong>Valor de la factura:</strong> {{ valorTotalFactura | currency:'':'symbol-narrow':'.0-0' }} </p>
+                </mat-card-content>
+            </mat-card>
+
+            <app-tabla-datos-solicitud-gog [listProyectos]="solicitudPago.contratoSon.listProyectos[1]"></app-tabla-datos-solicitud-gog>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                    Datos DDP y DRP
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="d-flex justify-content-center colorMainColor mt-1em">
+                <p>Número de DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].numeroDdp }} </b></p>
+                <p style="margin-left: 2em;">Valor del DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </b></p>
+            </div>
+
+            <div class="table-responsive mt-1em">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                    <ng-container matColumnDef="drp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                        <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDrp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDRP }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="valorSolicitudDdp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="saldoPresupuestal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo actual DRP</th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+
+            <app-tabla-datos-ddp-gog *ngIf="solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-datos-ddp-gog>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                    Soportes de factura
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                <mat-card-content style="text-align: left;">
+                    <p><strong>URL con soporte:</strong>
+                        {{ solicitudPago.solicitudPagoSoporteSolicitud[0]?.urlSoporte }}
+                    </p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoInfoGeneral : ''">
+                    Tercero de giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-tercero-giro [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'; tieneObservacion.emit( true )"></app-form-tercero-giro>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

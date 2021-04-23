@@ -1,3 +1,4 @@
+import { FormExpensasOtrosCostosComponent } from './components/form-expensas-otros-costos/form-expensas-otros-costos.component';
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
@@ -36,6 +37,30 @@ const routes: Routes = [
   {
     path: 'verDetalleOrdenGiro/:id',
     component: FormGenerarOrdenGiroComponent
+  },
+  {
+    path: 'generarOrdenExpensas/:id',
+    component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'editarOrdenExpensas/:id',
+    component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'detalleOrdenExpensas/:id',
+    component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'generarOrdenOtrosCostos/:id',
+    component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'editarOrdenOtrosCostos/:id',
+    component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'detalleOrdenOtrosCostos/:id',
+    component: FormExpensasOtrosCostosComponent
   }
 ];
 @NgModule({
