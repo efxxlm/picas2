@@ -435,10 +435,7 @@ namespace asivamosffie.services
                 if (informe.FechaSuscripcion > RangoFechaConDiasHabiles)
                 {
 
-                    string strContenido = TemplateRecoveryPassword.Contenido
-                                     .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                     .Replace("[ESTADO_CUMPLIMIENTO]", String.IsNullOrEmpty(informe.EstadoCumplimiento) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoCumplimiento, 163))
-                                     .Replace("[FECHA_SUSCRIPCION]", ((DateTime)informe.FechaSuscripcion).ToString("yyyy-MM-dd"));
+                    string strContenido = await ReplaceVariables(TemplateRecoveryPassword.Contenido, informe.InformeFinalId);
 
                     _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
 
@@ -591,6 +588,46 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private async Task<string> ReplaceVariables(string template, int pInformeFinalId)
+        {
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+
+            InformeFinal informeFinal = _context.InformeFinal
+                .Where(r => r.InformeFinalId == pInformeFinalId)
+                .Include(r => r.Proyecto)
+                    .ThenInclude(r => r.InstitucionEducativa)
+                .FirstOrDefault();
+
+            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == informeFinal.Proyecto.SedeId).FirstOrDefault();
+            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == informeFinal.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+            informeFinal.Proyecto.MunicipioObj = Municipio;
+            informeFinal.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+            informeFinal.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == informeFinal.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+            informeFinal.Proyecto.Sede = Sede;
+
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
+
+            template = template
+                      .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
+                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                      .Replace("[FECHA_TERMINACION_PROYECTO]", ((DateTime)informeFinal.FechaCreacion).ToString("dd-MMM-yy"))
+                      .Replace("[FECHA_SUSCRIPCION]", informeFinal.FechaSuscripcion != null ? ((DateTime)informeFinal.FechaSuscripcion).ToString("dd-MMM-yy") : "")
+                      .Replace("[INSTITUCION_EDUCATIVA]", informeFinal.Proyecto.InstitucionEducativa.Nombre)
+                      .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
+                      .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString)
+                      .Replace("[FECHA_ENVIO_APOYO]", informeFinal.FechaEnvioApoyoSupervisor != null ? ((DateTime)informeFinal.FechaEnvioApoyoSupervisor).ToString("dd-MMM-yy") : "")
+                      ;
+
+
+            return template;
         }
     }
 }

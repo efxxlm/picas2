@@ -8111,6 +8111,11 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
+                entity.Property(e => e.EstadoBalanceCodigo)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoTramiteLiquidacion)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -8128,6 +8133,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.FechaAprobacionLiquidacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaBalance).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInformeFinal).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaPoliza).HasColumnType("datetime");
 

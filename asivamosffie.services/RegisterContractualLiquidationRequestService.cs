@@ -659,13 +659,12 @@ namespace asivamosffie.services
 
         #region alertas
 
-        //pendiente tener los 3 campos
         public async Task<bool> RegistroLiquidacionPendiente()
         {
             DateTime MaxDate = await _commonService.CalculardiasLaborales(5, DateTime.Now);
             List<VContratacionProyectoSolicitudLiquidacion> contratacionProyectos =
                 _context.VContratacionProyectoSolicitudLiquidacion
-                .Where(r => r.FechaPoliza > MaxDate
+                .Where(r => r.FechaPoliza > MaxDate && r.FechaBalance > MaxDate && r.FechaInformeFinal > MaxDate
                    && !r.FechaTramiteLiquidacion.HasValue).ToList();
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_6_registro_solicitud_liquidacion_contrato));

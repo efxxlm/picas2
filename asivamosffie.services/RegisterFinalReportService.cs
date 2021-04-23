@@ -749,19 +749,17 @@ namespace asivamosffie.services
 
         private async Task<bool> EnviarCorreoApoyoSupervisor(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo || x.PerfilId == (int)EnumeratorPerfil.Apoyo_Supervisor).Include(y => y.Usuario);
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionApoyoInformeFinal5_1_1);
 
-            string template = TemplateRecoveryPassword.Contenido
-                .Replace("_LinkF_", pDominioFront)
-                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen);
+            string template = await ReplaceVariables(pDominioFront,TemplateRecoveryPassword.Contenido, informeFinal.InformeFinalId, null);
 
             bool blEnvioCorreo = false;
 
             foreach (var item in usuarios)
             {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificar informe final", template, pSender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
             }
             return blEnvioCorreo;
         }
@@ -785,28 +783,66 @@ namespace asivamosffie.services
 
                 if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon2DiasHabiles)  
                 {
-                    string template = TemplateRecoveryPassword.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[DIAS_HABILES]", "dos (2)");
+
+                    string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informe.InformeFinalId , RangoFechaCon2DiasHabiles);
+
                     foreach (var item in usuarios)
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Fecha límite de entrega del informe final", template, pSender, pPassword, pMailServer, pMailPort);
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
                     }
 
                 }
                 if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon8DiasHabiles)
                 {
-                    string template = TemplateRecoveryPassword.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[DIAS_HABILES]", "ocho (8)");
+
+                    string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informe.InformeFinalId, RangoFechaCon8DiasHabiles);
+
                     foreach (var item in usuarios)
                     {
                         Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Fecha límite de entrega del informe final", template, pSender, pPassword, pMailServer, pMailPort);
                     }
                 }
             }
+        }
+
+        private async Task<string> ReplaceVariables(string pDominioFront,string template, int pInformeFinalId, DateTime? date)
+        {
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+
+            InformeFinal informeFinal = _context.InformeFinal
+                .Where(r => r.InformeFinalId == pInformeFinalId)
+                .Include(r => r.Proyecto)
+                    .ThenInclude(r => r.InstitucionEducativa)
+                .FirstOrDefault();
+
+            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == informeFinal.Proyecto.SedeId).FirstOrDefault();
+            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == informeFinal.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+            informeFinal.Proyecto.MunicipioObj = Municipio;
+            informeFinal.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+            informeFinal.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == informeFinal.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+            informeFinal.Proyecto.Sede = Sede;
+
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
+
+            template = template
+                      .Replace("_LinkF_", pDominioFront)
+                      .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
+                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                      .Replace("[FECHA_TERMINACION_PROYECTO]", ((DateTime)informeFinal.FechaCreacion).ToString("dd-MMM-yy"))
+                      .Replace("[FECHA_SUSCRIPCION]", informeFinal.FechaSuscripcion != null ? ((DateTime)informeFinal.FechaSuscripcion).ToString("dd-MMM-yy") : "")
+                      .Replace("[INSTITUCION_EDUCATIVA]", informeFinal.Proyecto.InstitucionEducativa.Nombre)
+                      .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
+                      .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString)
+                      .Replace("[FECHA_LIMITE]", date != null ? ((DateTime)date).ToString("dd-MMM-yy"): "")
+                      ;
+
+            return template;
         }
 
     }

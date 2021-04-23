@@ -754,15 +754,13 @@ namespace asivamosffie.services
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionInterventorDevolucion5_1_3);
 
-            string template = TemplateRecoveryPassword.Contenido
-                .Replace("_LinkF_", pDominioFront)
-                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen);
+            string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informeFinal.InformeFinalId);
 
             bool blEnvioCorreo = false;
 
             foreach (var item in usuarios)
             {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Devolución por Supervisión - Informe Final", template, pSender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
             }
             return blEnvioCorreo;
         }
@@ -773,16 +771,13 @@ namespace asivamosffie.services
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionGrupoNovedadesInformeFinal5_1_3);
 
-            string template = TemplateRecoveryPassword.Contenido
-                .Replace("_LinkF_", pDominioFront)
-                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
-                .Replace("[FECHA_VERIFICACION]", ((DateTime)informeFinal.FechaAprobacion).ToString("dd-MMM-yy"));
+            string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informeFinal.InformeFinalId);
 
             bool blEnvioCorreo = false;
 
             foreach (var item in usuarios)
             {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Validar informe final Grupo Novedades", template, pSender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
             }
             return blEnvioCorreo;
         }
@@ -805,15 +800,11 @@ namespace asivamosffie.services
 
                 if (informeFinal.Count() > 0 && informe.FechaEnvioSupervisor > RangoFechaConDiasHabiles)
                 {
-                    string template = TemplateRecoveryPassword.Contenido
-                                .Replace("_LinkF_", pDominioFront)
-                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[ESTADO_APROBACION]", String.IsNullOrEmpty(informe.EstadoAprobacion) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoAprobacion, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final))
-                                .Replace("[FECHA_ENVIO_SUPERVISOR]", ((DateTime)informe.FechaEnvioSupervisor).ToString("yyyy-MM-dd"));
+                    string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informe.InformeFinalId);
 
                     foreach (var item in usuarios)
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "No se ha enviado el informe Final para revisión final. ", template, pSender, pPassword, pMailServer, pMailPort);
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
                     }
 
                 }
@@ -882,6 +873,46 @@ namespace asivamosffie.services
             }
 
             return informeFinal;
+        }
+
+        private async Task<string> ReplaceVariables(string pDominioFront, string template, int pInformeFinalId)
+        {
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+
+            InformeFinal informeFinal = _context.InformeFinal
+                .Where(r => r.InformeFinalId == pInformeFinalId)
+                .Include(r => r.Proyecto)
+                    .ThenInclude(r => r.InstitucionEducativa)
+                .FirstOrDefault();
+
+            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == informeFinal.Proyecto.SedeId).FirstOrDefault();
+            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == informeFinal.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+            informeFinal.Proyecto.MunicipioObj = Municipio;
+            informeFinal.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+            informeFinal.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == informeFinal.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+            informeFinal.Proyecto.Sede = Sede;
+
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
+
+            template = template
+                      .Replace("_LinkF_", pDominioFront)
+                      .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
+                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                      .Replace("[FECHA_VERIFICACION]", informeFinal.FechaEnvioSupervisor != null ?  ((DateTime)informeFinal.FechaEnvioSupervisor).ToString("dd-MMM-yy"): "")
+                      .Replace("[FECHA_APROBACION]", informeFinal.FechaAprobacion != null ? ((DateTime)informeFinal.FechaAprobacion).ToString("dd-MMM-yy") : "")
+                      .Replace("[FECHA_SUSCRIPCION]", informeFinal.FechaSuscripcion != null ? ((DateTime)informeFinal.FechaSuscripcion).ToString("dd-MMM-yy") : "")
+                      .Replace("[INSTITUCION_EDUCATIVA]", informeFinal.Proyecto.InstitucionEducativa.Nombre)
+                      .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
+                      .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString);
+
+
+            return template;
         }
 
     }
