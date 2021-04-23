@@ -62,7 +62,7 @@
                     <button mat-raised-button color="accent" 
                                                             class="btn-table" 
                                                             (click)="this.cargarActaSuscrita(element.contratoId,element.tipoContrato,element.numeroContratoObra)"
-                                                            > 
+                                                            *ngIf="element.estadoActa=='Con acta en proceso de firma' && element.tipoContrato=='Obra'"> 
                     Cargar acta suscrita
                     </button>
 
