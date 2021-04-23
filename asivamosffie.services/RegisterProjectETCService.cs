@@ -169,7 +169,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                await registroCompletoRecorridoObra(pRecorrido.ProyectoEntregaEtcid);
+                await registroCompletoRecorridoObra(pRecorrido);
 
                 //validateRegistroCompletoEtc(pRecorrido.InformeFinalId);
 
@@ -445,11 +445,11 @@ namespace asivamosffie.services
                 }
             }
         }
-        private async Task<bool> registroCompletoRecorridoObra(int proyectoEntregaEtcId)
+        private async Task<bool> registroCompletoRecorridoObra(ProyectoEntregaEtc proyectoEntregaEtc)
         {
             bool state = false;
-            ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefaultAsync();
-            if (proyectoEntregaEtc != null)
+            ProyectoEntregaEtc proyectoEntregaEtcOld = _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefault();
+            if (proyectoEntregaEtc != null && proyectoEntregaEtcOld != null)
             {
                 if (proyectoEntregaEtc.FechaRecorridoObra != null &&
                     proyectoEntregaEtc.FechaFirmaActaEngregaFisica != null &&
@@ -457,23 +457,22 @@ namespace asivamosffie.services
                     proyectoEntregaEtc.NumRepresentantesRecorrido != null
                     )
                 {
-                    int totalRepresentantes = _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId && (r.Eliminado == false || r.Eliminado == null) && r.RegistroCompleto == true).Count();
+                    int totalRepresentantes = _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid && (r.Eliminado == false || r.Eliminado == null) && r.RegistroCompleto == true).Count();
                     if (totalRepresentantes == proyectoEntregaEtc.NumRepresentantesRecorrido)
                     {
                         state = true;
                     }
                 }
-            }
+                await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid)
+                .UpdateAsync(r => new ProyectoEntregaEtc()
+                {
+                    RegistroCompletoRecorridoObra = state
+                });
 
-            await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId)
-            .UpdateAsync(r => new ProyectoEntregaEtc()
-            {
-                RegistroCompletoRecorridoObra = state
-            });
-
-            if (proyectoEntregaEtc.RegistroCompletoActaBienesServicios == true && state == true && proyectoEntregaEtc.RegistroCompletoRemision == true)
-            {
-                state = true;
+                if (proyectoEntregaEtcOld.RegistroCompletoActaBienesServicios == true && state == true && proyectoEntregaEtcOld.RegistroCompletoRemision == true)
+                {
+                    state = true;
+                }
             }
             else
             {
@@ -569,7 +568,7 @@ namespace asivamosffie.services
 
                 await _context.SaveChangesAsync();
 
-                await registroCompletoRecorridoObra(representanteEtcrecorridoOld.ProyectoEntregaEtcid);
+                await registroCompletoRecorridoObra(proyectoEntregaEtc);
 
                 return new Respuesta
                 {
