@@ -3240,7 +3240,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.InformeFinalInterventoria)
                     .HasForeignKey(d => d.InformeFinalListaChequeoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_InformeFinalListaChequeo");
+                    .HasConstraintName("FK_InformeFinalInterventoria_ListaChequeo");
             });
 
             modelBuilder.Entity<InformeFinalInterventoriaObservaciones>(entity =>
@@ -3459,8 +3459,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Orden)
-                    .HasMaxLength(255)
+                entity.Property(e => e.Mensaje)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)

@@ -28,8 +28,8 @@ export class TablaDetalleInformeFinalComponent implements OnInit {
                 if( report != null ){
                     report.forEach(element => {
                         datosTabla.push({
-                            numero: element.informeFinalListaChequeo.posicion,
-                            item: element.informeFinalListaChequeo.nombre,
+                            numero: element.informeFinalListaChequeo.orden,
+                            item: element.informeFinalListaChequeo.listaChequeoItem.nombre,
                             tipoAnexoString: element.informeFinalAnexo ? element.informeFinalAnexo.tipoAnexoString : "",
                             calificacionCodigo: element.calificacionCodigo,
                             numRadicadoSac: element.informeFinalAnexo ? element.informeFinalAnexo.numRadicadoSac : "",

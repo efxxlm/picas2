@@ -27,7 +27,7 @@ namespace asivamosffie.model.Models
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual InformeFinalAnexo InformeFinalAnexo { get; set; }
-        public virtual InformeFinalListaChequeo InformeFinalListaChequeo { get; set; }
+        public virtual ListaChequeoListaChequeoItem InformeFinalListaChequeo { get; set; }
         public virtual ICollection<InformeFinalInterventoriaObservaciones> InformeFinalInterventoriaObservaciones { get; set; }
     }
 }

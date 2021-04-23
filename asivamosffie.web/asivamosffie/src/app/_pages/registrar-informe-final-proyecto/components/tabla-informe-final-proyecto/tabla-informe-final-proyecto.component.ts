@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service';
+import { Router } from '@angular/router';
 
 export interface RegistrarInterface {
   fechaTerminacionObra: Date;
@@ -44,7 +45,8 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
 
   constructor(
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private routes: Router
   ) {}
 
   ngOnInit(): void {
@@ -105,7 +107,8 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   enviarRegistroFinal(pProyectoId: number) {
     this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
       this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-      this.ngOnInit();
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.routes.navigate( ['/registrarInformeFinalProyecto'] ) );
     });
   }
 }

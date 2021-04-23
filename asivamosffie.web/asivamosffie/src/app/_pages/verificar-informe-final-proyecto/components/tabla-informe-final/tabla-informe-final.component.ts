@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service';
+import { Router } from '@angular/router';
 
 export interface RegistrarInterface {
   fechaCreacion: Date;
@@ -40,7 +41,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   datosTabla = [];
-  constructor(private verificarInformeFinalProyectoService: VerificarInformeFinalService, public dialog: MatDialog) {}
+  constructor(private verificarInformeFinalProyectoService: VerificarInformeFinalService, public dialog: MatDialog, private routes: Router ) {}
 
   ngOnInit(): void {
     this.getListInformeFinal();
@@ -103,7 +104,8 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     // console.log("Antes: ",pProyectoId);
     this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
       this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
-      this.ngOnInit();
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.routes.navigate( ['/verificarInformeFinalProyecto'] ) );
     });
   }
 }

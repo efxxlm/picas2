@@ -23,7 +23,7 @@
                   No.
                 </th>
                 <td mat-cell *matCellDef="let element">
-                  <b>{{ element.informeFinalListaChequeo.posicion }}</b>
+                  <b>{{ element.informeFinalListaChequeo.orden }}</b>
                 </td>
               </ng-container>
 
@@ -33,7 +33,7 @@
                   Ítem
                 </th>
                 <td mat-cell *matCellDef="let element">
-                  {{ element.informeFinalListaChequeo.nombre }}
+                  {{ element.informeFinalListaChequeo.listaChequeoItem.nombre }}
                 </td>
               </ng-container>
 

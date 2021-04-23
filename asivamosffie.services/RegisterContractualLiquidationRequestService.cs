@@ -226,8 +226,9 @@ namespace asivamosffie.services
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                     .Where(r => r.InformeFinalId == pInformeFinalId)
                     .Include(r => r.InformeFinalListaChequeo)
+                        .ThenInclude(r => r.ListaChequeoItem)
                     .Include(r => r.InformeFinalAnexo)
-                    .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
+                    .OrderBy(r => r.InformeFinalListaChequeo.Orden)
                     .ToListAsync();
 
             foreach (var item in ListInformeFinalChequeo)

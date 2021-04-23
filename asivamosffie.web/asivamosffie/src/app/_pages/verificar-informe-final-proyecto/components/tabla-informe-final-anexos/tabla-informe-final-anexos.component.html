@@ -34,7 +34,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
                 <td mat-cell *matCellDef="let element">
                   <span [class.color-secondaryColor]="element.validacionCodigo === '' && estaEditando">
-                    <b>{{ element.informeFinalListaChequeo.posicion }}</b>
+                    <b>{{ element.informeFinalListaChequeo.orden }}</b>
                   </span>
                 </td>
               </ng-container>
@@ -44,7 +44,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
                 <td mat-cell *matCellDef="let element">
                   <span [class.color-secondaryColor]="element.validacionCodigo === '' && estaEditando">
-                    {{ element.informeFinalListaChequeo.nombre }}
+                    {{ element.informeFinalListaChequeo.listaChequeoItem.nombre }}
                   </span>
                 </td>
               </ng-container>

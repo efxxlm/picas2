@@ -132,7 +132,9 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                if (pRecorrido.ProyectoEntregaEtcid == 0)
+                ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == pRecorrido.InformeFinalId).FirstOrDefault();
+
+                if (pRecorrido.ProyectoEntregaEtcid == 0 && proyectoEntregaEtc == null)
                 {
                     strCrearEditar = "CREAR ENTREGA DE PROYECTO ETC - RECORRIDO";
                     pRecorrido.FechaCreacion = DateTime.Now;
@@ -141,6 +143,11 @@ namespace asivamosffie.services
                 else
                 {
                     strCrearEditar = "ACTUALIZAR ENTREGA DE PROYECTO ETC - RECORRIDO";
+
+                    if (pRecorrido.ProyectoEntregaEtcid == 0)
+                    {
+                        pRecorrido.ProyectoEntregaEtcid = proyectoEntregaEtc.ProyectoEntregaEtcid;
+                    }
 
                     await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == pRecorrido.ProyectoEntregaEtcid)
                                                                    .UpdateAsync(r => new ProyectoEntregaEtc()
@@ -251,16 +258,24 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                if (pDocumentos.ProyectoEntregaEtcid == 0)
+                ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == pDocumentos.InformeFinalId).FirstOrDefault();
+
+                bool registroCompletoRemision = !String.IsNullOrEmpty(pDocumentos.NumRadicadoDocumentosEntregaEtc) && pDocumentos.FechaEntregaDocumentosEtc != null ? true : false; ;
+                if (pDocumentos.ProyectoEntregaEtcid == 0 && proyectoEntregaEtc == null)
                 {
                     strCrearEditar = "CREAR ENTREGA DE PROYECTO ETC - DOC";
                     pDocumentos.FechaCreacion = DateTime.Now;
-                    pDocumentos.RegistroCompletoRemision = !String.IsNullOrEmpty(pDocumentos.NumRadicadoDocumentosEntregaEtc) && pDocumentos.FechaEntregaDocumentosEtc != null ? true : false;
+                    pDocumentos.RegistroCompletoRemision = registroCompletoRemision;
                     _context.ProyectoEntregaEtc.Add(pDocumentos);
                 }
                 else
                 {
                     strCrearEditar = "ACTUALIZAR ENTREGA DE PROYECTO ETC - DOC";
+                    
+                    if (pDocumentos.ProyectoEntregaEtcid == 0)
+                    {
+                        pDocumentos.ProyectoEntregaEtcid = proyectoEntregaEtc.ProyectoEntregaEtcid;
+                    }
 
                     await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == pDocumentos.ProyectoEntregaEtcid)
                                                                    .UpdateAsync(r => new ProyectoEntregaEtc()
@@ -269,13 +284,30 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pDocumentos.UsuarioCreacion,
                                                                        FechaEntregaDocumentosEtc = pDocumentos.FechaEntregaDocumentosEtc,
                                                                        NumRadicadoDocumentosEntregaEtc = pDocumentos.NumRadicadoDocumentosEntregaEtc,
-                                                                       RegistroCompletoRemision = !String.IsNullOrEmpty(pDocumentos.NumRadicadoDocumentosEntregaEtc) && pDocumentos.FechaEntregaDocumentosEtc != null ? true : false
+                                                                       RegistroCompletoRemision = registroCompletoRemision
 
-                });
+                                                                   });
                 }
+                bool state = false;
+
+                if (proyectoEntregaEtc != null)
+                {
+                    if (proyectoEntregaEtc.RegistroCompletoActaBienesServicios == true && proyectoEntregaEtc.RegistroCompletoRecorridoObra == true && registroCompletoRemision)
+                    {
+                        state = true;
+                    }
+                    _context.Set<InformeFinal>().Where(r => r.InformeFinalId == proyectoEntregaEtc.InformeFinalId)
+                    .Update(r => new InformeFinal()
+                    {
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = proyectoEntregaEtc.UsuarioCreacion,
+                        EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC,
+                        RegistroCompletoEntregaEtc = state
+                    });
+                }
+
                 _context.SaveChanges();
 
-                validateRegistroCompletoEtc(pDocumentos.InformeFinalId);
 
                 return
                 new Respuesta
@@ -307,16 +339,23 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                if (pActaServicios.ProyectoEntregaEtcid == 0)
+                ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == pActaServicios.InformeFinalId).FirstOrDefault();
+                bool registroCompletoActaBienesServicios = !String.IsNullOrEmpty(pActaServicios.ActaBienesServicios) && pActaServicios.FechaFirmaActaBienesServicios != null ? true : false;
+                if (pActaServicios.ProyectoEntregaEtcid == 0 && proyectoEntregaEtc == null)
                 {
                     strCrearEditar = "CREAR ENTREGA DE PROYECTO ETC - ACTA";
                     pActaServicios.FechaCreacion = DateTime.Now;
-                    pActaServicios.RegistroCompletoActaBienesServicios = !String.IsNullOrEmpty(pActaServicios.ActaBienesServicios) && pActaServicios.FechaFirmaActaBienesServicios != null ? true : false;
+                    pActaServicios.RegistroCompletoActaBienesServicios = registroCompletoActaBienesServicios;
                     _context.ProyectoEntregaEtc.Add(pActaServicios);
                 }
                 else
                 {
                     strCrearEditar = "ACTUALIZAR ENTREGA DE PROYECTO ETC - ACTA";
+
+                    if (pActaServicios.ProyectoEntregaEtcid == 0)
+                    {
+                        pActaServicios.ProyectoEntregaEtcid = proyectoEntregaEtc.ProyectoEntregaEtcid;
+                    }
 
                     await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == pActaServicios.ProyectoEntregaEtcid)
                                                                    .UpdateAsync(r => new ProyectoEntregaEtc()
@@ -325,12 +364,29 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pActaServicios.UsuarioCreacion,
                                                                        FechaFirmaActaBienesServicios = pActaServicios.FechaFirmaActaBienesServicios,
                                                                        ActaBienesServicios = pActaServicios.ActaBienesServicios,
-                                                                       RegistroCompletoActaBienesServicios = !String.IsNullOrEmpty(pActaServicios.ActaBienesServicios) && pActaServicios.FechaFirmaActaBienesServicios != null ? true : false
+                                                                       RegistroCompletoActaBienesServicios = registroCompletoActaBienesServicios,
                                                                    });
                 }
-                _context.SaveChanges();
 
-                validateRegistroCompletoEtc(pActaServicios.InformeFinalId);
+                bool state = false;
+
+                if (proyectoEntregaEtc != null)
+                {
+                    if (registroCompletoActaBienesServicios == true && proyectoEntregaEtc.RegistroCompletoRecorridoObra == true && proyectoEntregaEtc.RegistroCompletoRemision == true)
+                    {
+                        state = true;
+                    }
+                    _context.Set<InformeFinal>().Where(r => r.InformeFinalId == proyectoEntregaEtc.InformeFinalId)
+                    .Update(r => new InformeFinal()
+                    {
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = proyectoEntregaEtc.UsuarioCreacion,
+                        EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC,
+                        RegistroCompletoEntregaEtc = state
+                    });
+                }
+
+                _context.SaveChanges();
 
                 return
                 new Respuesta
@@ -392,7 +448,7 @@ namespace asivamosffie.services
         private async Task<bool> registroCompletoRecorridoObra(int proyectoEntregaEtcId)
         {
             bool state = false;
-            ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefault();
+            ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefaultAsync();
             if (proyectoEntregaEtc != null)
             {
                 if (proyectoEntregaEtc.FechaRecorridoObra != null &&
@@ -436,32 +492,6 @@ namespace asivamosffie.services
 
             return false;
 
-        }
-
-        private bool validateRegistroCompletoEtc(int informeFinalId)
-        {
-            bool state = false;
-
-            ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefault();
-            if (proyectoEntregaEtc != null)
-            {
-                if (proyectoEntregaEtc.RegistroCompletoActaBienesServicios == true && proyectoEntregaEtc.RegistroCompletoRecorridoObra == true && proyectoEntregaEtc.RegistroCompletoRemision == true)
-                {
-                    state = true;
-                }
-                _context.Set<InformeFinal>().Where(r => r.InformeFinalId == informeFinalId)
-                .Update(r => new InformeFinal()
-                {
-                    FechaModificacion = DateTime.Now,
-                    UsuarioModificacion = proyectoEntregaEtc.UsuarioCreacion,
-                    EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC,
-                    RegistroCompletoEntregaEtc = state
-                });
-            }
-
-            _context.SaveChanges();
-
-            return state;
         }
 
         public async Task<Respuesta> SendProjectToEtc(int informeFinalId, string pUsuario)

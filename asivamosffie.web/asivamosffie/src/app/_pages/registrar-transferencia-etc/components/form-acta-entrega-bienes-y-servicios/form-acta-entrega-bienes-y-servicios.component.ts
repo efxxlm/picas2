@@ -16,6 +16,8 @@ import { ProyectoEntregaETC } from 'src/app/_interfaces/proyecto-entrega-etc';
 export class FormActaEntregaBienesYServiciosComponent implements OnInit {
 
   addressForm = this.fb.group({
+    proyectoEntregaEtcid: [null, Validators.required],
+    informeFinalId: [null, Validators.required],
     fechaFirmaActaBienesServicios: [null, Validators.required],
     actaBienesServicios: [null, Validators.required]
   });
@@ -60,7 +62,8 @@ export class FormActaEntregaBienesYServiciosComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.callOnInitParent.emit();
-      this.router.navigate(['/registrarTransferenciaProyectosETC']);
+      this.router.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.router.navigate( ['/registrarTransferenciaProyectosETC'] ) );
       return;
     });
   }

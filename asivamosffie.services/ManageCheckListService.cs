@@ -82,7 +82,7 @@ namespace asivamosffie.services
                               {
                                   UsuarioModificacion = pAutor,
                                   FechaModificacion = DateTime.Now,
-                                  Orden = string.Empty,
+                                  Orden = null,
                                   Eliminado = true
                               });
 

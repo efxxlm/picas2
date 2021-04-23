@@ -309,9 +309,10 @@ namespace asivamosffie.services
             {
                 List<InformeFinalInterventoria> listInformeFinalInterventoria = await _context.InformeFinalInterventoria
                 .Where(r => r.InformeFinalId == informeFinal.InformeFinalId)
-                .Include(r => r.InformeFinalListaChequeo)
                 .Include(r => r.InformeFinalAnexo)
-                .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
+                .Include(r => r.InformeFinalListaChequeo)
+                    .ThenInclude(r => r.ListaChequeoItem)
+                .OrderBy(r => r.InformeFinalListaChequeo.Orden)
                 .ToListAsync();
 
                 if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.En_proceso_de_registro)
@@ -350,7 +351,7 @@ namespace asivamosffie.services
 
                     ListChequeo.Add(new
                     {
-                        Nombre = item.InformeFinalListaChequeo.Nombre,
+                        Nombre = item.InformeFinalListaChequeo.ListaChequeoItem.Nombre,
                         CalificacionCodigo = item.CalificacionCodigo,
                         InformeFinalListaChequeoId = item.InformeFinalListaChequeoId,
                         InformeFinalInterventoriaId = item.InformeFinalInterventoriaId,
@@ -361,13 +362,13 @@ namespace asivamosffie.services
                         TieneObservacionNoCumple = tieneObservacionNoCumple,
                         CalificacionCodigoString = String.IsNullOrEmpty(item.CalificacionCodigo) || item.CalificacionCodigo == "0" ? null : await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final),
                         EstadoInformeFinal = informeFinal.EstadoInforme,
-                        posicion = item.InformeFinalListaChequeo.Posicion,
+                        posicion = item.InformeFinalListaChequeo.Orden,
                         estadoInforme = informeFinal.EstadoInforme,
                         registroCompleto = (bool)informeFinal.RegistroCompleto,
                         semaforo = semaforo,
                         aprobacionCodigo = item.AprobacionCodigo,
                         tieneModificacionInterventor = item.TieneModificacionInterventor,
-                        mensajeAyuda = String.IsNullOrEmpty(item.InformeFinalListaChequeo.MensajeAyuda) ? string.Empty : item.InformeFinalListaChequeo.MensajeAyuda
+                        mensajeAyuda = String.IsNullOrEmpty(item.InformeFinalListaChequeo.Mensaje) ? string.Empty : item.InformeFinalListaChequeo.Mensaje
 
                     });
                 }
@@ -382,8 +383,12 @@ namespace asivamosffie.services
             string CreateEdit = string.Empty;
             try
             {
-                List<InformeFinalListaChequeo> ListInformeFinalChequeo = await _context.InformeFinalListaChequeo
+                //ListaChequeo listaChequeo = _context.ListaChequeo.Where(r => r.EstadoMenuCodigo == ConstanTipoListaChequeo.Informe_Final && r.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_Terminado).FirstOrDefault();
+                List<ListaChequeoListaChequeoItem> ListInformeFinalChequeo = await _context.ListaChequeoListaChequeoItem
+                    .Where(r => r.ListaChequeoId == 32)
+                    //.Where(r => r.ListaChequeoId == listaChequeo.ListaChequeoId)
                     .ToListAsync();
+
                 CreateEdit = "CREAR INFORME FINAL INTERVENTORIA";
                 foreach (var item in ListInformeFinalChequeo)
                 {
@@ -392,7 +397,7 @@ namespace asivamosffie.services
                         FechaCreacion = DateTime.Now,
                         UsuarioCreacion = user,
                         InformeFinalId = pInformeFinalAnexoId,
-                        InformeFinalListaChequeoId = item.InformeFinalListaChequeoId,
+                        InformeFinalListaChequeoId = item.ListaChequeoListaChequeoItemId,
                     };
                     _context.InformeFinalInterventoria.Add(informeFinalInterventoria);
                 }
