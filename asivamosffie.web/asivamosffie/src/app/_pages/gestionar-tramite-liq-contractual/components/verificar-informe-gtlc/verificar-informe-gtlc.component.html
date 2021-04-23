@@ -123,6 +123,6 @@
     </mat-accordion>
   
     <app-observaciones-supervisor *ngIf="contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle]="esVerDetalle"></app-observaciones-supervisor>
-    <app-observaciones-informe-final *ngIf="!esVerDetalle && contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion"></app-observaciones-informe-final>
+    <app-observaciones-informe-final *ngIf="!esVerDetalle && contratacionProyectoId && data" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-observaciones-informe-final>
   
   </section>  

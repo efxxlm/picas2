@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 import { InformeFinal } from 'src/app/_interfaces/informe-final';
@@ -24,7 +24,8 @@ export class AprobarInformeFinalComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+    private routes: Router
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
@@ -70,6 +71,15 @@ export class AprobarInformeFinalComponent implements OnInit {
           this.informeFinal = this.data.informeFinal;
           this.registroCompleto = this.data.registroCompleto ? 'Completo' : 'Incompleto';
         }
+      }
+    });
+  }
+
+  redirectToParent(): void{
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if(urlSegment.path.includes("Requisitos")){
+        this.routes.navigate(['/aprobarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        return;
       }
     });
   }

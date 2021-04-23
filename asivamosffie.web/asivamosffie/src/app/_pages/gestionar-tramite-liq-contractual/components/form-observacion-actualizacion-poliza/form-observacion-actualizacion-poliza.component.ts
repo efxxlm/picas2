@@ -79,6 +79,10 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
+    });
   }
 
   onSubmit() {
@@ -102,7 +106,6 @@ export class FormObservacionActualizacionPolizaComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.callOnInitParent.emit();
                 return;
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )

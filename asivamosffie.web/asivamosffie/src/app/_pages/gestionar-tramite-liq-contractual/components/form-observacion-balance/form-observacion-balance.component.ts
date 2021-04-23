@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +15,7 @@ export class FormObservacionBalanceComponent implements OnInit {
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() balanceFinancieroId: number;
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
 
   observaciones: FormGroup = this.fb.group({
     liquidacionContratacionObservacionId: [null, Validators.required],
@@ -77,6 +78,10 @@ export class FormObservacionBalanceComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
+    });
   }
 
   onSubmit() {
@@ -100,7 +105,6 @@ export class FormObservacionBalanceComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.ngOnInit();
                 return;
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )

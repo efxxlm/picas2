@@ -45,4 +45,14 @@ export class ValidarBalanceComponent implements OnInit {
 
   ngOnInit(): void {
   }  
+
+  redirectToParent(): void{
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if(urlSegment.path.includes("Requisitos")){
+        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        return;
+      }
+    });
+  }
+  
 }

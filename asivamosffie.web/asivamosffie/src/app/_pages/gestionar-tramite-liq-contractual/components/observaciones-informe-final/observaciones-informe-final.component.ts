@@ -17,6 +17,7 @@ export class ObservacionesInformeFinalComponent implements OnInit {
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() informeFinalId: number;
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
 
   observaciones: FormGroup = this.fb.group({
     liquidacionContratacionObservacionId: [null, Validators.required],
@@ -79,6 +80,10 @@ export class ObservacionesInformeFinalComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
+    });
   }
 
   onSubmit() {
@@ -102,7 +107,6 @@ export class ObservacionesInformeFinalComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.ngOnInit();
                 return;
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )

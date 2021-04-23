@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { EstadosRevision, TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
@@ -60,7 +60,8 @@ export class ActualizacionPolizaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
-    private commonSvc: CommonService
+    private commonSvc: CommonService,
+    private router: Router,
   ) {
     this.getContratoPoliza();
   }
@@ -263,6 +264,13 @@ export class ActualizacionPolizaComponent implements OnInit {
             return estado.nombre;
         }
     }
+  }
+
+  refreshUrl(): void{
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
   }
 
 

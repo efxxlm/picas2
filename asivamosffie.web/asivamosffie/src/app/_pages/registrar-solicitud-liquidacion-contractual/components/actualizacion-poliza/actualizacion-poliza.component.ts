@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId,TipoObservacionLiquidacionContrato,TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
@@ -61,13 +61,21 @@ export class ActualizacionPolizaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
-    private commonSvc: CommonService
+    private commonSvc: CommonService,
+    private router: Router,
   ) {
     this.getContratoPoliza();
   }
 
-   ngOnInit(): void {
+    refreshUrl(): void{
+      let currentUrl = this.router.url;
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+          this.router.navigate([currentUrl]);
+      });
     }
+
+   ngOnInit(): void {
+  }
   
   async getContratoPoliza() {
     this.polizasYSegurosArray = await this.commonSvc.listaGarantiasPolizas().toPromise();

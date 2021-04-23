@@ -47,6 +47,15 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   ngOnInit(): void {
   }  
 
+  redirectToParent(): void{
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if(urlSegment.path.includes("Requisitos")){
+        this.router.navigate(['/gestionarTramiteLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        return;
+      }
+    });
+  }
+
   irRecursosComprometidos(id){
     this.router.navigate(['/gestionarTramiteLiquidacionContractual/recursosComprometidos', id]);
   }

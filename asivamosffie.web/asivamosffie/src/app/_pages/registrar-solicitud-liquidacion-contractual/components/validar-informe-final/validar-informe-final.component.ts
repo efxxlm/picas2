@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { EstadosSolicitudLiquidacionContractual, EstadosSolicitudLiquidacionContractualCodigo, ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 import { InformeFinal } from 'src/app/_interfaces/informe-final';
@@ -23,7 +23,8 @@ export class ValidarInformeFinalComponent implements OnInit {
   
   constructor(
     private route: ActivatedRoute,
-    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+    private routes: Router
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
@@ -50,6 +51,16 @@ export class ValidarInformeFinalComponent implements OnInit {
   ngOnInit(): void {
     this.getInformeFinalByProyectoId(this.proyectoId, this.contratacionProyectoId);
   }
+
+  redirectToParent(): void{
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if(urlSegment.path.includes("Requisitos")){
+        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        return;
+      }
+    });
+  }
+
 
   getInformeFinalByProyectoId(proyectoId: number, contratacionProyectoId: number) {
     this.registerContractualLiquidationRequestService.getInformeFinalByProyectoId(proyectoId, contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {

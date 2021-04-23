@@ -46,4 +46,13 @@ export class AprobarBalanceComponent implements OnInit {
   ngOnInit(): void {
   }  
 
+  redirectToParent(): void{
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if(urlSegment.path.includes("Requisitos")){
+        this.routes.navigate(['/aprobarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        return;
+      }
+    });
+  }
+
 }

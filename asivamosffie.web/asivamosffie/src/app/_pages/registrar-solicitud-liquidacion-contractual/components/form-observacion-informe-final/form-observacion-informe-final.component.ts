@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-observacion-informe-final',
@@ -16,6 +17,8 @@ export class FormObservacionInformeFinalComponent implements OnInit {
   @Input() menuId: any;
   @Input() informeFinalId: number;
   @Input() esVerDetalle: boolean;
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
+
 
   observaciones: FormGroup = this.fb.group({
     liquidacionContratacionObservacionId: [null, Validators.required],
@@ -79,6 +82,10 @@ export class FormObservacionInformeFinalComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
+    });
   }
 
   onSubmit() {
@@ -102,7 +109,6 @@ export class FormObservacionInformeFinalComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.ngOnInit();
                 return;
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )
