@@ -115,7 +115,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
           this.actuacionAdelantada = 'Remisión de Comunicación de decisión por Alianza Fiduciaria al contratista';
           break;
         case '11':
-          this.actuacionAdelantada = 'Remisión de Comunicación de decisión por Alianza Fiduciaria a la Aseguradora';
+          this.actuacionAdelantada = 'Reclamación ante la compañía aseguradora';
           break;
         case '12':
           this.actuacionAdelantada = 'Envío de decisiones Comunicadas a la UG-PA FFIE';
@@ -157,7 +157,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
           this.actuacionRequerida = 'Remisión de Comunicación de decisión por Alianza Fiduciaria al contratista';
           break;
         case '11':
-          this.actuacionRequerida = 'Remisión de Comunicación de decisión por Alianza Fiduciaria a la Aseguradora';
+          this.actuacionRequerida = 'Reclamación ante la compañía aseguradora';
           break;
         case '12':
           this.actuacionRequerida = 'Envío de decisiones Comunicadas a la UG-PA FFIE';

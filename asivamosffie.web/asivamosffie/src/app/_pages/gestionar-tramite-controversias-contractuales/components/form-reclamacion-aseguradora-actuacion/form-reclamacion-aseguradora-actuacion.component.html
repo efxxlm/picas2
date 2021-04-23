@@ -8,8 +8,7 @@
               <label class="label-left" for="resumenReclamacionFiduciaria" [class.color-secondaryColor]="
               (addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
               (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)
-            ">Resumen de la propuesta de reclamación ante
-                la fiduciaria</label>
+            ">Breve descripción de la ocurrencia del siniestro y valor de la estimación de perjuicios</label>
             </div>
           </div>
         </div>
@@ -17,15 +16,15 @@
       <div class="d-flex align-items-center mtop">
         <div class="text-area-quill izqTitle auxBox">
           <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-            #resumenReclamacionFiduciaria (onContentChanged)="maxLength($event, 1000)"
+            #resumenReclamacionFiduciaria (onContentChanged)="maxLength($event, 5000)"
             formControlName="resumenReclamacionFiduciaria"
             [class.invalid]="(addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
               (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.resumenReclamacionFiduciaria.value">
-          {{1000 - (textoLimpio(resumenReclamacionFiduciaria.quillEditor,1000))}}
+          {{1000 - (textoLimpio(resumenReclamacionFiduciaria.quillEditor,5000))}}
         </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.resumenReclamacionFiduciaria.value"> 1000 </span>
+        <span class="contador miles" *ngIf="!addressForm.controls.resumenReclamacionFiduciaria.value"> 5000 </span>
         <span class="icon-incompleto">
           <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
             [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
@@ -42,8 +41,7 @@
               <label class="label-left" for="requereReclamacionComiteTecnico" [class.color-secondaryColor]="
               (addressForm.get('requereReclamacionComiteTecnico').invalid && addressForm.get('requereReclamacionComiteTecnico').touched) ||
               (addressForm.get('requereReclamacionComiteTecnico').invalid && estaEditando)
-            ">¿Se requiere presentar la propuesta de
-                reclamación a comité técnico?</label>
+            ">¿Se requiere presentar la ocurrencia del siniestro y valor de la estimación de perjuicios a comité técnico?</label>
             </div>
             <div class="col">
               <mat-radio-group class="radioInput" formControlName="requereReclamacionComiteTecnico" required>
