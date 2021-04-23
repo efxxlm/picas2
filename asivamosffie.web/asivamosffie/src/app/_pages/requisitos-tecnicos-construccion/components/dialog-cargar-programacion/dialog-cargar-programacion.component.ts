@@ -93,7 +93,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
 
   guardar () {
     //console.log( this.formCargarProgramacion );
-    this.loading = true;
+    //this.loading = true;
     const inputNode: any = document.getElementById('file');
     if ( inputNode.files[0] === undefined ) {
       return;
