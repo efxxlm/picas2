@@ -2027,10 +2027,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ResumenPropuestaFiduciaria)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
                     .IsUnicode(false);
