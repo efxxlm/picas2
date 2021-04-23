@@ -91,6 +91,17 @@ namespace asivamosffie.services
                                 ResponsableAprobacionId = PolizaObservacion.ResponsableAprobacionId
                             });
                 }
+
+                if (PolizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Aprobacion
+                    && PolizaObservacion.FechaAprobacion.HasValue)
+                        {
+                            _context.Set<ContratoPoliza>()
+                                    .Where(c => c.ContratoPolizaId == PolizaObservacion.ContratoPolizaId)
+                                    .Update(c => new ContratoPoliza
+                                    {
+                                        FechaAprobacion = PolizaObservacion.FechaAprobacion
+                                    }); 
+                        }
             }
         }
 
@@ -228,7 +239,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         public async Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
