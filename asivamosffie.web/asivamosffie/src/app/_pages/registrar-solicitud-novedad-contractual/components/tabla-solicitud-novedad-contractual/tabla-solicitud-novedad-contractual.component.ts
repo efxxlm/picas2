@@ -32,7 +32,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   displayedColumns: string[] = [
     'fechaSolictud',
     'numeroSolicitud',
-    'tipoNovedadNombre',
+    'novedadesSeleccionadas',
     'estadoNovedadNombre',
     'registroCompleto',
     'novedadContractualId'
@@ -48,18 +48,24 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     private activatedRoute: ActivatedRoute,
 
   ) {
-    console.log( this.activatedRoute.snapshot.data );
+    // console.log( this.activatedRoute.snapshot.data );
   }
 
   ngAfterViewInit() {
 
     this.contractualNoveltyService.getListGrillaNovedadContractualObra()
       .subscribe(resp => {
-      resp.forEach(element => {
-        element.fechaSolictud = element.fechaSolictud
-          ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
-          : '';
-      });
+        resp.sort((a, b) => {
+          if (a.fechaSolictud < b.fechaSolictud) return 1;
+          if (a.fechaSolictud > b.fechaSolictud) return -1;
+          return 0;
+        });
+        resp.forEach(element => {
+          element.fechaSolictud = element.fechaSolictud
+            ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
+            : '';
+          element.novedadesSeleccionadas = element.novedadesSeleccionadas.slice(0, -1);
+        });
         this.dataSource = new MatTableDataSource(resp);
 
         this.dataSource.sort = this.sort;
@@ -89,7 +95,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
         if ( respuesta.code === '200' )
           this.ngAfterViewInit();
       });
-    console.log(`Aprobar solicitud ${id}`);
+    // console.log(`Aprobar solicitud ${id}`);
   }
 
   rechazarSolicitud(id: number, numeroSolicitud, tipoNovedad) {

@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
     this.authe.actualUser$.subscribe(user => {
       if(user==null)
       {
-        console.log("iniciando");        
+        // console.log("iniciando");        
       }
       else{
         // this.actualUser = user;         

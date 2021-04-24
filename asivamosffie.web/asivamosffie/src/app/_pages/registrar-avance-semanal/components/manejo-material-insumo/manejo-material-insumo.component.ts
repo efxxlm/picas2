@@ -45,7 +45,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                     this.fb.group({
                         proveedor: [ '' ],
                         requierePermisosAmbientalesMineros: [ null ],
-                        urlRegistroFotografico: [ '' ],
+                        urlRegistroFotografico: [ null ],
                         manejoMaterialesInsumosProveedorId: [ 0 ],
                         manejoMaterialesInsumosId: [ 0 ]
                     })
@@ -56,7 +56,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                         this.fb.group({
                             proveedor: [ '' ],
                             requierePermisosAmbientalesMineros: [ null ],
-                            urlRegistroFotografico: [ '' ],
+                            urlRegistroFotografico: [ null ],
                             manejoMaterialesInsumosProveedorId: [ 0 ],
                             manejoMaterialesInsumosId: [ 0 ]
                         })
@@ -68,7 +68,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                                 proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
                                 requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros !== undefined ?
                                                                     proveedor.requierePermisosAmbientalesMineros : null,
-                                urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
+                                urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : null,
                                 manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
                                 manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
                             }
@@ -91,7 +91,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 this.fb.group({
                     proveedor: [ '' ],
                     requierePermisosAmbientalesMineros: [ null ],
-                    urlRegistroFotografico: [ '' ],
+                    urlRegistroFotografico: [ null ],
                     manejoMaterialesInsumosProveedorId: [ 0 ],
                     manejoMaterialesInsumosId: [ 0 ]
                 })
@@ -135,7 +135,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
             this.fb.group({
                 proveedor: [ '' ],
                 requierePermisosAmbientalesMineros: [ null ],
-                urlRegistroFotografico: [ '' ],
+                urlRegistroFotografico: [ null ],
                 manejoMaterialesInsumosProveedorId: [ 0 ],
                 manejoMaterialesInsumosId: [ this.formManejoMaterialInsumo.get( 'manejoMaterialesInsumosId' ).value ]
             })

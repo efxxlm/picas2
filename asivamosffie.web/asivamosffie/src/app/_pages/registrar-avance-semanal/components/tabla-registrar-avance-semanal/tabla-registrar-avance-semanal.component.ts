@@ -71,13 +71,9 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
     this.avanceSemanalSvc.getVRegistrarAvanceSemanal().subscribe(listas => {
       // console.log( this.permisos, listas );
       this.dataTable = listas;
-      this.dataTable.sort(function (a, b) {
-        if (a.fechaUltimoReporte > b.fechaUltimoReporte) {
-          return 1;
-        }
-        if (a.fechaUltimoReporte < b.fechaUltimoReporte) {
-          return -1;
-        }
+      this.dataTable.sort((a, b) => {
+        if (a.fechaUltimoReporte > b.fechaUltimoReporte) return 1;
+        if (a.fechaUltimoReporte < b.fechaUltimoReporte) return -1;
         return 0;
       });
       this.dataTable.forEach(element => {
@@ -90,17 +86,31 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
       this.tablaRegistro.sort = this.sort;
       this.tablaRegistro.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        if (length === 0 || pageSize === 0) {
+          return '0 de ' + length;
+        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ?
+          Math.min(startIndex + pageSize, length) :
+          startIndex + pageSize;
+        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+      };
+      this.paginator._intl.previousPageLabel = 'Anterior';
       /*
-                    if ( this.permisos.tienePermisoCrear === false ) {
-                        document.getElementsByName( 'crearBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
-                    }
-                    if ( this.permisos.tienePermisoEditar === false ) {
-                        document.getElementsByName( 'editarBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
-                    }
-                    if ( this.permisos.tienePermisoLeer === false ) {
-                        document.getElementsByName( 'leerBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
-                    }
-                    */
+        if ( this.permisos.tienePermisoCrear === false ) {
+            document.getElementsByName( 'crearBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+        }
+        if ( this.permisos.tienePermisoEditar === false ) {
+            document.getElementsByName( 'editarBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+        }
+        if ( this.permisos.tienePermisoLeer === false ) {
+            document.getElementsByName( 'leerBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+        }
+      */
     });
   }
 
