@@ -16,8 +16,9 @@ export class FormExpensasOtrosCostosComponent implements OnInit {
     esRegistroNuevo: boolean;
     esVerDetalle = false;
     esExpensas = false;
+    registroCompletoTerceroGiro = false;
     semaforoInfoGeneral = 'sin-diligenciar';
-    semaforoDetalle = 'sin-diligenciar';
+    semaforoDetalle = 'en-alerta';
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -74,6 +75,8 @@ export class FormExpensasOtrosCostosComponent implements OnInit {
                                         }
                                         if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === true ) {
                                             this.semaforoInfoGeneral = 'completo';
+                                            this.registroCompletoTerceroGiro = true;
+                                            this.semaforoDetalle = 'sin-diligenciar';
                                         }
                                     }
                                 }
@@ -85,6 +88,8 @@ export class FormExpensasOtrosCostosComponent implements OnInit {
                                         }
                                         if ( ordenGiroTerceroChequeGerencia.registroCompleto === true ) {
                                             this.semaforoInfoGeneral = 'completo';
+                                            this.registroCompletoTerceroGiro = true;
+                                            this.semaforoDetalle = 'sin-diligenciar';
                                         }
                                     }
                                 }

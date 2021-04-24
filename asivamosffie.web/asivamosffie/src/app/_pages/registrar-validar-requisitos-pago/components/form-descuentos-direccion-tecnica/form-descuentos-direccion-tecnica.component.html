@@ -141,7 +141,7 @@
                                                         </mat-option>
                                                     </mat-select>
                                                     <mat-select formControlName="tipoDescuentoCodigo" required *ngIf="descuento.get('tipoDescuentoCodigo').value !== null">
-                                                        <mat-option *ngFor="let tipoDescuento of listaTipoDescuento" [value]="tipoDescuento.codigo">
+                                                        <mat-option *ngFor="let tipoDescuento of getTipoDescuentoSeleccionado( descuento.get('tipoDescuentoCodigo').value )" [value]="tipoDescuento.codigo">
                                                             {{ tipoDescuento.nombre }}
                                                         </mat-option>
                                                     </mat-select>

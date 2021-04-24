@@ -24,6 +24,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     addressForm: FormGroup;
     tipoDescuentoArray: Dominio[] = [];
+    listaTipoDescuento: Dominio[] = [];
     listaCriterios: Dominio[] = [];
     listaFuenteTipoFinanciacion: Dominio[] = [];
     cantidadAportantes: number;
@@ -67,8 +68,6 @@ export class TerceroCausacionGogComponent implements OnInit {
     {
         this.commonSvc.listaFuenteTipoFinanciacion()
             .subscribe( listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion );
-        this.commonSvc.listaDescuentosOrdenGiro()
-            .subscribe( listaDescuentosOrdenGiro => this.tipoDescuentoArray = listaDescuentosOrdenGiro );
         this.crearFormulario();
     }
   
@@ -84,7 +83,9 @@ export class TerceroCausacionGogComponent implements OnInit {
         );
     }
 
-    getTerceroCausacion() {
+    async getTerceroCausacion() {
+        this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
+        this.listaTipoDescuento = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
         // Get IDs
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
@@ -156,7 +157,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             );
                         }
                     }
-                    this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+                    this.ordenGiroSvc.getAportantes( this.solicitudPago, async dataAportantes => {
                         // Get boolean si es uno o varios aportantes
                         if ( dataAportantes.listaTipoAportante.length > 1 ) {
                             this.variosAportantes = true;
@@ -168,6 +169,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
+                            const listDescuento = [ ...this.tipoDescuentoArray ];
+
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
                                 const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo );
                                 const listaDescuentos = [];
@@ -176,6 +179,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                                 if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                     terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
+                                        if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
+                                            const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
+
+                                            if ( descuentoIndex !== -1 ) {
+                                                listDescuento.splice( descuentoIndex, 1 );
+                                            }
+                                        }
                                         listaDescuentos.push(
                                             this.fb.group(
                                                 {
@@ -196,118 +206,129 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
                                         const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
                                         let listaFuenteRecursos: any[];
-                                        this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-                                            .subscribe( fuenteRecursos => {
-                                                listaFuenteRecursos = fuenteRecursos;
-                                                const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+                                        const fuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
 
-                                                listaAportantes.push(
-                                                    this.fb.group(
-                                                        {
-                                                            ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                            tipoAportante: [ tipoAportante, Validators.required ],
-                                                            listaNombreAportantes: [ [ nombreAportante ] ],
-                                                            nombreAportante: [ nombreAportante, Validators.required ],
-                                                            fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                            fuenteRecursos: [ fuente, Validators.required ],
-                                                            fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
-                                                            valorDescuento: [ aportante.valorDescuento, Validators.required ]
-                                                        }
-                                                    )
-                                                )
-                                            } );
+                                        listaFuenteRecursos = fuenteRecursos;
+                                        const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+
+                                        listaAportantes.push(
+                                            this.fb.group(
+                                                {
+                                                    ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                    tipoAportante: [ tipoAportante, Validators.required ],
+                                                    listaNombreAportantes: [ [ nombreAportante ] ],
+                                                    nombreAportante: [ nombreAportante, Validators.required ],
+                                                    fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                    fuenteRecursos: [ fuente, Validators.required ],
+                                                    fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
+                                                    valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                }
+                                            )
+                                        )
                                     }
+                                } else {
+                                    listaAportantes.push(
+                                        this.fb.group(
+                                            {
+                                                ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                                tipoAportante: [ null, Validators.required ],
+                                                listaNombreAportantes: [ null ],
+                                                nombreAportante: [ null, Validators.required ],
+                                                fuenteDeRecursos: [ null ],
+                                                fuenteRecursos: [ null, Validators.required ],
+                                                fuenteFinanciacionId: [ null ],
+                                                valorDescuento: [ null, Validators.required ]
+                                            }
+                                        )
+                                    )
                                 }
 
                                 for ( const concepto of criterio.listConceptos ) {
-                                    setTimeout(() => {
-                                        conceptosDePago.push( this.fb.group(
-                                            {
-                                                conceptoPagoCriterio: [ concepto.codigo ],
-                                                nombre: [ concepto.nombre ],
-                                                valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
-                                                tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                                nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                                descuento: this.fb.group(
-                                                    {
-                                                        aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
-                                                        numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
-                                                        descuentos: this.fb.array( listaDescuentos )
-                                                    }
-                                                ),
-                                                aportantes: this.fb.array( listaAportantes )
-                                            }
-                                        ) ) 
-                                    }, 600);
+                                    conceptosDePago.push( this.fb.group(
+                                        {
+                                            conceptoPagoCriterio: [ concepto.codigo ],
+                                            nombre: [ concepto.nombre ],
+                                            valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
+                                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                            tipoDescuentoArray: [ listDescuento ],
+                                            descuento: this.fb.group(
+                                                {
+                                                    aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
+                                                    numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
+                                                    descuentos: this.fb.array( listaDescuentos )
+                                                }
+                                            ),
+                                            aportantes: this.fb.array( listaAportantes )
+                                        }
+                                    ) )
                                 }
 
                                 // Set formulario criterios
-                                setTimeout( async () => {
-                                    // Get observaciones
-                                    let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
-                                    let obsVerificar = undefined;
-                                    let obsAprobar = undefined;
-                                    let obsTramitar = undefined;
+                                // Get observaciones
+                                let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
+                                let obsVerificar = undefined;
+                                let obsAprobar = undefined;
+                                let obsTramitar = undefined;
 
-                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                        this.listaMenu.verificarOrdenGiro,
+                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.verificarOrdenGiro,
+                                    this.ordenGiroId,
+                                    terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                    this.tipoObservaciones.terceroCausacion );
+                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.aprobarOrdenGiro,
+                                    this.ordenGiroId,
+                                    terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                    this.tipoObservaciones.terceroCausacion );
+                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.tramitarOrdenGiro,
                                         this.ordenGiroId,
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionId,
                                         this.tipoObservaciones.terceroCausacion );
-                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                        this.listaMenu.aprobarOrdenGiro,
-                                        this.ordenGiroId,
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                        this.tipoObservaciones.terceroCausacion );
-                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                            this.listaMenu.tramitarOrdenGiro,
-                                            this.ordenGiroId,
-                                            terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                            this.tipoObservaciones.terceroCausacion );
-                                    // Get lista de observacion y observacion actual
-                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
-                                        }
+                                // Get lista de observacion y observacion actual
+                                if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
                                     }
-                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
-                                        }
+                                }
+                                if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
                                     }
-                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
-                                        }
+                                }
+                                if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                        obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
                                     }
+                                }
 
-                                    if ( obsVerificar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
-                                    if ( obsAprobar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
-                                    if ( obsTramitar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
+                                if ( obsVerificar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
+                                if ( obsAprobar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
+                                if ( obsTramitar !== undefined ) {
+                                    estadoSemaforo = 'en-proceso';
+                                    this.tieneObservacion.emit( true );
+                                }
 
-                                    this.criterios.push( this.fb.group(
-                                        {
-                                            estadoSemaforo,
-                                            obsVerificar: [ obsVerificar ],
-                                            obsAprobar: [ obsAprobar ],
-                                            obsTramitar: [ obsTramitar ],
-                                            ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
-                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                            nombre: [ criterio.nombre ],
-                                            tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
-                                            conceptos: this.fb.array( conceptosDePago )
-                                        }
-                                    ) )
-                                }, 1000);
+                                this.criterios.push( this.fb.group(
+                                    {
+                                        estadoSemaforo,
+                                        obsVerificar: [ obsVerificar ],
+                                        obsAprobar: [ obsAprobar ],
+                                        obsTramitar: [ obsTramitar ],
+                                        ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                        tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                        nombre: [ criterio.nombre ],
+                                        tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
+                                        conceptos: this.fb.array( conceptosDePago )
+                                    }
+                                ) )
                             } else {
                                 const conceptosDePago = [];
                                 for ( const concepto of criterio.listConceptos ) {
@@ -318,6 +339,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                             valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
                                             tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
                                             nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                            tipoDescuentoArray: [ this.tipoDescuentoArray ],
                                             descuento: this.fb.group(
                                                 {
                                                     aplicaDescuentos:[ null, Validators.required ],
@@ -377,6 +399,26 @@ export class TerceroCausacionGogComponent implements OnInit {
             if ( descuento !== undefined ) {
                 return descuento.nombre;
             }
+        }
+    }
+
+    getTipoDescuento( codigo: string ): Dominio[] {
+        if ( this.listaTipoDescuento.length > 0 ) {
+            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+            if ( descuento !== undefined ) {
+                return [ descuento ];
+            }
+        }
+    }
+
+    getCodigoDescuento( codigo: string, index: number, jIndex: number ) {
+        const listaDescuento: Dominio[] = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).value;
+        const descuentoIndex = listaDescuento.findIndex( descuento => descuento.codigo === codigo );
+
+        if ( descuentoIndex !== -1 ) {
+            listaDescuento.splice( descuentoIndex, 1 );
+            this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).setValue( listaDescuento );
         }
     }
 
@@ -479,54 +521,58 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     getCantidadDescuentos( value: number, index: number, jIndex: number ) {
         if ( value !== null && value > 0 ) {
-            if ( this.getDescuentos( index, jIndex ).dirty === true ) {
-                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
-                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
-    
-                if ( value < this.getDescuentos( index, jIndex ).length ) {
-                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
-                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
-                    return;
-                }
-    
-                for ( let i = 0; i < nuevosDescuentos; i++ ) {
-    
-                    this.getDescuentos( index, jIndex ).push(
-                        this.fb.group(
-                            {
-                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
-                                tipoDescuento: [ null, Validators.required ],
-                                valorDescuento: [ null, Validators.required ]
-                            }
+            if (  this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).value.length > 0 ) {
+                if ( this.getDescuentos( index, jIndex ).dirty === true ) {
+                    const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+        
+                    if ( value < this.getDescuentos( index, jIndex ).length ) {
+                        this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                        this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                        return;
+                    }
+        
+                    for ( let i = 0; i < nuevosDescuentos; i++ ) {
+        
+                        this.getDescuentos( index, jIndex ).push(
+                            this.fb.group(
+                                {
+                                    ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                    tipoDescuento: [ null, Validators.required ],
+                                    valorDescuento: [ null, Validators.required ]
+                                }
+                            )
                         )
-                    )
-    
+        
+                    }
                 }
-            }
-            if ( this.getDescuentos( index, jIndex ).dirty === false ) {
-                const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
-                this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
-    
-                if ( value < this.getDescuentos( index, jIndex ).length ) {
-                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
-                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
-                    return;
-                }
-    
-    
-                for ( let i = 0; i < nuevosDescuentos; i++ ) {
-    
-                    this.getDescuentos( index, jIndex ).push(
-                        this.fb.group(
-                            {
-                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
-                                tipoDescuento: [ null, Validators.required ],
-                                valorDescuento: [ null, Validators.required ]
-                            }
+                if ( this.getDescuentos( index, jIndex ).dirty === false ) {
+                    const nuevosDescuentos = value - this.getDescuentos( index, jIndex ).length;
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValidators( Validators.min( this.getDescuentos( index, jIndex ).length ) );
+        
+                    if ( value < this.getDescuentos( index, jIndex ).length ) {
+                        this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                        this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
+                        return;
+                    }
+        
+        
+                    for ( let i = 0; i < nuevosDescuentos; i++ ) {
+        
+                        this.getDescuentos( index, jIndex ).push(
+                            this.fb.group(
+                                {
+                                    ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
+                                    tipoDescuento: [ null, Validators.required ],
+                                    valorDescuento: [ null, Validators.required ]
+                                }
+                            )
                         )
-                    )
-    
+        
+                    }
                 }
+            } else {
+                this.openDialog( '', '<b>No tiene parametrizados más descuentos para aplicar al pago.</b>' );
             }
         }
     }
@@ -536,8 +582,20 @@ export class TerceroCausacionGogComponent implements OnInit {
         .subscribe(
             value => {
                 if ( value === true ) {
-                    this.getDescuentos( index, jIndex ).removeAt( kIndex );
+                    const codigo: string = this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value;
 
+                    if ( codigo !== null ) {
+                        const listaDescuento: Dominio[] = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).value;
+                        const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+                        if ( descuento !== undefined ) {
+                            listaDescuento.push( descuento );
+                            this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).setValue( listaDescuento );
+                        }
+                    }
+
+                    this.getDescuentos( index, jIndex ).removeAt( kIndex );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
                     this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 }
             }

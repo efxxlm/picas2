@@ -64,7 +64,16 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-detalle-giro></app-detalle-giro>
+            <app-detalle-giro   [solicitudPago]="solicitudPago"
+                                [esVerDetalle]="esVerDetalle"
+                                (estadoSemaforo)="semaforoDetalle = $event"
+                                *ngIf="registroCompletoTerceroGiro === true">
+            </app-detalle-giro>
         </mat-expansion-panel>
     </mat-accordion>
+
+    <div class="d-flex justify-content-center align-items-center mt-1em" *ngIf="registroCompletoTerceroGiro === false">
+        <img src="./assets/img/icon/sim.svg" class="img-size">
+        <p><small> Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la sección anterior</small></p>
+    </div>
 </section>

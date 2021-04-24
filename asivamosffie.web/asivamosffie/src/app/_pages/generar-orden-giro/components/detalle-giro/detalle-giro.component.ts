@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-detalle-giro',
@@ -7,9 +7,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleGiroComponent implements OnInit {
 
-  constructor() { }
+    @Input() solicitudPago: any;
+    @Input() esVerDetalle: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    ordenGiro: any;
+    listaSemaforos = {
+        semaforoOrigen: 'sin-diligenciar',
+        semaforoObservacion: 'sin-diligenciar',
+        semaforoSoporteUrl: 'sin-diligenciar'
+    };
 
-  ngOnInit(): void {
-  }
+    constructor() { }
+
+    ngOnInit(): void {
+    }
+
+    checkSemaforoOrigen( value: boolean ) {
+        if ( value === false ) {
+            delete this.listaSemaforos.semaforoOrigen;
+        }
+    }
 
 }

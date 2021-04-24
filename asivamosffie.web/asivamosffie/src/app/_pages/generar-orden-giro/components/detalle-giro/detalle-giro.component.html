@@ -1,1 +1,64 @@
-<p>detalle-giro works!</p>
+<section *ngIf="solicitudPago !== undefined">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Tercero de causación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card border" align="left">
+                <mat-card-content>
+                    <!-- Se muestra la informacion del contratista diligenciada en el subAcordeon tercero de giro -->
+                    <!--
+                        <p><b>Número de identificación del contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </p>
+                        <p><b>Nombre de contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </p>
+                    -->
+                    <p><b>Número de factura:</b> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }} </p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoOrigen !== undefined ? listaSemaforos.semaforoOrigen : '' ) : ''">
+                    Origen
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div align="center">
+                <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
+            </div>
+
+            <!--
+            <app-form-origen    [solicitudPago]="solicitudPago"
+                                [esVerDetalle]="esVerDetalle"
+                                (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"
+                                (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
+            </app-form-origen>
+            -->
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoObservacion : ''">
+                    Observaciones
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-observaciones-orden-giro-gog>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoSoporteUrl : ''">
+                    Soporte de orden de giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-soporte-orden-giro-gog>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

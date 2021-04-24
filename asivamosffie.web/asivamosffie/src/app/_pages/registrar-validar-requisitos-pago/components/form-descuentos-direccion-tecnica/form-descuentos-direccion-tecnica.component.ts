@@ -260,6 +260,16 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
         }
     }
 
+    getTipoDescuentoSeleccionado( codigo: string ): Dominio[] {
+        if ( this.listaTipoDescuento.length > 0 ) {
+            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+            if ( descuento !== undefined ) {
+                return [ descuento ];
+            }
+        }
+    }
+
     validateNumberKeypress(event: KeyboardEvent) {
         const alphanumeric = /[0-9]/;
         const inputChar = String.fromCharCode(event.charCode);
