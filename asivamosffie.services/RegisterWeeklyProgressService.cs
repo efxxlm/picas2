@@ -645,8 +645,8 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, GeneralCodes.EliminacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
                 };
 
             }
@@ -695,8 +695,8 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, GeneralCodes.EliminacionExitosa, idAccion, pUsuarioModificacion, "Eliminar Manejo Materiales Insumo Proveedor".ToUpper())
                 };
 
             }
@@ -707,8 +707,8 @@ namespace asivamosffie.services
                     IsSuccessful = false,
                     IsException = true,
                     IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, GeneralCodes.EliminacionExitosa, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
                 };
             }
 
