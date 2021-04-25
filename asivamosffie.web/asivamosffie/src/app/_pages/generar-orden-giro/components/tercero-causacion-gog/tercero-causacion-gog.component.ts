@@ -595,8 +595,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                     }
 
                     this.getDescuentos( index, jIndex ).removeAt( kIndex );
-                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
                     this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'numeroDescuentos' ).setValue( this.getDescuentos( index, jIndex ).length );
                 }
             }
         )

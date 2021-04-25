@@ -114,6 +114,12 @@ export class ManejoMaterialInsumoComponent implements OnInit {
         });
     }
 
+    getRequiereObservacion( value: boolean ) {
+        if ( value === false ) {
+            this.formManejoMaterialInsumo.get('observacion').setValue( null );
+        }
+    }
+
     openDialogTrueFalse(modalTitle: string, modalText: string) {
       const dialogRef = this.dialog.open( ModalDialogComponent, {
         width: '28em',

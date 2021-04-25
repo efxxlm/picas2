@@ -175,7 +175,7 @@
             <div class="col d-flex">
                 <section style="width: 94%;">
                     <mat-form-field appearance="fill">
-                      <mat-select class="padding-left" formControlName="requiereObservacion" required>
+                      <mat-select class="padding-left" formControlName="requiereObservacion" required (ngModelChange)="getRequiereObservacion( $event )">
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
                           {{requisito.viewValue}}
                         </mat-option>

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-tabla-validar-avance-semanal',
@@ -51,7 +52,8 @@ export class TablaValidarAvanceSemanalComponent implements OnInit {
         this.validarAvanceSemanalSvc.getListReporteSemanalView()
             .subscribe(
                 response => {
-                    console.log( response );
+                    response.forEach( registro => registro.fechaReporte = moment( registro.fechaReporte ).format( 'DD/MM/YYYY' ) );
+
                     this.tablaRegistro = new MatTableDataSource( response );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;
