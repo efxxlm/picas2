@@ -10,11 +10,9 @@ export interface PeriodicElement {
   numero: string;
   tipo: string;
   estadoRegistro: boolean;
+  esNovedad: boolean;
+  novedadId: number;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { id: 1, fecha: '07/07/2020', numero: '003', tipo: 'Modificación contractual', estadoRegistro: true },
-];
 
 @Component({
   selector: 'app-tabla-con-disponibilidad-cancelada',
@@ -24,7 +22,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TablaConDisponibilidadCanceladaComponent implements OnInit {
   @Input()disponibilidadPresupuestal: any;
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -41,7 +39,8 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
-        tipo:element.tipoSolicitud})
+        tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
+        novedadId: element.novedadContractualRegistroPresupuestalId})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();
@@ -65,9 +64,9 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
  
-  verDetalle(id: number) {
+  verDetalle(id: number, esNovedad, novedadId) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id, esNovedad, novedadId]);
   }
 
 }

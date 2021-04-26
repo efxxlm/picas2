@@ -20,7 +20,7 @@ const routes: Routes = [
     component: ValidacionPresupuestalComponent
   },
   {
-    path: 'conValidacionPresupuestal/:id',
+    path: 'conValidacionPresupuestal/:id/:esNovedad/:novedadId',
     component: ConValidacionPresupuestalComponent
   },
   {

@@ -9,6 +9,8 @@ export interface OrdenDelDia {
   numero: string;
   estadoRegistro:string;
   tipo: string;
+  esNovedad: boolean;
+  novedadId: number;
 }
 
 const ELEMENT_DATA: OrdenDelDia[] = [];
@@ -45,7 +47,8 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
       }      
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,numero:element.numeroSolicitud,estadoRegistro:element.estadoRegistro,
-        tipo:element.tipoSolicitud})
+        tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
+        novedadId: element.novedadContractualRegistroPresupuestalId})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;

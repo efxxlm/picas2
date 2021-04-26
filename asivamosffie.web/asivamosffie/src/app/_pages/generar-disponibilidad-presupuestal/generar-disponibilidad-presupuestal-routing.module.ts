@@ -13,7 +13,7 @@ const routes: Routes = [
     component: MenuGenerarDisponibilidadComponent
   },
   {
-    path: 'DDP/:id',
+    path: 'DDP/:id/:esNovedad/:novedadId',
     component: GestionarDdpComponent
   },
   {

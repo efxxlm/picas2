@@ -23,13 +23,18 @@ export class ConValidacionPresupuestalComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    const novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
-        console.log(listas);
-        this.detailavailabilityBudget=listas[0];
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, esNovedad, novedadId)
+        .subscribe(listas => {
+          console.log(listas);
+          this.detailavailabilityBudget=listas[0];
       });
     }
   }
+
+
   download()
   {
     console.log(this.detailavailabilityBudget);
