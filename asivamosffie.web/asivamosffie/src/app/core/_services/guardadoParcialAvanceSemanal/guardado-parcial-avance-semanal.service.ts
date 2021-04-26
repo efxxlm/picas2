@@ -27,7 +27,6 @@ export class GuardadoParcialAvanceSemanalService {
     { }
 
     getDataAvanceFisico( avanceFisico: any, seRealizoPeticion?: boolean ) {
-        // console.log( 1, seRealizoPeticion )
         this.dataAvanceFisico = avanceFisico;
         
         if ( seRealizoPeticion !== undefined ) {
@@ -44,11 +43,11 @@ export class GuardadoParcialAvanceSemanalService {
     }
 
     getDataGestionAmbiental( gestionAmbiental: any, seRealizoPeticion?: boolean ) {
-      this.dataGestionAmbiental = gestionAmbiental;
+        this.dataGestionAmbiental = gestionAmbiental;
       
-      if ( seRealizoPeticion !== undefined ) {
-        this.seRealizoPeticion = seRealizoPeticion;
-      }
+        if ( seRealizoPeticion !== undefined ) {
+            this.seRealizoPeticion = seRealizoPeticion;
+        }
     }
 
     getDataGestionCalidad( gestionCalidad: any, seRealizoPeticion?: boolean ) {
@@ -273,10 +272,34 @@ export class GuardadoParcialAvanceSemanalService {
                                 .subscribe(
                                     response => {
                                         this.seRealizoPeticion = false;
+                                        this.dataAvanceFisico = undefined;
+                                        this.dataAvanceFinanciero = undefined;
+                                        this.dataGestionAmbiental = undefined;
+                                        this.dataGestionCalidad = undefined;
+                                        this.dataGestionSst = undefined;
+                                        this.dataGestionSocial = undefined;
+                                        this.dataAlertasRelevantes = undefined;
+                                        this.dataReporteActividades = undefined;
+                                        this.dataRegistroFotografico = undefined;
+                                        this.dataComiteObra = undefined;
+                                        this.seguimientoSemanalGestionObraId = 0;
                                         this.openDialog( '', `<b>${ response.message }</b>` )
                                     },
                                     err => this.openDialog( '', `<b>${ err.message }</b>` )
                                 );
+                        } else {
+                            this.seRealizoPeticion = false;
+                            this.dataAvanceFisico = undefined;
+                            this.dataAvanceFinanciero = undefined;
+                            this.dataGestionAmbiental = undefined;
+                            this.dataGestionCalidad = undefined;
+                            this.dataGestionSst = undefined;
+                            this.dataGestionSocial = undefined;
+                            this.dataAlertasRelevantes = undefined;
+                            this.dataReporteActividades = undefined;
+                            this.dataRegistroFotografico = undefined;
+                            this.dataComiteObra = undefined;
+                            this.seguimientoSemanalGestionObraId = 0;
                         }
                     }
                 )

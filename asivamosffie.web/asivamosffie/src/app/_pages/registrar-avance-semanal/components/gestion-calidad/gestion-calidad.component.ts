@@ -70,11 +70,18 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if ( this.seRealizoPeticion === false ) {
-            if ( this.formGestionCalidad.dirty === true || this.ensayosLaboratorio.dirty === true ) {
+            if ( this.ensayosLaboratorio.dirty === true ) {
+                console.log( 'test 1' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
+            } else {
+                console.log( 'test - 2' )
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
-
-            if ( this.formGestionCalidad.dirty === false && this.ensayosLaboratorio.dirty === false ) {
+            if ( this.formGestionCalidad.dirty === true ) {
+                console.log( 'test 3' )
+                this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
+            } else {
+                console.log( 'test - 4' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
         } else {
@@ -124,6 +131,13 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
         }
         if ( value === true ) {
             return 'completo';
+        }
+    }
+
+    getValueEnsayos( value: boolean ) {
+        if ( value === false ) {
+            this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '' );
+            this.ensayosLaboratorio.clear();
         }
     }
 
@@ -481,6 +495,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     }
 
     getRegistrarResultados( gestionObraCalidadEnsayoLaboratorioId: number ) {
+        this.seRealizoPeticion = true;
         this.routes.navigate( [ `${ this.routes.url }/registroResultadosEnsayo`, gestionObraCalidadEnsayoLaboratorioId ] );
     }
 
@@ -553,8 +568,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                         seguimientoSemanalGestionObraCalidadId: this.SeguimientoSemanalGestionObraCalidadId,
                         seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
                         seRealizaronEnsayosLaboratorio: this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value,
-                        gestionObraCalidadEnsayoLaboratorio: this.formGestionCalidad.get( 'ensayosLaboratorio' ).dirty === true ?
-                        this.formGestionCalidad.get( 'ensayosLaboratorio' ).value : null
+                        gestionObraCalidadEnsayoLaboratorio: this.ensayosLaboratorio.length > 0 ? this.ensayosLaboratorio.value : null
                     }
                 ]
             } else {
@@ -598,8 +612,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                 seguimientoSemanalGestionObraCalidadId: this.SeguimientoSemanalGestionObraCalidadId,
                 seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
                 seRealizaronEnsayosLaboratorio: this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value,
-                gestionObraCalidadEnsayoLaboratorio: this.formGestionCalidad.get( 'ensayosLaboratorio' ).dirty === true ?
-                this.formGestionCalidad.get( 'ensayosLaboratorio' ).value : null
+                gestionObraCalidadEnsayoLaboratorio: this.ensayosLaboratorio.length > 0 ? this.ensayosLaboratorio.value : null
             }
         ]
     }

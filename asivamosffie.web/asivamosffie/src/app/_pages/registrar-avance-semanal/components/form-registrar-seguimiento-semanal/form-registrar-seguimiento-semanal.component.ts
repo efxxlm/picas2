@@ -44,7 +44,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
             .subscribe( tipoObservaciones => {
               this.tipoObservaciones = tipoObservaciones;
               this.seguimientoSemanal = seguimiento;
-              // console.log( this.seguimientoSemanal, this.tipoObservaciones );
+              console.log( this.seguimientoSemanal );
               // Semaforo avance fisico
               if ( this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ) {
                 const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];

@@ -135,7 +135,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                     this.openDialog('', `<b>${response.message}</b>`);
                     if (this.esUnEditar === false) {
                         this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
-                            () => this.routes.navigate(['/registrarValidarRequisitosPago'])
+                            () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditar', response.data.contratoId, response.data.solicitudPagoId ] )
                         );
                     }
                     if (this.esUnEditar === true) {
@@ -143,11 +143,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                             .subscribe(
                                 () => {
                                     this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
-                                        () => this.routes.navigate(
-                                            [
-                                                '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
-                                            ]
-                                        )
+                                        () => this.routes.navigate( [ '/registrarValidarRequisitosPago/verDetalleEditar', response.data.contratoId, response.data.solicitudPagoId ] )
                                     );
                                 }
                             );

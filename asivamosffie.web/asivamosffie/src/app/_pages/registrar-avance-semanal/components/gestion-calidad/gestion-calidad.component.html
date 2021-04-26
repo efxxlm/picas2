@@ -18,7 +18,7 @@
                             <div class="col d-flex">
                                 <section style="width: 95%;">
                                     <mat-form-field class="w-50" appearance="fill">
-                                      <mat-select class="padding-left" formControlName="seRealizaronEnsayosLaboratorio" required>
+                                      <mat-select class="padding-left" formControlName="seRealizaronEnsayosLaboratorio" required (ngModelChange)="getValueEnsayos( $event )">
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                           {{requisito.viewValue}}
                                         </mat-option>
@@ -107,7 +107,7 @@
                 </table>
             </section>
         </div>
-        <div *ngIf="formGestionCalidad.get( 'cantidadEnsayos' ).value.length > 0 && convertToNumber( formGestionCalidad.get( 'cantidadEnsayos' ).value ) > 0">
+        <div *ngIf="formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === true && formGestionCalidad.get( 'cantidadEnsayos' ).value.length > 0 && convertToNumber( formGestionCalidad.get( 'cantidadEnsayos' ).value ) > 0">
             <mat-accordion formArrayName="ensayosLaboratorio" *ngFor="let ensayo of ensayosLaboratorio.controls; index as i">
                 <mat-expansion-panel class="expansion-style sub-expansion-black animatedDown" [formGroup]="ensayo">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -260,6 +260,7 @@
                                                           src="assets/img/icon/calendarioCirculo.svg"
                                                           alt="Abrir Calendario">
                                             </button>
+
                                             <span class="icon-incompleto" style="margin-top: .2em;">
                                                 <img  class="icon-incompleto--img"
                                                       src="assets/img/icon/incompleto.svg"

@@ -136,7 +136,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <div align="left">
+            <div align="left" style="margin-top: 3em;">
                 <mat-card class="border">
                     <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text text-color">
@@ -157,7 +157,15 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoReporteActividad" [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId" [esSiguienteSemana]="false" [reporteActividad]="reporteActividad" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas    [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId"
+                                                        [esSiguienteSemana]="false"
+                                                        [reporteActividad]="reporteActividad"
+                                                        [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
+                                                        [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
+                                                        [esVerDetalle]="true">
+            </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -167,7 +175,15 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoReporteActividad" [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId" [esSiguienteSemana]="true" [reporteActividad]="reporteActividad" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas    [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId"
+                                                        [esSiguienteSemana]="true"
+                                                        [reporteActividad]="reporteActividad"
+                                                        [formActividadesRealizadas]="formResumenGeneral.get( 'formActividadesRealizadas' )"
+                                                        [formActividadesRealizadasSiguienteSemana]="formResumenGeneral.get( 'formActividadesRealizadasSiguienteSemana' )"
+                                                        [esVerDetalle]="true">
+            </app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
