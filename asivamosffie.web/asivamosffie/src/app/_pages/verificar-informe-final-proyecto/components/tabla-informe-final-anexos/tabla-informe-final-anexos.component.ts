@@ -73,9 +73,10 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         this.estadoValidacion = listChequeo[0].estadoValidacion;
         this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;
         this.semaforo = listChequeo[0].semaforo;
+        this.estaEditando = true;
       }
       this.dataSource.data = listChequeo as ListaChequeo[];
-      console.log(listChequeo);
+      // console.log(listChequeo);
       
       this.listChequeo = listChequeo;
     });
