@@ -27,10 +27,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditInformeFinalInterventoriabyInformeFinal(InformeFinal pInformeFinal,string user);
         Task<Respuesta> CreateEditInformeFinalAnexo(InformeFinalAnexo pInformeFinalAnexoId, int pInformeFinalInterventoriaId);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
-        Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario);
 
         //Alertas
-        Task GetInformeFinalSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-
+        Task<bool> GetInformeFinalSinGestionar();
     }
 }

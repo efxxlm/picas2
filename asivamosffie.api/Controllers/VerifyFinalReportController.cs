@@ -180,7 +180,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _verifyFinalReportService.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                respuesta = await _verifyFinalReportService.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

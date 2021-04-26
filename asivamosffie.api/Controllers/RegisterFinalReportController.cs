@@ -250,8 +250,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
-                respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
 
                 return Ok(respuesta);
             }

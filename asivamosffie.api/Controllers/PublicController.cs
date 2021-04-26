@@ -276,7 +276,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _RegisterFinalReportService.GetInformeFinalSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                await _RegisterFinalReportService.GetInformeFinalSinGestionar();
             }
             catch (Exception ex)
             {
@@ -289,7 +289,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _VerifyFinalReportService.GetInformeFinalNoEnviadoASupervisor(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                await _VerifyFinalReportService.GetInformeFinalNoEnviadoASupervisor();
             }
             catch (Exception ex)
             {
@@ -302,7 +302,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _ValidateFinalReportService.GetInformeFinalNoEnviadoAGrupoNovedades(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                await _ValidateFinalReportService.GetInformeFinalNoEnviadoAGrupoNovedades();
             }
             catch (Exception ex)
             {
@@ -315,7 +315,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _ValidateFulfilmentFinalReportService.GetInformeFinalNoCumplimiento(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                await _ValidateFulfilmentFinalReportService.GetInformeFinalNoCumplimiento();
             }
             catch (Exception ex)
             {

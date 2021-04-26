@@ -576,7 +576,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Validacion, (int)EnumeratorTipoDominio.Acciones);
 
@@ -627,7 +627,7 @@ namespace asivamosffie.services
 
                     }
                     //Enviar Correo supervisor 5.1.2
-                    await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarCorreoSupervisor(informeFinal);
                 }
 
                 _context.SaveChanges();
@@ -743,26 +743,22 @@ namespace asivamosffie.services
              return await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefaultAsync();
         }
 
-        private async Task<bool> EnviarCorreoSupervisor(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        private async Task<bool> EnviarCorreoSupervisor(InformeFinal informeFinal)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.NotificacionSupervisionInformeFinal5_1_2));
+            string strContenido = await ReplaceVariables(template.Contenido, informeFinal.InformeFinalId);
 
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionSupervisionInformeFinal5_1_2);
-
-            string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informeFinal.InformeFinalId);
-
-            bool blEnvioCorreo = false;
-
-            foreach (var item in usuarios)
-            {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
-            }
-            return blEnvioCorreo;
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                            new List<EnumeratorPerfil>
+                                                      {
+                                                                        EnumeratorPerfil.Supervisor
+                                                      };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
 
         //Alerta 5 días
-        public async Task GetInformeFinalNoEnviadoASupervisor(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task<bool> GetInformeFinalNoEnviadoASupervisor()
         {
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
 
@@ -771,23 +767,29 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                 .ToList();
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo || x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alerta5DiasEnvioSupervisor5_1_2);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta5DiasEnvioSupervisor5_1_2));
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Apoyo,
+                                                EnumeratorPerfil.Apoyo_Supervisor,
+                                                EnumeratorPerfil.Supervisor
+                                           };
+
+            bool SedndIsSuccessfull = true;
 
             foreach (var informe in informeFinal)
             {
 
                 if (informeFinal.Count() > 0 && informe.FechaEnvioApoyoSupervisor > RangoFechaConDiasHabiles)
                 {
-                    string template = await ReplaceVariables(pDominioFront, TemplateRecoveryPassword.Contenido, informe.InformeFinalId);
-
-                    foreach (var item in usuarios)
-                    {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, TemplateRecoveryPassword.Asunto, template, pSender, pPassword, pMailServer, pMailPort);
-                    }
-
-                }           
+                    string strContenido = await ReplaceVariables(template.Contenido, informe.InformeFinalId);
+                    if (!_commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto))
+                        SedndIsSuccessfull = false;
+                }
             }
+            return SedndIsSuccessfull;
         }
 
         //Actualizar AprobacionCodigo == ValidacionCodigo
@@ -839,7 +841,7 @@ namespace asivamosffie.services
             }
         }
 
-        private async Task<string> ReplaceVariables(string pDominioFront, string template, int pInformeFinalId)
+        private async Task<string> ReplaceVariables(string template, int pInformeFinalId)
         {
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
@@ -865,7 +867,6 @@ namespace asivamosffie.services
                 .FirstOrDefault();
 
             template = template
-                      .Replace("_LinkF_", pDominioFront)
                       .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
                       .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
                       .Replace("[FECHA_VERIFICACION]", informeFinal.FechaEnvioSupervisor != null ? ((DateTime)informeFinal.FechaEnvioSupervisor).ToString("dd-MMM-yy") : "")
