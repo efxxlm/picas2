@@ -311,7 +311,8 @@
         public const string TP_VALOR_USO  = "234";
         public const string HISTORIAL_ACTUACIONES = "235";
         public const string HISTORIAL_RECLAMACIONES = "236";
-
+        public const string VAR_NOMBRE = "237";
+        public const string INFORMACION_ADIONAL_RECLAMACION = "238";
         #endregion
     }
 }

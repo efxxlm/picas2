@@ -96,5 +96,8 @@
         Tabla_actuaciones = 85,
         Proceso_defensa_judicial_4_2_2 = 86,
         Reclamaciones_4_2_1 = 87,
+        Mesas_4_2_1 = 88,
+        Actuaciones_Mesas_4_2_1 = 89,
+        Informacion_Adicional_Reclamacion_4_2_1 = 90,
     }
 }
