@@ -648,8 +648,8 @@
                             </mat-card-header>
                             <mat-card-content>
                                 <p style="margin-left: 2em;"><b> {{ formManejoOtra.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a otra?</b>: Si</p>
-                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a otra?</b>: No</p>
+                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones a la gestión ambiental?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones a la gestión ambiental?</b>: No</p>
                                 <section [innerHTML]="formManejoOtra.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === true"></section>
                             </mat-card-content>
                         </mat-card>
@@ -674,7 +674,7 @@
                                 <div class="col-md-12">
                                     <div class="row justify-content-center align-items-center" style="width: 100%;">
                                         <div class="pr-1">
-                                            <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a otra?</label>
+                                            <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a la gestión ambiental?</label>
                                         </div>
                                         <div>
                                             <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
@@ -691,7 +691,7 @@
                                         [class.color-secondaryColor]="formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid">
                                     <label  class="text-area-quill--label align-left-label"
                                             [class.colorMainColor]="!(formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid)">
-                                            Observaciones a otra
+                                            Observaciones a la gestión ambiental
                                     </label>
                                     <quill-editor   class="quill-editor-style ml-1em"
                                                     [styles]="editorStyle"

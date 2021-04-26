@@ -371,10 +371,11 @@
                                 <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.get( 'registroCompleto' ).value === true">
                                   <button mat-raised-button
                                           color="accent"
-                                          class="btn-table w-20"
+                                          class="info-button p-2-2"
+                                          type="button"
                                           [ngClass]="semaforoBtnRegistrar( ensayo.get( 'registroCompletoMuestras' ).value )"
                                           (click)="getRegistrarResultados( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value )">
-                                          <small class="mr-1em btn-color-text">Registrar resultados</small>
+                                          Registrar resultados
                                   </button>
                                 </div>
                             </mat-card-content>

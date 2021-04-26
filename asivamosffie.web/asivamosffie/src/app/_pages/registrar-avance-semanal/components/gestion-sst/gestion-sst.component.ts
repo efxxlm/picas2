@@ -137,6 +137,8 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                 }
             }
         } );
+
+        if (!this.esRegistroNuevo) this.formSst.markAllAsTouched();
     }
 
     crearFormulario() {

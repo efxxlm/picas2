@@ -99,6 +99,8 @@ export class RegistroFotograficoComponent implements OnInit, OnDestroy {
                 );
             }
         }
+
+        if (!this.esRegistroNuevo) this.formRegistroFotografico.markAllAsTouched();
     }
 
     crearFormulario() {

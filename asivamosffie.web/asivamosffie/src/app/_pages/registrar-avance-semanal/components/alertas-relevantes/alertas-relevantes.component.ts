@@ -108,6 +108,8 @@ export class AlertasRelevantesComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        if (!this.esRegistroNuevo) this.formAlertasRelevantes.markAllAsTouched();
     }
 
     crearFormulario() {

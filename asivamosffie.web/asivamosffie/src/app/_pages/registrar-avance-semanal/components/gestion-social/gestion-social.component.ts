@@ -124,6 +124,7 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
                 }
             }
         }
+        if (!this.esRegistroNuevo) this.formGestionSocial.markAllAsTouched();
     }
 
     maxLength(e: any, n: number) {

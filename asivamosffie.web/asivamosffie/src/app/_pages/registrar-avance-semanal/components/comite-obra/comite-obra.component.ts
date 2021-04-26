@@ -93,6 +93,8 @@ export class ComiteObraComponent implements OnInit, OnDestroy {
                 );
             }
         }
+
+        if (!this.esRegistroNuevo) this.formComiteObra.markAllAsTouched();
     }
 
     crearFormulario() {

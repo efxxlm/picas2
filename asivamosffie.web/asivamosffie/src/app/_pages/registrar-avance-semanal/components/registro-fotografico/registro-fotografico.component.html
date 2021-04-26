@@ -71,6 +71,10 @@
                             </div>
                             <div class="col d-flex">
                                 <quill-editor   class="quill-editor-style card position-relative"
+                                                [class.invalid]="
+                                                  ( formRegistroFotografico.get('descripcion').invalid && formRegistroFotografico.get('descripcion').touched) ||
+                                                  ( formRegistroFotografico.get('descripcion').invalid && esRegistroNuevo === false )
+                                                "
                                                 [styles]="editorStyle"
                                                 [modules]="config"
                                                 style="width: 100%;"
