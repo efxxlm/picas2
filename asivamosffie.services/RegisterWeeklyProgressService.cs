@@ -2229,7 +2229,7 @@ namespace asivamosffie.services
                 return false;
             if (!pManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales.HasValue
                 || !pManejoMaterialesInsumo.RequiereObservacion.HasValue
-                || (pManejoMaterialesInsumo.RequiereObservacion.HasValue && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
+                || (pManejoMaterialesInsumo.RequiereObservacion == true && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
                 )
                 return false;
 
