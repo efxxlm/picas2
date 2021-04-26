@@ -504,6 +504,7 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     }
 
     async guardar() {
+        this.seRealizoPeticion = true;
         this.ensayosLaboratorio.controls.forEach( value => {
             value.get( 'fechaEntregaResultados' ).setValue(
                 value.get( 'fechaEntregaResultados' ).value !== null ?
@@ -581,7 +582,6 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 response => {
-                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(

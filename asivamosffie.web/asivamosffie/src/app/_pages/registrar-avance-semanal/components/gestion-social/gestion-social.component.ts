@@ -215,6 +215,7 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
     }
 
     guardar() {
+        this.seRealizoPeticion = true;
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalGestionObra = [
             {

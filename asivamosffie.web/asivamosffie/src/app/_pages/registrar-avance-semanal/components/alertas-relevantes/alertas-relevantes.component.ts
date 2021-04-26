@@ -141,6 +141,7 @@ export class AlertasRelevantesComponent implements OnInit, OnDestroy {
     }
 
     guardar() {
+        this.seRealizoPeticion = true;
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalGestionObra = [
             {
@@ -190,7 +191,6 @@ export class AlertasRelevantesComponent implements OnInit, OnDestroy {
                         await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
                     }
 
-                    this.seRealizoPeticion = true;
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
