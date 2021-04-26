@@ -112,7 +112,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
 
   sendFinalReportToSupervision(pProyectoId: number) {
     this.validarCumplimientoInformeFinalService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
-      this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
       this.routes.navigateByUrl( '/', {skipLocationChange: true} )
       .then( () => this.routes.navigate( ['/validarCumplimientoInformeFinalProyecto'] ) );
     });
@@ -120,7 +120,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
 
   approveFinalReportByFulfilment(pProyectoId: number) {
     this.validarCumplimientoInformeFinalService.approveFinalReportByFulfilment(pProyectoId).subscribe(respuesta => {
-      this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
       this.routes.navigateByUrl( '/', {skipLocationChange: true} )
       .then( () => this.routes.navigate( ['/validarCumplimientoInformeFinalProyecto'] ) );
     });

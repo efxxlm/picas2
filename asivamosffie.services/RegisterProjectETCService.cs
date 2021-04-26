@@ -470,6 +470,10 @@ namespace asivamosffie.services
                 {
                     state = true;
                 }
+                else
+                {
+                    state = false;
+                }
             }
             else
             {
