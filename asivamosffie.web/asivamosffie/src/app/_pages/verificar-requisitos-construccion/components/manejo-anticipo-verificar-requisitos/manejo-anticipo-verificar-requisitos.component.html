@@ -13,7 +13,7 @@
     </mat-card-content>
   </mat-card>
 </div>
-<section class="mt-3em mb-1em px-2em">
+<section class="mt-3em mb-1em px-2em" *ngIf="contratacion.manejoAnticipoRutaSoporte">
   <div align="left" *ngIf="contratacion">
     <p><b>URL con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
   </div>
