@@ -12,9 +12,9 @@
       Estado del requisito:
       <b> No cumple </b>
     </span>
-    <span class="mx-1em">
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo">
       Tipo de anexo:
-      <b *ngIf="data.informe.informeFinalAnexo"> {{ data.informe.informeFinalAnexo.tipoAnexoString }} </b>
+      <b> {{ data.informe.informeFinalAnexo.tipoAnexoString }} </b>
     </span>
     <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.urlSoporte">
       URL:
@@ -30,8 +30,8 @@
     </span>
   </p>
   <p>
-    <b> {{ data.informe.informeFinalListaChequeo.posicion }}. </b>
-    {{ data.informe.informeFinalListaChequeo.nombre }}
+    <b> {{ data.informe.informeFinalListaChequeo.orden }}. </b>
+    {{ data.informe.informeFinalListaChequeo.listaChequeoItem.nombre }}
   </p>
 </div>
 

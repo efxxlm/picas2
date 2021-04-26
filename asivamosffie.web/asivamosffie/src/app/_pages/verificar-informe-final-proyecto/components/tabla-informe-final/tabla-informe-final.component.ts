@@ -103,7 +103,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   enviarRegistroFinal(pProyectoId: number) {
     // console.log("Antes: ",pProyectoId);
     this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
-      this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
       this.routes.navigateByUrl( '/', {skipLocationChange: true} )
       .then( () => this.routes.navigate( ['/verificarInformeFinalProyecto'] ) );
     });
