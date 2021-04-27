@@ -1497,6 +1497,7 @@ namespace asivamosffie.services
                 seguimientoSemanalObservacionOld.Observacion = pSeguimientoSemanalObservacion.Observacion;
                 seguimientoSemanalObservacionOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
                 seguimientoSemanalObservacionOld.FechaModificacion = DateTime.Now;
+                seguimientoSemanalObservacionOld.Archivada = pSeguimientoSemanalObservacion.Archivada;
             }
             _context.SaveChanges();
 
