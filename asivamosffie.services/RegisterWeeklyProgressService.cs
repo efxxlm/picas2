@@ -88,7 +88,7 @@ namespace asivamosffie.services
                                 {
                                     r.ObservacionPadreId,
                                     r.TieneObservacion,
-                                    r.TipoObservacionCodigo, 
+                                    r.TipoObservacionCodigo,
                                     r.SeguimientoSemanalId,
                                     r.SeguimientoSemanalObservacionId,
                                     r.Observacion,
@@ -984,6 +984,7 @@ namespace asivamosffie.services
 
                 if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
+                    GetArchivarObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId, pUsuarioMod);
                     await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
                     seguimientoSemanalMod.RegistroCompleto = true;
                     seguimientoSemanalMod.FechaRegistroCompletoInterventor = DateTime.Now;
@@ -1042,6 +1043,18 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private void GetArchivarObservacionesSeguimientoSemanal(int seguimientoSemanalId, string pAuthor)
+        {
+            _context.Set<SeguimientoSemanalObservacion>()
+                    .Where(s => s.SeguimientoSemanalId == seguimientoSemanalId)
+                    .Update(s => new SeguimientoSemanalObservacion
+                    {
+                        UsuarioModificacion = pAuthor,
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now
+                    });
         }
 
         public async Task<Respuesta> ChangueStatusMuestrasSeguimientoSemanal(int pSeguimientoSemanalID, string pEstadoMod, string pUsuarioMod)
