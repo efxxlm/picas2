@@ -209,7 +209,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
     getCantidadActividades() {
         this.formGestionAmbiental.get( 'cantidadActividad' ).valueChanges
             .pipe(
-                delay( 1000 )
+                delay( 500 )
             )
             .subscribe( value => {
                 if ( Number( value ) > 0 && (   this.gestionObraAmbiental === undefined
@@ -646,11 +646,64 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
         } );
     }
 
+    deleteActividad( index: number ) {
+        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+            .subscribe(
+                value => {
+                    if ( value === true ) {
+                        if ( this.actividades.controls[ index ].get( 'tipoActividad' ).value !== null ) {
+                            if ( this.tipoActividadesCodigo.manejoMaterialInsumo === this.actividades.controls[ index ].get( 'tipoActividad' ).value.codigo ) {
+                                if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined ) {
+                                    delete this.gestionObraAmbiental.manejoMaterialesInsumo;
+                                    this.gestionObraAmbiental.tieneManejoMaterialesInsumo = false;
+                                }
+                            }
+                            if ( this.tipoActividadesCodigo.manejoResiduosConstruccion === this.actividades.controls[ index ].get( 'tipoActividad' ).value.codigo ) {
+                                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
+                                    delete this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion;
+                                    this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion = false;
+                                }
+                            }
+                            if ( this.tipoActividadesCodigo.manejoResiduosPeligrosos === this.actividades.controls[ index ].get( 'tipoActividad' ).value.codigo ) {
+                                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
+                                    delete this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales;
+                                    this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales = false;
+                                }
+                            }
+                            if ( this.tipoActividadesCodigo.otra === this.actividades.controls[ index ].get( 'tipoActividad' ).value.codigo ) {
+                                if ( this.gestionObraAmbiental.manejoOtro !== undefined ) {
+                                    delete this.gestionObraAmbiental.manejoOtro;
+                                    this.gestionObraAmbiental.tieneManejoOtro = false;
+                                }
+                            }
+
+                            this.tipoActividades.push( this.actividades.controls[ index ].get( 'tipoActividad' ).value );
+                        }
+
+                        this.actividades.removeAt( index );
+                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                        this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ this.actividades.length }` )
+                        this.formGestionAmbiental.get( 'cantidadActividad' ).setErrors( null )
+                    }
+                }
+            )
+    }
+
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText }
         });
+    }
+
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        return dialogRef.afterClosed();
     }
 
     async guardar() {
@@ -745,7 +798,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         return gestionObra.length > 0 && gestionObra[0].manejoMaterialesInsumo !== undefined ? gestionObra[0].manejoMaterialesInsumo : manejoMaterial.value;
                     }
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoMaterialesInsumo !== undefined ? gestionObra[0].manejoMaterialesInsumo : null;
+                    return null;
                 }
             };
             // GET reactive form "Residuos de construccion y demolicion"
@@ -778,7 +831,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         return gestionObra.length > 0 && gestionObra[0].manejoResiduosConstruccionDemolicion !== undefined ? gestionObra[0].manejoResiduosConstruccionDemolicion : residuoConstruccion.value;
                     }
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoResiduosConstruccionDemolicion !== undefined ? gestionObra[0].manejoResiduosConstruccionDemolicion : null;
+                    return null;
                 }
             };
             // GET reactive form "Residuos peligrosos y especiales"
@@ -809,7 +862,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         return gestionObra.length > 0 && gestionObra[0].manejoResiduosPeligrososEspeciales !== undefined ? gestionObra[0].manejoResiduosPeligrososEspeciales : residuosPeligrosos.value;
                     }
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoResiduosPeligrososEspeciales !== undefined ? gestionObra[0].manejoResiduosPeligrososEspeciales : null;
+                    return null;
                 }
             };
             // GET reactive form "Otra"
@@ -839,7 +892,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         return gestionObra.length > 0 && gestionObra[0].manejoOtro !== undefined ? gestionObra[0].manejoOtro : otros.value;
                     }
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoOtro !== undefined ? gestionObra[0].manejoOtro : null;
+                    return null;
                 }
             };
             seguimientoSemanalGestionObra = [
@@ -944,7 +997,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         url:  manejoMaterial.get( 'url' ).value
                     };
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoMaterialesInsumo !== undefined ? gestionObra[0].manejoMaterialesInsumo : null;
+                    return null;
                 }
             };
             // GET reactive form "Residuos de construccion y demolicion"
@@ -962,7 +1015,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         cantidadToneladas: residuoConstruccion.get( 'cantidadToneladas' ).value
                     };
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoResiduosConstruccionDemolicion !== undefined ? gestionObra[0].manejoResiduosConstruccionDemolicion : null;
+                    return null;
                 }
             };
             // GET reactive form "Residuos peligrosos y especiales"
@@ -978,7 +1031,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         urlRegistroFotografico: residuosPeligrosos.get( 'urlRegistroFotografico' ).value,
                     };
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoResiduosPeligrososEspeciales !== undefined ? gestionObra[0].manejoResiduosPeligrososEspeciales : null;
+                    return null;
                 }
             };
             // GET reactive form "Otra"
@@ -992,7 +1045,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         urlSoporteGestion: otros.get( 'urlSoporteGestion' ).value
                     };
                 } else {
-                    return gestionObra.length > 0 && gestionObra[0].manejoOtro !== undefined ? gestionObra[0].manejoOtro : null;
+                    return null;
                 }
             }
 

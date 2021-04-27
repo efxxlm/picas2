@@ -70,7 +70,7 @@
                                   matTooltip="Debe ingresar la información en el campo para continuar"
                                   matTooltipClass="info-tooltip"
                                   *ngIf="( formGestionAmbiental.get('cantidadActividad').invalid && formGestionAmbiental.get('cantidadActividad').touched) || ( formGestionAmbiental.get('cantidadActividad').invalid && esRegistroNuevo === false )">
-                          </span>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -332,6 +332,16 @@
                             </section>
                         </mat-card-content>
                     </mat-card>
+                    <div class="text-right" *ngIf="actividades.length > 1">
+                      <button mat-button
+                              color="warn"
+                              type="button"
+                              class="btn-eliminar"
+                              (click)="deleteActividad( i )">
+                              <img src="assets/img/icon/menos.svg">
+                              Eliminar actividad
+                      </button>
+                    </div>
                     <div class="text-center" style="margin-top: 2em;">
                         <button mat-button
                                 color="warn"

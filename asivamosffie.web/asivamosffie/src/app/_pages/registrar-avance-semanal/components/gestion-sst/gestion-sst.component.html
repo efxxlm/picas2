@@ -71,234 +71,234 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.5em;"
-                                                [class.color-secondaryColor]="( formSst.get('seRealizoCapacitacion').invalid && formSst.get('seRealizoCapacitacion').touched) || ( formSst.get('seRealizoCapacitacion').invalid && esRegistroNuevo === false )">
-                                                ¿Se realizaron capacitaciones relacionadas con seguridad y salud en el trabajo durante la semana?
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 94%;">
-                                            <mat-form-field class="w-50" appearance="fill">
-                                              <mat-select class="padding-left" formControlName="seRealizoCapacitacion" required>
-                                                <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
-                                                    {{requisito.viewValue}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('seRealizoCapacitacion').invalid && formSst.get('seRealizoCapacitacion').touched) || ( formSst.get('seRealizoCapacitacion').invalid && esRegistroNuevo === false )">
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="formSst.get( 'seRealizoCapacitacion' ).value === true">
-                            <div class="col-md-12">
-                              <div>
+                    </section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
                                 <div class="pr-1">
                                     <label  class="label-left"
-                                            [class.color-secondaryColor]="( formSst.get('temaCapacitacion').invalid && formSst.get('temaCapacitacion').touched) || ( formSst.get('temaCapacitacion').invalid && esRegistroNuevo === false )">
-                                            Tema de capacitación
+                                            style="margin-top: 1.5em;"
+                                            [class.color-secondaryColor]="( formSst.get('seRealizoCapacitacion').invalid && formSst.get('seRealizoCapacitacion').touched) || ( formSst.get('seRealizoCapacitacion').invalid && esRegistroNuevo === false )">
+                                            ¿Se realizaron capacitaciones relacionadas con seguridad y salud en el trabajo durante la semana?
                                     </label>
                                 </div>
-                                <div class="col d-flex" style="width: 100%;">
-                                    <quill-editor   class="quill-editor-style card position-relative"
-                                                    [styles]="editorStyle"
-                                                    [modules]="config"
-                                                    style="width: 100%;"
-                                                    (onContentChanged)="maxLength($event, 200)"
-                                                    formControlName="temaCapacitacion"
-                                                    #obsTemaCapacitacion
-                                                    required>
-                                    </quill-editor>
-                                    <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value !== null" style="margin-top: 3.5em;">
-                                        {{200 - textoLimpio( obsTemaCapacitacion.quillEditor, 200 )}}
-                                    </span>
-                                    <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value === null" style="margin-top: 3.5em;">
-                                        200
-                                    </span>
-                                    <span class="icon-incompleto" style="margin-top: 3.6em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('temaCapacitacion').invalid && formSst.get('temaCapacitacion').touched) || ( formSst.get('temaCapacitacion').invalid && esRegistroNuevo === false )">
-                                    </span>
+                                <div class="col d-flex">
+                                    <section style="width: 94%;">
+                                        <mat-form-field class="w-50" appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizoCapacitacion" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
                                 </div>
-                              </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('seRealizoCapacitacion').invalid && formSst.get('seRealizoCapacitacion').touched) || ( formSst.get('seRealizoCapacitacion').invalid && esRegistroNuevo === false )">
+                                </span>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 1em;">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.5em;"
-                                                [class.color-secondaryColor]="( formSst.get('seRealizoRevisionElementosProteccion').invalid && formSst.get('seRealizoRevisionElementosProteccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
-                                                ¿Se realizaron revisiones de uso de elementos de protección personal y dotación durante la semana?
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 94%;">
-                                            <mat-form-field appearance="fill">
-                                              <mat-select class="padding-left" formControlName="seRealizoRevisionElementosProteccion" required>
-                                                <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
-                                                    {{requisito.viewValue}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('seRealizoRevisionElementosProteccion').invalid && formSst.get('seRealizoRevisionElementosProteccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
-                                    </span>
-                                </div>
+                    </div>
+                    <div class="row" *ngIf="formSst.get( 'seRealizoCapacitacion' ).value === true">
+                        <div class="col-md-12">
+                          <div>
+                            <div class="pr-1">
+                                <label  class="label-left"
+                                        [class.color-secondaryColor]="( formSst.get('temaCapacitacion').invalid && formSst.get('temaCapacitacion').touched) || ( formSst.get('temaCapacitacion').invalid && esRegistroNuevo === false )">
+                                        Tema de capacitación
+                                </label>
                             </div>
-                        </div>
-                        <div class="row" *ngIf="formSst.get( 'seRealizoRevisionElementosProteccion' ).value === true">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.5em;"
-                                                [class.color-secondaryColor]="( formSst.get('cumpleRevisionElementosProyeccion').invalid && formSst.get('cumpleRevisionElementosProyeccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
-                                                Resultado de revisión
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 98%;">
-                                            <mat-form-field appearance="fill">
-                                              <mat-select class="padding-left" formControlName="cumpleRevisionElementosProyeccion" required>
-                                                <mat-option *ngFor="let requisito of resultadosRevision" [value]="requisito.value">
-                                                    {{requisito.viewValue}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('cumpleRevisionElementosProyeccion').invalid && formSst.get('cumpleRevisionElementosProyeccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
-                                    </span>
-                                </div>
+                            <div class="col d-flex" style="width: 100%;">
+                                <quill-editor   class="quill-editor-style card position-relative"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                style="width: 100%;"
+                                                (onContentChanged)="maxLength($event, 200)"
+                                                formControlName="temaCapacitacion"
+                                                #obsTemaCapacitacion
+                                                required>
+                                </quill-editor>
+                                <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value !== null" style="margin-top: 3.5em;">
+                                    {{200 - textoLimpio( obsTemaCapacitacion.quillEditor, 200 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value === null" style="margin-top: 3.5em;">
+                                    200
+                                </span>
+                                <span class="icon-incompleto" style="margin-top: 3.6em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('temaCapacitacion').invalid && formSst.get('temaCapacitacion').touched) || ( formSst.get('temaCapacitacion').invalid && esRegistroNuevo === false )">
+                                </span>
                             </div>
+                          </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.5em;"
-                                                [class.color-secondaryColor]="( formSst.get('seRealizoRevisionSenalizacion').invalid && formSst.get('seRealizoRevisionSenalizacion').touched) || ( formSst.get('seRealizoRevisionSenalizacion').invalid && esRegistroNuevo === false )">
-                                                ¿Se realizaron revisiones de señalización de seguridad y salud en el trabajo y kit de emergencias durante la semana?
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 92%;">
-                                            <mat-form-field appearance="fill">
-                                              <mat-select class="padding-left" formControlName="seRealizoRevisionSenalizacion" required>
-                                                <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
-                                                    {{requisito.viewValue}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('seRealizoRevisionSenalizacion').invalid && formSst.get('seRealizoRevisionSenalizacion').touched) || ( formSst.get('seRealizoRevisionSenalizacion').invalid && esRegistroNuevo === false )">
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="formSst.get( 'seRealizoRevisionSenalizacion' ).value === true">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.5em;"
-                                                [class.color-secondaryColor]="( formSst.get('cumpleRevisionSenalizacion').invalid && formSst.get('cumpleRevisionSenalizacion').touched) || ( formSst.get('cumpleRevisionSenalizacion').invalid && esRegistroNuevo === false )">
-                                                Resultado de revisión
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 98%;">
-                                            <mat-form-field appearance="fill">
-                                              <mat-select class="padding-left" formControlName="cumpleRevisionSenalizacion" required>
-                                                <mat-option *ngFor="let requisito of resultadosRevision" [value]="requisito.value">
-                                                    {{requisito.viewValue}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img  class="icon-incompleto--img"
-                                              src="assets/img/icon/incompleto.svg"
-                                              alt="este campo es requerido"
-                                              [matTooltipPosition]="'above'"
-                                              matTooltip="Debe ingresar la información en el campo para continuar"
-                                              matTooltipClass="info-tooltip"
-                                              *ngIf="( formSst.get('cumpleRevisionSenalizacion').invalid && formSst.get('cumpleRevisionSenalizacion').touched) || ( formSst.get('cumpleRevisionSenalizacion').invalid && esRegistroNuevo === false )">
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-1em">
-                            <div class="col-md-12">
-                              <div class="row">
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-md-12">
+                            <div class="row">
                                 <div class="pr-1">
-                                  <label class="label-left">URL soporte de la gestión en seguridad y salud en el trabajo</label>
+                                    <label  class="label-left"
+                                            style="margin-top: 1.5em;"
+                                            [class.color-secondaryColor]="( formSst.get('seRealizoRevisionElementosProteccion').invalid && formSst.get('seRealizoRevisionElementosProteccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
+                                            ¿Se realizaron revisiones de uso de elementos de protección personal y dotación durante la semana?
+                                    </label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field style="width: 96%;">
-                                        <input  matInput
-                                                type="text"
-                                                maxlength="400"
-                                                formControlName="urlSoporteGestion">
-                                    </mat-form-field>
+                                    <section style="width: 94%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizoRevisionElementosProteccion" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
                                 </div>
-                                <div class="d-flex justify-content-center size-text-descriptivo">
-                                    <p class="color-text-descriptivo">
-                                        <i> 
-                                            Indique la ruta en la que se encuentran los documentos de soporte de la Gestión de seguridad y salud en el trabajo.
-                                        </i>
-                                    </p>
-                                </div>
-                              </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('seRealizoRevisionElementosProteccion').invalid && formSst.get('seRealizoRevisionElementosProteccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
+                                </span>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                    <div class="row" *ngIf="formSst.get( 'seRealizoRevisionElementosProteccion' ).value === true">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label  class="label-left"
+                                            style="margin-top: 1.5em;"
+                                            [class.color-secondaryColor]="( formSst.get('cumpleRevisionElementosProyeccion').invalid && formSst.get('cumpleRevisionElementosProyeccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
+                                            Resultado de revisión
+                                    </label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 98%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="cumpleRevisionElementosProyeccion" required>
+                                            <mat-option *ngFor="let requisito of resultadosRevision" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('cumpleRevisionElementosProyeccion').invalid && formSst.get('cumpleRevisionElementosProyeccion').touched) || ( formSst.get('seRealizoRevisionElementosProteccion').invalid && esRegistroNuevo === false )">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label  class="label-left"
+                                            style="margin-top: 1.5em;"
+                                            [class.color-secondaryColor]="( formSst.get('seRealizoRevisionSenalizacion').invalid && formSst.get('seRealizoRevisionSenalizacion').touched) || ( formSst.get('seRealizoRevisionSenalizacion').invalid && esRegistroNuevo === false )">
+                                            ¿Se realizaron revisiones de señalización de seguridad y salud en el trabajo y kit de emergencias durante la semana?
+                                    </label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 92%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizoRevisionSenalizacion" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('seRealizoRevisionSenalizacion').invalid && formSst.get('seRealizoRevisionSenalizacion').touched) || ( formSst.get('seRealizoRevisionSenalizacion').invalid && esRegistroNuevo === false )">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="formSst.get( 'seRealizoRevisionSenalizacion' ).value === true">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label  class="label-left"
+                                            style="margin-top: 1.5em;"
+                                            [class.color-secondaryColor]="( formSst.get('cumpleRevisionSenalizacion').invalid && formSst.get('cumpleRevisionSenalizacion').touched) || ( formSst.get('cumpleRevisionSenalizacion').invalid && esRegistroNuevo === false )">
+                                            Resultado de revisión
+                                    </label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 98%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="cumpleRevisionSenalizacion" required>
+                                            <mat-option *ngFor="let requisito of resultadosRevision" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img  class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( formSst.get('cumpleRevisionSenalizacion').invalid && formSst.get('cumpleRevisionSenalizacion').touched) || ( formSst.get('cumpleRevisionSenalizacion').invalid && esRegistroNuevo === false )">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1em">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left">URL soporte de la gestión en seguridad y salud en el trabajo</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field style="width: 96%;">
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="400"
+                                            formControlName="urlSoporteGestion">
+                                </mat-form-field>
+                            </div>
+                            <div class="d-flex justify-content-center size-text-descriptivo">
+                                <p class="color-text-descriptivo">
+                                    <i> 
+                                        Indique la ruta en la que se encuentran los documentos de soporte de la Gestión de seguridad y salud en el trabajo.
+                                    </i>
+                                </p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -320,7 +320,7 @@
         <mat-card class="border">
             <mat-card-content class="mt-1em">
                 <p><b>Cantidad de accidentes laborales registrados en la semana</b>: {{ gestionObraSst.cantidadAccidentes }} </p>
-                <section style="display: flex;align-items: baseline;">
+                <section style="display: flex;align-items: baseline;" *ngIf="gestionObraSst.cantidadAccidentes > 0">
                     <b>Principales causas de los accidentes o incidentes laborales ocurridos durante la semana</b>:
                     <div class="mb-1em" style="margin-left: .5em;">
                         <p *ngFor="let causa of getCausasDetalle( gestionObraSst.seguridadSaludCausaAccidente ); index as j"> {{ causa.nombre }} </p>
