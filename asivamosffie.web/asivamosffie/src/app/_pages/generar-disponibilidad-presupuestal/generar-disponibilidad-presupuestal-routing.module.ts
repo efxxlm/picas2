@@ -17,11 +17,11 @@ const routes: Routes = [
     component: GestionarDdpComponent
   },
   {
-    path: 'detalleConDisponibilidadPresupuestal/:id',
+    path: 'detalleConDisponibilidadPresupuestal/:id/:esNovedad/:novedadId',
     component: DetalleConValidacionPresupuestalComponent
   },
   {
-    path: 'devueltaPorCoordinacionFinanciera/:id',
+    path: 'devueltaPorCoordinacionFinanciera/:id/:esNovedad/:novedadId',
     component: DevueltaPorCoordinacionFinancieraComponent
   },
   {

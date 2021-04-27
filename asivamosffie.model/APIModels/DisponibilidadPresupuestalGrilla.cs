@@ -22,6 +22,7 @@ namespace asivamosffie.model.APIModels
         public IQueryable<Contratacion> Contratacion { get; set; }
         public string NumeroDDP { get; set; }
         public NovedadContractual? NovedadContractual { get; set; }
+        public int? NovedadContractualId { get; set; }
     }
 
     /*autor: jflorez

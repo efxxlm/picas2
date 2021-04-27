@@ -17,7 +17,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal();
         Task<Respuesta> SetCancelDisponibilidadPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
-        Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacion,string purl, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
+        Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacionCreateDDP, bool esNovedad, int RegistroPresupuestalId, string purl, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> returnDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion);
         Task<Byte[]> GetPDFDDP(int id, string pUsurioGenero);
         Task<List<GrillaDisponibilidadPresupuestal>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId);
@@ -35,7 +35,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> GetFinancialFundingGestionByDDPP(int pIdDisponibilidadPresupuestalProyecto, string usuarioModificacion);
         Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
-        Task<Respuesta> CreateDRP(int id, string usuarioModificacion, string urlDestino, string mailServer, int mailPort, bool enableSSL, string password, string sender);
+        Task<Respuesta> CreateDRP(int id, string usuarioModificacion, bool esNovedad, int RegistroPresupuestalId, string urlDestino, string mailServer, int mailPort, bool enableSSL, string password, string sender);
         Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal();
         Task<Byte[]> GetPDFDRP(int id, string usuarioModificacion);
          

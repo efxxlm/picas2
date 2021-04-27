@@ -14,59 +14,62 @@ import { DevolverPorValidacionComponent } from '../devolver-por-validacion/devol
 })
 export class DetalleConValidacionPresupuestalComponent implements OnInit {
   detailavailabilityBudget: any;
-  esModificacion=false;
-  pTipoDDP=TipoDDP;
+  esModificacion = false;
+  pTipoDDP = TipoDDP;
+  esNovedad;
+  novedadId;
 
-  constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
+  constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router) { }
 
-  openDialog(modalTitle: string, modalText: string,relocate=false) {
-    let ref=this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string, relocate = false) {
+    let ref = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(relocate)
-    {
-      ref.afterClosed().subscribe(result => {        
-        this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
-    });
+    if (relocate) {
+      ref.afterClosed().subscribe(result => {
+        this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
+      });
     }
   }
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
-        console.log(listas);
-        if(listas.length>0)
-        {
-          this.detailavailabilityBudget=listas[0];
-        }
-        else{
-          this.openDialog('','Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
-        }
-        
-      });
-    }    
-  }
-  generarddp(){
-    
-        this.download();
-    }
+    this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
-  download()
-  {
+    if (id) {
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, this.esNovedad, this.novedadId)
+        .subscribe(listas => {
+          console.log(listas);
+          if (listas.length > 0) {
+            this.detailavailabilityBudget = listas[0];
+          }
+          else {
+            this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
+          }
+
+        });
+    }
+  }
+  generarddp() {
+
+    this.download();
+  }
+
+  download() {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
       console.log(listas);
-      const documento = `${ this.detailavailabilityBudget.numeroSolicitud }.pdf`;
-        const text = documento,
-          blob = new Blob([listas], { type: 'application/pdf' }),
-          anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-        anchor.click();
+      const documento = `${this.detailavailabilityBudget.numeroSolicitud}.pdf`;
+      const text = documento,
+        blob = new Blob([listas], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
     });
   }
 
@@ -75,8 +78,8 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
-    dialogRef.afterClosed().subscribe(result => {        
-      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });
   }
 
@@ -85,10 +88,10 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
-    dialogRef.afterClosed().subscribe(result => {        
-      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });
-    
+
   }
 
 }

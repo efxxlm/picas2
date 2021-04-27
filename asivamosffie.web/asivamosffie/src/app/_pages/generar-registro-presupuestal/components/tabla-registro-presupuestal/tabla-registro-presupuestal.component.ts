@@ -18,6 +18,9 @@ export interface Contrato {
   numeroContrato: string;
   tipoSolicitud: string;
   estado: string;
+  esNovedad: boolean;
+  novedadId: number;
+
 }
 
 @Component({
@@ -47,7 +50,9 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
           estado:element.estado,
           fechaFirma:element.fechaFirmaContrato,
           numeroContrato:element.numeroContrato,
-          tipoSolicitud:element.tipoSolicitudEspecial});
+          tipoSolicitud:element.tipoSolicitudEspecial, 
+          esNovedad: element.esNovedad,
+          novedadId: element.novedadContractualRegistroPresupuestalId});
       });
       this.dataSource = new MatTableDataSource(elementos);
       this.dataSource.sort = this.sort;

@@ -42,12 +42,19 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
       {
         if(element.estadoRegistro)
         {
-          element.estadoRegistro=false;
+          element.estadoRegistro=false; 
         }
       }      
-      elements.push({id:element.disponibilidadPresupuestalId,
-        fecha:element.fechaSolicitud,numero:element.numeroSolicitud,estadoRegistro:element.estadoRegistro,
-        tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
+
+      console.log( element.novedadContractualRegistroPresupuestalId );
+
+      elements.push({
+        id:element.disponibilidadPresupuestalId,
+        fecha:element.fechaSolicitud,
+        numero:element.numeroSolicitud,
+        estadoRegistro:element.estadoRegistro,
+        tipo:element.tipoSolicitud,  
+        esNovedad: element.esNovedad,
         novedadId: element.novedadContractualRegistroPresupuestalId})
     });
     this.dataSource = new MatTableDataSource(elements);

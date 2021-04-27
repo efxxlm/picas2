@@ -16,6 +16,8 @@ export class GestionarDdpComponent implements OnInit {
   detailavailabilityBudget: any;
   esModificacion = false;
   pTipoDDP = TipoDDP;
+  esNovedad;
+  novedadId;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
@@ -32,12 +34,13 @@ export class GestionarDdpComponent implements OnInit {
       });
     }
   }
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
-    const novedadId = this.route.snapshot.paramMap.get('novedadId');
+    this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, esNovedad, novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, this.esNovedad, this.novedadId)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {
@@ -50,15 +53,17 @@ export class GestionarDdpComponent implements OnInit {
         });
     }
   }
+  
   generarddp() {
-    this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id).subscribe(listas => {
-      console.log(listas);
-      //this.detailavailabilityBudget=listas;
-      this.openDialog("", listas.message, true);
-      if (listas.code == "200") {
-        this.download(listas.data);
-      }
-    });
+    this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId)
+      .subscribe(listas => {
+        console.log(listas);
+        //this.detailavailabilityBudget=listas;
+        this.openDialog("", listas.message, true);
+        if (listas.code == "200") {
+          this.download(listas.data);
+        }
+      });
   }
 
   download(dato: any) {

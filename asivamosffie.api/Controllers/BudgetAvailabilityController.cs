@@ -119,14 +119,14 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("CreateDDP")]
         [HttpPost]
-        public async Task<IActionResult> CreateDDP(int id)
+        public async Task<IActionResult> CreateDDP(int id, bool esNovedad, int RegistroPresupuestalId)
         {
 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion, esNovedad, RegistroPresupuestalId, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -387,14 +387,14 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.4*/
         [Route("CreateDRP")]
         [HttpPost]
-        public async Task<IActionResult> CreateDRP(int id)
+        public async Task<IActionResult> CreateDRP(int id, bool esNovedad, int RegistroPresupuestalId)
         {
 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, esNovedad, RegistroPresupuestalId, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
