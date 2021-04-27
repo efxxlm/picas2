@@ -71,17 +71,13 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if ( this.seRealizoPeticion === false ) {
             if ( this.ensayosLaboratorio.dirty === true ) {
-                console.log( 'test 1' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
             } else {
-                console.log( 'test - 2' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
             if ( this.formGestionCalidad.dirty === true ) {
-                console.log( 'test 3' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
             } else {
-                console.log( 'test - 4' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
         } else {
