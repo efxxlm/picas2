@@ -1615,6 +1615,12 @@ namespace asivamosffie.services
 
                                 new ManejoResiduosConstruccionDemolicion
                                 {
+                                    EstaCuantificadoRcd = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd,
+                                    RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RequiereObservacion,
+                                    Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
+                                    SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
+                                    CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
+                                     
                                     UsuarioCreacion = pUsuarioCreacion,
                                     Eliminado = false,
                                     FechaCreacion = DateTime.Now,
@@ -1638,8 +1644,7 @@ namespace asivamosffie.services
                                 manejoResiduosConstruccionDemolicionOld.Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion;
                                 manejoResiduosConstruccionDemolicionOld.SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos;
                                 manejoResiduosConstruccionDemolicionOld.CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas;
-
-
+ 
                             }
 
                             foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
@@ -1677,6 +1682,10 @@ namespace asivamosffie.services
                             {
                                 ManejoResiduosPeligrososEspeciales manejoResiduosPeligrososEspeciales = new ManejoResiduosPeligrososEspeciales
                                 {
+                                    EstanClasificados = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.EstanClasificados,
+                                    RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RequiereObservacion,
+                                    Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.Observacion,
+                                    UrlRegistroFotografico = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.UrlRegistroFotografico,
                                     UsuarioCreacion = pUsuarioCreacion,
                                     Eliminado = false,
                                     FechaCreacion = DateTime.Now,
@@ -1710,6 +1719,9 @@ namespace asivamosffie.services
                             {
                                 ManejoOtro manejoOtro = new ManejoOtro
                                 {
+                                    FechaActividad = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.FechaActividad,
+                                    Actividad = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.Actividad,
+                                    UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion,
                                     UsuarioCreacion = pUsuarioCreacion,
                                     Eliminado = false,
                                     FechaCreacion = DateTime.Now,
