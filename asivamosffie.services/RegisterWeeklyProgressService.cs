@@ -473,7 +473,7 @@ namespace asivamosffie.services
                 int UltimaSemana = _context.SeguimientoSemanal.Count(s => s.ContratacionProyectoId == pContratacionProyectoId);
 
                 foreach (var item in ListseguimientoSemanal)
-                {
+                {  
                     decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
                     string strCodigoEstadoObra = string.Empty;
                     string strCodigoEstadoMuestas = string.Empty;
@@ -513,9 +513,9 @@ namespace asivamosffie.services
                     if (RegistroCompletoMuestrasValidar == null)
                         RegistroCompletoMuestrasValidar = false;
 
-                    bool? verDetalleEditar = item.SeguimientoSemanalGestionObra.FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault()?.SeRealizaronEnsayosLaboratorio;
+                    bool? verDetalleEditar = !item.SeguimientoSemanalGestionObra.FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault()?.SeRealizaronEnsayosLaboratorio;
 
-                    if (verDetalleEditar == true)
+                    if (verDetalleEditar == false)
                         verDetalleEditar = item.RegistroCompletoMuestras.HasValue ? !item.RegistroCompletoMuestras : false;
 
                     ListBitaCora.Add(new
