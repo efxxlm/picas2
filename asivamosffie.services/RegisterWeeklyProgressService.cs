@@ -86,6 +86,7 @@ namespace asivamosffie.services
                         .Select(r =>
                                 new
                                 {
+                                    r.ObservacionPadreId,
                                     r.TieneObservacion,
                                     r.TipoObservacionCodigo, 
                                     r.SeguimientoSemanalId,
