@@ -1048,7 +1048,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalGestionObraAlertaOld.RegistroCompleto = false;
+               // seguimientoSemanalGestionObraAlertaOld.RegistroCompleto = false;
                 seguimientoSemanalGestionObraAlertaOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalGestionObraAlertaOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1071,7 +1071,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalGestionObraSocialOld.RegistroCompleto = false;
+               // seguimientoSemanalGestionObraSocialOld.RegistroCompleto = false;
                 seguimientoSemanalGestionObraSocialOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalGestionObraSocialOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1093,7 +1093,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompleto = false;
+               // seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompleto = false;
                 seguimientoSemanalGestionObraSeguridadSaludOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalGestionObraSeguridadSaludOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1114,7 +1114,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = false;
+               // SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = false;
                 SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 SeguimientoSemanalRegistrarComiteObraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1135,7 +1135,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                SeguimientoSemanalRegistroFotograficoOld.RegistroCompleto = false;
+               // SeguimientoSemanalRegistroFotograficoOld.RegistroCompleto = false;
 
                 SeguimientoSemanalRegistroFotograficoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 SeguimientoSemanalRegistroFotograficoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
@@ -1158,8 +1158,8 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalReporteActividad.RegistroCompleto = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente = false;
+                //seguimientoSemanalReporteActividad.RegistroCompleto = false;
+                //seguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente = false;
 
                 seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividadSiguiente = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividadSiguiente = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
@@ -1182,8 +1182,8 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalReporteActividad.RegistroCompleto = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoActividad = false;
+              //  seguimientoSemanalReporteActividad.RegistroCompleto = false;
+              //  seguimientoSemanalReporteActividad.RegistroCompletoActividad = false;
 
                 seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividad = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividad = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
@@ -1206,8 +1206,8 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato = false;
-                seguimientoSemanalReporteActividad.RegistroCompleto = false;
+              //  seguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato = false;
+            //    seguimientoSemanalReporteActividad.RegistroCompleto = false;
 
                 seguimientoSemanalReporteActividad.TieneObservacionSupervisorEstadoContrato = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalReporteActividad.ObservacionSupervisorIdEstadoContrato = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
@@ -1250,7 +1250,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                ensayoLaboratorioMuestraOld.RegistroCompleto = false;
+              //  ensayoLaboratorioMuestraOld.RegistroCompleto = false;
                 ensayoLaboratorioMuestraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 ensayoLaboratorioMuestraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1273,7 +1273,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompleto = false;
+               // gestionObraCalidadEnsayoLaboratorioOld.RegistroCompleto = false;
                 gestionObraCalidadEnsayoLaboratorioOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 gestionObraCalidadEnsayoLaboratorioOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1295,7 +1295,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalGestionObraCalidad.RegistroCompleto = false;
+               // seguimientoSemanalGestionObraCalidad.RegistroCompleto = false;
                 seguimientoSemanalGestionObraCalidad.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalGestionObraCalidad.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1317,7 +1317,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                manejoOtroOld.RegistroCompleto = false;
+                //manejoOtroOld.RegistroCompleto = false;
                 manejoOtroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 manejoOtroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 manejoOtroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1339,7 +1339,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                manejoResiduosPeligrososEspecialesOld.RegistroCompleto = false;
+                //manejoResiduosPeligrososEspecialesOld.RegistroCompleto = false;
                 manejoResiduosPeligrososEspecialesOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 manejoResiduosPeligrososEspecialesOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1361,7 +1361,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                manejoResiduosConstruccionDemolicionOld.RegistroCompleto = false;
+              //  manejoResiduosConstruccionDemolicionOld.RegistroCompleto = false;
                 manejoResiduosConstruccionDemolicionOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 manejoResiduosConstruccionDemolicionOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1384,7 +1384,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                manejoMaterialesInsumosOld.RegistroCompleto = false;
+               // manejoMaterialesInsumosOld.RegistroCompleto = false;
                 manejoMaterialesInsumosOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 manejoMaterialesInsumosOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1407,7 +1407,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = false;
+               // seguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = false;
 
                 seguimientoSemanalGestionObraAmbientalOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalGestionObraAmbientalOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
@@ -1431,8 +1431,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = false;
-
+                //seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = false; 
                 seguimientoSemanalAvanceFinancieroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalAvanceFinancieroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
@@ -1454,7 +1453,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
-                seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
+               // seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
                 seguimientoSemanalAvanceFisicoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
                 seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
