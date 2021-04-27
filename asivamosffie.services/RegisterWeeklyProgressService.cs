@@ -513,11 +513,12 @@ namespace asivamosffie.services
                     if (RegistroCompletoMuestrasValidar == null)
                         RegistroCompletoMuestrasValidar = false;
 
+
                     ListBitaCora.Add(new
                     {
                         UltimoReporte = item.FechaModificacion,
                         item.SeguimientoSemanalId,
-                        RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                        RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? !item.RegistroCompletoMuestras : false,
                         item.NumeroSemana,
                         UltimaSemana,
                         item.FechaInicio,
