@@ -1089,8 +1089,6 @@ namespace asivamosffie.services
 
             try
             {
-                bool RegistroCompletoMuestras = true;
-
                 foreach (var EnsayoLaboratorioMuestra in pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
                 {
                     if (EnsayoLaboratorioMuestra.EnsayoLaboratorioMuestraId == 0)
@@ -1101,12 +1099,8 @@ namespace asivamosffie.services
                         EnsayoLaboratorioMuestra.RegistroCompleto =
                                !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
-                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
-                            ? true : false;
+                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue;
                         _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
-
-                        if (EnsayoLaboratorioMuestra.RegistroCompleto == false)
-                            RegistroCompletoMuestras = false;
                     }
                     else
                     {
@@ -1119,14 +1113,11 @@ namespace asivamosffie.services
                         EnsayoLaboratorioMuestraOld.RegistroCompleto =
                                !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
-                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
-                            ? true : false;
-                        if (EnsayoLaboratorioMuestraOld.RegistroCompleto == false)
-                            RegistroCompletoMuestras = false;
+                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue;
                     }
                 }
 
-
+                bool RegistroCompletoMuestras = pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra.Any(r => r.RegistroCompleto == false);
                 //Actualizar estado ensayo laboratorio
                 GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld =
                     _context.GestionObraCalidadEnsayoLaboratorio
@@ -1139,15 +1130,13 @@ namespace asivamosffie.services
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
 
-
                 SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
 
                 seguimientoSemanalOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
-
-
-
+                seguimientoSemanalOld.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Validado_Supervisor;
+                 
                 return new Respuesta
                 {
                     IsSuccessful = true,
