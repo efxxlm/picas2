@@ -833,19 +833,19 @@ namespace asivamosffie.services
                     blActualizarContratacionProyecto = true;
                 }
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.Count() > 0)
-                    SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateAvanceFinanciero(pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalGestionObra.Count() > 0)
-                    SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateGestionObra(pSeguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalReporteActividad.Count() > 0)
-                    SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateReporteActividades(pSeguimientoSemanal?.SeguimientoSemanalReporteActividad?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.Count() > 0)
-                    SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateRegistroFotografico(pSeguimientoSemanal?.SeguimientoSemanalRegistroFotografico?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.Count() > 0)
-                    SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateComiteObra(pSeguimientoSemanal?.SeguimientoSemanalRegistrarComiteObra?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 await _context.SaveChangesAsync();
 
@@ -1164,7 +1164,7 @@ namespace asivamosffie.services
                 };
             }
         }
-          
+
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
@@ -1197,7 +1197,7 @@ namespace asivamosffie.services
 
             }
         }
-         
+
         private void CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(ICollection<SeguimientoSemanalAvanceFisicoProgramacion> List, string strUsuario)
         {
             foreach (var item in List)
@@ -1527,21 +1527,34 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosConstruccionDemolicion = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosPeligrososEspeciales = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoOtro = SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro;
-
+                        SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumoId;
+                        SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = SeguimientoSemanalGestionObraAmbiental.ManejoOtroId;
+                        SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicionId;
+                        SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId;
                         //Manejo Materiales e Insumos
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
                         {
                             //New
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
+                                try
+                                {
+                                    _context.ManejoMaterialesInsumos.Add(
+                                                                            new ManejoMaterialesInsumos
+                                                                            {
+                                                                                UsuarioCreacion = pUsuarioCreacion,
+                                                                                Eliminado = false,
+                                                                                FechaCreacion = DateTime.Now,
+                                                                                RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo)
+                                                                            });
+                                    _context.SaveChanges();
 
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
+                                }
+                                catch (Exception e)
+                                {
 
-                                _context.ManejoMaterialesInsumos.Add(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
-                                _context.SaveChanges();
+
+                                }
                                 SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId;
                             }
                             //Update
@@ -1905,7 +1918,7 @@ namespace asivamosffie.services
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
         }
-         
+
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             if (pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId == 0)
@@ -2188,7 +2201,7 @@ namespace asivamosffie.services
               || !gestionObraCalidadEnsayoLaboratorio.FechaEntregaResultados.HasValue
               || !gestionObraCalidadEnsayoLaboratorio.RealizoControlMedicion.HasValue
                 )
-          return false; 
+                return false;
             return true;
         }
 
@@ -2198,7 +2211,7 @@ namespace asivamosffie.services
                 return false;
 
             return seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue;
-                
+
 
             //if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
             //    || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
@@ -2210,7 +2223,7 @@ namespace asivamosffie.services
             //        return false;
             //}
 
-         //   return true;
+            //   return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
@@ -2249,7 +2262,7 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos pManejoMaterialesInsumo)
         {
             if (pManejoMaterialesInsumo == null)
-                return false; 
+                return false;
             if (!pManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales.HasValue
                 || !pManejoMaterialesInsumo.RequiereObservacion.HasValue
                 || (pManejoMaterialesInsumo.RequiereObservacion == true && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
@@ -2419,7 +2432,7 @@ namespace asivamosffie.services
         {
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Supervisor_4_1_20));
-           string strContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+            string strContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
