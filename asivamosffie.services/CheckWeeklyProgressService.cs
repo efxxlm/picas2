@@ -262,8 +262,8 @@ namespace asivamosffie.services
                 {
                     foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
                     {
-                        if (item3.TieneObservacionSupervisor != true)
-                            return false;
+                        //if (item3.TieneObservacionSupervisor != true)
+                        //    return false;
 
                         //foreach (var item in item3.EnsayoLaboratorioMuestra)
                         //{
@@ -279,8 +279,8 @@ namespace asivamosffie.services
                 {
                     foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
                     {
-                        if (item3.TieneObservacionApoyo != true)
-                            return false;
+                        //if (item3.TieneObservacionApoyo != true)
+                        //    return false;
 
                         //foreach (var item in item3.EnsayoLaboratorioMuestra)
                         //{

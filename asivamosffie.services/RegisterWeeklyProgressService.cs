@@ -1297,16 +1297,23 @@ namespace asivamosffie.services
                     //Manejo Residuos Construccion Demolicion
                     if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null)
                     {
+                        ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
+                            new ManejoResiduosConstruccionDemolicion
+                            {
+                                UsuarioCreacion = pUsuarioCreacion,
+                                Eliminado = false,
+                                FechaCreacion = DateTime.Now,
+                                RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion)
+                            };
 
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.UsuarioCreacion = pUsuarioCreacion;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Eliminado = false;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
 
-                        _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
-
+                        _context.ManejoResiduosConstruccionDemolicion.Add(manejoResiduosConstruccionDemolicion);
+                        _context.SaveChanges();
                         foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
                         {
+
+
+                            ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
                             ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                             ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                             ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -1527,35 +1534,36 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosConstruccionDemolicion = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosPeligrososEspeciales = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoOtro = SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro;
-                        SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumoId;
-                        SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = SeguimientoSemanalGestionObraAmbiental.ManejoOtroId;
-                        SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicionId;
-                        SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = null;
+
                         //Manejo Materiales e Insumos
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
                         {
-                            //New
+                            //New ManejoMaterialesInsumos
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
-                                try
-                                {
-                                    _context.ManejoMaterialesInsumos.Add(
-                                                                            new ManejoMaterialesInsumos
-                                                                            {
-                                                                                UsuarioCreacion = pUsuarioCreacion,
-                                                                                Eliminado = false,
-                                                                                FechaCreacion = DateTime.Now,
-                                                                                RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo)
-                                                                            });
-                                    _context.SaveChanges();
-
-                                }
-                                catch (Exception e)
-                                {
-
-
-                                }
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId;
+                                ManejoMaterialesInsumos manejoMaterialesInsumosNew =
+                                                                        new ManejoMaterialesInsumos
+                                                                        {
+                                                                            UsuarioCreacion = pUsuarioCreacion,
+                                                                            Eliminado = false,
+                                                                            FechaCreacion = DateTime.Now,
+                                                                            RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo)
+                                                                        };
+                                _context.ManejoMaterialesInsumos.Add(manejoMaterialesInsumosNew);
+                                _context.SaveChanges();
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = manejoMaterialesInsumosNew.ManejoMaterialesInsumosId;
                             }
                             //Update
                             else
@@ -1600,22 +1608,27 @@ namespace asivamosffie.services
                         //Manejo Residuos Construccion Demolicion
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null)
                         {
+                            int idManejoResiduosConstruccionDemolicion = 0;
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+                                ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
 
-                                _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+                                new ManejoResiduosConstruccionDemolicion
+                                {
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion),
+                                };
+                                _context.ManejoResiduosConstruccionDemolicion.Add(manejoResiduosConstruccionDemolicion);
                                 _context.SaveChanges();
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
-
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+                                idManejoResiduosConstruccionDemolicion = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
                             }
                             else
                             {
                                 ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicionOld = _context.ManejoResiduosConstruccionDemolicion.Find(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId);
-
+                                idManejoResiduosConstruccionDemolicion = manejoResiduosConstruccionDemolicionOld.ManejoResiduosConstruccionDemolicionId;
                                 manejoResiduosConstruccionDemolicionOld.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
                                 manejoResiduosConstruccionDemolicionOld.UsuarioModificacion = pUsuarioCreacion;
                                 manejoResiduosConstruccionDemolicionOld.FechaModificacion = DateTime.Now;
@@ -1634,7 +1647,7 @@ namespace asivamosffie.services
 
                                 if (ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId == 0)
                                 {
-                                    ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+                                    ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionId = idManejoResiduosConstruccionDemolicion;
                                     ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                                     ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                                     ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -1662,15 +1675,18 @@ namespace asivamosffie.services
                         {
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RegistroCompleto = ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
+                                ManejoResiduosPeligrososEspeciales manejoResiduosPeligrososEspeciales = new ManejoResiduosPeligrososEspeciales
+                                {
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales)
+                                };
 
-                                _context.ManejoResiduosPeligrososEspeciales.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
+                                _context.ManejoResiduosPeligrososEspeciales.Add(manejoResiduosPeligrososEspeciales);
                                 _context.SaveChanges();
 
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId;
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = manejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId;
                             }
                             else
                             {
@@ -1692,14 +1708,16 @@ namespace asivamosffie.services
                         {
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoOtro.ManejoOtroId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto = ValidarRegistroCompletoManejoOtro(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
-
-                                _context.ManejoOtro.Add(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
+                                ManejoOtro manejoOtro = new ManejoOtro
+                                {
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoOtro(SeguimientoSemanalGestionObraAmbiental.ManejoOtro)
+                                };
+                                _context.ManejoOtro.Add(manejoOtro);
                                 _context.SaveChanges();
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.ManejoOtroId;
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = manejoOtro.ManejoOtroId;
                             }
                             else
                             {
@@ -1714,7 +1732,6 @@ namespace asivamosffie.services
                                 manejoOtroOld.UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion;
                             }
                         }
-
 
                         //Validar Registro Completo
                         SeguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
