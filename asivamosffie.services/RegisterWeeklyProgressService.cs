@@ -1117,7 +1117,7 @@ namespace asivamosffie.services
                     }
                 }
 
-                bool RegistroCompletoMuestras = pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra.Any(r => r.RegistroCompleto == false);
+                bool RegistroCompletoMuestras = pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra.Any(r => r.RegistroCompleto == false && r.Eliminado != false);
                 //Actualizar estado ensayo laboratorio
                 GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld =
                     _context.GestionObraCalidadEnsayoLaboratorio
