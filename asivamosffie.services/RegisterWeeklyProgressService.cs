@@ -513,9 +513,9 @@ namespace asivamosffie.services
                     if (RegistroCompletoMuestrasValidar == null)
                         RegistroCompletoMuestrasValidar = false;
 
-                    bool? verDetalleEditar = item.SeguimientoSemanalGestionObra.FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault()?.SeRealizaronEnsayosLaboratorio;
+                    bool? verDetalleEditar = !item.SeguimientoSemanalGestionObra.FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault()?.SeRealizaronEnsayosLaboratorio;
 
-                    if (verDetalleEditar == true)
+                    if (verDetalleEditar == false)
                         verDetalleEditar = item.RegistroCompletoMuestras.HasValue ? !item.RegistroCompletoMuestras : false;
 
                     ListBitaCora.Add(new
