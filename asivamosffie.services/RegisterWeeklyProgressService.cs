@@ -1300,6 +1300,11 @@ namespace asivamosffie.services
                         ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
                             new ManejoResiduosConstruccionDemolicion
                             {
+                                EstaCuantificadoRcd = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd,
+                                RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RequiereObservacion,
+                                Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
+                                SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
+                                CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
                                 UsuarioCreacion = pUsuarioCreacion,
                                 Eliminado = false,
                                 FechaCreacion = DateTime.Now,
@@ -1556,6 +1561,10 @@ namespace asivamosffie.services
                                 ManejoMaterialesInsumos manejoMaterialesInsumosNew =
                                                                         new ManejoMaterialesInsumos
                                                                         {
+                                                                            EstanProtegidosDemarcadosMateriales = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales,
+                                                                            RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RequiereObservacion,
+                                                                            Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Observacion,
+                                                                            Url = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Url,
                                                                             UsuarioCreacion = pUsuarioCreacion,
                                                                             Eliminado = false,
                                                                             FechaCreacion = DateTime.Now,
@@ -1620,7 +1629,7 @@ namespace asivamosffie.services
                                     Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
                                     SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
                                     CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
-                                     
+
                                     UsuarioCreacion = pUsuarioCreacion,
                                     Eliminado = false,
                                     FechaCreacion = DateTime.Now,
@@ -1644,7 +1653,7 @@ namespace asivamosffie.services
                                 manejoResiduosConstruccionDemolicionOld.Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion;
                                 manejoResiduosConstruccionDemolicionOld.SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos;
                                 manejoResiduosConstruccionDemolicionOld.CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas;
- 
+
                             }
 
                             foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
@@ -2198,11 +2207,12 @@ namespace asivamosffie.services
             if (seguimientoSemanalGestionObraSeguridadSalud == null)
                 return false;
 
-            if (seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes == 0)
-                return true;
+            if (seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes > 0)
+                if (seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0)
+                    return false;
 
             if (!seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes.HasValue
-                || seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0
+
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoCapacitacion.HasValue
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionElementosProteccion.HasValue
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionSenalizacion.HasValue
