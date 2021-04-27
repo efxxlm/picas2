@@ -473,7 +473,7 @@ namespace asivamosffie.services
                 int UltimaSemana = _context.SeguimientoSemanal.Count(s => s.ContratacionProyectoId == pContratacionProyectoId);
 
                 foreach (var item in ListseguimientoSemanal)
-                {  
+                {
                     decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
                     string strCodigoEstadoObra = string.Empty;
                     string strCodigoEstadoMuestas = string.Empty;
@@ -2099,11 +2099,15 @@ namespace asivamosffie.services
                     if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero?.FirstOrDefault().RegistroCompleto == false)
                         return false;
                 }
+                //Si tiene flujo Inversion no tiene actividades
+                if (pSeguimientoSemanal.FlujoInversion.Count() > 0)
+                {
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() == 0)
+                        return false;
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault().RegistroCompleto == false)
+                        return false;
+                }
 
-                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() == 0)
-                    return false;
-                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault().RegistroCompleto == false)
-                    return false;
 
                 if (pSeguimientoSemanal?.SeguimientoSemanalGestionObra.Count() == 0)
                     return false;
