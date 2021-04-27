@@ -1135,8 +1135,10 @@ namespace asivamosffie.services
                 seguimientoSemanalOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
-                seguimientoSemanalOld.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Validado_Supervisor;
-                 
+
+                if (RegistroCompletoMuestras)
+                    seguimientoSemanalOld.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Validado_Supervisor;
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
