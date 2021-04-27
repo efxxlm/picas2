@@ -1004,17 +1004,17 @@ namespace asivamosffie.services
                     seguimientoSemanalMod.RegistroCompletoAvalar = false;
                     seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = ConstanCodigoEstadoSeguimientoSemanal.Devuelto_Supervisor;
 
-                    List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion =
-                                            _context.SeguimientoSemanalObservacion
-                                            .Where(r => r.SeguimientoSemanalId == seguimientoSemanalMod.SeguimientoSemanalId)
-                                                                                                        .ToList();
+                    //List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion =
+                    //                        _context.SeguimientoSemanalObservacion
+                    //                        .Where(r => r.SeguimientoSemanalId == seguimientoSemanalMod.SeguimientoSemanalId)
+                    //                                                                                    .ToList();
 
-                    ListSeguimientoSemanalObservacion.ForEach(s =>
-                    {
-                        s.Archivada = true;
-                        s.FechaModificacion = DateTime.Now;
-                        s.UsuarioModificacion = pUsuarioMod;
-                    });
+                    //ListSeguimientoSemanalObservacion.ForEach(s =>
+                    //{
+                    //    s.Archivada = true;
+                    //    s.FechaModificacion = DateTime.Now;
+                    //    s.UsuarioModificacion = pUsuarioMod;
+                    //});
                 }
 
                 string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
