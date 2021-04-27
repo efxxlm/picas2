@@ -450,12 +450,22 @@ namespace asivamosffie.services
                      .Include(solicitud => solicitud.OrdenGiro)
                      .ThenInclude(detalle => detalle.OrdenGiroDetalle)
                      .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion).AsNoTracking().FirstOrDefaultAsync();
+                var ordenGiro = solicitud?.OrdenGiro;
                 var valorNeto = solicitud?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
 
                 if (solicitud == null || valorNeto == null)
                 {
                     errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, no tiene una Solicitud de Pago válida"));
                 }
+                else
+                {
+                    var processed = _context.OrdenGiroPago.Any(x => x.OrdenGiroId == ordenGiro.OrdenGiroId);
+                    if (processed)
+                    {
+                        errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, ya tiene un pago registrado"));
+                    }
+                }
+
             }
 
             // #2
@@ -681,8 +691,8 @@ namespace asivamosffie.services
                 response.Data = jsonString;
                 response.Message = await SaveAuditAction(fileRequest.Username, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
-                                        GeneralCodes.OperacionExitosa,
-                                        actionMesage);
+                                        GeneralCodes.Error,
+                                         ex.SubstringValid(_500));
             }
 
             response.Data = filePath;
@@ -1255,7 +1265,7 @@ namespace asivamosffie.services
                     FinancialLienProvision = uploadedOrder.FinancialLienProvision,
                     BankCharges = uploadedOrder.BankCharges,
                     DiscountedCharge = uploadedOrder.DiscountedCharge,
-                    PerformancesToAdd = uploadedOrder.PerformancesToAdd
+                    PerformancesToAdd = item.RendimientoIncorporar
                 };
                 managedPerformances.Add(managedPerformanceOrder);
             }
