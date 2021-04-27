@@ -1832,7 +1832,7 @@ namespace asivamosffie.services
 
                         seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
 
-                        if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio != false)
+                        if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false)
                             EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId, pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId);
 
 

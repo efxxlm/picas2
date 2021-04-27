@@ -320,15 +320,15 @@ namespace asivamosffie.services
             {
                 foreach (var item in seguimientoSemanalGestionObraAmbiental)
                 {
-                    if (item.ManejoMaterialesInsumoId == 0
-                     && item.ManejoResiduosConstruccionDemolicionId == 0
-                     && item.ManejoResiduosPeligrososEspecialesId == 0
-                     && item.ManejoOtroId == 0)
-                    {
-                        if (item.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                    }
-                    else
+                    //if (item.ManejoMaterialesInsumoId == 0
+                    // && item.ManejoResiduosConstruccionDemolicionId == 0
+                    // && item.ManejoResiduosPeligrososEspecialesId == 0
+                    // && item.ManejoOtroId == 0)
+                    //{
+                    //    if (item.RegistroCompletoObservacionSupervisor != true)
+                    //        return false;
+                    //}
+                    //else
                     {
                         if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
                             return false;
@@ -345,15 +345,15 @@ namespace asivamosffie.services
             {
                 foreach (var item in seguimientoSemanalGestionObraAmbiental)
                 {
-                    if (item.ManejoMaterialesInsumoId == 0
-                        && item.ManejoResiduosConstruccionDemolicionId == 0
-                        && item.ManejoResiduosPeligrososEspecialesId == 0
-                        && item.ManejoOtroId == 0)
-                    {
-                        if (item.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                    }
-                    else
+                    //if (item.ManejoMaterialesInsumoId == 0
+                    //    && item.ManejoResiduosConstruccionDemolicionId == 0
+                    //    && item.ManejoResiduosPeligrososEspecialesId == 0
+                    //    && item.ManejoOtroId == 0)
+                    //{
+                    //    if (item.RegistroCompletoObservacionApoyo != true)
+                    //        return false;
+                    //}
+                    //else
                     {
                         if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
                             return false;
