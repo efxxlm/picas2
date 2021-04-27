@@ -124,8 +124,8 @@
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="faseContrato" required>
-                                        <mat-option *ngFor="let fase of fasesArray" [value]="fase">
+                                    <mat-select multiple formControlName="faseContrato" required (ngModelChange)="getValueFase( $event )">
+                                        <mat-option *ngFor="let fase of fasesArray" [value]="fase.codigo">
                                             {{ fase.nombre }}
                                         </mat-option>
                                     </mat-select>

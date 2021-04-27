@@ -33,35 +33,34 @@ export class GestionDeObraComponent implements OnInit {
             // Semaforo Calidad
             let sinDiligenciar = 0;
             let enProceso = 0;
+
             if ( seguimientoSemanalObra.seguimientoSemanalGestionObraCalidad.length > 0 ) {
                 const gestionCalidad = seguimientoSemanalObra.seguimientoSemanalGestionObraCalidad[0];
-                for ( const ensayo of  gestionCalidad.gestionObraCalidadEnsayoLaboratorio ) {
-                    if ( ensayo.registroCompletoMuestras === false ) {
-                        enProceso++;
-                    }
-                    if ( ensayo.registroCompletoMuestras === undefined ) {
-                        sinDiligenciar++;
-                    }
-                }
 
-                if ( sinDiligenciar > 0 && ( sinDiligenciar === seguimientoSemanalObra.seguimientoSemanalGestionObraCalidad.length ) ) {
-                    this.semaforoCalidad = 'sin-diligenciar';
-                }
-
-                if ( enProceso > 0 && ( enProceso < seguimientoSemanalObra.seguimientoSemanalGestionObraCalidad.length ) ) {
-                    this.semaforoCalidad = 'en-proceso';
-                }
-                if ( enProceso === 0 && sinDiligenciar === 0 ) {
-                  this.semaforoCalidad = '';
+                if ( gestionCalidad.seRealizaronEnsayosLaboratorio === true ) {
+                    for ( const ensayo of  gestionCalidad.gestionObraCalidadEnsayoLaboratorio ) {
+                        if ( ensayo.registroCompletoMuestras === undefined ) {
+                            sinDiligenciar++;
+                        }
+                        if ( ensayo.registroCompletoMuestras === false ) {
+                            enProceso++;
+                        }
+                    }
+    
+                    if ( sinDiligenciar > 0 && sinDiligenciar === gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length ) {
+                        this.semaforoCalidad = 'sin-diligenciar';
+                    }
+    
+                    if ( enProceso > 0 && enProceso < gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length ) {
+                        this.semaforoCalidad = 'en-proceso';
+                    }
+                    if ( enProceso === 0 && sinDiligenciar === 0 ) {
+                      this.semaforoCalidad = '';
+                    }
+                } else {
+                    this.semaforoCalidad = '';
                 }
                 this.estadoSemaforoGestionObra.emit( this.semaforoCalidad );
-                
-                // if ( gestionCalidad.seRealizaronEnsayosLaboratorio !== undefined && gestionCalidad.registroCompleto === false ) {
-                //     this.semaforoCalidad = 'en-proceso';
-                // }
-                // if ( gestionCalidad.registroCompleto === true ) {
-                //     this.semaforoCalidad = 'completo';
-                // }
             }
         }
         if ( this.esVerDetalle === false ) {

@@ -83,6 +83,15 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
+        this.getRegistroFase();
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    getRegistroFase() {
         this.commonSvc.listaFases()
             .subscribe(
                 response => {
@@ -223,12 +232,13 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     this.dataSource.sort = this.sort;
                 }
             );
-    };
+    }
 
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    };
+    getValueFase( listFaseCodigo: Dominio[] ) {
+        const listaFase = [ ...listFaseCodigo ];
+
+        console.log( listaFase );
+    }
 
     enabledAcordeonFase( registroCompleto: boolean, esPreconstruccion?: boolean ) {
 
