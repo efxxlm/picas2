@@ -33,6 +33,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     solicitudPagoFaseFactura: any;
     solicitudPagoFase: any;
     estaEditando = false;
+
     get descuentos() {
         return this.formDescuentos.get('descuentos') as FormArray;
     }
@@ -246,8 +247,8 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     crearFormulario() {
         this.formDescuentos = this.fb.group({
             aplicaDescuento: [null],
-            numeroDescuentos: [''],
-            valorAPagarDespues: [{ value: null, disabled: true }],
+            numeroDescuentos: [ '' ],
+            valorAPagarDespues: [ { value: null, disabled: true } ],
             descuentos: this.fb.array([])
         });
     }

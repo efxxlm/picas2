@@ -171,7 +171,7 @@
             </button>
         </div>
     </form>
-    <div *ngIf="addressForm.get( 'faseContrato' ).value !== null && addressForm.get( 'faseContrato' ).value.codigo === faseContrato.preConstruccion">
+    <div *ngIf="tienePreconstruccion === true">
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -189,6 +189,7 @@
                         </mat-expansion-panel-header>
                         <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
                                                     [contratacionProyectoId]="contratacionProyectoId"
+                                                    [listaMenusId]="listaMenusId"
                                                     [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
                                                     [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
                                                     [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
@@ -233,7 +234,7 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <div *ngIf="addressForm.get( 'faseContrato' ).value !== null && addressForm.get( 'faseContrato' ).value.codigo === faseContrato.construccion">
+    <div *ngIf="tieneConstruccion === true">
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -292,6 +293,7 @@
                                                                     [listaMenusId]="listaMenusId"
                                                                     [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
                                                                     [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                                    [esPreconstruccion]="false"
                                                                     *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"
                                                                     (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriteriosProyecto = $event">
                         </app-detalle-factura-proyectos-asociados>
@@ -309,6 +311,7 @@
                                                                 [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
                                                                 [listaMenusId]="listaMenusId"
                                                                 [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+                                                                [esPreconstruccion]="false"
                                                                 *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"
                                                                 (semaforoObservacion)="estadoSemaforosObservaciones.observacionDatosFactura = $event">
                         </app-datos-factura-construccion-rvrp>

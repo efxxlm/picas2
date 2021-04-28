@@ -20,13 +20,19 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     @Input() datosFacturaCodigo: string;
     @Input() listaMenusId: any;
     @Input() tieneObservacionOrdenGiro: boolean;
+    @Input() esPreconstruccion = true;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
-        fechaFactura: [null, Validators.required]
+        fechaFactura: [null, Validators.required],
+        numeroDescuentos: [ '' ],
+        valorAPagarDespues: [ { value: null, disabled: true } ],
+        aplicaDescuento: [ null ],
+        descuentos: this.fb.array( [] )
     });
     valorFacturado = 0;
     tiposDescuentoArray: Dominio[] = [];
+    listaTipoDescuento: Dominio[] = [];
     solicitudPagoFaseFacturaDescuento: any[] = [];
     solicitudPagoFaseFacturaId = 0;
     solicitudPagoFaseFactura: any;
@@ -37,6 +43,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     estaEditando = false;
     minDate = new Date();
 
+    get descuentos() {
+        return this.addressForm.get('descuentos') as FormArray;
+    }
+
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -45,8 +55,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
-        this.commonSvc.tiposDescuento()
-            .subscribe( response => this.tiposDescuentoArray = response );
     }
     ngOnChanges(changes: SimpleChanges): void {
         if ( this.esVerDetalle === false ) {
@@ -60,7 +68,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
         this.getDatosFactura();
     }
 
-    getDatosFactura() {
+    async getDatosFactura() {
+        this.tiposDescuentoArray = await this.commonSvc.tiposDescuento().toPromise();
+        this.listaTipoDescuento = [ ...this.tiposDescuentoArray ];
+
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
         if ( this.solicitudPagoFaseFactura !== undefined ) {
@@ -136,6 +147,86 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
         if ( isNaN( Number( value ) ) === true ) {
             this.addressForm.get( 'numeroDescuentos' ).setValue( '' );
         }
+    }
+
+    totalPagoDescuentos() {
+        let totalDescuentos = 0;
+        let valorDespuesDescuentos = 0;
+        this.descuentos.controls.forEach(control => {
+            if (control.value.valorDescuento !== null) {
+                totalDescuentos += control.value.valorDescuento;
+            }
+        });
+        if (totalDescuentos > 0) {
+            if (totalDescuentos > this.valorFacturado) {
+                this.openDialog('', '<b>El valor total de los descuentos es mayor al valor facturado.</b>');
+                this.addressForm.get('valorAPagarDespues').setValue(null);
+                return;
+            } else {
+                valorDespuesDescuentos = this.valorFacturado - totalDescuentos;
+                this.addressForm.get('valorAPagarDespues').setValue(valorDespuesDescuentos);
+                return;
+            }
+        } else {
+            this.addressForm.get('valorAPagarDespues').setValue(null);
+            return;
+        }
+    }
+
+    addDescuento() {
+        if ( this.tiposDescuentoArray.length > 0 ) {
+            this.descuentos.push(
+                this.fb.group(
+                    {
+                        solicitudPagoFaseFacturaDescuentoId: [0],
+                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        tipoDescuentoCodigo: [null],
+                        valorDescuento: [null]
+                    }
+                )
+            );
+            this.addressForm.get( 'numeroDescuentos' ).setValidators( Validators.min( this.descuentos.length ) );
+            this.addressForm.get( 'numeroDescuentos' ).setValue( String( this.descuentos.length ) );
+        } else {
+            this.openDialog( '', '<b>No tiene parametrizados más descuentos para aplicar al pago.</b>' )
+        }
+    }
+
+    deleteDescuento(index: number, descuentoId: number) {
+        this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>')
+            .subscribe(
+                response => {
+                    if (response === true) {
+                        if (descuentoId === 0) {
+                            const codigo: string = this.descuentos.controls[ index ].get( 'tipoDescuentoCodigo' ).value;
+                            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+                            if ( descuento !== undefined ) {
+                                this.tiposDescuentoArray.push( descuento );
+                            }
+
+                            this.descuentos.removeAt(index);
+                            this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.descuentos.length }` );
+                            this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+                        } else {
+                            this.registrarPagosSvc.deleteSolicitudPagoFaseFacturaDescuento(descuentoId)
+                                .subscribe(
+                                    () => {
+                                        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+                                        this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
+                                            () => this.routes.navigate(
+                                                [
+                                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                                ]
+                                            )
+                                        );
+                                    },
+                                    err => this.openDialog('', `<b>${err.message}</b>`)
+                                );
+                        }
+                    }
+                }
+            );
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {

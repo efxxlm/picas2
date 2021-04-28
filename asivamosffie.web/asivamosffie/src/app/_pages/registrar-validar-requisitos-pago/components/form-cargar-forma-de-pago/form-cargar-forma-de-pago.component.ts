@@ -94,7 +94,6 @@ export class FormCargarFormaDePagoComponent implements OnInit {
 
                 if (this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined) {
                     const formaConstruccionSeleccionada = this.formaPagoArrayConstruccion.find(forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo);
-                    console.log( formaConstruccionSeleccionada )
 
                     this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada !== undefined ? formaConstruccionSeleccionada : null);
                     if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {

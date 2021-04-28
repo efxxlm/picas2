@@ -21,6 +21,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
     @Input() amortizacionAnticipoCodigo: string;
     @Input() tieneObservacionOrdenGiro: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
+    esPreconstruccion = false;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
     valorTotalDelContrato = 0;

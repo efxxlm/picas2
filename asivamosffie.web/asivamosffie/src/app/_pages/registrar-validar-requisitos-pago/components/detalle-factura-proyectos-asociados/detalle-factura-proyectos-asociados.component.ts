@@ -24,6 +24,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() criteriosPagoProyectoCodigo: string;
     @Input() tieneObservacionOrdenGiro: boolean;
+    @Input() esPreconstruccion = true;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     esAutorizar: boolean;
     observacion: any;
@@ -82,8 +83,29 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     getProyectos() {
         if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
-            this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+            const solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+
+            if ( this.esPreconstruccion === true ) {
+                if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                            this.solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
+                        }
+                    }
+                }
+            }
+
+            if ( this.esPreconstruccion === false ) {
+                if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                            this.solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
+                        }
+                    }
+                }
+            }
 
             if ( this.solicitudPagoFase.esPreconstruccion === true ) {
                 this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo )

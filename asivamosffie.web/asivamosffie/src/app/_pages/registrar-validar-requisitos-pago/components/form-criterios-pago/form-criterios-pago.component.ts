@@ -80,7 +80,15 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
                                     this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
-                                    this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+
+                                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                                this.solicitudPagoFase = solicitudPagoFase;
+                                            }
+                                        }
+                                    }
+
                                     this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
                                     if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
@@ -213,7 +221,15 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
                                     this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
-                                    this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+
+                                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                                this.solicitudPagoFase = solicitudPagoFase;
+                                            }
+                                        }
+                                    }
+
                                     this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
                                     if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
