@@ -1062,6 +1062,7 @@ namespace asivamosffie.services
             }
 
         }
+   
         public Respuesta CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
         { 
             try
@@ -1159,16 +1160,7 @@ namespace asivamosffie.services
                 return new Respuesta();
             }
         }
-
-        private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
-        {
-            return _context.SeguimientoSemanalObservacion
-                                             .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
-                                                 && r.EsSupervisor == esSupervisor
-                                                 && r.TieneObservacion == true
-                                             ).Count() == 0;
-        }
-
+         
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
         {
             SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlertaOld = _context.SeguimientoSemanalGestionObraAlerta.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
@@ -1178,8 +1170,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = false;
-                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = false;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = null;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1207,8 +1199,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = false;
-                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = false;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = null;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1235,8 +1227,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = false;
-                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = false;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = null;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1262,8 +1254,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = false;
-                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = false;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = null;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1289,8 +1281,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = false;
-                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = false;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = null;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1318,13 +1310,13 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = null;
 
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = null;
             }
 
 
@@ -1354,13 +1346,13 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = null;
 
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1389,13 +1381,13 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = null;
 
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = null;
             }
             if (pSeguimientoSemanalObservacion.EsSupervisor)
             {
@@ -1423,13 +1415,13 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = null;
 
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
-                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = null;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = null;
             }
 
             //if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1454,8 +1446,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = false;
-                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = false;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = null;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1483,8 +1475,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = false;
-                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = false;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = null;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1511,8 +1503,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = false;
-                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = false;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = null;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1539,8 +1531,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                manejoOtroOld.RegistroCompletoObservacionApoyo = false;
-                manejoOtroOld.RegistroCompletoObservacionSupervisor = false;
+                manejoOtroOld.RegistroCompletoObservacionApoyo = null;
+                manejoOtroOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1567,8 +1559,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = false;
-                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = false;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = null;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
@@ -1595,8 +1587,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = false;
-                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = false;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = null;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = null;
             }
 
 
@@ -1625,8 +1617,8 @@ namespace asivamosffie.services
 
             if (pEliminarRegistrCompleto)
             {
-                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = false;
-                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = false;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = null;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = null;
             }
 
             if (pSeguimientoSemanalObservacion.EsSupervisor)
