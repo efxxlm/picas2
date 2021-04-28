@@ -918,7 +918,7 @@ namespace asivamosffie.services
                             seguimientoSemanal.TieneObservacionApoyo = ValidarSiTieneObservacionSeguimientoSemanal(pSeguimientoSemanalObservacion.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
                             seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;
                         }
-                    } 
+                    }
                     UpdateObservation(pSeguimientoSemanalObservacion);
                 }
                 switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
@@ -1038,7 +1038,8 @@ namespace asivamosffie.services
                                              .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
                                                  && r.EsSupervisor == esSupervisor
                                                  && r.TieneObservacion == true
-                                             ).Count() == 0;
+                                                 && r.Archivada != true
+                                             ).Count() > 0;
         }
 
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
