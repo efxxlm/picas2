@@ -101,7 +101,7 @@
               {{ novedad.instanciaNombre }}
             </span>
           </p>
-          <p>
+          <p *ngIf="novedad.instanciaNombre !== 'No aplica'">
             <strong>
               Fecha de la sesión de la instancia :
             </strong>
@@ -145,10 +145,24 @@
               <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{
                 descripcion.plazoAdicionalDias }}</p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de
-                  inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha
-                  final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+                <strong>
+                  Fecha de inicio de la
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '1'">suspensión</span>
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '2'">Prórroga a las Suspensión</span>
+                  :</strong
+                >
+                {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+                <strong>
+                  Fecha final de la
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '1'">suspensión</span>
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '2'">Prórroga a las Suspensión</span>
+                  :
+                </strong>
+                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
+              </p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'"><strong>Presupuesto adicional solicitado: </strong> {{
                 descripcion.presupuestoAdicionalSolicitado }} </p>

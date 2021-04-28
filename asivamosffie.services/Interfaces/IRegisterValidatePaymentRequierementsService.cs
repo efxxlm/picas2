@@ -54,5 +54,9 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId);
 
         Task<dynamic> GetProyectosByIdContrato(int pContratoId);
+        
+        SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago);
+
+        List<TablaDRP> GetDrpContrato(Contrato contrato);
     }
 }

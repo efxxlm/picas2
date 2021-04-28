@@ -8,11 +8,9 @@ export interface OrdenDelDia {
   fecha: string;
   numero: string;
   tipo: string;
+  esNovedad: boolean;
+  novedadId: number;
 }
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', tipo: 'Sin acta' }
-];
 
 @Component({
   selector: 'app-tabla-con-disponibilidad-cancelada',
@@ -22,7 +20,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 export class TablaConDisponibilidadCanceladaComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
   @Input()disponibilidadPresupuestal: any;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -39,7 +37,8 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
-        tipo:element.tipoSolicitud})
+        tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
+        novedadId: element.novedadContractualRegistroPresupuestalId})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;

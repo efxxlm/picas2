@@ -448,7 +448,7 @@
       <mat-card-content class="mt-1em">
         <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === true"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: Si</p>
         <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === false"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: No</p>
-        <p><b>Cantidad de ensayos de laboratorio realizados en la semana</b>: {{ gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length }} </p>
+        <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === true"><b>Cantidad de ensayos de laboratorio realizados en la semana</b>: {{ gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length }} </p>
       </mat-card-content>
     </mat-card>
   </div>
@@ -476,7 +476,7 @@
                 </section>
                 <p *ngIf="ensayo.urlSoporteGestion !== undefined"><b>URL con soporte de la gestión de calidad</b>: {{ ensayo.urlSoporteGestion }}</p>
                 <div class="d-flex justify-content-center mt-1em">
-                  <div *ngIf="ensayo.registroCompletoMuestras === false">
+                  <div *ngIf="ensayo.registroCompletoMuestras === false || ensayo.registroCompletoMuestras === undefined">
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"

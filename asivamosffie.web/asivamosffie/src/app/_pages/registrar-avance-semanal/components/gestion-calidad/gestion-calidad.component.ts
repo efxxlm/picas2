@@ -71,17 +71,13 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if ( this.seRealizoPeticion === false ) {
             if ( this.ensayosLaboratorio.dirty === true ) {
-                console.log( 'test 1' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
             } else {
-                console.log( 'test - 2' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
             if ( this.formGestionCalidad.dirty === true ) {
-                console.log( 'test 3' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( this.guardadoParcial(), this.seRealizoPeticion )
             } else {
-                console.log( 'test - 4' )
                 this.guardadoParcialAvanceSemanalSvc.getDataGestionCalidad( undefined )
             }
         } else {
@@ -160,9 +156,9 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                             this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.SeguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
                                 .subscribe(
                                     response => {
-                                        this.obsApoyo  = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
-                                        this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
-                                        this.dataHistorial = response;
+                                        this.obsApoyo  = response.find( obs => obs.archivada === false && obs.esSupervisor === false && obs.tieneObservacion === true );
+                                        this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true && obs.tieneObservacion === true );
+                                        this.dataHistorial = response.filter( obs => obs.tieneObservacion === true );
 
                                         if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
                                             this.tieneObservacion.emit();
@@ -216,9 +212,9 @@ export class GestionCalidadComponent implements OnInit, OnDestroy {
                             }
                             if ( this.esVerDetalle === false ) {
                                 const response = await this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio ).toPromise();
-                                obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
-                                obsSupervisor = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
-                                historial = response;
+                                obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false && obs.tieneObservacion === true );
+                                obsSupervisor = response.find( obs => obs.archivada === false && obs.esSupervisor === true && obs.tieneObservacion === true );
+                                historial = response.filter( obs => obs.tieneObservacion === true );
 
                                 if ( obsApoyo !== undefined || obsSupervisor !== undefined ) {
                                     semaforoEnsayo = 'en-proceso';

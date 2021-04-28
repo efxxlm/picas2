@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { BtnRegistrarComponent } from './components/btn-registrar/btn-registrar.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
 import { ControlDeRecursosComponent } from './components/control-de-recursos/control-de-recursos.component';
+import { SaldosYRendimientosComponent } from './components/saldos-y-rendimientos/saldos-y-rendimientos.component';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
  
 export const customCurrencyMaskConfig = {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'controlRecursos/:idFuente/:idControl',
     component: ControlDeRecursosComponent
+  },
+  {
+    path: 'verSaldosyRendimientos/:idFuente/:idControl',
+    component: SaldosYRendimientosComponent
   }
 ];
 

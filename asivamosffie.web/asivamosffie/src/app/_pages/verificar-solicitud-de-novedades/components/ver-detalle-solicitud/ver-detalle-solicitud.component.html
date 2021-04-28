@@ -129,7 +129,7 @@
               {{ novedad.instanciaNombre }}
             </span>
           </p>
-          <p>
+          <p *ngIf="novedad.instanciaNombre !== 'No aplica'">
             <strong>
               Fecha de la sesión de la instancia :
             </strong>

@@ -83,7 +83,7 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf=" estadoAvanceSemanal !== undefined && element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === false && element.estadoSeguimientoSemanalCodigo === estadoAvanceSemanal.enviadoPorVerificacion.codigo"
+                        *ngIf="estadoAvanceSemanal !== undefined && element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === false && element.estadoSeguimientoSemanalCodigo === estadoAvanceSemanal.enviadoPorVerificacion.codigo"
                         (click)="enviarVerificacion( element.seguimientoSemanalId )">
                         Aprobar avance
                 </button>

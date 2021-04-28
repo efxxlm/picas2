@@ -199,7 +199,10 @@
                     (addressForm.get('fechaInicio').invalid && estaEditando)
                   "
                 >
-                  Fecha de inicio de la suspensión
+                  Fecha de inicio de la
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">suspensión</span>
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">prórroga a la auspensión</span>
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">reinicio</span>
                 </label>
               </div>
               <div class="col d-flex">
@@ -262,7 +265,10 @@
                   (addressForm.get('fechaFinal').invalid && estaEditando)
                 "
               >
-                Fecha final de la suspensión
+                Fecha final de la
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">suspensión</span>
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">prórroga a la auspensión</span>
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">reinicio</span>
               </label>
             </div>
             <div class="col d-flex">
@@ -559,7 +565,7 @@
                     }}
                   </span>
                   <span class="contador miles mt-3em" *ngIf="!clausula.get('clausulaModificar').value"> 1000 </span>
-                  <span class="icon-incompleto">
+                  <span class="icon-incompleto mt-3em">
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
@@ -568,9 +574,8 @@
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('clausulaModificar')?.invalid &&
-                          addressForm.get('clausulaModificar')?.touched) ||
-                        (addressForm.get('clausulaModificar')?.invalid && estaEditando)
+                        (clausula.get('clausulaModificar').invalid && clausula.get('clausulaModificar').touched) ||
+                        (clausula.get('clausulaModificar').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -621,7 +626,7 @@
                   <span class="contador miles mt-3em" *ngIf="!clausula.get('ajusteSolicitadoClausula').value">
                     1000
                   </span>
-                  <span class="icon-incompleto">
+                  <span class="icon-incompleto mt-3em">
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
@@ -650,7 +655,7 @@
               *ngIf="clausulaField.controls.length > 1"
             >
               <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
-              Eliminar tema
+              Eliminar Cláusula
             </button>
             <button
               mat-button

@@ -24,6 +24,45 @@ namespace asivamosffie.api.Controllers
         {
             _finalBalanceService = finalBalanceService;
             _settings = settings;
-        } 
+        }
+
+        [HttpGet]
+        [Route("GridBalance")]
+        public async Task<IActionResult> GridBalance()
+        {
+            return Ok(await _finalBalanceService.GridBalance());
+        }
+
+        [HttpGet]
+        [Route("GetContratoByProyectoId")]
+        public async Task<IActionResult> GetContratoByProyectoId([FromQuery] int pProyectoId)
+        {
+            return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
+        }
+
+        [HttpPost]
+        [Route("CreateEditBalanceFinanciero")]
+        public async Task<IActionResult> CreateEditBalanceFinanciero([FromBody] BalanceFinanciero pBalanceFinanciero)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pBalanceFinanciero.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _finalBalanceService.CreateEditBalanceFinanciero(pBalanceFinanciero);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetBalanceFinanciero")]
+        public async Task<IActionResult> GetBalanceFinanciero([FromQuery] int pProyectoId)
+        {
+            return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
+        }
     }
 }

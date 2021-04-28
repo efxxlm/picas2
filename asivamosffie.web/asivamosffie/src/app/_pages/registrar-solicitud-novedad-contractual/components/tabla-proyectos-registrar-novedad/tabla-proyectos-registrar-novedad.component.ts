@@ -48,7 +48,7 @@ export class TablaProyectosRegistrarNovedadComponent implements AfterViewInit, O
     'llaveMen',
     'institucionEducativa',
     'sede',
-    'tipoIntervencion',
+    // 'tipoIntervencion',
     'proyectoId'
   ];
   dataSource = new MatTableDataSource();

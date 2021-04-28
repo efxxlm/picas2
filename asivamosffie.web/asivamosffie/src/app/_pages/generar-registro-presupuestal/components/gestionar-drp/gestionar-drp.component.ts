@@ -40,6 +40,9 @@ export class GestionarDrpComponent implements OnInit {
   dataSource = [];
   detailavailabilityBudget: any;
   listaComponentesUsoAportante:any[] = [];
+  esNovedad;
+  novedadId;
+
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute, private currencyPipe: CurrencyPipe,
     private router: Router, private sanitized: DomSanitizer,) { }
@@ -59,9 +62,12 @@ export class GestionarDrpComponent implements OnInit {
     let listaComponentesUsoAportante=[];
     let dataSource = [];
     const id = this.route.snapshot.paramMap.get('id');
+    this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, this.esNovedad, this.novedadId)
+        .subscribe(listas => {
 
         if (listas.length > 0) {
           this.detailavailabilityBudget = listas[0];
@@ -143,7 +149,8 @@ export class GestionarDrpComponent implements OnInit {
   }
 
   generardrp() {
-    this.disponibilidadServices.CreateDRP(this.detailavailabilityBudget.id).subscribe(listas => {
+    this.disponibilidadServices.CreateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId )
+      .subscribe(listas => {
       console.log(listas);
       //this.detailavailabilityBudget=listas;
       this.openDialog("", listas.message, true);

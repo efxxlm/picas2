@@ -19,7 +19,7 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     [Authorize]
     public class CheckWeeklyProgressController : Controller
-    { 
+    {
         private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -31,7 +31,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetValidarRegistroCompletoObservaciones")]
         [HttpGet]
-        public async Task<bool> GetValidarRegistroCompletoObservaciones([FromQuery] int pSeguimientoSemanalId , bool esSupervisor)
+        public async Task<bool> GetValidarRegistroCompletoObservaciones([FromQuery] int pSeguimientoSemanalId, bool esSupervisor)
         {
             return await _checkWeeklyProgressService.GetValidarRegistroCompletoObservaciones(pSeguimientoSemanalId, esSupervisor);
         }
@@ -44,7 +44,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pSeguimientoSemanalObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _checkWeeklyProgressService.CreateEditSeguimientoSemanalObservacion(pSeguimientoSemanalObservacion);
+                respuesta = await _checkWeeklyProgressService.CreateEditSeguimientoSemanalObservacion(pSeguimientoSemanalObservacion, false);
 
                 return Ok(respuesta);
             }
@@ -54,12 +54,12 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [Route("GetSeguimientoSemanalBySeguimientoSemanalId")]
         [HttpGet]
         public async Task<ActionResult<SeguimientoSemanal>> GetSeguimientoSemanalBySeguimientoSemanalId([FromQuery] int pSeguimientoSemanalId)
         {
-            return await _checkWeeklyProgressService.GetSeguimientoSemanalBySeguimientoSemanalId(pSeguimientoSemanalId); 
+            return await _checkWeeklyProgressService.GetSeguimientoSemanalBySeguimientoSemanalId(pSeguimientoSemanalId);
         }
 
         [Route("GetListReporteSemanal")]

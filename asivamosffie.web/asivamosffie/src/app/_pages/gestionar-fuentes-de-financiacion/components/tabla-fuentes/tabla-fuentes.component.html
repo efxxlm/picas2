@@ -75,6 +75,16 @@
           >
             Control de recursos
           </button>
+
+          <button
+            mat-raised-button
+            color="accent"
+            class="btn-table"
+            [disabled]="!element.registroCompleto"
+            (click)="verSaldosyRendimientos(element.fuenteFinanciacionId)"
+          >
+          Ver Saldos y Rendimientos
+          </button>
         </td>
       </ng-container>
 

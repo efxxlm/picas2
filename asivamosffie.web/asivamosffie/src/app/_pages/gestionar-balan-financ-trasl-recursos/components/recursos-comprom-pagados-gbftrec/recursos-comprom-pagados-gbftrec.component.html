@@ -2,7 +2,7 @@
     <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-                Contrato de obra N801801
+                Contrato de obra &nbsp;<span *ngIf="contratoObra">{{ contratoObra.numeroContrato }}</span>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-accordion>
@@ -12,7 +12,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -22,7 +22,7 @@
                         Contratistas
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-contratistas-gbftrec></app-contratistas-gbftrec>
+                <app-contratistas-gbftrec *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -32,14 +32,14 @@
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec *ngIf="contratoObra" [solicitudPago]="contratoObra.solicitudPago"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-                Contrato de interventoria A513513
+                Contrato de interventoria &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-accordion>
@@ -49,7 +49,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -59,7 +59,7 @@
                         Contratistas
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-contratistas-gbftrec></app-contratistas-gbftrec>
+                <app-contratistas-gbftrec *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -69,7 +69,7 @@
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec *ngIf="contratoInterventoria" [solicitudPago]="contratoInterventoria.solicitudPago"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>

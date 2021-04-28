@@ -74,7 +74,7 @@ export class GestionCalidadComponent implements OnInit {
         this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
-    getGestionCalidad() {
+    async getGestionCalidad() {
         if ( this.seguimientoSemanal !== undefined ) {
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
@@ -92,16 +92,20 @@ export class GestionCalidadComponent implements OnInit {
                             .subscribe(
                                 response => {
                                     const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                    if ( observacionApoyo[0].observacion !== undefined ) {
-                                        if ( observacionApoyo[0].observacion.length > 0 ) {
-                                            this.formGestionCalidad.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+
+                                    if ( observacionApoyo.length > 0 ) {
+                                        if ( observacionApoyo[0].observacion !== undefined ) {
+                                            if ( observacionApoyo[0].observacion.length > 0 ) {
+                                                this.formGestionCalidad.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                            }
                                         }
+                                        this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                        this.formGestionCalidad.get( 'tieneObservaciones' ).setValue( this.gestionObraCalidad.tieneObservacionApoyo );
+                                        this.formGestionCalidad.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                     }
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
-                                    this.formGestionCalidad.get( 'tieneObservaciones' ).setValue( this.gestionObraCalidad.tieneObservacionApoyo );
-                                    this.formGestionCalidad.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
                     }
@@ -123,33 +127,28 @@ export class GestionCalidadComponent implements OnInit {
                         if ( this.esVerDetalle === true ) {
                             estadoSemaforo = '';
                         }
-                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
-                            .subscribe(
-                                response => {
-                                    historial = response.filter( obs => obs.archivada === true );
-                                }
-                            );
-                        setTimeout(() => {
-                            this.ensayos.push( this.fb.group(
-                                {
-                                    estadoSemaforo,
-                                    tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
-                                    numeroMuestras: ensayo.numeroMuestras,
-                                    fechaTomaMuestras: ensayo.fechaTomaMuestras,
-                                    fechaEntregaResultados: ensayo.fechaEntregaResultados,
-                                    realizoControlMedicion: ensayo.realizoControlMedicion,
-                                    observacion: ensayo.observacion,
-                                    urlSoporteGestion: ensayo.urlSoporteGestion,
-                                    registroCompletoMuestras: ensayo.registroCompletoMuestras,
-                                    gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
-                                    tieneObservaciones: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
-                                    observacionEnsayo: [ observacionApoyo !== undefined ? ( observacionApoyo.observacion !== undefined ? ( observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null ) : null ) : null],
-                                    fechaCreacion: observacionApoyo !== undefined ? observacionApoyo.fechaCreacion : null,
-                                    seguimientoSemanalObservacionId: ensayo.observacionApoyoId !== undefined ? ensayo.observacionApoyoId : 0,
-                                    historial: [ historial ]
-                                }
-                            ) );
-                        }, 1500);
+                        const response = await this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio ).toPromise();
+                        historial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+
+                        this.ensayos.push( this.fb.group(
+                            {
+                                estadoSemaforo,
+                                tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
+                                numeroMuestras: ensayo.numeroMuestras,
+                                fechaTomaMuestras: ensayo.fechaTomaMuestras,
+                                fechaEntregaResultados: ensayo.fechaEntregaResultados,
+                                realizoControlMedicion: ensayo.realizoControlMedicion,
+                                observacion: ensayo.observacion,
+                                urlSoporteGestion: ensayo.urlSoporteGestion,
+                                registroCompletoMuestras: ensayo.registroCompletoMuestras,
+                                gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
+                                tieneObservaciones: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
+                                observacionEnsayo: [ observacionApoyo !== undefined ? ( observacionApoyo.observacion !== undefined ? ( observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null ) : null ) : null],
+                                fechaCreacion: observacionApoyo !== undefined ? observacionApoyo.fechaCreacion : null,
+                                seguimientoSemanalObservacionId: ensayo.observacionApoyoId !== undefined ? ensayo.observacionApoyoId : 0,
+                                historial: [ historial ]
+                            }
+                        ) );
                     }
                 }
             }

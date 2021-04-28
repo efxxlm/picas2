@@ -122,6 +122,10 @@ export class TablaFuentesComponent implements OnInit {
     this.router.navigate(['/gestionarFuentes/controlRecursos', e, 0]);
   }
 
+  verSaldosyRendimientos(e: number) {
+    this.router.navigate(['/gestionarFuentes/verSaldosyRendimientos', e, 0]);
+  }
+
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',

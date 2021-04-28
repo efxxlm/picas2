@@ -75,7 +75,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                             if ( response.length > 0 ) {
                                 this.observacionApoyoActividad = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const observacionSupervisorActividad = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 if ( observacionSupervisorActividad.length > 0 ) {
                                     if ( observacionSupervisorActividad[0].observacion !== undefined ) {
@@ -96,7 +96,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                             if ( response.length > 0 ) {
                                 this.observacionApoyoActividadSiguiente = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const observacionSupervisorActividadSiguiente = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
+                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
                                 if ( observacionSupervisorActividadSiguiente.length > 0 ) {
                                     if ( observacionSupervisorActividadSiguiente[0].observacion !== undefined ) {
@@ -154,7 +154,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             tieneObservacion: this.formActividadesRealizadas.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -162,7 +162,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanal.seguimientoSemanalId, 'True' )
                         .subscribe(
                             response => {
-                                console.log( response );
+
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
@@ -195,7 +195,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             tieneObservacion: this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

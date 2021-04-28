@@ -66,16 +66,20 @@ export class AvanceFinancieroComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsFinanciero = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsFinanciero[0].observacion !== undefined ) {
-                                    if ( obsFinanciero[0].observacion.length > 0 ) {
-                                        this.formAvanceFinanciero.get( 'observaciones' ).setValue( obsFinanciero[0].observacion );
+
+                                if ( obsFinanciero.length > 0 ) {
+                                    if ( obsFinanciero[0].observacion !== undefined ) {
+                                        if ( obsFinanciero[0].observacion.length > 0 ) {
+                                            this.formAvanceFinanciero.get( 'observaciones' ).setValue( obsFinanciero[0].observacion );
+                                        }
                                     }
+                                    this.seguimientoSemanalObservacionId = obsFinanciero[0].seguimientoSemanalObservacionId;
+                                    this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionApoyo );
+                                    this.formAvanceFinanciero.get( 'fechaCreacion' ).setValue( obsFinanciero[0].fechaCreacion );
                                 }
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+
+                                this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                this.seguimientoSemanalObservacionId = obsFinanciero[0].seguimientoSemanalObservacionId;
-                                this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionApoyo );
-                                this.formAvanceFinanciero.get( 'fechaCreacion' ).setValue( obsFinanciero[0].fechaCreacion );
                             }
                         )
                 }

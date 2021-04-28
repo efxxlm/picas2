@@ -12,7 +12,6 @@ namespace asivamosffie.model.Models
             ContratoInterventor = new HashSet<Contrato>();
             ContratoPolizaActualizacionRevisionAprobacionObservacion = new HashSet<ContratoPolizaActualizacionRevisionAprobacionObservacion>();
             ContratoSupervisor = new HashSet<Contrato>();
-            NovedadContractual = new HashSet<NovedadContractual>();
             PolizaObservacion = new HashSet<PolizaObservacion>();
             SesionComentario = new HashSet<SesionComentario>();
             SesionParticipante = new HashSet<SesionParticipante>();
@@ -61,7 +60,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<Contrato> ContratoInterventor { get; set; }
         public virtual ICollection<ContratoPolizaActualizacionRevisionAprobacionObservacion> ContratoPolizaActualizacionRevisionAprobacionObservacion { get; set; }
         public virtual ICollection<Contrato> ContratoSupervisor { get; set; }
-        public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<PolizaObservacion> PolizaObservacion { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }

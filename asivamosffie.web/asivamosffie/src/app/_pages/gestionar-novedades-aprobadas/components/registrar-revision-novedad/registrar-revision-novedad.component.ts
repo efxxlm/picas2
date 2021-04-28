@@ -50,15 +50,17 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
         this.nombreAbogadoPresentoSolicitudArray = respuesta;
       });
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.novedad) {
       this.addressForm.get('fechaEnvioGestionContractual').setValue(this.novedad.fechaEnvioGestionContractual)
       this.addressForm.get('estadoProcesoCodigo').setValue(this.novedad.estadoProcesoCodigo)
       this.addressForm.get('fechaAprobacionGestionContractual').setValue(this.novedad.fechaAprobacionGestionContractual)
-      this.addressForm.get('abogadoRevisionId').setValue(this.novedad.abogadoRevisionId.toString())
+      this.addressForm.get('abogadoRevisionId').setValue(this.novedad.abogadoRevisionId?.toString())
 
+      console.log(this.novedad.observacionTramite)
       if (this.novedad.observacionTramite) {
-        console.log(this.novedad.observacionTramite)
+        
         this.addressForm.get('novedadContractualObservacionesId').setValue(this.novedad.observacionTramite.novedadContractualObservacionesId);
         this.addressForm.get('observacionDevolver').setValue(this.novedad.observacionTramite.observaciones);
       }

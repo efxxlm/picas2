@@ -2,7 +2,7 @@ import { CommonService } from './../../../../core/_services/common/common.servic
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 
@@ -24,6 +24,7 @@ export class DialogCargarActaComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private matDialogRef: MatDialogRef<DialogCargarActaComponent>,
         @Inject(MAT_DIALOG_DATA) public data )
     {
         this.commonSvc.modalidadesContrato()
@@ -69,19 +70,23 @@ export class DialogCargarActaComponent implements OnInit {
         if ( this.data.registro.modalidadCodigo === this.listaModalidadCodigo.tipoA ) {
             const pContratacionProyecto = new FormData();
             pContratacionProyecto.append( 'rutaCargaActaTerminacionContrato', this.formCargarActa.get( 'rutaCargaActaTerminacionContrato' ).value );
+            pContratacionProyecto.append( 'contratacionProyectoId', this.data.registro.contratacionProyectoId );
             this.avanceSemanalSvc.uploadContractTerminationCertificate( pContratacionProyecto )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.matDialogRef.close();
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
         }
 
         if ( this.data.registro.modalidadCodigo === this.listaModalidadCodigo.tipoB ) {
             const inputNode: any = document.getElementById('file');
-            if ( this.formCargarActa.invalid === true || inputNode.files[0] === undefined ) {
+            if ( inputNode.files[0] === undefined ) {
                 return;
             }
-            console.log( inputNode.files[0] );
+
             if (inputNode.files[0].size > 1048576) {
                 this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
                 return;
@@ -95,7 +100,10 @@ export class DialogCargarActaComponent implements OnInit {
                 pContratacionProyecto.append( 'contratacionProyectoId', this.data.registro.contratacionProyectoId );
                 this.avanceSemanalSvc.uploadContractTerminationCertificate( pContratacionProyecto )
                     .subscribe(
-                        response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                        response => {
+                            this.openDialog( '', `<b>${ response.message }</b>` );
+                            this.matDialogRef.close();
+                        },
                         err => this.openDialog( '', `<b>${ err.message }</b>` )
                     );
             } else {

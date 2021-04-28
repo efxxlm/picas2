@@ -185,7 +185,7 @@ export class GestionAmbientalComponent implements OnInit {
                             response => {
                                 this.obsApoyoAmbiental = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorAmbiental = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
                                 if ( obsSupervisorAmbiental.length > 0 ) {
                                     if ( obsSupervisorAmbiental[0].observacion !== undefined ) {
@@ -211,7 +211,7 @@ export class GestionAmbientalComponent implements OnInit {
                                 this.obsApoyoManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
 
-                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
+                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
                                 if ( obsSupervisorManejoMateriales.length > 0 ) {
                                     if ( obsSupervisorManejoMateriales[0].observacion !== undefined ) {
@@ -236,7 +236,7 @@ export class GestionAmbientalComponent implements OnInit {
                             response => {
                                 this.obsApoyoResiduosConstruccion = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorResiduosConstruccion = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
+                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
                                 if ( obsSupervisorResiduosConstruccion.length > 0 ) {
                                     if ( obsSupervisorResiduosConstruccion[0].observacion !== undefined ) {
@@ -261,7 +261,7 @@ export class GestionAmbientalComponent implements OnInit {
                             response => {
                                 this.obsApoyoResiduosPeligrosos = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorResiduosPeligrosos = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
+                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
                                 if ( obsSupervisorResiduosPeligrosos.length > 0 ) {
                                     if ( obsSupervisorResiduosPeligrosos[0].observacion !== undefined ) {
@@ -286,7 +286,7 @@ export class GestionAmbientalComponent implements OnInit {
                             response => {
                                 this.obsApoyoOtros = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const obsSupervisorOtros = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.historialManejoOtros = response.filter( obs => obs.archivada === true );
+                                this.historialManejoOtros = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
                                 if ( obsSupervisorOtros.length > 0 ) {
                                     if ( obsSupervisorOtros[0].observacion !== undefined ) {
@@ -692,7 +692,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -732,7 +732,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formMaterialObservacion.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -772,7 +772,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formResiduosConstruccion.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -812,7 +812,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {
@@ -852,7 +852,7 @@ export class GestionAmbientalComponent implements OnInit {
             tieneObservacion: this.formManejoOtra.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

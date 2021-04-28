@@ -28,13 +28,16 @@ namespace asivamosffie.services
 
         private ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
 
         public RegisterWeeklyProgressService(
             devAsiVamosFFIEContext context,
             ICommonService commonService,
+            //     ICheckWeeklyProgressService checkWeeklyProgressService,
             IDocumentService documentService)
         {
+            //     _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -86,6 +89,10 @@ namespace asivamosffie.services
                         .Select(r =>
                                 new
                                 {
+                                    r.ObservacionPadreId,
+                                    r.TieneObservacion,
+                                    r.TipoObservacionCodigo,
+                                    r.SeguimientoSemanalId,
                                     r.SeguimientoSemanalObservacionId,
                                     r.Observacion,
                                     r.EsSupervisor,
@@ -513,11 +520,16 @@ namespace asivamosffie.services
                     if (RegistroCompletoMuestrasValidar == null)
                         RegistroCompletoMuestrasValidar = false;
 
+                    bool? verDetalleEditar = !item.SeguimientoSemanalGestionObra.FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault()?.SeRealizaronEnsayosLaboratorio;
+
+                    if (verDetalleEditar == false)
+                        verDetalleEditar = item.RegistroCompletoMuestras.HasValue ? !item.RegistroCompletoMuestras : false;
+
                     ListBitaCora.Add(new
                     {
                         UltimoReporte = item.FechaModificacion,
                         item.SeguimientoSemanalId,
-                        RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                        RegistroCompletoMuestras = verDetalleEditar,
                         item.NumeroSemana,
                         UltimaSemana,
                         item.FechaInicio,
@@ -833,19 +845,19 @@ namespace asivamosffie.services
                     blActualizarContratacionProyecto = true;
                 }
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.Count() > 0)
-                    SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateAvanceFinanciero(pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalGestionObra.Count() > 0)
-                    SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateGestionObra(pSeguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalReporteActividad.Count() > 0)
-                    SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateReporteActividades(pSeguimientoSemanal?.SeguimientoSemanalReporteActividad?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.Count() > 0)
-                    SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateRegistroFotografico(pSeguimientoSemanal?.SeguimientoSemanalRegistroFotografico?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.Count() > 0)
-                    SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateComiteObra(pSeguimientoSemanal?.SeguimientoSemanalRegistrarComiteObra?.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 await _context.SaveChangesAsync();
 
@@ -976,6 +988,9 @@ namespace asivamosffie.services
                 if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
                     await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
+
+                    GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId);
+                    GetArchivarObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId, pUsuarioMod);
                     seguimientoSemanalMod.RegistroCompleto = true;
                     seguimientoSemanalMod.FechaRegistroCompletoInterventor = DateTime.Now;
                 }
@@ -998,17 +1013,17 @@ namespace asivamosffie.services
                     seguimientoSemanalMod.RegistroCompletoAvalar = false;
                     seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = ConstanCodigoEstadoSeguimientoSemanal.Devuelto_Supervisor;
 
-                    List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion =
-                                            _context.SeguimientoSemanalObservacion
-                                            .Where(r => r.SeguimientoSemanalId == seguimientoSemanalMod.SeguimientoSemanalId)
-                                                                                                        .ToList();
+                    //List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion =
+                    //                        _context.SeguimientoSemanalObservacion
+                    //                        .Where(r => r.SeguimientoSemanalId == seguimientoSemanalMod.SeguimientoSemanalId)
+                    //                                                                                    .ToList();
 
-                    ListSeguimientoSemanalObservacion.ForEach(s =>
-                    {
-                        s.Archivada = true;
-                        s.FechaModificacion = DateTime.Now;
-                        s.UsuarioModificacion = pUsuarioMod;
-                    });
+                    //ListSeguimientoSemanalObservacion.ForEach(s =>
+                    //{
+                    //    s.Archivada = true;
+                    //    s.FechaModificacion = DateTime.Now;
+                    //    s.UsuarioModificacion = pUsuarioMod;
+                    //});
                 }
 
                 string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
@@ -1033,6 +1048,713 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private void GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(int seguimientoSemanalId)
+        {
+            List<SeguimientoSemanalObservacion> seguimientoSemanalObservacions =
+                _context.SeguimientoSemanalObservacion
+                .Where(s => s.SeguimientoSemanalId == seguimientoSemanalId).ToList();
+
+            foreach (var item in seguimientoSemanalObservacions)
+            {
+                CreateEditSeguimientoSemanalObservacion(item, true);
+            }
+
+        }
+        public Respuesta CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
+        { 
+            try
+            {
+                switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
+                {
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.AVANCE_FISICO:
+                        CreateOrEditObservacionAvanceFisico(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.AVANCE_FINANCIERO:
+                        CreateOrEditObservacionAvanceFinanciero(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL:
+                        CreateOrEditObservacionGestionObraAmbiental(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_MATERIALES:
+                        CreateOrEditObservacionGestionObraAmbientalManejoMateriales(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_CONSTRUCCION_DEMOLICION:
+                        CreateOrEditObservacionGestionObraAmbientalManejoConstruccionDemolicion(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_RESIDUOS_PELIGROSOS:
+                        CreateOrEditObservacionGestionObraAmbientalManejoResiduosPeligrosos(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_OTRA:
+                        CreateOrEditObservacionGestionObraAmbientalManejoOtra(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD:
+                        CreateOrEditObservacionGestionCalidad(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD_ENSAYO_LABORATORIO:
+                        CreateOrEditObservacionGestionCalidadEnsayoLaboratorio(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD_ENSAYO_LABORATORIO_MUESTRAS:
+                        CreateOrEditObservacionGestionCalidadEnsayoLaboratorioMuestras(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SEGURIDAD_Y_SALUD:
+                        CreateOrEditObservacionGestionSeguridadSalud(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SOCIAL:
+                        CreateOrEditObservacionGestionSocial(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.ALERTAS_RELEVANTES:
+                        CreateOrEditObservacionAlertasRelevantes(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES:
+                        CreateOrEditObservacionReporteActividades(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ESTADO_OBRA:
+                        CreateOrEditObservacionReporteActividadesEstadoContrato(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ACTIVIDADES_REALIZADAS:
+                        CreateOrEditObservacionReporteActividadesRealizadas(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ACTIVIDADES_REALIZADAS_SIGUIENTE_SEMANA:
+                        CreateOrEditObservacionReporteActividadesRealizadasSiguienteSemana(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REGISTRO_FOTOGRAFICO:
+                        CreateOrEditObservacionRegistroFotografico(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.COMITE_OBRA:
+                        CreateOrEditObservacionComiteObra(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                _context.SaveChanges();
+
+                return new Respuesta();
+                 
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta();
+            }
+        }
+
+        private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
+        {
+            return _context.SeguimientoSemanalObservacion
+                                             .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
+                                                 && r.EsSupervisor == esSupervisor
+                                                 && r.TieneObservacion == true
+                                             ).Count() == 0;
+        }
+
+        private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlertaOld = _context.SeguimientoSemanalGestionObraAlerta.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraAlertaOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraAlertaOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraAlertaOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraAlertaOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAlertaOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraAlertaOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAlertaOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionSocial(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocialOld = _context.SeguimientoSemanalGestionObraSocial.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraSocialOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraSocialOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraSocialOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraSocialOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSocialOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraSocialOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSocialOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionSeguridadSalud(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSaludOld = _context.SeguimientoSemanalGestionObraSeguridadSalud.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraSeguridadSaludOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraSeguridadSaludOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraSeguridadSaludOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSeguridadSaludOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraSeguridadSaludOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSeguridadSaludOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionComiteObra(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
+            SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = false;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = false;
+                SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistrarComiteObraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistrarComiteObraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionRegistroFotografico(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalRegistroFotografico SeguimientoSemanalRegistroFotograficoOld = _context.SeguimientoSemanalRegistroFotografico.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            SeguimientoSemanalRegistroFotograficoOld.FechaModificacion = DateTime.Now;
+            SeguimientoSemanalRegistroFotograficoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = false;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // SeguimientoSemanalRegistroFotograficoOld.RegistroCompleto = false;
+
+                SeguimientoSemanalRegistroFotograficoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistroFotograficoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                SeguimientoSemanalRegistroFotograficoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistroFotograficoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesRealizadasSiguienteSemana(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //seguimientoSemanalReporteActividad.RegistroCompleto = false;
+                //seguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividadSiguiente = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividadSiguiente = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoActividadSiguiente = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdActividadSiguiente = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesRealizadas(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  seguimientoSemanalReporteActividad.RegistroCompleto = false;
+                //  seguimientoSemanalReporteActividad.RegistroCompletoActividad = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividad = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividad = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoActividad = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdActividad = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesEstadoContrato(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  seguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato = false;
+                //    seguimientoSemanalReporteActividad.RegistroCompleto = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorEstadoContrato = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdEstadoContrato = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoEstadoContrato = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdEstadoContrato = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividades(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+            //if (pSeguimientoSemanalObservacion.EsSupervisor)
+            //{
+            //    seguimientoSemanalReporteActividad.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+            //    seguimientoSemanalReporteActividad.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+            //    seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            //}
+            //else
+            //{
+            //    seguimientoSemanalReporteActividad.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+            //    seguimientoSemanalReporteActividad.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+            //    seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            //}
+        }
+
+        private void CreateOrEditObservacionGestionCalidadEnsayoLaboratorioMuestras(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            EnsayoLaboratorioMuestra ensayoLaboratorioMuestraOld = _context.EnsayoLaboratorioMuestra.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            ensayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
+            ensayoLaboratorioMuestraOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = false;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  ensayoLaboratorioMuestraOld.RegistroCompleto = false;
+                ensayoLaboratorioMuestraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                ensayoLaboratorioMuestraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                ensayoLaboratorioMuestraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                ensayoLaboratorioMuestraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionCalidadEnsayoLaboratorio(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
+            gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = false;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // gestionObraCalidadEnsayoLaboratorioOld.RegistroCompleto = false;
+                gestionObraCalidadEnsayoLaboratorioOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                gestionObraCalidadEnsayoLaboratorioOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                gestionObraCalidadEnsayoLaboratorioOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                gestionObraCalidadEnsayoLaboratorioOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionCalidad(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidad = _context.SeguimientoSemanalGestionObraCalidad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraCalidad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraCalidad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraCalidad.RegistroCompleto = false;
+                seguimientoSemanalGestionObraCalidad.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraCalidad.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraCalidad.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraCalidad.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoOtra(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoOtro manejoOtroOld = _context.ManejoOtro.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoOtroOld.FechaModificacion = DateTime.Now;
+            manejoOtroOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoOtroOld.RegistroCompletoObservacionApoyo = false;
+                manejoOtroOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //manejoOtroOld.RegistroCompleto = false;
+                manejoOtroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoOtroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoOtroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoOtroOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoOtroOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoOtroOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoResiduosPeligrosos(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoResiduosPeligrososEspeciales manejoResiduosPeligrososEspecialesOld = _context.ManejoResiduosPeligrososEspeciales.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoResiduosPeligrososEspecialesOld.FechaModificacion = DateTime.Now;
+            manejoResiduosPeligrososEspecialesOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = false;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //manejoResiduosPeligrososEspecialesOld.RegistroCompleto = false;
+                manejoResiduosPeligrososEspecialesOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosPeligrososEspecialesOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoResiduosPeligrososEspecialesOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosPeligrososEspecialesOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoConstruccionDemolicion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicionOld = _context.ManejoResiduosConstruccionDemolicion.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoResiduosConstruccionDemolicionOld.FechaModificacion = DateTime.Now;
+            manejoResiduosConstruccionDemolicionOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = false;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  manejoResiduosConstruccionDemolicionOld.RegistroCompleto = false;
+                manejoResiduosConstruccionDemolicionOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosConstruccionDemolicionOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoResiduosConstruccionDemolicionOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosConstruccionDemolicionOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoMateriales(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoMaterialesInsumos manejoMaterialesInsumosOld = _context.ManejoMaterialesInsumos.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoMaterialesInsumosOld.FechaModificacion = DateTime.Now;
+            manejoMaterialesInsumosOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = false;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // manejoMaterialesInsumosOld.RegistroCompleto = false;
+                manejoMaterialesInsumosOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoMaterialesInsumosOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoMaterialesInsumosOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoMaterialesInsumosOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
+        {
+            if (pSeguimientoSemanalObservacion.TieneObservacion == false)
+                return true;
+
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && string.IsNullOrEmpty(pSeguimientoSemanalObservacion.Observacion))
+                return false;
+
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
+                return true;
+
+            return false;
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbiental(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraAmbiental seguimientoSemanalGestionObraAmbientalOld = _context.SeguimientoSemanalGestionObraAmbiental.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+
+            seguimientoSemanalGestionObraAmbientalOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraAmbientalOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = false;
+
+                seguimientoSemanalGestionObraAmbientalOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAmbientalOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraAmbientalOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAmbientalOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionAvanceFinanciero(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinancieroOld = _context.SeguimientoSemanalAvanceFinanciero.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalAvanceFinancieroOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalAvanceFinancieroOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = false; 
+                seguimientoSemanalAvanceFinancieroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFinancieroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalAvanceFinancieroOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFinancieroOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionAvanceFisico(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
+                seguimientoSemanalAvanceFisicoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = null;
+                seguimientoSemanalAvanceFisicoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFisicoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void GetArchivarObservacionesSeguimientoSemanal(int seguimientoSemanalId, string pAuthor)
+        {
+            _context.Set<SeguimientoSemanalObservacion>()
+                    .Where(s => s.SeguimientoSemanalId == seguimientoSemanalId)
+                    .Update(s => new SeguimientoSemanalObservacion
+                    {
+                        UsuarioModificacion = pAuthor,
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now
+                    });
         }
 
         public async Task<Respuesta> ChangueStatusMuestrasSeguimientoSemanal(int pSeguimientoSemanalID, string pEstadoMod, string pUsuarioMod)
@@ -1140,7 +1862,8 @@ namespace asivamosffie.services
                 seguimientoSemanalOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
-
+                if (RegistroCompletoMuestras)
+                    seguimientoSemanalOld.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Validado_Supervisor;
 
 
                 return new Respuesta
@@ -1164,7 +1887,7 @@ namespace asivamosffie.services
                 };
             }
         }
-          
+
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
@@ -1197,7 +1920,7 @@ namespace asivamosffie.services
 
             }
         }
-         
+
         private void CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(ICollection<SeguimientoSemanalAvanceFisicoProgramacion> List, string strUsuario)
         {
             foreach (var item in List)
@@ -1297,16 +2020,28 @@ namespace asivamosffie.services
                     //Manejo Residuos Construccion Demolicion
                     if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null)
                     {
+                        ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
+                            new ManejoResiduosConstruccionDemolicion
+                            {
+                                EstaCuantificadoRcd = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd,
+                                RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RequiereObservacion,
+                                Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
+                                SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
+                                CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
+                                UsuarioCreacion = pUsuarioCreacion,
+                                Eliminado = false,
+                                FechaCreacion = DateTime.Now,
+                                RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion)
+                            };
 
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.UsuarioCreacion = pUsuarioCreacion;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Eliminado = false;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
-                        SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
 
-                        _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
-
+                        _context.ManejoResiduosConstruccionDemolicion.Add(manejoResiduosConstruccionDemolicion);
+                        _context.SaveChanges();
                         foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
                         {
+
+
+                            ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
                             ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                             ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                             ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -1528,21 +2263,39 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosPeligrososEspeciales = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoOtro = SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro;
 
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = null;
+
+                        if (SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion == false)
+                            SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = null;
+
                         //Manejo Materiales e Insumos
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
                         {
-                            //New
+                            //New ManejoMaterialesInsumos
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
-
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
-
-                                _context.ManejoMaterialesInsumos.Add(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
+                                ManejoMaterialesInsumos manejoMaterialesInsumosNew =
+                                                                        new ManejoMaterialesInsumos
+                                                                        {
+                                                                            EstanProtegidosDemarcadosMateriales = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales,
+                                                                            RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RequiereObservacion,
+                                                                            Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Observacion,
+                                                                            Url = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Url,
+                                                                            UsuarioCreacion = pUsuarioCreacion,
+                                                                            Eliminado = false,
+                                                                            FechaCreacion = DateTime.Now,
+                                                                            RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo)
+                                                                        };
+                                _context.ManejoMaterialesInsumos.Add(manejoMaterialesInsumosNew);
                                 _context.SaveChanges();
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId;
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId = manejoMaterialesInsumosNew.ManejoMaterialesInsumosId;
                             }
                             //Update
                             else
@@ -1587,22 +2340,33 @@ namespace asivamosffie.services
                         //Manejo Residuos Construccion Demolicion
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null)
                         {
+                            int idManejoResiduosConstruccionDemolicion = 0;
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+                                ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
 
-                                _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+                                new ManejoResiduosConstruccionDemolicion
+                                {
+                                    EstaCuantificadoRcd = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd,
+                                    RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RequiereObservacion,
+                                    Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
+                                    SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
+                                    CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
+
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion),
+                                };
+                                _context.ManejoResiduosConstruccionDemolicion.Add(manejoResiduosConstruccionDemolicion);
                                 _context.SaveChanges();
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
-
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+                                idManejoResiduosConstruccionDemolicion = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
                             }
                             else
                             {
                                 ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicionOld = _context.ManejoResiduosConstruccionDemolicion.Find(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId);
-
+                                idManejoResiduosConstruccionDemolicion = manejoResiduosConstruccionDemolicionOld.ManejoResiduosConstruccionDemolicionId;
                                 manejoResiduosConstruccionDemolicionOld.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
                                 manejoResiduosConstruccionDemolicionOld.UsuarioModificacion = pUsuarioCreacion;
                                 manejoResiduosConstruccionDemolicionOld.FechaModificacion = DateTime.Now;
@@ -1613,7 +2377,6 @@ namespace asivamosffie.services
                                 manejoResiduosConstruccionDemolicionOld.SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos;
                                 manejoResiduosConstruccionDemolicionOld.CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas;
 
-
                             }
 
                             foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
@@ -1621,7 +2384,7 @@ namespace asivamosffie.services
 
                                 if (ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId == 0)
                                 {
-                                    ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+                                    ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionId = idManejoResiduosConstruccionDemolicion;
                                     ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                                     ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                                     ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -1649,15 +2412,22 @@ namespace asivamosffie.services
                         {
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RegistroCompleto = ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
+                                ManejoResiduosPeligrososEspeciales manejoResiduosPeligrososEspeciales = new ManejoResiduosPeligrososEspeciales
+                                {
+                                    EstanClasificados = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.EstanClasificados,
+                                    RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RequiereObservacion,
+                                    Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.Observacion,
+                                    UrlRegistroFotografico = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.UrlRegistroFotografico,
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales)
+                                };
 
-                                _context.ManejoResiduosPeligrososEspeciales.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
+                                _context.ManejoResiduosPeligrososEspeciales.Add(manejoResiduosPeligrososEspeciales);
                                 _context.SaveChanges();
 
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId;
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = manejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId;
                             }
                             else
                             {
@@ -1679,14 +2449,19 @@ namespace asivamosffie.services
                         {
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoOtro.ManejoOtroId == 0)
                             {
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UsuarioCreacion = pUsuarioCreacion;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.Eliminado = false;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.FechaCreacion = DateTime.Now;
-                                SeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto = ValidarRegistroCompletoManejoOtro(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
-
-                                _context.ManejoOtro.Add(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
+                                ManejoOtro manejoOtro = new ManejoOtro
+                                {
+                                    FechaActividad = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.FechaActividad,
+                                    Actividad = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.Actividad,
+                                    UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion,
+                                    UsuarioCreacion = pUsuarioCreacion,
+                                    Eliminado = false,
+                                    FechaCreacion = DateTime.Now,
+                                    RegistroCompleto = ValidarRegistroCompletoManejoOtro(SeguimientoSemanalGestionObraAmbiental.ManejoOtro)
+                                };
+                                _context.ManejoOtro.Add(manejoOtro);
                                 _context.SaveChanges();
-                                SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.ManejoOtroId;
+                                SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = manejoOtro.ManejoOtroId;
                             }
                             else
                             {
@@ -1701,7 +2476,6 @@ namespace asivamosffie.services
                                 manejoOtroOld.UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion;
                             }
                         }
-
 
                         //Validar Registro Completo
                         SeguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
@@ -1781,7 +2555,7 @@ namespace asivamosffie.services
 
                         seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
 
-                        if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio != false)
+                        if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false)
                             EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId, pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId);
 
 
@@ -1905,7 +2679,7 @@ namespace asivamosffie.services
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
         }
-         
+
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             if (pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId == 0)
@@ -2042,11 +2816,15 @@ namespace asivamosffie.services
                     if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero?.FirstOrDefault().RegistroCompleto == false)
                         return false;
                 }
+                //Si tiene flujo Inversion no tiene actividades
+                if (pSeguimientoSemanal.FlujoInversion.Count() > 0)
+                {
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() == 0)
+                        return false;
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault().RegistroCompleto == false)
+                        return false;
+                }
 
-                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() == 0)
-                    return false;
-                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault().RegistroCompleto == false)
-                    return false;
 
                 if (pSeguimientoSemanal?.SeguimientoSemanalGestionObra.Count() == 0)
                     return false;
@@ -2156,11 +2934,12 @@ namespace asivamosffie.services
             if (seguimientoSemanalGestionObraSeguridadSalud == null)
                 return false;
 
-            if (seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes == 0)
-                return true;
+            if (seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes > 0)
+                if (seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0)
+                    return false;
 
             if (!seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes.HasValue
-                || seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0
+
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoCapacitacion.HasValue
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionElementosProteccion.HasValue
                 || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionSenalizacion.HasValue
@@ -2188,7 +2967,7 @@ namespace asivamosffie.services
               || !gestionObraCalidadEnsayoLaboratorio.FechaEntregaResultados.HasValue
               || !gestionObraCalidadEnsayoLaboratorio.RealizoControlMedicion.HasValue
                 )
-          return false; 
+                return false;
             return true;
         }
 
@@ -2198,7 +2977,7 @@ namespace asivamosffie.services
                 return false;
 
             return seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue;
-                
+
 
             //if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
             //    || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
@@ -2210,7 +2989,7 @@ namespace asivamosffie.services
             //        return false;
             //}
 
-         //   return true;
+            //   return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
@@ -2249,7 +3028,7 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos pManejoMaterialesInsumo)
         {
             if (pManejoMaterialesInsumo == null)
-                return false; 
+                return false;
             if (!pManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales.HasValue
                 || !pManejoMaterialesInsumo.RequiereObservacion.HasValue
                 || (pManejoMaterialesInsumo.RequiereObservacion == true && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
@@ -2419,7 +3198,7 @@ namespace asivamosffie.services
         {
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Supervisor_4_1_20));
-           string strContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+            string strContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>

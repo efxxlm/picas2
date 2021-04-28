@@ -1564,6 +1564,18 @@ namespace asivamosffie.services
 
                     _context.NovedadContractual.Update(novedadContractual);
 
+                    List<NovedadContractualObservaciones> listaObservaciones = _context.NovedadContractualObservaciones
+                                                                                            .Where(x => x.EsTramiteNovedades == true &&
+                                                                                                   x.Eliminado != true)
+                                                                                            .ToList();
+
+                    foreach( NovedadContractualObservaciones observacion in listaObservaciones)
+                    {
+                        observacion.Archivado = true;
+
+                        _context.NovedadContractualObservaciones.Update(observacion);
+                    }
+
                     _context.SaveChanges();
 
                     EnviarNotificacionATramitador(novedadContractual);

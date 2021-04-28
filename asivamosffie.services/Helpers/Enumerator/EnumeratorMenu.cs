@@ -64,6 +64,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_tramite_liquidacion_contractual = 90,
         Registrar_actualizacion_de_polizas_y_garantias = 91,
         Registrar_liquidacion_contrato = 92,
+        Gestionar_balance_financiero_traslados_de_recursos = 94,
     }
 
     public enum enumeratorAccion

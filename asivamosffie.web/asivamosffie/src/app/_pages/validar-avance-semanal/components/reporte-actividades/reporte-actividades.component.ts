@@ -107,7 +107,7 @@ export class ReporteActividadesComponent implements OnInit {
                             response => {
                                 this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 if ( observacionSupervisor.length > 0 ) {
                                     this.seguimientoSemanalObservacionId = observacionSupervisor[0].seguimientoSemanalObservacionId;

@@ -144,9 +144,9 @@ export class ReporteActividadesComponent implements OnInit, OnDestroy {
                         .subscribe(
                             response => {
                                 if ( response.length > 0 ) {
-                                    this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
-                                    this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
-                                    this.dataHistorial = response;
+                                    this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false && obs.tieneObservacion === true );
+                                    this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true && obs.tieneObservacion === true );
+                                    this.dataHistorial = response.filter( obs => obs.tieneObservacion === true );
 
                                     if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
                                         this.estadoSemaforoReporte.emit( 'en-proceso' );
