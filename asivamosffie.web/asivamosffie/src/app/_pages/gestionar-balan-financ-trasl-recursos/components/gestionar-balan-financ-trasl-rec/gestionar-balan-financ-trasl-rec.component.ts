@@ -3,6 +3,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+
+export interface RegistrarInterface {
+  fechaTerminacionProyecto: Date;
+  llaveMen: string;
+  tipoIntervencion: string;
+  institucionEducativa: string;
+  sedeEducativa: string;
+  proyectoId: number;
+}
 
 @Component({
   selector: 'app-gestionar-balan-financ-trasl-rec',
@@ -11,9 +21,11 @@ import { Router } from '@angular/router';
 })
 export class GestionarBalanFinancTraslRecComponent implements OnInit {
   verAyuda = false;
-  dataSource = new MatTableDataSource();
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  ELEMENT_DATA: RegistrarInterface[] = [];
+
   displayedColumns: string[] = [
     'fechaTerminacionProyecto',
     'llaveMEN',
@@ -22,6 +34,8 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     'sede',
     'gestion'
   ];
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
+
   dataTable: any[] = [
     {
       fechaTerminacionProyecto: '09/08/2021',
@@ -39,14 +53,24 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   constructor(
-    private routes: Router
+    private routes: Router,
+    private financialBalanceService: FinancialBalanceService,
   ) { }
 
+
   ngOnInit(): void {
+    this.getAllReports();
     this.loadDataSource();
   }
+
+  getAllReports() {
+    this.financialBalanceService.gridBalance().subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+    });
+  }
+
   loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
+    //this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

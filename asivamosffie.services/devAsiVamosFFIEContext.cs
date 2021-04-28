@@ -254,6 +254,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VProcesoSeleccionReporteHist> VProcesoSeleccionReporteHist { get; set; }
         public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
         public virtual DbSet<VProyectoReporteHist> VProyectoReporteHist { get; set; }
+        public virtual DbSet<VProyectosBalance> VProyectosBalance { get; set; }
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
@@ -494,13 +495,25 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.NumeroBalance).HasMaxLength(20);
 
                 entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
 
-                entity.HasOne(d => d.ContratacionProyecto)
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.BalanceFinanciero)
-                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .HasForeignKey(d => d.ProyectoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BalanceFinanciero_ContratacionProyecto");
             });
@@ -4427,6 +4440,12 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.OrdenGiro)
                     .WithMany(p => p.OrdenGiroPago)
                     .HasForeignKey(d => d.OrdenGiroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrdenGiro_OrdenGiroPago");
+
+                entity.HasOne(d => d.RegistroPago)
+                    .WithMany(p => p.OrdenGiroPago)
+                    .HasForeignKey(d => d.RegistroPagoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RegistroPago_OrdenGiroPago");
             });
@@ -8403,7 +8422,7 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_ListaContratacionModificacionContractual");
 
                 entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(2)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoDelRegistro)
@@ -8419,8 +8438,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitud)
@@ -8869,6 +8887,45 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VProyectosBalance>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ProyectosBalance");
+
+                entity.Property(e => e.EstadoBalance).HasMaxLength(250);
+
+                entity.Property(e => e.EstadoBalanceCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaTerminacionProyecto)
+                    .HasColumnName("fechaTerminacionProyecto")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasColumnName("institucionEducativa")
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SedeEducativa)
+                    .IsRequired()
+                    .HasColumnName("sedeEducativa")
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasColumnName("tipoIntervencion")
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VProyectosCierre>(entity =>

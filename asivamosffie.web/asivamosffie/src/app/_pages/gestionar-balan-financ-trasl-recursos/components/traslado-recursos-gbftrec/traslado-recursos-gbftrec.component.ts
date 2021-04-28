@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ɵNullViewportScroller } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-traslado-recursos-gbftrec',
@@ -9,9 +12,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./traslado-recursos-gbftrec.component.scss']
 })
 export class TrasladoRecursosGbftrecComponent implements OnInit {
+  @Input() id: number;
+
   addressForm = this.fb.group({
-    requiereTrasladoRecursos: [null, Validators.required],
-    justificacionTraslado: [null, Validators.required],
+    balanceFinancieroId: [null, Validators.required],
+    proyectoId: [ɵNullViewportScroller, Validators.required],
+    requiereTransladoRecursos: [null, Validators.required],
+    justificacionTrasladoAportanteFuente: [null, Validators.required],
     urlSoporte: [null, Validators.required],
   });
   editorStyle = {
@@ -26,7 +33,8 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
     ]
   };
   estaEditando = false;
-  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog,private financialBalanceService: FinancialBalanceService,
+    ) { }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -51,10 +59,47 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       data: { modalTitle, modalText }
     });
   }
+
   ngOnInit(): void {
+    this.buildForm();
   }
+
+  buildForm() {
+    this.financialBalanceService.getBalanceFinanciero(
+      this.id
+    ).subscribe(response => {
+      if(response != null){
+        this.addressForm.patchValue(response);
+      }
+    });
+  }
+
   onSubmit() {
-    console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+
+    if ( this.addressForm.get( 'requiereTransladoRecursos' ).value !== null && this.addressForm.get( 'requiereTransladoRecursos' ).value === false ) {
+        this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).setValue( '' );
+    }
+
+    const pBalanceFinanciero = {
+        balanceFinancieroId: this.addressForm.get( 'balanceFinancieroId' ).value,
+        proyectoId:this.id,
+        requiereTransladoRecursos: this.addressForm.get( 'requiereTransladoRecursos' ).value,
+        justificacionTrasladoAportanteFuente: this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).value,
+        urlSoporte: this.addressForm.get( 'urlSoporte' ).value,
+      };
+
+    this.financialBalanceService.createEditBalanceFinanciero( pBalanceFinanciero )
+    .subscribe((respuesta: Respuesta) => {
+        this.openDialog('', respuesta.message);
+        this.ngOnInit();
+        return; 
+      },
+      err => {
+        this.openDialog('', err.message);
+        this.ngOnInit();
+        return;
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-contratistas-gbftrec',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contratistas-gbftrec.component.scss']
 })
 export class ContratistasGbftrecComponent implements OnInit {
+
+  @Input() contratista: any;
 
   constructor() { }
 

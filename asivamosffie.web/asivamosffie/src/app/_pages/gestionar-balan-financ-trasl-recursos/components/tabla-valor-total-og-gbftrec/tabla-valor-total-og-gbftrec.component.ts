@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 
 @Component({
   selector: 'app-tabla-valor-total-og-gbftrec',
@@ -10,9 +11,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./tabla-valor-total-og-gbftrec.component.scss']
 })
 export class TablaValorTotalOgGbftrecComponent implements OnInit {
+
+  @Input() solicitudPago: any[] = [];
   dataSource = new MatTableDataSource();
+  dataTable: any[] = [];
+
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   displayedColumns: string[] = [
     'numOrdenGiro',
     'contratista',
@@ -23,37 +30,21 @@ export class TablaValorTotalOgGbftrecComponent implements OnInit {
     'aPagarAntesImpuestos',
     'gestion'
   ];
-  dataTable: any[] = [
-    {
-      numOrdenGiro: 'ODG_Obra_001',
-      contratista: 'Construir futuro',
-      facturado: '$67.000.000',
-      ansAplicado: '$500.000',
-      reteGarantiaAPagar: '$3.500.000',
-      otrosDescuentos: '$1.100.000',
-      aPagarAntesImpuestos: '$61.890.000',
-      gestion: 1
-    },
-    {
-      numOrdenGiro: 'ODG_Obra_326',
-      contratista: 'Contratista 2',
-      facturado: '$30.000.000',
-      ansAplicado: '$100.000',
-      reteGarantiaAPagar: '$500.000',
-      otrosDescuentos: '$810.000',
-      aPagarAntesImpuestos: '$26.590.000',
-      gestion: 2
-    }
-  ];
+
+
   constructor(
-    private routes: Router
+    private routes: Router,
+    private ordenGiroSvc: OrdenPagoService
   ) { }
 
   ngOnInit(): void {
-    this.loadDataSource();
+    if(this.solicitudPago.length > 0){
+      this.dataSource.data = this.solicitudPago;
+    }
   }
+
   loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
+    //this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -70,7 +61,7 @@ export class TablaValorTotalOgGbftrecComponent implements OnInit {
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
-  verDetalle(){
-    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/detalleOrdengiro']);
+  verDetalle(solicitudPagoId :number){
+    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/detalleOrdengiro', solicitudPagoId]);
   }
 }

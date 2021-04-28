@@ -39,7 +39,7 @@
             </ng-container>
             <ng-container matColumnDef="llaveMEN">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
-                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.llaveMEN }}</em> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.llaveMen }}</em> </td>
             </ng-container>
             <ng-container matColumnDef="tipoIntervencion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
@@ -51,7 +51,7 @@
             </ng-container>
             <ng-container matColumnDef="sede">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede Educativa</th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.sedeEducativa }} </td>
             </ng-container>
             <!--
             <ng-container matColumnDef="numeroTraslados">
@@ -66,8 +66,8 @@
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numeroTraslados=='---'"
-                        (click)="validarBalance(element.gestion)">
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="validarBalance(element.proyectoId)">
                         Validar balance
                     </button>
                 </td>

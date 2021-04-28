@@ -34,7 +34,7 @@ const routes: Routes = [
     component: ValidarBalanceGbftrecComponent
   },
   {
-    path: 'detalleOrdengiro',
+    path: 'detalleOrdengiro/:id',
     component: DetalleOgGbftrecComponent
   },
   {

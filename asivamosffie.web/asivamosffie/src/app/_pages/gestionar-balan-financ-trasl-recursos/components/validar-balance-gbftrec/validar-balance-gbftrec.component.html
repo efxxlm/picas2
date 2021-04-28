@@ -32,7 +32,7 @@
             Traslados de recursos
         </button>
     </div>
-    <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1"></app-recursos-comprom-pagados-gbftrec>
-    <app-ejecucion-financiera-gbftrec *ngIf="opcion2"></app-ejecucion-financiera-gbftrec>
-    <app-traslado-recursos-gbftrec *ngIf="opcion3"></app-traslado-recursos-gbftrec>
+    <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && id" [id]="id"></app-recursos-comprom-pagados-gbftrec>
+    <app-ejecucion-financiera-gbftrec *ngIf="opcion2 && id" [id]="id"></app-ejecucion-financiera-gbftrec>
+    <app-traslado-recursos-gbftrec *ngIf="opcion3&& id" [id]="id"></app-traslado-recursos-gbftrec>
 </section>

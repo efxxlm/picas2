@@ -9,23 +9,23 @@
     
       <ng-container matColumnDef="totalComprometido">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Total comprometido </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.totalComprometido }} </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">$105.000.000</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text">  ${{ element.totalComprometido | currency:' ':'symbol-narrow':'.0-0' }} </td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">${{ total.totalComprometido | currency:' ':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="facturadoAntesdeImpuestos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Facturado antes de impuestos  </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.facturadoAntesdeImpuestos }} </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">$68.000.000</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> ${{ element.facturadoAntesdeImpuestos | currency:' ':'symbol-narrow':'.0-0' }}</td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">${{ total.facturadoAntesdeImpuestos | currency:' ':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="saldo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Saldo </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.saldo }} </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">$37.000.000</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text">  ${{ element.saldo | currency:' ':'symbol-narrow':'.0-0' }}  </td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;"> ${{ total.saldo | currency:' ':'symbol-narrow':'.0-0' }} </td>
       </ng-container>
       <ng-container matColumnDef="porcentajeEjecucionPresupuestal">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Porcentaje de ejecución presupuestal </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.porcentajeEjecucionPresupuestal }} </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">68%</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.porcentajeEjecucionPresupuestal }} %</td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.porcentajeEjecucionPresupuestal }} %</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

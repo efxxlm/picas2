@@ -1782,7 +1782,7 @@ namespace asivamosffie.services
             }
         }
 
-        private List<TablaDRP> GetDrpContrato(Contrato contrato)
+        public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();

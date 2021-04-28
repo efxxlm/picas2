@@ -370,5 +370,7 @@
         public const string CancelarNovedadContractual = "271";
 
         public const string Eliminar_Demandante_Convocante = "272";
+        public const string Crear_Editar_Balance_Financiero = "273";
+
     }
 }
