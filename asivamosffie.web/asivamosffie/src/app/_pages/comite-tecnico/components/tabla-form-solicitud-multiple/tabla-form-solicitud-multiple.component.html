@@ -42,13 +42,24 @@
           <!-- obra -->
           <mat-form-field
             class="select-width"
-            [class.mat-form-field-invalid]="!element.proyecto.estadoProyectoObraCodigo && estaEditando"
+            [class.mat-form-field-invalid]="
+              element.proyecto.estadoProyectoObraCodigo != 3 &&
+              element.proyecto.estadoProyectoObraCodigo != 5 &&
+              element.proyecto.estadoProyectoObraCodigo != 7 &&
+              estaEditando
+            "
             *ngIf="contratacion.tipoSolicitudCodigo === '1'"
           >
             <mat-select
               required
               [(ngModel)]="element.proyecto.estadoProyectoObraCodigo"
               (selectionChange)="onChangeEstado()"
+              [class.invalid]="
+                element.proyecto.estadoProyectoObraCodigo != 3 &&
+                element.proyecto.estadoProyectoObraCodigo != 5 &&
+                element.proyecto.estadoProyectoObraCodigo != 7 &&
+                estaEditando
+              "
             >
               <mat-option *ngFor="let estado of listaEstados" [value]="estado.codigo">
                 {{ estado.nombre }}
@@ -75,13 +86,24 @@
           <!-- interventoria -->
           <mat-form-field
             class="select-width"
-            [class.mat-form-field-invalid]="!element.proyecto.estadoProyectoInterventoriaCodigo && estaEditando"
+            [class.mat-form-field-invalid]="
+              element.proyecto.estadoProyectoInterventoriaCodigo != 3 &&
+              element.proyecto.estadoProyectoInterventoriaCodigo != 5 &&
+              element.proyecto.estadoProyectoInterventoriaCodigo != 7 &&
+              estaEditando
+            "
             *ngIf="contratacion.tipoSolicitudCodigo === '2'"
           >
             <mat-select
               required
               [(ngModel)]="element.proyecto.estadoProyectoInterventoriaCodigo"
               (selectionChange)="onChangeEstado()"
+              [class.mat-select-invalid]="
+                element.proyecto.estadoProyectoInterventoriaCodigo != 3 &&
+                element.proyecto.estadoProyectoInterventoriaCodigo != 5 &&
+                element.proyecto.estadoProyectoInterventoriaCodigo != 7 &&
+                estaEditando
+              "
             >
               <mat-option *ngFor="let estado of listaEstados" [value]="estado.codigo">
                 {{ estado.nombre }}
