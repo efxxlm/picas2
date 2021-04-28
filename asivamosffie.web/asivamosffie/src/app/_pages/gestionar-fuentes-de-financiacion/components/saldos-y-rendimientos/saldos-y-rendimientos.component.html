@@ -1,0 +1,64 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center mb-2em">
+    <h1 class="title-menu--h1">
+      Ver Saldos y Rendimientos
+    </h1>
+  </div>
+
+  <div class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)" />
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+    </button>
+  </div>
+  
+  <div class="table-responsive mb-2em text-center">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- saldoActual Column -->
+      <ng-container matColumnDef="saldoActual">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Saldo actual
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.saldoActual }}
+        </td>
+      </ng-container>
+  
+      <!-- comprometidoDDP Column -->
+      <ng-container matColumnDef="comprometidoDDP">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Comprometido en DDP
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.comprometidoDDP }}
+        </td>
+      </ng-container>
+  
+      <!-- rendimientosIncorporados Column -->
+      <ng-container matColumnDef="rendimientosIncorporados">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Rendimientos incorporados
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.rendimientosIncorporados }}</td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    #paginator
+    [length]="dataSource?.data.length"
+    [pageIndex]="0"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+  ></mat-paginator>
+</section>

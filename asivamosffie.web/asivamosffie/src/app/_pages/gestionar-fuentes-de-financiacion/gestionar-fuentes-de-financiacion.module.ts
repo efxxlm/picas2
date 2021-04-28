@@ -11,9 +11,10 @@ import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableControlRecursosComponent } from './components/table-control-recursos/table-control-recursos.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { SaldosYRendimientosComponent } from './components/saldos-y-rendimientos/saldos-y-rendimientos.component';
 
 @NgModule({
-  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent, TableControlRecursosComponent],
+  declarations: [BtnRegistrarComponent, RegistrarComponent, TablaFuentesComponent, ControlDeRecursosComponent, TableControlRecursosComponent, SaldosYRendimientosComponent],
   imports: [
     CommonModule,
     GestionarFuentesDeFinanciacionRoutingModule,

@@ -72,6 +72,8 @@ export class ControlDeRecursosComponent implements OnInit {
         this.commonService.listaDepartamentos()
         
       ]).subscribe( respuesta => {        
+        console.log(respuesta);
+        
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
         this.listaFuentes = respuesta[2];
