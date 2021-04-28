@@ -71,8 +71,7 @@ export class ControlDeRecursosComponent implements OnInit {
         this.commonService.listaFuenteTipoFinanciacion(),
         this.commonService.listaDepartamentos()
         
-      ]).subscribe( respuesta => {        
-        console.log(respuesta);
+      ]).subscribe( respuesta => {
         
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
@@ -84,8 +83,8 @@ export class ControlDeRecursosComponent implements OnInit {
           let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() == 
           this.fuente.aportante.departamentoId.toString() )
           if (valorDepartamento){
-            console.log("tiene departamento ");
-            console.log(valorDepartamento);
+            // console.log("tiene departamento ");
+            // console.log(valorDepartamento);
             this.commonService.listaMunicipiosByIdDepartamento( this.fuente.aportante.departamentoId.toString() ).subscribe( mun => {
               if (mun){
                 let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
