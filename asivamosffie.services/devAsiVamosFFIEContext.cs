@@ -4431,6 +4431,12 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.OrdenGiroPago)
                     .HasForeignKey(d => d.OrdenGiroId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrdenGiro_OrdenGiroPago");
+
+                entity.HasOne(d => d.RegistroPago)
+                    .WithMany(p => p.OrdenGiroPago)
+                    .HasForeignKey(d => d.RegistroPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RegistroPago_OrdenGiroPago");
             });
 

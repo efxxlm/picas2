@@ -23,6 +23,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace asivamosffie.services
 {
@@ -88,11 +89,25 @@ namespace asivamosffie.services
         private static string WriteCollectionToPath<T>(string fileName, string directory, List<T> list, List<ExcelError> errors)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+         
+           
+
             var streams = new MemoryStream();
             using (var packages = new ExcelPackage())
             {
-                // Add a new worksheet to the empty workbook
+                //// Add a new worksheet to the empty workbook
                 var worksheet = packages.Workbook.Worksheets.Add("Hoja 1");
+                //// #.##% is also Excel style index 1
+                //WorkbookStylesPart sp = workbookPart.AddNewPart<WorkbookStylesPart>();
+
+                //sp.Stylesheet = new DocumentFormat.OpenXml.Spreadsheet.Stylesheet();
+                //sp.Stylesheet.NumberingFormats = new NumberingFormats();
+                //NumberingFormat nf2decimal = new NumberingFormat();
+                //nf2decimal.NumberFormatId = UInt32Value.FromUInt32(3453);
+                //nf2decimal.FormatCode = StringValue.FromString("0.0%");
+                //sp.Stylesheet.NumberingFormat.Append(nf2decimal);
+
+
 
                 worksheet.Cells.LoadFromCollection(list, true);
 
@@ -106,8 +121,17 @@ namespace asivamosffie.services
                     if (customAtt != null)
                     {
                         worksheet.Cells[1, index].Value = customAtt.PropertyName;
-                        
-                    }
+                       // worksheet.Column(index).CellsUsed().SetDataType(XLDataType.Number);
+                        if (property.PropertyType.Name == "Decimal")
+                        {
+                           // worksheet.Cells[1, index].Style.Numberformat.Format = "0.0%";
+                            worksheet.Column(index).Style.Numberformat.Format = "0.00";
+                            worksheet.Column(index).AutoFit();
+                            //  worksheet.Cells[1, index].Style.DataType = ClosedXML.Excel.XLDataType.Number;
+                        }
+
+                        // property.PropertyType
+                    }                    
                     index++;
                 }
                 if(errors != null)
@@ -357,12 +381,12 @@ namespace asivamosffie.services
                         CantidadRegistrosInvalidos++;
                     }
                 }
-
+                CarguePagosRendimientos carguePagosRendimientos = new CarguePagosRendimientos();
                 int cantidadRegistrosTotales = worksheet.Dimension.Rows - 1;
 
                 if (CantidadRegistrosInvalidos > 0 || saveSuccessProcess)
                 {
-                    CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos
+                    carguePagosRendimientos = new CarguePagosRendimientos
                     {
                         EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
                         CargueValido = CantidadRegistrosInvalidos == 0,
@@ -377,14 +401,14 @@ namespace asivamosffie.services
                         Errores = JsonConvert.SerializeObject(errors),
                     };
 
-                    _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
+                    _context.CarguePagosRendimientos.Add(carguePagosRendimientos);
                 }
                 bool isValidPayment = true;
                 if (CantidadRegistrosInvalidos == 0 && saveSuccessProcess && fileType == CONSTPAGOS)
                 {
                     try
                     {
-                        isValidPayment = await ProcessPayment(fileType, listaCarguePagosRendimientos, _userName);
+                        isValidPayment = await ProcessPayment(fileType, listaCarguePagosRendimientos, carguePagosRendimientos);
                     }
                     catch (Exception)
                     {
@@ -768,7 +792,7 @@ namespace asivamosffie.services
             decimal? performances = 0;
             if (performancesIncorporated.Count > 0)
             {
-                performances = performancesIncorporated.Sum(x => x.Incorporados);
+                performances = performancesIncorporated.Where(v => v.Aprobado.HasValue && v.Aprobado.Value).Sum(x => x.RendimientoIncorporar);
             }
 
             // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
@@ -976,7 +1000,8 @@ namespace asivamosffie.services
         /// </summary>
         /// <param name="typeFile"></param>
         /// <param name="listaCarguePagosRendimientos"></param>
-        public async Task<bool> ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos, string author)
+        public async Task<bool> ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos,
+            CarguePagosRendimientos carguePagosRendimientos)
         {
             foreach (var payment in listaCarguePagosRendimientos)
             {
@@ -1006,7 +1031,7 @@ namespace asivamosffie.services
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
                     pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
                     pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
-                    pDisponibilidadPresObservacion.UsuarioCreacion = author;
+                    pDisponibilidadPresObservacion.UsuarioCreacion = _userName;
                     var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
                     pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
@@ -1017,6 +1042,13 @@ namespace asivamosffie.services
                     pDisponibilidadPresObservacion.Eliminado = false;
                     _context.GestionFuenteFinanciacion.Add(pDisponibilidadPresObservacion);
                     // cruce de pagos
+                    var paymentOrder = new OrdenGiroPago();
+                    paymentOrder.OrdenGiroId = solicitud.OrdenGiro.OrdenGiroId;
+                    carguePagosRendimientos.OrdenGiroPago.Add(paymentOrder);
+                   // paymentOrder.RegistroPagoId = payment.;
+
+                    //    carguePagosRendimientos.
+                    //    _context.OrdenGiroPago.Add(paymentOrder);
                 }
             }
             return true;
@@ -1265,7 +1297,8 @@ namespace asivamosffie.services
                     FinancialLienProvision = uploadedOrder.FinancialLienProvision,
                     BankCharges = uploadedOrder.BankCharges,
                     DiscountedCharge = uploadedOrder.DiscountedCharge,
-                    PerformancesToAdd = item.RendimientoIncorporar
+                    PerformancesToAdd = item.RendimientoIncorporar,
+                    // Visitas = item.Visitas
                 };
                 managedPerformances.Add(managedPerformanceOrder);
             }
@@ -1361,11 +1394,11 @@ namespace asivamosffie.services
 
                 var gestionFuenteFinanciacionId = (int)bankAccount.FuenteFinanciacionId;
 
-                decimal valorSolicitado = accountReturnOrder.PerformancesToAdd;
+                decimal valorAIncorporar = accountReturnOrder.PerformancesToAdd;
 
                 var gestionFuenteFinanciacion = new GestionFuenteFinanciacion();
                 gestionFuenteFinanciacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
-                gestionFuenteFinanciacion.ValorSolicitado = valorSolicitado;
+                gestionFuenteFinanciacion.ValorSolicitado = valorAIncorporar;
                 gestionFuenteFinanciacion.UsuarioCreacion = _userName;
 
                 var sumValoresSolicitados = _context.GestionFuenteFinanciacion
@@ -1375,8 +1408,8 @@ namespace asivamosffie.services
 
                 var fuente = await _context.FuenteFinanciacion.FindAsync(gestionFuenteFinanciacion.FuenteFinanciacionId);
                 gestionFuenteFinanciacion.SaldoActual = (decimal)fuente.ValorFuente - sumValoresSolicitados;
-                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual - gestionFuenteFinanciacion.ValorSolicitado;
-                int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
+                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual + gestionFuenteFinanciacion.ValorSolicitado;
+                int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado; ///
                 gestionFuenteFinanciacion.FechaCreacion = DateTime.Now;
                 gestionFuenteFinanciacion.EstadoCodigo = estado.ToString();
                 gestionFuenteFinanciacion.Eliminado = false; 

@@ -66,6 +66,15 @@ export class GestionarRendimientosComponent implements OnInit {
       this.dataSource = new MatTableDataSource(response)
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
+
+      this.dataSource.sortingDataAccessor = (item: any , property): string | number => {
+        switch (property) {
+          case 'fechaCargue': return new Date(item.fechaCargue).toString();
+          default: return item[property];
+        }
+      };
+
+
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página'
 
       this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
