@@ -663,8 +663,8 @@
                             </mat-card-header>
                             <mat-card-content>
                                 <p style="margin-left: 2em;"><b> {{ obsApoyoOtros[0].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                                <p style="margin-left: 2em;" *ngIf="gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === true"><b>¿Tiene observaciones a otra?</b>: Si</p>
-                                <p style="margin-left: 2em;" *ngIf="gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === false"><b>¿Tiene observaciones a otra?</b>: No</p>
+                                <p style="margin-left: 2em;" *ngIf="gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === true"><b>¿Tiene observaciones a la gestión ambiental?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === false"><b>¿Tiene observaciones a la gestión ambiental?</b>: No</p>
                                 <section [innerHTML]="obsApoyoOtros[0].observacion" style="margin-left: 2em;" *ngIf="gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === true"></section>
                             </mat-card-content>
                         </mat-card>
