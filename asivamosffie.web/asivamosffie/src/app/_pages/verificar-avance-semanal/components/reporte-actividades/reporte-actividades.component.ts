@@ -104,16 +104,19 @@ export class ReporteActividadesComponent implements OnInit {
                             response => {
                                 if ( response.length > 0 ) {
                                     const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                    if ( observacionApoyo[0].observacion !== undefined ) {
-                                        if ( observacionApoyo[0].observacion.length > 0 ) {
-                                            this.formResumenGeneral.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    if ( observacionApoyo.length > 0 ) {
+                                        if ( observacionApoyo[0].observacion !== undefined ) {
+                                            if ( observacionApoyo[0].observacion.length > 0 ) {
+                                                this.formResumenGeneral.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                            }
                                         }
+                                        this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                        this.formResumenGeneral.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoEstadoContrato );
+                                        this.formResumenGeneral.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                     }
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
-                                    this.formResumenGeneral.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoEstadoContrato );
-                                    this.formResumenGeneral.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             }
                         );

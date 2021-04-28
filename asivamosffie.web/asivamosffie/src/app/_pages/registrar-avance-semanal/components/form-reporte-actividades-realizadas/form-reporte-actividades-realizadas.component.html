@@ -493,9 +493,8 @@
         </button>
       </div>
     </form>
-  </section>
 
-  <section
+    <section
     class="text-center table-responsive size-table"
     style="margin-top: 2em"
     *ngIf="dataHistorialSiguiente.length > 0"
@@ -530,6 +529,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial"></tr>
     </table>
+  </section>
   </section>
 </section>
 

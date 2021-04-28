@@ -82,9 +82,9 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
-                                this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorial = response;
+                                this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false && obs.tieneObservacion === true );
+                                this.obsSupervisor  = response.find( obs => obs.archivada === false && obs.esSupervisor === true && obs.tieneObservacion === true );
+                                this.dataHistorial = response.filter( obs => obs.tieneObservacion === true );
 
                                 if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
                                     this.tieneObservacion.emit();
@@ -98,9 +98,9 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                this.obsApoyoSiguienteSemana = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
-                                this.obsSupervisorSiguienteSemana  = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorialSiguiente = response;
+                                this.obsApoyoSiguienteSemana = response.find( obs => obs.archivada === false && obs.esSupervisor === false && obs.tieneObservacion === true );
+                                this.obsSupervisorSiguienteSemana  = response.find( obs => obs.archivada === false && obs.esSupervisor === true && obs.tieneObservacion === true );
+                                this.dataHistorialSiguiente = response.filter( obs => obs.tieneObservacion === true );
 
                                 if ( this.obsApoyoSiguienteSemana !== undefined || this.obsSupervisorSiguienteSemana !== undefined ) {
                                     this.tieneObservacion.emit();
@@ -144,26 +144,26 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         }
     }
 
-    async guardar() {
-        if ( this.formActividadesRealizadas.dirty === true ) {
+    guardar() {
+        if ( this.formActividadesRealizadas.dirty === true && this.esSiguienteSemana === false ) {
             if ( this.obsApoyo !== undefined ) {
                 this.obsApoyo.archivada = !this.obsApoyo.archivada;
-                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).toPromise();
+                this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyo ).subscribe();
             }
             if ( this.obsSupervisor !== undefined ) {
                 this.obsSupervisor.archivada = !this.obsSupervisor.archivada;
-                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).toPromise();
+                this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisor ).subscribe();
             }
         }
 
-        if ( this.formActividadesRealizadasSiguienteSemana.dirty === true ) {
+        if ( this.formActividadesRealizadasSiguienteSemana.dirty === true && this.esSiguienteSemana === true ) {
             if ( this.obsApoyoSiguienteSemana !== undefined ) {
                 this.obsApoyoSiguienteSemana.archivada = !this.obsApoyoSiguienteSemana.archivada;
-                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyoSiguienteSemana ).toPromise();
+                this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsApoyoSiguienteSemana ).subscribe();
             }
             if ( this.obsSupervisorSiguienteSemana !== undefined ) {
                 this.obsSupervisorSiguienteSemana.archivada = !this.obsSupervisorSiguienteSemana.archivada;
-                await this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisorSiguienteSemana ).toPromise();
+                this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( this.obsSupervisorSiguienteSemana ).subscribe();
             }
         }
 

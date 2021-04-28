@@ -170,15 +170,19 @@ export class GestionAmbientalComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsApoyoAmbiental = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsApoyoAmbiental[0].observacion !== undefined ) {
-                                    if ( obsApoyoAmbiental[0].observacion.length > 0 ) {
-                                        this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental[0].observacion );
+
+                                if ( obsApoyoAmbiental.length > 0 ) {
+                                    if ( obsApoyoAmbiental[0].observacion !== undefined ) {
+                                        if ( obsApoyoAmbiental[0].observacion.length > 0 ) {
+                                            this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental[0].observacion );
+                                        }
                                     }
+                                    this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
+                                    this.formGestionAmbientalObservacion.get( 'fechaCreacion' ).setValue( obsApoyoAmbiental[0].fechaCreacion );
                                 }
-                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+
+                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
-                                this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
-                                this.formGestionAmbientalObservacion.get( 'fechaCreacion' ).setValue( obsApoyoAmbiental[0].fechaCreacion );
                             }
                         );
                 }
@@ -190,15 +194,19 @@ export class GestionAmbientalComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsManejoMateriales[0].observacion !== undefined ) {
-                                    if ( obsManejoMateriales[0].observacion.length > 0 ) {
-                                        this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales[0].observacion );
+
+                                if ( obsManejoMateriales.length > 0 ) {
+                                    if ( obsManejoMateriales[0].observacion !== undefined ) {
+                                        if ( obsManejoMateriales[0].observacion.length > 0 ) {
+                                            this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales[0].observacion );
+                                        }
                                     }
+                                    this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
+                                    this.formMaterialObservacion.get( 'fechaCreacion' ).setValue( obsManejoMateriales[0].fechaCreacion );
                                 }
-                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
+
+                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
-                                this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
-                                this.formMaterialObservacion.get( 'fechaCreacion' ).setValue( obsManejoMateriales[0].fechaCreacion );
                             }
                         );
                 }
@@ -210,15 +218,19 @@ export class GestionAmbientalComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsResiduosConstruccion = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsResiduosConstruccion[0].observacion !== undefined ) {
-                                    if ( obsResiduosConstruccion[0].observacion.length > 0 ) {
-                                        this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion[0].observacion );
+
+                                if ( obsResiduosConstruccion.length > 0 ) {
+                                    if ( obsResiduosConstruccion[0].observacion !== undefined ) {
+                                        if ( obsResiduosConstruccion[0].observacion.length > 0 ) {
+                                            this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion[0].observacion );
+                                        }
                                     }
+                                    this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
+                                    this.formResiduosConstruccion.get( 'fechaCreacion' ).setValue( obsResiduosConstruccion[0].fechaCreacion );
                                 }
-                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
+
+                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
-                                this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
-                                this.formResiduosConstruccion.get( 'fechaCreacion' ).setValue( obsResiduosConstruccion[0].fechaCreacion );
                             }
                         );
                 }
@@ -230,15 +242,19 @@ export class GestionAmbientalComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsResiduosPeligrosos = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsResiduosPeligrosos[0].observacion !== undefined ) {
-                                    if ( obsResiduosPeligrosos[0].observacion.length > 0 ) {
-                                        this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos[0].observacion );
+
+                                if ( obsResiduosPeligrosos.length > 0 ) {
+                                    if ( obsResiduosPeligrosos[0].observacion !== undefined ) {
+                                        if ( obsResiduosPeligrosos[0].observacion.length > 0 ) {
+                                            this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos[0].observacion );
+                                        }
                                     }
+                                    this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
+                                    this.formResiduosPeligrosos.get( 'fechaCreacion' ).setValue( obsResiduosPeligrosos[0].fechaCreacion );
                                 }
-                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
+
+                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
-                                this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
-                                this.formResiduosPeligrosos.get( 'fechaCreacion' ).setValue( obsResiduosPeligrosos[0].fechaCreacion );
                             }
                         )
                 }
@@ -250,15 +266,19 @@ export class GestionAmbientalComponent implements OnInit {
                         .subscribe(
                             response => {
                                 const obsOtros = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( obsOtros[0].observacion !== undefined ) {
-                                    if ( obsOtros[0].observacion.length > 0 ) {
-                                        this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros[0].observacion );
+
+                                if ( obsOtros.length > 0 ) {
+                                    if ( obsOtros[0].observacion !== undefined ) {
+                                        if ( obsOtros[0].observacion.length > 0 ) {
+                                            this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros[0].observacion );
+                                        }
                                     }
+                                    this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
+                                    this.formManejoOtra.get( 'fechaCreacion' ).setValue( obsOtros[0].fechaCreacion );
                                 }
-                                this.historialManejoOtros = response.filter( obs => obs.archivada === true );
+
+                                this.historialManejoOtros = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
-                                this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
-                                this.formManejoOtra.get( 'fechaCreacion' ).setValue( obsOtros[0].fechaCreacion );
                             }
                         )
                 }

@@ -53,6 +53,7 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
                 response => {
                     response.forEach( registro => registro.fechaReporte = moment( registro.fechaReporte ).format( 'DD/MM/YYYY' ) )
 
+                    console.log( response )
                     this.tablaRegistro = new MatTableDataSource( response );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;

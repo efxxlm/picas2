@@ -70,16 +70,20 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                         response => {
                             if ( response.length > 0 ) {
                                 const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( observacionApoyo[0].observacion !== undefined ) {
-                                    if ( observacionApoyo[0].observacion.length > 0 ) {
-                                        this.formActividadesRealizadas.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+
+                                if ( observacionApoyo.length > 0 ) {
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formActividadesRealizadas.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
                                     }
+                                    this.reporteActividadId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formActividadesRealizadas.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividad );
+                                    this.formActividadesRealizadas.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+
+                                this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                this.reporteActividadId = observacionApoyo[0].seguimientoSemanalObservacionId;
-                                this.formActividadesRealizadas.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividad );
-                                this.formActividadesRealizadas.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         }
                     );
@@ -88,16 +92,20 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                         response => {
                             if ( response.length > 0 ) {
                                 const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                if ( observacionApoyo[0].observacion !== undefined ) {
-                                    if ( observacionApoyo[0].observacion.length > 0 ) {
-                                        this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+
+                                if ( observacionApoyo.length > 0 ) {
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
                                     }
+                                    this.reporteActividadSiguienteId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividadSiguiente );
+                                    this.formActividadesRealizadasSiguienteSemana.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
-                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
+
+                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
-                                this.reporteActividadSiguienteId = observacionApoyo[0].seguimientoSemanalObservacionId;
-                                this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividadSiguiente );
-                                this.formActividadesRealizadasSiguienteSemana.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         }
                     );

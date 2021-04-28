@@ -74,7 +74,7 @@ export class ComiteObraComponent implements OnInit {
                             response => {
                                 this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 if ( observacionSupervisor.length > 0 ) {
                                     if ( observacionSupervisor[0].observacion !== undefined ) {
@@ -132,7 +132,7 @@ export class ComiteObraComponent implements OnInit {
             tieneObservacion: this.formComiteObra.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
+
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

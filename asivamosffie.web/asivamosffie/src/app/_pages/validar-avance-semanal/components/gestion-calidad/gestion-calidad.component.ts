@@ -75,7 +75,7 @@ export class GestionCalidadComponent implements OnInit {
         this.getGestionCalidad();
     }
 
-    getGestionCalidad() {
+    async getGestionCalidad() {
         if ( this.seguimientoSemanal !== undefined ) {
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
@@ -93,7 +93,7 @@ export class GestionCalidadComponent implements OnInit {
                                 response => {
                                     this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     if ( observacionSupervisor.length > 0 ) {
                                         if ( observacionSupervisor[0].observacion !== undefined ) {
@@ -137,35 +137,31 @@ export class GestionCalidadComponent implements OnInit {
                         if ( this.esVerDetalle === true ) {
                             estadoSemaforo = '';
                         }
-                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
-                            .subscribe(
-                                response => {
-                                    historial = response.filter( obs => obs.archivada === true );
-                                }
-                            );
-                            setTimeout(() => {
-                                this.ensayos.push( this.fb.group(
-                                    {
-                                        estadoSemaforo,
-                                        tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
-                                        numeroMuestras: ensayo.numeroMuestras,
-                                        fechaTomaMuestras: ensayo.fechaTomaMuestras,
-                                        fechaEntregaResultados: ensayo.fechaEntregaResultados,
-                                        realizoControlMedicion: ensayo.realizoControlMedicion,
-                                        observacion: ensayo.observacion,
-                                        urlSoporteGestion: ensayo.urlSoporteGestion,
-                                        registroCompletoMuestras: ensayo.registroCompletoMuestras,
-                                        observacionApoyo: observacionApoyo !== undefined ? observacionApoyo : null,
-                                        gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
-                                        tieneObservaciones: [ ensayo.tieneObservacionSupervisor !== undefined ? ensayo.tieneObservacionSupervisor : null, Validators.required ],
-                                        tieneObservacionApoyo: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
-                                        observacionEnsayo: observacion !== undefined ? observacion : null,
-                                        fechaCreacion: fechaCreacion !== undefined ? fechaCreacion : null,
-                                        seguimientoSemanalObservacionId: ensayo.observacionSupervisorId !== undefined ? ensayo.observacionSupervisorId : 0,
-                                        historial: [ historial ]
-                                    }
-                                ) );
-                            }, 500);
+
+                        const response = await this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio ).toPromise();
+                        historial = response.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                        
+                        this.ensayos.push( this.fb.group(
+                            {
+                                estadoSemaforo,
+                                tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
+                                numeroMuestras: ensayo.numeroMuestras,
+                                fechaTomaMuestras: ensayo.fechaTomaMuestras,
+                                fechaEntregaResultados: ensayo.fechaEntregaResultados,
+                                realizoControlMedicion: ensayo.realizoControlMedicion,
+                                observacion: ensayo.observacion,
+                                urlSoporteGestion: ensayo.urlSoporteGestion,
+                                registroCompletoMuestras: ensayo.registroCompletoMuestras,
+                                observacionApoyo: observacionApoyo !== undefined ? observacionApoyo : null,
+                                gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
+                                tieneObservaciones: [ ensayo.tieneObservacionSupervisor !== undefined ? ensayo.tieneObservacionSupervisor : null, Validators.required ],
+                                tieneObservacionApoyo: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
+                                observacionEnsayo: observacion !== undefined ? observacion : null,
+                                fechaCreacion: fechaCreacion !== undefined ? fechaCreacion : null,
+                                seguimientoSemanalObservacionId: ensayo.observacionSupervisorId !== undefined ? ensayo.observacionSupervisorId : 0,
+                                historial: [ historial ]
+                            }
+                        ) );
                     }
                 }
             }

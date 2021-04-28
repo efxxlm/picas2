@@ -161,7 +161,7 @@
 <!-- Ver detalle -->
 <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="esVerDetalle === true">
   <ng-container *ngIf="sinRegistros === true; else mostrarTabla">
-    <div class="d-flex justify-content-center align-items-center mt-1em" *ngIf="seguimientoSemanal.numeroSemana % 5 !== 0">
+    <div class="d-flex justify-content-center align-items-center mt-1em">
       <img src="./assets/img/icon/sim.svg" class="img-size">
       <p><small>No hay actividades para esta semana.</small></p>
     </div>
