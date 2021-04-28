@@ -34,48 +34,51 @@ export class GestionDeObraComponent implements OnInit {
             const gestionAmbiental = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
             let totalCompletados = 0;
             let totalActividades = 0;
-            if ( gestionAmbiental.registroCompletoObservacionApoyo === false ) {
-              this.semaforoGestionAmbiental = 'en-proceso';
-            }
-            if ( gestionAmbiental.registroCompletoObservacionApoyo === true ) {
-              this.semaforoGestionAmbiental = 'completo';
-              totalGestion++;
-
-            }
-            if ( gestionAmbiental.manejoMaterialesInsumo !== undefined ) {
-              totalActividades++;
-              const manejoMateriales = gestionAmbiental.manejoMaterialesInsumo;
-              if ( manejoMateriales.registroCompletoObservacionApoyo === true ) {
-                totalCompletados++;
+            if ( gestionAmbiental.seEjecutoGestionAmbiental === false ) {
+              if ( gestionAmbiental.registroCompletoObservacionApoyo === false ) {
+                this.semaforoGestionAmbiental = 'en-proceso';
+              }
+              if ( gestionAmbiental.registroCompletoObservacionApoyo === true ) {
+                this.semaforoGestionAmbiental = 'completo';
+                totalGestion++;
               }
             }
-            if ( gestionAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
-              totalActividades++;
-              const residuosConstruccion = gestionAmbiental.manejoResiduosConstruccionDemolicion;
-              if ( residuosConstruccion.registroCompletoObservacionApoyo === true ) {
-                totalCompletados++;
+            if ( gestionAmbiental.seEjecutoGestionAmbiental === true ) {
+              if ( gestionAmbiental.manejoMaterialesInsumo !== undefined ) {
+                totalActividades++;
+                const manejoMateriales = gestionAmbiental.manejoMaterialesInsumo;
+                if ( manejoMateriales.registroCompletoObservacionApoyo === true ) {
+                  totalCompletados++;
+                }
               }
-            }
-            if ( gestionAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
-              totalActividades++;
-              const residuosPeligrosos = gestionAmbiental.manejoResiduosPeligrososEspeciales;
-              if ( residuosPeligrosos.registroCompletoObservacionApoyo === true ) {
-                totalCompletados++;
+              if ( gestionAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
+                totalActividades++;
+                const residuosConstruccion = gestionAmbiental.manejoResiduosConstruccionDemolicion;
+                if ( residuosConstruccion.registroCompletoObservacionApoyo === true ) {
+                  totalCompletados++;
+                }
               }
-            }
-            if ( gestionAmbiental.manejoOtro !== undefined ) {
-              totalActividades++;
-              const manejoOtros = gestionAmbiental.manejoOtro;
-              if ( manejoOtros.registroCompletoObservacionApoyo === true ) {
-                totalCompletados++;
+              if ( gestionAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
+                totalActividades++;
+                const residuosPeligrosos = gestionAmbiental.manejoResiduosPeligrososEspeciales;
+                if ( residuosPeligrosos.registroCompletoObservacionApoyo === true ) {
+                  totalCompletados++;
+                }
               }
-            }
-            if ( totalActividades > 0 && ( totalCompletados < totalActividades ) ) {
-              this.semaforoGestionAmbiental = 'en-proceso';
-            }
-            if ( totalActividades > 0 && ( totalCompletados === totalActividades ) ) {
-              this.semaforoGestionAmbiental = 'completo';
-              totalGestion++;
+              if ( gestionAmbiental.manejoOtro !== undefined ) {
+                totalActividades++;
+                const manejoOtros = gestionAmbiental.manejoOtro;
+                if ( manejoOtros.registroCompletoObservacionApoyo === true ) {
+                  totalCompletados++;
+                }
+              }
+              if ( totalActividades > 0 && ( totalCompletados < totalActividades ) ) {
+                this.semaforoGestionAmbiental = 'en-proceso';
+              }
+              if ( totalActividades > 0 && ( totalCompletados === totalActividades ) ) {
+                this.semaforoGestionAmbiental = 'completo';
+                totalGestion++;
+              }
             }
             // Semaforo gestion de calidad
             const gestionCalidad = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
