@@ -27,17 +27,17 @@ namespace asivamosffie.services
         #region constructor
 
         private ICommonService _commonService;
-        private readonly IDocumentService _documentService;     
-      //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
+        private readonly IDocumentService _documentService;
+        //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
 
         public RegisterWeeklyProgressService(
             devAsiVamosFFIEContext context,
             ICommonService commonService,
-       //     ICheckWeeklyProgressService checkWeeklyProgressService,
+            //     ICheckWeeklyProgressService checkWeeklyProgressService,
             IDocumentService documentService)
         {
-       //     _checkWeeklyProgressService = checkWeeklyProgressService;
+            //     _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -987,9 +987,10 @@ namespace asivamosffie.services
 
                 if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
+                    await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
+
                     GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId);
                     GetArchivarObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId, pUsuarioMod);
-                    await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
                     seguimientoSemanalMod.RegistroCompleto = true;
                     seguimientoSemanalMod.FechaRegistroCompletoInterventor = DateTime.Now;
                 }
@@ -1051,23 +1052,20 @@ namespace asivamosffie.services
 
         private void GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(int seguimientoSemanalId)
         {
-            List<SeguimientoSemanalObservacion> seguimientoSemanalObservacions = 
+            List<SeguimientoSemanalObservacion> seguimientoSemanalObservacions =
                 _context.SeguimientoSemanalObservacion
                 .Where(s => s.SeguimientoSemanalId == seguimientoSemanalId).ToList();
 
             foreach (var item in seguimientoSemanalObservacions)
             {
-                CreateEditSeguimientoSemanalObservacion(item,true);
+                CreateEditSeguimientoSemanalObservacion(item, true);
             }
-     
-        }
-        public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
-            SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalObservacion.SeguimientoSemanalId);
 
+        }
+        public Respuesta CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
+        { 
             try
-            { 
+            {
                 switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
                 {
 
@@ -1078,7 +1076,7 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.AVANCE_FINANCIERO:
                         CreateOrEditObservacionAvanceFinanciero(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
                         break;
-                         
+
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL:
                         CreateOrEditObservacionGestionObraAmbiental(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
                         break;
@@ -1153,25 +1151,12 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, "CREAR OBSERVACION")
-                };
+                return new Respuesta();
+                 
             }
             catch (Exception ex)
             {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, ex.InnerException.ToString())
-                };
+                return new Respuesta();
             }
         }
 
@@ -1658,6 +1643,7 @@ namespace asivamosffie.services
                 manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
             }
         }
+
         private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)

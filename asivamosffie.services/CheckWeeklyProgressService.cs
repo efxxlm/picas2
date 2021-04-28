@@ -329,16 +329,16 @@ namespace asivamosffie.services
                     //        return false;
                     //}
                     //else
-                    {
-                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                    }
+                    //{
+                    //    if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
+                    //        return false;
+                    //    if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionSupervisor != true)
+                    //        return false;
+                    //    if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionSupervisor != true)
+                    //        return false;
+                    //    if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionSupervisor != true)
+                    //        return false;
+                    //}
                 }
             }
             else
@@ -354,16 +354,16 @@ namespace asivamosffie.services
                     //        return false;
                     //}
                     //else
-                    {
-                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                    }
+                    //{
+                    //    if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
+                    //        return false;
+                    //    if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionApoyo != true)
+                    //        return false;
+                    //    if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionApoyo != true)
+                    //        return false;
+                    //    if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionApoyo != true)
+                    //        return false;
+                    //}
                 }
             }
             return true;
