@@ -53,6 +53,13 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
           dataTable.push( solicitud );
         };
+
+        if (solicitud.tipoSolicitud === 'Novedad Contractual' && solicitud.estadoCodigo === '12'){
+          
+          solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
+
+          dataTable.push( solicitud );
+        }
       }
 
       if ( conTrue === dataTable.length ) {
@@ -94,14 +101,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
     
-    console.log( sesionComiteSolicitudId, estadoCodigo );
+    console.log( sesionComiteSolicitudId, estadoCodigo, tipoSolicitud );
 
     switch ( tipoSolicitud ) {
 
       case 'Contratación':
         this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
       break;
-      case 'Modificación contractual':
+      case 'Novedad Contractual':
         /*Ejemplo para los 3 tipos de modificaciones contractuales*/
         this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: true, reinicio: false, sesionComiteSolicitudId, estadoCodigo } } );

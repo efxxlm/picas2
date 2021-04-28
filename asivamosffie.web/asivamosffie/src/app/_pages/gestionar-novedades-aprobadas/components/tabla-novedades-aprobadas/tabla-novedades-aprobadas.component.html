@@ -93,7 +93,7 @@
       </a>
       
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-        *ngIf="element.estadoCodigo === '11' && element?.novedadContractual?.registroCompletoDevolucionTramite === true "
+        *ngIf="element?.novedadContractual?.registroCompletoDevolucionTramite === true "
         (click)="devolverSolicitud(element.novedadContractualId)">
         Devolver solicitud
       </button>
