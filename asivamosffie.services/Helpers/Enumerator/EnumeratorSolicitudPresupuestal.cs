@@ -27,5 +27,6 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Solicitado = 1,
 		Apartado_en_DDP = 2,
 		Gestionado_en_DRP = 3,	
+		Rendimientos = 4
 	}
 }
