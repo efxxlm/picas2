@@ -5,7 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VVerificarSeguimientoSemanal
     {
-        public int SeguimientoSemanalId { get; set; }
+        public int? SeguimientoSemanalId { get; set; }
         public int ContratacionProyectoId { get; set; }
         public int NumeroSemana { get; set; }
         public string LlaveMen { get; set; }

@@ -28,16 +28,16 @@ namespace asivamosffie.services
 
         private ICommonService _commonService;
         private readonly IDocumentService _documentService;     
-        private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
+      //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
 
         public RegisterWeeklyProgressService(
             devAsiVamosFFIEContext context,
             ICommonService commonService,
-            ICheckWeeklyProgressService checkWeeklyProgressService,
+       //     ICheckWeeklyProgressService checkWeeklyProgressService,
             IDocumentService documentService)
         {
-            _checkWeeklyProgressService = checkWeeklyProgressService;
+       //     _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -1057,9 +1057,706 @@ namespace asivamosffie.services
 
             foreach (var item in seguimientoSemanalObservacions)
             {
-                _checkWeeklyProgressService.CreateEditSeguimientoSemanalObservacion(item,true);
+                CreateEditSeguimientoSemanalObservacion(item,true);
             }
      
+        }
+        public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
+            SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalObservacion.SeguimientoSemanalId);
+
+            try
+            { 
+                switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
+                {
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.AVANCE_FISICO:
+                        CreateOrEditObservacionAvanceFisico(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.AVANCE_FINANCIERO:
+                        CreateOrEditObservacionAvanceFinanciero(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+                         
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL:
+                        CreateOrEditObservacionGestionObraAmbiental(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_MATERIALES:
+                        CreateOrEditObservacionGestionObraAmbientalManejoMateriales(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_CONSTRUCCION_DEMOLICION:
+                        CreateOrEditObservacionGestionObraAmbientalManejoConstruccionDemolicion(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_RESIDUOS_PELIGROSOS:
+                        CreateOrEditObservacionGestionObraAmbientalManejoResiduosPeligrosos(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_OBRA_AMBIENTAL_MANEJO_OTRA:
+                        CreateOrEditObservacionGestionObraAmbientalManejoOtra(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD:
+                        CreateOrEditObservacionGestionCalidad(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD_ENSAYO_LABORATORIO:
+                        CreateOrEditObservacionGestionCalidadEnsayoLaboratorio(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_CALIDAD_ENSAYO_LABORATORIO_MUESTRAS:
+                        CreateOrEditObservacionGestionCalidadEnsayoLaboratorioMuestras(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SEGURIDAD_Y_SALUD:
+                        CreateOrEditObservacionGestionSeguridadSalud(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SOCIAL:
+                        CreateOrEditObservacionGestionSocial(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.ALERTAS_RELEVANTES:
+                        CreateOrEditObservacionAlertasRelevantes(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES:
+                        CreateOrEditObservacionReporteActividades(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ESTADO_OBRA:
+                        CreateOrEditObservacionReporteActividadesEstadoContrato(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ACTIVIDADES_REALIZADAS:
+                        CreateOrEditObservacionReporteActividadesRealizadas(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES_ACTIVIDADES_REALIZADAS_SIGUIENTE_SEMANA:
+                        CreateOrEditObservacionReporteActividadesRealizadasSiguienteSemana(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.REGISTRO_FOTOGRAFICO:
+                        CreateOrEditObservacionRegistroFotografico(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    case ConstanCodigoTipoObservacionSeguimientoSemanal.COMITE_OBRA:
+                        CreateOrEditObservacionComiteObra(pSeguimientoSemanalObservacion, pEliminarRegistroCompleto);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, "CREAR OBSERVACION")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+        }
+
+        private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
+        {
+            return _context.SeguimientoSemanalObservacion
+                                             .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
+                                                 && r.EsSupervisor == esSupervisor
+                                                 && r.TieneObservacion == true
+                                             ).Count() == 0;
+        }
+
+        private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlertaOld = _context.SeguimientoSemanalGestionObraAlerta.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraAlertaOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraAlertaOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraAlertaOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraAlertaOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAlertaOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraAlertaOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAlertaOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAlertaOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionSocial(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocialOld = _context.SeguimientoSemanalGestionObraSocial.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraSocialOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraSocialOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraSocialOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraSocialOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSocialOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraSocialOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSocialOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSocialOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionSeguridadSalud(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSaludOld = _context.SeguimientoSemanalGestionObraSeguridadSalud.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraSeguridadSaludOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraSeguridadSaludOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompleto = false;
+                seguimientoSemanalGestionObraSeguridadSaludOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSeguridadSaludOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraSeguridadSaludOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraSeguridadSaludOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionComiteObra(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
+            SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = false;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = false;
+                SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistrarComiteObraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistrarComiteObraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionRegistroFotografico(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalRegistroFotografico SeguimientoSemanalRegistroFotograficoOld = _context.SeguimientoSemanalRegistroFotografico.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            SeguimientoSemanalRegistroFotograficoOld.FechaModificacion = DateTime.Now;
+            SeguimientoSemanalRegistroFotograficoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = false;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // SeguimientoSemanalRegistroFotograficoOld.RegistroCompleto = false;
+
+                SeguimientoSemanalRegistroFotograficoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistroFotograficoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                SeguimientoSemanalRegistroFotograficoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                SeguimientoSemanalRegistroFotograficoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                SeguimientoSemanalRegistroFotograficoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesRealizadasSiguienteSemana(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //seguimientoSemanalReporteActividad.RegistroCompleto = false;
+                //seguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividadSiguiente = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividadSiguiente = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoActividadSiguiente = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdActividadSiguiente = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesRealizadas(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  seguimientoSemanalReporteActividad.RegistroCompleto = false;
+                //  seguimientoSemanalReporteActividad.RegistroCompletoActividad = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorActividad = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdActividad = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoActividad = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdActividad = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividadesEstadoContrato(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  seguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato = false;
+                //    seguimientoSemanalReporteActividad.RegistroCompleto = false;
+
+                seguimientoSemanalReporteActividad.TieneObservacionSupervisorEstadoContrato = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionSupervisorIdEstadoContrato = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalReporteActividad.TieneObservacionApoyoEstadoContrato = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalReporteActividad.ObservacionApoyoIdEstadoContrato = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionReporteActividades(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalReporteActividad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalReporteActividad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato = false;
+
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente = false;
+                seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato = false;
+            }
+
+            //if (pSeguimientoSemanalObservacion.EsSupervisor)
+            //{
+            //    seguimientoSemanalReporteActividad.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+            //    seguimientoSemanalReporteActividad.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+            //    seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            //}
+            //else
+            //{
+            //    seguimientoSemanalReporteActividad.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+            //    seguimientoSemanalReporteActividad.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+            //    seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            //}
+        }
+
+        private void CreateOrEditObservacionGestionCalidadEnsayoLaboratorioMuestras(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            EnsayoLaboratorioMuestra ensayoLaboratorioMuestraOld = _context.EnsayoLaboratorioMuestra.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+            ensayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
+            ensayoLaboratorioMuestraOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = false;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  ensayoLaboratorioMuestraOld.RegistroCompleto = false;
+                ensayoLaboratorioMuestraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                ensayoLaboratorioMuestraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                ensayoLaboratorioMuestraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                ensayoLaboratorioMuestraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                ensayoLaboratorioMuestraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionCalidadEnsayoLaboratorio(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
+            gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = false;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // gestionObraCalidadEnsayoLaboratorioOld.RegistroCompleto = false;
+                gestionObraCalidadEnsayoLaboratorioOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                gestionObraCalidadEnsayoLaboratorioOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                gestionObraCalidadEnsayoLaboratorioOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                gestionObraCalidadEnsayoLaboratorioOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionCalidad(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidad = _context.SeguimientoSemanalGestionObraCalidad.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalGestionObraCalidad.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraCalidad.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraCalidad.RegistroCompleto = false;
+                seguimientoSemanalGestionObraCalidad.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraCalidad.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraCalidad.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraCalidad.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraCalidad.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoOtra(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoOtro manejoOtroOld = _context.ManejoOtro.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoOtroOld.FechaModificacion = DateTime.Now;
+            manejoOtroOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoOtroOld.RegistroCompletoObservacionApoyo = false;
+                manejoOtroOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //manejoOtroOld.RegistroCompleto = false;
+                manejoOtroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoOtroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoOtroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoOtroOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoOtroOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoOtroOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoResiduosPeligrosos(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoResiduosPeligrososEspeciales manejoResiduosPeligrososEspecialesOld = _context.ManejoResiduosPeligrososEspeciales.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoResiduosPeligrososEspecialesOld.FechaModificacion = DateTime.Now;
+            manejoResiduosPeligrososEspecialesOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = false;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //manejoResiduosPeligrososEspecialesOld.RegistroCompleto = false;
+                manejoResiduosPeligrososEspecialesOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosPeligrososEspecialesOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoResiduosPeligrososEspecialesOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosPeligrososEspecialesOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosPeligrososEspecialesOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoConstruccionDemolicion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicionOld = _context.ManejoResiduosConstruccionDemolicion.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoResiduosConstruccionDemolicionOld.FechaModificacion = DateTime.Now;
+            manejoResiduosConstruccionDemolicionOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = false;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //  manejoResiduosConstruccionDemolicionOld.RegistroCompleto = false;
+                manejoResiduosConstruccionDemolicionOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosConstruccionDemolicionOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoResiduosConstruccionDemolicionOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoResiduosConstruccionDemolicionOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoResiduosConstruccionDemolicionOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbientalManejoMateriales(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            ManejoMaterialesInsumos manejoMaterialesInsumosOld = _context.ManejoMaterialesInsumos.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            manejoMaterialesInsumosOld.FechaModificacion = DateTime.Now;
+            manejoMaterialesInsumosOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = false;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // manejoMaterialesInsumosOld.RegistroCompleto = false;
+                manejoMaterialesInsumosOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoMaterialesInsumosOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                manejoMaterialesInsumosOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                manejoMaterialesInsumosOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                manejoMaterialesInsumosOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+        private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
+        {
+            if (pSeguimientoSemanalObservacion.TieneObservacion == false)
+                return true;
+
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && string.IsNullOrEmpty(pSeguimientoSemanalObservacion.Observacion))
+                return false;
+
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
+                return true;
+
+            return false;
+        }
+
+        private void CreateOrEditObservacionGestionObraAmbiental(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalGestionObraAmbiental seguimientoSemanalGestionObraAmbientalOld = _context.SeguimientoSemanalGestionObraAmbiental.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+
+            seguimientoSemanalGestionObraAmbientalOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalGestionObraAmbientalOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = false;
+
+                seguimientoSemanalGestionObraAmbientalOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAmbientalOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalGestionObraAmbientalOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalGestionObraAmbientalOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalGestionObraAmbientalOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionAvanceFinanciero(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinancieroOld = _context.SeguimientoSemanalAvanceFinanciero.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalAvanceFinancieroOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalAvanceFinancieroOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                //seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = false; 
+                seguimientoSemanalAvanceFinancieroOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFinancieroOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalAvanceFinancieroOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFinancieroOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+        }
+
+        private void CreateOrEditObservacionAvanceFisico(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
+        {
+            SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
+
+            seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
+            seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+
+            if (pEliminarRegistrCompleto)
+            {
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = false;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = false;
+            }
+
+            if (pSeguimientoSemanalObservacion.EsSupervisor)
+            {
+                // seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
+                seguimientoSemanalAvanceFisicoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
+            else
+            {
+                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = null;
+                seguimientoSemanalAvanceFisicoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                seguimientoSemanalAvanceFisicoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+            }
         }
 
         private void GetArchivarObservacionesSeguimientoSemanal(int seguimientoSemanalId, string pAuthor)

@@ -250,6 +250,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
+        public virtual DbSet<VProcesoSeleccionIntegrante> VProcesoSeleccionIntegrante { get; set; }
         public virtual DbSet<VProcesoSeleccionReporteHist> VProcesoSeleccionReporteHist { get; set; }
         public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
         public virtual DbSet<VProyectoReporteHist> VProyectoReporteHist { get; set; }
@@ -283,6 +284,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -3887,11 +3889,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
-
-                entity.HasOne(d => d.AbogadoRevision)
-                    .WithMany(p => p.NovedadContractual)
-                    .HasForeignKey(d => d.AbogadoRevisionId)
-                    .HasConstraintName("FK_NovedadContractual_Usuario");
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.NovedadContractual)
@@ -8683,6 +8680,32 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VProcesoSeleccionIntegrante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ProcesoSeleccionIntegrante");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreIntegrante)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProcesoSeleccionIntegranteId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VProcesoSeleccionReporteHist>(entity =>
             {
                 entity.HasNoKey();
@@ -8965,9 +8988,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RegistrarAvanceSemanal");
 
-                entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
@@ -9007,9 +9028,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoIntervencion)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VRegistrarFase1>(entity =>
@@ -9580,17 +9599,11 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ValidarSeguimientoSemanal");
 
-                entity.Property(e => e.EstadoMuestras)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoMuestras).HasMaxLength(250);
 
-                entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
 
-                entity.Property(e => e.EstadoSeguimientoSemanal)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoSeguimientoSemanal).HasMaxLength(250);
 
                 entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
                     .HasMaxLength(100)
@@ -9619,9 +9632,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoIntervencion)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VValorConstruccionXproyectoContrato>(entity =>
@@ -9755,17 +9766,11 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_VerificarSeguimientoSemanal");
 
-                entity.Property(e => e.EstadoMuestras)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoMuestras).HasMaxLength(250);
 
-                entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
 
-                entity.Property(e => e.EstadoSeguimientoSemanal)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoSeguimientoSemanal).HasMaxLength(250);
 
                 entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
 
@@ -9790,9 +9795,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoIntervencion)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VigenciaAporte>(entity =>
