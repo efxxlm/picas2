@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetListReporteSemanal();
 
-        Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion);
+        Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion , bool pEliminarRegistroCompleto);
 
         Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId);
     }

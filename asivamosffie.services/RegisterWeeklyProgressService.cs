@@ -27,14 +27,17 @@ namespace asivamosffie.services
         #region constructor
 
         private ICommonService _commonService;
-        private readonly IDocumentService _documentService;
+        private readonly IDocumentService _documentService;     
+        private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
 
         public RegisterWeeklyProgressService(
             devAsiVamosFFIEContext context,
             ICommonService commonService,
+            ICheckWeeklyProgressService checkWeeklyProgressService,
             IDocumentService documentService)
         {
+            _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -984,6 +987,7 @@ namespace asivamosffie.services
 
                 if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
+                    GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId);
                     GetArchivarObservacionesSeguimientoSemanal(seguimientoSemanalMod.SeguimientoSemanalId, pUsuarioMod);
                     await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
                     seguimientoSemanalMod.RegistroCompleto = true;
@@ -1043,6 +1047,19 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private void GetEliminarRegistrCompletoObservacionesSeguimientoSemanal(int seguimientoSemanalId)
+        {
+            List<SeguimientoSemanalObservacion> seguimientoSemanalObservacions = 
+                _context.SeguimientoSemanalObservacion
+                .Where(s => s.SeguimientoSemanalId == seguimientoSemanalId).ToList();
+
+            foreach (var item in seguimientoSemanalObservacions)
+            {
+                _checkWeeklyProgressService.CreateEditSeguimientoSemanalObservacion(item,true);
+            }
+     
         }
 
         private void GetArchivarObservacionesSeguimientoSemanal(int seguimientoSemanalId, string pAuthor)
