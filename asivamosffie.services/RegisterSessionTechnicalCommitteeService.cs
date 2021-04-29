@@ -29,7 +29,8 @@ namespace asivamosffie.services
         private readonly IContractualControversy _IContractualControversy;
         private readonly devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
-        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IProjectService projectService, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService, IContractualControversy contractualControversy)
+        private readonly IContractualNoveltyService _IContractualNoveltyService;
+        public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IProjectService projectService, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService, IContractualControversy contractualControversy, IContractualNoveltyService contractualNoveltyService)
         {
             _IProjectContractingService = projectContractingService;
             _commonService = commonService;
@@ -37,6 +38,7 @@ namespace asivamosffie.services
             _IprojectService = projectService;
             _converter = converter;
             _IContractualControversy = contractualControversy;
+            _IContractualNoveltyService = contractualNoveltyService;
         }
         #endregion
 
@@ -3020,6 +3022,7 @@ namespace asivamosffie.services
 
         }
 
+
         public async Task<byte[]> ReplacePlantillaProcesosSeleccion(int pProcesoSeleccionId)
         {
             ProcesoSeleccion procesoSeleccion = await GetProcesosSelecccionByProcesoSeleccionId(pProcesoSeleccionId);
@@ -5851,6 +5854,12 @@ namespace asivamosffie.services
                     .ToString()).FirstOrDefault()
                  .Contenido;
 
+                string PlantillaNovedadContractual = _context.Plantilla
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_novedad_contractual)
+                    .ToString()).FirstOrDefault()
+                 .Contenido;
+                string RegistrosFichaNovedadContractual = string.Empty;
+
                 string RegistrosFichaProcesosSeleccion = string.Empty;
 
                 foreach (var scst in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
@@ -5867,6 +5876,11 @@ namespace asivamosffie.services
                             RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
                             break;
 
+                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                            RegistrosFichaNovedadContractual += PlantillaNovedadContractual;
+                            RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual, await _IContractualNoveltyService.GetNovedadContractualById(scst.SolicitudId));
+                            break;
+
                         default:
                             break;
                     }
@@ -5874,6 +5888,7 @@ namespace asivamosffie.services
                 }
                 //Suma de las fichas 
                 RegistrosFichaContratacion += RegistrosFichaProcesosSeleccion;
+                RegistrosFichaContratacion += RegistrosFichaNovedadContractual;
 
                 //Plantilla Principal 
                 foreach (Dominio placeholderDominio in placeholders)
@@ -6166,11 +6181,12 @@ namespace asivamosffie.services
 
             //ControversiaContractual controversia = await _IContractualControversy.GetControversiaContractualById(actuacion.ControversiaContractualId);
 
-
+            NovedadContractual novedadContractual = await _IContractualNoveltyService.GetNovedadContractualById(pNovedadContractual);
+            
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_novedad_contractual).ToString();
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = await ReemplazarDatosPlantillaNovedadContractual(Plantilla.Contenido, pNovedadContractual);
+            Plantilla.Contenido = await ReemplazarDatosPlantillaNovedadContractual(Plantilla.Contenido, novedadContractual);
             return PDF.Convertir(Plantilla);
 
         }
@@ -6717,7 +6733,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<string> ReemplazarDatosPlantillaNovedadContractual(string pPlantilla, int pNovedadContractual)
+        public async Task<string> ReemplazarDatosPlantillaNovedadContractual(string pPlantilla, NovedadContractual novedadContractual)
         {
             try
             {
@@ -6784,14 +6800,6 @@ namespace asivamosffie.services
                 int enumClausula = 1;
                 int enumDetalles = 1;
 
-                NovedadContractual novedadContractual = _context.NovedadContractual.Where(r => r.NovedadContractualId == pNovedadContractual)
-                                                                    .Include(r => r.NovedadContractualDescripcion)
-                                                                        .ThenInclude(r => r.NovedadContractualClausula)
-                                                                    .Include(r => r.NovedadContractualAportante)
-                                                                        .ThenInclude(r => r.ComponenteAportanteNovedad)
-                                                                            .ThenInclude(r => r.ComponenteFuenteNovedad)
-                                                                                .ThenInclude(r => r.ComponenteUsoNovedad).FirstOrDefault();
-
                 Contrato contrato = _context.Contrato.Where(r => r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
                 Contratacion contratacion = null;
                 DisponibilidadPresupuestal disponibilidadPresupuestal = null;
@@ -6805,6 +6813,7 @@ namespace asivamosffie.services
                 bool existeProrrogaDetalle = false;
                 bool existeModificacionDetalle = false;
                 bool existeOtroDetalle = false;
+                string tipoNovedadDetalle = string.Empty;
 
                 List<NovedadContractualDescripcion> novedadContractualDescripcionDetalle = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).ToList();
                 foreach (var item in novedadContractualDescripcionDetalle)
@@ -6816,13 +6825,13 @@ namespace asivamosffie.services
                         string codigotipoNovedadTemp = item.TipoNovedadCodigo;
                         string tipoNovedadTemp = ListaParametricas.Where(r => r.Codigo == item.TipoNovedadCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).FirstOrDefault().Nombre;
 
-                        if (String.IsNullOrEmpty(tipoNovedadString))
+                        if (String.IsNullOrEmpty(tipoNovedadDetalle))
                         {
-                            tipoNovedadString = tipoNovedadTemp;
+                            tipoNovedadDetalle = tipoNovedadTemp;
                         }
                         else
                         {
-                            tipoNovedadString = tipoNovedadString + ", " + tipoNovedadTemp;
+                            tipoNovedadDetalle = tipoNovedadDetalle + ", " + tipoNovedadTemp;
                         }
 
                         foreach (var motivo in item.NovedadContractualDescripcionMotivo)
@@ -6930,7 +6939,7 @@ namespace asivamosffie.services
                     {
 
                         case ConstanCodigoVariablesPlaceHolders.TP_NOVEDAD:
-                            DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, tipoNovedadString);
+                            DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, tipoNovedadDetalle);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TP_NOVEDAD_DETALLES:
@@ -7486,7 +7495,7 @@ namespace asivamosffie.services
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, disponibilidadPresupuestal != null ? !string.IsNullOrEmpty(disponibilidadPresupuestal.NumeroDrp) ? disponibilidadPresupuestal.NumeroDrp : " " : " ");
                             break;
 
-                        case ConstanCodigoVariablesPlaceHolders.DDP_NUEVO_SALDO_FUENTE:
+                        case ConstanCodigoVariablesPlaceHolders.SALDO_APORTANTE:
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, disponibilidadPresupuestal != null ? " " : " ");
                             break;
 

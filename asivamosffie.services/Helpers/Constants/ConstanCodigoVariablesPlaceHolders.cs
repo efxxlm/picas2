@@ -319,6 +319,7 @@
         public const string TP_CONCEPTO_TECNICO = "242";
         public const string TP_NOVEDAD_DETALLES = "243";
         public const string NUMERO_DRP = "244";
+        public const string SALDO_APORTANTE = "245";
         #endregion
     }
 }
