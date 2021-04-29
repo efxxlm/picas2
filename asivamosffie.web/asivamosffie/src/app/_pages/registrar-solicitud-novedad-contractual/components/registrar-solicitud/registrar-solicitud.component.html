@@ -26,7 +26,12 @@
           </label>
         </div>
         <div class="col d-flex">
-          <mat-form-field class="example-full-width">
+          <mat-form-field
+            class="example-full-width"
+            [matTooltipPosition]="'above'"
+            matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+            matTooltipClass="info-tooltip"
+          >
             <input
               #buscar
               type="text"

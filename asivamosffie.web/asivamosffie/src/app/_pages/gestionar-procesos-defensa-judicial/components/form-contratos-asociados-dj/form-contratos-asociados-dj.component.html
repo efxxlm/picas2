@@ -49,7 +49,12 @@
                                       }">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field class="full-width">
+                                    <mat-form-field 
+                                        class="full-width"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                                        matTooltipClass="info-tooltip"
+                                    >
                                         <input matInput #contrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto"  
                                         [formControl]="myControl.controls[i]"  formControlName="contrato" (ngModelChange)="getContratos($event, i)">
                                         <mat-autocomplete #auto="matAutocomplete">

@@ -55,7 +55,12 @@
           </label>
         </div>
         <div class="col d-flex">
-          <mat-form-field class="full-width">
+          <mat-form-field 
+            class="full-width"
+            [matTooltipPosition]="'above'"
+            matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+            matTooltipClass="info-tooltip"
+          >
             <input
               matInput
               #nombre
@@ -417,7 +422,12 @@
           </label>
         </div>
         <div class="col d-flex">
-          <mat-form-field class="full-width">
+          <mat-form-field
+            class="full-width"
+            [matTooltipPosition]="'above'"
+            matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+            matTooltipClass="info-tooltip"
+          >
             <input
               matInput
               #nombre2
@@ -532,7 +542,12 @@
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="full-width">
+              <mat-form-field
+                class="full-width"
+                [matTooltipPosition]="'above'"
+                matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                matTooltipClass="info-tooltip"
+              >
                 <input
                   matInput
                   #representanteLegal2
@@ -1169,7 +1184,12 @@
                 </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field
+                  class="full-width"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                  matTooltipClass="info-tooltip"
+                >
                   <input
                     matInput
                     #nombre

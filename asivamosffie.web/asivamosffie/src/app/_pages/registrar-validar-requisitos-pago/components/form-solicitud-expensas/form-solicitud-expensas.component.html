@@ -37,7 +37,12 @@
                                   }">Llave MEN</label>
                             </div>
                             <div class="col d-flex">
-                                <mat-form-field class="full-width">
+                                <mat-form-field
+                                    class="full-width"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                                    matTooltipClass="info-tooltip"
+                                >
                                     <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100"
                                         required [matAutocomplete]="auto" formControlName="llaveMen">
                                     <mat-autocomplete #auto="matAutocomplete">

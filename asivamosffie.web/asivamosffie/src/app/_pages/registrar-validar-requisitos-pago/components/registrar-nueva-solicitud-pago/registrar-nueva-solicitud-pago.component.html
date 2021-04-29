@@ -104,7 +104,13 @@
                                       }">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field class="full-width" #desplegable>
+                                    <mat-form-field
+                                        class="full-width"
+                                        #desplegable
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                                        matTooltipClass="info-tooltip"
+                                    >
                                         <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required
                                             [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
@@ -171,7 +177,13 @@
                                     <label class="label-left" for="numeroContrato">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field class="full-width" #desplegable>
+                                    <mat-form-field
+                                        class="full-width"
+                                        #desplegable
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                                        matTooltipClass="info-tooltip"
+                                    >
                                         <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required
                                             [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
