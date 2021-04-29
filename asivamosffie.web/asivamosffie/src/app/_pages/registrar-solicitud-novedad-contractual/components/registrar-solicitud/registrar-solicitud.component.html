@@ -117,7 +117,8 @@
       </p> -->
       <p>
         <strong>Valor del contrato:</strong>
-        {{ contrato?.valor | currency: '':'symbol':'3.0' }}
+        {{ (contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+            contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong>Plazo:</strong>

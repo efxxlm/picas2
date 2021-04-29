@@ -263,6 +263,8 @@ namespace asivamosffie.services
                 novedadContractual.RegistroCompletoFirmas = RegistrocompletoFirmas(novedadContractual);
                 novedadContractual.RegistroCompletoDetallar = RegistrocompletoDetallar(novedadContractual);
 
+                novedadContractual.NovedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true).ToList();
+
                 foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
                     novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
@@ -494,8 +496,23 @@ namespace asivamosffie.services
                             novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
                         }
 
+                        
+
                         if (novedadContractual.NovedadContractualDescripcion != null)
                         {
+                            List<NovedadContractualDescripcion> listaDescripciones = _context.NovedadContractualDescripcion
+                                                                                                .Where(x => x.NovedadContractualId == novedadContractual.NovedadContractualId &&
+                                                                                                        x.Eliminado != true)
+                                                                                                .ToList();
+
+                            foreach (NovedadContractualDescripcion novedadContractualDescripcion in listaDescripciones)
+                            {
+                                if (novedadContractual.NovedadContractualDescripcion.Where( x => x.NovedadContractualDescripcionId == novedadContractualDescripcion.NovedadContractualDescripcionId ).Count() == 0)
+                                {
+                                    novedadContractualDescripcion.Eliminado = true;
+                                }
+                            }
+
                             foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
                             {
                                 descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
@@ -2151,7 +2168,7 @@ namespace asivamosffie.services
                 esCompleto = null;
             }
 
-            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
+            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion.Where( x => x.Eliminado != true ))
             {
                 // Suspension - Prórroga a la Suspensión -Reinicio
 
@@ -2177,8 +2194,8 @@ namespace asivamosffie.services
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
                         descripcion.EsDocumentacionSoporte == null ||
-                        string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
-                        descripcion.FechaConcepto == null ||
+                        //string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
+                        //descripcion.FechaConcepto == null ||
                         string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )

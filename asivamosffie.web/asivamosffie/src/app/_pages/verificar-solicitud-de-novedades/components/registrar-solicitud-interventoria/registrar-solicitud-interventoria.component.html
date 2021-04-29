@@ -97,11 +97,21 @@
       </p> -->
       <p>
         <strong>Valor del contrato:</strong>
-        {{ (novedad?.proyectosContrato ? novedad?.proyectosContrato[0]?.valorTotal : 0 ) | currency:'':'symbol':'3.0'}}
+        {{ (contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+          contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong>Plazo:</strong>
-        {{contrato?.plazoFase1PreMeses}} meses / {{contrato?.plazoFase1PreDias}} días
+        {{
+          contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+          (contrato?.contratacion?.disponibilidadPresupuestal[0]?.plazoMeses) : 0
+        }}
+        meses /
+        {{
+            contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+            (contrato?.contratacion?.disponibilidadPresupuestal[0]?.plazoDias) : 0
+        }}
+        días
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>

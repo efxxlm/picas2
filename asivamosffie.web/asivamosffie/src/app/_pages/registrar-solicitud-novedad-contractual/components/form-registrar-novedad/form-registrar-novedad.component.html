@@ -78,7 +78,7 @@
           addressForm.get('instanciaPresentoSolicitud').value !== instanciaSeguimientoTecnico.NoAplica
         "
       >
-        <div class="col-md-8">
+        <div class="col-md-8" *ngIf="addressForm.get('instanciaPresentoSolicitud').value !== '3'">
           <div class="row">
             <div class="pr-1">
               <label
