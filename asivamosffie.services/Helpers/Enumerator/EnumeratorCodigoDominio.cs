@@ -10,5 +10,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         public const string ActaSuscritaContrato = "5";
         public const string AjusteProgramacionObra = "6"; 
         public const string AjusteFlujoInversion = "7";
+        public const string Rendimientos = "8";
     }
 }

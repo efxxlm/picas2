@@ -575,6 +575,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaActa).HasColumnType("date");
+
                 entity.Property(e => e.FechaCargue).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -591,6 +593,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones).IsUnicode(false);
+
+                entity.Property(e => e.RutaActa).IsUnicode(false);
 
                 entity.Property(e => e.TipoCargue)
                     .IsRequired()

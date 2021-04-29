@@ -1647,6 +1647,62 @@ namespace asivamosffie.services
             return resultSource;
         }
 
+
+        public async Task<Respuesta> UploadPerformanceMinute(int uploadedOrderId, IFormFile pFile)
+        {
+            var response = new Respuesta();
+            string pFilePatch = Path.Combine(_mailSettings.DirectoryBase,
+                _mailSettings.DirectoryBaseCargue, _mailSettings.DirectoryBaseActaRendimientos);
+
+            string actionMesage = ConstantCommonMessages.Performances.CARGAR_ACTA_RENDIMIENTOS;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Generar_Acta_Rendimientos);
+
+      
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Rendimientos), uploadedOrderId);
+
+            CarguePagosRendimientos carguePagosRendimientos = _context.CarguePagosRendimientos.Find(uploadedOrderId);
+            try
+            {
+                var modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                     .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                     .UpdateAsync(o => new CarguePagosRendimientos()
+                     {
+                         FechaModificacion = DateTime.Now,
+                         FechaActa = DateTime.Now,
+                         UsuarioModificacion = _userName,
+                         RutaActa = pFilePatch
+                     });
+
+                string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : ConstMessagesPerformances.ErrorGuardarCambios;
+
+                response.Data = modifiedRows;
+                response.IsSuccessful = true;
+                response.IsException = false;
+                response.Code = GeneralCodes.OperacionExitosa;
+                response.Message = await SaveAuditAction(_userName, actionId,
+                                         enumeratorMenu.AprobarIncorporacionRendimientos,
+                                        response.Code,
+                                        actionMesage);
+
+                return response;
+
+            }
+
+            catch (Exception ex)
+            {
+                response.IsException = true;
+                response.IsSuccessful = true;
+                response.Code = GeneralCodes.OperacionExitosa;
+                response.Message = await SaveAuditAction(_userName, actionId,
+                                        enumeratorMenu.AprobarIncorporacionRendimientos,
+                                        GeneralCodes.Error,
+                                         ex.SubstringValid(_500));
+            }
+
+            return response;
+        }
+
+
         //public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
         //{
         //    using (System.Data.SqlClient.SqlConnection sql = new SqlConnection(_connectionString))

@@ -315,18 +315,27 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [Route("uploadMinutes")]
         [HttpPost]
-        public async Task<Respuesta> UploadSignedMinutes(int uploadedOrderId)
+        [Route("uploadMinutes")]
+        public async Task<IActionResult> UploadSignedMinutes(int uploadedOrderId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria, [FromForm] IFormFile pFile, string pUsuarioModificacion)
         {
+            Respuesta response = new Respuesta();
             try
             {
-                var list = await _paymentAndPerformancesService.IncludePerformances(uploadedOrderId);
-                return list;
+
+                //asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                //_appSettingsService = toAppSettingsService(_settings);
+
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                response = await _paymentAndPerformancesService.UploadPerformanceMinute(uploadedOrderId,pFile);
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                throw ex.InnerException;
+                response.Data = ex.InnerException.ToString();
+                return BadRequest(response);
             }
         }
 
@@ -349,5 +358,10 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+
+
+
+       
     }
 }
