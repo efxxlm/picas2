@@ -494,6 +494,9 @@ namespace asivamosffie.services
 
             // #2
             //Fecha de pago
+            //string sDate = (worksheet.Cells[indexWorkSheetRow, 2] as DocumentFormat.OpenXml.Office.Excel.Range).Value2.ToString();
+            //DateTime conv = DateTime.FromOADate(d);
+
             carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[indexWorkSheetRow, 2].Text);
             if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 2].Text) ||
                  !TryStringToDate(worksheet.Cells[indexWorkSheetRow, 2].Text, out DateTime fecha))
@@ -568,6 +571,8 @@ namespace asivamosffie.services
 
             int indexCell = 1;
             string dateValue = worksheet.Cells[2, 1].Text;
+            var dateObje = worksheet.Cells[indexRow, indexCell].Value;
+
             TryStringToDate(dateValue, out DateTime guideDate);
             int month = guideDate.Month;
 
@@ -576,7 +581,15 @@ namespace asivamosffie.services
             foreach (var rowFormat in performanceStructure)
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
-                carguePagosRendimiento.Add(rowFormat.Key, cellValue);
+
+                if (rowFormat.Value == "Date" && cellValue != dateObje.ToString())
+                {
+                    carguePagosRendimiento.Add(rowFormat.Key, guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    carguePagosRendimiento.Add(rowFormat.Key, cellValue);
+                }
                 if (rowFormat.Value == "Date")
                 {
                     if (string.IsNullOrEmpty(cellValue) || !TryStringToDate(cellValue, out DateTime fecha))
@@ -940,7 +953,7 @@ namespace asivamosffie.services
                     inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
                     total = uploadedPerformances.TotalRegistros.ToString();
                     consistencies = uploadedPerformances.RegistrosConsistentes.ToString();
-                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
+                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyyy");
                 }
               
                 string template = temNotifyInconsistencies.Contenido.
@@ -1142,7 +1155,7 @@ namespace asivamosffie.services
                     inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
                     total = uploadedPerformances.TotalRegistros.ToString();
                     consistencies = uploadedPerformances.RegistrosConsistentes.ToString();
-                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
+                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyyy");
                 }
 
                 string template = temNotifyInconsistencies.Contenido.
