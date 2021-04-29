@@ -436,7 +436,26 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
                 solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
             }
         ]
-        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+
+        if ( this.esPreconstruccion === true ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+                    }
+                }
+            }
+        }
+
+        if ( this.esPreconstruccion === false ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === false ) {
+                        solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+                    }
+                }
+            }
+        }
 
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(

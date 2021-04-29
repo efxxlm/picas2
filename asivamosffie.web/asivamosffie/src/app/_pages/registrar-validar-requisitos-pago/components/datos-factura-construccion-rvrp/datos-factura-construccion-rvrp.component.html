@@ -130,7 +130,11 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                        <label  class="label-left"
+                                for="tipoDescuento"
+                                [ngClass]="{ 'color-secondaryColor': (descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) || (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando) }">
+                                Tipo de descuento
+                        </label>
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
@@ -146,6 +150,15 @@
                           </mat-select>
                       </mat-form-field>
                       </div>
+                      <span class="icon-incompleto">
+                        <img  class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="(descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) || (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando)">
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -153,21 +166,37 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left" for="valorDescuento">
-                          Valor del descuento
+                        <label  class="label-left"
+                                for="valorDescuento"
+                                [ngClass]="{ 'color-secondaryColor': (descuento.get('valorDescuento')?.invalid && descuento.get('valorDescuento').touched) || (descuento.get('valorDescuento')?.invalid && estaEditando) }">
+                                Valor del descuento
                         </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
-                            (keypress)="validateNumberKeypress($event)"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                            (ngModelChange)="totalPagoDescuentos()"
-                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                          <input  matInput
+                                  #valorDescuento
+                                  currencyMask
+                                  maxlength="20"
+                                  required
+                                  formControlName="valorDescuento"
+                                  (keypress)="validateNumberKeypress($event)"
+                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                  (ngModelChange)="totalPagoDescuentos()"
+                                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>
                         <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                           matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}</span>
                       </div>
+                      <span class="icon-incompleto">
+                        <img  class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="(descuento.get('valorDescuento')?.invalid && descuento.get('valorDescuento').touched) || (descuento.get('valorDescuento')?.invalid && estaEditando)">
+                      </span>
                     </div>
                   </div>
                 </div>

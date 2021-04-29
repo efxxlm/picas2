@@ -43,6 +43,8 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     modalidadContratoArray: Dominio[] = [];
     criteriosArray: { codigo: string, nombre: string }[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
+    tienePreconstruccion = false;
+    tieneConstruccion = false;
     tipoSolicitudCodigo: any = {};
     contrato: any;
     solicitudPagoCargarFormaPago: any;
@@ -124,141 +126,19 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                                 }
                                 this.solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
                                 this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
-                                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0].esPreconstruccion === true ) {
-                                    const fasePreConstruccionFormaPagoCodigo = this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
-                                    this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.contrato.solicitudPagoOnly.solicitudPagoId, fasePreConstruccionFormaPagoCodigo, 'False' )
-                                        .subscribe(
-                                            getMontoMaximoMontoPendiente => {
-                                                this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
-                                                this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
-                                                    .subscribe(
-                                                        async response => {
-                                                            const criteriosSeleccionadosArray = [];
-                                                            this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
 
-                                                            if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-                                                                for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
-                                                                    // GET Criterio seleccionado
-                                                                    const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
-                                                                    criteriosSeleccionadosArray.push( criterioSeleccionado[0] );
-                                                                    // GET tipos de pago
-                                                                    const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( criterio.tipoCriterioCodigo );
-                                                                    const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
-                                                                    // GET conceptos de pago
-                                                                    const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                                                    const conceptoDePagoArray = [];
-                                                                    const conceptosDePagoSeleccionados = [];
-                                                                    // Get conceptos de pago
-                                                                    if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
-                                                                        criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
-                                                                            if ( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ).length > 0 ) {
-                                                                                conceptosDePagoSeleccionados.push( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0] );
-                                                                            }
-                                                                            conceptoDePagoArray.push(
-                                                                                this.fb.group(
-                                                                                    {
-                                                                                        solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
-                                                                                        solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                                                        conceptoPagoCriterioNombre: [ conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0].nombre ],
-                                                                                        conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
-                                                                                        valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
-                                                                                    }
-                                                                                )
-                                                                            );
-                                                                        } );
-                                                                    }
-                                                                    this.criterios.push(
-                                                                        this.fb.group(
-                                                                            {
-                                                                                solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
-                                                                                solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                                                tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                                                                nombreCriterio: [ criterioSeleccionado[0].nombre ],
-                                                                                tiposDePago: [ tiposDePago ],
-                                                                                tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
-                                                                                conceptosDePago: [ conceptosDePago ],
-                                                                                conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                                                                conceptos: this.fb.array( conceptoDePagoArray ),
-                                                                                valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
-                                                                            }
-                                                                        )
-                                                                    );
-                                                                }
-                                                            }
-                                                            this.criteriosArray = response;
-                                                            this.criteriosArraySeleccionados = criteriosSeleccionadosArray;
-                                                        }
-                                                    );
+                                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                                this.tienePreconstruccion = true;
                                             }
-                                        );
-                                }
-                                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0].esPreconstruccion === false ) {
-                                    const faseConstruccionFormaPagoCodigo = this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo;
-                                    this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.contrato.solicitudPagoOnly.solicitudPagoId, faseConstruccionFormaPagoCodigo, 'False' )
-                                        .subscribe(
-                                            getMontoMaximoMontoPendiente => {
-                                                this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
-                                                this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
-                                                    .subscribe(
-                                                        async response => {
-                                                            const criteriosSeleccionadosArray = [];
-                                                            this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
-
-                                                            if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-                                                                for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
-                                                                    // GET Criterio seleccionado
-                                                                    const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
-                                                                    criteriosSeleccionadosArray.push( criterioSeleccionado[0] );
-                                                                    // GET tipos de pago
-                                                                    const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( criterio.tipoCriterioCodigo );
-                                                                    const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
-                                                                    // GET conceptos de pago
-                                                                    const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                                                    const conceptoDePagoArray = [];
-                                                                    const conceptosDePagoSeleccionados = [];
-                                                                    // Get conceptos de pago
-                                                                    if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
-                                                                        criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
-                                                                            if ( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ).length > 0 ) {
-                                                                                conceptosDePagoSeleccionados.push( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0] );
-                                                                            }
-                                                                            conceptoDePagoArray.push(
-                                                                                this.fb.group(
-                                                                                    {
-                                                                                        solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
-                                                                                        solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                                                        conceptoPagoCriterioNombre: [ conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0].nombre ],
-                                                                                        conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
-                                                                                        valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
-                                                                                    }
-                                                                                )
-                                                                            );
-                                                                        } );
-                                                                    }
-                                                                    this.criterios.push(
-                                                                        this.fb.group(
-                                                                            {
-                                                                                solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
-                                                                                solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                                                tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                                                                nombreCriterio: [ criterioSeleccionado[0].nombre ],
-                                                                                tiposDePago: [ tiposDePago ],
-                                                                                tipoPago: [ tipoDePago[0], Validators.required ],
-                                                                                conceptosDePago: [ conceptosDePago, Validators.required ],
-                                                                                conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                                                                conceptos: this.fb.array( conceptoDePagoArray ),
-                                                                                valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
-                                                                            }
-                                                                        )
-                                                                    );
-                                                                }
-                                                            }
-                                                            this.criteriosArray = response;
-                                                            this.criteriosArraySeleccionados = criteriosSeleccionadosArray;
-                                                        }
-                                                    );
+    
+                                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                                this.tieneConstruccion = true;
                                             }
-                                        );
+                                        }
+                                    }
                                 }
     
                                 this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
