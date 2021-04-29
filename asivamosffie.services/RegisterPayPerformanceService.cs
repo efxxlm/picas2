@@ -783,24 +783,24 @@ namespace asivamosffie.services
             TryStringToDate(performanceOrders.First().PerformancesDate,  out DateTime currentMonthPerformances);
             DateTime beforeMonth = new DateTime(currentMonthPerformances.Year, currentMonthPerformances.Month, 1);
             DateTime lastDayMonth = beforeMonth.AddDays(-1);
-
+            DateTime firstDayMonth = new DateTime(lastDayMonth.Year, lastDayMonth.Month, 1);
 
             var performancesIncorporated = await _context.RendimientosIncorporados
-                .Where(x => x.FechaRendimientos >= beforeMonth && x.FechaRendimientos <= lastDayMonth)
+                .Where(x => x.FechaRendimientos >= firstDayMonth && x.FechaRendimientos <= lastDayMonth)
                 .AsNoTracking().ToListAsync();
-
-            decimal? performances = 0;
-            if (performancesIncorporated.Count > 0)
-            {
-                performances = performancesIncorporated.Where(v => v.Aprobado.HasValue && v.Aprobado.Value).Sum(x => x.RendimientoIncorporar);
-            }
-
-            // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
-            // Consistente , or save month or orders process ?
 
 
             foreach (var accountOrder in performanceOrders)
             {
+                decimal? performances = 0;
+                if (performancesIncorporated.Count > 0)
+                {
+                    performances = performancesIncorporated.Where(v => v.Aprobado.HasValue
+                        && v.Aprobado.Value && v.CuentaBancaria == accountOrder.AccountNumber)
+                        .Sum(x => x.RendimientoIncorporar);
+                }
+
+
                 valorAporteEnCuenta = 0;
                 // TODO Review Payment concept..
                 var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
@@ -1409,10 +1409,12 @@ namespace asivamosffie.services
                 var fuente = await _context.FuenteFinanciacion.FindAsync(gestionFuenteFinanciacion.FuenteFinanciacionId);
                 gestionFuenteFinanciacion.SaldoActual = (decimal)fuente.ValorFuente - sumValoresSolicitados;
                 gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual + gestionFuenteFinanciacion.ValorSolicitado;
-                int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado; ///
+                int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Rendimientos;
                 gestionFuenteFinanciacion.FechaCreacion = DateTime.Now;
                 gestionFuenteFinanciacion.EstadoCodigo = estado.ToString();
-                gestionFuenteFinanciacion.Eliminado = false; 
+                gestionFuenteFinanciacion.Eliminado = false;
+                gestionFuenteFinanciacion.RendimientosIncorporadosId = rendimientosIncorporados.Where(
+                    x => x.CuentaBancaria == bankAccount.NumeroCuentaBanco && x.CarguePagosRendimientosId == uploadedOrderId).FirstOrDefault().RendimientosIncorporadosId;
 
                  _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacion);
             }

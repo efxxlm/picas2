@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class RendimientosIncorporados
     {
+        public RendimientosIncorporados()
+        {
+            GestionFuenteFinanciacion = new HashSet<GestionFuenteFinanciacion>();
+        }
+
         public int RendimientosIncorporadosId { get; set; }
         public int CarguePagosRendimientosId { get; set; }
         public DateTime FechaRendimientos { get; set; }
@@ -21,5 +26,6 @@ namespace asivamosffie.model.Models
         public bool? Aprobado { get; set; }
 
         public virtual CarguePagosRendimientos CarguePagosRendimientos { get; set; }
+        public virtual ICollection<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
     }
 }
