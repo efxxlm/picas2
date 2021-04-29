@@ -33,6 +33,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public string Errores { get; set; }
+        public DateTime? FechaActa { get; set; }
+        public string RutaActa { get; set; }
 
         public virtual ICollection<OrdenGiroPago> OrdenGiroPago { get; set; }
         public virtual ICollection<RendimientosIncorporados> RendimientosIncorporados { get; set; }

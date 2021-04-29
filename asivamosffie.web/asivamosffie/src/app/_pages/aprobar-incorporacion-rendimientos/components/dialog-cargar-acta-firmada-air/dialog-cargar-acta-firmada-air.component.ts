@@ -44,7 +44,8 @@ export class DialogCargarActaFirmadaAirComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+  //  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.guardar();
   }
 
   fileName() {
@@ -69,7 +70,7 @@ export class DialogCargarActaFirmadaAirComponent implements OnInit {
         const pContratacionProyecto = new FormData();
         pContratacionProyecto.append( 'pFile', inputNode.files[0] );
         pContratacionProyecto.append( 'contratacionProyectoId', this.data.registro.contratacionProyectoId );
-        this.faseDosPagosRendimientosSvc.uploadMinutes( this.data, pContratacionProyecto  )
+        this.faseDosPagosRendimientosSvc.uploadMinutes( this.data, pContratacionProyecto, pFile  )
             .subscribe(
                 response => this.openDialog( '', `<b>${ response.message }</b>` ),
                 err => this.openDialog( '', `<b>${ err.message }</b>` )

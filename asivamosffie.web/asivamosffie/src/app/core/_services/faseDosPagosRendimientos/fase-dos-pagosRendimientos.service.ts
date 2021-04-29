@@ -89,10 +89,11 @@ export class FaseDosPagosRendimientosService {
     return this.http.post(
       `${this.urlApi}/PerformanceMinute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" });
   }
-  uploadMinutes(uploadedOrderId :number, formData: FormData){
+  uploadMinutes(uploadedOrderId :number, formData: FormData, pFile: File){
     // const formData = new FormData()
-    // formData.append('file', documento, documento.name)
+    formData.append('file', pFile, pFile.name)
     return this.http.post<Respuesta>(`${this.urlApi}/uploadMinutes?uploadedOrderId=${uploadedOrderId}`, formData);
   }
+
   
 }

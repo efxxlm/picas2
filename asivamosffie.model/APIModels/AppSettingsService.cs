@@ -44,5 +44,7 @@
         public string DirectoryBaseOrdeELegibilidad { get; set; }
 
         public string DirectoryRutaCargaActaTerminacionContrato { get; set; }
+
+        public string DirectoryBaseActaRendimientos { get; set; }
     }
 }
