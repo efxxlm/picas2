@@ -100,7 +100,9 @@
         Actuaciones_Mesas_4_2_1 = 89,
         Informacion_Adicional_Reclamacion_4_2_1 = 90,
         Ficha_novedad_contractual = 91,
-        Detalle_proyecto_no_alcance = 92
+        Detalle_proyecto_no_alcance = 92,
+        Detalle_solicitud_novedad = 93,
+        Novedades_detalles = 94
 
     }
 }
