@@ -65,7 +65,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("CambiarEstadoSesionComiteSolicitud")]
         [HttpPost]
-        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromQuery]  string pEstadoCodigo, int pSesionComiteSolicitudId , int pSolicitudId)
+        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromQuery] string pEstadoCodigo, int pSesionComiteSolicitudId, int pSolicitudId)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -75,52 +75,59 @@ namespace asivamosffie.api.Controllers
                     SolicitudId = pSolicitudId,
                     SesionComiteSolicitudId = pSesionComiteSolicitudId,
                     UsuarioCreacion = HttpContext.User.FindFirst("User").Value,
-                    EstadoCodigo = pEstadoCodigo, 
-                }; 
+                    EstadoCodigo = pEstadoCodigo,
+                };
 
-            respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-            return Ok(respuesta);
-        }
+                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(respuesta);
+            }
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
-    }
-}
-
-public object GetPropValue(object src, string propName)
-{
-    return src.GetType().GetProperties()
-          .Single(pi => pi.Name == propName)
-          .GetValue(src, null);
-}
-
-
-[HttpPost]
-[Route("RegistrarTramiteContratacion")]
-public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
-{
-    Respuesta respuesta = new Respuesta();
-    try
-    {
-        if (!string.IsNullOrEmpty(FechaEnvioDocumentacion))
-        {
-            pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
+            }
         }
 
-        pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-        respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
-           , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
+        public object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperties()
+                  .Single(pi => pi.Name == propName)
+                  .GetValue(src, null);
+        }
 
-        return Ok(respuesta);
-    }
-    catch (Exception ex)
-    {
-        respuesta.Data = ex.ToString();
-        return BadRequest(respuesta);
-    }
-}
 
+        [HttpPost]
+        [Route("RegistrarTramiteContratacion")]
+        public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (!string.IsNullOrEmpty(FechaEnvioDocumentacion))
+                {
+                    pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
+                }
+
+                pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
+                   , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("GetNovedadById")]
+        [HttpGet]
+        public async Task<NovedadContractual> GetNovedadById(int id)
+        {
+            var result = await _manageContractualProcessesService.GetNovedadById(id);
+            return result;
+        }
 
     }
 }

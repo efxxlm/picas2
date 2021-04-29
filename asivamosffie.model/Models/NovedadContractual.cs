@@ -58,6 +58,7 @@ namespace asivamosffie.model.Models
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ModificacionContractual ModificacionContractual { get; set; }
         public virtual ICollection<AjusteProgramacion> AjusteProgramacion { get; set; }
         public virtual ICollection<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual ICollection<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
