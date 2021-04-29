@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 export interface RegistrarInterface {
   fechaTerminacionProyecto: Date;
@@ -12,7 +14,7 @@ export interface RegistrarInterface {
   institucionEducativa: string;
   sedeEducativa: string;
   proyectoId: number;
-  numeroTraslados: number;
+  numeroTraslado: number;
   estadoBalance: string;
   registroCompleto: boolean;
   estadoBalanceCodigo: string;
@@ -61,6 +63,7 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
   constructor(
     private routes: Router,
     private financialBalanceService: FinancialBalanceService,
+    public dialog: MatDialog,
   ) { }
 
 
@@ -101,5 +104,20 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
   }
   verDetalleBalance(id){
     this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleBalance', id]);
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  aprobarBalance(pProyectoId: number) {
+    this.financialBalanceService.approveBalance(pProyectoId).subscribe(respuesta => {
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.routes.navigate( ['/gestionarBalanceFinancieroTrasladoRecursos'] ) );
+    });
   }
 }

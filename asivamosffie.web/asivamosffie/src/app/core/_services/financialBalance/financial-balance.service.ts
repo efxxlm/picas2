@@ -26,4 +26,8 @@ export class FinancialBalanceService {
     getBalanceFinanciero( pProyectoId: number) {
       return this.http.get( `${ this.apiUrl }/GetBalanceFinanciero?pProyectoId=${ pProyectoId }` );
     }
+
+    approveBalance(pProyectoId: number){
+      return this.http.post(`${ this.apiUrl }/ApproveBalance?pProyectoId=${ pProyectoId }`,null);
+    }
 }

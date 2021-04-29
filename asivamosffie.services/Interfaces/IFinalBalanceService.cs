@@ -14,5 +14,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<dynamic>> GetContratoByProyectoId(int pProyectoId);
         Task<Respuesta> CreateEditBalanceFinanciero(BalanceFinanciero pBalanceFinanciero);
         Task<BalanceFinanciero> GetBalanceFinanciero(int pProyectoId);
+        Task<Respuesta> ApproveBalance(int pProyectoId, string pUsuario);
     }
 }

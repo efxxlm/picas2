@@ -64,5 +64,23 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
         }
+
+        [HttpPost]
+        [Route("ApproveBalance")]
+        public async Task<IActionResult> ApproveBalance([FromQuery] int pProyectoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _finalBalanceService.ApproveBalance(pProyectoId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }

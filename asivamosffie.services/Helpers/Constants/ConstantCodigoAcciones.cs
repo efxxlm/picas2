@@ -371,6 +371,7 @@
 
         public const string Eliminar_Demandante_Convocante = "272";
         public const string Crear_Editar_Balance_Financiero = "273";
+        public const string Aprobar_Balance_Financiero = "274";
 
     }
 }

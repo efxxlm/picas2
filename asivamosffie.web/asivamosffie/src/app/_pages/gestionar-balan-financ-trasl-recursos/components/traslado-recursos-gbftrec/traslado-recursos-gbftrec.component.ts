@@ -13,6 +13,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 })
 export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
+  @Input() esVerDetalle: boolean;
 
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
@@ -20,6 +21,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
     requiereTransladoRecursos: [null, Validators.required],
     justificacionTrasladoAportanteFuente: [null, Validators.required],
     urlSoporte: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],
   });
   editorStyle = {
     height: '50px'
