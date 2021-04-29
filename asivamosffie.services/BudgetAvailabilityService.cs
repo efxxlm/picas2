@@ -1336,21 +1336,30 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
             descripción: return disponibilidad por validacion pres
         impacto: CU 3.3.2*/
 
-        public async Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
-            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad, int RegistroPresupuestalId
+            ,string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Devuelta_por_validacion_presupuestal;
-                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
-                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                if ( esNovedad == true)
+                {
 
-                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
-                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
-                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                }
+                else
+                {
+                    int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Devuelta_por_validacion_presupuestal;
+                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                    DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+
+                    pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                    pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                    _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                }
+
+                
                 _context.SaveChanges();
                 //envio correo a tecnico
                 //////

@@ -238,6 +238,8 @@ namespace asivamosffie.services
                                                                     .ThenInclude(r => r.ComponenteAportanteNovedad)
                                                                         .ThenInclude(r => r.ComponenteFuenteNovedad)
                                                                             .ThenInclude(r => r.ComponenteUsoNovedad)
+                                                                .Include( x => x.Contrato )
+                                                                    .ThenInclude( x => x.ContratoPoliza )
                                                                 .FirstOrDefault();
 
             if (novedadContractual != null)
@@ -265,7 +267,30 @@ namespace asivamosffie.services
 
                 novedadContractual.NovedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true).ToList();
 
-                foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+                if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
+                {
+                    DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
+                                                                            .OrderBy(x => x.FechaAprobacion)?
+                                                                            .FirstOrDefault()?
+                                                                            .FechaAprobacion
+                                                                            .Value;
+
+                    novedadContractual.Contrato.FechaActaInicioFase1 = fechaTemp;
+                }
+
+                if ( novedadContractual.Contrato.FechaTerminacionFase2 == null)
+                {
+                    DateTime? fechaTemp = novedadContractual.Contrato.FechaActaInicioFase1.Value;
+
+                    fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias.Value);
+                    fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses.Value);
+
+                    novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+                }
+
+                
+
+                    foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
                     novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
                                                                             .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
