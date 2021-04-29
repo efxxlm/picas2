@@ -46,6 +46,12 @@
       </p>
       <p>
         <strong>Plazo:</strong>
+        {{
+          novedad.contrato.contratacion.disponibilidadPresupuestal[
+            novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
+          ].plazoMeses
+        }}
+        Meses
         <span>
           {{
             novedad.contrato.contratacion.disponibilidadPresupuestal[
@@ -53,12 +59,6 @@
             ].plazoDias
           }}
           Días
-          {{
-            novedad.contrato.contratacion.disponibilidadPresupuestal[
-              novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
-            ].plazoMeses
-          }}
-          Meses
         </span>
       </p>
       <p>

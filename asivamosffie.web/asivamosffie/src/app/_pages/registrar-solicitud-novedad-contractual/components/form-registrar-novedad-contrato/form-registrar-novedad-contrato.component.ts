@@ -29,8 +29,8 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
     presupuestoAdicional: [],
-    plazoAdicionalDias: [],
-    plazoAdicionalMeses: [],
+    plazoAdicionalDias: [null, Validators.required],
+    plazoAdicionalMeses: [null, Validators.required],
     resumenJustificacionNovedad: [null, Validators.required],
     documentacion: [null, Validators.required],
     fechaInicio: [null, Validators.required],
@@ -45,9 +45,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     documentacionSuficiente: [null, Validators.required],
     conceptoTecnico: [null],
     fechaConceptoTecnico: [null],
-    numeroRadicadoSolicitud: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(20)])
-    ]
+    numeroRadicadoSolicitud: [null, Validators.maxLength(20)]
   });
 
   get plazoSolicitadoField() {
