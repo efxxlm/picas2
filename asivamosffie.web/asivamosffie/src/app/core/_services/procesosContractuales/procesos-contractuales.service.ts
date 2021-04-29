@@ -5,6 +5,7 @@ import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContrac
 import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,9 @@ export class ProcesosContractualesService {
   sendCambioTramite ( pEstadoCodigo : string, pSesionComiteSolicitudId: number, pSolicitudId: number ) {
     return this.http.post<Respuesta>( `${ this.url }/CambiarEstadoSesionComiteSolicitud?pEstadoCodigo=${ pEstadoCodigo }&pSesionComiteSolicitudId=${ pSesionComiteSolicitudId }&pSolicitudId=${ pSolicitudId }`, '' );
   }
+
+  getNovedadById ( id: number ) {
+    return this.http.get<NovedadContractual>( `${ this.url }/getNovedadById?id=${id}` )
+  };
 
 };

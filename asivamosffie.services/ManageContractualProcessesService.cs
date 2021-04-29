@@ -33,8 +33,9 @@ namespace asivamosffie.services
         private readonly IBudgetAvailabilityService _budgetAvailabilityService;
         public readonly IConverter _converter;
         public readonly IProjectContractingService _ProjectContractingService;
+        public readonly IContractualNoveltyService _ContractualNoveltyService;
 
-        public ManageContractualProcessesService(IBudgetAvailabilityService budgetAvailabilityService, IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        public ManageContractualProcessesService(IBudgetAvailabilityService budgetAvailabilityService, IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService, IContractualNoveltyService contractualNoveltyService)
         {
             _budgetAvailabilityService = budgetAvailabilityService;
             _ProjectContractingService = projectContractingService;
@@ -42,6 +43,7 @@ namespace asivamosffie.services
             _context = context;
             _documentService = documentService;
             _commonService = commonService;
+            _ContractualNoveltyService = contractualNoveltyService;
         }
 
         public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
@@ -1008,6 +1010,25 @@ namespace asivamosffie.services
                 return false;
             }
         }
+
+        #region modificaciones contractuales
+
+        public async Task<NovedadContractual> GetNovedadById(int id)
+        {
+            try
+            {
+                NovedadContractual novedadContractual = await _ContractualNoveltyService.GetNovedadContractualById(id);
+
+                return novedadContractual;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        #endregion 
 
 
     }

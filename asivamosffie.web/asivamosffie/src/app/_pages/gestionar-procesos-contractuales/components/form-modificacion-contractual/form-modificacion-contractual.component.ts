@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
@@ -82,12 +82,18 @@ export class FormModificacionContractualComponent implements OnInit {
 
   constructor ( private fb: FormBuilder,
                 private routes: Router,
-                private procesosContractualesSvc: ProcesosContractualesService ) {
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private activatedRoute: ActivatedRoute ) {
     this.crearFormulario();
-    this.getMotivo();
+    //this.getMotivo();
   }
 
   ngOnInit(): void {
+    console.log( "hola" ) 
+    this.procesosContractualesSvc.getNovedadById( this.activatedRoute.snapshot.params.id )
+      .subscribe( respuesta => {
+        //console
+      })
   }
 
   getMotivo () {
@@ -123,8 +129,8 @@ export class FormModificacionContractualComponent implements OnInit {
   };
 
   getDdp ( sesionComiteSolicitudId ) {
-    this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
-      .subscribe();
+    // this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
+    //   .subscribe();
   };
 
 };
