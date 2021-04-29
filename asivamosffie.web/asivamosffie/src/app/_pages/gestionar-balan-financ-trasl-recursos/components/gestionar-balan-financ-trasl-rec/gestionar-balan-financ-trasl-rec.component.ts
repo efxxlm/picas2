@@ -12,6 +12,10 @@ export interface RegistrarInterface {
   institucionEducativa: string;
   sedeEducativa: string;
   proyectoId: number;
+  numeroTraslados: number;
+  estadoBalance: string;
+  registroCompleto: boolean;
+  estadoBalanceCodigo: string;
 }
 
 @Component({
@@ -31,7 +35,9 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     'llaveMEN',
     'tipoIntervencion',
     'institucionEducativa',
-    'sede',
+    'sede',    
+    'numeroTraslados',
+    'estadoBalance',
     'gestion'
   ];
   dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
