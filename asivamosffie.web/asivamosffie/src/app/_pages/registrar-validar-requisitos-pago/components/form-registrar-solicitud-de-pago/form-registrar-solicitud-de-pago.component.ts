@@ -61,6 +61,13 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         observacionDatosFactura: null,
         observacionDescuentos: null
     }
+    estadoSemaforosObservacionesConstruccion = {
+        observacionCriterios: null,
+        observacionAmortizacion: null,
+        observacionCriteriosProyecto: null,
+        observacionDatosFactura: null,
+        observacionDescuentos: null
+    }
     addressForm = this.fb.group({
       fechaSolicitud: [null, Validators.required],
       numeroRadicado: [null, Validators.required],
@@ -71,6 +78,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         solicitudPagoFaseRegistroCompleto: false
     }
     estadoRegistroCompletoSubAcordeon = {
+        criterioRegistroCompleto: false,
+        amortizacionRegistroCompleto: false,
+        detalleFacturaRegistroCompleto: false
+    }
+    estadoRegistroCompletoSubAcordeonConstruccion = {
         criterioRegistroCompleto: false,
         amortizacionRegistroCompleto: false,
         detalleFacturaRegistroCompleto: false
@@ -424,8 +436,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         semaforoCriterioPago = 'en-proceso';
                     }
                     if ( this.solicitudPagoFaseConstruccion.registroCompletoCriterio === true ) {
-                        this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto = true;
-                        this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                        this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto = true;
+                        this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
                         semaforoCriterioPago = 'completo';
                     }
 
@@ -435,10 +447,10 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 if ( this.manejoAnticipoRequiere === true ) {
                     if ( tipoAcordeon === 'amortizacion' ) {
     
-                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === false ) {
+                        if ( this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === false ) {
                             return 'en-alerta';
                         }
-                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true ) {
+                        if ( this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === true ) {
                             
                             const solicitudPagoFaseAmortizacion = this.solicitudPagoFaseConstruccion.solicitudPagoFaseAmortizacion[0];
                             let semaforoAmortizacion = 'sin-diligenciar';
@@ -449,7 +461,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
                                 if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
                                     semaforoAmortizacion = 'completo';
-                                    this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                                    this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
                                 }
                             }
         
@@ -460,7 +472,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
 
                 if ( tipoAcordeon === 'detalleFactura' ) {
-                    if ( this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true ) {
                         if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
                             if ( this.solicitudPagoFaseConstruccion.solicitudPagoFaseCriterio.length > 0 ) {
                                 const solicitudPagoFaseCriterio = this.solicitudPagoFaseConstruccion.solicitudPagoFaseCriterio.filter( criterioValue => criterioValue.solicitudPagoFaseCriterioProyecto.length > 0 );
@@ -473,7 +485,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
 
                                 if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === solicitudPagoFaseCriterio.length ) {
-                                    this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                                    this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto = true;
                                     return 'completo';
                                 }
                                 if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== solicitudPagoFaseCriterio.length ) {
@@ -486,7 +498,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 return 'sin-diligenciar';
                             }
                         } else {
-                            this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                            this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto = true;
                             return '';
                         }
                     } else {
@@ -495,11 +507,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
 
                 if ( tipoAcordeon === 'datosFactura' ) {
-                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === false ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === false ) {
                         return 'en-alerta';
                     }
 
-                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === true ) {
                         if ( this.solicitudPagoFaseConstruccion.solicitudPagoFaseFactura.length === 0 ) {
                             return 'sin-diligenciar';
                         }

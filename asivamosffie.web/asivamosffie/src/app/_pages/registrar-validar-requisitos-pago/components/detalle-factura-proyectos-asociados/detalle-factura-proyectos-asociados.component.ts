@@ -99,7 +99,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             if ( this.esPreconstruccion === false ) {
                 if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
                     for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
                             this.solicitudPagoFase = solicitudPagoFase;
                             this.solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
                         }

@@ -164,15 +164,30 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === true ) {
 
             const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
+            const solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase;
             let semaforoSolicitudPago = 'sin-diligenciar';
+            let enProceso = 0;
+            let completo = 0;
 
-            if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
+            if ( solicitudPagoFase.length > 0 ) {
+                for ( const fase of solicitudPagoFase ) {
+                    if ( fase.registroCompleto === false ) {
+                        enProceso++;
+                    }
+
+                    if ( fase.registroCompleto === true ) {
+                        completo++;
+                    }
+                }
+
+                if ( enProceso > 0 && enProceso < solicitudPagoFase.length ) {
                     semaforoSolicitudPago = 'en-proceso';
                 }
-                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
+                if ( enProceso > 0 && enProceso === solicitudPagoFase.length ) {
+                    semaforoSolicitudPago = 'en-proceso';
+                }
+                if ( completo > 0 && completo === solicitudPagoFase.length ) {
                     semaforoSolicitudPago = 'completo';
-                    // Get registro completo
                     this.registroCompletoAcordeones.registroCompletoSolicitudPago = true;
                 }
             }
