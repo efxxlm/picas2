@@ -611,11 +611,11 @@ namespace asivamosffie.services
                         _context.SolicitudPagoCargarFormaPago.Add(pSolicitudPagoCargarFormaPago);
                     }
                 }
-   
+
             }
             catch (Exception)
             {
-              
+
             }
         }
 
@@ -690,7 +690,7 @@ namespace asivamosffie.services
                                                                                             });
             }
         }
-         
+
         private void CreateEditSolicitudPagoFaseDescuento(ICollection<SolicitudPagoFaseFacturaDescuento> pSolicitudPagoFaseDescuentoList, string pUsusarioCreacion)
         {
             foreach (var SolicitudPagoFaseDescuento in pSolicitudPagoFaseDescuentoList)
@@ -1123,10 +1123,10 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
         {
             if (
-                    pSolicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion.HasValue
+                    !pSolicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion.HasValue
                 || !pSolicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion.HasValue
                 || !pSolicitudPagoRegistrarSolicitudPago.FechaSolicitud.HasValue
-                || pSolicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac == null
+                || string.IsNullOrEmpty(pSolicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac)
                 ) return false;
 
             if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Count() == 0)
@@ -1137,21 +1137,21 @@ namespace asivamosffie.services
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() == 0)
                     return false;
             }
-     
+
             foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
-            { 
+            {
                 foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
                 {
                     if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
                         return false;
-                } 
-            } 
+                }
+            }
 
             foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
             {
                 if (!ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase))
-                    return false; 
-            } 
+                    return false;
+            }
             return true;
         }
 
@@ -1193,7 +1193,7 @@ namespace asivamosffie.services
         }
 
         private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
-        { 
+        {
             if (pSolicitudPagoCargarFormaPago.TieneFase1 == true)
                 if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo))
                     return false;
