@@ -168,7 +168,6 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             let semaforoSolicitudPago = 'sin-diligenciar';
 
             if ( solicitudPagoFase.length > 0 ) {
-                // solicitudPagoRegistrarSolicitudPago.registroCompleto = true; // Validacion temporal mientras llega Julian
                 if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
                     semaforoSolicitudPago = 'en-proceso';
                 }

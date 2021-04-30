@@ -590,7 +590,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
             ]
         }
-        console.log( pSolicitudPago )
+
         this.registrarPagosSvc.createEditNewPayment( pSolicitudPago )
             .subscribe(
                 response => {

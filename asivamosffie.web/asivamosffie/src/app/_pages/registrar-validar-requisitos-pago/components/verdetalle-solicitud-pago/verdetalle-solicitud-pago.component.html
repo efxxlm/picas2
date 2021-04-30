@@ -1,4 +1,4 @@
-<section class="container text-center" *ngIf="contrato !== undefined && montoMaximoPendiente !== undefined">
+<section class="container text-center" *ngIf="contrato !== undefined">
     <div class="text-right">
         <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -155,8 +155,7 @@
                         <mat-card-content style="text-align: left;">
                             <p><strong>Fecha de solicitud:</strong> {{ solicitudPagoRegistrarSolicitudPago.fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
                             <p><strong>Número de radicado SAC:</strong> {{ solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac }} </p>
-                            <p *ngIf="tienePreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
-                            <p *ngIf="tieneConstruccion === true"><strong>Fase del contrato:</strong> Fase 2 - Construcción</p>
+                            <p *ngIf="tienePreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción<span *ngIf="tieneConstruccion === true">, Fase 2 - Construcción.</span><span *ngIf="tienePreconstruccion === true && tieneConstruccion === false">.</span></p>
                         </mat-card-content>
                     </mat-card>
                     <mat-accordion>
@@ -232,7 +231,11 @@
                                             Detalle factura para proyectos asociados
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
-                                    <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos-asociados>
+                                    <app-detalle-factura-proyectos-asociados    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                                [esVerDetalle]="true"
+                                                                                [esPreconstruccion]="false"
+                                                                                [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago">
+                                    </app-detalle-factura-proyectos-asociados>
                                 </mat-expansion-panel>
                                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                                     <mat-expansion-panel-header class="expansion-style--header">
@@ -240,11 +243,15 @@
                                             Datos de la factura
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
-                                    <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-datos-factura-construccion-rvrp>
+                                    <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                            [esPreconstruccion]="false"
+                                                                            [esVerDetalle]="true">
+                                    </app-datos-factura-construccion-rvrp>
                                 </mat-expansion-panel>
                             </mat-accordion>
                         </mat-expansion-panel>
                     </mat-accordion>
+                    <!--
                     <mat-accordion>
                         <mat-expansion-panel class="expansion-style sub-expansion">
                             <mat-expansion-panel-header class="expansion-style--header">
@@ -256,6 +263,7 @@
                             <app-form-descuentos-direccion-tecnica [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-form-descuentos-direccion-tecnica>
                         </mat-expansion-panel>
                     </mat-accordion>
+                    -->
                 </mat-expansion-panel>
             </mat-accordion>
         </div>  

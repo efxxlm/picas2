@@ -10,6 +10,27 @@
       <p><strong>Número de factura:</strong> {{ addressForm.get( 'numeroFactura' ).value }} </p>
       <p><strong>Fecha de factura:</strong> {{ addressForm.get( 'fechaFactura' ).value | date: 'dd/MM/yyyy' }} </p>
       <p style="margin-top: 10px;"><strong>Valor facturado: </strong> {{ valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </p>
+      <h2 class="card-subTitle mainGris">Descuentos dirección técnica asociados a la factura</h2>
+      <p>
+        <b>¿Aplican descuentos?: </b>
+        <span *ngIf="addressForm.get( 'aplicaDescuento' ).value === true"> Si </span>
+        <span *ngIf="addressForm.get( 'aplicaDescuento' ).value === false"> No </span>
+      </p>
+
+      <div *ngIf="addressForm.get( 'aplicaDescuento' ).value == true">
+          <p><b>¿Cuántos descuentos se aplican sobre la factura?: </b> {{ descuentos.length }} </p>
+
+          <div class="mt-1em" *ngFor="let descuento of descuentos.controls; index as i">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px; margin-top: 1em;">
+              Descuento {{ i + 1 }}
+            </mat-card-title>
+
+            <p><b>Tipo de descuento: </b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </p>
+            <p><b>Valor del descuento: </b> {{ descuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+          </div>
+
+          <p class="mt-1em"><b>Valor a pagar después de descuentos: </b> {{ addressForm.get( 'valorAPagarDespues' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+      </div>
     </mat-card-content>
   </mat-card>
 </ng-container>

@@ -21,10 +21,14 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     @Input() registrarSolicitudPago: any;
     @Output() estadoSemaforoRegistroSolicitud = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
+    solicitudPagoRegistrarSolicitudPagoId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
     solicitudPagoCargarFormaPago: any;
+    solicitudPagoRegistrarSolicitudPago: any;
     manejoAnticipoRequiere: boolean;
+    tienePreconstruccion = false;
+    tieneConstruccion = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -52,9 +56,15 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     estadoSemaforosAcordeonesPrincipales = {
         estadoSemaforoObsPrincipal: 'sin-diligenciar',
         semaforoAcordeonFase: 'sin-diligenciar',
-        semaforoAcordeonDescuentosTecnica: 'sin-diligenciar'
+        semaforoAcordeonConstruccion: 'sin-diligenciar'
+        // semaforoAcordeonDescuentosTecnica: 'sin-diligenciar'
     }
     estadoSemaforos = {
+        semaforoAcordeonCriterios: 'sin-diligenciar',
+        semaforoAcordeonDetalleFacturaProyecto: 'sin-diligenciar',
+        semaforoAcordeonDatosFactura: 'sin-diligenciar'
+    }
+    estadoSemaforosConstruccion = {
         semaforoAcordeonCriterios: 'sin-diligenciar',
         semaforoAcordeonAmortizacion: 'sin-diligenciar',
         semaforoAcordeonDetalleFacturaProyecto: 'sin-diligenciar',
@@ -75,12 +85,13 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     ngOnInit(): void {
         if ( this.contrato !== undefined ) {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
-            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
+            this.solicitudPagoRegistrarSolicitudPagoId = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoRegistrarSolicitudPagoId;
 
             this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
             if ( this.manejoAnticipoRequiere === false ) {
-                delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
+                delete this.estadoSemaforosConstruccion.semaforoAcordeonAmortizacion;
             }
 
             if ( this.contrato.solicitudPago.length > 1 ) {
@@ -89,14 +100,30 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                 this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
             }
 
-            if ( this.solicitudPagoFase.esPreconstruccion === true ) {
-                // Validacion si es preconstruccion eliminar el campo de amortizacion de los semaforos.
-                delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
+            if ( this.solicitudPagoRegistrarSolicitudPago.tieneFasePreconstruccion === false ) {
+                delete this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase;
+            }
+            if ( this.solicitudPagoRegistrarSolicitudPago.tieneFaseConstruccion === false ) {
+                delete this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonConstruccion;
+            }
+
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.tienePreconstruccion = true;
+                        }
+
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
+                            this.tieneConstruccion = true;
+                        }
+                    }
+                }
             }
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                 this.aprobarSolicitudPagoId,
                 this.solicitudPago.solicitudPagoId,
-                this.solicitudPagoFase.solicitudPagoFaseId,
+                this.solicitudPagoRegistrarSolicitudPagoId,
                 this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
                 .subscribe(
                     response => {
@@ -143,22 +170,14 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
       })
     }
 
-    getSemaforoStatus( estadoAcordeon?: string, tipoAcordeon?: string ) {
+    getSemaforoStatus( esPreconstruccion?: boolean, estadoAcordeon?: string, tipoAcordeon?: string ) {
+        let sinDiligenciar = 0;
+        let enProceso = 0;
+        let completo = 0;
         // Get semaforos acordeon preconstruccion
-        if ( this.solicitudPagoFase.esPreconstruccion === true ) {
+        if ( esPreconstruccion === true ) {
             if ( tipoAcordeon === 'criteriosPago' ) {
                 this.estadoSemaforos.semaforoAcordeonCriterios = estadoAcordeon;
-            }
-        }
-        // Get semaforos acordeon construccion
-        if ( this.solicitudPagoFase.esPreconstruccion === false ) {
-            // Get semaforo criterios de pago
-            if ( tipoAcordeon === 'criteriosPago' ) {
-                this.estadoSemaforos.semaforoAcordeonCriterios = estadoAcordeon;
-            }
-            // Get semaforo amortizacion del anticipo
-            if ( tipoAcordeon === 'amortizacion' ) {
-                this.estadoSemaforos.semaforoAcordeonAmortizacion = estadoAcordeon;
             }
             // Get semaforo detalle factura para proyectos asociados
             if ( tipoAcordeon === 'detalleFactura' ) {
@@ -169,40 +188,77 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                 this.estadoSemaforos.semaforoAcordeonDatosFactura = estadoAcordeon;
             }
             // Get semaforo fase
-            const sinDiligenciar = Object.values( this.estadoSemaforos ).includes( 'sin-diligenciar' );
-            const enProceso = Object.values( this.estadoSemaforos ).includes( 'en-proceso' );
-            const completo = Object.values( this.estadoSemaforos ).includes( 'completo' );
+            const sinDiligenciarFase = Object.values( this.estadoSemaforos ).includes( 'sin-diligenciar' );
+            const enProcesoFase = Object.values( this.estadoSemaforos ).includes( 'en-proceso' );
+            const completoFase = Object.values( this.estadoSemaforos ).includes( 'completo' );
 
-            if ( enProceso === true ) {
+            if ( enProcesoFase === true ) {
                 this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'en-proceso';
             }
-            if ( sinDiligenciar === true && completo === true ) {
+            if ( sinDiligenciarFase === true && completoFase === true ) {
                 this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'en-proceso';
             }
-            if ( sinDiligenciar === false && enProceso === false && completo === true ) {
+            if ( sinDiligenciarFase === false && enProcesoFase === false && completoFase === true ) {
                 this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'completo';
             }
+        }
+        // Get semaforos acordeon construccion
+        if ( esPreconstruccion === false ) {
+            // Get semaforo criterios de pago
+            if ( tipoAcordeon === 'criteriosPago' ) {
+                this.estadoSemaforosConstruccion.semaforoAcordeonCriterios = estadoAcordeon;
+            }
+            // Get semaforo amortizacion del anticipo
+            if ( tipoAcordeon === 'amortizacion' ) {
+                this.estadoSemaforosConstruccion.semaforoAcordeonAmortizacion = estadoAcordeon;
+            }
+            // Get semaforo detalle factura para proyectos asociados
+            if ( tipoAcordeon === 'detalleFactura' ) {
+                this.estadoSemaforosConstruccion.semaforoAcordeonDetalleFacturaProyecto = estadoAcordeon;
+            }
+            // Get semaforo datos de la factura
+            if ( tipoAcordeon === 'datosFactura' ) {
+                this.estadoSemaforosConstruccion.semaforoAcordeonDatosFactura = estadoAcordeon;
+            }
+            // Get semaforo fase
+            const sinDiligenciarFase = Object.values( this.estadoSemaforosConstruccion ).includes( 'sin-diligenciar' );
+            const enProcesoFase = Object.values( this.estadoSemaforosConstruccion ).includes( 'en-proceso' );
+            const completoFase = Object.values( this.estadoSemaforosConstruccion ).includes( 'completo' );
+
+            if ( enProcesoFase === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonConstruccion = 'en-proceso';
+            }
+            if ( sinDiligenciarFase === true && completoFase === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonConstruccion = 'en-proceso';
+            }
+            if ( sinDiligenciarFase === false && enProcesoFase === false && completoFase === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonConstruccion = 'completo';
+            }
+
+            /*
             // Get semaforo descuentos direccion tecnica
             if ( tipoAcordeon === 'descuentosTecnica' ) {
                 this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica = estadoAcordeon;
             }
-            // Get semaforo registrar solicitud de pago
-            const sinDiligenciarPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'sin-diligenciar' );
-            const enProcesoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'en-proceso' );
-            const completoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'completo' );
+            */
+        }
 
-            if ( sinDiligenciarPrincipal === true && enProcesoPrincipal === false && completoPrincipal === false ) {
-                this.estadoSemaforoRegistroSolicitud.emit( 'sin-diligenciar' );
-            }
-            if ( enProcesoPrincipal === true ) {
-                this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
-            }
-            if ( sinDiligenciarPrincipal === true && completoPrincipal === true ) {
-                this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
-            }
-            if ( sinDiligenciarPrincipal === false && enProcesoPrincipal === false && completoPrincipal === true ) {
-                this.estadoSemaforoRegistroSolicitud.emit( 'completo' );
-            }
+        // Get semaforo registrar solicitud de pago
+        const sinDiligenciarPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'sin-diligenciar' );
+        const enProcesoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'en-proceso' );
+        const completoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'completo' );
+
+        if ( sinDiligenciarPrincipal === true && enProcesoPrincipal === false && completoPrincipal === false ) {
+            this.estadoSemaforoRegistroSolicitud.emit( 'sin-diligenciar' );
+        }
+        if ( enProcesoPrincipal === true ) {
+            this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
+        }
+        if ( sinDiligenciarPrincipal === true && completoPrincipal === true ) {
+            this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
+        }
+        if ( sinDiligenciarPrincipal === false && enProcesoPrincipal === false && completoPrincipal === true ) {
+            this.estadoSemaforoRegistroSolicitud.emit( 'completo' );
         }
     }
 
@@ -240,7 +296,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.registrarSolicitudPago.registrarSolicitudPagoCodigo,
             menuId: this.aprobarSolicitudPagoId,
-            idPadre: this.solicitudPagoFase.solicitudPagoFaseId,
+            idPadre: this.solicitudPagoRegistrarSolicitudPagoId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
         };
 

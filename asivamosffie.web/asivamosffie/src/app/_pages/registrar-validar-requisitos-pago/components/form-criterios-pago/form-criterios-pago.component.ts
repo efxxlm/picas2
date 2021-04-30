@@ -664,8 +664,8 @@ export class FormCriteriosPagoComponent implements OnInit {
         if ( verifyValorTotalConceptos === false ) {
             if ( this.contratacionProyectoId === 0 ) {
                 let valorTotalConceptos = 0;
+                const solicitudPagoFaseCriterio = [];
 
-                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
                 this.criterios.controls.forEach( control => {
                     const criterio = control.value;
 
@@ -673,7 +673,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         valorTotalConceptos += control.get( 'valorFacturado' ).value;
                     }
 
-                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                    solicitudPagoFaseCriterio.push(
                         {
                             tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                             solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
@@ -685,6 +685,26 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                     );
                 } );
+
+                if ( this.esPreconstruccion === true ) {
+                    if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
+                            }
+                        }
+                    }
+                }
+        
+                if ( this.esPreconstruccion === false ) {
+                    if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
+                            }
+                        }
+                    }
+                }
 
                 if ( this.montoMaximoPendiente.montoMaximo !== valorTotalConceptos ) {
                     this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )
@@ -717,7 +737,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             } else {
                 let valorTotalConceptos = 0;
 
-                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
+                const solicitudPagoFaseCriterio = [];
                 this.criterios.controls.forEach( control => {
                     const criterio = control.value;
                     const solicitudPagoFaseCriterioProyecto = [];
@@ -733,7 +753,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         valorTotalConceptos += control.get( 'valorFacturado' ).value;
                     }
 
-                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                    solicitudPagoFaseCriterio.push(
                         {
                             tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                             solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
@@ -745,6 +765,26 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                     );
                 } );
+
+                if ( this.esPreconstruccion === true ) {
+                    if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
+                            }
+                        }
+                    }
+                }
+        
+                if ( this.esPreconstruccion === false ) {
+                    if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
+                            }
+                        }
+                    }
+                }
 
                 if ( this.montoMaximoPendiente.montoMaximo !== valorTotalConceptos ) {
                     this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )

@@ -1,5 +1,5 @@
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-  <p class="info-sub-title supportBlack">
+  <p class="info-sub-title supportBlack" *ngIf="montoMaximoPendiente !== undefined">
     <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
     <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
   </p>

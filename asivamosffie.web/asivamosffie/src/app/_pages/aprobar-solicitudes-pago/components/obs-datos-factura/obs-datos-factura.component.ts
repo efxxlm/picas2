@@ -16,6 +16,7 @@ export class ObsDatosFacturaComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() esPreconstruccion = true;
     @Input() aprobarSolicitudPagoId: any;
     @Input() datosFacturaCodigo: string;
     @Output() estadoSemaforo = new EventEmitter<string>();

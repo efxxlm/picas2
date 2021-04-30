@@ -119,10 +119,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
                 );
             }
 
-            // if ( this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined ) {
-            //     this.addressForm.disable();
-            //     this.descuentos.disable();
-            // }
+            if ( this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined ) {
+                this.addressForm.disable();
+                this.descuentos.disable();
+            }
 
             if ( this.esVerDetalle === false ) {
                 // Get observacion CU autorizar solicitud de pago 4.1.9
