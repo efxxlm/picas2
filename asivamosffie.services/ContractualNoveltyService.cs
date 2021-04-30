@@ -158,6 +158,14 @@ namespace asivamosffie.services
                                                                                x.Eliminado != true)
                                                                         .ToList();
 
+            List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
+                                                                        .Where(x => (
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
+                                                                                    ) &&
+                                                                               x.Eliminado != true)
+                                                                        .Include( x => x.NovedadContractualDescripcion )
+                                                                        .ToList();
+
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
 
             foreach (var contrato in contratos)
@@ -173,6 +181,15 @@ namespace asivamosffie.services
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
                     contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+
+                    if (listaNovedadesSuspension.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0)
+                    {
+                        contrato.tieneSuspensionAprobada = true;
+                    }
+                    else
+                        contrato.tieneSuspensionAprobada = false;
+
+
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);
                 }

@@ -171,6 +171,7 @@ namespace asivamosffie.services
 
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
         {
+                       
 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal =
                                                                                 await _context.DisponibilidadPresupuestal
@@ -189,6 +190,20 @@ namespace asivamosffie.services
                                                                                                         .Include(x => x.DisponibilidadPresupuestal)
                                                                                                             .ThenInclude(x => x.GestionFuenteFinanciacion)
                                                                                                         .ToListAsync();
+            if (pCodigoEstadoSolicitud == "5")
+            {
+                List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestalConDrp =
+                                                                                await _context.DisponibilidadPresupuestal
+                                                                                                    .Where(r => !(bool)r.Eliminado &&
+                                                                                                            r.EstadoSolicitudCodigo.Equals("8"))
+                                                                                                    .Include(x => x.DisponibilidadPresupuestalProyecto)
+                                                                                                    .Include(x => x.GestionFuenteFinanciacion)
+                                                                                                    .ToListAsync();
+
+                ListDisponibilidadPresupuestal.AddRange(ListDisponibilidadPresupuestalConDrp);
+            }
+
+            
 
             foreach (var RegistroPresupuestal in listRegistroPresupuestal)
             {
