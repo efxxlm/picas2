@@ -20,6 +20,7 @@ export class ObsDatosFacturaComponent implements OnInit {
     @Input() aprobarSolicitudPagoId: any;
     @Input() datosFacturaCodigo: string;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoObservacionId = 0;
     detalleForm = this.fb.group({
         numeroFactura: [null, Validators.required],
@@ -101,7 +102,30 @@ export class ObsDatosFacturaComponent implements OnInit {
     }
 
     getDatosFactura() {
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+        if ( this.esPreconstruccion === true ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                        }
+                    }
+                }
+            }
+        }
+        if ( this.esPreconstruccion === false ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                        }
+                    }
+                }
+            }
+        }
+        
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
         if ( this.solicitudPagoFaseFactura !== undefined ) {
             this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
