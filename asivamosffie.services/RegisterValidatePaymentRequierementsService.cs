@@ -1158,25 +1158,28 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
             //La Fase Construccion Es la unica que tiene amortizacion
-            bool? TieneAmortizacion = _context.SolicitudPagoFase
-                .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFase.SolicitudPagoFaseId)
-                .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                .ThenInclude(r => r.SolicitudPago)
-                .ThenInclude(r => r.Contrato)
-                .ThenInclude(r => r.ContratoConstruccion)
-                .Select(r => r.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.Contrato.ContratoConstruccion
-                .FirstOrDefault().ManejoAnticipoRequiere)
-                .FirstOrDefault();
-
-            if (TieneAmortizacion == true)
+            if (pSolicitudPagoFase.EsPreconstruccion != true)
             {
-                if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
-                    return false;
+                bool? TieneAmortizacion = _context.SolicitudPagoFase
+                    .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFase.SolicitudPagoFaseId)
+                    .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                    .ThenInclude(r => r.SolicitudPago)
+                    .ThenInclude(r => r.Contrato)
+                    .ThenInclude(r => r.ContratoConstruccion)
+                    .Select(r => r.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.Contrato.ContratoConstruccion
+                    .FirstOrDefault().ManejoAnticipoRequiere)
+                    .FirstOrDefault();
 
-                foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
+                if (TieneAmortizacion == true)
                 {
-                    if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
+                    if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
                         return false;
+
+                    foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
+                    {
+                        if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
+                            return false;
+                    }
                 }
             }
             return true;
@@ -2023,7 +2026,7 @@ namespace asivamosffie.services
                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                    .Sum(c => c.SaldoPresupuestal));
 
-              //  ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+                //  ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
 
                 return new
                 {
