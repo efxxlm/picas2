@@ -2023,7 +2023,7 @@ namespace asivamosffie.services
                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                    .Sum(c => c.SaldoPresupuestal));
 
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+              //  ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
 
                 return new
                 {
