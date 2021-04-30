@@ -24,7 +24,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<BalanceFinanciero> BalanceFinanciero { get; set; }
-        public virtual DbSet<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
+        public virtual DbSet<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
+        public virtual DbSet<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
         public virtual DbSet<CarguePagosRendimientos> CarguePagosRendimientos { get; set; }
         public virtual DbSet<Cofinanciacion> Cofinanciacion { get; set; }
@@ -111,6 +112,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<MesEjecucion> MesEjecucion { get; set; }
+        public virtual DbSet<ModificacionContractual> ModificacionContractual { get; set; }
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
         public virtual DbSet<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual DbSet<NovedadContractualClausula> NovedadContractualClausula { get; set; }
@@ -239,6 +241,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
+        public virtual DbSet<VEjecucionFinancieraXcontrato> VEjecucionFinancieraXcontrato { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
@@ -285,6 +288,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -517,19 +522,57 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_BalanceFinanciero_ContratacionProyecto");
             });
 
-            modelBuilder.Entity<BalanceFinancieroTranslado>(entity =>
+            modelBuilder.Entity<BalanceFinancieroTraslado>(entity =>
             {
                 entity.HasOne(d => d.BalanceFinanciero)
-                    .WithMany(p => p.BalanceFinancieroTranslado)
+                    .WithMany(p => p.BalanceFinancieroTraslado)
                     .HasForeignKey(d => d.BalanceFinancieroId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BalanceFinancieroTranslado_BalanceFinanciero");
 
                 entity.HasOne(d => d.OrdenGiro)
-                    .WithMany(p => p.BalanceFinancieroTranslado)
+                    .WithMany(p => p.BalanceFinancieroTraslado)
                     .HasForeignKey(d => d.OrdenGiroId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BalanceFinancieroTranslado_OrdenGiro");
+            });
+
+            modelBuilder.Entity<BalanceFinancieroTrasladoValor>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoTrasladoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorTraslado).HasColumnType("decimal(38, 0)");
+
+                entity.HasOne(d => d.BalanceFinancieroTraslado)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.BalanceFinancieroTrasladoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_BalanceFinancieroTrasladoValor");
+
+                entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacionAportante)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionAportanteId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleTerceroCausacionAportante");
+
+                entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionDescuentoId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleTerceroCausacionDescuentoId");
             });
 
             modelBuilder.Entity<CargueObservacion>(entity =>
@@ -3843,6 +3886,21 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratoConstruccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MesEjecucion_ContratoConstruccion");
+            });
+
+            modelBuilder.Entity<ModificacionContractual>(entity =>
+            {
+                entity.Property(e => e.ModificacionContractualId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FechaEnvioTramite).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ModificacionContractualNavigation)
+                    .WithOne(p => p.ModificacionContractual)
+                    .HasForeignKey<ModificacionContractual>(d => d.ModificacionContractualId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ModificacionContractual_NovedadContractual");
             });
 
             modelBuilder.Entity<NovedadContractual>(entity =>
@@ -8313,6 +8371,25 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VEjecucionFinancieraXcontrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_EjecucionFinancieraXContrato");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoTesoral).HasColumnType("decimal(38, 3)");
+
+                entity.Property(e => e.ValorNeto).HasColumnType("decimal(38, 3)");
+
+                entity.Property(e => e.ValorSolicitudDdp)
+                    .HasColumnName("ValorSolicitudDDP")
+                    .HasColumnType("decimal(18, 0)");
+            });
+
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
             {
                 entity.HasNoKey();
@@ -9735,11 +9812,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 0)");
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")
-                    .HasColumnType("numeric(38, 2)");
+                    .HasColumnType("decimal(18, 0)");
             });
 
             modelBuilder.Entity<VValorFacturadoProyecto>(entity =>
