@@ -264,8 +264,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     }
   }
   validatenomore30() {
-    if (this.addressForm.value.plazoDias > 30) {
-      this.openDialog("", "<b>El valor ingresado en dias no puede ser superior a 30</b>");
+    if (this.addressForm.value.plazoDias > 29) {
+      this.openDialog("", "<b>El valor ingresado en dias no puede ser superior a 29</b>");
       this.addressForm.get("plazoDias").setValue("");
     }
   }
