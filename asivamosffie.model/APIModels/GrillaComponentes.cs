@@ -14,6 +14,7 @@ namespace asivamosffie.model.APIModels
         public List<decimal> ValorUso{ get; set; }
         public decimal ValorTotal { get; set; }
         public int cofinanciacionAportanteId { get; set; }
+        public int? FuenteFinanciacionId { get; set; } 
 
     }
 }
