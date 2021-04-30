@@ -379,13 +379,17 @@
                       matInput
                       maxlength="2"
                       min="1"
-                      max="31"
+                      max="29"
                       required
                       (keypress)="number($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="diasPlazoEjFase2"
+                      onkeyup="if(this.value>29) this.value = 29;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Campo numérico igual o menor a 29 días"
+                      matTooltipClass="info-tooltip"
                     />
                   </mat-form-field>
                   <span
