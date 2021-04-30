@@ -31,7 +31,7 @@
       <p><b>DDP:</b>{{ddpsolicitud}}</p>
       <p><b>Valor DDP:</b> {{ddpvalor|currency:'':'symbol':'3.0'}}</p>
       <p><b>Detalle de la modificación:</b></p>
-      <p>{{ddpdetalle}}</p>
+      <div [innerHTML]="ddpdetalle"></div>
     </mat-card-content>
   </mat-card>
 

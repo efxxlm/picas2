@@ -72,6 +72,21 @@ export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
+  config = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+    ],
+  };
+
+  maxLength(e: any, n: number) {
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
 
     let contadorConcurrencias = 0;

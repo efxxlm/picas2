@@ -1,26 +1,43 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
-
       <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaEnvioGestionContractual" [class.color-secondaryColor]="
-                addressForm.get('fechaEnvioGestionContractual').invalid && addressForm.get('fechaEnvioGestionContractual').touched ||
-                addressForm.get('fechaEnvioGestionContractual').invalid && estaEditando">
+              <label
+                class="label-left"
+                for="fechaEnvioGestionContractual"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaEnvioGestionContractual').invalid &&
+                    addressForm.get('fechaEnvioGestionContractual').touched) ||
+                  (addressForm.get('fechaEnvioGestionContractual').invalid && estaEditando)
+                "
+              >
                 Fecha de envío de solicitud al grupo de gestión contractual
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerEnvioSolicitud" formControlName="fechaEnvioGestionContractual"
-                  readonly (click)="pickerEnvioSolicitud.open()" placeholder="DD/MM/AAAA" required>
+                <input
+                  matInput
+                  [matDatepicker]="pickerEnvioSolicitud"
+                  formControlName="fechaEnvioGestionContractual"
+                  readonly
+                  (click)="pickerEnvioSolicitud.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
                 <mat-datepicker #pickerEnvioSolicitud></mat-datepicker>
-              </mat-form-field> 
-              <button mat-button color="primary" type="button" (click)="pickerEnvioSolicitud.open()"
-                class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerEnvioSolicitud.open()"
+                class="btn-calendario"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
             </div>
           </div>
@@ -30,9 +47,14 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="estadoProcesoCodigo" [class.color-secondaryColor]="
-                addressForm.get('estadoProcesoCodigo').invalid && addressForm.get('estadoProcesoCodigo').touched ||
-                addressForm.get('estadoProcesoCodigo').invalid && estaEditando">
+              <label
+                class="label-left"
+                for="estadoProcesoCodigo"
+                [class.color-secondaryColor]="
+                  (addressForm.get('estadoProcesoCodigo').invalid && addressForm.get('estadoProcesoCodigo').touched) ||
+                  (addressForm.get('estadoProcesoCodigo').invalid && estaEditando)
+                "
+              >
                 Estado del proceso
               </label>
             </div>
@@ -53,21 +75,39 @@
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="fechaAprobacionGestionContractual" [class.color-secondaryColor]="
-                  addressForm.get('fechaAprobacionGestionContractual').invalid && addressForm.get('fechaAprobacionGestionContractual').touched ||
-                  addressForm.get('fechaAprobacionGestionContractual').invalid && estaEditando">
+                <label
+                  class="label-left"
+                  for="fechaAprobacionGestionContractual"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('fechaAprobacionGestionContractual').invalid &&
+                      addressForm.get('fechaAprobacionGestionContractual').touched) ||
+                    (addressForm.get('fechaAprobacionGestionContractual').invalid && estaEditando)
+                  "
+                >
                   Fecha de aprobación del grupo de gestión contractual
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="pickerSolicitudNovedad" formControlName="fechaAprobacionGestionContractual"
-                    readonly (click)="pickerSolicitudNovedad.open()" placeholder="DD/MM/AAAA" required>
+                  <input
+                    matInput
+                    [matDatepicker]="pickerSolicitudNovedad"
+                    formControlName="fechaAprobacionGestionContractual"
+                    readonly
+                    (click)="pickerSolicitudNovedad.open()"
+                    placeholder="DD/MM/AAAA"
+                    required
+                  />
                   <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
                 </mat-form-field>
-                <button mat-button color="primary" type="button" (click)="pickerSolicitudNovedad.open()"
-                  class="btn-calendario">
-                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                <button
+                  mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerSolicitudNovedad.open()"
+                  class="btn-calendario"
+                >
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                 </button>
               </div>
             </div>
@@ -77,16 +117,24 @@
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="abogadoRevisionId" [class.color-secondaryColor]="
-                  addressForm.get('abogadoRevisionId').invalid && addressForm.get('abogadoRevisionId').touched ||
-                  addressForm.get('abogadoRevisionId').invalid && estaEditando">
+                <label
+                  class="label-left"
+                  for="abogadoRevisionId"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('abogadoRevisionId').invalid && addressForm.get('abogadoRevisionId').touched) ||
+                    (addressForm.get('abogadoRevisionId').invalid && estaEditando)
+                  "
+                >
                   Nombre del abogado que realizó la revisión
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="abogadoRevisionId">
-                    <mat-option *ngFor="let instancia of nombreAbogadoPresentoSolicitudArray" [value]="instancia.codigo">
+                    <mat-option
+                      *ngFor="let instancia of nombreAbogadoPresentoSolicitudArray"
+                      [value]="instancia.codigo"
+                    >
                       {{ instancia.nombre }}
                     </mat-option>
                   </mat-select>
@@ -96,31 +144,64 @@
           </div>
         </div>
       </div>
-      
     </mat-card-content>
   </mat-card>
   <div class="d-flex align-items-center mt-1em" *ngIf="addressForm.get('estadoProcesoCodigo').value === '3'">
-        
-    <div class="text-area-quill">
-      <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
-              !(addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched ||
-              addressForm.get('observacionDevolver').invalid && estaEditando)">
-      Observaciones de la devolución
-    </label>
-      <quill-editor class="quill-editor-style" [modules]="config"
-        (onContentChanged)="maxLength($event, 1000)" formControlName="observacionDevolver" required>
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched) ||
+        (addressForm.get('observacionDevolver').invalid && estaEditando)
+      "
+    >
+      <label
+        class="text-area-quill--label align-left-label"
+        [class.colorMainColor]="
+          !(
+            (addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched) ||
+            (addressForm.get('observacionDevolver').invalid && estaEditando)
+          )
+        "
+      >
+        Observaciones de la devolución
+      </label>
+      <quill-editor
+        class="quill-editor-style"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 1000)"
+        formControlName="observacionDevolver"
+        #obsGestionSst
+        required
+      >
       </quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value !== null">
-      {{1000 - (textoLimpio(addressForm.get('observacionDevolver').value)>1000?1000:textoLimpio(addressForm.get('observacionDevolver').value))}}
+    <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value">
+      {{
+        1000 -
+          (textoLimpio(addressForm.get('observacionDevolver').value) > 1000
+            ? 1000
+            : textoLimpio(addressForm.get('observacionDevolver').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value === null">
-      1000
+    <span class="contador miles" *ngIf="!addressForm.get('observacionDevolver').value"> 1000 </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        [matTooltipPosition]="'above'"
+        matTooltip="Debe ingresar la información en el campo para continuar"
+        matTooltipClass="info-tooltip"
+        *ngIf="
+          (addressForm.get('observacionDevolver').invalid && addressForm.get('observacionDevolver').touched) ||
+          (addressForm.get('observacionDevolver').invalid && estaEditando)
+        "
+      />
     </span>
   </div>
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
