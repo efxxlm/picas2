@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion);
+
         Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion);
 
         Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion);

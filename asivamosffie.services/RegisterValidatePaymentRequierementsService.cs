@@ -2008,6 +2008,39 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion)
+        {
+            decimal ValorPendientePorPagar = 0;
+            try
+            {
+                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId
+                    .Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion)
+                    .Sum(v => v.ValorUso);
+
+                ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
+                   .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
+                   .Sum(c => c.SaldoPresupuestal));
+
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+
+                return new
+                {
+                    ValorPendientePorPagar
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    ValorPendientePorPagar
+                };
+            }
+        }
+
+
+
         public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
             decimal ValorMaximoProyecto =
