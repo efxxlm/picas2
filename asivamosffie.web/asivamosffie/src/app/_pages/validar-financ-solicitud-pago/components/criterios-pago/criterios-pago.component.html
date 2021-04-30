@@ -1,8 +1,4 @@
-<section *ngIf="solicitudPago !== undefined && montoMaximoPendiente !== undefined">
-    <p class="info-sub-title supportBlack">
-        <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
-        <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
-    </p>
+<section *ngIf="solicitudPago !== undefined">
     <div class="d-flex justify-content-center" *ngIf="criteriosArraySeleccionados.length > 0">
         <strong>Criterios de pago:</strong>
         <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>

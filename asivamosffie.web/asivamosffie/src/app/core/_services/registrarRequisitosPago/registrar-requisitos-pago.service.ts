@@ -37,12 +37,16 @@ export class RegistrarRequisitosPagoService {
     return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }` );
   }
 
+  getMontoMaximo( solicitudPagoId: number, esPreConstruccion: string ) {
+    return this.http.get<any>( `${ this.apiUrl }/GetMontoMaximo?SolicitudPagoId=${ solicitudPagoId }&EsPreConstruccion=${ esPreConstruccion }` )
+  }
+
   getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string ) {
     return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }` );
   }
 
   getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
-    return this.http.get<{ codigo: string, nombre: string }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
+    return this.http.get<{ codigo: string, nombre: string, porcentaje: number }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
   }
 
   getValidateSolicitudPagoId( pSolicitudPagoId: number ) {

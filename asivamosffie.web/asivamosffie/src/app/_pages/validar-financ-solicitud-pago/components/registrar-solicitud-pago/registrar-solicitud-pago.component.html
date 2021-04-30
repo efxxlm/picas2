@@ -38,12 +38,11 @@
         <mat-card-content style="text-align: left;">
             <p><strong>Fecha de solicitud:</strong> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
             <p><strong>Número de radicado SAC:</strong> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].numeroRadicadoSac }} </p>
-            <p *ngIf="solicitudPagoFase.esPreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
-            <p *ngIf="solicitudPagoFase.esPreconstruccion === false"><strong>Fase del contrato:</strong> Fase 2 - Construcción</p>
+            <p *ngIf="tienePreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción<span *ngIf="tieneConstruccion === true">, Fase 2 - Construcción.</span><span *ngIf="tienePreconstruccion === true && tieneConstruccion === false">.</span></p>
         </mat-card-content>
     </mat-card>
     
-    <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === true">
+    <mat-accordion *ngIf="tienePreconstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
@@ -84,7 +83,7 @@
         </mat-expansion-panel>
     </mat-accordion>
     
-    <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === false">
+    <mat-accordion *ngIf="tieneConstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
@@ -119,7 +118,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-detalle-factura-proyectos [solicitudPago]="solicitudPago" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos>
+                    <app-detalle-factura-proyectos [esPreconstruccion]="false" [solicitudPago]="solicitudPago" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -129,12 +128,13 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-datos-factura [solicitudPago]="solicitudPago"></app-datos-factura>
+                    <app-datos-factura [esPreconstruccion]="false" [solicitudPago]="solicitudPago"></app-datos-factura>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
 
+    <!--
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -146,4 +146,5 @@
             <app-descuentos-direccion-tecnica [solicitudPago]="solicitudPago"></app-descuentos-direccion-tecnica>
         </mat-expansion-panel>
     </mat-accordion>
+    -->
 </section>

@@ -27,7 +27,14 @@ export class AmortizacionPagoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+            for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                if ( solicitudPagoFase.esPreconstruccion === false ) {
+                    this.solicitudPagoFase = solicitudPagoFase;
+                }
+            }
+        }
+
         if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
             // Get detalle amortización

@@ -1,8 +1,4 @@
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-  <p class="info-sub-title supportBlack" *ngIf="montoMaximoPendiente !== undefined">
-    <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
-    <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
-  </p>
   <div class="d-flex justify-content-center" *ngIf="criteriosSeleccionadosArray.length > 0">
     <strong>Criterios de pago:</strong>
     <p *ngFor="let criterio of criteriosSeleccionadosArray; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="criteriosSeleccionadosArray.length - 1 !== i">,</span><span *ngIf="criteriosSeleccionadosArray.length - 1 === i">.</span> </p>
@@ -30,11 +26,7 @@
   </form>
 </ng-container>
 <ng-template #noEsVerDetalle>
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="montoMaximoPendiente !== undefined">
-    <p class="info-sub-title supportBlack">
-      <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
-      <span><b>Monto pendiente por pagar en la fase:</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
-    </p>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
     <div class="row">
       <div class="col-md-12">
         <div class="row">
@@ -48,7 +40,9 @@
           <div class="col d-flex">
             <mat-form-field class="select-width">
               <mat-select formControlName="criterioPago" multiple (selectionChange)="getvalues($event.value)">
-                <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago"> {{ criterioPago.nombre }} </mat-option>
+                <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago">
+                  {{ criterioPago.nombre }}
+                </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
