@@ -30,7 +30,7 @@
             <td mat-cell *matCellDef="let element">
                 <span class="info-text tabla"
                     [ngClass]="{'completo': element.estadoRegistro, 'sin-diligenciar': !element.estadoRegistro}"></span>
-                {{element.estadoRegistro?"Completo":"Incompleto"}}
+                {{ element.estadoRegistro === true ? "Completo" : "Incompleto" }}
             </td>
             
         </ng-container>

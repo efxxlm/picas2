@@ -216,7 +216,10 @@
                             <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}</p>
                         <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
                         <div *ngFor="let fuente of apo.fuentesFinanciacion;index as j">
-                            <mat-card-title class="header-card--text sub-text textoGris" >Fuente {{j+1}}</mat-card-title>
+                            <section *ngIf="fuente.saldo_actual_de_la_fuente_al_guardar !== 0">
+                            <mat-card-title class="header-card--text sub-text textoGris" >
+                                
+                            </mat-card-title>
                             
                             <p>
                                 <strong>Fuente:</strong>
@@ -238,6 +241,7 @@
                                 <strong>Estado de las fuentes:</strong>
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
+                        </section>
                         </div>
                         
                     </div>

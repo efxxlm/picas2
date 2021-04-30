@@ -451,6 +451,10 @@ namespace asivamosffie.services
                 fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
                 fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente?.Aportante?.CofinanciacionId);
 
+                fuente.saldoFuente = fuente.ValorFuente.Value - _context.GestionFuenteFinanciacion
+                                                    .Where(x => x.FuenteFinanciacionId == fuente.FuenteFinanciacionId &&
+                                                           x.Eliminado != true).Sum(x => x.ValorSolicitado);
+
             }
 
             return listaFuentes;

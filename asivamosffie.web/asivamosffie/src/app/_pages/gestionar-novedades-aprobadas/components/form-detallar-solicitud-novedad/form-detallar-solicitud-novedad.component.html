@@ -47,8 +47,8 @@
                       formControlName="valorAportanteProyecto" (ngModelChange)="
                         validarSaldoDisponible(
                           $event,
-                          
-                          aportante.get('nombreAportante').value
+                          aportante.get('nombreAportante').value,
+                          aportante
                         )
                       " />
                     <input type="hidden" formControlName="contratacionProyectoAportanteId" />

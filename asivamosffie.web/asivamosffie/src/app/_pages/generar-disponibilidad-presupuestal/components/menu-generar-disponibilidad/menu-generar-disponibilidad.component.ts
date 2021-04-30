@@ -25,11 +25,12 @@ export class MenuGenerarDisponibilidadComponent implements OnInit {
           {            
             let cantcompleto=0;
             element.disponibilidadPresupuestal.forEach(element2 => {
-              if(element2.estadoRegistro)
+              if(element2.estadoRegistro === true && element.numeroDdp === null)
               {
                 cantcompleto++;
               }
             });
+            console.log(cantcompleto, element.disponibilidadPresupuestal.length)
             if(cantcompleto==element.disponibilidadPresupuestal.length)
             {
               element.completo='Completo';

@@ -315,8 +315,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     };
   };
 
-  validarSaldoDisponible(saldoIngresado: number, nombreAportante: string) {
+  validarSaldoDisponible(saldoIngresado: number, nombreAportante: string, aportante) {
 
+    console.log('apo',aportante);
     let saldoDisponible = 0;
 
     this.novedad.novedadContractualDescripcion.forEach( descripcion => {
