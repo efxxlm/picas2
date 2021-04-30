@@ -176,7 +176,12 @@
       </quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('observacionDevolver').value">
-      {{ 1000 - (textoLimpio(addressForm.get('observacionDevolver').value)>1000?1000:textoLimpio(addressForm.get('observacionDevolver').value))}}
+      {{
+        1000 -
+          (textoLimpio(addressForm.get('observacionDevolver').value) > 1000
+            ? 1000
+            : textoLimpio(addressForm.get('observacionDevolver').value))
+      }}
     </span>
     <span class="contador miles" *ngIf="!addressForm.get('observacionDevolver').value"> 1000 </span>
     <span class="icon-incompleto">
