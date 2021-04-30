@@ -104,6 +104,7 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
                     }
                 }
             }
+
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
             // Get observaciones
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(

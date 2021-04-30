@@ -22,7 +22,9 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
     @Input() autorizarSolicitudPagoId: any
     @Input() criteriosPagoProyectoCodigo: string;
     @Input() solicitudPagoCargarFormaPago: any;
+    @Input() esPreconstruccion = true;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
     proyectos: any;
@@ -81,7 +83,30 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
 
     getProyectos() {
         if (this.solicitudPago !== undefined) {
-            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+            if ( this.esPreconstruccion === true ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                this.solicitudPagoFase = solicitudPagoFase;
+                            }
+                        }
+                    }
+                }
+            }
+            if ( this.esPreconstruccion === false ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                this.solicitudPagoFase = solicitudPagoFase;
+                            }
+                        }
+                    }
+                }
+            }
+
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
             // Get observaciones
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
@@ -110,7 +135,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                     }
                 );
 
-            if (this.solicitudPagoFase.esPreconstruccion === true) {
+            if ( this.esPreconstruccion === true ) {
                 this.registrarPagosSvc.getCriterioByFormaPagoCodigo(this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo)
                     .subscribe(
                         criterios => {
@@ -213,7 +238,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                         }
                     );
             }
-            if (this.solicitudPagoFase.esPreconstruccion === false) {
+            if ( this.esPreconstruccion === false ) {
                 this.registrarPagosSvc.getCriterioByFormaPagoCodigo(this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo)
                     .subscribe(
                         criterios => {

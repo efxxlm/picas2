@@ -120,6 +120,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                     }
                 }
             }
+
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                 this.aprobarSolicitudPagoId,
                 this.solicitudPago.solicitudPagoId,
@@ -171,9 +172,6 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     }
 
     getSemaforoStatus( esPreconstruccion?: boolean, estadoAcordeon?: string, tipoAcordeon?: string ) {
-        let sinDiligenciar = 0;
-        let enProceso = 0;
-        let completo = 0;
         // Get semaforos acordeon preconstruccion
         if ( esPreconstruccion === true ) {
             if ( tipoAcordeon === 'criteriosPago' ) {

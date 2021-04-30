@@ -143,7 +143,7 @@
                                                     [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                     [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
                                                     [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                    (estadoSemaforo)="getSemaforoStatus( false, $event, 'criteriosPago' )">
+                                                    (estadoSemaforo)="getSemaforoStatus( true, $event, 'criteriosPago' )">
                     </app-obs-criterio-pagos-autoriz>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -158,7 +158,7 @@
                                                         [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                         [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
                                                         [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                        (estadoSemaforo)="getSemaforoStatus( false, $event, 'detalleFactura' )">
+                                                        (estadoSemaforo)="getSemaforoStatus( true, $event, 'detalleFactura' )">
                     </app-obs-detllfact-procasoc-autoriz>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -172,7 +172,7 @@
                                                     [esVerDetalle]="esVerDetalle"
                                                     [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                     [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
-                                                    (estadoSemaforo)="getSemaforoStatus( false, $event, 'datosFactura' )">
+                                                    (estadoSemaforo)="getSemaforoStatus( true, $event, 'datosFactura' )">
                     </app-obs-datos-factura-autoriz>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -182,7 +182,7 @@
     <mat-accordion *ngIf="tieneConstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonConstruccion">
                     Fase 2 - Construcción
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -196,6 +196,7 @@
 
                     <app-obs-criterio-pagos-autoriz [solicitudPago]="solicitudPago"
                                                     [esVerDetalle]="esVerDetalle"
+                                                    [esPreconstruccion]="false"
                                                     [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                     [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
                                                     [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
@@ -228,6 +229,7 @@
 
                     <app-obs-detllfact-procasoc-autoriz [solicitudPago]="solicitudPago"
                                                         [esVerDetalle]="esVerDetalle"
+                                                        [esPreconstruccion]="false"
                                                         [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                         [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
                                                         [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
@@ -244,6 +246,7 @@
 
                     <app-obs-datos-factura-autoriz  [solicitudPago]="solicitudPago"
                                                     [esVerDetalle]="esVerDetalle"
+                                                    [esPreconstruccion]="false"
                                                     [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
                                                     [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
                                                     (estadoSemaforo)="getSemaforoStatus( false, $event, 'datosFactura' )">

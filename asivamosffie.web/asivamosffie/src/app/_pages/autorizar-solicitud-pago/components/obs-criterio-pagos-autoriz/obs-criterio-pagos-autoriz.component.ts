@@ -19,6 +19,7 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
     @Input() autorizarSolicitudPagoId: any;
     @Input() criteriosPagoFacturaCodigo: string;
     @Input() solicitudPagoCargarFormaPago: any;
+    @Input() esPreconstruccion = true;
     @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     solicitudPagoRegistrarSolicitudPago: any;
@@ -95,8 +96,30 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
 
     getCriterios() {
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
-        this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
-        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].esPreconstruccion === true ) {
+        if ( this.esPreconstruccion === true ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                        }
+                    }
+                }
+            }
+        }
+        if ( this.esPreconstruccion === false ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ( this.esPreconstruccion === true ) {
             const fasePreConstruccionFormaPagoCodigo = this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, fasePreConstruccionFormaPagoCodigo, 'False' )
                 .subscribe(
@@ -106,7 +129,6 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
                             .subscribe(
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
-                                    this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
 
                                     if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                                         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
@@ -164,7 +186,7 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
                     }
                 );
         }
-        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].esPreconstruccion === false ) {
+        if ( this.esPreconstruccion === false ) {
             const faseConstruccionFormaPagoCodigo = this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, faseConstruccionFormaPagoCodigo, 'False' )
                 .subscribe(
@@ -174,7 +196,6 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
                             .subscribe(
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
-                                    this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
 
                                     if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                                         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
