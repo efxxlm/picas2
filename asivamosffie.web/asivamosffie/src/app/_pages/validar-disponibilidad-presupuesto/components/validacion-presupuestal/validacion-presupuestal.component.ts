@@ -57,7 +57,8 @@ export class ValidacionPresupuestalComponent implements OnInit {
   }
   download() {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+    this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad).subscribe((listas: any) => {
       console.log(listas);
       const documento = `${this.detailavailabilityBudget.numeroDDP}.pdf`;
       const text = documento,

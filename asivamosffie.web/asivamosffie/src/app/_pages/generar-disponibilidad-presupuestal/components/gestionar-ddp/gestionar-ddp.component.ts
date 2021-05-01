@@ -69,7 +69,7 @@ export class GestionarDdpComponent implements OnInit {
   download(dato: any) {
     console.log(this.detailavailabilityBudget);
     console.log(dato);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad).subscribe((listas: any) => {
       console.log(listas);
       const documento = `${dato.numeroSolicitud ? dato.numeroSolicitud : 'DDP'}.pdf`;
       const text = documento,

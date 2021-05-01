@@ -37,14 +37,14 @@ export class DisponibilidadPresupuestalService {
     var json = JSON.stringify(pdf[0]);    
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
-  GenerateDRP(id)
+  GenerateDRP(id, esNovedad)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}&esNovedad=${esNovedad}`, { responseType: "blob" } );
   }
   
-  GenerateDDP(id)
+  GenerateDDP(id, esNovedad)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}`, { responseType: "blob" } );
   }
   CreateDDP(id, esNovedad, RegistroPresupuestalId)
   {

@@ -179,7 +179,7 @@ namespace asivamosffie.services
                                                                                                             r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud))
                                                                                                     .Include(x => x.DisponibilidadPresupuestalProyecto)
                                                                                                     .Include(x => x.GestionFuenteFinanciacion)
-                                                                                                    .ToListAsync();
+                                                                                                     .ToListAsync();
 
             List<NovedadContractualRegistroPresupuestal> listRegistroPresupuestal =
                                                                                     await _context.NovedadContractualRegistroPresupuestal
@@ -224,7 +224,7 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
 
-
+                ListDisponibilidadPresupuestal.Remove(RegistroPresupuestal.DisponibilidadPresupuestal);
                 ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
             }
 
@@ -877,7 +877,7 @@ namespace asivamosffie.services
             return ListGrillaControlCronograma;
         }
 
-        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero)
+        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad)
         {
             if (id == 0)
             {
@@ -894,7 +894,7 @@ namespace asivamosffie.services
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString())
                 .Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false);
+            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false, esNovedad);
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
         }
@@ -942,7 +942,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp)
+        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
             /*variables que pueden diferir de uno u otro tipo*/
@@ -1853,7 +1853,7 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
             }
         }
 
-        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion)
+        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad)
         {
             if (id == 0)
             {
@@ -1868,7 +1868,7 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
                 return Array.Empty<byte>();
             }
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true);
+            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);

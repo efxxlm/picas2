@@ -2590,7 +2590,7 @@ namespace asivamosffie.services
                                                     .FirstOrDefault();
 
             if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
-                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
+                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion, false);
             else
             {
                 throw new Exception("El contrato no tiene DRP");
