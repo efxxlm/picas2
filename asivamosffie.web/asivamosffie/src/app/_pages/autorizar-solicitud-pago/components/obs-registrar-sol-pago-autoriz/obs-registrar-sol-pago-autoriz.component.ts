@@ -34,7 +34,6 @@ export class ObsRegistrarSolPagoAutorizComponent implements OnInit {
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
         'faseContrato',
-        'pagosRealizados',
         'valorFacturado',
         'porcentajeFacturado',
         'saldoPorPagar',

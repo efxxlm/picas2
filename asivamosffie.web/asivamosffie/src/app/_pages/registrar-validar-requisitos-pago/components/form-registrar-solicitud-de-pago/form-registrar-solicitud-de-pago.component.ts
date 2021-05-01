@@ -47,7 +47,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = [
       'faseContrato',
-      'pagosRealizados',
       'valorFacturado',
       'porcentajeFacturado',
       'saldoPorPagar',
