@@ -138,13 +138,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDDP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDDP(int id, bool esNovedad)
+        public async Task<IActionResult> GenerateDDP(int id, bool esNovedad, int pRegistroPresupuestalId)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion, esNovedad), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
             {
@@ -406,14 +406,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDRP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDRP(int id, bool esNovedad)
+        public async Task<IActionResult> GenerateDRP(int id, bool esNovedad, int pRegistroPresupuestalId)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 //return File(respuesta, "application/octet-stream");
-                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
             {

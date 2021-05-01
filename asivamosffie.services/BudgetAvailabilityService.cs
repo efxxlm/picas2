@@ -877,7 +877,7 @@ namespace asivamosffie.services
             return ListGrillaControlCronograma;
         }
 
-        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad)
+        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad, int pRegistroPresupuestalId)
         {
             if (id == 0)
             {
@@ -891,10 +891,18 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
+
+            NovedadContractualRegistroPresupuestal novedadContractualRegistro = new NovedadContractualRegistroPresupuestal();
+
+            if ( esNovedad )
+            {
+                novedadContractualRegistro = _context.NovedadContractualRegistroPresupuestal.Find(pRegistroPresupuestalId);
+            }
+
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString())
                 .Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false, esNovedad);
+            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false, esNovedad, novedadContractualRegistro);
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
         }
@@ -942,7 +950,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad)
+        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad, NovedadContractualRegistroPresupuestal pRegistro)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
             /*variables que pueden diferir de uno u otro tipo*/
@@ -1070,8 +1078,24 @@ namespace asivamosffie.services
                 int codcabeceraproycto = (int)ConstanCodigoPlantillas.DDP_Cabecera_Proyecto;
                 var plantilla_proycto = _context.Plantilla.Where(x => x.Codigo == codtablaproyecto.ToString()).FirstOrDefault().Contenido;
 
-                //empuezo con fuentes
-                var gestionfuentes = _context.GestionFuenteFinanciacion
+                List<GestionFuenteFinanciacion> gestionfuentes = new List<GestionFuenteFinanciacion>();
+
+                if (esNovedad)
+                {
+                    gestionfuentes = _context.GestionFuenteFinanciacion
+                    .Where(x => !(bool)x.Eliminado
+                        && x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId).
+                    Include(x => x.FuenteFinanciacion).
+                        ThenInclude(x => x.Aportante).
+                        ThenInclude(x => x.CofinanciacionDocumento).
+                    Include(x => x.DisponibilidadPresupuestalProyecto).
+                        ThenInclude(x => x.Proyecto).
+                            ThenInclude(x => x.Sede).
+                    ToList();
+                }
+                else
+                {
+                    gestionfuentes = _context.GestionFuenteFinanciacion
                     .Where(x => !(bool)x.Eliminado
                         && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
                     Include(x => x.FuenteFinanciacion).
@@ -1081,14 +1105,31 @@ namespace asivamosffie.services
                         ThenInclude(x => x.Proyecto).
                             ThenInclude(x => x.Sede).
                     ToList();
+                }
+
+                //empuezo con fuentes
+                
                 decimal total = 0;
                 foreach (var gestion in gestionfuentes)
                 {
-                    var gestionAlGuardar = _context.GestionFuenteFinanciacion
+                    GestionFuenteFinanciacion gestionAlGuardar = new GestionFuenteFinanciacion();
+                    if ( esNovedad)
+                    {
+                        gestionAlGuardar = _context.GestionFuenteFinanciacion
+                                    .Where(x => x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId &&
+                                        x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
+                                        && x.Eliminado != true)
+                                    .FirstOrDefault();
+                    }
+                    else
+                    {
+                        gestionAlGuardar = _context.GestionFuenteFinanciacion
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId &&
                                         x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
                                         && x.Eliminado != true)
                                     .FirstOrDefault();
+                    }
+                    
 
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
@@ -1853,7 +1894,7 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
             }
         }
 
-        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad)
+        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId)
         {
             if (id == 0)
             {
@@ -1867,8 +1908,16 @@ pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
             {
                 return Array.Empty<byte>();
             }
+
+            NovedadContractualRegistroPresupuestal novedadContractualRegistro = new NovedadContractualRegistroPresupuestal();
+
+            if (esNovedad)
+            {
+                novedadContractualRegistro = _context.NovedadContractualRegistroPresupuestal.Find(pRegistroPresupuestalId);
+            }
+
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad);
+            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad, novedadContractualRegistro);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
