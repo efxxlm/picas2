@@ -2041,9 +2041,7 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
-
+         
         public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
             decimal ValorMaximoProyecto =

@@ -241,6 +241,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
+        public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
+        public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
         public virtual DbSet<VEjecucionFinancieraXcontrato> VEjecucionFinancieraXcontrato { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -283,6 +285,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorFacturadoContrato> VValorFacturadoContrato { get; set; }
         public virtual DbSet<VValorFacturadoProyecto> VValorFacturadoProyecto { get; set; }
         public virtual DbSet<VValorFacturadoSolicitudPago> VValorFacturadoSolicitudPago { get; set; }
+        public virtual DbSet<VValorFacturadoXfasesSolicitudPago> VValorFacturadoXfasesSolicitudPago { get; set; }
         public virtual DbSet<VValorUsoXcontratoAportante> VValorUsoXcontratoAportante { get; set; }
         public virtual DbSet<VValorUsoXcontratoId> VValorUsoXcontratoId { get; set; }
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
@@ -8313,11 +8316,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 0)");
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(38, 0)");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
-
-                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>
@@ -8369,6 +8370,24 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VDrpNovedadXfaseContratacionId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpNovedadXFaseContratacionId");
+
+                entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VDrpXfaseContratacionId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpXFaseContratacionId");
+
+                entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VEjecucionFinancieraXcontrato>(entity =>
@@ -9837,6 +9856,15 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Valor).HasColumnType("decimal(38, 3)");
             });
 
+            modelBuilder.Entity<VValorFacturadoXfasesSolicitudPago>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ValorFacturadoXFasesSolicitudPago");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+            });
+
             modelBuilder.Entity<VValorUsoXcontratoAportante>(entity =>
             {
                 entity.HasNoKey();
@@ -9868,10 +9896,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
