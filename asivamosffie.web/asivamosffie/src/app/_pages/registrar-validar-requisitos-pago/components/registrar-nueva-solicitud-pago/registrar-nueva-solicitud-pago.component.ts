@@ -23,10 +23,10 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
-      'drp',
-      'numDrp',
-      'valor',
-      'saldo'
+        'drp',
+        'numDrp',
+        'valor',
+        'saldo'
     ];
     addressForm = this.fb.group({
       tipoSolicitud: [null, Validators.required],
@@ -108,7 +108,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             contrato => {
                 this.contrato = contrato;
                 console.log( this.contrato );
-                this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             }
