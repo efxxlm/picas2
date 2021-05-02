@@ -135,7 +135,7 @@ export class GestionarDrpComponent implements OnInit {
   }
   descargarDRPBoton() {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad).subscribe((listas: any) => {
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((listas: any) => {
       console.log(listas);
       const documento = `DRP ${this.detailavailabilityBudget.id}.pdf`;
       const text = documento,

@@ -56,7 +56,7 @@
                 <strong>Valor después de la modificación:</strong>
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}
             </p>
-            <p *ngIf="detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses">
+            <p *ngIf="detailavailabilityBudget?.novedadContractual?.novedadContractualDescripcion[0].plazoAdicionalMeses">
                 <strong>Plazo  de la modificación:</strong>
                 
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
@@ -65,7 +65,7 @@
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Detalle de la modificación:</strong>
             </p>
-            <div [innerHTML]="detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].resumenJustificacion"></div>
+            <div [innerHTML]="detailavailabilityBudget?.novedadContractual?.novedadContractualDescripcion[0].resumenJustificacion"></div>
 
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
