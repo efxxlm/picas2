@@ -28,12 +28,11 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     ];
     displayedColumnsRegistrarSolicitud: string[] = [
         'faseContrato',
-        'pagosRealizados',
         'valorFacturado',
         'porcentajeFacturado',
         'saldoPorPagar',
         'porcentajePorPagar'
-      ];
+    ];
     addressForm = this.fb.group({
         criterios: this.fb.array( [] )
     });
@@ -141,7 +140,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                                     }
                                 }
     
-                                this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                                this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                 this.dataSourceRegistrarSolicitud = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
                             }
                             console.log( this.contrato );
