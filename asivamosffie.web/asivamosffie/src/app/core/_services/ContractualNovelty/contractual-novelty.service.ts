@@ -115,4 +115,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/CancelarNovedad?pNovedadContractualId=${pId}`, null ); 
   }
 
+  AprobacionTecnicaJuridica( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/AprobacionTecnicaJuridica?pNovedaContractual=${ id }`, null ); 
+  }
+
 }

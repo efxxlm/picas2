@@ -32,5 +32,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId);
         Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId);
         Task<Respuesta> CancelarNovedad(int pNovedadContractualId, string pUsuario);
+        Task<Respuesta> AprobacionTecnicaJuridica(int pNovedadContractualId, string pUsuario);
     }
 }

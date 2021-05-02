@@ -9,6 +9,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public NovedadContractual novedadContractual { get; set; }
 
-        
+        [NotMapped]
+        public bool vaComite { get; set; }
+
+
     }
 }

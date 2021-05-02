@@ -98,7 +98,22 @@ namespace asivamosffie.services
                     NovedadContractual novedadContractual = _context.NovedadContractual
                                                                         .Where(x => x.NovedadContractualId == novedad.NovedadContractualId)
                                                                         .Include(x => x.NovedadContractualObservaciones)
+                                                                        .Include( x => x.NovedadContractualDescripcion )
                                                                         .FirstOrDefault();
+                    novedad.vaComite = true;
+
+                    foreach ( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
+                    {
+                        if ( 
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio
+                            )
+                        {
+                            novedad.vaComite = false;
+                        }                            
+
+                    }
 
                     if (novedadContractual.EstadoProcesoCodigo == "3")
                     {
@@ -152,7 +167,7 @@ namespace asivamosffie.services
 
             List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
                                                                         .Where(x => (
-                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
+                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente &&
                                                                                         x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor
                                                                                     ) &&
                                                                                x.Eliminado != true)
@@ -182,9 +197,12 @@ namespace asivamosffie.services
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
                     contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
 
-                    if (listaNovedadesSuspension.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0)
+                    NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == contrato.ContratoId).FirstOrDefault();
+
+                    if (novedadTemp != null)
                     {
                         contrato.tieneSuspensionAprobada = true;
+                        contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                     }
                     else
                         contrato.tieneSuspensionAprobada = false;
@@ -237,6 +255,13 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
                                                                 .ToList();
 
+            List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
+                                                                        .Where(x => (
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
+                                                                                    ) &&
+                                                                               x.Eliminado != true)
+                                                                        .Include(x => x.NovedadContractualDescripcion)
+                                                                        .ToList();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where(r => r.NovedadContractualId == pId)
@@ -261,6 +286,16 @@ namespace asivamosffie.services
 
             if (novedadContractual != null)
             {
+                NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+
+                if (novedadTemp != null)
+                {
+                    novedadContractual.Contrato.tieneSuspensionAprobada = true;
+                    novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
+                }
+                else
+                    novedadContractual.Contrato.tieneSuspensionAprobada = false;
+
                 novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)
                                                                 .ToList();
@@ -434,6 +469,53 @@ namespace asivamosffie.services
            });
 
             return listaAportantes;
+
+            ////Contratacion contratacion = _context.Contratacion
+            ////                                        .Include(x => x.ContratacionProyecto)
+            ////                                            .ThenInclude(x => x.ContratacionProyectoAportante)
+            ////                                                .ThenInclude(x => x.CofinanciacionAportante)
+            ////                                        .FirstOrDefault(x => x.ContratacionId == pId);
+
+            ////contratacion.ContratacionProyecto.ToList().ForEach(cp =>
+            //{
+            //    //cp.ContratacionProyectoAportante.ToList().ForEach(cpa =>
+            //    _context.CofinanciacionAportante.Where(x => x.Eliminado != true).ToList().ForEach(cpa =>
+            //    {
+            //        //CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+            //        //cofinanciacionAportante.CofinanciacionAportanteId = cpa.CofinanciacionAportante.CofinanciacionAportanteId;
+
+            //        if (cpa.TipoAportanteId == ConstanTipoAportante.Ffie)
+            //        {
+            //            cpa.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+            //        }
+            //        else if (cpa.TipoAportanteId == ConstanTipoAportante.ET)
+            //        {
+            //            //verifico si tiene municipio
+            //            if (cpa.MunicipioId != null)
+            //            {
+            //                cpa.NombreAportanteString = _context.Localizacion.Find(cpa.MunicipioId).Descripcion;
+            //            }
+            //            else//solo departamento
+            //            {
+            //                cpa.NombreAportanteString = cpa.DepartamentoId == null ? "" : _context.Localizacion.Find(cpa.DepartamentoId).Descripcion;
+
+            //            }
+
+            //        }
+            //        else if (cpa.NombreAportanteId != null)
+            //        {
+            //            cpa.NombreAportanteString = _context.Dominio.Find(cpa.NombreAportanteId).Nombre;
+            //        }
+
+            //        if (!string.IsNullOrEmpty(cpa.NombreAportanteString))
+            //        {
+            //            listaAportantes.Add(cpa);
+
+            //        }
+
+            //    });
+            //}//);
+
         }
 
         public async Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId)
@@ -1852,6 +1934,63 @@ namespace asivamosffie.services
                 novedadContractual.FechaModificacion = DateTime.Now;
 
                 novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico;
+
+                _context.SaveChanges();
+
+
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = ex,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> AprobacionTecnicaJuridica(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_tecnica_y_juridica_novedad, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "APROBACION TECNICA Y JURIDICA";
+
+            try
+            {
+
+                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                    .Where(r => r.NovedadContractualId == pNovedadContractualId)
+                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                    .FirstOrDefault();
+
+                novedadContractual.UsuarioModificacion = pUsuario;
+                novedadContractual.FechaModificacion = DateTime.Now;
+
+                novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente;
 
                 _context.SaveChanges();
 

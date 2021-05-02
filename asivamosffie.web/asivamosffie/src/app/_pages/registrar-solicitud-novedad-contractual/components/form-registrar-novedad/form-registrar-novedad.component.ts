@@ -130,7 +130,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     public contractualNoveltyService: ContractualNoveltyService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   cargarRegistro() {
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
@@ -152,6 +152,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
       let listaDescripcion: NovedadContractualDescripcion[] = [];
 
+      console.log(this.contrato)
       if (this.novedad.novedadContractualDescripcion) {
         this.novedad.novedadContractualDescripcion.forEach(n => {
           let tipoNovedadseleccionada = this.tipoNovedadArray
@@ -283,7 +284,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     this.contractualNoveltyService.createEditNovedadContractual(novedad)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code === '200'){
+        if (respuesta.code === '200') {
           //console.log(novedad.novedadContractualId )
           if (novedad.novedadContractualId === undefined)
             this.router.navigate(['/registrarSolicitudNovedadContractual/registrarSolicitud', respuesta.data.novedadContractualId]);
@@ -294,4 +295,13 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       });
 
   }
+
+  habilitarTipoNovedad(tnovedad) {
+    if (((tnovedad.tipoNovedadCodigo === '2' || tnovedad.tipoNovedadCodigo === '6') && this.contrato.tieneSuspensionAprobada === false))
+      return 'none'
+    else {
+      return 'flex'
+    }
+  }
+
 }
