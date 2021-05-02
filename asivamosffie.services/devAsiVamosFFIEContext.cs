@@ -293,6 +293,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -8310,8 +8311,6 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(16)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(38, 28)");
 
                 entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 

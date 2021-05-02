@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public bool? EsPreconstruccion { get; set; }
         public int ValorFacturado { get; set; }
-        public decimal? PorcentajeFacturado { get; set; }
+        public int? PorcentajeFacturado { get; set; }
         public string FaseContrato { get; set; }
         public int? PagosRealizados { get; set; }
         public decimal? SaldoPorPagar { get; set; }
