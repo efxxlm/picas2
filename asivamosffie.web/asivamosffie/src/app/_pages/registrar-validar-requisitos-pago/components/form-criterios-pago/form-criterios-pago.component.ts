@@ -16,6 +16,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormCriteriosPagoComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() contrato: any;
     @Input() esPreconstruccion = true;
     @Input() contratacionProyectoId: number;
     @Input() solicitudPagoCargarFormaPago: any;
@@ -70,7 +71,6 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     getCriterios() {
-        
         if ( this.esPreconstruccion === true ) {
             const fasePreConstruccionFormaPagoCodigo = this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
 
@@ -98,7 +98,27 @@ export class FormCriteriosPagoComponent implements OnInit {
 
                                 criterioValue.porcentaje = porcentajeCriterio;
                             }
+
+                            const listSolicitudPago: any[] = this.contrato.solicitudPago;
+
+                            if ( listSolicitudPago.length > 1 ) {
+                                for ( const solicitud of listSolicitudPago ) {
+                                    if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
+                                        const fasePreconstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+
+                                        fasePreconstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
+                                            const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
+
+                                            if ( criterioIndex !== -1 ) {
+                                                response.splice( criterioIndex, 1 );
+                                            }
+                                        } )
+                                    }
+                                }
+                            }
                         }
+
+
 
                         this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
@@ -249,6 +269,24 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const porcentajeCriterio = Number( porcentaje ) / 100;
 
                                 criterioValue.porcentaje = porcentajeCriterio;
+                            }
+
+                            const listSolicitudPago: any[] = this.contrato.solicitudPago;
+
+                            if ( listSolicitudPago.length > 1 ) {
+                                for ( const solicitud of listSolicitudPago ) {
+                                    if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
+                                        const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
+
+                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
+                                            const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
+
+                                            if ( criterioIndex !== -1 ) {
+                                                response.splice( criterioIndex, 1 );
+                                            }
+                                        } )
+                                    }
+                                }
                             }
                         }
 
