@@ -1768,6 +1768,7 @@ namespace asivamosffie.services
                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
                         .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
                         .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                        .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoRegistrarSolicitudPago).ThenInclude(r => r.SolicitudPagoFase).ThenInclude(r => r.SolicitudPagoFaseCriterio).ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
                         .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
@@ -1777,7 +1778,8 @@ namespace asivamosffie.services
                         .FirstOrDefaultAsync();
 
                 if (contrato.SolicitudPago.Count() > 0)
-                    contrato.SolicitudPago = contrato.SolicitudPago.Where(s => s.Eliminado != true).ToList();
+                    contrato.SolicitudPago = contrato.SolicitudPago
+                        .Where(s => s.Eliminado != true).ToList();
 
                 if (pSolicitudPago > 0)
                 {
@@ -2041,7 +2043,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
             decimal ValorMaximoProyecto =
