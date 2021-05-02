@@ -12,7 +12,7 @@ namespace asivamosffie.model.Models
         public string FaseContrato { get; set; }
         public int? PagosRealizados { get; set; }
         public decimal? SaldoPorPagar { get; set; }
-        public decimal? PorcentajePorPagar { get; set; }
+        public int? PorcentajePorPagar { get; set; }
         public decimal? ValorSolicitud { get; set; }
     }
 }

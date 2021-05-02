@@ -8312,11 +8312,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(16)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
-
                 entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(19, 0)");
 
-                entity.Property(e => e.ValorSolicitud).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("decimal(18, 0)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>
