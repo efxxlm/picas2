@@ -84,7 +84,7 @@ export class GestionarDrpComponent implements OnInit {
                   ], valorUso: [
                     { valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
                   ], valorTotal: element2.valorTotal,
-                  fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuenteFinanciacionID
+                  fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
                 });
               });
               //dataSource.push(new MatTableDataSource(this.listacomponentes));
