@@ -106,11 +106,17 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const solicitudPagoFaseCriterio = [];
                                 for ( const solicitud of listSolicitudPago ) {
                                     if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
-                                        const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
-
-                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
-                                            solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
-                                        } )
+                                        if ( solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ] !== undefined ) {
+                                            const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+                                        
+                                            if ( faseConstruccion !== undefined ) {
+                                                if ( faseConstruccion.solicitudPagoFaseCriterio.length > 0 ) {
+                                                    faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
+                                                        solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
+                                                    } )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
@@ -189,7 +195,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     } );
                                 }
 
-                                const montoMaximo = ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje );
+                                const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
 
                                 this.criterios.push(
                                     this.fb.group(
@@ -308,11 +314,17 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const solicitudPagoFaseCriterio = [];
                                 for ( const solicitud of listSolicitudPago ) {
                                     if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
-                                        const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
+                                        if ( solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ] !== undefined ) {
+                                            const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
 
-                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
-                                            solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
-                                        } )
+                                            if ( faseConstruccion !== undefined ) {
+                                                if ( faseConstruccion.solicitudPagoFaseCriterio.length > 0 ) {
+                                                    faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
+                                                        solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
+                                                    } )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
@@ -389,7 +401,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     } );
                                 }
 
-                                const montoMaximo = ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje );
+                                const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
 
                                 this.criterios.push(
                                     this.fb.group(
@@ -557,7 +569,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     if ( this.criterios.controls.filter( control => control.value.tipoCriterioCodigo === value.codigo ).length === 0 ) {
                         const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
 
-                        const montoMaximo = ( this.montoMaximoPendiente * value.porcentaje );
+                        const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * value.porcentaje ) : 0;
 
                         this.criterios.push(
                             this.fb.group(
@@ -599,7 +611,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         if ( this.criterios.controls.filter( control => control.value.tipoCriterioCodigo === value.codigo ).length === 0 ) {
                             const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
 
-                            const montoMaximo = ( this.montoMaximoPendiente * value.porcentaje );
+                            const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * value.porcentaje ) : 0;
 
                             this.criterios.push(
                                 this.fb.group(
@@ -626,7 +638,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     values.forEach( async value => {
                         const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
 
-                        const montoMaximo = ( this.montoMaximoPendiente * value.porcentaje );
+                        const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * value.porcentaje ) : 0;
 
                         this.criterios.push(
                             this.fb.group(
@@ -812,7 +824,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     {
                         tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                         solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        tipoPagoCodigo: criterio.tipoPago.codigo,
+                        tipoPagoCodigo: criterio.tipoPago !== null ? criterio.tipoPago.codigo : null,
                         valorFacturado: control.get( 'valorFacturado' ).value,
                         solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
                         solicitudPagoFaseId: criterio.solicitudPagoFaseId,
@@ -892,7 +904,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     {
                         tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                         solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        tipoPagoCodigo: criterio.tipoPago.codigo,
+                        tipoPagoCodigo: criterio.tipoPago !== null ? criterio.tipoPago.codigo : null,
                         valorFacturado: control.get( 'valorFacturado' ).value,
                         solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
                         solicitudPagoFaseId: criterio.solicitudPagoFaseId,

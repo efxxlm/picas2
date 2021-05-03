@@ -292,7 +292,7 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left; margin-bottom: 2em;">
-                    <p><strong>URL con soporte:</strong> {{ contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
+                    <p><strong>URL con soporte:</strong> {{ contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud.length > 0 ? contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].urlSoporte : '' }} </p>
                 </mat-card-content>
             </mat-card>
         </mat-expansion-panel>
