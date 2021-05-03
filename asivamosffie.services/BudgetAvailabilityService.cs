@@ -1241,6 +1241,10 @@ namespace asivamosffie.services
                         Include(x => x.DisponibilidadPresupuestalProyecto).
                             ThenInclude(x => x.Proyecto).
                                 ThenInclude(x => x.Sede).
+                        Include(x => x.DisponibilidadPresupuestal).
+                          ThenInclude(x => x.DisponibilidadPresupuestalProyecto).
+                            ThenInclude(x => x.Proyecto).
+                                ThenInclude(x => x.Sede).
                         ToList();
                     decimal totales = 0;
                     foreach (var gestion in gestionfuentesEspecial)
@@ -1257,6 +1261,54 @@ namespace asivamosffie.services
                         // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
                         saldototal += (decimal)consignadoemnfuente - saldofuente;
 
+                        GestionFuenteFinanciacion gestionAlGuardar = new GestionFuenteFinanciacion();
+                        if (esNovedad)
+                        {
+                            gestionAlGuardar = _context.GestionFuenteFinanciacion
+                                        .Where(x => x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId &&
+                                            x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
+                                            && x.Eliminado != true)
+                                        .FirstOrDefault();
+                        }
+                        else
+                        {
+                            gestionAlGuardar = _context.GestionFuenteFinanciacion
+                                        .Where(x => x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId &&
+                                            x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
+                                            && x.Eliminado != true)
+                                        .FirstOrDefault();
+                        }
+                        Proyecto proyectoTemp = null;
+                        if (gestion.DisponibilidadPresupuestal != null)
+                        {
+                            if(gestion.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Count() > 0)
+                                proyectoTemp = gestion.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.FirstOrDefault().Proyecto;
+                        
+                        }else if (gestion.DisponibilidadPresupuestalProyecto != null)
+                        {
+                            if(gestion.DisponibilidadPresupuestalProyecto.Proyecto != null)
+                                proyectoTemp = gestion.DisponibilidadPresupuestalProyecto.Proyecto;
+                        }
+
+                        if (proyectoTemp != null)
+                        {
+                            string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == proyectoTemp.Sede.PadreId).FirstOrDefault().Nombre;
+                            var tr = plantilla_proycto.Replace("[DDP_LLAVE_MEN]", proyectoTemp.LlaveMen)
+                                .Replace("[DDP_INSTITUCION_EDUCATIVA]", institucion)
+                                .Replace("[DDP_SEDE]", proyectoTemp.Sede.Nombre)
+                                .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
+                                .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
+                                .Replace("[DDP_FUENTE]", fuenteNombre)
+
+                                .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", gestionAlGuardar.SaldoActual).ToString())
+                                .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
+                                .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (gestionAlGuardar.NuevoSaldo)).ToString());
+
+                            //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
+                            //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
+                            //.Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
+                            tablaproyecto += tr;
+                        }
 
                         var tr2 = plantilla_fuentes
                             .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
@@ -1269,6 +1321,11 @@ namespace asivamosffie.services
                         totales += gestion.ValorSolicitado;
                     }
                     proyecto = "";
+                    proyecto = tablaproyecto;
+                    if (!string.IsNullOrEmpty(proyecto))
+                    {
+                        pStrCabeceraProyectos = _context.Plantilla.Where(x => x.Codigo == codcabeceraproycto.ToString()).FirstOrDefault().Contenido;
+                    }
                     limitacionEspecial = "";
                     tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
                        Replace("[TOTAL_DE_RECURSOS]", "$ " + String.Format("{0:n0}", totales).ToString()).
