@@ -1397,9 +1397,9 @@ namespace asivamosffie.services
                     .Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion)
                     .Sum(v => v.ValorUso);
 
-                ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                   .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                   .Sum(c => c.SaldoPresupuestal));
+                ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoXfasesSolicitudPago
+                   .Where(v => v.SolicitudPagoId == SolicitudPagoId && v.EsPreConstruccion == EsPreConstruccion)
+                   .Sum(c => c.ValorFacturado));
 
                 //  ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
 
