@@ -1657,7 +1657,10 @@ namespace asivamosffie.services
 
                 contrato.TablaDRP = GetDrpContrato(contrato);
             }
-            catch (Exception) { }
+            catch (Exception e) 
+            {
+            
+            }
 
             return contrato;
 

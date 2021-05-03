@@ -4265,6 +4265,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -4378,6 +4380,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ConceptoPagoCriterio)
                     .HasMaxLength(2)
                     .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -8311,6 +8315,10 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(16)
                     .IsUnicode(false);
+
+                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(19, 0)");
 

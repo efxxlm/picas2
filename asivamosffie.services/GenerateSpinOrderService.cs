@@ -255,7 +255,7 @@ namespace asivamosffie.services
                                 OrdenGiroDetalleId = pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleId,
                                 ConceptoPagoCriterio = pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio,
                                 TipoPagoCodigo = pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo,
-
+                                EsPreconstruccion = pOrdenGiroDetalleTerceroCausacion.EsPreconstruccion,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
@@ -384,6 +384,7 @@ namespace asivamosffie.services
                                      CriterioCodigo = pOrdenGiroDetalleDescuentoTecnica.CriterioCodigo,
                                      FechaModificacion = DateTime.Now,
                                      UsuarioModificacion = pUsuarioCreacion,
+                                     EsPreconstruccion = pOrdenGiroDetalleDescuentoTecnica.EsPreconstruccion,
                                      RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnica)
                                  });
                 }
@@ -793,7 +794,7 @@ namespace asivamosffie.services
                                 AportanteId = Aportante.AportanteId,
                                 Valor = String.Format("{0:n0}", ValorUso - Descuento)
                             }
-                        }; 
+                        };
                     }
                 }
 
@@ -842,7 +843,7 @@ namespace asivamosffie.services
         #region validate 
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
-        { 
+        {
             if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
                || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
@@ -854,7 +855,7 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
         {
             if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
-                return true;  
+                return true;
 
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
