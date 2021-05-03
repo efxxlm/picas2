@@ -92,33 +92,62 @@ export class FormCriteriosPagoComponent implements OnInit {
 
                         if ( response.length > 0 ) {
                             for ( const criterioValue of response ) {
-                                const nombre = criterioValue.nombre.trim().split( ' ' );
+                                const nombre = criterioValue.nombre.split( ' ' );
                                 const porcentaje = nombre[ nombre.length - 1 ].replace( '%', '' );
                                 const porcentajeCriterio = Number( porcentaje ) / 100;
 
                                 criterioValue.porcentaje = porcentajeCriterio;
+                                criterioValue[ 'criterios' ] = [];
                             }
 
                             const listSolicitudPago: any[] = this.contrato.solicitudPago;
 
                             if ( listSolicitudPago.length > 1 ) {
+                                const solicitudPagoFaseCriterio = [];
                                 for ( const solicitud of listSolicitudPago ) {
                                     if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
-                                        const fasePreconstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+                                        const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
 
-                                        fasePreconstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
-                                            const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
-
-                                            if ( criterioIndex !== -1 ) {
-                                                response.splice( criterioIndex, 1 );
-                                            }
+                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
+                                            solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
                                         } )
                                     }
                                 }
+
+                                if ( solicitudPagoFaseCriterio.length > 0 ) {
+                                    solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
+                                        const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
+
+                                        if ( criterioIndex !== -1 ) {
+                                            response[ criterioIndex ][ 'criterios' ].push( solicitudPagoFaseCriterio );
+                                        }
+                                    } )
+
+                                    response.forEach( ( criterioValue, index ) => {
+                                        let totalCriterio = 0;
+                                        if ( criterioValue[ 'criterios' ].length > 0 ) {
+                                            criterioValue[ 'criterios' ].forEach( criterio => {
+                                                totalCriterio += criterio.valorFacturado;
+                                            } )
+                                        }
+
+                                        if ( totalCriterio > 0 ) {
+                                            const restanteCriterio = ( ( this.montoMaximoPendiente * criterioValue.porcentaje ) - totalCriterio );
+
+                                            if ( totalCriterio === ( this.montoMaximoPendiente * criterioValue.porcentaje ) ) {
+                                                response.splice( index, 1 );
+                                            } else {
+                                                criterioValue.porcentaje = ( restanteCriterio / this.montoMaximoPendiente );
+                                            }
+                                        }
+                                    } )
+
+                                    response.forEach( criterioValue => {
+                                        delete criterioValue[ 'criterios' ];
+                                    } )
+                                }
                             }
                         }
-
-
 
                         this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
@@ -126,6 +155,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.estaEditando = true;
                             this.addressForm.markAllAsTouched();
                             this.criterios.markAllAsTouched();
+
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -269,23 +299,54 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const porcentajeCriterio = Number( porcentaje ) / 100;
 
                                 criterioValue.porcentaje = porcentajeCriterio;
+                                criterioValue[ 'criterios' ] = [];
                             }
 
                             const listSolicitudPago: any[] = this.contrato.solicitudPago;
 
                             if ( listSolicitudPago.length > 1 ) {
+                                const solicitudPagoFaseCriterio = [];
                                 for ( const solicitud of listSolicitudPago ) {
                                     if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
                                         const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
 
-                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
-                                            const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
-
-                                            if ( criterioIndex !== -1 ) {
-                                                response.splice( criterioIndex, 1 );
-                                            }
+                                        faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
+                                            solicitudPagoFaseCriterio.push( solicitudPagoFaseCriterioValue );
                                         } )
                                     }
+                                }
+
+                                if ( solicitudPagoFaseCriterio.length > 0 ) {
+                                    solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
+                                        const criterioIndex = response.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
+
+                                        if ( criterioIndex !== -1 ) {
+                                            response[ criterioIndex ][ 'criterios' ].push( solicitudPagoFaseCriterio );
+                                        }
+                                    } )
+
+                                    response.forEach( ( criterioValue, index ) => {
+                                        let totalCriterio = 0;
+                                        if ( criterioValue[ 'criterios' ].length > 0 ) {
+                                            criterioValue[ 'criterios' ].forEach( criterio => {
+                                                totalCriterio += criterio.valorFacturado;
+                                            } )
+                                        }
+
+                                        if ( totalCriterio > 0 ) {
+                                            const restanteCriterio = ( ( this.montoMaximoPendiente * criterioValue.porcentaje ) - totalCriterio );
+
+                                            if ( totalCriterio === ( this.montoMaximoPendiente * criterioValue.porcentaje ) ) {
+                                                response.splice( index, 1 );
+                                            } else {
+                                                criterioValue.porcentaje = ( restanteCriterio / this.montoMaximoPendiente );
+                                            }
+                                        }
+                                    } )
+
+                                    response.forEach( criterioValue => {
+                                        delete criterioValue[ 'criterios' ];
+                                    } )
                                 }
                             }
                         }
@@ -294,6 +355,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.estaEditando = true;
                             this.addressForm.markAllAsTouched();
                             this.criterios.markAllAsTouched();
+
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );

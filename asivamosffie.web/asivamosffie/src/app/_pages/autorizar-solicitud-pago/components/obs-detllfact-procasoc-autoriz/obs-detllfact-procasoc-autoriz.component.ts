@@ -223,9 +223,6 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                             }
                                         }
                                         if (proyectos[1].length < 2) {
-                                            this.solicitudPagoFaseCriterio.forEach(criterio => {
-                                                this.criteriosArraySeleccionados.push(this.listaCriterios.filter(criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo)[0]);
-                                            });
                                             this.proyectos = proyectos[1];
                                             const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'True' );
                                             this.montoMaximo = montoMaximo;
@@ -325,9 +322,6 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                                 );
                                             }
                                         } else {
-                                            this.solicitudPagoFaseCriterio.forEach(criterio => {
-                                                this.criteriosArraySeleccionados.push(this.listaCriterios.filter(criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo)[0]);
-                                            });
                                             this.proyectos = proyectos[1];
                                             const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'False' );
                                             this.montoMaximo = montoMaximo;
