@@ -65,7 +65,7 @@
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Detalle de la modificación:</strong>
             </p>
-            <div [innerHTML]="detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].resumenJustificacion"></div>
+            <div [innerHTML]="detailavailabilityBudget?.novedadContractual?.novedadContractualDescripcion[0].resumenJustificacion"></div>
 
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
