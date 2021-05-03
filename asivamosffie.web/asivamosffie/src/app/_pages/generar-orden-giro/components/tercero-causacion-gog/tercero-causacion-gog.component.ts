@@ -19,6 +19,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Input() esPreconstruccion: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -104,7 +105,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
         }
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
         this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
 
@@ -633,6 +634,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                         ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                         valorNetoGiro: this.valorNetoGiro,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,
+                        esPreconstruccion: this.esPreconstruccion,
                         conceptoPagoCriterio: criterioControl.get( 'tipoCriterioCodigo' ).value,
                         tipoPagoCodigo: criterioControl.get( 'tipoPagoCodigo' ).value,
                         tieneDescuento: conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value,

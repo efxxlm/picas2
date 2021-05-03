@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
@@ -90,7 +91,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                             }
                         }
 
-                        if ( response.length > 0 ) {
+                        if ( response.length > 0 && this.esVerDetalle === false ) {
                             for ( const criterioValue of response ) {
                                 const nombre = criterioValue.nombre.split( ' ' );
                                 const porcentaje = nombre[ nombre.length - 1 ].replace( '%', '' );
@@ -298,7 +299,7 @@ export class FormCriteriosPagoComponent implements OnInit {
 
                         this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
-                        if ( response.length > 0 ) {
+                        if ( response.length > 0 && this.esVerDetalle === false ) {
                             for ( const criterioValue of response ) {
                                 const nombre = criterioValue.nombre.split( ' ' );
                                 const porcentaje = nombre[ nombre.length - 1 ].replace( '%', '' );
@@ -506,7 +507,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         }
 
         if ( valorConcepto > this.criterios.controls[ index ].get( 'montoMaximo' ).value ) {
-            this.openDialog( '', '<b>El valor facturado al concepto no puede ser mayor al monto maximo del criterio.</b>' );
+            this.openDialog( '', `<b>El valor facturado al concepto no puede ser mayor al monto maximo del criterio.</b>` );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
         }
         if ( this.getConceptos( index ).length > 0 ) {

@@ -32,28 +32,38 @@
             <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="tieneDescuentosDireccionTecnica === true">
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : '' ) : ''">
-                    Descuentos Dirección Técnica
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <app-desc-dir-tecnica-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso'"></app-desc-dir-tecnica-gog>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoTerceroCausacion : ''">
-                    Tercero de causación
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <app-tercero-causacion-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoTerceroCausacion = 'en-proceso'"></app-tercero-causacion-gog>
-        </mat-expansion-panel>
-    </mat-accordion>
+    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase">
+        <mat-accordion *ngIf="tieneDescuentosDireccionTecnica === true">
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : '' ) : ''">
+                        Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+    
+                <app-desc-dir-tecnica-gog   [solicitudPago]="solicitudPago"
+                                            [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                            [esVerDetalle]="esVerDetalle"
+                                            (tieneObservacion)="listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso'">
+                </app-desc-dir-tecnica-gog>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoTerceroCausacion : ''">
+                        Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+    
+                <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                            (tieneObservacion)="listaSemaforos.semaforoTerceroCausacion = 'en-proceso'">
+                </app-tercero-causacion-gog>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">

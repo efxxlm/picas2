@@ -140,7 +140,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
             if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
                 this.estadoSemaforo.emit( 'completo' );
             }
-        }, 5000);
+        }, 4000);
     }
 
     checkSemaforoOrigen( value: boolean ) {
