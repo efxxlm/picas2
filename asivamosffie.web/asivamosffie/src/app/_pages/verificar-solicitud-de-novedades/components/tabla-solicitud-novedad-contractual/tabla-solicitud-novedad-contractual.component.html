@@ -32,7 +32,10 @@
     <!-- estadoNovedad Column -->
     <ng-container matColumnDef="estadoNovedadNombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la novedad</th>
-      <td mat-cell *matCellDef="let element">{{element.estadoCodigoNombre}}</td>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.estadoCodigo === '9'">Con novedad rechazada por apoyo</span>
+        <span *ngIf="element.estadoCodigo !== '9'">{{element.estadoDescripcion}}</span>
+      </td>
     </ng-container>
 
     <!-- estadoRegistro Column -->

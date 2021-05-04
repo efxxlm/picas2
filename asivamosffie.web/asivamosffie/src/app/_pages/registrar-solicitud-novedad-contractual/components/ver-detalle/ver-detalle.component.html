@@ -60,17 +60,26 @@
           {{
           novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias
           }} Días
-      </p>
+      </p>{{
+          (contrato?.fechaTerminacionFase2 ? contrato?.fechaTerminacionFase2 : contrato?.fechaTerminacion)
+            | date: 'dd/MM/yyyy'
+        }}
       <p>
         <strong>Fecha de inicio de contrato:</strong>
         <span>
-
+          {{
+            (novedad?.contrato?.fechaActaInicioFase2 ? novedad?.contrato?.fechaActaInicioFase2 : novedad?.contrato?.fechaActaInicioFase1)
+              | date: 'dd/MM/yyyy'
+          }}
         </span>
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
         <span>
-
+          {{
+            (novedad?.contrato?.fechaTerminacionFase2 ? novedad?.contrato?.fechaTerminacionFase2 : novedad?.contrato?.fechaTerminacion)
+              | date: 'dd/MM/yyyy'
+          }}
         </span>
       </p>
 
@@ -107,12 +116,12 @@
             </strong>
             {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
-          <!-- <p>
+          <p>
             <strong>
               Tipo de Novedad :
             </strong>
-            Modificación de Condiciones Contractuales
-          </p> -->
+            {{ tipoNovedadNombre }}
+          </p> 
 
         </mat-card-content>
       </mat-card>

@@ -21,6 +21,8 @@ export class VerDetalleComponent implements OnInit {
     }
   ]
 
+  tipoNovedadNombre: string = '';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -36,6 +38,15 @@ export class VerDetalleComponent implements OnInit {
       this.contractualNoveltyService.getNovedadContractualById( this.detalleId )
         .subscribe( respuesta => {
           this.novedad = respuesta;
+
+          respuesta.novedadContractualDescripcion.forEach( d => {
+            if ( d.tipoNovedadCodigo === '3' )
+              
+
+              this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 
+
+          });
+
         });
 
     });

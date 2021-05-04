@@ -15,6 +15,7 @@ export class VerDetalleTramiteComponent implements OnInit {
   tieneAdicion: boolean = false;
 
   detallarSolicitud = []
+  tipoNovedadNombre: string = '';
 
   constructor(
     private router: Router,
@@ -33,7 +34,10 @@ export class VerDetalleTramiteComponent implements OnInit {
           respuesta.novedadContractualDescripcion.forEach(d => {
             if (d.tipoNovedadCodigo === '3')
               this.tieneAdicion = true;
+
+              this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 
           });
+
 
           if (this.tieneAdicion === true) {
             this.novedad.novedadContractualAportante.forEach( na => {

@@ -11,6 +11,8 @@ export class SolicitudNovedadComponent implements OnInit {
 
   @Input() novedad: NovedadContractual;
 
+  tipoNovedadNombre: string = '';
+
   listaObservaciones = [
     {
       llaveMEN: 'LJ776554',
@@ -27,6 +29,11 @@ export class SolicitudNovedadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.novedad.novedadContractualDescripcion.forEach(d => {
+        this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 
+    });
+
     //this.contractualNoveltyService.get
   }
 

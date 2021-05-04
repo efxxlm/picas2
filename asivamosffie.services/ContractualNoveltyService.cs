@@ -2674,6 +2674,7 @@ namespace asivamosffie.services
             if (proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
             {
                 listaMails.Add(contrato?.Interventor?.Email);
+                listaMails.Add(contrato?.Apoyo?.Email);
             }
 
             if (proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
