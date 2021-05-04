@@ -2140,6 +2140,7 @@ namespace asivamosffie.services
                                     //el saldo de la fuente realmente es lo que tengo en control de recursos
                                     //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                                     decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
+                                   //Valor nuevo SOLICITADO NUEVO
                                     decimal valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId ==
                                     proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
 
@@ -2482,6 +2483,7 @@ namespace asivamosffie.services
 
             return ListDetailValidarDisponibilidadPresupuesal;
         }
+
 
         private string getNombreAportante(CofinanciacionAportante confinanciacion)
         {

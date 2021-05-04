@@ -624,6 +624,8 @@ namespace asivamosffie.services
                         gestion.EstadoCodigo = estadocod.ToString();
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
+
+                        //llamar GetDetailAvailabilityBudgetProyect y buscar los saldos calculados
                         _context.GestionFuenteFinanciacion.Update(gestion);
                     }
                 }
@@ -949,7 +951,7 @@ namespace asivamosffie.services
 
             return _converter.Convert(pdf);
         }
-
+        ///Validar campos solicitues $$  nuevos 
         private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad, NovedadContractualRegistroPresupuestal pRegistro)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
