@@ -68,7 +68,7 @@
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
-                                    {{ aportante.valorTotalAportante | currency }}
+                                    {{ aportante.valorTotalAportante  | currency: 'COP':'symbol-narrow':'.0-0' }}
     
                                 </p>
                             </div>

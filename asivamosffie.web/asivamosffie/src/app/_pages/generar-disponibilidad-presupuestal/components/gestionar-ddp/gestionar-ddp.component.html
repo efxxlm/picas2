@@ -56,9 +56,8 @@
                 <strong>Valor después de la modificación:</strong>
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}
             </p>
-            <p *ngIf="detailavailabilityBudget?.novedadContractual">
-                <strong>Plazo  de la modificación:</strong>
-                
+            <p *ngIf="detailavailabilityBudget?.novedadContractual && false">
+                <strong>Plazo de la modificación:</strong>
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
             </p>

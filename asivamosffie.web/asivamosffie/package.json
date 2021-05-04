@@ -7,7 +7,10 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "compilar": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200",
+    "pruebas": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pru",
+    "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre"
   },
   "private": true,
   "dependencies": {
