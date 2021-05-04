@@ -40,6 +40,13 @@ namespace asivamosffie.api.Controllers
             return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
         }
 
+        [HttpGet]
+        [Route("GetDataByProyectoId")]
+        public async Task<IActionResult> GetDataByProyectoId([FromQuery] int pProyectoId)
+        {
+            return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId));
+        }
+
         [HttpPost]
         [Route("CreateEditBalanceFinanciero")]
         public async Task<IActionResult> CreateEditBalanceFinanciero([FromBody] BalanceFinanciero pBalanceFinanciero)

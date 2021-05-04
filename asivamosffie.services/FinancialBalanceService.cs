@@ -35,6 +35,67 @@ namespace asivamosffie.services
             return await _context.VProyectosBalance.OrderByDescending(r => r.ProyectoId).ToListAsync();
         }
 
+        public async Task<dynamic> GetDataByProyectoId(int pProyectoId)
+        {
+            String numeroContratoObra = string.Empty, numeroContratoInterventoria = string.Empty;
+
+            List<dynamic> ProyectoAjustado = new List<dynamic>();
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                         .Include(r => r.InstitucionEducativa)
+                                                         .FirstOrDefaultAsync();
+
+            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
+            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+            proyecto.MunicipioObj = Municipio;
+            proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+            proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+            proyecto.Sede = Sede;
+            List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
+                                                        .Where(r => r.ProyectoId == pProyectoId)
+                                                        .Include(r => r.Contratacion)
+                                                         .ThenInclude(r => r.Contratista)
+                                                        .Include(r => r.Contratacion)
+                                                         .ThenInclude(r => r.Contrato)
+                                                        .ToListAsync();
+
+            ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+
+            foreach (var item in ListContratacion)
+            {
+                Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                if (contrato != null)
+                {
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                    {
+                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                    }
+                    else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                    {
+                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;    
+                    }
+                }
+            }
+            ProyectoAjustado.Add(new
+            {
+                llaveMen = proyecto.LlaveMen,
+                tipoIntervencion = proyecto.tipoIntervencionString,
+                institucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                sedeEducativa = proyecto.Sede.Nombre,
+                departamento = proyecto.DepartamentoObj.Descripcion,
+                municipio = proyecto.MunicipioObj.Descripcion,
+                numeroContratoObra = numeroContratoObra,
+                numeroContratoInterventoria = numeroContratoInterventoria
+            });
+
+            return ProyectoAjustado;
+        }
+
         public async Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro)
         { 
             if (string.IsNullOrEmpty(pNumeroOrdenGiro))

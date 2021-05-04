@@ -1045,7 +1045,9 @@ namespace asivamosffie.services
                     .Include(x => x.ComponenteUso).
                     Include(x => x.ContratacionProyectoAportante).
                     ThenInclude(x => x.ContratacionProyecto).
-                    ThenInclude(x => x.Proyecto).ToList();
+                    ThenInclude(x => x.Proyecto).
+                    Include(x => x.ContratacionProyectoAportante).
+                    ThenInclude(x => x.CofinanciacionAportante).ToList();
 
 
                 foreach (var compAp in componenteAp)
@@ -1055,6 +1057,8 @@ namespace asivamosffie.services
                     decimal total = 0;
                     var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
                     var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
+                    string aportante = this.getNombreAportante(compAp.ContratacionProyectoAportante.CofinanciacionAportante);
+
                     foreach (var comp in compAp.ComponenteUso)
                     {
                         var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
@@ -1062,6 +1066,7 @@ namespace asivamosffie.services
                         string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
                         var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", llavemen).
                             Replace("[FASE]", strFase.Nombre).
+                            Replace("[APORTANTE]", aportante).
                             Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
                             Replace("[USO]", usos.FirstOrDefault().Nombre).
                             Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", comp.ValorUso).ToString());
