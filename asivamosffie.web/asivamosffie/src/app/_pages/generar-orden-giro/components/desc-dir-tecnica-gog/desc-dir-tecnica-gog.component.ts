@@ -14,6 +14,7 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Input() esPreconstruccion: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
     solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any[];
@@ -51,7 +52,7 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
     getDireccionTecnica() {
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
         this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
 

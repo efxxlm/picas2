@@ -30,12 +30,12 @@ const ELEMENT_DATA: tablaEjemplo[] = [
   styleUrls: ['./gestionar-drp.component.scss']
 })
 export class GestionarDrpComponent implements OnInit {
-  listacomponentes: tablaEjemplo[] = [];
+  listacomponentes: any[] = [];
   public numContrato = "";
   public fechaContrato = "";
   public solicitudContrato = "";
   public estadoSolicitud = "";
-  displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'valorTotal'];
+  displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'fuenteFinanciacion', 'valorTotal'];
   esModificacion = false;
   dataSource = [];
   detailavailabilityBudget: any;
@@ -83,7 +83,8 @@ export class GestionarDrpComponent implements OnInit {
                     { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
                   ], valorUso: [
                     { valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
-                  ], valorTotal: element2.valorTotal
+                  ], valorTotal: element2.valorTotal,
+                  fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
                 });
               });
               //dataSource.push(new MatTableDataSource(this.listacomponentes));
@@ -119,7 +120,7 @@ export class GestionarDrpComponent implements OnInit {
 
   descargarDDPBoton() {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((listas: any) => {
       console.log(listas);
       const documento = `${this.detailavailabilityBudget.numeroDDP}.pdf`;
       const text = documento,
@@ -134,7 +135,7 @@ export class GestionarDrpComponent implements OnInit {
   }
   descargarDRPBoton() {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((listas: any) => {
       console.log(listas);
       const documento = `DRP ${this.detailavailabilityBudget.id}.pdf`;
       const text = documento,

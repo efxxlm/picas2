@@ -84,5 +84,8 @@ namespace asivamosffie.services.Interfaces
         byte[] ConvertirPDF(Plantilla plantilla);
 
         void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo);
+
+        Task<string> ReemplazarDatosPlantillaNovedadContractual(string pPlantilla, NovedadContractual novedadContractual);
+
     }
 }

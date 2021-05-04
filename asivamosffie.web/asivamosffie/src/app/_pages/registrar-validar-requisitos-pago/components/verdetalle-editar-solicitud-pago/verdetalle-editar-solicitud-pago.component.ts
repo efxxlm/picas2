@@ -91,7 +91,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             this.contrato = response;
                             console.log( this.contrato );
                             if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
-                                this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                                this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
 
@@ -167,13 +167,17 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             let semaforoSolicitudPago = 'sin-diligenciar';
 
             if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
-                    semaforoSolicitudPago = 'en-proceso';
-                }
-                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
-                    semaforoSolicitudPago = 'completo';
-                    // Get registro completo
-                    this.registroCompletoAcordeones.registroCompletoSolicitudPago = true;
+                const solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase;
+
+                if ( solicitudPagoFase.length > 0 ) {
+                    if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
+                        semaforoSolicitudPago = 'en-proceso';
+                    }
+    
+                    if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
+                        semaforoSolicitudPago = 'completo';
+                        this.registroCompletoAcordeones.registroCompletoSolicitudPago = true; 
+                    }
                 }
             }
             return semaforoSolicitudPago;

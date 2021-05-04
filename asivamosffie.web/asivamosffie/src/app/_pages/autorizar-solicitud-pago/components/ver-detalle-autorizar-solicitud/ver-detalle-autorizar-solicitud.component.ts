@@ -63,9 +63,9 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
     };
     displayedColumns: string[] = [
         'drp',
-        'numeroDrp',
-        'valorSolicitudDdp',
-        'saldoPresupuestal'
+        'numDrp',
+        'valor',
+        'saldo'
     ];
     estaEditando = false;
     constructor(
@@ -196,7 +196,7 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                                     }
 
-                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                                    this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }

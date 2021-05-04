@@ -41,10 +41,10 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
         tipoPago: [null, Validators.required]
     });
     displayedColumns: string[] = [
-      'drp',
-      'numeroDrp',
-      'valorSolicitudDdp',
-      'saldoPresupuestal'
+        'drp',
+        'numDrp',
+        'valor',
+        'saldo'
     ];
     dataTable: any[] = [
       {
@@ -177,7 +177,7 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                                     }
 
-                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                                    this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }

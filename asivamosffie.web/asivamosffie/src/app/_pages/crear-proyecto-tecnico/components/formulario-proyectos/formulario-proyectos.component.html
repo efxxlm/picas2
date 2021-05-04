@@ -1607,14 +1607,14 @@
                   type="number"
                   maxlength="2"
                   min="1"
-                  max="31"
+                  max="29"
                   required
                   (keypress)="number($event)"
-                  onkeyup="if(this.value>31) this.value = 31;"
+                  onkeyup="if(this.value>29) this.value = 29;"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
-                  matTooltip="Campo numérico igual o menor a 31 días"
+                  matTooltip="Campo numérico igual o menor a 29 días"
                   matTooltipClass="info-tooltip"
                 />
               </mat-form-field>
@@ -1689,14 +1689,14 @@
                   type="number"
                   maxlength="2"
                   min="1"
-                  max="31"
+                  max="29"
                   required
                   (keypress)="number($event)"
-                  onkeyup="if(this.value>31) this.value = 31;"
+                  onkeyup="if(this.value>29) this.value = 29;"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
-                  matTooltip="Campo numérico igual o menor a 31 días"
+                  matTooltip="Campo numérico igual o menor a 29 días"
                   matTooltipClass="info-tooltip"
                 />
               </mat-form-field>

@@ -315,8 +315,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     };
   };
 
-  validarSaldoDisponible(saldoIngresado: number, nombreAportante: string) {
+  validarSaldoDisponible(saldoIngresado: number, nombreAportante: string, aportante) {
 
+    console.log('apo',aportante);
     let saldoDisponible = 0;
 
     this.novedad.novedadContractualDescripcion.forEach( descripcion => {
@@ -444,8 +445,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       .subscribe(
         value => {
           if (value === true) {
-            if (this.componentes(j).at(i).get('componenteAportanteId').value !== null) {
-              this.projectContractingService.deleteComponenteAportante(this.componentes(j).at(i).get('componenteAportanteId').value)
+            if (this.componentes(j).at(i).get('componenteAportanteNovedadId').value !== null) {
+              this.projectContractingService.deleteComponenteAportante(this.componentes(j).at(i).get('componenteAportanteNovedadId').value)
                 .subscribe(
                   () => {
                     this.componentes(j).removeAt(i);

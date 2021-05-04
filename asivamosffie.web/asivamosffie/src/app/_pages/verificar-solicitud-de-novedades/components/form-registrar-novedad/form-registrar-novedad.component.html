@@ -102,7 +102,9 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple (selectionChange)="changeTipoNovedad()">
-                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad">
+                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad"
+                  [style.display]="habilitarTipoNovedad(tnovedad)"
+                  >
                     {{ tnovedad.nombreTipoNovedad }}
                   </mat-option>
                 </mat-select>

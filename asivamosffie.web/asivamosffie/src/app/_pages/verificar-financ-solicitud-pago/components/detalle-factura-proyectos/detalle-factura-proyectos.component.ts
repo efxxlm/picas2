@@ -21,6 +21,8 @@ export class DetalleFacturaProyectosComponent implements OnInit {
     @Input() aprobarSolicitudPagoId: any
     @Input() criteriosPagoProyectoCodigo: string;
     @Input() solicitudPagoCargarFormaPago: any;
+    @Input() esPreconstruccion = true;
+    solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
     proyectos: any;
@@ -60,7 +62,30 @@ export class DetalleFacturaProyectosComponent implements OnInit {
 
     getProyectos() {
         if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+            if ( this.esPreconstruccion === true ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                this.solicitudPagoFase = solicitudPagoFase;
+                            }
+                        }
+                    }
+                }
+            }
+            if ( this.esPreconstruccion === false ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                        for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                            if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                this.solicitudPagoFase = solicitudPagoFase;
+                            }
+                        }
+                    }
+                }
+            }
+
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
 
             if ( this.solicitudPagoFase.esPreconstruccion === true ) {
@@ -151,9 +176,6 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                             }
                                         }
                                         if ( proyectos[1].length < 2 ) {
-                                            this.solicitudPagoFaseCriterio.forEach( criterio => {
-                                                this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
-                                            } );
                                             this.proyectos = proyectos[1];
                                             const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'True' );
                                             this.montoMaximo = montoMaximo;
@@ -254,9 +276,6 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                                 );
                                             }
                                         } else {
-                                            this.solicitudPagoFaseCriterio.forEach( criterio => {
-                                                this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
-                                            } );
                                             this.proyectos = proyectos[1];
                                             const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'False' );
                                             this.montoMaximo = montoMaximo;

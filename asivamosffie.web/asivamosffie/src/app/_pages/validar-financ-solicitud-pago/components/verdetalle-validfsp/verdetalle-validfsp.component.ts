@@ -29,10 +29,10 @@ export class VerdetalleValidfspComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
-      'drp',
-      'numDrp',
-      'valor',
-      'saldo'
+        'drp',
+        'numDrp',
+        'valor',
+        'saldo'
     ];
     otrosCostosForm = this.fb.group({
         numeroContrato: [null, Validators.required],

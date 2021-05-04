@@ -9,7 +9,10 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string FuenteRecursosString { get; set; }
-        
+
+        [NotMapped]
+        public decimal saldoFuente { get; set; }
+
     }
 
 }

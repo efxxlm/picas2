@@ -1,159 +1,95 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="montoMaximoPendiente !== undefined">
-  <p class="info-sub-title supportBlack">
-    <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
-    <span><b>Monto pendiente por pagar en la fase:</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
-  </p>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="pr-1">
-          <label class="label-left" for="criterioPago" [ngClass]="{
-            'color-secondaryColor':
-              (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
-              (addressForm.get('criterioPago').invalid && estaEditando)
-          }">Criterio de pago</label>
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+  <div class="d-flex justify-content-center" *ngIf="criteriosSeleccionadosArray.length > 0">
+    <strong>Criterios de pago:</strong>
+    <p *ngFor="let criterio of criteriosSeleccionadosArray; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="criteriosSeleccionadosArray.length - 1 !== i">,</span><span *ngIf="criteriosSeleccionadosArray.length - 1 === i">.</span> </p>
+  </div>
+  <form [formGroup]="addressForm">
+    <div formArrayName="criterios">
+        <div *ngFor="let criterio of criterios.controls; index as j" [formGroup]="criterio">
+            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        {{ criterio.get( 'nombreCriterio' ).value }}
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p style="margin-bottom: 2em;"><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
+                    <div style="margin-top: 2em;" *ngFor="let concepto of getConceptos( j ).controls">
+                        <p style="font-size: 16px;"><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
+                        <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    </div>
+                    <p style="margin-top: 2em;"><strong style="font-size: 16px;">Valor total de los conceptos:</strong> ${{ criterio.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                </mat-card-content>
+            </mat-card>
         </div>
-        <div class="col d-flex">
-          <mat-form-field class="select-width">
-            <mat-select formControlName="criterioPago" multiple (selectionChange)="getvalues($event.value)">
-              <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago"> {{ criterioPago.nombre }} </mat-option>
-            </mat-select>
-          </mat-form-field>
+    </div>
+  </form>
+</ng-container>
+<ng-template #noEsVerDetalle>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="criterioPago" [ngClass]="{
+              'color-secondaryColor':
+                (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
+                (addressForm.get('criterioPago').invalid && estaEditando)
+            }">Criterio de pago</label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="criterioPago" multiple (selectionChange)="getvalues($event.value)">
+                <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago">
+                  {{ criterioPago.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
+                (addressForm.get('criterioPago').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
-              (addressForm.get('criterioPago').invalid && estaEditando)
-            "
-          />
-        </span>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="criterios.length > 0" class="animatedDown">
-    <div formArrayName="criterios" style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
-      <mat-card class="shipping-card" [formGroup]="criterio">
-        <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text"> {{ criterio.get( 'nombreCriterio' ).value }} </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="tipoPago"               
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
-                      (criterio.get('tipoPago').invalid && estaEditando)
-                  }">Tipo de pago</label>
-                </div>
-                <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select formControlName="tipoPago" (ngModelChange)="getConceptosDePago( i, $event )">
-                      <mat-option *ngFor="let tipoPago of criterio.get( 'tiposDePago' ).value" [value]="tipoPago">
-                        {{ tipoPago.nombre }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <span class="icon-incompleto">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
-                    (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
-                    (criterio.get('tipoPago').invalid && estaEditando)
-                    "
-                  />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="conceptoPago"
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
-                      (criterio.get('conceptoPago').invalid && estaEditando)
-                  }">Concepto de pago para el criterio</label>
-                </div>
-                <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select formControlName="conceptoPago" multiple
-                      (selectionChange)="getvaluesConcepto( $event.value, i )">
-                      <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto">
-                        {{ concepto.nombre }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <span class="icon-incompleto">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
-                    (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
-                    (criterio.get('conceptoPago').invalid && estaEditando)
-                    "
-                  />
-                </span>
-              </div>
-            </div>
-          </div>
-          <!--
-            Get conceptos seleccionados
-          -->
-          <div class="animatedDown" formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
-            <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em; font-size: 16px;"> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </mat-card-title>
-            <div class="row" [formGroup]="concepto">
-              <div class="col-md-8">
+  
+    <div *ngIf="criterios.length > 0" class="animatedDown">
+      <div formArrayName="criterios" style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
+        <mat-card class="shipping-card" [formGroup]="criterio">
+          <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text"> {{ criterio.get( 'nombreCriterio' ).value }} </mat-card-title>
+          </mat-card-header>
+          <mat-card-content style="text-align: left;">
+            <div class="row">
+              <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="valorFacturadoConcepto"  [ngClass]="{
+                    <label class="label-left" for="tipoPago"               
+                    [ngClass]="{
                       'color-secondaryColor':
-                        (concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
-                        (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
-                    }">
-                      Valor facturado al concepto
-                    </label>
+                        (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
+                        (criterio.get('tipoPago').invalid && estaEditando)
+                    }">Tipo de pago</label>
                   </div>
-                  <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                          <input  matInput 
-                                  #valorFacturadoConcepto
-                                  currencyMask
-                                  maxlength="20"
-                                  formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
-                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                  (ngModelChange)="getValorTotalConceptos( i, j, $event )">
-                      </mat-form-field>
-                      <span   class="contador"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Campo numérico"
-                              matTooltipClass="info-tooltip">
-                              {{20 - valorFacturadoConcepto.value.length}}
-                      </span>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="tipoPago" (ngModelChange)="getConceptosDePago( i, $event )">
+                        <mat-option *ngFor="let tipoPago of criterio.get( 'tiposDePago' ).value" [value]="tipoPago">
+                          {{ tipoPago.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
                   </div>
                   <span class="icon-incompleto">
                     <img
@@ -163,93 +99,184 @@
                       [matTooltipPosition]="'above'"
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
-                      *ngIf="(concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
-                      (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
+                      *ngIf="
+                      (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
+                      (criterio.get('tipoPago').invalid && estaEditando)
                       "
                     />
                   </span>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row" style=" margin-top: 10px;">
-                <div class="pr-1" style="margin-top: 0.5em;">
-                  <label class="header-card--text" for="valorFacturado" style="padding-left: 0em; font-size: 16px;"
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
-                      (criterio.get('valorFacturado').invalid && estaEditando)
-                  }">
-                    <b> Valor total de los conceptos</b>
-                  </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="conceptoPago"
+                    [ngClass]="{
+                      'color-secondaryColor':
+                        (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
+                        (criterio.get('conceptoPago').invalid && estaEditando)
+                    }">Concepto de pago para el criterio</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="conceptoPago" multiple
+                        (selectionChange)="getvaluesConcepto( $event.value, i )">
+                        <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto">
+                          {{ concepto.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                      (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
+                      (criterio.get('conceptoPago').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
-                <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                          <input    matInput
-                                    #valorFacturado
-                                    currencyMask
-                                    maxlength="20"
-                                    formControlName="valorFacturado"
-                                    (keypress)="validateNumberKeypress($event)"
-                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                    (ngModelChange)="verifyValorTotalConceptos( i )"
-                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                      </mat-form-field>
-                      <span   class="contador"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Campo numérico"
-                              matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}
-                      </span>
-                </div>
-                <span class="icon-incompleto">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
-                    (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
-                    (criterio.get('valorFacturado').invalid && estaEditando)
-                    "
-                  />
-                </span>
               </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <div class="text-right">
-        <button mat-button color="warn" type="button" class="btn-eliminar"
-                (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )"
-                *ngIf="registroCompletoCriterio === false || tieneObservacionOrdenGiro !== undefined">
-          <img src="assets/img/icon/menos.svg">
-          Eliminar criterio
-        </button>
+            <!--
+              Get conceptos seleccionados
+            -->
+            <div class="animatedDown" formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+              <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em; font-size: 16px;"> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </mat-card-title>
+              <div class="row" [formGroup]="concepto">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" for="valorFacturadoConcepto"  [ngClass]="{
+                        'color-secondaryColor':
+                          (concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
+                          (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
+                      }">
+                        Valor facturado al concepto
+                      </label>
+                    </div>
+                    <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                            <input  matInput 
+                                    #valorFacturadoConcepto
+                                    currencyMask
+                                    maxlength="20"
+                                    formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                    (ngModelChange)="getValorTotalConceptos( i, j, $event )">
+                        </mat-form-field>
+                        <span   class="contador"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Campo numérico"
+                                matTooltipClass="info-tooltip">
+                                {{20 - valorFacturadoConcepto.value.length}}
+                        </span>
+                    </div>
+                    <span class="icon-incompleto">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="(concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
+                        (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
+                        "
+                      />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row" style=" margin-top: 10px;">
+                  <div class="pr-1" style="margin-top: 0.5em;">
+                    <label class="header-card--text" for="valorFacturado" style="padding-left: 0em; font-size: 16px;"
+                    [ngClass]="{
+                      'color-secondaryColor':
+                        (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
+                        (criterio.get('valorFacturado').invalid && estaEditando)
+                    }">
+                      <b> Valor total de los conceptos</b>
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                        <mat-form-field class="full-width">
+                            <input    matInput
+                                      #valorFacturado
+                                      currencyMask
+                                      maxlength="20"
+                                      formControlName="valorFacturado"
+                                      (keypress)="validateNumberKeypress($event)"
+                                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                      (ngModelChange)="verifyValorTotalConceptos( i )"
+                                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                        </mat-form-field>
+                        <span   class="contador"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Campo numérico"
+                                matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}
+                        </span>
+                  </div>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                      (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
+                      (criterio.get('valorFacturado').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <div class="text-right">
+          <button mat-button color="warn" type="button" class="btn-eliminar"
+                  (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )"
+                  *ngIf="registroCompletoCriterio === false || tieneObservacionOrdenGiro !== undefined">
+            <img src="assets/img/icon/menos.svg">
+            Eliminar criterio
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-
-    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text textoGris">
-                Observación de la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-            <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a los criterios de pago incluidos en la factura?:</b> Si</p>
-            <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a los criterios de pago incluidos en la factura?:</b> No</p>
-            <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
-        </mat-card-content>
-    </mat-card>
-
-  <div class="text-center mb-2em">
-    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="criterios.dirty === false">
-      <img src="assets/img/icon/guardar.svg">
-    </button>
-  </div>
-</form>
+  
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
+          <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text textoGris">
+                  Observación de la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }}
+              </mat-card-title>
+          </mat-card-header>
+          <mat-card-content style="text-align: left;">
+              <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+              <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a los criterios de pago incluidos en la factura?:</b> Si</p>
+              <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a los criterios de pago incluidos en la factura?:</b> No</p>
+              <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
+          </mat-card-content>
+      </mat-card>
+  
+    <div class="text-center mb-2em">
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="criterios.dirty === false">
+        <img src="assets/img/icon/guardar.svg">
+      </button>
+    </div>
+  </form>
+</ng-template>

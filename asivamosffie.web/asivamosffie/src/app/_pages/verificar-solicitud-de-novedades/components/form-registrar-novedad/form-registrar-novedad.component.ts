@@ -283,5 +283,16 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
           this.router.navigate(['/verificarSolicitudDeNovedades']);
       });
 
+      
+
   }
+
+  habilitarTipoNovedad(tnovedad) {
+    if (((tnovedad.tipoNovedadCodigo === '2' || tnovedad.tipoNovedadCodigo === '6') && this.contrato.tieneSuspensionAprobada === false))
+      return 'none'
+    else {
+      return 'flex'
+    }
+  }
+  
 }

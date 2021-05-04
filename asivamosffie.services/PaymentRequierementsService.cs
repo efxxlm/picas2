@@ -228,7 +228,7 @@ namespace asivamosffie.services
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
                 }
-                 
+
                 switch (pSolicitudPagoObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_solicitud_de_pago:
@@ -323,14 +323,15 @@ namespace asivamosffie.services
                 intCantidadDependenciasSolicitudPago++;
 
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
-                {
-                    //#5 Criterios de pago
-                    intCantidadDependenciasSolicitudPago++;
-
-                    foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
+                { 
+                     
+                    if (SolicitudPagoFase.EsPreconstruccion != true)
                     {
-                        //#6 Observacion Amortizacion
-                        intCantidadDependenciasSolicitudPago++;
+                        foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
+                        {
+                            //#6 Observacion Amortizacion
+                            intCantidadDependenciasSolicitudPago++;
+                        }
                     }
                     foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura.Where(r => r.Eliminado != true))
                     {
@@ -382,7 +383,7 @@ namespace asivamosffie.services
                 {
                     OrdenGiroId = null,
                     ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
-                   
+
                     RegistroCompleto = false,
                     FechaRegistroCompleto = null,
 
@@ -728,7 +729,7 @@ namespace asivamosffie.services
         }
 
         private void ReturnOrdenGiroSolicitudPago(SolicitudPago pSolicitudPago)
-        { 
+        {
             _context.Set<OrdenGiro>()
                     .Where(o => o.OrdenGiroId == pSolicitudPago.OrdenGiroId)
                     .Update(o => new OrdenGiro
@@ -797,7 +798,7 @@ namespace asivamosffie.services
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-   
+
         ///4.3.1 Rechaza *
         private async Task<bool> SendEmailRejectAutorizar(int pSolicitudPagoId, bool esVerificar)
         {
@@ -877,7 +878,7 @@ namespace asivamosffie.services
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-      
+
         /// 4.1.8 devuelve *
         private async Task<bool> SendEmailToDeclineVerify(int pSolicitudPagoId)
         {
@@ -906,7 +907,7 @@ namespace asivamosffie.services
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-      
+
         /// 4.1.7 devuelve *
         private async Task<bool> SendEmailToDecline(int pSolicitudPagoId)
         {

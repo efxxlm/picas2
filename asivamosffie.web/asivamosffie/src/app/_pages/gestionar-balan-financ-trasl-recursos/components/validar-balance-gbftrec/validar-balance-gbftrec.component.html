@@ -4,7 +4,14 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">Validar balance LL457326</h1>
+    <h1 class="title-menu--h1">
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            Ver detalle balance LL457326
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance LL457326
+        </ng-template>  
+      </h1>
     <p class="info-sub-title">
         <span>Número de contrato de obra: <b>N801801</b></span>
         <span>Número de contrato de interventoría: <b>A513513</b></span>
@@ -34,5 +41,5 @@
     </div>
     <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && id" [id]="id"></app-recursos-comprom-pagados-gbftrec>
     <app-ejecucion-financiera-gbftrec *ngIf="opcion2 && id" [id]="id"></app-ejecucion-financiera-gbftrec>
-    <app-traslado-recursos-gbftrec *ngIf="opcion3&& id" [id]="id"></app-traslado-recursos-gbftrec>
+    <app-traslado-recursos-gbftrec *ngIf="opcion3 && id" [id]="id" [esVerDetalle] = "esVerDetalle"></app-traslado-recursos-gbftrec>
 </section>

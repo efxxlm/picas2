@@ -667,9 +667,49 @@ namespace asivamosffie.services
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
+            List<int> listaFuentesProyecto = new List<int>();
+
+            DisponibilidadPresupuestalProyecto disponibilidadProyecto = _context.DisponibilidadPresupuestalProyecto.Find(disponibilidadPresupuestalProyectoid);
+
+            DisponibilidadPresupuestal disponibilidadPresupuestal = _context.DisponibilidadPresupuestal
+                                                                                .Where(x => x.DisponibilidadPresupuestalId == disponibilidadProyecto.DisponibilidadPresupuestalId)
+                                                                                .Include(x => x.Contratacion)
+                                                                                    .ThenInclude(x => x.ContratacionProyecto)
+                                                                                .FirstOrDefault();
+
+            ContratacionProyecto contratacionProyecto = disponibilidadPresupuestal.Contratacion.ContratacionProyecto
+                                                                                                    .Where(x => x.ProyectoId == disponibilidadProyecto.ProyectoId)
+                                                                                                    .FirstOrDefault();
+
+            if (contratacionProyecto != null)
+            {
+                ContratacionProyectoAportante aportante = _context.ContratacionProyectoAportante
+                                                                        .Where(x => x.CofinanciacionAportanteId == aportanteID &&
+                                                                               x.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId)
+                                                                        .Include(x => x.ComponenteAportante)
+                                                                            .ThenInclude(x => x.ComponenteUso)
+                                                                        .FirstOrDefault();
+
+                if ( aportante != null)
+                {
+                    aportante.ComponenteAportante.ToList().ForEach(ca =>
+                   {
+                       ca.ComponenteUso.ToList().ForEach(cu =>
+                      {
+                          if (cu.FuenteFinanciacionId.HasValue)
+                          listaFuentesProyecto.Add(cu.FuenteFinanciacionId.Value);
+                      });
+                   });
+                }
+            }
+
             var gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
 
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+
+            financiaciones = financiaciones.Where(x => listaFuentesProyecto.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+
+
             foreach (var financiacion in financiaciones)
             {
                 List<GestionFuenteFinanciacion> gestionFuenteFinanciacion = _context.GestionFuenteFinanciacion

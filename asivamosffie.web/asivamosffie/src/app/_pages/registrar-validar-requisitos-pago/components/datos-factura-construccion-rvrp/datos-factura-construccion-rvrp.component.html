@@ -9,8 +9,28 @@
       <h2 class="card-subTitle mainGris">Descripción de la factura</h2>
       <p><strong>Número de factura:</strong> {{ addressForm.get( 'numeroFactura' ).value }} </p>
       <p><strong>Fecha de factura:</strong> {{ addressForm.get( 'fechaFactura' ).value | date: 'dd/MM/yyyy' }} </p>
-      <p style="margin-top: 10px;"><strong>Valor facturado: </strong> ${{ valorFacturado | currency:'
-        ':'symbol-narrow':'.0-0' }} </p>
+      <p style="margin-top: 10px;"><strong>Valor facturado: </strong> {{ valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </p>
+      <h2 class="card-subTitle mainGris">Descuentos dirección técnica asociados a la factura</h2>
+      <p>
+        <b>¿Aplican descuentos?: </b>
+        <span *ngIf="addressForm.get( 'aplicaDescuento' ).value === true"> Si </span>
+        <span *ngIf="addressForm.get( 'aplicaDescuento' ).value === false"> No </span>
+      </p>
+
+      <div *ngIf="addressForm.get( 'aplicaDescuento' ).value == true">
+          <p><b>¿Cuántos descuentos se aplican sobre la factura?: </b> {{ descuentos.length }} </p>
+
+          <div class="mt-1em" *ngFor="let descuento of descuentos.controls; index as i">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px; margin-top: 1em;">
+              Descuento {{ i + 1 }}
+            </mat-card-title>
+
+            <p><b>Tipo de descuento: </b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </p>
+            <p><b>Valor del descuento: </b> {{ descuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+          </div>
+
+          <p class="mt-1em"><b>Valor a pagar después de descuentos: </b> {{ addressForm.get( 'valorAPagarDespues' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+      </div>
     </mat-card-content>
   </mat-card>
 </ng-container>
@@ -88,7 +108,7 @@
             </div>
           </div>
         </div>
-        <p style="margin-top: 10px;"><strong>Valor facturado: </strong> ${{ valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </p>
+        <p style="margin-top: 10px;"><strong>Valor facturado: </strong> {{ valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </p>
 
             <h2 class="card-subTitle">Descuentos dirección técnica asociados a la factura</h2>
             <div class="row">
@@ -122,7 +142,7 @@
                 </div>
               </div>
             </div>
-            <section formArrayName="descuentos" *ngIf="descuentos.length > 0">
+            <section formArrayName="descuentos" *ngIf="descuentos.length > 0 && addressForm.get( 'aplicaDescuento' ).value === true">
               <div *ngFor="let descuento of descuentos.controls; index as i" [formGroup]="descuento">
                 <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px; margin-top: 1em;">
                   Descuento {{ i + 1 }}
@@ -131,17 +151,35 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                        <label  class="label-left"
+                                for="tipoDescuento"
+                                [ngClass]="{ 'color-secondaryColor': (descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) || (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando) }">
+                                Tipo de descuento
+                        </label>
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
-                          <mat-select formControlName="tipoDescuentoCodigo" required>
-                            <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.codigo">
-                              {{ tipoDescuento.nombre }}
-                            </mat-option>
+                          <mat-select formControlName="tipoDescuentoCodigo" required *ngIf="descuento.get('tipoDescuentoCodigo').value === null" (ngModelChange)="getCodigoTipoDescuento( $event )">
+                              <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.codigo">
+                                  {{ tipoDescuento.nombre }}
+                              </mat-option>
                           </mat-select>
-                        </mat-form-field>
+                          <mat-select formControlName="tipoDescuentoCodigo" required *ngIf="descuento.get('tipoDescuentoCodigo').value !== null">
+                              <mat-option *ngFor="let tipoDescuento of getTipoDescuentoSeleccionado( descuento.get('tipoDescuentoCodigo').value )" [value]="tipoDescuento.codigo">
+                                  {{ tipoDescuento.nombre }}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
                       </div>
+                      <span class="icon-incompleto">
+                        <img  class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="(descuento.get('tipoDescuentoCodigo')?.invalid && descuento.get('tipoDescuentoCodigo').touched) || (descuento.get('tipoDescuentoCodigo')?.invalid && estaEditando)">
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -149,31 +187,47 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left" for="valorDescuento">
-                          Valor del descuento
+                        <label  class="label-left"
+                                for="valorDescuento"
+                                [ngClass]="{ 'color-secondaryColor': (descuento.get('valorDescuento')?.invalid && descuento.get('valorDescuento').touched) || (descuento.get('valorDescuento')?.invalid && estaEditando) }">
+                                Valor del descuento
                         </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
-                            (keypress)="validateNumberKeypress($event)"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                            (ngModelChange)="totalPagoDescuentos()"
-                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                          <input  matInput
+                                  #valorDescuento
+                                  currencyMask
+                                  maxlength="20"
+                                  required
+                                  formControlName="valorDescuento"
+                                  (keypress)="validateNumberKeypress($event)"
+                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                  (ngModelChange)="totalPagoDescuentos()"
+                                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>
                         <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                           matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}</span>
                       </div>
+                      <span class="icon-incompleto">
+                        <img  class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="(descuento.get('valorDescuento')?.invalid && descuento.get('valorDescuento').touched) || (descuento.get('valorDescuento')?.invalid && estaEditando)">
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="text-right" *ngIf="i === descuentos.length - 1">
+                <div class="text-right" *ngIf="i === descuentos.length - 1 && descuentos.disabled === false">
                   <button mat-button color="warn" type="button" class="btn-eliminar" (click)="addDescuento()">
                     <img src="assets/img/icon/mas.svg" alt="agregar">
                     Agregar otro descuento
                   </button>
                 </div>
-                <div class="text-right" *ngIf="descuentos.length > 1">
+                <div class="text-right" *ngIf="descuentos.length > 1 && descuentos.disabled === false">
                   <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, descuento.get( 'solicitudPagoFaseFacturaDescuentoId' ).value )">
                     <img src="assets/img/icon/menos.svg">
                     Eliminar descuento
@@ -181,7 +235,7 @@
                 </div>
               </div>
             </section>
-            <div class="row" *ngIf="descuentos.length > 0">
+            <div class="row" *ngIf="descuentos.length > 0 && addressForm.get( 'aplicaDescuento' ).value === true">
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">

@@ -53,7 +53,15 @@ export class FormAmortizacionComponent implements OnInit {
         if (this.contrato.contratacion.disponibilidadPresupuestal.length > 0) {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach(ddp => this.valorTotalDelContrato += ddp.valorSolicitud);
         }
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+
+        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+            for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                if ( solicitudPagoFase.esPreconstruccion === false ) {
+                    this.solicitudPagoFase = solicitudPagoFase;
+                }
+            }
+        }
+
         if (this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0) {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
             this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;

@@ -37,14 +37,14 @@ export class DisponibilidadPresupuestalService {
     var json = JSON.stringify(pdf[0]);    
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
-  GenerateDRP(id)
+  GenerateDRP(id, esNovedad, pRegistroPresupuestalId)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
   }
   
-  GenerateDDP(id)
+  GenerateDDP(id, esNovedad, pRegistroPresupuestalId)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
   }
   CreateDDP(id, esNovedad, RegistroPresupuestalId)
   {
@@ -72,9 +72,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetRechazarValidacionDDP`,DisponibilidadPresupuestalObservacion);
   }
-  SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion:any)
+  SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion:any, esNovedad, RegistroPresupuestalId)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnValidacionDDP`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetReturnValidacionDDP?esNovedad=${esNovedad}&RegistroPresupuestalId=${RegistroPresupuestalId}`,DisponibilidadPresupuestalObservacion);
   }
   SetCancelDDR(DisponibilidadPresupuestalObservacion:any)
   {

@@ -138,13 +138,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDDP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDDP(int id)
+        public async Task<IActionResult> GenerateDDP(int id, bool esNovedad, int pRegistroPresupuestalId)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
             {
@@ -207,7 +207,7 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.2*/
         [Route("SetReturnValidacionDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        public async Task<IActionResult> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad, int RegistroPresupuestalId)
         {
 
             try
@@ -215,7 +215,7 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
-                Task<Respuesta> result = _budgetAvailabilityService.SetReturnValidacionDDP(pDisponibilidadPresObservacion,
+                Task<Respuesta> result = _budgetAvailabilityService.SetReturnValidacionDDP(pDisponibilidadPresObservacion, esNovedad, RegistroPresupuestalId,
                     _settings.Value.DominioFront,
                     _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
@@ -406,14 +406,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDRP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDRP(int id)
+        public async Task<IActionResult> GenerateDRP(int id, bool esNovedad, int pRegistroPresupuestalId)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 //return File(respuesta, "application/octet-stream");
-                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
             {

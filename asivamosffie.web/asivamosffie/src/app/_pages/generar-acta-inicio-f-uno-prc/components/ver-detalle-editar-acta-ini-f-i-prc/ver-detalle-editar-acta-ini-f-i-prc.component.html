@@ -261,18 +261,22 @@
                     Días
                   </label>
                   <mat-form-field class="w97">
-                    <input
+                    <input                      
                       matInput
+                      type="number"
+                      formControlName="diasPlazoEjFase1"
                       maxlength="2"
                       min="1"
-                      max="99"
+                      max="29"
                       required
                       (keypress)="number($event)"
                       (ngModelChange)="getDays( $event )"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                      onkeyup="if(this.value>29) this.value = 29;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      type="number"
-                      formControlName="diasPlazoEjFase1"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Campo numérico igual o menor a 29 días"
+                      matTooltipClass="info-tooltip"
                     />
                   </mat-form-field>
                   <span
@@ -379,13 +383,17 @@
                       matInput
                       maxlength="2"
                       min="1"
-                      max="31"
+                      max="29"
                       required
                       (keypress)="number($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="diasPlazoEjFase2"
+                      onkeyup="if(this.value>29) this.value = 29;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Campo numérico igual o menor a 29 días"
+                      matTooltipClass="info-tooltip"
                     />
                   </mat-form-field>
                   <span

@@ -69,6 +69,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<TablaDRP> TablaDRP { get; set; }
+
+        [NotMapped]
+        public bool tieneSuspensionAprobada{ get; set; }
+
+        [NotMapped]
+        public int? SuspensionAprobadaId { get; set; }
     }
 
     

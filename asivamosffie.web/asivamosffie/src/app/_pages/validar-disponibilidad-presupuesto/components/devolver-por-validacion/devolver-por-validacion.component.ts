@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
@@ -32,7 +32,9 @@ export class DevolverPorValidacionComponent implements OnInit {
   numeroSolicitud: any;
 
   constructor(public dialog: MatDialog,  private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data,private disponibilidadServices: DisponibilidadPresupuestalService) {
+    @Inject(MAT_DIALOG_DATA) public data,private disponibilidadServices: DisponibilidadPresupuestalService,
+    private activatedRoute: ActivatedRoute
+    ) {
     this.declararOnservaciones();
     this.minDate = new Date();
   }
@@ -42,6 +44,12 @@ export class DevolverPorValidacionComponent implements OnInit {
     this.tipo=this.data.tipo;
     this.tipoSolicitud=this.data.tipoSolicitud;
     this.numeroSolicitud=this.data.numeroSolicitud;
+
+    this.activatedRoute.params.subscribe(param => {
+      console.log(param);
+      //this.cargarServicio1(param.idTipoSolicitud);
+    });
+
   }
 
   maxLength(e: any, n: number) {
@@ -92,8 +100,8 @@ export class DevolverPorValidacionComponent implements OnInit {
     let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.solicitudID,Observacion:this.observaciones.value};
     if(this.tipo==0)
     {
-      this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
-        this.openDialog('', '<b>La solicitud ha sido devuelta al responsable técnico.</b>');
+       this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion, false, 0).subscribe(listas => {
+         this.openDialog('', '<b>La solicitud ha sido devuelta al responsable técnico.</b>');
 
       });
     }

@@ -469,24 +469,26 @@ namespace asivamosffie.services
             string strInterventoriaCodigo = _context.Contrato
                                              .Include(ctr => ctr.Contratacion)
                                              .Where(s => s.ContratoId == pSolicitudPago.ContratoId)
-                                            .Select(crt =>
-                                                    crt.Contratacion.TipoSolicitudCodigo
-                                                    ).FirstOrDefault();
+                                             .Select(crt => crt.Contratacion.TipoSolicitudCodigo)
+                                             .FirstOrDefault();
 
             if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                 CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
 
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
+                decimal? ValorFacturado =
+                    pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?
+                    .Sum(r => r.SolicitudPagoFase?
+                    .Sum(r => r.SolicitudPagoFaseFactura?
+                    .Sum(r => r.ValorFacturado)));
 
-                decimal? ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
                 _context.Set<SolicitudPago>()
                         .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                         .Update(s => new SolicitudPago
                         {
                             FechaModificacion = DateTime.Now,
                             TieneObservacion = false,
-
                             ObservacionDevolucionOrdenGiro = null,
                             UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
                             ValorFacturado = ValorFacturado,
@@ -495,7 +497,11 @@ namespace asivamosffie.services
             }
             else
             {
-                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?.FirstOrDefault()?.SolicitudPagoFase?.FirstOrDefault()?.SolicitudPagoFaseFactura?.FirstOrDefault()?.ValorFacturado;
+                pSolicitudPago.ValorFacturado = pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?
+                    .Sum(r => r.SolicitudPagoFase?
+                    .Sum(r => r.SolicitudPagoFaseFactura?
+                    .Sum(r => r.ValorFacturado)));
+
                 pSolicitudPago.TieneObservacion = false;
                 pSolicitudPago.NumeroSolicitud = Int32.Parse(strInterventoriaCodigo) == ConstanCodigoTipoContratacion.Obra ? await _commonService.EnumeradorSolicitudPago(true) : await _commonService.EnumeradorSolicitudPago(false);
                 pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
@@ -540,17 +546,17 @@ namespace asivamosffie.services
 
                 if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() > 0)
                 {
-                    pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
-                    CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
+                    CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago, pSolicitudPago.UsuarioCreacion);
                 }
 
                 if (pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() > 0)
                 {
-                    pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
+                    CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago, pSolicitudPago.UsuarioCreacion);
 
-                    CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault());
-
-                    CreateEditSolicitudPagoFase(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
+                    foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago)
+                    {
+                        CreateEditSolicitudPagoFase(SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
+                    }
                 }
 
                 CreateEditListaChequeoRespuesta(pSolicitudPago.SolicitudPagoListaChequeo, pSolicitudPago.UsuarioCreacion);
@@ -580,7 +586,68 @@ namespace asivamosffie.services
             }
         }
 
-        private async void CreateEditListaChequeoRespuesta(ICollection<SolicitudPagoListaChequeo> pListSolicitudPagoListaChequeo, string usuarioCreacion)
+        private void CreateEditNewPaymentWayToPay(ICollection<SolicitudPagoCargarFormaPago> pListSolicitudPagoCargarFormaPago, string usuarioCreacion)
+        {
+            try
+            {
+                foreach (var pSolicitudPagoCargarFormaPago in pListSolicitudPagoCargarFormaPago)
+                {
+                    if (pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId > 0)
+                    {
+                        SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
+                        solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
+                        solicitudPagoCargarFormaPagoOld.TieneFase1 = pSolicitudPagoCargarFormaPago.TieneFase1;
+
+                        solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
+                        solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
+                        solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
+                    }
+                    else
+                    {
+                        pSolicitudPagoCargarFormaPago.FechaCreacion = DateTime.Now;
+                        pSolicitudPagoCargarFormaPago.Eliminado = false;
+                        pSolicitudPagoCargarFormaPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
+
+                        _context.SolicitudPagoCargarFormaPago.Add(pSolicitudPagoCargarFormaPago);
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void CreateEditRegistrarSolicitudPago(ICollection<SolicitudPagoRegistrarSolicitudPago> ListSolicitudPagoRegistrarSolicitudPago, string pAuhor)
+        {
+            foreach (var solicitudPagoRegistrarSolicitudPago in ListSolicitudPagoRegistrarSolicitudPago)
+            {
+                if (solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId > 0)
+                {
+                    SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPagoOld = _context.SolicitudPagoRegistrarSolicitudPago.Find(solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId);
+                    solicitudPagoRegistrarSolicitudPagoOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoRegistrarSolicitudPagoOld.UsuarioModificacion = pAuhor;
+                    solicitudPagoRegistrarSolicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
+                    solicitudPagoRegistrarSolicitudPagoOld.TieneFasePreconstruccion = solicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion;
+                    solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
+                    solicitudPagoRegistrarSolicitudPagoOld.TieneFaseConstruccion = solicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion;
+                    solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
+                    solicitudPagoRegistrarSolicitudPagoOld.NumeroRadicadoSac = solicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac;
+                }
+                else
+                {
+                    solicitudPagoRegistrarSolicitudPago.UsuarioCreacion = pAuhor;
+                    solicitudPagoRegistrarSolicitudPago.FechaCreacion = DateTime.Now;
+                    solicitudPagoRegistrarSolicitudPago.Eliminado = false;
+                    solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
+
+                    _context.SolicitudPagoRegistrarSolicitudPago.Add(solicitudPagoRegistrarSolicitudPago);
+                }
+            }
+        }
+
+        private void CreateEditListaChequeoRespuesta(ICollection<SolicitudPagoListaChequeo> pListSolicitudPagoListaChequeo, string usuarioCreacion)
         {
             foreach (var SolicitudPagoListaChequeo in pListSolicitudPagoListaChequeo)
             {
@@ -624,62 +691,6 @@ namespace asivamosffie.services
             }
         }
 
-        private bool CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
-        {
-            try
-            {
-                if (pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId > 0)
-                {
-                    SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
-                    solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
-                    solicitudPagoCargarFormaPagoOld.TieneFase1 = pSolicitudPagoCargarFormaPago.TieneFase1;
-
-                    solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
-                    solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
-                    solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
-
-                }
-                else
-                {
-                    pSolicitudPagoCargarFormaPago.FechaCreacion = DateTime.Now;
-                    pSolicitudPagoCargarFormaPago.Eliminado = false;
-                    pSolicitudPagoCargarFormaPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
-
-                    _context.SolicitudPagoCargarFormaPago.Add(pSolicitudPagoCargarFormaPago);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-        }
-
-        private void CreateEditRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPago)
-        {
-
-            if (solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId > 0)
-            {
-                SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPagoOld = _context.SolicitudPagoRegistrarSolicitudPago.Find(solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId);
-                solicitudPagoRegistrarSolicitudPagoOld.FechaModificacion = DateTime.Now;
-                solicitudPagoRegistrarSolicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
-                solicitudPagoRegistrarSolicitudPagoOld.TieneFasePreconstruccion = solicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion;
-                solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
-                solicitudPagoRegistrarSolicitudPagoOld.TieneFaseConstruccion = solicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion;
-                solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
-                solicitudPagoRegistrarSolicitudPagoOld.NumeroRadicadoSac = solicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac;
-            }
-            else
-            {
-                solicitudPagoRegistrarSolicitudPago.FechaCreacion = DateTime.Now;
-                solicitudPagoRegistrarSolicitudPago.Eliminado = false;
-                solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
-
-                _context.SolicitudPagoRegistrarSolicitudPago.Add(solicitudPagoRegistrarSolicitudPago);
-            }
-        }
-
         private void CreateEditSolicitudPagoFaseDescuento(ICollection<SolicitudPagoFaseFacturaDescuento> pSolicitudPagoFaseDescuentoList, string pUsusarioCreacion)
         {
             foreach (var SolicitudPagoFaseDescuento in pSolicitudPagoFaseDescuentoList)
@@ -713,9 +724,9 @@ namespace asivamosffie.services
                 if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
                     CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
 
-
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
+
                 if (!SolicitudPagoFase.EsPreconstruccion)
                     if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
                         CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
@@ -957,244 +968,6 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
-        {
-            //Tipo Obra o Interventoria
-            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) < (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
-            {
-                if (
-                       pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
-                    || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
-                    || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
-                    return false;
-
-                if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1)
-                {
-                }
-                else
-                {
-                    if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0)
-                        return false;
-                    foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
-                    {
-                        if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
-                            return false;
-                    }
-                }
-
-                foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
-                {
-                    if (!ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud))
-                        return false;
-                }
-
-            }
-
-            //Tipo Expensas
-            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
-            {
-                if (pSolicitudPago.SolicitudPagoExpensas.Count() == 0)
-                    return false;
-                foreach (var SolicitudPagoExpensas in pSolicitudPago.SolicitudPagoExpensas)
-                {
-                    if (
-                           string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroRadicadoSac)
-                        || string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroFactura)
-                        || string.IsNullOrEmpty(SolicitudPagoExpensas.TipoPagoCodigo)
-                        || string.IsNullOrEmpty(SolicitudPagoExpensas.ConceptoPagoCriterioCodigo)
-                        || SolicitudPagoExpensas.ValorFacturado == 0
-                        || SolicitudPagoExpensas.ValorFacturadoConcepto == 0
-                       ) return false;
-                }
-            }
-            //Tipo Otros Costos
-            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Otros_costos_servicios)
-            {
-                if (pSolicitudPago.SolicitudPagoOtrosCostosServicios.Count() == 0)
-                    return false;
-
-                foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPago.SolicitudPagoOtrosCostosServicios)
-                {
-                    if (
-                           string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroRadicadoSac)
-                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroFactura)
-                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
-                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
-                        || SolicitudPagoOtrosCostosServicios.ValorFacturado == 0
-                       ) return false;
-                }
-            }
-            //Lista de chequeo
-
-            foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
-            {
-                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
-                {
-                    if (SolicitudPagoListaChequeoRespuesta.RegistroCompleto != true)
-                        return false;
-                }
-            }
-
-            //Solicitud Pago
-            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud pSolicitudPagoSoporteSolicitud)
-        {
-            if (string.IsNullOrEmpty(pSolicitudPagoSoporteSolicitud.UrlSoporte))
-                return false;
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
-        {
-
-            if (solicitudPagoFaseFactura.TieneDescuento == false)
-                return true;
-            if (
-                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
-                || !solicitudPagoFaseFactura.TieneDescuento.HasValue
-                || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
-                || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
-                )
-                return false;
-
-            if (solicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() == 0)
-                return false;
-
-            foreach (var SolicitudPagoFaseFacturaDescuento in solicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento solicitudPagoFaseDescuento)
-        {
-            if (string.IsNullOrEmpty(solicitudPagoFaseDescuento.TipoDescuentoCodigo)
-               || string.IsNullOrEmpty(solicitudPagoFaseDescuento.ValorDescuento.ToString()))
-                return false;
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
-        {
-            if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
-                )
-                return false;
-
-            if (solicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() == 0)
-                return false;
-
-            foreach (var SolicitudPagoFaseCriterioProyecto in solicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto solicitudPagoFaseCriterioProyecto)
-        {
-            if (string.IsNullOrEmpty(solicitudPagoFaseCriterioProyecto.ValorFacturado.ToString()))
-                return false;
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
-        {
-            if (!pSolicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion.HasValue
-                || !pSolicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion.HasValue
-                || !pSolicitudPagoRegistrarSolicitudPago.FechaSolicitud.HasValue
-                || pSolicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac == null
-                ) return false;
-
-            if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Count() == 0)
-                return false;
-
-            if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault().SolicitudPagoFaseFactura.Count() == 0)
-                return false;
-
-            foreach (var SolicitudPagoFaseFactura in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault().SolicitudPagoFaseFactura)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
-                    return false;
-            }
-
-            if (!ValidateCompleteRecordSolicitudPagoFase(pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault()))
-                return false;
-
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
-        {
-            //La Fase Construccion Es la unica que tiene amortizacion
-            bool? TieneAmortizacion = _context.SolicitudPagoFase
-                .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFase.SolicitudPagoFaseId)
-                .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                .ThenInclude(r => r.SolicitudPago)
-                .ThenInclude(r => r.Contrato)
-                .ThenInclude(r => r.ContratoConstruccion)
-                .Select(r => r.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.Contrato.ContratoConstruccion
-                .FirstOrDefault().ManejoAnticipoRequiere)
-                .FirstOrDefault();
-
-            if (TieneAmortizacion == true)
-            {
-                if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
-                    return false;
-
-                foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
-                {
-                    if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoFaseAmortizacion solicitudPagoAmortizacion)
-        {
-            if (
-                     string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
-                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString())
-                )
-                return false;
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
-        {
-            if (pSolicitudPagoCargarFormaPago.TieneFase1 == true)
-                if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo))
-                    return false;
-
-            if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo))
-                return false;
-
-            return true;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
-        {
-            foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
-            {
-                if (
-                       string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                    || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
-                      ) return false;
-            }
-            return true;
-        }
 
         #endregion
 
@@ -1210,8 +983,8 @@ namespace asivamosffie.services
 
                 if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                     CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
-                 
-                _context.SaveChanges(); 
+
+                _context.SaveChanges();
                 return
                      new Respuesta
                      {
@@ -1456,7 +1229,7 @@ namespace asivamosffie.services
                 }
                 if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                     CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
-                
+
 
                 _context.SaveChanges();
                 return
@@ -1558,6 +1331,115 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        {
+
+            try
+            {
+                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+
+                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
+                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
+                    .Sum(c => c.SaldoPresupuestal));
+
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+
+                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
+
+                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
+                decimal MontoMaximo = 0;
+                //TODO:VALIDAR 
+                foreach (var PorcentajePago in FormasPago)
+                {
+                    if (Convert.ToUInt32(PorcentajePago) == 100)
+                        MontoMaximo = ValorPendientePorPagar;
+                    else
+                    {
+                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
+                        MontoMaximo /= 100;
+                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
+
+                        if (MontoMaximo < 0)
+                            MontoMaximo = ValorTotalPorFase;
+
+                        if (MontoMaximo < ValorPendientePorPagar)
+                            break;
+                    }
+                }
+
+                return new
+                {
+                    MontoMaximo,
+                    ValorPendientePorPagar
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    MontoMaximo = 0,
+                    ValorPendientePorPagar = 0
+                };
+            }
+        }
+
+        public async Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion)
+        {
+            decimal ValorPendientePorPagar = 0;
+            try
+            {
+                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId
+                    .Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion)
+                    .Sum(v => v.ValorUso);
+
+                ValorPendientePorPagar = ValorTotalPorFase;
+
+                // - (decimal)_context.VValorFacturadoXfasesSolicitudPago
+                //.Where(v => v.SolicitudPagoId == SolicitudPagoId && v.EsPreConstruccion == EsPreConstruccion)
+                //.Sum(c => c.ValorFacturado);
+
+                //  ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+
+                return new
+                {
+                    ValorPendientePorPagar
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    ValorPendientePorPagar
+                };
+            }
+        }
+
+        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
+        {
+            decimal ValorMaximoProyecto =
+               (decimal)await _context.VValorUsosFasesAportanteProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                      && r.EsPreConstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorUso);
+
+            decimal ValorFacturadoProyecto =
+               (decimal)await _context.VValorFacturadoProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                        && r.EsPreconstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorFacturado);
+
+            return new
+            {
+                ValorMaximoProyecto,
+                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
+            };
+        }
+
         public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
         {
             SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(pSolicitudPagoId);
@@ -1736,50 +1618,52 @@ namespace asivamosffie.services
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
         {
+
+            Contrato contrato = await _context.Contrato
+                    .Where(c => c.ContratoId == pContratoId)
+                    .Include(c => c.ContratoConstruccion)
+                    .Include(c => c.ContratoPoliza)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                    .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoRegistrarSolicitudPago).ThenInclude(r => r.SolicitudPagoFase).ThenInclude(r => r.SolicitudPagoFaseCriterio).ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            if (contrato.SolicitudPago.Count() > 0)
+                contrato.SolicitudPago = contrato.SolicitudPago
+                    .Where(s => s.Eliminado != true).ToList();
+
+            if (pSolicitudPago > 0)
+            {
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
+                contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
+            }
+            //contrato.ValorFacturadoContrato =
+            //    _context.VValorFacturadoContrato
+            //    .Where(v => v.ContratoId == pContratoId)
+            //    .ToList();
             try
             {
-                Contrato contrato = await _context.Contrato
-                        .Where(c => c.ContratoId == pContratoId)
-                        .Include(c => c.ContratoConstruccion)
-                        .Include(c => c.ContratoPoliza)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                        .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                        .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
-                        .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync();
-
-                if (contrato.SolicitudPago.Count() > 0)
-                    contrato.SolicitudPago = contrato.SolicitudPago.Where(s => s.Eliminado != true).ToList();
-
-                if (pSolicitudPago > 0)
-                {
-                    SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                    contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
-                }
-                contrato.ValorFacturadoContrato =
-                    _context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == pContratoId)
-                    .ToList();
-
                 contrato.VContratoPagosRealizados =
                     _context.VContratoPagosRealizados
                        .Where(v => v.ContratoId == pContratoId)
                        .ToList();
 
                 contrato.TablaDRP = GetDrpContrato(contrato);
-
-
-                return contrato;
             }
-            catch (Exception ex)
+            catch (Exception e) 
             {
-                return new Contrato();
+            
             }
+
+            return contrato;
+
         }
 
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
@@ -1817,7 +1701,6 @@ namespace asivamosffie.services
 
             return ListTablaDrp;
         }
-
 
         private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
         {
@@ -1933,81 +1816,257 @@ namespace asivamosffie.services
         #endregion
 
         #region Validate 
-
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
-
-            try
+            //Tipo Obra o Interventoria
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) < (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
             {
-                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+                if (
+                       pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
+                    || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
+                    || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
+                    return false;
 
-                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
-
-                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal));
-
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
-
-                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-
-                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                decimal MontoMaximo = 0;
-                //TODO:VALIDAR 
-                foreach (var PorcentajePago in FormasPago)
+                if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1)
                 {
-                    if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorPendientePorPagar;
-                    else
+                }
+                else
+                {
+                    if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0)
+                        return false;
+                    foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
                     {
-                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                        MontoMaximo /= 100;
-                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
-
-                        if (MontoMaximo < 0)
-                            MontoMaximo = ValorTotalPorFase;
-
-                        if (MontoMaximo < ValorPendientePorPagar)
-                            break;
+                        if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
+                            return false;
                     }
                 }
 
-                return new
+                foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
                 {
-                    MontoMaximo,
-                    ValorPendientePorPagar
-                };
+                    if (!ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud))
+                        return false;
+                }
+
             }
-            catch (Exception e)
+
+            //Tipo Expensas
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
             {
-                return new
+                if (pSolicitudPago.SolicitudPagoExpensas.Count() == 0)
+                    return false;
+                foreach (var SolicitudPagoExpensas in pSolicitudPago.SolicitudPagoExpensas)
                 {
-                    MontoMaximo = 0,
-                    ValorPendientePorPagar = 0
-                };
+                    if (
+                           string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroRadicadoSac)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroFactura)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.TipoPagoCodigo)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.ConceptoPagoCriterioCodigo)
+                        || SolicitudPagoExpensas.ValorFacturado == 0
+                        || SolicitudPagoExpensas.ValorFacturadoConcepto == 0
+                       ) return false;
+                }
             }
+            //Tipo Otros Costos
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Otros_costos_servicios)
+            {
+                if (pSolicitudPago.SolicitudPagoOtrosCostosServicios.Count() == 0)
+                    return false;
+
+                foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPago.SolicitudPagoOtrosCostosServicios)
+                {
+                    if (
+                           string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroRadicadoSac)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroFactura)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
+                        || SolicitudPagoOtrosCostosServicios.ValorFacturado == 0
+                       ) return false;
+                }
+            }
+            //Lista de chequeo
+
+            foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
+            {
+                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                {
+                    if (SolicitudPagoListaChequeoRespuesta.RegistroCompleto != true)
+                        return false;
+                }
+            }
+
+            //Solicitud Pago
+            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago)
+            {
+                if (!ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago))
+                    return false;
+            }
+
+            return true;
         }
 
-        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
+        private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud pSolicitudPagoSoporteSolicitud)
         {
-            decimal ValorMaximoProyecto =
-               (decimal)await _context.VValorUsosFasesAportanteProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                      && r.EsPreConstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorUso);
-
-            decimal ValorFacturadoProyecto =
-               (decimal)await _context.VValorFacturadoProyecto
-                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
-                        && r.EsPreconstruccion == EsPreConstruccion)
-                .SumAsync(s => s.ValorFacturado);
-
-            return new
-            {
-                ValorMaximoProyecto,
-                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
-            };
+            if (string.IsNullOrEmpty(pSolicitudPagoSoporteSolicitud.UrlSoporte))
+                return false;
+            return true;
         }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
+        {
+
+            if (solicitudPagoFaseFactura.TieneDescuento == false)
+                return true;
+            if (
+                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
+                || !solicitudPagoFaseFactura.TieneDescuento.HasValue
+                || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
+                || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
+                )
+                return false;
+
+            if (solicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() == 0)
+                return false;
+
+            foreach (var SolicitudPagoFaseFacturaDescuento in solicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento)
+            {
+                if (!ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento solicitudPagoFaseDescuento)
+        {
+            if (string.IsNullOrEmpty(solicitudPagoFaseDescuento.TipoDescuentoCodigo)
+               || string.IsNullOrEmpty(solicitudPagoFaseDescuento.ValorDescuento.ToString()))
+                return false;
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
+        {
+            if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                )
+                return false;
+
+            if (solicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() == 0)
+                return false;
+
+            foreach (var SolicitudPagoFaseCriterioProyecto in solicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto)
+            {
+                if (!ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto solicitudPagoFaseCriterioProyecto)
+        {
+            if (string.IsNullOrEmpty(solicitudPagoFaseCriterioProyecto.ValorFacturado.ToString()))
+                return false;
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
+        {
+            if (
+                    !pSolicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion.HasValue
+                || !pSolicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion.HasValue
+                || !pSolicitudPagoRegistrarSolicitudPago.FechaSolicitud.HasValue
+                || string.IsNullOrEmpty(pSolicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac)
+                ) return false;
+
+            if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Count() == 0)
+                return false;
+
+            foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+            {
+                if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() == 0)
+                    return false;
+            }
+
+            foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+            {
+                foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
+                {
+                    if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
+                        return false;
+                }
+            }
+
+            foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+            {
+                if (!ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
+        {
+            //La Fase Construccion Es la unica que tiene amortizacion
+            if (pSolicitudPagoFase.EsPreconstruccion != true)
+            {
+                bool? TieneAmortizacion = _context.SolicitudPagoFase
+                    .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFase.SolicitudPagoFaseId)
+                    .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                    .ThenInclude(r => r.SolicitudPago)
+                    .ThenInclude(r => r.Contrato)
+                    .ThenInclude(r => r.ContratoConstruccion)
+                    .Select(r => r.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.Contrato.ContratoConstruccion
+                    .FirstOrDefault().ManejoAnticipoRequiere)
+                    .FirstOrDefault();
+
+                if (TieneAmortizacion == true)
+                {
+                    if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
+                        return false;
+
+                    foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
+                    {
+                        if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoFaseAmortizacion solicitudPagoAmortizacion)
+        {
+            if (
+                     string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
+                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString())
+                )
+                return false;
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
+        {
+            if (pSolicitudPagoCargarFormaPago.TieneFase1 == true)
+                if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo))
+                    return false;
+
+            if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo))
+                return false;
+
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
+        {
+            foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
+            {
+                if (
+                       string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                    || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                      ) return false;
+            }
+            return true;
+        }
+
         #endregion 
     }
 }

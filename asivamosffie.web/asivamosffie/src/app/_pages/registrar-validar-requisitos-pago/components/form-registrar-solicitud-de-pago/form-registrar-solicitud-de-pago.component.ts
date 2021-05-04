@@ -47,7 +47,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = [
       'faseContrato',
-      'pagosRealizados',
       'valorFacturado',
       'porcentajeFacturado',
       'saldoPorPagar',
@@ -55,6 +54,13 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     ];
     // Interfaz verificar semaforos en caso de haber observaciones
     estadoSemaforosObservaciones = {
+        observacionCriterios: null,
+        observacionAmortizacion: null,
+        observacionCriteriosProyecto: null,
+        observacionDatosFactura: null,
+        observacionDescuentos: null
+    }
+    estadoSemaforosObservacionesConstruccion = {
         observacionCriterios: null,
         observacionAmortizacion: null,
         observacionCriteriosProyecto: null,
@@ -71,6 +77,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         solicitudPagoFaseRegistroCompleto: false
     }
     estadoRegistroCompletoSubAcordeon = {
+        criterioRegistroCompleto: false,
+        amortizacionRegistroCompleto: false,
+        detalleFacturaRegistroCompleto: false
+    }
+    estadoRegistroCompletoSubAcordeonConstruccion = {
         criterioRegistroCompleto: false,
         amortizacionRegistroCompleto: false,
         detalleFacturaRegistroCompleto: false
@@ -106,7 +117,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                     this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
-                    if ( this.manejoAnticipoRequiere === false ) {
+                    if ( this.manejoAnticipoRequiere === false || this.manejoAnticipoRequiere === undefined ) {
                         this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
                     }
 
@@ -226,7 +237,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                                             if ( this.observacion.tieneObservacion === true ) {
                                                 this.tieneObservacion = true;
-                                                this.tieneObservacionSemaforo.emit( true );;
+                                                this.tieneObservacionSemaforo.emit( true );
                                                 this.addressForm.get( 'fechaSolicitud' ).enable();
                                                 this.addressForm.get( 'numeroRadicado' ).enable();
                                                 this.addressForm.get( 'faseContrato' ).enable();
@@ -290,6 +301,13 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 semaforoPreConstruccion = 'en-alerta';
             }
 
+            const tieneObservacion = Object.values( this.estadoSemaforosObservaciones ).includes( true );
+
+            if ( tieneObservacion === true ) {
+                semaforoPreConstruccion = 'en-proceso';
+                this.tieneObservacionSemaforo.emit( true );
+            }
+
             return semaforoPreConstruccion;
         }
 
@@ -313,6 +331,13 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         }
                     }
                 }
+            }
+
+            const tieneObservacion = Object.values( this.estadoSemaforosObservacionesConstruccion ).includes( true );
+
+            if ( tieneObservacion === true ) {
+                semaforoConstruccion = 'en-proceso';
+                this.tieneObservacionSemaforo.emit( true );
             }
 
             return semaforoConstruccion;
@@ -424,8 +449,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         semaforoCriterioPago = 'en-proceso';
                     }
                     if ( this.solicitudPagoFaseConstruccion.registroCompletoCriterio === true ) {
-                        this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto = true;
-                        this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                        this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto = true;
+                        this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
                         semaforoCriterioPago = 'completo';
                     }
 
@@ -435,10 +460,10 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 if ( this.manejoAnticipoRequiere === true ) {
                     if ( tipoAcordeon === 'amortizacion' ) {
     
-                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === false ) {
+                        if ( this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === false ) {
                             return 'en-alerta';
                         }
-                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true ) {
+                        if ( this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === true ) {
                             
                             const solicitudPagoFaseAmortizacion = this.solicitudPagoFaseConstruccion.solicitudPagoFaseAmortizacion[0];
                             let semaforoAmortizacion = 'sin-diligenciar';
@@ -449,7 +474,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
                                 if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
                                     semaforoAmortizacion = 'completo';
-                                    this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                                    this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
                                 }
                             }
         
@@ -460,7 +485,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
 
                 if ( tipoAcordeon === 'detalleFactura' ) {
-                    if ( this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true ) {
                         if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
                             if ( this.solicitudPagoFaseConstruccion.solicitudPagoFaseCriterio.length > 0 ) {
                                 const solicitudPagoFaseCriterio = this.solicitudPagoFaseConstruccion.solicitudPagoFaseCriterio.filter( criterioValue => criterioValue.solicitudPagoFaseCriterioProyecto.length > 0 );
@@ -473,7 +498,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
 
                                 if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === solicitudPagoFaseCriterio.length ) {
-                                    this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                                    this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto = true;
                                     return 'completo';
                                 }
                                 if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== solicitudPagoFaseCriterio.length ) {
@@ -486,7 +511,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 return 'sin-diligenciar';
                             }
                         } else {
-                            this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                            this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto = true;
                             return '';
                         }
                     } else {
@@ -495,11 +520,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
 
                 if ( tipoAcordeon === 'datosFactura' ) {
-                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === false ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === false ) {
                         return 'en-alerta';
                     }
 
-                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true ) {
+                    if ( this.estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === true ) {
                         if ( this.solicitudPagoFaseConstruccion.solicitudPagoFaseFactura.length === 0 ) {
                             return 'sin-diligenciar';
                         }
@@ -537,23 +562,105 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                     if ( tienePreconstruccion === true ) {
 
-                        listFase.push(
-                            {
-                                solicitudPagofaseId: this.solicitudPagofaseId,
-                                solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
-                                esPreconstruccion: true
+                        if ( this.solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                                    let tieneRegistro = false;
+
+                                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                                            listFase.push( solicitudPagoFase );
+                                            tieneRegistro = true;
+                                        }
+                                    }
+
+                                    if ( tieneRegistro === false ) {
+                                        listFase.push(
+                                            {
+                                                solicitudPagofaseId: this.solicitudPagofaseId,
+                                                solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                                esPreconstruccion: true
+                                            }
+                                        )
+                                    }
+                                } else {
+                                    listFase.push(
+                                        {
+                                            solicitudPagofaseId: this.solicitudPagofaseId,
+                                            solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                            esPreconstruccion: true
+                                        }
+                                    )
+                                }
+                            } else {
+                                listFase.push(
+                                    {
+                                        solicitudPagofaseId: this.solicitudPagofaseId,
+                                        solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                        esPreconstruccion: true
+                                    }
+                                )
                             }
-                        )
+                        } else {
+                            listFase.push(
+                                {
+                                    solicitudPagofaseId: this.solicitudPagofaseId,
+                                    solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                    esPreconstruccion: true
+                                }
+                            )
+                        }
                     }
                     if ( tieneConstruccion === true ) {
 
-                        listFase.push(
-                            {
-                                solicitudPagofaseId: this.solicitudPagofaseId,
-                                solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
-                                esPreconstruccion: false
+                        if ( this.solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                                    let tieneRegistro = false;
+
+                                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                                        if ( solicitudPagoFase.esPreconstruccion === false ) {
+                                            listFase.push( solicitudPagoFase );
+                                            tieneRegistro = true;
+                                        }
+                                    }
+
+                                    if ( tieneRegistro === false ) {
+                                        listFase.push(
+                                            {
+                                                solicitudPagofaseId: this.solicitudPagofaseId,
+                                                solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                                esPreconstruccion: false
+                                            }
+                                        )
+                                    }
+                                } else {
+                                    listFase.push(
+                                        {
+                                            solicitudPagofaseId: this.solicitudPagofaseId,
+                                            solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                            esPreconstruccion: false
+                                        }
+                                    )
+                                }
+                            } else {
+                                listFase.push(
+                                    {
+                                        solicitudPagofaseId: this.solicitudPagofaseId,
+                                        solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                        esPreconstruccion: false
+                                    }
+                                )
                             }
-                        )
+                        } else {
+                            listFase.push(
+                                {
+                                    solicitudPagofaseId: this.solicitudPagofaseId,
+                                    solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                                    esPreconstruccion: false
+                                }
+                            )
+                        }
                     }
                 }
             } else {
@@ -578,7 +685,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
             ]
         }
-        console.log( pSolicitudPago )
+
         this.registrarPagosSvc.createEditNewPayment( pSolicitudPago )
             .subscribe(
                 response => {

@@ -313,6 +313,13 @@
         public const string HISTORIAL_RECLAMACIONES = "236";
         public const string VAR_NOMBRE = "237";
         public const string INFORMACION_ADIONAL_RECLAMACION = "238";
+        public const string TP_NOVEDAD = "239";
+        public const string TP_MOTIVOS_NOVEDAD = "240";
+        public const string TP_JUSTIFICACION = "241";
+        public const string TP_CONCEPTO_TECNICO = "242";
+        public const string TP_NOVEDAD_DETALLES = "243";
+        public const string NUMERO_DRP = "244";
+        public const string SALDO_APORTANTE = "245";
         #endregion
     }
 }

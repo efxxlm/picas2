@@ -199,10 +199,10 @@
                     (addressForm.get('fechaInicio').invalid && estaEditando)
                   "
                 >
-                  Fecha de inicio de la
-                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">suspensión</span>
-                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">prórroga a la auspensión</span>
-                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">reinicio</span>
+                  Fecha de inicio 
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">de la suspensión</span>
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">de la prórroga a la suspensión</span>
+                  <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">de reinicio</span>
                 </label>
               </div>
               <div class="col d-flex">
@@ -265,10 +265,10 @@
                   (addressForm.get('fechaFinal').invalid && estaEditando)
                 "
               >
-                Fecha final de la
-                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">suspensión</span>
-                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">prórroga a la auspensión</span>
-                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">reinicio</span>
+                Fecha final 
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">de la suspensión</span>
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">de la prórroga a la suspensión</span>
+                <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">de reinicio</span>
               </label>
             </div>
             <div class="col d-flex">
@@ -492,11 +492,15 @@
                   #plazoAdicionalDias
                   maxlength="2"
                   min="1"
-                  max="99"
+                  max="29"
                   required
                   (keypress)="validateNumberKeypress($event)"
+                  onkeyup="if(this.value>29) this.value = 29;"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico igual o menor a 29 días"
+                  matTooltipClass="info-tooltip"
                 />
               </mat-form-field>
 
@@ -849,7 +853,6 @@
                   formControlName="numeroRadicadoSolicitud"
                   #numeroRadicadoSolicitud
                   maxlength="20"
-                  required
                 />
               </mat-form-field>
               <span

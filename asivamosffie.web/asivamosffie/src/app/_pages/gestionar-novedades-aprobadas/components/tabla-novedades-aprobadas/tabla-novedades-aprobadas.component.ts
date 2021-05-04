@@ -99,4 +99,13 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
       })
   }  
 
+  AprobacionTecnicaJuridica(id){
+    this.contractualNoveltyService.AprobacionTecnicaJuridica( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }
+
 }

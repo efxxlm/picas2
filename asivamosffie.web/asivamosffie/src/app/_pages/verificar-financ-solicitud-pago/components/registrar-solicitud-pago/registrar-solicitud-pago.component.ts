@@ -14,17 +14,19 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() registrarSolicitudPago: any;
+    solicitudPagoRegistrarSolicitudPago: any
     solicitudPagoObservacionId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
     manejoAnticipoRequiere: boolean;
+    tienePreconstruccion = false;
+    tieneConstruccion = false;
     dataSource = new MatTableDataSource();
     solicitudPagoCargarFormaPago: any;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
         'faseContrato',
-        'pagosRealizados',
         'valorFacturado',
         'porcentajeFacturado',
         'saldoPorPagar',
@@ -46,7 +48,21 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
             }
 
             this.solicitudPago = this.contrato.solicitudPagoOnly;
-            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+            
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    for ( const solicitudPagoFase of this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                            this.tienePreconstruccion = true;
+                        }
+
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
+                            this.tieneConstruccion = true;
+                        }
+                    }
+                }
+            }
         }
 
         this.dataSource = new MatTableDataSource( this.contrato.vContratoPagosRealizados );

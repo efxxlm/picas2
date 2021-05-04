@@ -140,9 +140,10 @@
                     </mat-card-title>
                     <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
                         <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
-                            <p>
-                                <strong>Fuente {{ii+1}}:</strong>
-                                {{fuente.nombre}}
+                            <section *ngIf="fuente.saldo_actual_de_la_fuente_al_guardar !== 0">
+                            <p> 
+                                <strong></strong>
+                                {{fuente.nombre}} 
                             </p>
                             <p>
                                 <strong>Saldo actual de la fuente:</strong>
@@ -160,6 +161,7 @@
                                 <strong>Estado de las fuentes:</strong>
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
+                        </section>
                         </div>
                     </div>
                 </div>
@@ -212,7 +214,8 @@
                             <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}</p>
                         <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
                         <div *ngFor="let fuente of apo.fuentesFinanciacion;index as j">
-                            <mat-card-title class="header-card--text sub-text textoGris" >Fuente {{j+1}}</mat-card-title>
+                            <section *ngIf="fuente.saldo_actual_de_la_fuente_al_guardar !== 0">
+                            <mat-card-title class="header-card--text sub-text textoGris" ></mat-card-title>
 
                             <p>
                                 <strong>Fuente:</strong>
@@ -234,6 +237,7 @@
                                 <strong>Estado de las fuentes:</strong>
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
+                        </section>
                         </div>
 
                     </div>
@@ -327,6 +331,10 @@
             </mat-accordion>
 
         </mat-expansion-panel>
+
+        <!--
+            Pedido por Yuly 03/05/2021
+
         <mat-expansion-panel class="expansion-style"
             *ngIf="false">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -339,6 +347,7 @@
             <app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"
             *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo"></app-tabla-gestionar-validacion-administrativo>
         </mat-expansion-panel>
+        -->
     </mat-accordion>
 
     <div class="botones">

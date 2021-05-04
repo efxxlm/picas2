@@ -98,7 +98,22 @@ namespace asivamosffie.services
                     NovedadContractual novedadContractual = _context.NovedadContractual
                                                                         .Where(x => x.NovedadContractualId == novedad.NovedadContractualId)
                                                                         .Include(x => x.NovedadContractualObservaciones)
+                                                                        .Include( x => x.NovedadContractualDescripcion )
                                                                         .FirstOrDefault();
+                    novedad.vaComite = true;
+
+                    foreach ( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
+                    {
+                        if ( 
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio
+                            )
+                        {
+                            novedad.vaComite = false;
+                        }                            
+
+                    }
 
                     if (novedadContractual.EstadoProcesoCodigo == "3")
                     {
@@ -152,10 +167,18 @@ namespace asivamosffie.services
 
             List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
                                                                         .Where(x => (
-                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
+                                                                                        x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente &&
                                                                                         x.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor
                                                                                     ) &&
                                                                                x.Eliminado != true)
+                                                                        .ToList();
+
+            List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
+                                                                        .Where(x => (
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
+                                                                                    ) &&
+                                                                               x.Eliminado != true)
+                                                                        .Include( x => x.NovedadContractualDescripcion )
                                                                         .ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
@@ -173,6 +196,18 @@ namespace asivamosffie.services
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
                     contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+
+                    NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == contrato.ContratoId).FirstOrDefault();
+
+                    if (novedadTemp != null)
+                    {
+                        contrato.tieneSuspensionAprobada = true;
+                        contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
+                    }
+                    else
+                        contrato.tieneSuspensionAprobada = false;
+
+
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);
                 }
@@ -220,6 +255,13 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
                                                                 .ToList();
 
+            List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
+                                                                        .Where(x => (
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
+                                                                                    ) &&
+                                                                               x.Eliminado != true)
+                                                                        .Include(x => x.NovedadContractualDescripcion)
+                                                                        .ToList();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where(r => r.NovedadContractualId == pId)
@@ -238,10 +280,22 @@ namespace asivamosffie.services
                                                                     .ThenInclude(r => r.ComponenteAportanteNovedad)
                                                                         .ThenInclude(r => r.ComponenteFuenteNovedad)
                                                                             .ThenInclude(r => r.ComponenteUsoNovedad)
+                                                                .Include( x => x.Contrato )
+                                                                    .ThenInclude( x => x.ContratoPoliza )
                                                                 .FirstOrDefault();
 
             if (novedadContractual != null)
             {
+                NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+
+                if (novedadTemp != null)
+                {
+                    novedadContractual.Contrato.tieneSuspensionAprobada = true;
+                    novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
+                }
+                else
+                    novedadContractual.Contrato.tieneSuspensionAprobada = false;
+
                 novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)
                                                                 .ToList();
@@ -263,7 +317,32 @@ namespace asivamosffie.services
                 novedadContractual.RegistroCompletoFirmas = RegistrocompletoFirmas(novedadContractual);
                 novedadContractual.RegistroCompletoDetallar = RegistrocompletoDetallar(novedadContractual);
 
-                foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+                novedadContractual.NovedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true).ToList();
+
+                if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
+                {
+                    DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
+                                                                            .OrderBy(x => x.FechaAprobacion)?
+                                                                            .FirstOrDefault()?
+                                                                            .FechaAprobacion
+                                                                            .Value;
+
+                    novedadContractual.Contrato.FechaActaInicioFase1 = fechaTemp;
+                }
+
+                if ( novedadContractual.Contrato.FechaTerminacionFase2 == null)
+                {
+                    DateTime? fechaTemp = novedadContractual.Contrato.FechaActaInicioFase1.Value;
+
+                    fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias.Value);
+                    fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses.Value);
+
+                    novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+                }
+
+                
+
+                    foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
                     novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
                                                                             .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
@@ -390,6 +469,53 @@ namespace asivamosffie.services
            });
 
             return listaAportantes;
+
+            ////Contratacion contratacion = _context.Contratacion
+            ////                                        .Include(x => x.ContratacionProyecto)
+            ////                                            .ThenInclude(x => x.ContratacionProyectoAportante)
+            ////                                                .ThenInclude(x => x.CofinanciacionAportante)
+            ////                                        .FirstOrDefault(x => x.ContratacionId == pId);
+
+            ////contratacion.ContratacionProyecto.ToList().ForEach(cp =>
+            //{
+            //    //cp.ContratacionProyectoAportante.ToList().ForEach(cpa =>
+            //    _context.CofinanciacionAportante.Where(x => x.Eliminado != true).ToList().ForEach(cpa =>
+            //    {
+            //        //CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+            //        //cofinanciacionAportante.CofinanciacionAportanteId = cpa.CofinanciacionAportante.CofinanciacionAportanteId;
+
+            //        if (cpa.TipoAportanteId == ConstanTipoAportante.Ffie)
+            //        {
+            //            cpa.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+            //        }
+            //        else if (cpa.TipoAportanteId == ConstanTipoAportante.ET)
+            //        {
+            //            //verifico si tiene municipio
+            //            if (cpa.MunicipioId != null)
+            //            {
+            //                cpa.NombreAportanteString = _context.Localizacion.Find(cpa.MunicipioId).Descripcion;
+            //            }
+            //            else//solo departamento
+            //            {
+            //                cpa.NombreAportanteString = cpa.DepartamentoId == null ? "" : _context.Localizacion.Find(cpa.DepartamentoId).Descripcion;
+
+            //            }
+
+            //        }
+            //        else if (cpa.NombreAportanteId != null)
+            //        {
+            //            cpa.NombreAportanteString = _context.Dominio.Find(cpa.NombreAportanteId).Nombre;
+            //        }
+
+            //        if (!string.IsNullOrEmpty(cpa.NombreAportanteString))
+            //        {
+            //            listaAportantes.Add(cpa);
+
+            //        }
+
+            //    });
+            //}//);
+
         }
 
         public async Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId)
@@ -406,6 +532,10 @@ namespace asivamosffie.services
             {
                 fuente.FuenteRecursosString = listaDominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo)?.FirstOrDefault()?.Nombre;
                 fuente.FuenteRecursosString = string.Concat(fuente.FuenteRecursosString, "-", fuente?.Aportante?.CofinanciacionId);
+
+                fuente.saldoFuente = fuente.ValorFuente.Value - _context.GestionFuenteFinanciacion
+                                                    .Where(x => x.FuenteFinanciacionId == fuente.FuenteFinanciacionId &&
+                                                           x.Eliminado != true).Sum(x => x.ValorSolicitado);
 
             }
 
@@ -494,8 +624,23 @@ namespace asivamosffie.services
                             novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
                         }
 
+                        
+
                         if (novedadContractual.NovedadContractualDescripcion != null)
                         {
+                            List<NovedadContractualDescripcion> listaDescripciones = _context.NovedadContractualDescripcion
+                                                                                                .Where(x => x.NovedadContractualId == novedadContractual.NovedadContractualId &&
+                                                                                                        x.Eliminado != true)
+                                                                                                .ToList();
+
+                            foreach (NovedadContractualDescripcion novedadContractualDescripcion in listaDescripciones)
+                            {
+                                if (novedadContractual.NovedadContractualDescripcion.Where( x => x.NovedadContractualDescripcionId == novedadContractualDescripcion.NovedadContractualDescripcionId ).Count() == 0)
+                                {
+                                    novedadContractualDescripcion.Eliminado = true;
+                                }
+                            }
+
                             foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
                             {
                                 descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
@@ -1828,6 +1973,63 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> AprobacionTecnicaJuridica(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_tecnica_y_juridica_novedad, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "APROBACION TECNICA Y JURIDICA";
+
+            try
+            {
+
+                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                    .Where(r => r.NovedadContractualId == pNovedadContractualId)
+                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                    .FirstOrDefault();
+
+                novedadContractual.UsuarioModificacion = pUsuario;
+                novedadContractual.FechaModificacion = DateTime.Now;
+
+                novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente;
+
+                _context.SaveChanges();
+
+
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = ex,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         public async Task<Respuesta> CancelarNovedad(int pNovedadContractualId, string pUsuario)
         {
             Respuesta respuesta = new Respuesta();
@@ -2151,7 +2353,7 @@ namespace asivamosffie.services
                 esCompleto = null;
             }
 
-            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
+            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion.Where( x => x.Eliminado != true ))
             {
                 // Suspension - Prórroga a la Suspensión -Reinicio
 
@@ -2177,8 +2379,8 @@ namespace asivamosffie.services
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
                         descripcion.EsDocumentacionSoporte == null ||
-                        string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
-                        descripcion.FechaConcepto == null ||
+                        //string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
+                        //descripcion.FechaConcepto == null ||
                         string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )

@@ -377,5 +377,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("AprobacionTecnicaJuridica")]
+        public async Task<IActionResult> AprobacionTecnicaJuridica([FromQuery] int pNovedaContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.AprobacionTecnicaJuridica(pNovedaContractual, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

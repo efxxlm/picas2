@@ -71,8 +71,28 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     async getDatosFactura() {
         this.tiposDescuentoArray = await this.commonSvc.tiposDescuento().toPromise();
         this.listaTipoDescuento = [ ...this.tiposDescuentoArray ];
+        const solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
 
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        if ( this.esPreconstruccion === true ) {
+            if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        this.solicitudPagoFase = solicitudPagoFase;
+                    }
+                }
+            }
+        }
+
+        if ( this.esPreconstruccion === false ) {
+            if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === false ) {
+                        this.solicitudPagoFase = solicitudPagoFase;
+                    }
+                }
+            }
+        }
+
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
         if ( this.solicitudPagoFaseFactura !== undefined ) {
             this.estaEditando = true;
@@ -81,9 +101,27 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
+            this.addressForm.get('aplicaDescuento').setValue(this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null);
+            this.addressForm.get('numeroDescuentos').setValue(this.solicitudPagoFaseFacturaDescuento.length > 0 ? `${this.solicitudPagoFaseFacturaDescuento.length}` : '');
+            this.addressForm.get('valorAPagarDespues').setValue(this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null);
 
-            if ( this.addressForm.get( 'numeroFactura' ).value !== undefined && this.addressForm.get( 'fechaFactura' ).value !== undefined && this.tieneObservacionOrdenGiro === undefined ) {
+            for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
+                this.descuentos.markAllAsTouched();
+                this.descuentos.push(
+                    this.fb.group(
+                        {
+                            solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
+                            solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                            tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
+                            valorDescuento: [descuento.valorDescuento]
+                        }
+                    )
+                );
+            }
+
+            if ( this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined ) {
                 this.addressForm.disable();
+                this.descuentos.disable();
             }
 
             if ( this.esVerDetalle === false ) {
@@ -135,6 +173,105 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;
         }
+        this.addressForm.get('numeroDescuentos').valueChanges
+            .subscribe(
+                value => {
+                    value = Number(value);
+                    if ( value <= this.listaTipoDescuento.length ) {
+                        if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
+                            if (value > 0) {
+                                this.descuentos.clear();
+                                for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
+                                    this.estaEditando = true;
+                                    this.descuentos.markAllAsTouched();
+                                    this.descuentos.push(
+                                        this.fb.group(
+                                            {
+                                                solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
+                                                solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                                                tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
+                                                valorDescuento: [descuento.valorDescuento]
+                                            }
+                                        )
+                                    );
+                                }
+    
+                                this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+                                const nuevosDescuentos = value - this.descuentos.length;
+                                if (value < this.descuentos.length) {
+                                    this.openDialog(
+                                        '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                                    );
+                                    this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
+                                    return;
+                                }
+                                for (let i = 0; i < nuevosDescuentos; i++) {
+                                    this.estaEditando = true;
+                                    this.descuentos.markAllAsTouched();
+                                    this.descuentos.push(
+                                        this.fb.group(
+                                            {
+                                                solicitudPagoFaseFacturaDescuentoId: [0],
+                                                solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                                                tipoDescuentoCodigo: [null],
+                                                valorDescuento: [null]
+                                            }
+                                        )
+                                    );
+                                }
+                            }
+                        } else {
+                            if (value > 0) {
+                                if (this.descuentos.dirty === true) {
+                                    this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+                                    const nuevosDescuentos = value - this.descuentos.length;
+                                    if (value < this.descuentos.length) {
+                                        this.openDialog(
+                                            '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                                        );
+                                        this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
+                                        return;
+                                    }
+                                    for (let i = 0; i < nuevosDescuentos; i++) {
+                                        this.estaEditando = true;
+                                        this.descuentos.markAllAsTouched();
+                                        this.descuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseFacturaDescuentoId: [0],
+                                                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                                                    tipoDescuentoCodigo: [null],
+                                                    valorDescuento: [null]
+                                                }
+                                            )
+                                        );
+                                    }
+                                }
+                                if (this.descuentos.dirty === false) {
+                                    this.descuentos.clear();
+                                    for (let i = 0; i < value; i++) {
+                                        this.estaEditando = true;
+                                        this.descuentos.markAllAsTouched();
+                                        this.descuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseFacturaDescuentoId: [0],
+                                                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                                                    tipoDescuentoCodigo: [null],
+                                                    valorDescuento: [null]
+                                                }
+                                            )
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        this.addressForm.get('numeroDescuentos').setValue( String( this.listaTipoDescuento.length ) );
+                        this.openDialog( '', `<b>Tiene parametrizados ${ this.listaTipoDescuento.length } descuentos para aplicar al pago.</b>` )
+                    }
+                }
+            );
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -146,6 +283,24 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     validateNumber( value: any ) {
         if ( isNaN( Number( value ) ) === true ) {
             this.addressForm.get( 'numeroDescuentos' ).setValue( '' );
+        }
+    }
+
+    getTipoDescuentoSeleccionado( codigo: string ): Dominio[] {
+        if ( this.listaTipoDescuento.length > 0 ) {
+            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+            if ( descuento !== undefined ) {
+                return [ descuento ];
+            }
+        }
+    }
+
+    getCodigoTipoDescuento( codigo: string ) {
+        const descuentoIndex = this.tiposDescuentoArray.findIndex( descuento => descuento.codigo === codigo );
+
+        if ( descuentoIndex !== -1 ) {
+            this.tiposDescuentoArray.splice( descuentoIndex, 1 );
         }
     }
 
@@ -256,12 +411,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     onSubmit() {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
-        /*
-        Se comenta metodo para obtener descuentos por novedad diseño
-
+        this.descuentos.markAllAsTouched();
         const getSolicitudPagoFaseFacturaDescuento = () => {
-            if ( this.descuentos.length > 0 ) {
-                if ( this.addressForm.get( 'aplicaDescuento' ).value === true ) {
+            if (this.descuentos.length > 0) {
+                if (this.addressForm.get('aplicaDescuento').value === true) {
                     return this.descuentos.value;
                 } else {
                     return [];
@@ -270,7 +423,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
                 return [];
             }
         }
-        */
 
         const solicitudPagoFaseFactura = [
             {
@@ -279,13 +431,32 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
                 fecha: this.addressForm.get( 'fechaFactura' ).value !== null ? new Date( this.addressForm.get( 'fechaFactura' ).value ).toISOString() : this.addressForm.get( 'fechaFactura' ).value,
                 valorFacturado: this.valorFacturado,
                 numero: this.addressForm.get( 'numeroFactura' ).value,
-                tieneDescuento: null,
-                valorFacturadoConDescuento: null,
-                solicitudPagoFaseFacturaDescuento: null
+                tieneDescuento: this.addressForm.get('aplicaDescuento').value,
+                valorFacturadoConDescuento: this.addressForm.get('valorAPagarDespues').value,
+                solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
             }
         ]
-        console.log( solicitudPagoFaseFactura );
-        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+
+        if ( this.esPreconstruccion === true ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+                    }
+                }
+            }
+        }
+
+        if ( this.esPreconstruccion === false ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === false ) {
+                        solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+                    }
+                }
+            }
+        }
+
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(
                 response => {

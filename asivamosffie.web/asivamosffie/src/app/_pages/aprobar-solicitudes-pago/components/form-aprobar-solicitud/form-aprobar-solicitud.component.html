@@ -57,26 +57,28 @@
                     </div>
                 </div>
                 <h2 class="card-subTitle">DRP</h2>
-                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-                    <ng-container matColumnDef="drp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
-                        <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
-                    </ng-container>
-                    <ng-container matColumnDef="numeroDrp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="valorSolicitudDdp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                        <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitudDdp | currency:'':'symbol-narrow':'.0-0' }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="saldoPresupuestal">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-                        <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPresupuestal | currency:'':'symbol-narrow':'.0-0' }} </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                            <ng-container matColumnDef="drp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                                <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="numDrp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDRP }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valor">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="saldo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
                 <div class="tabs--actions" style="margin-top: 1em;">
                     <button mat-raised-button color="accent" class="tabs--btn auxBtn"
                         (click)="openProyectosAsociados()">

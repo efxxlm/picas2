@@ -82,8 +82,18 @@
         
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         (click)="EnviarAComite(element.novedadContractualId)"
-        *ngIf="element.estadoCodigo === '17' && element.registroCompletoTramiteNovedades === true" >
+        *ngIf="element.estadoCodigo === '17' && 
+               element.registroCompletoTramiteNovedades === true &&
+               element.vaComite === true" >
           Enviar a comité técnico
+        </button>
+
+          <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="AprobacionTecnicaJuridica(element.novedadContractualId)"
+          *ngIf="element.estadoCodigo === '17' && 
+                 element.registroCompletoTramiteNovedades === true &&
+                 element.vaComite === false" >
+          Aprobar técnica y juridicamente
         
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"

@@ -99,7 +99,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             if ( this.esPreconstruccion === false ) {
                 if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
                     for ( const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        if ( solicitudPagoFase.esPreconstruccion === false ) {
                             this.solicitudPagoFase = solicitudPagoFase;
                             this.solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
                         }
@@ -211,46 +211,49 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                             this.projects.disable();
                                                         }, 2000);
                                                     }
-                                                    // Get observacion CU autorizar solicitud de pago 4.1.9
-                                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                                        this.listaMenusId.autorizarSolicitudPagoId,
-                                                        this.solicitudPago.solicitudPagoId,
-                                                        this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
-                                                        this.criteriosPagoProyectoCodigo )
-                                                        .subscribe(
-                                                            response => {
-                                                                const observacion = response.find( obs => obs.archivada === false );
-                                                                if ( observacion !== undefined ) {
-                                                                    this.esAutorizar = true;
-                                                                    this.observacion = observacion;
-                                                                    if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
-                                                                        this.projects.enable();
-                                                                        this.semaforoObservacion.emit( true );
-                                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+
+                                                    if ( this.esVerDetalle === false ) {
+                                                        // Get observacion CU autorizar solicitud de pago 4.1.9
+                                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                                            this.listaMenusId.autorizarSolicitudPagoId,
+                                                            this.solicitudPago.solicitudPagoId,
+                                                            this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+                                                            this.criteriosPagoProyectoCodigo )
+                                                            .subscribe(
+                                                                response => {
+                                                                    const observacion = response.find( obs => obs.archivada === false );
+                                                                    if ( observacion !== undefined ) {
+                                                                        this.esAutorizar = true;
+                                                                        this.observacion = observacion;
+                                                                        if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
+                                                                            this.projects.enable();
+                                                                            this.semaforoObservacion.emit( true );
+                                                                            this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        );
-                                                    // Get observacion CU verificar solicitud de pago 4.1.8
-                                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                                        this.listaMenusId.aprobarSolicitudPagoId,
-                                                        this.solicitudPago.solicitudPagoId,
-                                                        this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
-                                                        this.criteriosPagoProyectoCodigo )
-                                                        .subscribe(
-                                                            response => {
-                                                                const observacion = response.find( obs => obs.archivada === false );
-                                                                if ( observacion !== undefined ) {
-                                                                    this.esAutorizar = false;
-                                                                    this.observacion = observacion;
-                                                                    if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
-                                                                        this.projects.enable();
-                                                                        this.semaforoObservacion.emit( true );
-                                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                            );
+                                                        // Get observacion CU verificar solicitud de pago 4.1.8
+                                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                                            this.listaMenusId.aprobarSolicitudPagoId,
+                                                            this.solicitudPago.solicitudPagoId,
+                                                            this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+                                                            this.criteriosPagoProyectoCodigo )
+                                                            .subscribe(
+                                                                response => {
+                                                                    const observacion = response.find( obs => obs.archivada === false );
+                                                                    if ( observacion !== undefined ) {
+                                                                        this.esAutorizar = false;
+                                                                        this.observacion = observacion;
+                                                                        if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
+                                                                            this.projects.enable();
+                                                                            this.semaforoObservacion.emit( true );
+                                                                            this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        );
+                                                            );
+                                                    }
                                                 }, 2000);
                                             }
                                         }
@@ -614,8 +617,27 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                 }
             } );
         } );
-        console.log( this.solicitudPagoFaseCriterio );
-        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = this.solicitudPagoFaseCriterio;
+
+        if ( this.esPreconstruccion === true ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        solicitudPagoFase.solicitudPagoFaseCriterio = this.solicitudPagoFaseCriterio;
+                    }
+                }
+            }
+        }
+
+        if ( this.esPreconstruccion === false ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
+                    if ( solicitudPagoFase.esPreconstruccion === false ) {
+                        solicitudPagoFase.solicitudPagoFaseCriterio = this.solicitudPagoFaseCriterio;
+                    }
+                }
+            }
+        }
+
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(
                 response => {
