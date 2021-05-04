@@ -21,6 +21,9 @@ namespace asivamosffie.model.Models
         public bool? EsNovedad { get; set; }
         public int? NovedadContractualRegistroPresupuestalId { get; set; }
         public int? RendimientosIncorporadosId { get; set; }
+        public decimal? SaldoActualGenerado { get; set; }
+        public decimal? ValorSolicitadoGenerado { get; set; }
+        public decimal? NuevoSaldoGenerado { get; set; }
 
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual DisponibilidadPresupuestalProyecto DisponibilidadPresupuestalProyecto { get; set; }

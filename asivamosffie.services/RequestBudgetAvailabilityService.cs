@@ -2037,7 +2037,7 @@ namespace asivamosffie.services
 
                         #region proyecto administrativo
                         if (proyectospp.ProyectoId == null) //proyecto administrativo
-                        {
+                        {//Poner el nuevo ValorSolicitadoGenerado
                             valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitado);
                             int intaportante = 0;
                             var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
@@ -2050,6 +2050,7 @@ namespace asivamosffie.services
                                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
                                     foreach (var font in apo.AportanteFuenteFinanciacion)
                                     {
+                                        //Poner el nuevo ValorSolicitadoGenerado
                                         //el saldo actual de la fuente son todas las solicitudes a la fuentes
                                         var saldofuente = _context.GestionFuenteFinanciacion.
                                             Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId

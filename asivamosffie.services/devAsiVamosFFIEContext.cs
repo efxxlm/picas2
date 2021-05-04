@@ -3069,7 +3069,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NuevoSaldo).HasColumnType("numeric(18, 2)");
 
+                entity.Property(e => e.NuevoSaldoGenerado).HasColumnType("numeric(18, 2)");
+
                 entity.Property(e => e.SaldoActual).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.SaldoActualGenerado).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -3081,6 +3085,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorSolicitado).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorSolicitadoGenerado).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.DisponibilidadPresupuestal)
                     .WithMany(p => p.GestionFuenteFinanciacion)
