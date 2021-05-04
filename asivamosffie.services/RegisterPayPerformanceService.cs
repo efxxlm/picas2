@@ -319,7 +319,7 @@ namespace asivamosffie.services
                 using var package = new ExcelPackage(stream);
 
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-
+             
                 // TODO add validation to prevent query a column in a  not existing position
 
                 var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
@@ -855,7 +855,7 @@ namespace asivamosffie.services
                     - accountOrder.DiscountedCharge
                     - (visitas.HasValue ? visitas.Value : 0);
                 accountOrder.IsConsistent = true;
-                if(accountOrder.PerformancesToAdd < 0 && valorAporteEnCuenta < accountOrder.PerformancesToAdd )
+                if(accountOrder.PerformancesToAdd < 0 && valorAporteEnCuenta + accountOrder.PerformancesToAdd < 0 )
                 {
                     accountOrder.IsConsistent = false;
                     registrosInconsistentes += 1;
@@ -1164,9 +1164,9 @@ namespace asivamosffie.services
                     Replace("[CONSISTENTES]", consistencies).
                     Replace("[INCONSISTENTES]", inconsistencies);
 
-                string subject = "Aprobar Incorporación de rendimientos";
+                string subject = "Inconsistencias Rendimientos";
 
-                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.CordinadorFinanciera);
+                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
 
                 if (!isMailSent)
                 {
