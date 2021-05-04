@@ -32,10 +32,10 @@ namespace asivamosffie.model.APIModels
         public decimal FinancialLienProvision
         {
             get {
-                decimal sumLiables = LiableContributtions + LiablePerformances;
-                decimal fourThousand = 4 / 100;
-                decimal total = (sumLiables * fourThousand) - LiableDiscountedCharge;
-                return total;
+                double sumLiables = (double)LiableContributtions + (double)LiablePerformances;
+                double fourThousand = 4/1000;
+                double total = (sumLiables * 0.004) - (double)LiableDiscountedCharge;
+                return (decimal)total;
             }
         }
 
