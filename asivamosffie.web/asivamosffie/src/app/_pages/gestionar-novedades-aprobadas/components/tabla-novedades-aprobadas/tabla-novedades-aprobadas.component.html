@@ -91,6 +91,7 @@
           <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="AprobacionTecnicaJuridica(element.novedadContractualId)"
           *ngIf="element.estadoCodigo === '17' && 
+                 element.novedadContractual.deseaContinuar === true && 
                  element.registroCompletoTramiteNovedades === true &&
                  element.vaComite === false" >
           Aprobar técnica y juridicamente
