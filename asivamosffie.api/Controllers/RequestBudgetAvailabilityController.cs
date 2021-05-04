@@ -26,8 +26,15 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
 
-        } 
-
+        }
+ 
+        [Route("GetDetailAvailabilityBudgetProyectNew")]
+        [HttpGet]
+        public async Task<dynamic> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad , int RegistroNovedadId)
+        {
+            return await _managementCommitteeReportService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad , RegistroNovedadId);
+        }
+         
         [Route("GetListAportanteByTipoAportanteByProyectoId")]
         public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId([FromQuery] int pProyectoId, int pTipoAportanteId)
         {
