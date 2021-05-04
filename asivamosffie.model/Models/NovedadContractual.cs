@@ -55,6 +55,11 @@ namespace asivamosffie.model.Models
         public string RazonesNoContinuaProceso { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
         public DateTime? FechaAprobacionGestionContractual { get; set; }
+        public DateTime? FechaTramiteGestionar { get; set; }
+        public string ObservacionGestionar { get; set; }
+        public string UrlSoporteGestionar { get; set; }
+        public bool? RegistroCompletoGestionar { get; set; }
+        public string EstadoCodigoGestionar { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
