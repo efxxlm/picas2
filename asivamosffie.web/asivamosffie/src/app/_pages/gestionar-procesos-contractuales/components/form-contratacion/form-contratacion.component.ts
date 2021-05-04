@@ -149,9 +149,7 @@ export class FormContratacionComponent implements OnInit {
       } );
   };
 */
-  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string )
-  {
-    
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
     this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';

@@ -5,6 +5,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Component({
   selector: 'app-form-contratacion-registrados',
@@ -29,6 +30,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
                 private routes: Router,
                 private dialog: MatDialog,
                 private commonSvc: CommonService,
+                private disponibilidadServices: DisponibilidadPresupuestalService,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService )
   {
     this.crearFormulario();
@@ -122,7 +124,27 @@ export class FormContratacionRegistradosComponent implements OnInit {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
+
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
+    
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0).subscribe((listas:any) => {
+      console.log(listas);
+      let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  }
 
   getDocumento ( nombreDocumento: string ) {
     this.commonSvc.getDocumento( nombreDocumento )

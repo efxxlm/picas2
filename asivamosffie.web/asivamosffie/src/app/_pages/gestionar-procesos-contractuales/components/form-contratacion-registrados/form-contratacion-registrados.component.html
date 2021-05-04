@@ -59,21 +59,12 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: {{ contratacion?.contrato[0].tipoContratoCodigo }} </p>
+              <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].tipoSolicitudCodigo  === '2' ? 'Interventoria' : 'Obra' }} </p>
               <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
               <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
-
-      </mat-expansion-panel>
-
-      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === estadoCodigos.firmado">
-        <mat-expansion-panel-header class="expansion-style--header w-50">
-          <mat-panel-title class="expansion-style--title">
-            Detalle de modificación
-          </mat-panel-title>
-        </mat-expansion-panel-header>
 
         <div align="left">
           <mat-card class="border">
@@ -96,14 +87,28 @@
           </mat-card>
         </div>
 
-        <!--
+        <div class="text-center w-15">
+          <button mat-raised-button color="accent" class="btn-table"
+            (click)="getDdp( contratacion?.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, contratacion?.disponibilidadPresupuestal[0].numeroDdp )">
+            Descargar DDP
+          </button>
+        </div>
+      </mat-expansion-panel>
+
+      <!--
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === estadoCodigos.firmado">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de modificación
+          </mat-panel-title>
+        </mat-expansion-panel-header>
         <div class="text-center" style="width: 20%;display: inline-block;">
           <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
             Descargar documento
           </button>
         </div>
-        -->
       </mat-expansion-panel>
+      -->
     </mat-accordion>
   </div>
 

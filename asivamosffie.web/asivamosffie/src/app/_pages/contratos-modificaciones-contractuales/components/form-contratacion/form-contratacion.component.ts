@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
@@ -31,6 +32,7 @@ export class FormContratacionComponent implements OnInit {
                 private routes: Router,
                 private commonSvc: CommonService,
                 private dialog: MatDialog,
+                private disponibilidadServices: DisponibilidadPresupuestalService,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService,
                 @Inject(DOCUMENT) readonly document: Document ) {
     this.crearFormulario();
@@ -72,6 +74,7 @@ export class FormContratacionComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {
           this.contratacion = resp;
+          console.log( this.contratacion )
 
           if ( resp.contrato.length > 0 ) {
             let rutaDocumento;
@@ -116,21 +119,40 @@ export class FormContratacionComponent implements OnInit {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
   textoLimpioMessage (texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio;
     };
-  };
+  }
 
   innerObservacion ( observacion: string ) {
     if ( observacion !== null ) {
       const observacionHtml = observacion.replace( '"', '' );
       return observacionHtml;
     };
-  };
+  }
+
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0).subscribe((listas:any) => {
+      console.log(listas);
+      let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  }
 
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
@@ -139,7 +161,7 @@ export class FormContratacionComponent implements OnInit {
     }
     
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
-  };
+  }
 
   getDocumento ( nombreDocumento: string ) {
     this.commonSvc.getDocumento( nombreDocumento )
@@ -158,6 +180,6 @@ export class FormContratacionComponent implements OnInit {
         },
         () => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
       );
-  };
+  }
 
 };
