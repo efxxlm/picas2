@@ -41,7 +41,7 @@
       <p>
         <strong>Valor del contrato:</strong>
         <span>
-          {{ novedad.proyectosContrato[0].valorTotal | currency: '': 'symbol-narrow':'.0-0' }}
+          {{ novedad.proyectosContrato[0].valorTotal | currency: '':'symbol-narrow':'.0-0' }}
         </span>
       </p>
       <p>
@@ -67,7 +67,7 @@
           {{
             (novedad.contrato?.fechaActaInicioFase2
               ? novedad.contrato?.fechaActaInicioFase2
-              : novedad.contrato?.fechaActaInicioFase1
+             : novedad.contrato?.fechaActaInicioFase1
             ) | date: 'dd/MM/yyyy'
           }}
         </span>
@@ -78,7 +78,7 @@
           {{
             (novedad.contrato?.fechaTerminacionFase2
               ? novedad.contrato?.fechaTerminacionFase2
-              : novedad.contrato?.fechaTerminacion
+             : novedad.contrato?.fechaTerminacion
             ) | date: 'dd/MM/yyyy'
           }}
         </span>
@@ -118,22 +118,22 @@
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
           <p>
-            <strong> Fecha de solicitud de la novedad : </strong>
+            <strong> Fecha de solicitud de la novedad: </strong>
             {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
           </p>
           <p>
-            <strong> Instancia donde se presentó la solicitud : </strong>
+            <strong> Instancia donde se presentó la solicitud: </strong>
             <span>
               {{ novedad.instanciaNombre }}
             </span>
           </p>
           <p>
-            <strong> Fecha de la sesión de la instancia : </strong>
+            <strong> Fecha de la sesión de la instancia: </strong>
             {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
           <!-- <p>
             <strong>
-              Tipo de Novedad :
+              Tipo de Novedad:
             </strong>
             Modificación de Condiciones Contractuales
           </p> -->
@@ -154,7 +154,7 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <strong>Motivos de la novedad :</strong>
+              <strong>Motivos de la novedad:</strong>
               <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo">
                 {{ motivo.nombreMotivo }},
               </section>
@@ -197,7 +197,7 @@
 
               <p>
                 <strong>¿Cuenta con la documentación soporte suficiente?: </strong>
-                {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}
+                {{ descripcion.esDocumentacionSoporte === true ? 'Sí': 'No' }}
               </p>
               <p><strong>Concepto técnico: </strong></p>
               <section class="text-justify" [innerHTML]="descripcion.conceptoTecnico"></section>

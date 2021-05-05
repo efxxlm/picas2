@@ -123,13 +123,13 @@
         <mat-card-content>
           <p>
             <strong>
-              Fecha de solicitud de la novedad :
+              Fecha de solicitud de la novedad:
             </strong>
             {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
           </p>
           <p>
             <strong>
-              Instancia donde se presentó la solicitud :
+              Instancia donde se presentó la solicitud:
             </strong>
             <span>
               {{ novedad.instanciaNombre }}
@@ -137,7 +137,7 @@
           </p>
           <p *ngIf="novedad.instanciaNombre !== 'No aplica'">
             <strong>
-              Fecha de la sesión de la instancia :
+              Fecha de la sesión de la instancia:
             </strong>
             {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
@@ -158,7 +158,7 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <strong>Motivos de la novedad :</strong>
+              <strong>Motivos de la novedad:</strong>
               <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{
                 motivo.nombreMotivo}}, </section>
 
