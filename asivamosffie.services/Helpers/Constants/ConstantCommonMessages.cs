@@ -49,6 +49,7 @@ namespace asivamosffie.services.Helpers.Constant
             public const string ELIMINAR_APORTANTE_ORDENES_GIRO = "ELIMINAR APORTANTE ORDEN GIRO";
             public const string CAMBIAR_ESTADO_ORDEN_GIRO = "CAMBIAR ESTADO ORDEN GIRO";
             public const string CREAR_EDITAR_OBSERVACION_ORDEN_GIRO = "CREAR EDITAR OBSERVACION ORDEN GIRO";
+            public const string ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA = "ELIMINAR DESCUENTO TECNICA";
         }
 
         internal static class UpdatePolicies

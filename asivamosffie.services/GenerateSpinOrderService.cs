@@ -34,6 +34,104 @@ namespace asivamosffie.services
         #endregion
 
         #region Create 
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiroDetalleDescuentoTecnica>()
+                        .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnicaId)
+                        .Update(o => new OrdenGiroDetalleDescuentoTecnica
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now
+                        });
+
+     
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+
+        }
+
+
+
+
+        public async Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                //_context.Set<OrdedeGiro>()
+                //        .Where(o => o.OrdenGiroId == OrdenGiroId)
+                //        .Update(o => new OrdenGiro
+                //        {
+                //            Eliminado = true,
+                //            UsuarioModificacion = pAuthor,
+                //            FechaModificacion = DateTime.Now
+                //        });
+
+                _context.Set<SolicitudPago>()
+                     .Where(o => o.OrdenGiroId == OrdenGiroId)
+                     .Update(o => new SolicitudPago
+                     {
+                         OrdenGiroId = null,
+                         UsuarioModificacion = pAuthor,
+                         FechaModificacion = DateTime.Now
+                     });
+                 
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.OperacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
 
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {

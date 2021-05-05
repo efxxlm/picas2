@@ -374,5 +374,9 @@
         public const string Aprobar_Balance_Financiero = "274";
         public const string Aprobar_tecnica_y_juridica_novedad = "275";
 
+
+
+        public const string Eliminar_Orden_Giro = "278";
+
     }
 }

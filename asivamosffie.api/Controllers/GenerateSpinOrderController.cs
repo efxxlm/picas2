@@ -26,7 +26,21 @@ namespace asivamosffie.api.Controllers
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
         }
-
+  
+        [Route("DeleteOrdenGiroDetalleDescuentoTecnica")]
+        [HttpPost]
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaId)
+        {
+            try
+            {
+                return await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalleDescuentoTecnicaId, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)
