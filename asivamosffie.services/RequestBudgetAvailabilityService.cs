@@ -63,7 +63,7 @@ namespace asivamosffie.services
                 ListDetailValidarDisponibilidadPresupuesal = await GetDetailAvailabilityBudgetProyectNovelty(RegistroNovedadId);
             }
             else
-            { 
+            {
                 List<DisponibilidadPresupuestal> ListDP = await _context.DisponibilidadPresupuestal.
                     Where(r => !r.Eliminado && r.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).
                     Include(x => x.DisponibilidadPresupuestalProyecto).
@@ -89,7 +89,7 @@ namespace asivamosffie.services
                         #region proyecto administrativo
                         if (proyectospp.ProyectoId == null) //proyecto administrativo
                         {//Poner el nuevo ValorSolicitadoGenerado
-                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitado);
+                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitadoGenerado) ?? 0;
                             int intaportante = 0;
                             var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
                                 Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion).ToList();
@@ -173,7 +173,7 @@ namespace asivamosffie.services
 
                         else
                         {
-                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitadoGenerado) ?? 0;
 
                             var localizacion = _context.Localizacion.Where(x => x.LocalizacionId == proyectospp.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                             var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
@@ -193,7 +193,7 @@ namespace asivamosffie.services
                                     //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                                     decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
                                     //Valor nuevo SOLICITADO NUEVO
-                                    decimal valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId ==
+                                    decimal? valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId ==
                                     proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
 
                                     decimal valorsolicitadoxotros = (decimal)_context.GestionFuenteFinanciacion
@@ -215,11 +215,11 @@ namespace asivamosffie.services
                                         Fuente = namefuente,
                                         Estado_de_las_fuentes = "",
                                         FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                        Valor_solicitado_de_la_fuente = valorsolicitado,
-                                        Nuevo_saldo_de_la_fuente = saldo - valorsolicitadoxotros - valorsolicitado,
+                                        Valor_solicitado_de_la_fuente = valorsolicitado ?? 0,
+                                        Nuevo_saldo_de_la_fuente = saldo - valorsolicitadoxotros - valorsolicitado ?? 0,
                                         Saldo_actual_de_la_fuente = saldo - valorsolicitadoxotros,
-                                        Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? (decimal)gestionAlGuardar.NuevoSaldoGenerado : 0,
-                                        Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? (decimal)gestionAlGuardar.SaldoActualGenerado : 0,
+                                        Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
+                                        Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                                     });
                                 }
                                 if (detailDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
@@ -530,7 +530,7 @@ namespace asivamosffie.services
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
                 }
-            } 
+            }
             return ListDetailValidarDisponibilidadPresupuesal;
         }
 

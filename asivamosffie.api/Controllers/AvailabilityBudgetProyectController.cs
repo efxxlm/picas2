@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using asivamosffie.model.APIModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace asivamosffie.api.Controllers
 {
@@ -26,7 +27,23 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _converter = converter;
         }
-         
+
+
+        [HttpGet]
+        [Route("GetDetailAvailabilityBudgetProyectNew")]
+        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
+        {
+            try
+            {
+                return await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
+            
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         [Route("GetAvailabilityBudgetProyect")]
         public async Task<IActionResult> GetAvailabilityBudgetProyect()
         {
@@ -56,16 +73,16 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [HttpGet]
         [Route("StartDownloadPDF")]
-        public async Task<IActionResult>  StartDownloadPDF([FromBody] DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal)
+        public async Task<IActionResult> StartDownloadPDF([FromBody] DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal)
         {
             try
             {
 
-            //    var result = await  _availabilityBudgetProyectService.GetHTMLString(detailValidarDisponibilidadPresupuesal);
-             
+                //    var result = await  _availabilityBudgetProyectService.GetHTMLString(detailValidarDisponibilidadPresupuesal);
+
                 var globalSettings = new GlobalSettings
                 {
                     ColorMode = ColorMode.Color,
@@ -88,14 +105,14 @@ namespace asivamosffie.api.Controllers
                 {
                     GlobalSettings = globalSettings,
                     Objects = { objectSettings },
-                    
+
                 };
 
                 var file = _converter.Convert(pdf);
 
                 //return Ok("El documento PDF fue descargado.");
                 //return File(file, "application/pdf", "DDP_.pdf");
-                return File(file, "application/pdf",  detailValidarDisponibilidadPresupuesal.NumeroSolicitud.ToString() + ".pdf");
+                return File(file, "application/pdf", detailValidarDisponibilidadPresupuesal.NumeroSolicitud.ToString() + ".pdf");
             }
             catch (Exception ex)
             {

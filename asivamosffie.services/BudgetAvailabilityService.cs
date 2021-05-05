@@ -580,9 +580,9 @@ namespace asivamosffie.services
 
 
                     //TODO VALIDAR SI LOS PARAMETROS  
-                    List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
-                        _requestBudgetAvailabilityService.
-                        GetDetailAvailabilityBudgetProyectNew(DisponibilidadCancelar.DisponibilidadPresupuestalId, false, 0);
+                    //List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
+                    //    _requestBudgetAvailabilityService.
+                    //    GetDetailAvailabilityBudgetProyectNew(DisponibilidadCancelar.DisponibilidadPresupuestalId, false, 0);
 
 
                     foreach (GestionFuenteFinanciacion gestion in listaGestion)
@@ -593,13 +593,13 @@ namespace asivamosffie.services
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
                         //llamar GetDetailAvailabilityBudgetProyect y buscar los saldos calculados 
-                        gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
-                        gestion.NuevoSaldoGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
-                        gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
+                        //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
+                        //gestion.NuevoSaldoGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
+                        //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
 
                         _context.GestionFuenteFinanciacion.Update(gestion);
-                    } 
-                } 
+                    }
+                }
                 else
                 {
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
@@ -626,7 +626,11 @@ namespace asivamosffie.services
 
                     Dictionary<int, List<decimal>> fuente = new Dictionary<int, List<decimal>>();
                     //var contratacionproyecto = DisponibilidadCancelar.Contratacion.ContratacionProyecto;
-                    var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
+                    var gestionfuentes =
+                        _context.GestionFuenteFinanciacion
+                        .Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante)
+                        .Where(x => !(bool)x.Eliminado
+                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
 
                     //TODO VALIDAR SI LOS PARAMETROS  
                     List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
@@ -641,12 +645,23 @@ namespace asivamosffie.services
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
-                        //llamar GetDetailAvailabilityBudgetProyect y buscar los saldos calculados 
-                        gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
-                        gestion.NuevoSaldoGenerado  = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
-                        gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
 
-                        _context.GestionFuenteFinanciacion.Update(gestion);
+                        foreach (var DetailValidarDisponibilidadPresupuesal in ListDetailValidarDisponibilidadPresupuesal)
+                        {
+                            foreach (var Aportantes in DetailValidarDisponibilidadPresupuesal.Aportantes)
+                            {
+                                if (Aportantes.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
+                                { 
+                                    gestion.SaldoActualGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Saldo_actual_de_la_fuente).FirstOrDefault();
+                                    gestion.ValorSolicitadoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Valor_solicitado_de_la_fuente).FirstOrDefault();
+                                    gestion.NuevoSaldoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Nuevo_saldo_de_la_fuente).FirstOrDefault();
+                                     
+                                    _context.GestionFuenteFinanciacion.Update(gestion);
+                                }
+                            }
+                        }
+
+             
                     }
                 }
 

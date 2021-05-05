@@ -7,6 +7,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IAvailabilityBudgetProyectService
     {
+        
+        Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId);
         Task<ActionResult<List<GrillaValidarDisponibilidadPresupuesal>>> GetBudgetavailabilityRequests();
         Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
         //Task<List<DetailValidarDisponibilidadPresupuesal>> StartDownloadPDF(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
