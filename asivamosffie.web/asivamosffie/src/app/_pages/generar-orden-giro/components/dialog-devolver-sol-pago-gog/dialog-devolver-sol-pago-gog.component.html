@@ -4,7 +4,7 @@
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <div style="padding: 0px 20px; text-align: center;">
         <h1 class="title-menu--h1 centerTrick">
-            Devolver Solicitud de Pago {{ registro.registro.numeroSolicitudPago }}
+            {{ this.registro.esAnular === true ? 'Anular' : 'Devolver' }} Solicitud de Pago {{ registro.registro.numeroSolicitudPago }}
         </h1>
         <p class="info-sub-title">
             <span>Modalidad de contrato: <b> {{ registro.registro.modalidad }} </b></span>

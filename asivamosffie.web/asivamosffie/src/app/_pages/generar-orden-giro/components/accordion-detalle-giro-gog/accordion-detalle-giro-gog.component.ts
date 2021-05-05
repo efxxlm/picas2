@@ -9,7 +9,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
-    @Output() estadoSemaforo = new EventEmitter<string>();
+    @Output() estadoSemaforo = new EventEmitter<any>();
     ordenGiro: any;
     solicitudPagoRegistrarSolicitudPago: any;
     listaSemaforos = {
@@ -22,6 +22,10 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
         semaforoObservacion: 'sin-diligenciar',
         semaforoSoporteUrl: 'sin-diligenciar'
     };
+    tieneObsDescuentos = false;
+    tieneObsDescuentosConstruccion = false;
+    tieneObsTercero = false;
+    tieneObsTerceroConstruccion = false;
 
     constructor() { }
 
@@ -47,50 +51,6 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                             }
                             if ( ordenGiroDetalleEstrategiaPago.registroCompleto === true ) {
                                 this.listaSemaforos.semaforoEstrategiaPago = 'completo';
-                            }
-                        }
-                    }
-                    // Get semaforo descuentos direccion tecnica
-                    if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica !== undefined ) {
-                        if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length > 0 ) {
-                            let registroCompleto = 0;
-
-                            ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnica => {
-                                if ( descuentoTecnica.registroCompleto === true ) {
-                                    registroCompleto++;
-                                }
-                            } )
-
-                            if ( registroCompleto === 0 ) {
-                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso';
-                            }
-                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
-                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso';
-                            }
-                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length ) {
-                                this.listaSemaforos.semaforoDescuentosDireccionTecnica = 'completo';
-                            }
-                        }
-                    }
-                    // Get semaforo tercero de causacion
-                    if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                        if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
-                            let registroCompleto = 0;
-
-                            ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
-                                if ( terceroCausacion.registroCompleto === true ) {
-                                    registroCompleto++;
-                                }
-                            } )
-
-                            if ( registroCompleto === 0 ) {
-                                this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
-                            }
-                            if ( registroCompleto > 0 && registroCompleto < ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length ) {
-                                this.listaSemaforos.semaforoTerceroCausacion = 'en-proceso';
-                            }
-                            if ( registroCompleto > 0 && registroCompleto === ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length ) {
-                                this.listaSemaforos.semaforoTerceroCausacion = 'completo';
                             }
                         }
                     }
@@ -123,22 +83,8 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                 }
             }
         }
-        // Check semaforo principal
-        setTimeout(() => {
-            const tieneSinDiligenciar = Object.values( this.listaSemaforos ).includes( 'sin-diligenciar' );
-            const tieneEnProceso = Object.values( this.listaSemaforos ).includes( 'en-proceso' );
-            const tieneCompleto = Object.values( this.listaSemaforos ).includes( 'completo' );
-    
-            if ( tieneEnProceso === true ) {
-                this.estadoSemaforo.emit( 'en-proceso' );
-            }
-            if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
-                this.estadoSemaforo.emit( 'en-proceso' );
-            }
-            if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
-                this.estadoSemaforo.emit( 'completo' );
-            }
-        }, 4000);
+
+        this.estadoSemaforo.emit( this.listaSemaforos )
     }
 
     checkSemaforoOrigen( value: boolean ) {
@@ -174,6 +120,19 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     checkSemaforoDescuentos( esPreconstruccion: boolean ) {
         let semaforo = 'sin-diligenciar';
+
+        if ( esPreconstruccion === true && this.tieneObsDescuentos === true ) {
+            semaforo = 'en-proceso';
+            this.listaSemaforos.semaforoDescuentosDireccionTecnica = semaforo;
+
+            return semaforo;
+        }
+
+        if ( esPreconstruccion === false && this.tieneObsDescuentosConstruccion === true ) {
+            semaforo = 'en-proceso';
+            this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion = semaforo;
+            return semaforo;
+        }
 
         if ( this.ordenGiro !== undefined ) {
             if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
@@ -216,11 +175,33 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
             }
         }
 
+        if ( esPreconstruccion === true ) {
+            this.listaSemaforos.semaforoDescuentosDireccionTecnica = semaforo;
+        }
+        if ( esPreconstruccion === false ) {
+            this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion = semaforo;
+        }
+        this.estadoSemaforo.emit( this.listaSemaforos );
+
         return semaforo;
     }
 
     checkSemaforoTercero( esPreconstruccion: boolean ) {
         let semaforo = 'sin-diligenciar';
+
+        if ( esPreconstruccion === true && this.tieneObsTercero === true ) {
+            semaforo = 'en-proceso';
+            this.listaSemaforos.semaforoTerceroCausacion = semaforo;
+
+            return semaforo;
+        }
+
+        if ( esPreconstruccion === false && this.tieneObsTerceroConstruccion === true ) {
+            semaforo = 'en-proceso';
+            this.listaSemaforos.semaforoTerceroCausacionConstruccion = semaforo;
+
+            return semaforo;
+        }
 
         if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
             if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
@@ -260,6 +241,14 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
                 }
             }
         }
+
+        if ( esPreconstruccion === true ) {
+            this.listaSemaforos.semaforoTerceroCausacion = semaforo;
+        }
+        if ( esPreconstruccion === false ) {
+            this.listaSemaforos.semaforoTerceroCausacionConstruccion = semaforo;
+        }
+        this.estadoSemaforo.emit( this.listaSemaforos );
 
         return semaforo;
     }

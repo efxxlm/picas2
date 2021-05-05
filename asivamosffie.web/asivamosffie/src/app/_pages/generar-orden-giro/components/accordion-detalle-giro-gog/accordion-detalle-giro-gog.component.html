@@ -44,7 +44,7 @@
                 <app-desc-dir-tecnica-gog   [solicitudPago]="solicitudPago"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             [esVerDetalle]="esVerDetalle"
-                                            (tieneObservacion)="listaSemaforos.semaforoDescuentosDireccionTecnica = 'en-proceso'">
+                                            (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsDescuentos = true : tieneObsDescuentosConstruccion = true">
                 </app-desc-dir-tecnica-gog>
             </mat-expansion-panel>
         </mat-accordion>
@@ -59,7 +59,7 @@
                 <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                            (tieneObservacion)="listaSemaforos.semaforoTerceroCausacion = 'en-proceso'">
+                                            (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsTercero = true : tieneObsTerceroConstruccion = true">
                 </app-tercero-causacion-gog>
             </mat-expansion-panel>
         </mat-accordion>

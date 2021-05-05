@@ -96,4 +96,20 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
         }
     }
 
+    checkSemaforoDetalle( listaSemaforosDetalle: any ) {
+        const tieneSinDiligenciar = Object.values( listaSemaforosDetalle ).includes( 'sin-diligenciar' );
+        const tieneEnProceso = Object.values( listaSemaforosDetalle ).includes( 'en-proceso' );
+        const tieneCompleto = Object.values( listaSemaforosDetalle ).includes( 'completo' );
+
+        if ( tieneEnProceso === true ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
+            this.semaforoDetalle = 'completo';
+        }
+    }
+
 }
