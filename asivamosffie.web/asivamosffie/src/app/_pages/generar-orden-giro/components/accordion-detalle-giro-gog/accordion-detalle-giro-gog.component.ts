@@ -11,11 +11,13 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     ordenGiro: any;
-    tieneDescuentosDireccionTecnica = true;
+    solicitudPagoRegistrarSolicitudPago: any;
     listaSemaforos = {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDescuentosDireccionTecnica: 'sin-diligenciar',
         semaforoTerceroCausacion: 'sin-diligenciar',
+        semaforoDescuentosDireccionTecnicaConstruccion: 'sin-diligenciar',
+        semaforoTerceroCausacionConstruccion: 'sin-diligenciar',
         semaforoOrigen: 'sin-diligenciar',
         semaforoObservacion: 'sin-diligenciar',
         semaforoSoporteUrl: 'sin-diligenciar'
@@ -24,13 +26,9 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
         // Verificar si se diligenciaron descuentos desde la direccion tecnica en CU 4.1.7
         const solicitudPagoFaseFactura = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0];
-        if ( solicitudPagoFaseFactura.tieneDescuento === false && solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length === 0 ) {
-            this.tieneDescuentosDireccionTecnica = false;
-            // Delete propiedad del semaforo "semaforoDescuentosDireccionTecnica" por que no tiene descuentos de direccion tecnica
-            delete this.listaSemaforos.semaforoDescuentosDireccionTecnica;
-        }
         // Get semaforo acordeones
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiro = this.solicitudPago.ordenGiro;
@@ -147,6 +145,123 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
         if ( value === false ) {
             delete this.listaSemaforos.semaforoOrigen;
         }
+    }
+
+    checkTieneDescuentos( esPreconstruccion: boolean ) {
+        const solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
+        
+        if ( solicitudPagoFase !== undefined ) {
+            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === true ) {
+                return true;
+            }
+
+            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === false ) {
+                if ( esPreconstruccion === true ) {
+                    if ( this.listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ) {
+                        delete this.listaSemaforos.semaforoDescuentosDireccionTecnica
+                    }
+                }
+                if ( esPreconstruccion === false ) {
+                    if ( this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion !== undefined ) {
+                        delete this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion
+                    }
+                }
+
+                return false;
+            }
+        }
+    }
+
+    checkSemaforoDescuentos( esPreconstruccion: boolean ) {
+        let semaforo = 'sin-diligenciar';
+
+        if ( this.ordenGiro !== undefined ) {
+            if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
+                if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
+
+                    if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                            const ordenGiroDetalleDescuentoTecnica: any[] = ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.filter( ordenGiroDetalleDescuentoTecnica => ordenGiroDetalleDescuentoTecnica.esPreconstruccion === esPreconstruccion );
+                            let enProceso = 0;
+                            let completo = 0;
+
+                            if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                                ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnico => {
+                                    if ( descuentoTecnico.registroCompleto === false ) {
+                                        enProceso++;
+                                    }
+
+                                    if ( descuentoTecnico.registroCompleto === true ) {
+                                        completo++;
+                                    }
+                                } )
+                            }
+
+                            if ( enProceso > 0 && enProceso === ordenGiroDetalleDescuentoTecnica.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( enProceso > 0 && enProceso < ordenGiroDetalleDescuentoTecnica.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( completo > 0 && completo < ordenGiroDetalleDescuentoTecnica.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( completo > 0 && completo === ordenGiroDetalleDescuentoTecnica.length ) {
+                                semaforo = 'completo';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return semaforo;
+    }
+
+    checkSemaforoTercero( esPreconstruccion: boolean ) {
+        let semaforo = 'sin-diligenciar';
+
+        if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
+            if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
+
+                if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
+                    if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                        const ordenGiroDetalleTerceroCausacion = ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.filter( terceroCausacion => terceroCausacion.esPreconstruccion === esPreconstruccion );
+                        let enProceso = 0;
+                        let completo = 0;
+
+                        if ( ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                            ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
+                                if ( terceroCausacion.registroCompleto === false ) {
+                                    enProceso++;
+                                }
+
+                                if ( terceroCausacion.registroCompleto === true ) {
+                                    completo++;
+                                }
+                            } )
+                        }
+
+                        if ( enProceso > 0 && enProceso === ordenGiroDetalleTerceroCausacion.length ) {
+                            semaforo = 'en-proceso';
+                        }
+                        if ( enProceso > 0 && enProceso < ordenGiroDetalleTerceroCausacion.length ) {
+                            semaforo = 'en-proceso';
+                        }
+                        if ( completo > 0 && completo < ordenGiroDetalleTerceroCausacion.length ) {
+                            semaforo = 'en-proceso';
+                        }
+                        if ( completo > 0 && completo === ordenGiroDetalleTerceroCausacion.length ) {
+                            semaforo = 'completo';
+                        }
+                    }
+                }
+            }
+        }
+
+        return semaforo;
     }
 
 }

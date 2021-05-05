@@ -32,11 +32,11 @@
             <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
-    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase">
-        <mat-accordion *ngIf="tieneDescuentosDireccionTecnica === true">
+    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
+        <mat-accordion *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ? listaSemaforos.semaforoDescuentosDireccionTecnica : '' ) : ''">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( checkSemaforoDescuentos( solicitudPagoFase.esPreconstruccion ) ) : ''">
                         Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -51,7 +51,7 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoTerceroCausacion : ''">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( checkSemaforoTercero( solicitudPagoFase.esPreconstruccion ) ) : ''">
                         Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
