@@ -49,8 +49,8 @@ export class FormOrigenComponent implements OnInit {
         this.getOrigen();
     }
 
-    getOrigen() {
-        this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+    async getOrigen() {
+        const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
 
             // Get IDs
             if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -125,7 +125,6 @@ export class FormOrigenComponent implements OnInit {
                     }
                 }
             }
-        } );
     }
 
     crearFormulario() {

@@ -45,11 +45,15 @@ export class OrdenPagoService {
         return this.http.post<Respuesta>( `${ environment.apiUrl }/RegisterValidateSpinOrder/ChangueStatusOrdenGiro`, pOrdenGiro );
     }
 
+    deleteOrdenGiroDetalleDescuentoTecnica( pOrdenGiroDetalleDescuentoTecnicaId ) {
+        return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleDescuentoTecnica?pOrdenGiroDetalleDescuentoTecnicaId=${ pOrdenGiroDetalleDescuentoTecnicaId }`, '' );
+    }
+
     deleteOrdenGiroDetalleDescuentoTecnicaAportante( pOrdenGiroDetalleDescuentoTecnicaAportanteId: number ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleDescuentoTecnicaAportante?pOrdenGiroDetalleDescuentoTecnicaAportanteId=${ pOrdenGiroDetalleDescuentoTecnicaAportanteId }`, '' );
     }
 
-    getAportantes( solicitudPago: any, cb: { ( dataAportantes: { listaTipoAportante: Dominio[], listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] } ): void } ) {
+    async getAportantes( solicitudPago: any ) {
         if ( solicitudPago !== undefined ) {
             // constantes y variables
             const contratacionProyecto: any[] = solicitudPago.contratoSon.contratacion.contratacionProyecto;
@@ -140,34 +144,32 @@ export class OrdenPagoService {
                 tieneAportanteTercero = false;
             }
 
-            this.commonSvc.listaTipoAportante()
-                .subscribe( listaTipoAportante => {
-                    if ( tieneAportanteFfie === false ) {
-                        const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.ffie );
+            const listaTipoAportante = await this.commonSvc.listaTipoAportante().toPromise()
+            if ( tieneAportanteFfie === false ) {
+                const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.ffie );
 
-                        if ( indexAportante !== -1 ) {
-                            listaTipoAportante.splice( indexAportante, 1 );
-                        }
-                    }
+                if ( indexAportante !== -1 ) {
+                    listaTipoAportante.splice( indexAportante, 1 );
+                }
+            }
 
-                    if ( tieneAportanteEt === false ) {
-                        const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.et );
+            if ( tieneAportanteEt === false ) {
+                const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.et );
 
-                        if ( indexAportante !== -1 ) {
-                            listaTipoAportante.splice( indexAportante, 1 );
-                        }
-                    }
+                if ( indexAportante !== -1 ) {
+                    listaTipoAportante.splice( indexAportante, 1 );
+                }
+            }
 
-                    if ( tieneAportanteTercero === false ) {
-                        const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.tercero );
+            if ( tieneAportanteTercero === false ) {
+                const indexAportante = listaTipoAportante.findIndex( aportante => aportante.dominioId === this.listaTipoAportantes.tercero );
 
-                        if ( indexAportante !== -1 ) {
-                            listaTipoAportante.splice( indexAportante, 1 );
-                        }
-                    }
+                if ( indexAportante !== -1 ) {
+                    listaTipoAportante.splice( indexAportante, 1 );
+                }
+            }
 
-                    cb( { listaTipoAportante, listaNombreAportante } );
-                } )
+            return new Promise<{ listaTipoAportante, listaNombreAportante }>( resolve => resolve ( { listaTipoAportante, listaNombreAportante } ) );
         }
     }
 

@@ -200,66 +200,60 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                                                 const concepto = conceptosDePago.find( concepto => concepto.codigo === codigo );
                                             
                                                 if ( concepto !== undefined ) {
-                                                    this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
-                                                        const formArrayAportantes = [];
+                                                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+
+                                                    const formArrayAportantes = [];
                                                     
-                                                        if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
-                                                            for ( const aportante of ordenGiroDetalleDescuentoTecnicaAportante ) {
-                                                                const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
-                                                                const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                                                let listaFuenteRecursos: any[];
-                                                                this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-                                                                    .subscribe( fuenteRecursos => {
-                                                                        listaFuenteRecursos = fuenteRecursos;
-                                                                    
-                                                                        formArrayAportantes.push(
-                                                                            this.fb.group(
-                                                                                {
-                                                                                    ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId ],
-                                                                                    tipoAportante: [ tipoAportante, Validators.required ],
-                                                                                    listaNombreAportantes: [ [ nombreAportante ] ],
-                                                                                    nombreAportante: [ nombreAportante, Validators.required ],
-                                                                                    fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                                                    fuenteRecursos: [ aportante.fuenteRecursosCodigo, Validators.required ],
-                                                                                    valorDescuento: [ aportante.valorDescuento, Validators.required ]
-                                                                                }
-                                                                            )
-                                                                        )
-                                                                    } );
-                                                            }
+                                                    if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
+                                                        for ( const aportante of ordenGiroDetalleDescuentoTecnicaAportante ) {
+                                                            const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+                                                            const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                                            let listaFuenteRecursos: any[];
+                                                            const fuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                            listaFuenteRecursos = fuenteRecursos;
+                                                                
+                                                            formArrayAportantes.push(
+                                                                this.fb.group(
+                                                                    {
+                                                                        ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId ],
+                                                                        tipoAportante: [ tipoAportante, Validators.required ],
+                                                                        listaNombreAportantes: [ [ nombreAportante ] ],
+                                                                        nombreAportante: [ nombreAportante, Validators.required ],
+                                                                        fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                                        fuenteRecursos: [ aportante.fuenteRecursosCodigo, Validators.required ],
+                                                                        valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                                    }
+                                                                )
+                                                            )
                                                         }
-                                                    
-                                                        setTimeout(() => {
-                                                            formArrayConceptos.push( this.fb.group(
-                                                                {
-                                                                    nombre: [ concepto.nombre ],
-                                                                    conceptoCodigo: [ concepto.codigo ],
-                                                                    tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                                                    nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                                                    aportantes: this.fb.array( formArrayAportantes )
-                                                                }
-                                                            ) );
-                                                        }, 1000);
-                                                    } );
+                                                    }
+                                                
+                                                    formArrayConceptos.push( this.fb.group(
+                                                        {
+                                                            nombre: [ concepto.nombre ],
+                                                            conceptoCodigo: [ concepto.codigo ],
+                                                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                                            aportantes: this.fb.array( formArrayAportantes )
+                                                        }
+                                                    ) );
                                                 }
                                             }
-                                        
-                                            setTimeout(() => {
-                                                // Set formulario de los criterios
-                                                formArrayCriterios.push(
-                                                    this.fb.group(
-                                                        {
-                                                            nombre: [ this.listaCriterios.find( criterio => criterio.codigo === codigo ).nombre ],
-                                                            criterioCodigo: [ this.listaCriterios.find( criterio => criterio.codigo === codigo ).codigo ],
-                                                            tipoPagoNombre: [ tipoPago.nombre ],
-                                                            tipoPagoCodigo: [ tipoPago.codigo ],
-                                                            conceptosDePago: [ conceptosDePago ],
-                                                            concepto: [ listaConceptos, Validators.required ],
-                                                            conceptos: this.fb.array( formArrayConceptos )
-                                                        }
-                                                    )
+
+                                            // Set formulario de los criterios
+                                            formArrayCriterios.push(
+                                                this.fb.group(
+                                                    {
+                                                        nombre: [ this.listaCriterios.find( criterio => criterio.codigo === codigo ).nombre ],
+                                                        criterioCodigo: [ this.listaCriterios.find( criterio => criterio.codigo === codigo ).codigo ],
+                                                        tipoPagoNombre: [ tipoPago.nombre ],
+                                                        tipoPagoCodigo: [ tipoPago.codigo ],
+                                                        conceptosDePago: [ conceptosDePago ],
+                                                        concepto: [ listaConceptos, Validators.required ],
+                                                        conceptos: this.fb.array( formArrayConceptos )
+                                                    }
                                                 )
-                                            }, 1500);
+                                            )
                                         }
                                     }
                                 }

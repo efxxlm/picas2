@@ -1018,6 +1018,14 @@ namespace asivamosffie.services
             try
             {
                 NovedadContractual novedadContractual = await _ContractualNoveltyService.GetNovedadContractualById(id);
+                
+                List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
+                 .Where(r => r.SolicitudId == novedadContractual.NovedadContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual && !(bool)r.Eliminado)
+                 .Include(r => r.ComiteTecnico)
+                 .Include(r => r.ComiteTecnicoFiduciario)
+                 .ToList();
+
+                novedadContractual.sesionComiteSolicitud = sesionComiteSolicitud;
 
                 return novedadContractual;
             }
@@ -1027,6 +1035,53 @@ namespace asivamosffie.services
             }
 
         }
+
+        public async Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                NovedadContractual novedadContractualOld = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
+                //Auditoria
+                novedadContractualOld.FechaModificacion = DateTime.Now;
+                novedadContractualOld.UsuarioModificacion = pNovedadContractual.UsuarioCreacion;
+                //
+                novedadContractualOld.UrlSoporteGestionar = pNovedadContractual.UrlSoporteGestionar;
+                novedadContractualOld.FechaTramiteGestionar = pNovedadContractual.FechaTramiteGestionar;
+                novedadContractualOld.ObservacionGestionar = pNovedadContractual.ObservacionGestionar;
+                //Registros
+                novedadContractualOld.RegistroCompletoGestionar = string.IsNullOrEmpty(pNovedadContractual.UrlSoporteGestionar) &&
+                                                                  pNovedadContractual.FechaTramiteGestionar != null &&
+                                                                  string.IsNullOrEmpty(pNovedadContractual.ObservacionGestionar) ? false : true;
+
+                await _context.SaveChangesAsync();
+
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, pNovedadContractual.UsuarioCreacion, "REGISTRAR SOLICITUD")
+                  };
+
+            }
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.Error, idAccion, pNovedadContractual.UsuarioCreacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
 
         #endregion 
 
