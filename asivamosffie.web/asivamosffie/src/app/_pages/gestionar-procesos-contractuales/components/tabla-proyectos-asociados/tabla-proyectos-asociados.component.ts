@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,7 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./tabla-proyectos-asociados.component.scss']
 })
 export class TablaProyectosAsociadosComponent implements OnInit {
-
+  @Input() proyectos : any[];
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   dataSource                 = new MatTableDataSource();
@@ -21,19 +21,22 @@ export class TablaProyectosAsociadosComponent implements OnInit {
     { titulo: 'Institución educativa', name: 'instEducativa'},
     { titulo: 'Sede', name: 'sede' },
   ];
-  data: any[] = [
-    {
-      idMen                : 'LL000012',
-      tipoIntervencion     : 'Ampliación',
-      departamentoMunicipio: 'Valle del Cauca/Buga',
-      instEducativa        : 'I.E. Manuela Beltran',
-      sede                 : 'Sede principal'
-    }
-  ]
+  data: any[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
+    if(this.proyectos.length > 0){
+      this.proyectos.forEach(element => {
+        this.data.push({
+          idMen                : element.llaveMen,
+          tipoIntervencion     : element.tipoIntervencion,
+          departamentoMunicipio: element.departamento+"/"+element.municipio,
+          instEducativa        : element.institucionEducativa,
+          sede                 : element.sede
+        });
+      });
+    }
     this.dataSource                        = new MatTableDataSource( this.data );
     this.dataSource.paginator              = this.paginator;
     this.dataSource.sort                   = this.sort;

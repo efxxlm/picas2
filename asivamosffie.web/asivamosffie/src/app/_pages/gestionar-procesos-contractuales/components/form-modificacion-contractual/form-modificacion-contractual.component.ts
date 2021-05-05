@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
@@ -17,6 +19,13 @@ export class FormModificacionContractualComponent implements OnInit {
   suspensionBoolean: boolean;
   sesionComiteId: number = 0;
   estadoCodigo: string;
+  dataNovedad: NovedadContractual;
+  tipoModificacion : string;
+  valorTotalDdp: number = 0;
+  listaTipoSolicitud = {
+    obra: '1',
+    interventoria: '2'
+  };
   editorStyle = {
     height: '45px'
   };
@@ -54,47 +63,66 @@ export class FormModificacionContractualComponent implements OnInit {
     }
   ]
 
-  dataForm: any[] = [
-    {
-      nombre            : 'LL000012 - I.E Manuela Beltran - Sede Principal',
-      tipoIntervencion  : 'Remodelación',
-      departamento      : 'Valle del Cauca',
-      municipio         : 'Buga',
-      valorTotalProyecto: '300.000.000',
-      aportantes        : [
-        {
-          tipoAportante         : 'FFIE',
-          nombreAportante       : 'FFIE',
-          valorAportanteProyecto: '150.000.000',
-          fuente                : 'Contingencias',
-          valorSolicitado       : '150.000.000'
-        },
-        {
-          tipoAportante         : 'ET',
-          nombreAportante       : 'Gobernación Del Valle del Cauca',
-          valorAportanteProyecto: '150.000.000',
-          fuente                : 'Recursos propios',
-          valorSolicitado       : '150.000.000'
-        }
-      ]
-    }
-  ];
-
   constructor ( private fb: FormBuilder,
                 private routes: Router,
                 private procesosContractualesSvc: ProcesosContractualesService,
+                private disponibilidadServices:DisponibilidadPresupuestalService,
                 private activatedRoute: ActivatedRoute ) {
+    this.getNovedadById( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
     //this.getMotivo();
   }
 
   ngOnInit(): void {
-    console.log( "hola" ) 
     this.procesosContractualesSvc.getNovedadById( this.activatedRoute.snapshot.params.id )
       .subscribe( respuesta => {
         //console
       })
   }
+
+  getNovedadById ( id: number ) {
+
+    this.procesosContractualesSvc.getNovedadById( id )
+      .subscribe( novedadContractual => {
+
+        console.log( novedadContractual );
+        this.dataNovedad = novedadContractual;
+        this.dataNovedad.novedadContractualDescripcion.forEach(element => {
+            if(this.tipoModificacion == null){
+              this.tipoModificacion = element.nombreTipoNovedad;
+            }else{
+              this.tipoModificacion = this.tipoModificacion + "," + element.nombreTipoNovedad;
+            }
+        });
+        let rutaDocumento;
+        if ( novedadContractual.urlSoporteGestionar !== undefined ) {
+          rutaDocumento = novedadContractual.urlSoporteGestionar.split( /[^\w\s]/gi );
+          rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+        } else {
+          rutaDocumento = null;
+        };
+
+        this.form.reset({
+          fechaEnvioTramite: novedadContractual.fechaTramiteGestionar,
+          observaciones:novedadContractual.observacionGestionar,
+          minutaName: rutaDocumento,
+          rutaDocumento: novedadContractual.urlSoporteGestionar !== null ? novedadContractual.urlSoporteGestionar : null
+        });
+
+        if ( novedadContractual.contrato.contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.obra ) {
+          for ( let contratacionProyecto of novedadContractual.contrato.contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
+          };
+        }
+        if ( novedadContractual.contrato.contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.interventoria ) {
+          for ( let contratacionProyecto of novedadContractual.contrato.contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
+          };
+        }
+
+      });
+
+  };
 
   getMotivo () {
 
@@ -124,13 +152,35 @@ export class FormModificacionContractualComponent implements OnInit {
       fechaEnvioTramite: [ null, Validators.required ],
       observaciones    : [ null ],
       minuta           : [ null ],
-      minutaFile       : [ null ]
-    });
+      minutaName       : [ null ],
+      minutaFile       : [ null ],
+      rutaDocumento    : [ null ]
+    })
   };
 
-  getDdp ( sesionComiteSolicitudId ) {
-    // this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
-    //   .subscribe();
-  };
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0).subscribe((listas:any) => {
+      console.log(listas);
+      let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  }
+
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml;
+  }
+
 
 };

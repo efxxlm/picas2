@@ -373,6 +373,7 @@
         public const string Crear_Editar_Balance_Financiero = "273";
         public const string Aprobar_Balance_Financiero = "274";
         public const string Aprobar_tecnica_y_juridica_novedad = "275";
+        public const string Registrar_Tramite_Novedad_Contractual = "276";
 
 
 

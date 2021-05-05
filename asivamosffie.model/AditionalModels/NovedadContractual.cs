@@ -72,6 +72,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool? RegistroCompletoDetallar { get; set; }
 
+        [NotMapped]
+        public List<SesionComiteSolicitud> sesionComiteSolicitud { get; set; }
+
     }
 
 }

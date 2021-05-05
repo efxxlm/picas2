@@ -59,6 +59,11 @@ export interface NovedadContractual{
         observacionDevolucion?: NovedadContractualObservaciones,
         observacionDevolucionTramite?: NovedadContractualObservaciones,
 
+        urlSoporteGestionar ?: string,
+        fechaTramiteGestionar ?: Date,
+        observacionGestionar ?: string,
+        registroCompletoGestionar ?: boolean,
+
 }
 
 export interface NovedadContractualDescripcion{

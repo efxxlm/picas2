@@ -17,6 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
 
     public class ManageContractualProcessesController : ControllerBase
     {
@@ -53,6 +54,7 @@ namespace asivamosffie.api.Controllers
             var result = await _manageContractualProcessesService.GetContratacionByContratacionId(pContratacionId);
             return result;
         }
+
         [HttpGet]
         [Route("GetDDPBySesionComiteSolicitudID")]
         public async Task<FileResult> GetDDPBySesionComiteSolicitudID([FromQuery] int pSesionComiteSolicitudID)
@@ -127,6 +129,25 @@ namespace asivamosffie.api.Controllers
         {
             var result = await _manageContractualProcessesService.GetNovedadById(id);
             return result;
+        }
+
+        [Route("RegistrarTramiteNovedadContractual")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarTramiteNovedadContractual([FromBody] NovedadContractual novedadContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteNovedadContractual(novedadContractual);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
         }
 
     }

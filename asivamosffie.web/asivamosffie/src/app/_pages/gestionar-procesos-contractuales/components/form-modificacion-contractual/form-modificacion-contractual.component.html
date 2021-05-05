@@ -1,4 +1,4 @@
-<div class="container text-center mt-2em">
+<div class="container text-center mt-2em" *ngIf="dataNovedad != null">
   <div class="text-right">
     <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,25 +7,25 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud CO_003
+      Gestionar solicitud {{ dataNovedad.numeroSolicitud }}
     </h1>
   </div>
 
   <div class="text-center flex">
-    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>15/06/2020</b></p>
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ dataNovedad.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
     <p class="color-titulo"><b>Modificación contractual</b></p>
   </div>
 
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: DDP_PI_008</p>
-        <p>
-          <b>Objeto</b>:  Ejecutar la preconstrucción, construcción y post construcción de la Institución Educativa Manuela Beltran Sede principal en el municipio
-                          de Buga del departamente del Valle del Cauca.
-        </p>
-        <p><b>Número de comité fiduciario</b>: CF_002</p>
-        <p><b>Fecha de comité fiduciario</b>: 14/06/2020</p>
+        <p><b>Número DDP</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}</p>
+        <section>
+          <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].objeto )">
+          </div>
+        </section>
+        <p><b>Número de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+        <p><b>Fecha de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
       </mat-card-content>
   </mat-card>
   </div>
@@ -42,9 +42,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: Obra</p>
-              <p><b>Valor del contrato</b>: $30.000.000</p>
-              <p><b>Plazo</b>: 33 meses / 12 días</p>
+              <p><b>Tipo de contrato</b>: {{ dataNovedad.contrato.contratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}</p>
+              <p><b>Valor del contrato</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Plazo</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
+                {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -87,7 +88,7 @@
           <mat-card class="border" *ngFor="let element of data">
             <mat-card-content>
               <p><b>Número de la solicitud de modificación</b>: {{ element.numeroSolicitud }}</p>
-              <p><b>Tipo de modificación</b>: {{ element.tipoModificacion }}</p>
+              <p><b>Tipo de modificación</b>: {{ tipoModificacion }}</p>
               <p><b>Valor después de la modificación</b>: ${{ element.valorDespuesModificacion }}</p>
               <p><b>Plazo después de la modificación</b>: {{ element.plazoDespuesModificacion }}</p>
               <p><b>Detalle de la modificación</b>: {{ element.detalle }}</p>
@@ -126,7 +127,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="flex-table">
-          <app-tabla-proyectos-asociados></app-tabla-proyectos-asociados>
+          <app-tabla-proyectos-asociados *ngIf="dataNovedad != null" [proyectos]="dataNovedad.proyectosContrato"></app-tabla-proyectos-asociados>
         </div>
       </mat-expansion-panel>
 
@@ -140,15 +141,15 @@
         <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              DDP_PI_008
+              {{ dataNovedad.contrato.contratacion.numeroSolicitud }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="text-center">
-            <p><b>Valor del DDP</b> $300.000.000</p>
+            <p><b>Valor del DDP</b> {{ valorTotalDdp | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </div>
 
-          <app-form-aportantes [data]="dataForm"></app-form-aportantes>
+          <app-form-aportantes [data]="dataNovedad.contrato.contratacion.contratacionProyecto" [tipoSolicitud]="dataNovedad.contrato.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
 
         </mat-expansion-panel>
 
@@ -156,7 +157,7 @@
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  (click)="getDdp( sesionComiteId )">
+                  (click)="getDdp( dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp )">
                   Descargar DDP
           </button>
         </div>
@@ -184,13 +185,16 @@
       </mat-expansion-panel>
     </mat-accordion>
   </div>
+  
+  <!--Esta condición estaba. se deja? - *ngIf="estadoCodigo === '2'"-->
 
-  <div class="mt-2em" align="left" *ngIf="estadoCodigo === '2'">
+  <div class="mt-2em" align="left">
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
-        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
+        <p>Fecha del trámite <b class="color-titulo">{{ dataNovedad.contrato.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
+        <app-form-registro-tramite [dataFormulario]="form" [novedadContractual]="dataNovedad"
+        [minDate]="dataNovedad.contrato.contratacion.fechaTramite" [esNovedad]= true></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

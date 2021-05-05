@@ -24,5 +24,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> RegistrarTramiteContratacion(Contratacion pContratacion, IFormFile pFile, string pDirectorioBase, string pDirectorioMinuta);
 
         Task<NovedadContractual> GetNovedadById(int id);
+
+        Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual);
     }
 }
