@@ -68,6 +68,9 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
         element.fechaSolictud = element.fechaSolictud
           ? element.fechaSolictud.split('T')[0].split('-').reverse().join('/')
           : '';
+        element.novedadesSeleccionadas = element.novedadesSeleccionadas
+          ? element.novedadesSeleccionadas.slice(0, -1)
+          : '';
       });
       this.dataSource = new MatTableDataSource(resp);
 

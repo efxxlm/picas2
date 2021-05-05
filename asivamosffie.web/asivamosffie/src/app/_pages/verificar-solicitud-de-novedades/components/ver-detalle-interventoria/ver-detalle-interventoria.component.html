@@ -160,7 +160,14 @@
 
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
               <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
-              <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
+              <mat-card-title
+                class="header-card--text sub-text"
+                *ngIf="
+                  descripcion.tipoNovedadCodigo == '4' ||
+                  descripcion.tipoNovedadCodigo == '1' ||
+                  descripcion.tipoNovedadCodigo == '2'
+                "
+              >
                 Plazo solicitado
               </mat-card-title>
               <p *ngIf="descripcion.tipoNovedadCodigo == '4'">
