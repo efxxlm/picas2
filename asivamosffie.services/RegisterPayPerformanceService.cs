@@ -1048,12 +1048,12 @@ namespace asivamosffie.services
                     var valorSolicitado = payment["Valor neto girado"];
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
                     pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
-                    pDisponibilidadPresObservacion.ValorSolicitadoGenerado = decimal.Parse(valorSolicitado);
+                    pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
                     pDisponibilidadPresObservacion.UsuarioCreacion = _userName;
-                    var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitadoGenerado);
+                    var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    pDisponibilidadPresObservacion.SaldoActualGenerado = (decimal)fuente.ValorFuente - valoresSolicitados;
-                    pDisponibilidadPresObservacion.NuevoSaldoGenerado = pDisponibilidadPresObservacion.SaldoActualGenerado - pDisponibilidadPresObservacion.ValorSolicitadoGenerado;
+                    pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
+                    pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
                     int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresObservacion.EstadoCodigo = estado.ToString();
