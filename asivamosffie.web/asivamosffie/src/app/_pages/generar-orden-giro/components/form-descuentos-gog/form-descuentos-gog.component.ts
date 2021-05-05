@@ -184,7 +184,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                                 formArrayAportantes.push(
                                                     this.fb.group(
                                                         {
-                                                            ordenGiroDetalleDescuentoTecnicaAportanteId: [ 0 ],
+                                                            ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId !== undefined ? aportante.ordenGiroDetalleDescuentoTecnicaAportanteId : 0 ],
                                                             tipoAportante: [ null, Validators.required ],
                                                             listaNombreAportantes: [ null ],
                                                             nombreAportante: [ null, Validators.required ],
@@ -740,8 +740,11 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                     if ( value === true ) {
                         const aportanteSeleccionado = this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'tipoAportante' ).value;
                         const listaTipoAportantes = this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).value;
-                        listaTipoAportantes.push( aportanteSeleccionado );
-                        this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
+
+                        if ( aportanteSeleccionado !== null ) {
+                            listaTipoAportantes.push( aportanteSeleccionado );
+                            this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'tipoDeAportantes' ).setValue( listaTipoAportantes );
+                        }
 
                         if ( this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value !== 0 ) {
                             this.ordenGiroSvc.deleteOrdenGiroDetalleDescuentoTecnicaAportante( this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value )
