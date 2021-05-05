@@ -21,7 +21,7 @@ using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
-
+using Z.EntityFramework.Plus;
 namespace asivamosffie.services
 {
     public class ManageContractualProcessesService : IManageContractualProcessesService
@@ -55,7 +55,7 @@ namespace asivamosffie.services
                 SesionComiteSolicitud sesionComiteSolicitudOld =
                     await _context.SesionComiteSolicitud
                     .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                    .Include(r => r.ComiteTecnico) 
+                    .Include(r => r.ComiteTecnico)
                     .FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
@@ -983,16 +983,16 @@ namespace asivamosffie.services
         public async Task<bool> EnviarNotificacion(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             try
-            { 
+            {
                 bool blEnvioCorreo = false;
-                List<EnumeratorPerfil> perfils = new List<EnumeratorPerfil> 
-                { 
+                List<EnumeratorPerfil> perfils = new List<EnumeratorPerfil>
+                {
                     EnumeratorPerfil.Fiduciaria
-                }; 
-                 
+                };
+
                 List<Dominio> ListDominio = _context.Dominio.ToList();
                 Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificarFiduciaria322);
-                string template =  TemplateActaAprobada.Contenido
+                string template = TemplateActaAprobada.Contenido
                     .Replace("_LinkF_", pDominioFront)
                     .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                     .Replace("[NUMERO_DDP]", pSesionComiteSolicitud?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.NumeroDdp ?? " ")
@@ -1001,7 +1001,7 @@ namespace asivamosffie.services
                     .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MM-yy") : " ")
                     .Replace("[FECHA_ENVIO_TRAMITE]", DateTime.Now.ToString("dd-MM-yy"))
                     .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud?.Contratacion?.NumeroSolicitud ?? " ");
-                 
+
                 _commonService.EnviarCorreo(perfils, template, TemplateActaAprobada.Asunto);
                 return blEnvioCorreo;
             }
@@ -1018,7 +1018,7 @@ namespace asivamosffie.services
             try
             {
                 NovedadContractual novedadContractual = await _ContractualNoveltyService.GetNovedadContractualById(id);
-                
+
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
                  .Where(r => r.SolicitudId == novedadContractual.NovedadContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual && !(bool)r.Eliminado)
                  .Include(r => r.ComiteTecnico)
@@ -1041,21 +1041,20 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-                NovedadContractual novedadContractualOld = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
-                //Auditoria
-                novedadContractualOld.FechaModificacion = DateTime.Now;
-                novedadContractualOld.UsuarioModificacion = pNovedadContractual.UsuarioCreacion;
-                //
-                novedadContractualOld.UrlSoporteGestionar = pNovedadContractual.UrlSoporteGestionar;
-                novedadContractualOld.FechaTramiteGestionar = pNovedadContractual.FechaTramiteGestionar;
-                novedadContractualOld.ObservacionGestionar = pNovedadContractual.ObservacionGestionar;
-                //Registros
-                novedadContractualOld.RegistroCompletoGestionar = string.IsNullOrEmpty(pNovedadContractual.UrlSoporteGestionar) &&
-                                                                  pNovedadContractual.FechaTramiteGestionar != null &&
-                                                                  string.IsNullOrEmpty(pNovedadContractual.ObservacionGestionar) ? false : true;
+            { 
+                _context.Set<NovedadContractual>()
+                        .Where(n => n.NovedadContractualId == pNovedadContractual.NovedadContractualId)
+                        .Update(n =>
+                        new NovedadContractual
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pNovedadContractual.UsuarioCreacion,
+                            UrlSoporteGestionar = pNovedadContractual.UrlSoporteGestionar,
+                            FechaTramiteGestionar = pNovedadContractual.FechaTramiteGestionar,
+                            ObservacionGestionar = pNovedadContractual.ObservacionGestionar,
+                            RegistroCompletoGestionar = ValidarRegistroCompleto(pNovedadContractual)
+                        });
 
-                await _context.SaveChangesAsync();
 
                 return
                   new Respuesta
@@ -1082,8 +1081,19 @@ namespace asivamosffie.services
             }
         }
 
+        private bool ValidarRegistroCompleto(NovedadContractual pNovedadContractual)
+        {
+            if (
+                   string.IsNullOrEmpty(pNovedadContractual.UrlSoporteGestionar)
+                || !pNovedadContractual.FechaTramiteGestionar.HasValue
+                || string.IsNullOrEmpty(pNovedadContractual.ObservacionGestionar)
+                ) return false;
+             
+            return true; 
+        }
 
-        #endregion 
+
+        #endregion
 
 
     }
