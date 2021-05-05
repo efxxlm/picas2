@@ -95,19 +95,8 @@ namespace asivamosffie.services
             var streams = new MemoryStream();
             using (var packages = new ExcelPackage())
             {
-                //// Add a new worksheet to the empty workbook
+                // Add a new worksheet to the empty workbook
                 var worksheet = packages.Workbook.Worksheets.Add("Hoja 1");
-                //// #.##% is also Excel style index 1
-                //WorkbookStylesPart sp = workbookPart.AddNewPart<WorkbookStylesPart>();
-
-                //sp.Stylesheet = new DocumentFormat.OpenXml.Spreadsheet.Stylesheet();
-                //sp.Stylesheet.NumberingFormats = new NumberingFormats();
-                //NumberingFormat nf2decimal = new NumberingFormat();
-                //nf2decimal.NumberFormatId = UInt32Value.FromUInt32(3453);
-                //nf2decimal.FormatCode = StringValue.FromString("0.0%");
-                //sp.Stylesheet.NumberingFormat.Append(nf2decimal);
-
-
 
                 worksheet.Cells.LoadFromCollection(list, true);
 
@@ -319,7 +308,7 @@ namespace asivamosffie.services
                 using var package = new ExcelPackage(stream);
 
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-             
+
                 // TODO add validation to prevent query a column in a  not existing position
 
                 var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
@@ -570,12 +559,26 @@ namespace asivamosffie.services
             performanceStructure.Add("Acumulado de gravamen financiero descontado no exentos", "Money");
 
             int indexCell = 1;
-            string dateValue = worksheet.Cells[2, 1].Text;
-            var dateObje = worksheet.Cells[indexRow, indexCell].Value;
 
-            TryStringToDate(dateValue, out DateTime guideDate);
+
+            var dateObje = worksheet.Cells[indexRow, 1].Value;
+            DateTime guideDate = new DateTime();
+            var cellType = worksheet.Cells[indexRow, 1].Value.GetType().Name;
+            if (cellType ==  "DateTime")
+            {
+                var dtFormat = "dd/MM/yyyy";
+                worksheet.Cells[indexRow, 1].Style.Numberformat.Format = dtFormat;
+            }
+            string dateValue = worksheet.Cells[indexRow, 1].Text;
+            TryStringToDate(dateValue, out guideDate);
+
+            if(cellType == "Double")
+            {
+                Double d = Double.Parse(dateObje.ToString());
+                guideDate = DateTime.FromOADate(d);
+            }
+                        
             int month = guideDate.Month;
-
 
             carguePagosRendimiento.Add("Row", indexRow.ToString());
             foreach (var rowFormat in performanceStructure)
@@ -585,6 +588,7 @@ namespace asivamosffie.services
                 if (rowFormat.Value == "Date" && cellValue != dateObje.ToString())
                 {
                     carguePagosRendimiento.Add(rowFormat.Key, guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                   // guideDate = dateObje;
                 }
                 else
                 {
@@ -816,7 +820,8 @@ namespace asivamosffie.services
 
                 valorAporteEnCuenta = 0;
                 // TODO Review Payment concept..
-                var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
+                var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber
+                & acc.TipoPagoCodigo == ConstantTipoPago.Visitas);
 
                 var visitas = accountPayments.Sum(v => v.ValorNetoGiro);
                 var account = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountOrder.AccountNumber).FirstOrDefault();
