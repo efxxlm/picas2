@@ -163,13 +163,20 @@
               
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
                 <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
-              <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
+                <mat-card-title
+                  class="header-card--text sub-text"
+                  *ngIf="
+                    descripcion.tipoNovedadCodigo == '4' ||
+                    descripcion.tipoNovedadCodigo == '1' ||
+                    descripcion.tipoNovedadCodigo == '2'
+                  "
+                >
                 Plazo solicitado
               </mat-card-title>
               <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>Plazo adicional meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
               <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensiónnnnnnnnnnnnnnnn: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
               <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
