@@ -175,163 +175,215 @@ export class TerceroCausacionGogComponent implements OnInit {
                             const listDescuento = [ ...this.tipoDescuentoArray ];
 
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo );
+                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion );
                                 const listaDescuentos = [];
                                 const listaAportantes = [];
                                 const conceptosDePago = [];
 
-                                if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
-                                    terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-                                        if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
-                                            const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
-
-                                            if ( descuentoIndex !== -1 ) {
-                                                listDescuento.splice( descuentoIndex, 1 );
+                                if ( terceroCausacion !== undefined ) {
+                                    if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
+                                            if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
+                                                const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
+    
+                                                if ( descuentoIndex !== -1 ) {
+                                                    listDescuento.splice( descuentoIndex, 1 );
+                                                }
+                                            }
+                                            listaDescuentos.push(
+                                                this.fb.group(
+                                                    {
+                                                        ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
+                                                        tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
+                                                        valorDescuento: [ descuento.valorDescuento, Validators.required ]
+                                                    }
+                                                )
+                                            );
+                                        } )
+                                    }
+                                    // Get lista de aportantes
+                                    // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
+                                    this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
+    
+                                    if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
+                                        for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
+                                            const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+    
+                                            if ( nombreAportante !== undefined ) {
+                                                const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                                let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+        
+                                                listaAportantes.push(
+                                                    this.fb.group(
+                                                        {
+                                                            ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                            tipoAportante: [ tipoAportante, Validators.required ],
+                                                            listaNombreAportantes: [ [ nombreAportante ] ],
+                                                            nombreAportante: [ nombreAportante, Validators.required ],
+                                                            fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                            fuenteRecursos: [ fuente, Validators.required ],
+                                                            fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
+                                                            valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                        }
+                                                    )
+                                                )
                                             }
                                         }
-                                        listaDescuentos.push(
-                                            this.fb.group(
-                                                {
-                                                    ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
-                                                    tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
-                                                    valorDescuento: [ descuento.valorDescuento, Validators.required ]
-                                                }
-                                            )
-                                        );
-                                    } )
-                                }
-                                // Get lista de aportantes
-                                // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
-                                this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
-
-                                if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                    for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
-                                        const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
-                                        const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                        let listaFuenteRecursos: any[];
-                                        const fuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-
-                                        listaFuenteRecursos = fuenteRecursos;
-                                        const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
-
+                                    } else {
                                         listaAportantes.push(
                                             this.fb.group(
                                                 {
-                                                    ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                    tipoAportante: [ tipoAportante, Validators.required ],
-                                                    listaNombreAportantes: [ [ nombreAportante ] ],
-                                                    nombreAportante: [ nombreAportante, Validators.required ],
-                                                    fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                    fuenteRecursos: [ fuente, Validators.required ],
-                                                    fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
-                                                    valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                    ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                                    tipoAportante: [ null, Validators.required ],
+                                                    listaNombreAportantes: [ null ],
+                                                    nombreAportante: [ null, Validators.required ],
+                                                    fuenteDeRecursos: [ null ],
+                                                    fuenteRecursos: [ null, Validators.required ],
+                                                    fuenteFinanciacionId: [ null ],
+                                                    valorDescuento: [ null, Validators.required ]
                                                 }
                                             )
                                         )
                                     }
-                                } else {
-                                    listaAportantes.push(
-                                        this.fb.group(
+    
+                                    for ( const concepto of criterio.listConceptos ) {
+                                        conceptosDePago.push( this.fb.group(
                                             {
-                                                ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                tipoAportante: [ null, Validators.required ],
-                                                listaNombreAportantes: [ null ],
-                                                nombreAportante: [ null, Validators.required ],
-                                                fuenteDeRecursos: [ null ],
-                                                fuenteRecursos: [ null, Validators.required ],
-                                                fuenteFinanciacionId: [ null ],
-                                                valorDescuento: [ null, Validators.required ]
+                                                conceptoPagoCriterio: [ concepto.codigo ],
+                                                nombre: [ concepto.nombre ],
+                                                valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
+                                                tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                                nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                                tipoDescuentoArray: [ listDescuento ],
+                                                descuento: this.fb.group(
+                                                    {
+                                                        aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
+                                                        numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
+                                                        descuentos: this.fb.array( listaDescuentos )
+                                                    }
+                                                ),
+                                                aportantes: this.fb.array( listaAportantes )
                                             }
-                                        )
-                                    )
-                                }
-
-                                for ( const concepto of criterio.listConceptos ) {
-                                    conceptosDePago.push( this.fb.group(
-                                        {
-                                            conceptoPagoCriterio: [ concepto.codigo ],
-                                            nombre: [ concepto.nombre ],
-                                            valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
-                                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                            tipoDescuentoArray: [ listDescuento ],
-                                            descuento: this.fb.group(
-                                                {
-                                                    aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
-                                                    numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
-                                                    descuentos: this.fb.array( listaDescuentos )
-                                                }
-                                            ),
-                                            aportantes: this.fb.array( listaAportantes )
-                                        }
-                                    ) )
-                                }
-
-                                // Set formulario criterios
-                                // Get observaciones
-                                let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
-                                let obsVerificar = undefined;
-                                let obsAprobar = undefined;
-                                let obsTramitar = undefined;
-
-                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                    this.listaMenu.verificarOrdenGiro,
-                                    this.ordenGiroId,
-                                    terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                    this.tipoObservaciones.terceroCausacion );
-                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                    this.listaMenu.aprobarOrdenGiro,
-                                    this.ordenGiroId,
-                                    terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                    this.tipoObservaciones.terceroCausacion );
-                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                        this.listaMenu.tramitarOrdenGiro,
+                                        ) )
+                                    }
+    
+                                    // Set formulario criterios
+                                    // Get observaciones
+                                    let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
+                                    let obsVerificar = undefined;
+                                    let obsAprobar = undefined;
+                                    let obsTramitar = undefined;
+    
+                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.verificarOrdenGiro,
                                         this.ordenGiroId,
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionId,
                                         this.tipoObservaciones.terceroCausacion );
-                                // Get lista de observacion y observacion actual
-                                if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
-                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                        obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.aprobarOrdenGiro,
+                                        this.ordenGiroId,
+                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                        this.tipoObservaciones.terceroCausacion );
+                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                            this.listaMenu.tramitarOrdenGiro,
+                                            this.ordenGiroId,
+                                            terceroCausacion.ordenGiroDetalleTerceroCausacionId,
+                                            this.tipoObservaciones.terceroCausacion );
+                                    // Get lista de observacion y observacion actual
+                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                        }
                                     }
-                                }
-                                if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
-                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                        obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                        }
                                     }
-                                }
-                                if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
-                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                        obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                                        if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                            obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                                        }
                                     }
-                                }
-
-                                if ( obsVerificar !== undefined ) {
-                                    estadoSemaforo = 'en-proceso';
-                                    this.tieneObservacion.emit( true );
-                                }
-                                if ( obsAprobar !== undefined ) {
-                                    estadoSemaforo = 'en-proceso';
-                                    this.tieneObservacion.emit( true );
-                                }
-                                if ( obsTramitar !== undefined ) {
-                                    estadoSemaforo = 'en-proceso';
-                                    this.tieneObservacion.emit( true );
-                                }
-
-                                this.criterios.push( this.fb.group(
-                                    {
-                                        estadoSemaforo,
-                                        obsVerificar: [ obsVerificar ],
-                                        obsAprobar: [ obsAprobar ],
-                                        obsTramitar: [ obsTramitar ],
-                                        ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
-                                        tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                        nombre: [ criterio.nombre ],
-                                        tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
-                                        conceptos: this.fb.array( conceptosDePago )
+    
+                                    if ( obsVerificar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
                                     }
-                                ) )
+                                    if ( obsAprobar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
+                                    }
+                                    if ( obsTramitar !== undefined ) {
+                                        estadoSemaforo = 'en-proceso';
+                                        this.tieneObservacion.emit( true );
+                                    }
+    
+                                    this.criterios.push( this.fb.group(
+                                        {
+                                            estadoSemaforo,
+                                            obsVerificar: [ obsVerificar ],
+                                            obsAprobar: [ obsAprobar ],
+                                            obsTramitar: [ obsTramitar ],
+                                            ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                            nombre: [ criterio.nombre ],
+                                            tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
+                                            conceptos: this.fb.array( conceptosDePago )
+                                        }
+                                    ) )
+                                } else {
+                                    const conceptosDePago = [];
+                                    for ( const concepto of criterio.listConceptos ) {
+                                        conceptosDePago.push( this.fb.group(
+                                            {
+                                                conceptoPagoCriterio: [ concepto.codigo ],
+                                                nombre: [ concepto.nombre ],
+                                                valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
+                                                tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                                nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                                tipoDescuentoArray: [ this.tipoDescuentoArray ],
+                                                descuento: this.fb.group(
+                                                    {
+                                                        aplicaDescuentos:[ null, Validators.required ],
+                                                        numeroDescuentos: [ null, Validators.required ],
+                                                        descuentos: this.fb.array( [] )
+                                                    }
+                                                ),
+                                                aportantes: this.fb.array( [
+                                                    this.fb.group(
+                                                        {
+                                                            ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                                            tipoAportante: [ null, Validators.required ],
+                                                            listaNombreAportantes: [ null ],
+                                                            nombreAportante: [ null, Validators.required ],
+                                                            fuenteDeRecursos: [ null ],
+                                                            fuenteRecursos: [ null, Validators.required ],
+                                                            fuenteFinanciacionId: [ null ],
+                                                            valorDescuento: [ null, Validators.required ]
+                                                        }
+                                                    )
+                                                ] )
+                                            }
+                                        ) )
+                                    }
+    
+                                    // Set formulario criterios
+                                    this.criterios.push( this.fb.group(
+                                        {
+                                            estadoSemaforo: [ 'sin-diligenciar' ],
+                                            obsVerificar: [ null ],
+                                            obsAprobar: [ null ],
+                                            obsTramitar: [ null ],
+                                            ordenGiroDetalleTerceroCausacionId: [ 0 ],
+                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                            nombre: [ criterio.nombre ],
+                                            tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
+                                            conceptos: this.fb.array( conceptosDePago )
+                                        }
+                                    ) )
+                                }
                             } else {
                                 const conceptosDePago = [];
                                 for ( const concepto of criterio.listConceptos ) {
@@ -691,6 +743,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             ]
         }
 
+        console.log( pOrdenGiro )
         this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
             .subscribe(
                 response => {
