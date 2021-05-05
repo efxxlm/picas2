@@ -49,7 +49,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now
                         });
 
-     
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -109,7 +109,7 @@ namespace asivamosffie.services
                          UsuarioModificacion = pAuthor,
                          FechaModificacion = DateTime.Now
                      });
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -818,6 +818,12 @@ namespace asivamosffie.services
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
                             .Include(d => d.SolicitudPago)
                         .AsNoTracking().FirstOrDefault();
+                     
+                    foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
+                    {
+                        if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
+                            OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+                    }
                 }
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
@@ -902,8 +908,6 @@ namespace asivamosffie.services
 
             return tabla;
         }
-
-
 
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
