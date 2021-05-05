@@ -189,7 +189,8 @@ export class TerceroCausacionComponent implements OnInit {
                             );
                         }
                     }
-                    this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+
                         // Get boolean si es uno o varios aportantes
                         if ( dataAportantes.listaTipoAportante.length > 1 ) {
                             this.variosAportantes = true;
@@ -366,7 +367,6 @@ export class TerceroCausacionComponent implements OnInit {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
                         }, 2000);
-                    } );
                 } 
             );
     }

@@ -54,100 +54,94 @@ export class FormOrigenComponent implements OnInit {
         this.getOrigen();
     }
 
-    getOrigen() {
-        this.ordenGiroSvc.getAportantes( this.solicitudPago, dataAportantes => {
+    async getOrigen() {
+        const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
 
-            // Get IDs
-            if ( this.solicitudPago.ordenGiro !== undefined ) {
-                this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+        // Get IDs
+        if ( this.solicitudPago.ordenGiro !== undefined ) {
+            this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
 
-                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
-                    if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
-                        this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
-                        this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
+            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
+                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+                    this.ordenGiroDetalleId = this.ordenGiroDetalle.ordenGiroDetalleId;
 
-                        if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                            if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
-                                this.ordenGiroDetalleTerceroCausacion = this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion;
-                                let totalCuenta = 0;
-                                let totalEnProceso = 0;
-                                let totalCompleto = 0;
+                    if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
+                        if ( this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                            this.ordenGiroDetalleTerceroCausacion = this.ordenGiroDetalle.ordenGiroDetalleTerceroCausacion;
+                            let totalCuenta = 0;
+                            let totalEnProceso = 0;
+                            let totalCompleto = 0;
 
-                                this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
-                                    if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
-                                            const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
+                            this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
+                                if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
+                                    terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
+                                        const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
 
-                                            if ( aportanteFind === undefined ) {
-                                                this.listaAportantes.push( aportante );
+                                        if ( aportanteFind === undefined ) {
+                                            this.listaAportantes.push( aportante );
+                                        }
+                                    } );
+                                }
+                            } );
+
+                            for ( const aportante of this.listaAportantes ) {
+                                const nombreAportante = dataAportantes.listaNombreAportante.find( nombreAportante => nombreAportante.cofinanciacionAportanteId === aportante.aportanteId );
+                                const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante.tipoAportanteId );
+                                const fuente = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
+                                const cuentaBancaria = ( ) => {
+                                    if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
+                                        if ( aportante.cuentaBancariaId !== undefined ) {
+                                            const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
+                                            
+                                            if ( cuenta !== undefined ) {
+                                                totalCompleto++;
+                                                return cuenta;
+                                            } else {
+                                                totalEnProceso++;
+                                                return null;
                                             }
-                                        } );
+                                        } else {
+                                            return null;
+                                        }
+                                    } else {
+                                        return aportante.fuenteFinanciacion.cuentaBancaria[ 0 ];
                                     }
-                                } );
-
-                                for ( const aportante of this.listaAportantes ) {
-                                    const nombreAportante = dataAportantes.listaNombreAportante.find( nombreAportante => nombreAportante.cofinanciacionAportanteId === aportante.aportanteId );
-                                    const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante.tipoAportanteId );
-
-                                    this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-                                        .subscribe( fuente => {
-                                            const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
-                                            const cuentaBancaria = ( ) => {
-                                                if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
-                                                    if ( aportante.cuentaBancariaId !== undefined ) {
-                                                        const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
-                                                        
-                                                        if ( cuenta !== undefined ) {
-                                                            totalCompleto++;
-                                                            return cuenta;
-                                                        } else {
-                                                            totalEnProceso++;
-                                                            return null;
-                                                        }
-                                                    } else {
-                                                        return null;
-                                                    }
-                                                } else {
-                                                    return aportante.fuenteFinanciacion.cuentaBancaria[ 0 ];
-                                                }
-                                            }
-
-                                            if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
-                                                totalCuenta++;
-                                            }
-
-                                            this.aportantes.push(
-                                                this.fb.group(
-                                                    {
-                                                        tipoAportante: [ tipoAportante ],
-                                                        nombreAportante: [ nombreAportante ],
-                                                        fuente: [ fuenteRecurso ],
-                                                        listaCuentaBancaria: [ aportante.fuenteFinanciacion.cuentaBancaria ],
-                                                        cuentaBancariaId: [ cuentaBancaria(), Validators.required ]
-                                                    }
-                                                )
-                                            );
-                                        } );
                                 }
 
-                                setTimeout(() => {
-                                    if ( totalEnProceso > 0 && totalEnProceso === this.listaAportantes.length ) {
-                                        this.estadoSemaforo.emit( 'en-proceso' );
-                                    }
-                                    if ( totalCompleto > 0 && totalCompleto === this.listaAportantes.length ) {
-                                        this.estadoSemaforo.emit( 'completo' );
-                                    }
-                                    if ( totalCuenta === this.listaAportantes.length ) {
-                                        this.esUnicaCuenta = true;
-                                        this.seDiligenciaFormulario.emit( false );
-                                    }
-                                }, 1000);
+                                if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
+                                    totalCuenta++;
+                                }
+
+                                this.aportantes.push(
+                                    this.fb.group(
+                                        {
+                                            tipoAportante: [ tipoAportante ],
+                                            nombreAportante: [ nombreAportante ],
+                                            fuente: [ fuenteRecurso ],
+                                            listaCuentaBancaria: [ aportante.fuenteFinanciacion.cuentaBancaria ],
+                                            cuentaBancariaId: [ cuentaBancaria(), Validators.required ]
+                                        }
+                                    )
+                                );
+                            }
+
+                            if ( totalEnProceso > 0 && totalEnProceso === this.listaAportantes.length ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( totalCompleto > 0 && totalCompleto === this.listaAportantes.length ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                            if ( totalCuenta === this.listaAportantes.length ) {
+                                this.esUnicaCuenta = true;
+                                this.seDiligenciaFormulario.emit( false );
                             }
                         }
                     }
                 }
             }
-        } );
+        }
     }
 
     crearFormulario() {
