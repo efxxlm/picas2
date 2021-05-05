@@ -26,7 +26,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id, esNovedad, novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId)
         .subscribe(listas => {
           console.log(listas);
           this.detailavailabilityBudget=listas[0];

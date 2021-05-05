@@ -36,7 +36,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
     if (this.id) {
       //if ( esNovedad === 'true' ){
-        this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(this.id, this.esNovedad, this.novedadId)
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(this.id, this.esNovedad, this.novedadId)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {

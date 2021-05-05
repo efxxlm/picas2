@@ -28,7 +28,7 @@ export class VerDetalleDdpAdministrativoComponent implements OnInit {
   }
 
   cargarRegistro(id) {
-    this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(resp=>{
+    this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(id).subscribe(resp=>{
       this.numeroSolicitud = resp[0].numeroSolicitud;
       this.objeto = resp[0].objeto;
       this.idProyectoAdmin = resp[0].proyectos[0].llaveMen;

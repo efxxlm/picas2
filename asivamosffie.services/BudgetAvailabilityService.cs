@@ -919,7 +919,7 @@ namespace asivamosffie.services
             if (id == 0)
             {
                 return Array.Empty<byte>();
-            }
+            }   
             DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                 .Where(r => r.DisponibilidadPresupuestalId == id)
                 .Include(r => r.Contratacion).FirstOrDefaultAsync();

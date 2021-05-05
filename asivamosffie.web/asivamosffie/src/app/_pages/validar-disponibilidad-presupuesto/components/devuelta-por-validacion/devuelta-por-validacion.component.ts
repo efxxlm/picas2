@@ -22,7 +22,7 @@ export class DevueltaPorValidacionComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id).subscribe(listas => {
         console.log(listas);
         this.detailavailabilityBudget=listas[0];
       });
