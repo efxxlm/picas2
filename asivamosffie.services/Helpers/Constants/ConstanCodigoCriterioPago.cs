@@ -7,4 +7,10 @@
         public const string Criterio_3 = "3";
         public const string Criterio_4 = "4";
     }
+
+
+    public static class ConstantTipoPago
+    {
+        public const string Visitas = "27";
+    }
 }
