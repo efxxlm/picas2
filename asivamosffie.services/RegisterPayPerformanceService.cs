@@ -1048,17 +1048,19 @@ namespace asivamosffie.services
                     var valorSolicitado = payment["Valor neto girado"];
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
                     pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
-                    pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
+                    pDisponibilidadPresObservacion.ValorSolicitadoGenerado = decimal.Parse(valorSolicitado);
                     pDisponibilidadPresObservacion.UsuarioCreacion = _userName;
-                    var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+                    var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitadoGenerado);
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
-                    pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
+                    pDisponibilidadPresObservacion.SaldoActualGenerado = (decimal)fuente.ValorFuente - valoresSolicitados;
+                    pDisponibilidadPresObservacion.NuevoSaldoGenerado = pDisponibilidadPresObservacion.SaldoActualGenerado - pDisponibilidadPresObservacion.ValorSolicitadoGenerado;
                     int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresObservacion.EstadoCodigo = estado.ToString();
                     pDisponibilidadPresObservacion.Eliminado = false;
                     _context.GestionFuenteFinanciacion.Add(pDisponibilidadPresObservacion);
+
+
                     // cruce de pagos
                     var paymentOrder = new OrdenGiroPago();
                     paymentOrder.OrdenGiroId = solicitud.OrdenGiro.OrdenGiroId;
@@ -1416,17 +1418,17 @@ namespace asivamosffie.services
 
                 var gestionFuenteFinanciacion = new GestionFuenteFinanciacion();
                 gestionFuenteFinanciacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
-                gestionFuenteFinanciacion.ValorSolicitado = valorAIncorporar;
+                gestionFuenteFinanciacion.ValorSolicitadoGenerado = valorAIncorporar;
                 gestionFuenteFinanciacion.UsuarioCreacion = _userName;
 
                 var sumValoresSolicitados = _context.GestionFuenteFinanciacion
                     .Where(x => !(bool)x.Eliminado && 
                                  x.FuenteFinanciacionId == gestionFuenteFinanciacion.FuenteFinanciacionId)
-                    .Sum(x => x.ValorSolicitado);
+                    .Sum(x => x.ValorSolicitadoGenerado);
 
                 var fuente = await _context.FuenteFinanciacion.FindAsync(gestionFuenteFinanciacion.FuenteFinanciacionId);
-                gestionFuenteFinanciacion.SaldoActual = (decimal)fuente.ValorFuente - sumValoresSolicitados;
-                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual + gestionFuenteFinanciacion.ValorSolicitado;
+                gestionFuenteFinanciacion.SaldoActualGenerado = (decimal)fuente.ValorFuente - sumValoresSolicitados;
+                gestionFuenteFinanciacion.NuevoSaldoGenerado = gestionFuenteFinanciacion.SaldoActual + gestionFuenteFinanciacion.ValorSolicitadoGenerado;
                 int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Rendimientos;
                 gestionFuenteFinanciacion.FechaCreacion = DateTime.Now;
                 gestionFuenteFinanciacion.EstadoCodigo = estado.ToString();
