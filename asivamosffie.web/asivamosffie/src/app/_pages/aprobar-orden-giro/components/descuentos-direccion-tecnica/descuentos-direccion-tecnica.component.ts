@@ -21,6 +21,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Input() esPreconstruccion: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -114,7 +115,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
 
     getDireccionTecnica() {
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
         this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
 
@@ -155,6 +156,211 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                     }
                 }
                 // Set data Formulario
+                if ( this.ordenGiroDetalle !== undefined ) {
+                    const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
+        
+                    if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                        for ( const descuento of this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento ) {
+                            const formArrayCriterios = [];
+                            const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId && descuentoTecnica.esPreconstruccion === this.esPreconstruccion );
+        
+                            if ( detalleDescuentoTecnica.length > 0 ) {
+                                // Get forArray de los criterios
+                                const listaCriterios = [];
+        
+                                for ( const descuento of detalleDescuentoTecnica ) {
+                                    const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( descuento.criterioCodigo );
+                                    const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === descuento.tipoPagoCodigo );
+                                    const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+                                    // Get data del formulario de los conceptos seleccionados
+                                    const listaConceptos = [];
+                                    const formArrayConceptos = [];
+                                    const ordenGiroDetalleDescuentoTecnicaAportante = [];
+        
+                                    listaCriterios.push( descuento.criterioCodigo )
+        
+                                    descuento.ordenGiroDetalleDescuentoTecnicaAportante.forEach( value => {
+                                        ordenGiroDetalleDescuentoTecnicaAportante.push( value );
+                                        if ( listaConceptos.length > 0 ) {
+                                            const tieneConceptoCodigo = listaConceptos.includes( value.conceptoPagoCodigo );
+        
+                                            if ( tieneConceptoCodigo === false ) {
+                                                listaConceptos.push( value.conceptoPagoCodigo );    
+                                            }
+                                        } else {
+                                            listaConceptos.push( value.conceptoPagoCodigo )
+                                        }
+                                    } );
+        
+                                    for ( const codigo of listaConceptos ) {
+                                        const concepto = conceptosDePago.find( concepto => concepto.codigo === codigo );
+                                        if ( concepto !== undefined ) {
+                                            const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago )
+                                            const formArrayAportantes = [];
+        
+                                            if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
+                                                for ( const aportante of ordenGiroDetalleDescuentoTecnicaAportante ) {
+                                                    const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+                                                    let tipoAportante: any;
+                                                    let listaFuenteRecursos: any[];
+        
+                                                    if ( nombreAportante !== undefined ) {
+                                                        tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                                        listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+        
+                                                        formArrayAportantes.push(
+                                                            this.fb.group(
+                                                                {
+                                                                    ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId !== undefined ? aportante.ordenGiroDetalleDescuentoTecnicaAportanteId : 0 ],
+                                                                    tipoAportante: [ tipoAportante !== undefined ? tipoAportante : null, Validators.required ],
+                                                                    listaNombreAportantes: [ [ nombreAportante !== undefined ? nombreAportante : null ] ],
+                                                                    nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
+                                                                    fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                                    fuenteRecursos: [ aportante.fuenteRecursosCodigo !== undefined ? aportante.fuenteRecursosCodigo : null, Validators.required ],
+                                                                    valorDescuento: [ aportante.valorDescuento !== undefined ? aportante.valorDescuento : null, Validators.required ]
+                                                                }
+                                                            )
+                                                        )
+                                                    } else {
+                                                        formArrayAportantes.push(
+                                                            this.fb.group(
+                                                                {
+                                                                    ordenGiroDetalleDescuentoTecnicaAportanteId: [ aportante.ordenGiroDetalleDescuentoTecnicaAportanteId !== undefined ? aportante.ordenGiroDetalleDescuentoTecnicaAportanteId : 0 ],
+                                                                    tipoAportante: [ null, Validators.required ],
+                                                                    listaNombreAportantes: [ null ],
+                                                                    nombreAportante: [ null, Validators.required ],
+                                                                    fuenteDeRecursos: [ null ],
+                                                                    fuenteRecursos: [ null, Validators.required ],
+                                                                    valorDescuento: [ null, Validators.required ]
+                                                                }
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
+        
+                                            formArrayConceptos.push( this.fb.group(
+                                                {
+                                                    nombre: [ concepto !== undefined ? concepto.nombre : null ],
+                                                    conceptoCodigo: [ concepto !== undefined ? concepto.codigo : null ],
+                                                    tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                                    nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                                    aportantes: this.fb.array( formArrayAportantes.length > 0 ? formArrayAportantes : [] )
+                                                }
+                                            ) );
+                                        }
+                                    }
+        
+                                    // Set formulario de los criterios
+                                    formArrayCriterios.push(
+                                        this.fb.group(
+                                            {
+                                                nombre: [ descuento.criterioCodigo !== undefined ? this.listaCriterios.find( criterio => criterio.codigo === descuento.criterioCodigo ).nombre : null ],
+                                                ordenGiroDetalleDescuentoTecnicaId: [ descuento.ordenGiroDetalleDescuentoTecnicaId !== undefined ? descuento.ordenGiroDetalleDescuentoTecnicaId : 0 ],
+                                                criterioCodigo: [ descuento.criterioCodigo !== undefined ? this.listaCriterios.find( criterio => criterio.codigo === descuento.criterioCodigo ).codigo : null ],
+                                                tipoPagoNombre: [ tipoPago !== undefined ? tipoPago.nombre : null ],
+                                                tipoPagoCodigo: [ tipoPago !== undefined ? tipoPago.codigo : null ],
+                                                conceptosDePago: [ conceptosDePago ],
+                                                concepto: [ listaConceptos.length > 0 ? listaConceptos : null, Validators.required ],
+                                                conceptos: this.fb.array( formArrayConceptos.length > 0 ? formArrayConceptos : [] )
+                                            }
+                                        )
+                                    )
+                                }
+                                // Get observaciones
+                                let estadoSemaforo = 'sin-diligenciar';
+                                const historialObservaciones = [];
+                                const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.verificarOrdenGiro,
+                                    this.ordenGiroId,
+                                    descuento.solicitudPagoFaseFacturaDescuentoId,
+                                    this.tipoObservaciones.direccionTecnica );
+                                const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                    this.listaMenu.aprobarOrdenGiro,
+                                    this.ordenGiroId,
+                                    descuento.solicitudPagoFaseFacturaDescuentoId,
+                                    this.tipoObservaciones.direccionTecnica );
+                                const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                        this.listaMenu.tramitarOrdenGiro,
+                                        this.ordenGiroId,
+                                        descuento.solicitudPagoFaseFacturaDescuentoId,
+                                        this.tipoObservaciones.direccionTecnica );
+
+                                if ( listaObservacionVerificar.length > 0 ) {
+                                    listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
+                                }
+                                if ( listaObservacionAprobar.length > 0 ) {
+                                    listaObservacionAprobar.forEach( obs => obs.menuId = this.listaMenu.aprobarOrdenGiro );
+                                }
+                                if ( listaObservacionTramitar.length > 0 ) {
+                                    listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
+                                }
+
+                                // Get lista observaciones archivadas
+                                const obsArchivadasVerificar = listaObservacionVerificar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                                const obsArchivadasAprobar = listaObservacionAprobar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                                const obsArchivadasTramitar = listaObservacionTramitar.filter( obs => obs.archivada === true && obs.tieneObservacion === true );
+                                if ( obsArchivadasVerificar.length > 0 ) {
+                                    obsArchivadasVerificar.forEach( obs => historialObservaciones.push( obs ) );
+                                }
+                                if ( obsArchivadasAprobar.length > 0 ) {
+                                    obsArchivadasAprobar.forEach( obs => historialObservaciones.push( obs ) );
+                                }
+                                if ( obsArchivadasTramitar.length > 0 ) {
+                                    obsArchivadasTramitar.forEach( obs => historialObservaciones.push( obs ) );
+                                }
+
+                                // Get observacion actual    
+                                const observacion = listaObservacionAprobar.find( obs => obs.archivada === false );
+                                const observacionVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                                if ( observacion !== undefined ) {
+                                    if ( observacion.registroCompleto === false ) {
+                                        estadoSemaforo = 'en-proceso';
+                                    }
+                                    if ( observacion.registroCompleto === true ) {
+                                        estadoSemaforo = 'completo';
+                                    }
+                                }
+
+                                // Set contador semaforo observaciones
+                                if ( estadoSemaforo === 'en-proceso' ) {
+                                    this.totalEnProceso++;
+                                }
+                                if ( estadoSemaforo === 'completo' ) {
+                                    this.totalCompleto++;
+                                }
+
+                                this.descuentos.controls.push( this.fb.group(
+                                    {
+                                        estadoSemaforo,
+                                        observacionVerificar: [ observacionVerificar !== undefined ? observacionVerificar : null ],
+                                        historialObservaciones: [ historialObservaciones ],
+                                        ordenGiroObservacionId: [ observacion !== undefined ? ( observacion.ordenGiroObservacionId !== undefined ? observacion.ordenGiroObservacionId : 0 ) : 0 ],
+                                        tieneObservaciones: [ observacion !== undefined ? ( observacion.tieneObservacion !== undefined ? observacion.tieneObservacion : null ) : null, Validators.required ],
+                                        observaciones: [ observacion !== undefined ? ( observacion.observacion !== undefined ? ( observacion.observacion.length > 0 ? observacion.observacion : null ) : null ) : null, Validators.required ],
+                                        fechaCreacion: [ observacion !== undefined ? ( observacion.fechaCreacion !== undefined ? observacion.fechaCreacion : null ) : null ],
+                                        solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                                        tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                                        criterio: [ listaCriterios, Validators.required ],
+                                        criterios: this.fb.array( formArrayCriterios )
+                                    }
+                                ) );
+                            }
+                        }
+                    }
+                }
+
+                if ( this.totalEnProceso > 0 && this.totalEnProceso === this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'en-proceso' );
+                }
+                if ( this.totalCompleto > 0 && this.totalCompleto < this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'en-proceso' );
+                }
+                if ( this.totalCompleto > 0 && this.totalCompleto === this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'completo' );
+                }
+
+                /*
                 if ( this.ordenGiroDetalle !== undefined ) {
                     const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
                 
@@ -265,17 +471,17 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                                         const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
                                             this.listaMenu.verificarOrdenGiro,
                                             this.ordenGiroId,
-                                            descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                            descuento.solicitudPagoFaseFacturaDescuentoId,
                                             this.tipoObservaciones.direccionTecnica );
                                         const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
                                             this.listaMenu.aprobarOrdenGiro,
                                             this.ordenGiroId,
-                                            descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                            descuento.solicitudPagoFaseFacturaDescuentoId,
                                             this.tipoObservaciones.direccionTecnica );
                                         const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
                                                 this.listaMenu.tramitarOrdenGiro,
                                                 this.ordenGiroId,
-                                                descuentoValue.ordenGiroDetalleDescuentoTecnicaId,
+                                                descuento.solicitudPagoFaseFacturaDescuentoId,
                                                 this.tipoObservaciones.direccionTecnica );
                                         if ( listaObservacionVerificar.length > 0 ) {
                                             listaObservacionVerificar.forEach( obs => obs.menuId = this.listaMenu.verificarOrdenGiro );
@@ -351,6 +557,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                         }, 3000);
                     }
                 }
+                */
 
                 this.dataSource = new MatTableDataSource( [ this.listData ] );
             } );
@@ -436,7 +643,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
             ordenGiroId: this.ordenGiroId,
             tipoObservacionCodigo: this.tipoObservaciones.direccionTecnica,
             menuId: this.listaMenu.aprobarOrdenGiro,
-            idPadre: descuento.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
+            idPadre: descuento.get( 'solicitudPagoFaseFacturaDescuentoId' ).value,
             observacion: descuento.get( 'observaciones' ).value,
             tieneObservacion: descuento.get( 'tieneObservaciones' ).value
         }

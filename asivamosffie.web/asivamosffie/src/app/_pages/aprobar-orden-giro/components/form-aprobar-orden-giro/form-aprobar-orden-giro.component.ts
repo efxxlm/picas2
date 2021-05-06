@@ -68,4 +68,20 @@ export class FormAprobarOrdenGiroComponent implements OnInit {
         }
     }
 
+    checkSemaforoDetalle( listaSemaforosDetalle: any ) {
+        const tieneSinDiligenciar = Object.values( listaSemaforosDetalle ).includes( 'sin-diligenciar' );
+        const tieneEnProceso = Object.values( listaSemaforosDetalle ).includes( 'en-proceso' );
+        const tieneCompleto = Object.values( listaSemaforosDetalle ).includes( 'completo' );
+
+        if ( tieneEnProceso === true ) {
+            this.semaforoDetalleGiro = 'en-proceso';
+        }
+        if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
+            this.semaforoDetalleGiro = 'en-proceso';
+        }
+        if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
+            this.semaforoDetalleGiro = 'completo';
+        }
+    }
+
 }

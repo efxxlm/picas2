@@ -1,10 +1,11 @@
+import { Dominio } from './../../../../core/_services/common/common.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { DevolucionesCodigo, EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-dialog-devolver-sol-pago-gog',
@@ -15,6 +16,7 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
 
     addressForm: FormGroup;
     listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
+    devolucionesCodigo = DevolucionesCodigo;
     editorStyle = {
       height: '45px',
       overflow: 'auto'
@@ -28,6 +30,11 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
       ]
     };
     estaEditando = true;
+    listaDevoluciones: any[] = [
+        { nombre: 'Registrar y validar requisitos de pago', codigo: 1 },
+        { nombre: 'Verificar financieramente solicitud de pago', codigo: 2 },
+        { nombre: 'Validar financieramente solicitud de pago', codigo: 3 }
+    ]
 
     constructor(
         private fb: FormBuilder,
@@ -44,9 +51,10 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
     }
 
     crearFormulario() {
-      return this.fb.group({
-        observaciones:[null, Validators.required]
-      })
+        return this.fb.group({
+            usuarioADevolver: [ null ],
+            observaciones: [ null, Validators.required ]
+        })
     }
 
     maxLength(e: any, n: number) {
@@ -73,9 +81,30 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
     onSubmit() {
         const pSolicitudPago = {
             solicitudPagoId: this.registro.registro.solicitudPagoId,
-            estadoCodigo: this.registro.esAnular === true ? this.listaEstadoSolicitudPago.ordenGiroAnulada : this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion,
+            estadoCodigo: '',
             observacionDevolucionOrdenGiro: this.addressForm.get( 'observaciones' ).value
         };
+
+        if ( this.registro.esAnular === true ) {
+            pSolicitudPago.estadoCodigo = this.listaEstadoSolicitudPago.ordenGiroAnulada
+        }
+        if ( this.registro.esAnular === false ) {
+            if ( this.addressForm.get( 'usuarioADevolver' ).value !== null ) {
+                if ( this.addressForm.get( 'usuarioADevolver' ).value === this.devolucionesCodigo.solicitudPago ) {
+                    pSolicitudPago.estadoCodigo = this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion
+                }
+
+                if ( this.addressForm.get( 'usuarioADevolver' ).value === this.devolucionesCodigo.verificarFinancieramente ) {
+                    pSolicitudPago.estadoCodigo = this.listaEstadoSolicitudPago.enProcesoVerificacionFinanciera
+                }
+
+                if ( this.addressForm.get( 'usuarioADevolver' ).value === this.devolucionesCodigo.validarFinancieramente ) {
+                    pSolicitudPago.estadoCodigo = this.listaEstadoSolicitudPago.enProcesoValidacionFinanciera
+                }
+            } else {
+                return;
+            }
+        }
 
         this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
             .subscribe(

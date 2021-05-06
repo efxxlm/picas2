@@ -215,7 +215,7 @@
     </mat-expansion-panel>
 
     <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="tieneDireccionTecnica === true">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion">
                     Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}

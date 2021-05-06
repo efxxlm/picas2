@@ -56,7 +56,7 @@
             <app-detalle-giro   [esRegistroNuevo]="esRegistroNuevo"
                                 [esVerDetalle]="esVerDetalle"
                                 [solicitudPago]="solicitudPago"
-                                (estadoSemaforo)="semaforoDetalleGiro = $event">
+                                (estadoSemaforo)="checkSemaforoDetalle( $event )">
             </app-detalle-giro>
         </mat-expansion-panel>
     </mat-accordion>
