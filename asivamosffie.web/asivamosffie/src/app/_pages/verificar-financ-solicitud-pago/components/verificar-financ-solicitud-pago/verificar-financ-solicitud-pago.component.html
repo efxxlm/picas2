@@ -84,7 +84,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="subsanarSolicitud( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.tieneSubsanacion === true">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.tieneSubsanacion === true">
                                 Subsanar solicitud
                         </button>
 
@@ -92,7 +92,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.tieneSubsanacion === false">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.tieneSubsanacion === false">
                                 Enviar para validación
                         </button>
 
@@ -100,7 +100,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="getRechazo( element )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.estaRechazada === true">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.estaRechazada === true">
                                 Rechazar solicitud
                         </button>
 
@@ -139,14 +139,14 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="subsanarSolicitud( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.tieneSubsanacion === true">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.tieneSubsanacion === true">
                                 Subsanar solicitud
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.tieneSubsanacion === false"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.tieneSubsanacion === false"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )">
                                 Enviar para validación
                         </button>
@@ -155,7 +155,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="getRechazo( element )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.estaRechazada === true">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera && element.registroCompletoVerificacionFinanciera === true && element.estaRechazada === true">
                                 Rechazar solicitud
                         </button>
 

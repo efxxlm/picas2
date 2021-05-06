@@ -108,7 +108,7 @@ export class VerdetalleValidfspComponent implements OnInit {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                                     }
 
-                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
+                                    this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }
