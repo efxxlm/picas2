@@ -672,6 +672,8 @@ namespace asivamosffie.services
                                                    .Where(s => s.SolicitudPagoListaChequeoRespuestaId == SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeoRespuestaId)
                                                                                 .Update(s => new SolicitudPagoListaChequeoRespuesta
                                                                                 {
+                                                                                    ValidacionObservacion = SolicitudPagoListaChequeoRespuesta.ValidacionObservacion,
+                                                                                    VerificacionObservacion  = SolicitudPagoListaChequeoRespuesta.VerificacionObservacion,
                                                                                     TieneSubsanacion = SolicitudPagoListaChequeoRespuesta.TieneSubsanacion,
                                                                                     FechaModificacion = DateTime.Now,
                                                                                     RegistroCompleto = RegistroCompletoItem,
@@ -683,7 +685,7 @@ namespace asivamosffie.services
                 _context.Set<SolicitudPagoListaChequeo>()
                                                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
                                                                                             .Update(s => new SolicitudPagoListaChequeo
-                                                                                            {
+                                                                                            { 
                                                                                                 RegistroCompleto = blRegistroCompletoListaChequeo,
                                                                                                 FechaModificacion = DateTime.Now,
                                                                                                 UsuarioModificacion = usuarioCreacion
