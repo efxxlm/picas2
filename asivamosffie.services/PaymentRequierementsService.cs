@@ -497,8 +497,8 @@ namespace asivamosffie.services
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.ValidacionRespuestaCodigo != null).ToList().Count())
                             blRegistroCompleto = false;
 
-                        if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
-                            blRegistroCompleto = false;
+                        //if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                        //    blRegistroCompleto = false;
 
                         pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
                                                   .ToList().ForEach(res =>
@@ -526,8 +526,8 @@ namespace asivamosffie.services
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.VerificacionRespuestaCodigo != null).ToList().Count())
                             blRegistroCompleto = false;
 
-                        if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
-                            blRegistroCompleto = false;
+                        //if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                        //    blRegistroCompleto = false;
 
 
                         pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
