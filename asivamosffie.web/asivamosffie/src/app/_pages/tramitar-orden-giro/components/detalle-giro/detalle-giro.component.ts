@@ -72,33 +72,6 @@ export class DetalleGiroComponent implements OnInit {
             [{ align: [] }],
         ]
     };
-    dataTable = [
-        {
-            numeroDrp: 'IP_00090',
-            aportantes: [
-                {
-                    nombre: 'Alcaldía de Susacón',
-                    porcentaje: 70
-
-                },
-                {
-                    nombre: 'Fundación Pies Descalzos',
-                    porcentaje: 30
-
-                }
-            ]
-        },
-        {
-            numeroDrp: 'IP_00123',
-            aportantes: [
-                {
-                    nombre: 'Alcaldía de Susacón',
-                    porcentaje: 100
-
-                }
-            ]
-        }
-    ];
     dataTableFuentes = [
         {
             nombre: 'Alcaldía de Susacón',
@@ -121,7 +94,6 @@ export class DetalleGiroComponent implements OnInit {
 
     ngOnInit(): void {
         this.getObservacion()
-        this.dataSource = new MatTableDataSource( this.dataTable );
         this.dataSourceFuentes = new MatTableDataSource( this.dataTableFuentes );
     }
 
@@ -129,6 +101,8 @@ export class DetalleGiroComponent implements OnInit {
         this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
         this.ordenGiroDetalleEstrategiaPago = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleEstrategiaPago[ 0 ];
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+
+        this.dataSource = new MatTableDataSource( this.solicitudPago.tablaPorcentajeParticipacion );
 
         // Get observaciones
         const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(

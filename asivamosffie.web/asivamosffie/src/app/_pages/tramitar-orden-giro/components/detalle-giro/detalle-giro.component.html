@@ -26,8 +26,8 @@
                 <ng-container matColumnDef="nombreAportante">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Nombre del aportante </th>
                   <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
-                    <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let aportante of element.aportantes">
-                      {{ aportante.nombre }}
+                    <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let aportante of element.listAportantes">
+                      {{ aportante.nombreAportante }}
                     </div>
                   </td>
                 </ng-container>
@@ -35,9 +35,8 @@
                 <ng-container matColumnDef="porcentaje">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Porcentaje de participación </th>
                   <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
-                    <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let aportante of element.aportantes">
-                      <!-- {{ aportante.porcentaje }}% -->
-                      Pendiente por novedades contractuales
+                    <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let aportante of element.listAportantes">
+                      {{ aportante.nomTotalParticipacion }}
                     </div>
                   </td>
                 </ng-container>

@@ -526,6 +526,10 @@ export class TerceroCausacionGogComponent implements OnInit {
         const listaNombreAportantes: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'nombreDeAportantes' ).value;
         const filterAportantesDominioId = listaNombreAportantes.filter( aportante => aportante.tipoAportanteId === aportanteSeleccionado.dominioId );
 
+        if ( aportanteIndex !== -1 ) {
+            listaAportantes.splice( aportanteIndex, 1 )
+        }
+
         if ( filterAportantesDominioId.length > 0 ) {
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'listaNombreAportantes' ).setValue( filterAportantesDominioId );
         }
@@ -542,8 +546,11 @@ export class TerceroCausacionGogComponent implements OnInit {
                 value => {
                     if ( value === true ) {
                         const aportanteSeleccionado = this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'tipoAportante' ).value;
-                        const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
-                        listaTipoAportantes.push( aportanteSeleccionado );
+
+                        if ( aportanteSeleccionado !== null ) {
+                            const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
+                            listaTipoAportantes.push( aportanteSeleccionado );
+                        }
 
                         this.getAportantes( index, jIndex ).removeAt( kIndex );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );

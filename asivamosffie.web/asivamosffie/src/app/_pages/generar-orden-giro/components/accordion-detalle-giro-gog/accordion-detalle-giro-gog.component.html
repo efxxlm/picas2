@@ -7,7 +7,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
+            <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
