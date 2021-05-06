@@ -27,6 +27,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
   ];
   estadoCodigos = {
     enviadaFiduciaria: '4',
+    enviadaFiduciariaNovedad: '24',
     enRevision: '2'
   }
 
@@ -44,7 +45,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
         let sinDiligenciar = 0;
         let enProceso = 0;
         for ( let contrataciones of resp ) {
-          if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria || contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad ) {
             this.dataTable.push( contrataciones );
             sinDiligenciar++;
           };

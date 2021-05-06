@@ -94,7 +94,52 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
                             break;
 
-                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual: 
+                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
+                            
+                            NovedadContractual novedadContractual =
+                                _context.NovedadContractual
+                                .Include(r => r.Contrato)
+                                    .ThenInclude(r => r.Contratacion)
+                                .Where(r => r.NovedadContractualId == sesionComiteSolicitud.SolicitudId)
+                                .FirstOrDefault();
+
+                            if (novedadContractual == null)
+                                break;
+
+                            if (novedadContractual.Contrato != null)
+                            {
+                                if (!string.IsNullOrEmpty(novedadContractual.Contrato.NumeroContrato))
+                                    sesionComiteSolicitud.EstaTramitado = true;
+                                else
+                                    sesionComiteSolicitud.EstaTramitado = false;
+                            }
+                            else
+                                sesionComiteSolicitud.EstaTramitado = false;
+
+
+                            sesionComiteSolicitud.Contratacion = novedadContractual.Contrato.Contratacion;
+
+                            sesionComiteSolicitud.FechaSolicitud = (DateTime)novedadContractual.FechaCreacion;
+
+                            sesionComiteSolicitud.NumeroSolicitud = novedadContractual.NumeroSolicitud;
+
+                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                && r.Codigo == ConstanCodigoTipoSolicitud.Novedad_Contractual
+                                ).FirstOrDefault().Nombre;
+
+                            if (novedadContractual.Contrato.Contratacion.RegistroCompleto == null || !(bool)novedadContractual.Contrato.Contratacion.RegistroCompleto)
+                            {
+                                sesionComiteSolicitud.EstadoRegistro = false;
+                                sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
+                            }
+                            else
+                            {
+                                sesionComiteSolicitud.EstadoRegistro = true;
+                                sesionComiteSolicitud.EstadoDelRegistro = "Completo";
+                            }
+                            sesionComiteSolicitud.EstadoCodigo = novedadContractual.EstadoCodigo;
+
                             break;
                              
                         default:
