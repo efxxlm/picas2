@@ -133,6 +133,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   ) { }
 
   cargarRegistro() {
+    this.tipoNovedadArray = [];
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       response.forEach(n => {
         let novedadContractualDescripcion: NovedadContractualDescripcion = {
