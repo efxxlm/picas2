@@ -6,10 +6,10 @@
         Cargar acta firmada
     </h1>
     <div class="centerTrick" style="margin-top: 10px;">
-        <p><b>10/08/2020</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número de registros incorporados: <b>5</b>
+        <p><b> {{data.fechaCargue |  date: "dd/MM/yyyy"}} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número de registros incorporados: <b>{{data.registrosIncorporados}}</b>
         </p>
     </div>
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="minuteUrlForm" (ngSubmit)="onSubmit()">
         <div class="text-center">
             <div class="mtop">
                 <mat-card class="shipping-card" style="padding: 1em 2em;">
@@ -18,11 +18,11 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="pr-1">
-                                        <label class="label-left" for="urlSoporte">Url con soporte de acta</label>
+                                        <label class="label-left" for="fileName">Url con soporte de acta</label>
                                     </div>
                                     <div class="col">
                                         <mat-form-field class="full-width">
-                                            <input matInput #urlSoporte type="text" formControlName="urlSoporte"
+                                            <input matInput #fileName type="text" formControlName="fileName"
                                                 required>
                                         </mat-form-field>
                                         <span class="info-url">Adjunte el acta con todas las firmas requeridas</span>
@@ -33,7 +33,7 @@
                     </mat-card-content>
                 </mat-card>
                 <div style="margin-top: 1.5em;">
-                    <button mat-raised-button color="accent" [disabled]="!addressForm.valid"
+                    <button mat-raised-button color="accent" [disabled]="!minuteUrlForm.valid"
                         type="submit">{{boton}}</button>
                 </div>
             </div>

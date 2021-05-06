@@ -43,12 +43,12 @@
                      >
                         Ver registros consistentes
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0 && !element.fechaActa"
                         (click)="generateMinute(element.registerId)">
                         Generar Acta
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
-                    (click)="uploadSignedMinutes();">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0 && !element.fechaActa"
+                    (click)="uploadSignedMinutes(element);">
                         Cargar acta firmada
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosIncorporados > 0"
@@ -56,7 +56,8 @@
                         >
                         Ver registros incorporados
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.acta">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.fechaActa"  
+                        (click)="downloadMinute(element.registerId)">
                        Descargar Acta
                     </button>
                 </td>

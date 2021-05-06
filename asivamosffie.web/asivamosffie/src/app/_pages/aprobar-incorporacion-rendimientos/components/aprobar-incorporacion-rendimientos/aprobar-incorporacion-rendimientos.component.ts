@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { filter } from 'rxjs/operators';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
 import { FileDownloader } from 'src/app/_helpers/file-downloader';
@@ -72,12 +73,19 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   };
 
   
-  uploadSignedMinutes(uploadedOrderId: number){
+  uploadSignedMinutes(uploadedOrder: any){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '50%';
-    dialogConfig.data = uploadedOrderId
+    dialogConfig.data = uploadedOrder
     const dialogRef = this.dialog.open(DialogCargarActaFirmadaAirComponent, dialogConfig);
+
+    const onCloseSubmit = dialogRef.afterClosed().pipe(filter(result => result));
+    
+    onCloseSubmit.subscribe( X =>{
+      this.loadDataSource();
+      });
+
   }
 
   includePerformances(uploadedOrder: any){
@@ -109,6 +117,10 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
       console.log(content)
       FileDownloader.exportPDF("ActaRendimientos.pdf", content)
     });
+  }
+
+  downloadMinute(uploadedOrderId: number){
+    
   }
 
 

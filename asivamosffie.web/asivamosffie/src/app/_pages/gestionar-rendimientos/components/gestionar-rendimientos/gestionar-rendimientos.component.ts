@@ -26,29 +26,29 @@ export class GestionarRendimientosComponent implements OnInit {
     'registrosInconsistentes',
     'gestion'
   ];
-  dataTable: any[] = [
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistros: 300,
-      registrosConsistentes: '',
-      registrosInconsistentes: '',
-      gestion: 1
-    },
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistros: 23,
-      registrosConsistentes: '0',
-      registrosInconsistentes: '23',
-      gestion: 2
-    },
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistros: 326,
-      registrosConsistentes: '300',
-      registrosInconsistentes: '26',
-      gestion: 2
-    }
-  ];
+  // dataTable: any[] = [
+  //   {
+  //     fechaCargue: '10/08/2020',
+  //     numTotalRegistros: 300,
+  //     registrosConsistentes: '',
+  //     registrosInconsistentes: '',
+  //     gestion: 1
+  //   },
+  //   {
+  //     fechaCargue: '10/08/2020',
+  //     numTotalRegistros: 23,
+  //     registrosConsistentes: '0',
+  //     registrosInconsistentes: '23',
+  //     gestion: 2
+  //   },
+  //   {
+  //     fechaCargue: '10/08/2020',
+  //     numTotalRegistros: 326,
+  //     registrosConsistentes: '300',
+  //     registrosInconsistentes: '26',
+  //     gestion: 2
+  //   }
+  // ];
   constructor(public dialog: MatDialog,
     private faseDosPagosRendimientosSvc: FaseDosPagosRendimientosService) { }
 

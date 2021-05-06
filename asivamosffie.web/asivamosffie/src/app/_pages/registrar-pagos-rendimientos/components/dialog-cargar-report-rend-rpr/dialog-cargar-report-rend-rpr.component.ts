@@ -52,6 +52,7 @@ export class DialogCargarReportRendRprComponent implements OnInit {
           .uploadFileToValidate(pFile, this.typeFile, true)
           .subscribe((response: any) => {
             this.openDialog('', 'La información ha sido guardada exitosamente')
+            this.close();
           })
       }
     })
