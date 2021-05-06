@@ -242,33 +242,37 @@
         </ng-template>
     </mat-expansion-panel>
 
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoDireccionTecnica">
-                Descuentos Dirección Técnica
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <app-descuentos-direccion-tecnica   [esVerDetalle]="esVerDetalle"
-                                            [esRegistroNuevo]="esRegistroNuevo"
-                                            [solicitudPago]="solicitudPago"
-                                            (estadoSemaforo)="listaSemaforos.semaforoDireccionTecnica = $event">
-        </app-descuentos-direccion-tecnica>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoTerceroCausacion">
-                Tercero de causación
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <app-tercero-causacion  [esVerDetalle]="esVerDetalle"
-                                [esRegistroNuevo]="esRegistroNuevo"
-                                [solicitudPago]="solicitudPago"
-                                (estadoSemaforo)="listaSemaforos.semaforoTerceroCausacion = $event">
-        </app-tercero-causacion>
-    </mat-expansion-panel>
+    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion">
+                    Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <app-descuentos-direccion-tecnica   [esVerDetalle]="esVerDetalle"
+                                                [esRegistroNuevo]="esRegistroNuevo"
+                                                [solicitudPago]="solicitudPago"
+                                                [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                                (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica = $event : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
+            </app-descuentos-direccion-tecnica>
+        </mat-expansion-panel>
+    
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion : listaSemaforos.semaforoTerceroCausacionConstruccion">
+                    Tercero de causación - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <app-tercero-causacion  [esVerDetalle]="esVerDetalle"
+                                    [esRegistroNuevo]="esRegistroNuevo"
+                                    [solicitudPago]="solicitudPago"
+                                    [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                    (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion = $event : listaSemaforos.semaforoTerceroCausacionConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
+            </app-tercero-causacion>
+        </mat-expansion-panel>
+    </div>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">

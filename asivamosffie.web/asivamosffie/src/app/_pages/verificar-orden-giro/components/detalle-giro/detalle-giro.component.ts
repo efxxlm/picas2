@@ -19,7 +19,7 @@ export class DetalleGiroComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
-    @Output() estadoSemaforo = new EventEmitter<string>();
+    @Output() estadoSemaforo = new EventEmitter<any>();
     solicitudPagoRegistrarSolicitudPago: any;
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -130,6 +130,7 @@ export class DetalleGiroComponent implements OnInit {
     async getObservacion() {
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
         this.ordenGiroDetalleEstrategiaPago = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleEstrategiaPago[ 0 ];
+        this.ordenGiroId = this.solicitudPago.ordenGiroId;
 
         // Get observaciones
         const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
@@ -189,21 +190,7 @@ export class DetalleGiroComponent implements OnInit {
         this.tablaHistorial = new MatTableDataSource( this.historialObservaciones );
 
         // Check semaforo principal
-        setTimeout(() => {
-            const tieneSinDiligenciar = Object.values( this.listaSemaforos ).includes( 'sin-diligenciar' );
-            const tieneEnProceso = Object.values( this.listaSemaforos ).includes( 'en-proceso' );
-            const tieneCompleto = Object.values( this.listaSemaforos ).includes( 'completo' );
-    
-            if ( tieneEnProceso === true ) {
-                this.estadoSemaforo.emit( 'en-proceso' );
-            }
-            if ( tieneSinDiligenciar === true && tieneCompleto === true ) {
-                this.estadoSemaforo.emit( 'en-proceso' );
-            }
-            if ( tieneSinDiligenciar === false && tieneEnProceso === false && tieneCompleto === true ) {
-                this.estadoSemaforo.emit( 'completo' );
-            }
-        }, 6000);
+        this.estadoSemaforo.emit( this.listaSemaforos )
     }
 
     checkTieneDescuentos( esPreconstruccion: boolean ) {

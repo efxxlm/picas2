@@ -12,7 +12,7 @@
                     <b style="margin-right: .5em;">Criterios a los cuales aplica el descuento: </b>
 
                     <div class="d-flex" *ngFor="let value of descuento.get( 'criterio' ).value; index as indexCriterio">
-                        {{ firstLetterUpperCase( getValueCriterio( value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexCriterio">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexCriterio"></span>
+                        {{ firstLetterUpperCase( getValueCriterio( value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexCriterio" style="margin-right: .3em;">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexCriterio">.</span>
                     </div>
                 </div>
                 <p>  </p>

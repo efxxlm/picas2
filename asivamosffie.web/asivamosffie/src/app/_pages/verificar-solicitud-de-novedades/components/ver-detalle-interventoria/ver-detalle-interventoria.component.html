@@ -267,6 +267,22 @@
     </mat-card>
   </div>
 
+  <mat-card class="shipping-card var-main-gris" *ngIf="novedad.estadoCodigo === '7'">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Causa del rechazo </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          {{ novedad['fechaModificacion'] | date: 'dd/MM/yyyy' }}
+        </strong>
+      </p>
+      <div>
+        <section class="text-justify" [innerHTML]="novedad.causaRechazo"></section>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   <div *ngIf="false">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
       <thead>

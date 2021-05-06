@@ -61,7 +61,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
-            <app-tabla-datos-ddp-gog *ngIf="solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-datos-ddp-gog>
+            <app-tabla-datos-ddp-gog *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-datos-ddp-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

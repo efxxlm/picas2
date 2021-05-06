@@ -231,6 +231,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VActualizacionPolizaYgarantias> VActualizacionPolizaYgarantias { get; set; }
         public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
+        public virtual DbSet<VAportanteFuenteUso> VAportanteFuenteUso { get; set; }
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
         public virtual DbSet<VComponenteUsoNovedad> VComponenteUsoNovedad { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
@@ -291,7 +292,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -3920,10 +3920,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EstadoCodigoGestionar)
-                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoProcesoCodigo)
@@ -8121,6 +8117,21 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VAportanteFuenteUso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Aportante_Fuente_Uso");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.TipoUso)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
             modelBuilder.Entity<VAportantesXcriterio>(entity =>
             {
                 entity.HasNoKey();
@@ -8435,11 +8446,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NombreUso).HasMaxLength(250);
 
-                entity.Property(e => e.TipoUsoCodigo)
+                entity.Property(e => e.TipoUso)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>

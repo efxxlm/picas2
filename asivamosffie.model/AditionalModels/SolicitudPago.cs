@@ -24,6 +24,13 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public TablaUsoFuenteAportante TablaUsoFuenteAportante { get; set; }
+
+        [NotMapped]
+        public dynamic TablaPorcentajeParticipacion { get; set; }
+
+        [NotMapped]
+        public dynamic TablaInformacionFuenteRecursos { get; set; }
+
     }
     
 }

@@ -215,9 +215,9 @@
     </mat-expansion-panel>
 
     <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="tieneDireccionTecnica === true">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoDireccionTecnica">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion">
                     Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -226,14 +226,14 @@
                                                 [esRegistroNuevo]="esRegistroNuevo"
                                                 [solicitudPago]="solicitudPago"
                                                 [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                                (estadoSemaforo)="listaSemaforos.semaforoDireccionTecnica = $event">
+                                                (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica = $event : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
             </app-descuentos-direccion-tecnica>
         </mat-expansion-panel>
     
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoTerceroCausacion">
-                    Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion : listaSemaforos.semaforoTerceroCausacionConstruccion">
+                    Tercero de causación - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
     
@@ -241,7 +241,7 @@
                                     [esRegistroNuevo]="esRegistroNuevo"
                                     [solicitudPago]="solicitudPago"
                                     [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                    (estadoSemaforo)="listaSemaforos.semaforoTerceroCausacion = $event">
+                                    (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion = $event : listaSemaforos.semaforoTerceroCausacionConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
             </app-tercero-causacion>
         </mat-expansion-panel>
     </div>

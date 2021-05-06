@@ -59,7 +59,6 @@ namespace asivamosffie.model.Models
         public string ObservacionGestionar { get; set; }
         public string UrlSoporteGestionar { get; set; }
         public bool? RegistroCompletoGestionar { get; set; }
-        public string EstadoCodigoGestionar { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }

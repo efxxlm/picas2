@@ -201,39 +201,41 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
             return semaforo;
         }
 
-        if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
-            if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
-                const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
-
-                if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                    if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
-                        const ordenGiroDetalleTerceroCausacion = ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.filter( terceroCausacion => terceroCausacion.esPreconstruccion === esPreconstruccion );
-                        let enProceso = 0;
-                        let completo = 0;
-
-                        if ( ordenGiroDetalleTerceroCausacion.length > 0 ) {
-                            ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
-                                if ( terceroCausacion.registroCompleto === false ) {
-                                    enProceso++;
-                                }
-
-                                if ( terceroCausacion.registroCompleto === true ) {
-                                    completo++;
-                                }
-                            } )
-                        }
-
-                        if ( enProceso > 0 && enProceso === ordenGiroDetalleTerceroCausacion.length ) {
-                            semaforo = 'en-proceso';
-                        }
-                        if ( enProceso > 0 && enProceso < ordenGiroDetalleTerceroCausacion.length ) {
-                            semaforo = 'en-proceso';
-                        }
-                        if ( completo > 0 && completo < ordenGiroDetalleTerceroCausacion.length ) {
-                            semaforo = 'en-proceso';
-                        }
-                        if ( completo > 0 && completo === ordenGiroDetalleTerceroCausacion.length ) {
-                            semaforo = 'completo';
+        if ( this.ordenGiro !== undefined ) {
+            if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
+                if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
+    
+                    if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                            const ordenGiroDetalleTerceroCausacion = ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.filter( terceroCausacion => terceroCausacion.esPreconstruccion === esPreconstruccion );
+                            let enProceso = 0;
+                            let completo = 0;
+    
+                            if ( ordenGiroDetalleTerceroCausacion.length > 0 ) {
+                                ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
+                                    if ( terceroCausacion.registroCompleto === false ) {
+                                        enProceso++;
+                                    }
+    
+                                    if ( terceroCausacion.registroCompleto === true ) {
+                                        completo++;
+                                    }
+                                } )
+                            }
+    
+                            if ( enProceso > 0 && enProceso === ordenGiroDetalleTerceroCausacion.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( enProceso > 0 && enProceso < ordenGiroDetalleTerceroCausacion.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( completo > 0 && completo < ordenGiroDetalleTerceroCausacion.length ) {
+                                semaforo = 'en-proceso';
+                            }
+                            if ( completo > 0 && completo === ordenGiroDetalleTerceroCausacion.length ) {
+                                semaforo = 'completo';
+                            }
                         }
                     }
                 }

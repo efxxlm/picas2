@@ -15,7 +15,7 @@
             </mat-card-content>
         </mat-card>
 
-        <app-tabla-aportantes *ngIf="solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-aportantes>
+        <app-tabla-datos-solicitud [listProyectos]="solicitudPago.contratoSon.listProyectos[1]"></app-tabla-datos-solicitud>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -53,7 +53,7 @@
             </table>
         </div>
 
-        <app-tabla-aportantes></app-tabla-aportantes>
+        <app-tabla-aportantes *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-aportantes>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">

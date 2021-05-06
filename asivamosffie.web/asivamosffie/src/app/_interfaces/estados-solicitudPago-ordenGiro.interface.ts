@@ -135,3 +135,9 @@ export enum TipoObservacionesCodigo {
     observaciones = '6',
     soporteOrdenGiro = '7'
 }
+
+export enum DevolucionesCodigo {
+    solicitudPago = 1,
+    verificarFinancieramente,
+    validarFinancieramente
+}

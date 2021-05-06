@@ -33,8 +33,8 @@
     <ng-container matColumnDef="estadoNovedadNombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la novedad</th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.estadoCodigo === '4'">{{element.estadoDescripcion}}</span>
-        <span *ngIf="element.estadoCodigo !== '4'">{{element.estadoCodigoNombre}}</span>
+        <span *ngIf="element.estadoCodigo === '4' ">{{element.estadoDescripcion}}</span>
+        <span *ngIf="element.estadoCodigo !== '4' ">{{element.estadoCodigoNombre}}</span>
         
       </td>
     </ng-container>

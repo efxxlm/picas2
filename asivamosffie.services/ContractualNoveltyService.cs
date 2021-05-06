@@ -2378,10 +2378,10 @@ namespace asivamosffie.services
                         descripcion.NovedadContractualDescripcionMotivo == null ||
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
-                        descripcion.EsDocumentacionSoporte == null ||
+                        descripcion.EsDocumentacionSoporte == null 
                         //string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
                         //descripcion.FechaConcepto == null ||
-                        string.IsNullOrEmpty(descripcion.NumeroRadicado)
+                        //string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )
                     {

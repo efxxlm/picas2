@@ -21,12 +21,20 @@ export class TablaDatosDdpGogComponent implements OnInit {
 
     ngOnInit(): void {
         this.tablaUsoFuenteAportante.forEach( registro => {
+            const valorUso = [];
+            const saldoActualUso = [];
+
+            registro.fuentes[ registro.fuentes.length -1 ].aportante.forEach( aportante => {
+                valorUso.push( aportante.valorUso[ 0 ].valor )
+                saldoActualUso.push( aportante.valorUso[ 0 ].valorActual )
+            } )
+
             const registroObj = {
                 nombreUso: registro.nombreUso,
                 fuentes: registro.fuentes,
                 aportante: registro.fuentes[ registro.fuentes.length -1 ].aportante,
-                valorUso: registro.fuentes[ registro.fuentes.length -1 ].aportante[ registro.fuentes[ registro.fuentes.length -1 ].aportante.length -1 ].valorUso,
-                saldoActualUso: registro.fuentes[ registro.fuentes.length -1 ].aportante[ registro.fuentes[ registro.fuentes.length -1 ].aportante.length -1 ].saldoActualUso
+                valorUso,
+                saldoActualUso
             }
 
             this.dataTable.push( registroObj );

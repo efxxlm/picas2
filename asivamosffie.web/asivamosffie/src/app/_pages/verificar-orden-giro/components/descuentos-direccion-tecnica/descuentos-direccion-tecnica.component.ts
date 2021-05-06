@@ -348,6 +348,16 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                     }
                 }
 
+                if ( this.totalEnProceso > 0 && this.totalEnProceso === this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'en-proceso' );
+                }
+                if ( this.totalCompleto > 0 && this.totalCompleto < this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'en-proceso' );
+                }
+                if ( this.totalCompleto > 0 && this.totalCompleto === this.descuentos.length ) {
+                    this.estadoSemaforo.emit( 'completo' );
+                }
+
                 /*
                 if ( this.ordenGiroDetalle !== undefined ) {
                     const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
@@ -531,15 +541,6 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                             }
                         }
                         setTimeout(() => {
-                            if ( this.totalEnProceso > 0 && this.totalEnProceso === this.descuentos.length ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
-                            }
-                            if ( this.totalCompleto > 0 && this.totalCompleto < this.descuentos.length ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
-                            }
-                            if ( this.totalCompleto > 0 && this.totalCompleto === this.descuentos.length ) {
-                                this.estadoSemaforo.emit( 'completo' );
-                            }
                         }, 3000);
                     }
                 }
