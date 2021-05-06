@@ -82,7 +82,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -128,7 +128,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {
             bool blRegistroCompleto = false;
@@ -656,12 +656,12 @@ namespace asivamosffie.services
                      IsException = false,
                      IsValidation = false,
                      Code = GeneralCodes.EliminacionExitosa,
-                     Message = 
+                     Message =
                      await _commonService.GetMensajesValidacionesByModuloAndCodigo(
                                                                                      (int)enumeratorMenu.Generar_Orden_de_giro,
                                                                                      GeneralCodes.EliminacionExitosa,
-                                                                                     idAccion, 
-                                                                                     pAuthor, 
+                                                                                     idAccion,
+                                                                                     pAuthor,
                                                                                      ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
                                                                                  )
                  };
@@ -799,108 +799,109 @@ namespace asivamosffie.services
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
 
-            try
+            if (SolicitudPago.ContratoId > 0)
             {
-                if (SolicitudPago.ContratoId > 0)
-                {
-                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
-                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
-                }
-                if (SolicitudPago.OrdenGiroId != null)
-                {
-                    SolicitudPago.OrdenGiro = _context.OrdenGiro
-                        .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
-                            .Include(d => d.SolicitudPago)
-                        .AsNoTracking().FirstOrDefault();
-                     
-                    foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
-                    {
-                        if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
-                            OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+                SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
+                SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
+            }
+            if (SolicitudPago.OrdenGiroId != null)
+            {
+                SolicitudPago.OrdenGiro = _context.OrdenGiro
+                    .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
+                        .Include(d => d.SolicitudPago)
+                    .AsNoTracking().FirstOrDefault();
 
-                        foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
-                        {
-                            if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
-                                OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
-                        }
+                foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
+                {
+                    if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
+                        OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+
+                    foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+                    {
+                        if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
+                            OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
                     }
                 }
+            }
+            try
+            {
+
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
             }
             catch (Exception ex)
             {
-            }
+            } 
             return SolicitudPago;
         }
 
-        private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
-        {
-            List<VFuentesUsoXcontratoId> List =
-                                               _context.VFuentesUsoXcontratoId
-                                               .Where(c => c.ContratoId == solicitudPago.ContratoSon.ContratoId)
-                                               .ToList();
-
-            TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
-            {
-                Usos = List
-                           .ConvertAll(x => new Usos
-                           {
-                               NombreUso = x.NombreUso,
-                               TipoUsoCodigo = x.TipoUsoCodigo
-                           }).Distinct().ToList()
-            };
-
-            foreach (var usos in tabla.Usos)
-            {
-                usos.Fuentes = List
-                                   .ConvertAll(x => new Fuentes
-                                   {
-                                       TipoUsoCodigo = usos.TipoUsoCodigo,
-                                       FuenteFinanciacionId = x.FuenteFinanciacionId,
-                                       NombreFuente = x.FuenteFinanciacion
-                                   })
-                                   .Where(r => r.TipoUsoCodigo == usos.TipoUsoCodigo)
-                                   .Distinct()
-                                   .ToList();
-
-                foreach (var Fuentes in usos.Fuentes.Distinct().ToList())
-                {
-                    Fuentes.Aportante = List
-                                           .ConvertAll(x => new Aportante
-                                           {
-                                               FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
-                                               AportanteId = x.AportanteProyecto
-                                           })
-                                           .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId)
-                                           .Distinct()
+    private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
+    {
+        List<VFuentesUsoXcontratoId> List =
+                                           _context.VFuentesUsoXcontratoId
+                                           .Where(c => c.ContratoId == solicitudPago.ContratoSon.ContratoId)
                                            .ToList();
 
-                    foreach (var Aportante in Fuentes.Aportante.Distinct().ToList())
-                    {
-                        decimal ValorUso = List.Where(r => r.AportanteProyecto == Aportante.AportanteId).Select(r => r.ValorUso).FirstOrDefault();
-                        decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
-                        Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-                        Aportante.ValorUso = List
-                                                   .ConvertAll(x => new ValorUso
-                                                   {
-                                                       AportanteId = Aportante.AportanteId,
-                                                       Valor = String.Format("{0:n0}", x.ValorUso)
-                                                   })
-                                                   .Where(r => r.AportanteId == Aportante.AportanteId)
-                                                   .Distinct()
-                                                   .ToList();
+        TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
+        {
+            Usos = List
+                       .ConvertAll(x => new Usos
+                       {
+                           NombreUso = x.NombreUso,
+                           TipoUsoCodigo = x.TipoUsoCodigo
+                       }).Distinct().ToList()
+        };
 
-                        Aportante.SaldoActualUso = new List<SaldoActualUso>
+        foreach (var usos in tabla.Usos)
+        {
+            usos.Fuentes = List
+                               .ConvertAll(x => new Fuentes
+                               {
+                                   TipoUsoCodigo = usos.TipoUsoCodigo,
+                                   FuenteFinanciacionId = x.FuenteFinanciacionId,
+                                   NombreFuente = x.FuenteFinanciacion
+                               })
+                               .Where(r => r.TipoUsoCodigo == usos.TipoUsoCodigo)
+                               .Distinct()
+                               .ToList();
+
+            foreach (var Fuentes in usos.Fuentes)
+            {
+                Fuentes.Aportante = List
+                                       .ConvertAll(x => new Aportante
+                                       {
+                                           FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                           AportanteId = x.AportanteProyecto
+                                       })
+                                       .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId)
+                                       .Distinct()
+                                       .ToList();
+
+                foreach (var Aportante in Fuentes.Aportante)
+                {
+                    decimal ValorUso = List.Where(r => r.AportanteProyecto == Aportante.AportanteId).Select(r => r.ValorUso).FirstOrDefault();
+                    decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+                    Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+                    Aportante.ValorUso = List
+                                               .ConvertAll(x => new ValorUso
+                                               {
+                                                   AportanteId = Aportante.AportanteId,
+                                                   Valor = String.Format("{0:n0}", x.ValorUso)
+                                               })
+                                               .Where(r => r.AportanteId == Aportante.AportanteId)
+                                               .Distinct()
+                                               .ToList();
+
+                    Aportante.SaldoActualUso = new List<SaldoActualUso>
                         {
                             new SaldoActualUso
                             {
@@ -908,230 +909,230 @@ namespace asivamosffie.services
                                 Valor = String.Format("{0:n0}", ValorUso - Descuento)
                             }
                         };
-                    }
                 }
-
-
             }
 
 
-            return tabla;
         }
 
-        private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
-        {
-            String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
-            List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
-            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0;
-
-
-            List<VRpsPorContratacion> vRpsPorContratacion =
-                                                           _context.VRpsPorContratacion
-                                                           .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
-                                                           .OrderBy(C => C.ContratacionId)
-                                                           .ToList();
-
-            int Enum = 1;
-            foreach (var DPR in vRpsPorContratacion)
-            {
-                ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
-
-                ListTablaDrp.Add(new TablaDRP
-                {
-                    Enum = Enum,
-                    NumeroDRP = DPR.NumeroDrp,
-                    Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
-                    Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
-                });
-                Enum++;
-            }
-            return ListTablaDrp;
-        }
-
-        #endregion
-
-        #region validate 
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
-        {
-            if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
-               || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
-               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
-                ) return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
-        {
-            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
-                return true;
-
-            if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
-               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
-               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
-               || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
-               || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
-                ) return false;
-
-            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
-                return false;
-
-            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
-                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
-                )
-                return false;
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTercero.MedioPagoGiroCodigo))
-                return false;
-
-            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
-            {
-                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() == 0)
-                    return false;
-                if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
-                    return false;
-            }
-            else
-            {
-                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() == 0)
-                    return false;
-                if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
-        {
-            if (
-                   pOrdenGiro.OrdenGiroDetalle == null
-                || pOrdenGiro.OrdenGiroTercero == null
-                ) return false;
-
-            if (pOrdenGiro.OrdenGiroDetalle.Count() == 0
-                || pOrdenGiro.OrdenGiroTercero.Count() == 0
-                ) return false;
-
-            foreach (var item in pOrdenGiro.OrdenGiroDetalle)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalle(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiro.OrdenGiroTercero)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroTercero(item))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
-        {
-            if (
-                  pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
-               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
-                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
-                return false;
-
-            if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
-                return false;
-
-            foreach (var OrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
-        {
-            if (
-                   pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
-                || pOrdenGiroDetalle?.OrdenGiroSoporte == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
-                ) return false;
-
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
-            {
-                if (string.IsNullOrEmpty(item.Observacion))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
-            {
-                if (string.IsNullOrEmpty(item.UrlSoporte))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
-            {
-                if (string.IsNullOrEmpty(item.EstrategiaPagoCodigo))
-                    return false;
-            }
-
-            return true;
-        }
-
-        #endregion 
+        return tabla;
     }
+
+    private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
+    {
+        String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
+        List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
+
+        decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0;
+
+
+        List<VRpsPorContratacion> vRpsPorContratacion =
+                                                       _context.VRpsPorContratacion
+                                                       .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
+                                                       .OrderBy(C => C.ContratacionId)
+                                                       .ToList();
+
+        int Enum = 1;
+        foreach (var DPR in vRpsPorContratacion)
+        {
+            ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
+
+            ListTablaDrp.Add(new TablaDRP
+            {
+                Enum = Enum,
+                NumeroDRP = DPR.NumeroDrp,
+                Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
+                Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
+            });
+            Enum++;
+        }
+        return ListTablaDrp;
+    }
+
+    #endregion
+
+    #region validate 
+
+    private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
+    {
+        if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+           || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
+           || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+            ) return false;
+
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+    {
+        if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
+            return true;
+
+        if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+           || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
+           || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
+           || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+           || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
+            ) return false;
+
+        if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
+            return false;
+
+        foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
+                return false;
+        }
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
+    {
+        if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
+            || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
+            || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
+            || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
+            || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
+            )
+            return false;
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
+    {
+        if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
+           || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+           || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+            )
+            return false;
+
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
+    {
+        if (string.IsNullOrEmpty(pOrdenGiroTercero.MedioPagoGiroCodigo))
+            return false;
+
+        if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
+        {
+            if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() == 0)
+                return false;
+            if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
+                return false;
+        }
+        else
+        {
+            if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() == 0)
+                return false;
+            if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
+    {
+        if (
+               pOrdenGiro.OrdenGiroDetalle == null
+            || pOrdenGiro.OrdenGiroTercero == null
+            ) return false;
+
+        if (pOrdenGiro.OrdenGiroDetalle.Count() == 0
+            || pOrdenGiro.OrdenGiroTercero.Count() == 0
+            ) return false;
+
+        foreach (var item in pOrdenGiro.OrdenGiroDetalle)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroDetalle(item))
+                return false;
+        }
+
+        foreach (var item in pOrdenGiro.OrdenGiroTercero)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroTercero(item))
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
+    {
+        if (
+              pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
+           || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
+           || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
+           || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
+            )
+            return false;
+
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
+    {
+        if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
+            || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
+            return false;
+
+        if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
+            return false;
+
+        foreach (var OrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante))
+                return false;
+        }
+        return true;
+    }
+
+    private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+    {
+        if (
+               pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
+            || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
+            || pOrdenGiroDetalle?.OrdenGiroSoporte == null
+            || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
+            || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
+            ) return false;
+
+
+        foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
+                return false;
+        }
+
+        foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
+        {
+            if (string.IsNullOrEmpty(item.Observacion))
+                return false;
+        }
+
+        foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
+        {
+            if (string.IsNullOrEmpty(item.UrlSoporte))
+                return false;
+        }
+
+        foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+        {
+            if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
+                return false;
+        }
+
+        foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
+        {
+            if (string.IsNullOrEmpty(item.EstrategiaPagoCodigo))
+                return false;
+        }
+
+        return true;
+    }
+
+    #endregion
+}
 }
