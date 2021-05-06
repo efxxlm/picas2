@@ -1059,6 +1059,8 @@ namespace asivamosffie.services
                     pDisponibilidadPresObservacion.EstadoCodigo = estado.ToString();
                     pDisponibilidadPresObservacion.Eliminado = false;
                     _context.GestionFuenteFinanciacion.Add(pDisponibilidadPresObservacion);
+
+
                     // cruce de pagos
                     var paymentOrder = new OrdenGiroPago();
                     paymentOrder.OrdenGiroId = solicitud.OrdenGiro.OrdenGiroId;
@@ -1416,7 +1418,8 @@ namespace asivamosffie.services
 
                 var gestionFuenteFinanciacion = new GestionFuenteFinanciacion();
                 gestionFuenteFinanciacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
-                gestionFuenteFinanciacion.ValorSolicitado = valorAIncorporar;
+                gestionFuenteFinanciacion.ValorSolicitadoGenerado = valorAIncorporar;
+                gestionFuenteFinanciacion.ValorSolicitado = 0;
                 gestionFuenteFinanciacion.UsuarioCreacion = _userName;
 
                 var sumValoresSolicitados = _context.GestionFuenteFinanciacion
@@ -1424,9 +1427,18 @@ namespace asivamosffie.services
                                  x.FuenteFinanciacionId == gestionFuenteFinanciacion.FuenteFinanciacionId)
                     .Sum(x => x.ValorSolicitado);
 
+
+                var sumValoresSolicitadosGenerado = _context.GestionFuenteFinanciacion
+                    .Where(x => !(bool)x.Eliminado &&
+                                 x.FuenteFinanciacionId == gestionFuenteFinanciacion.FuenteFinanciacionId &&
+                                 x.ValorSolicitadoGenerado.HasValue)
+                    .Sum(x => x.ValorSolicitadoGenerado.Value);
+
                 var fuente = await _context.FuenteFinanciacion.FindAsync(gestionFuenteFinanciacion.FuenteFinanciacionId);
                 gestionFuenteFinanciacion.SaldoActual = (decimal)fuente.ValorFuente - sumValoresSolicitados;
-                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual + gestionFuenteFinanciacion.ValorSolicitado;
+                gestionFuenteFinanciacion.SaldoActualGenerado = (decimal)fuente.ValorFuente - sumValoresSolicitadosGenerado;
+                gestionFuenteFinanciacion.NuevoSaldo = gestionFuenteFinanciacion.SaldoActual;
+                gestionFuenteFinanciacion.NuevoSaldoGenerado = gestionFuenteFinanciacion.SaldoActualGenerado + gestionFuenteFinanciacion.ValorSolicitadoGenerado;
                 int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Rendimientos;
                 gestionFuenteFinanciacion.FechaCreacion = DateTime.Now;
                 gestionFuenteFinanciacion.EstadoCodigo = estado.ToString();
