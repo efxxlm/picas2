@@ -201,4 +201,8 @@ a[target='_blank'] {
   .tabla-gris &  {
     color: $fontColor;
   }
+
+  &.max-width-none {
+    max-width: none;
+  }
 }

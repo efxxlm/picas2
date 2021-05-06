@@ -130,11 +130,6 @@ export class VerificarSolicitudNovedadComponent implements OnInit {
     this.contractualNoveltyService.createEditObservacion(novedad, false)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code == "200") {
-          this.router.navigate(['/verificarSolicitudDeNovedades']);
-        }
-
-
       });
   }
 
