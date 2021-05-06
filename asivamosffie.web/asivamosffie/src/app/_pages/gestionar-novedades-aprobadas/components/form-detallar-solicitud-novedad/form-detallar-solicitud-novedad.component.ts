@@ -140,6 +140,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
             this.novedad.novedadContractualAportante.forEach(apo => {
 
+              console.log(apo)
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
 
@@ -156,6 +157,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                   grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
                   grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
                   grupoAportante.get('cofinanciacionAportanteId').setValue(apo.cofinanciacionAportanteId);
+                  grupoAportante.get('nombreAportante').setValue(apo.nombreAportante);
 
                   if (apo.componenteAportanteNovedad.length > 0) {
                     apo.componenteAportanteNovedad.forEach(compoApo => {
