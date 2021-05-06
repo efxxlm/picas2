@@ -294,7 +294,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -8123,6 +8122,8 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_Aportante_Fuente_Uso");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.TipoUso)
                     .HasMaxLength(100)

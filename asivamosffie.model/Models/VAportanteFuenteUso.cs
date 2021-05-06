@@ -10,5 +10,6 @@ namespace asivamosffie.model.Models
         public decimal ValorUso { get; set; }
         public string TipoUso { get; set; }
         public int? FuenteFinanciacionId { get; set; }
+        public string Nombre { get; set; }
     }
 }

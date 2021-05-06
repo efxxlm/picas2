@@ -869,7 +869,9 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-                usos.Fuentes = List
+                List<VFuentesUsoXcontratoId> List2 = List.Where(r => r.NombreUso == usos.NombreUso).ToList();
+
+                usos.Fuentes = List2
                         .ConvertAll(x => new Fuentes
                         {
                             TipoUsoCodigo = usos.TipoUsoCodigo,
@@ -890,41 +892,49 @@ namespace asivamosffie.services
                     {
                         if (Fuentes.Aportante == null || !Fuentes.Aportante.Any(r => r.AportanteId == item.CofinanciacionAportanteId))
                         {
-                            Fuentes.Aportante = List
-                              .ConvertAll(x => new Aportante
-                              {
-                                  FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
-                                  AportanteId = item.CofinanciacionAportanteId
-                              })
-                              .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId)
-                              .Distinct()
-                              .ToList();
+
+                            if (Fuentes.Aportante == null)
+                                Fuentes.Aportante = new List<Aportante>();
 
 
+                            List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
+                                ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+
+                            Fuentes.Aportante.Add(new Aportante
+                            {
+                                FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                AportanteId = item.CofinanciacionAportanteId
+
+                            });
                             foreach (var Aportante in Fuentes.Aportante)
                             {
-                                decimal ValorUso = ListVAportanteFuenteUso
-                                    .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId &&
-                                    r.TipoUso == usos.TipoUsoCodigo
-                                    ).Sum(s => s.ValorUso);
+                                decimal ValorUso = ListVAportanteFuenteUso3
+                                    .Where(r => r.Nombre == usos.NombreUso
+                                    && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                    ).Select(s => s.ValorUso).FirstOrDefault();
+
 
                                 decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
 
                                 Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-                                Aportante.ValorUso = List
-                                                        .ConvertAll(x => new ValorUso
-                                                        {
-                                                            AportanteId = Aportante.AportanteId,
-                                                            Valor = String.Format("{0:n0}", ValorUso)
-                                                        })
-                                                        .Where(r => r.AportanteId == Aportante.AportanteId)
-                                                        .Distinct()
-                                                        .ToList();
+
+                                if (Aportante.ValorUso == null)
+                                    Aportante.ValorUso = new List<ValorUso>();
+
+                                Aportante.ValorUso.Add(new ValorUso
+                                {
+                                    AportanteId = Aportante.AportanteId,
+                                    Valor = String.Format("{0:n0}", ValorUso),
+                                    ValorActual = String.Format("{0:n0}", (ValorUso- Descuento))
+                                });
+
+
+
                             }
                         }
                     }
                 }
-            } 
+            }
             return tabla;
         }
 

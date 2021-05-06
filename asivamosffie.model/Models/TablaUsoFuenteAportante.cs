@@ -38,11 +38,13 @@ namespace asivamosffie.model.Models
     {
         public int? AportanteId { get; set; }
         public string Valor { get; set; }
+        public string ValorActual { get; set; }
     }
 
     public partial class SaldoActualUso
     {
         public int? AportanteId { get; set; }
         public string Valor { get; set; }
+
     }
 }
