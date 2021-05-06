@@ -31,8 +31,6 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     ngOnInit(): void {
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
-        // Verificar si se diligenciaron descuentos desde la direccion tecnica en CU 4.1.7
-        const solicitudPagoFaseFactura = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0];
         // Get semaforo acordeones
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiro = this.solicitudPago.ordenGiro;
