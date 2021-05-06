@@ -74,14 +74,6 @@ export class DetalleGiroComponent implements OnInit {
             [{ align: [] }],
         ]
     };
-    dataTableFuentes = [
-        {
-            nombre: 'Alcaldía de Susacón',
-            fuenteRecursos: 'Contingencias',
-            saldoActualRecursos: 75000000,
-            saldoValorFacturado: 75000000
-        }
-    ];
 
     constructor(
         private fb: FormBuilder,
@@ -96,15 +88,40 @@ export class DetalleGiroComponent implements OnInit {
 
     ngOnInit(): void {
         this.getObservacion()
-        this.dataSourceFuentes = new MatTableDataSource( this.dataTableFuentes );
     }
 
     async getObservacion() {
         this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
         this.ordenGiroDetalleEstrategiaPago = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleEstrategiaPago[ 0 ];
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+        let tieneFasePreconstruccion = false;
+        let tieneFaseConstruccion = false;
+        // Verificar las fases diligenciadas en solicitud de pago;
+        if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                const fasePreconstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+                const faseConstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
+
+                if ( fasePreconstruccion !== undefined ) {
+                    tieneFasePreconstruccion = true;
+                }
+                if ( faseConstruccion !== undefined ) {
+                    tieneFaseConstruccion = true;
+                }
+            }
+        }
+
+        if ( tieneFasePreconstruccion === false ) {
+            delete this.listaSemaforos.semaforoDireccionTecnica
+            delete this.listaSemaforos.semaforoTerceroCausacion
+        }
+        if ( tieneFaseConstruccion === false ) {
+            delete this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion
+            delete this.listaSemaforos.semaforoTerceroCausacionConstruccion
+        }
 
         this.dataSource = new MatTableDataSource( this.solicitudPago.tablaPorcentajeParticipacion );
+        this.dataSourceFuentes = new MatTableDataSource( this.solicitudPago.tablaInformacionFuenteRecursos );
 
         // Get observaciones
         const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
