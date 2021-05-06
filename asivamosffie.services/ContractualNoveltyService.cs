@@ -2376,8 +2376,7 @@ namespace asivamosffie.services
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) &&
                         descripcion.EsDocumentacionSoporte == null &&
                         string.IsNullOrEmpty(descripcion.ConceptoTecnico) &&
-                        descripcion.FechaConcepto == null &&
-                        string.IsNullOrEmpty(descripcion.NumeroRadicado)
+                        descripcion.FechaConcepto == null
 
                     )
                 {
