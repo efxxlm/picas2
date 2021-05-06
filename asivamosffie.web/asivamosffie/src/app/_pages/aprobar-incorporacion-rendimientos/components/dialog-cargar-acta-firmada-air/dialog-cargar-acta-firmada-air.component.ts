@@ -12,12 +12,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogCargarActaFirmadaAirComponent implements OnInit {
 
-  addressForm = this.fb.group({
-    urlSoporte: [null, Validators.required]
-  });
+  minuteUrlForm: FormGroup;
   boton: string = "Cargar";
   archivo: string;
-  formCargarActa: FormGroup;
   tipoArchivoPermitido = 'pdf';
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, 
     public matDialogRef: MatDialogRef<DialogCargarActaFirmadaAirComponent>, 
@@ -25,13 +22,13 @@ export class DialogCargarActaFirmadaAirComponent implements OnInit {
     private faseDosPagosRendimientosSvc: FaseDosPagosRendimientosService) { }
 
   ngOnInit(): void {
-    this.crearFormulario()
+    this.buidForm()
   }
 
-
-  crearFormulario() {
-    this.formCargarActa = this.fb.group({
-        fileCargarActa: [ null, Validators.required ]
+  buidForm() {
+    this.minuteUrlForm = this.fb.group({
+      resourceId : this.data.registerId,
+      fileName: [null, Validators.required]
     });
 }
 
@@ -41,39 +38,22 @@ export class DialogCargarActaFirmadaAirComponent implements OnInit {
       data: { modalTitle, modalText }
     });
   }
-
+  
   onSubmit() {
-    console.log(this.addressForm.value);
+    if ( this.minuteUrlForm.invalid ) {
+        return;
+    }
   //  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-    this.guardar();
-  }
-
-  fileName() {
-    const inputNode: any = document.getElementById('file');
-    this.archivo = inputNode.files[0].name;
-  }
-
-  guardar() {
-    const inputNode: any = document.getElementById('file');
-    if ( this.formCargarActa.invalid === true || inputNode.files[0] === undefined ) {
-        return;
-    }
-    console.log( inputNode.files[0] );
-    if (inputNode.files[0].size > 1048576) {
-        this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
-        return;
-    }
-    let pFile = inputNode.files[0];
-    pFile = pFile.name.split('.');
-    pFile = pFile[pFile.length - 1];
-    if ( pFile === this.tipoArchivoPermitido ) {
-        const pContratacionProyecto = new FormData();
-        pContratacionProyecto.append( 'pFile', inputNode.files[0] );
-        pContratacionProyecto.append( 'contratacionProyectoId', this.data.registro.contratacionProyectoId );
-        this.faseDosPagosRendimientosSvc.uploadMinutes( this.data, pContratacionProyecto, pFile  )
-            .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
+    let pFile = this.minuteUrlForm.value.fileName;
+    pFile = pFile.split('.');
+    if ( pFile.length > 0 && pFile[pFile.length - 1] === this.tipoArchivoPermitido  ) {
+       
+        this.faseDosPagosRendimientosSvc.uploadMinutes( this.minuteUrlForm.value )
+            .subscribe(response =>{
+              this.openDialog( '', `<b>${ response.message }</b>` );
+              this.close();
+            }
+             , err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
     } else {
         this.openDialog('', `<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>

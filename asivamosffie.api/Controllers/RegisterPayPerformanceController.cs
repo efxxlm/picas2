@@ -184,7 +184,6 @@ namespace asivamosffie.api.Controllers
             //    return BadRequest();
             try
             {
-                fileRequest.Username = User.Identity.Name;
                 var result = await _paymentAndPerformancesService.DownloadPaymentPerformanceAsync(fileRequest, fileType);
 
                 if (result.IsSuccessful && !result.IsException)
@@ -317,19 +316,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("uploadMinutes")]
-        public async Task<IActionResult> UploadSignedMinutes(int uploadedOrderId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria, [FromForm] IFormFile pFile, string pUsuarioModificacion)
+        public async Task<IActionResult> UploadSignedMinutes([FromQuery] int uploadedOrderId,  FileRequest minuteRequest)
         {
             Respuesta response = new Respuesta();
             try
             {
-
-                //asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
-
-                //_appSettingsService = toAppSettingsService(_settings);
-
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                response = await _paymentAndPerformancesService.UploadPerformanceMinute(uploadedOrderId,pFile);
+                response = await _paymentAndPerformancesService.UploadPerformanceUrlMinute(minuteRequest);
                 return Ok(response);
             }
             catch (Exception ex)

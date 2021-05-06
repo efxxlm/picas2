@@ -730,7 +730,7 @@ namespace asivamosffie.services
                 response.IsSuccessful = true;
                 response.Code = GeneralCodes.OperacionExitosa;
                 response.Data = jsonString;
-                response.Message = await SaveAuditAction(fileRequest.Username, actionId,
+                response.Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
                                         GeneralCodes.Error,
                                          ex.SubstringValid(_500));
@@ -739,7 +739,7 @@ namespace asivamosffie.services
             response.Data = filePath;
             response.IsSuccessful = true;
             response.Code = GeneralCodes.OperacionExitosa;
-            response.Message = await SaveAuditAction(fileRequest.Username, actionId,
+            response.Message = await SaveAuditAction(_userName, actionId,
                                     enumeratorMenu.RegistrarPagosRendimientos,
                                     GeneralCodes.OperacionExitosa,
                                     actionMesage);
@@ -1328,23 +1328,26 @@ namespace asivamosffie.services
         public async Task<IEnumerable<dynamic>> GetRequestedApprovalPerformances()
         {
             List<dynamic> requestedApprovals = new List<dynamic>();
-            var performancesOrders = _context.CarguePagosRendimientos.Where(
-                x => !x.Eliminado && x.PendienteAprobacion).Select(x =>
-           new
-           {
-               x.FechaCargue,
-               x.TramiteJson,
-               x.CargaPagosRendimientosId
-           }).AsNoTracking();
+           // var performancesOrders = _context.CarguePagosRendimientos.Where(
+           //     x => !x.Eliminado && x.PendienteAprobacion == true).Select(x =>
+           //new
+           //{
+           //    x.FechaCargue,
+           //    x.TramiteJson,
+           //    x.CargaPagosRendimientosId
+           //}).AsNoTracking();
 
 
-            var rendimientosIncorporados = from performance in _context.RendimientosIncorporados
-                                           join register in _context.CarguePagosRendimientos 
-                                            on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId                                           
-                                           group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue } into g                                          
-                                           select new { RegisterId = g.Key.CarguePagosRendimientosId, 
-                                               RegistrosIncorporados = g.Sum(x => x.Aprobado.HasValue && x.Aprobado.Value ? 1: 0),
-                                               FechaCargue = g.Key.FechaCargue };
+            var rendimientosIncorporados = 
+                from performance in _context.RendimientosIncorporados
+                join register in _context.CarguePagosRendimientos 
+                on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId                                           
+                group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue, register.FechaActa } into g                                          
+                select new { RegisterId = g.Key.CarguePagosRendimientosId, 
+                    RegistrosIncorporados = g.Sum(x => x.Aprobado.HasValue && x.Aprobado.Value == true ? 1: 0),
+                    g.Key.FechaCargue,
+                    g.Key.FechaActa
+                };
               //  Include(r => r.CarguePagosRendimientos).AsNoTracking(); ;
 
             //var collection = rendimientosIncorporados.FirstOrDefault().CarguePagosRendimientos;
@@ -1387,6 +1390,19 @@ namespace asivamosffie.services
             var rendimientosIncorporados = _context.RendimientosIncorporados.Where(x =>
                             x.CarguePagosRendimientosId == uploadedOrderId && x.Consistente == true)
                 .Include( r => r.CarguePagosRendimientos);
+
+            if (rendimientosIncorporados.Count() == 0)
+            {
+                response.Data = 0; ;
+                response.IsSuccessful = false;
+                response.IsException = false;
+                response.Code = GeneralCodes.EntradaInvalida;
+                response.Message = await SaveAuditAction(_userName, actionId,
+                                        menu,
+                                        response.Code,
+                                        actionMesage);
+                return response;
+            }
 
             var collection = rendimientosIncorporados.FirstOrDefault().CarguePagosRendimientos;
  
@@ -1678,29 +1694,25 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> UploadPerformanceMinute(int uploadedOrderId, IFormFile pFile)
+        public async Task<Respuesta> UploadPerformanceUrlMinute(FileRequest minuteUrl)
         {
             var response = new Respuesta();
-            string pFilePatch = Path.Combine(_mailSettings.DirectoryBase,
-                _mailSettings.DirectoryBaseCargue, _mailSettings.DirectoryBaseActaRendimientos);
 
             string actionMesage = ConstantCommonMessages.Performances.CARGAR_ACTA_RENDIMIENTOS;
-            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Generar_Acta_Rendimientos);
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Generar_Acta_Rendimientos);  // TODO Registrar
 
       
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.Rendimientos), uploadedOrderId);
-
-            CarguePagosRendimientos carguePagosRendimientos = _context.CarguePagosRendimientos.Find(uploadedOrderId);
+            CarguePagosRendimientos carguePagosRendimientos = _context.CarguePagosRendimientos.Find(minuteUrl.ResourceId);
             try
             {
                 var modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                     .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                     .Where(order => order.CargaPagosRendimientosId == minuteUrl.ResourceId)
                      .UpdateAsync(o => new CarguePagosRendimientos()
                      {
                          FechaModificacion = DateTime.Now,
                          FechaActa = DateTime.Now,
                          UsuarioModificacion = _userName,
-                         RutaActa = pFilePatch
+                         RutaActa = minuteUrl.FileName
                      });
 
                 string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : ConstMessagesPerformances.ErrorGuardarCambios;
@@ -1731,31 +1743,6 @@ namespace asivamosffie.services
 
             return response;
         }
-
-
-        //public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
-        //{
-        //    using (System.Data.SqlClient.SqlConnection sql = new SqlConnection(_connectionString))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand("GetBudgetAvailabilityRequest", sql))
-        //        {
-        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-        //            var response = new List<CustonReuestCommittee>();
-        //            await sql.OpenAsync();
-
-        //            using (var reader = await cmd.ExecuteReaderAsync())
-        //            {
-        //                while (await reader.ReadAsync())
-        //                {
-        //                    response.Add(MapToValue(reader));
-        //                }
-        //            }
-
-        //            return response;
-        //        }
-        //    }
-        //}
-
 
         public async Task<byte[]> GetPDFMinutes(int id, string usuarioModificacion)
         {

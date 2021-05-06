@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services.Interfaces
@@ -34,6 +32,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> DownloadApprovedIncorporatedPerfomances(int uploadedOrderId);
         Task<byte[]> GenerateMinute(int uploadOrderId);
-        Task<Respuesta> UploadPerformanceMinute(int uploadOrderId, IFormFile pFile);
+        Task<Respuesta> UploadPerformanceUrlMinute(FileRequest pFile);
     }
 }

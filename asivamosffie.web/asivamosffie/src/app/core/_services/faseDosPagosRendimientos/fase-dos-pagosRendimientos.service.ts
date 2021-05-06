@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
-import { deprecate } from 'util'
 import { Respuesta } from '../common/common.service'
 
 @Injectable({
@@ -89,11 +88,12 @@ export class FaseDosPagosRendimientosService {
     return this.http.post(
       `${this.urlApi}/PerformanceMinute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" });
   }
-  uploadMinutes(uploadedOrderId :number, formData: FormData, pFile: File){
-    // const formData = new FormData()
-    formData.append('file', pFile, pFile.name)
-    return this.http.post<Respuesta>(`${this.urlApi}/uploadMinutes?uploadedOrderId=${uploadedOrderId}`, formData);
+  uploadPerformanceUrlMinute(minuteRequest: any){
+    return this.http.post<Respuesta>(`${this.urlApi}/uploadMinutes?uploadedOrderId=${minuteRequest.resourceId}`, minuteRequest);
   }
 
+  downloadPerformanceUrlMinute(uploadedOrderId :number){
+    return this.http.post(`${this.urlApi}/performanceMinute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" })
+  }
   
 }

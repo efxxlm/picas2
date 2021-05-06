@@ -98,16 +98,9 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     this.faseDosPagosRendimientosSvc.downloadPaymentsPerformanceStatus(fileRequest, this.uploadType)
     .subscribe((content: any)=>{
       FileDownloader.exportExcel("Rendimientos.xlsx", content)
-      // const data = content.data.archivoJson;
-
-      // const fileName = content.data.nombreArchivo
-      // const exportType = 'xls'
- 
-      // exportFromJSON({ data, fileName, exportType, withBOM: true })
     },onError => {
        console.log("error", onError);
     });
-    // FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
   }
 
   cargarNuevoReportedeRendimiento(){
