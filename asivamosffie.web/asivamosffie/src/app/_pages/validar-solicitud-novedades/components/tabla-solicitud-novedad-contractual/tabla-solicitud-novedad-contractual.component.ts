@@ -62,7 +62,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   ngAfterViewInit() {
     this.contractualNoveltyService.getListGrillaNovedadContractualInterventoria().subscribe(resp => {
 
-      resp = resp.filter( x => x.estadoCodigo !== '1');
+      resp = resp.filter( x => x.estadoCodigo !== '1' && x.estadoCodigo !== '9');
 
       resp.forEach(element => {
         element.fechaSolictud = element.fechaSolictud
