@@ -48,7 +48,14 @@ export class DialogCargarActaFirmadaAirComponent implements OnInit {
     pFile = pFile.split('.');
     if ( pFile.length > 0 && pFile[pFile.length - 1] === this.tipoArchivoPermitido  ) {
        
-        this.faseDosPagosRendimientosSvc.uploadMinutes( this.minuteUrlForm.value )
+      /*
+      Carlos Molero
+      El nombre del servicio comentado no existe en el services se encuentra uno llamado "uploadPerformanceUrlMinute"
+      que realiza una peticion a "uploadMinutes"
+      lo acomode por que no compilaba el front
+      this.faseDosPagosRendimientosSvc.uploadMinutes( this.minuteUrlForm.value )
+      */
+        this.faseDosPagosRendimientosSvc.uploadPerformanceUrlMinute( this.minuteUrlForm.value )
             .subscribe(response =>{
               this.openDialog( '', `<b>${ response.message }</b>` );
               this.close();
