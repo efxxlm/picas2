@@ -241,6 +241,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
+        public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
@@ -8123,6 +8124,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_Aportante_Fuente_Uso");
 
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.TipoUso)
@@ -8370,6 +8375,21 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DefensaJudicialContratacionProyecto");
+            });
+
+            modelBuilder.Entity<VDescuentosOdgxFuenteFinanciacionXaportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosODGX_FuenteFinanciacionXAportante");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.TipoRecursosCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VDominio>(entity =>

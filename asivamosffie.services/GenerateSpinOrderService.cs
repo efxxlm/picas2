@@ -839,13 +839,45 @@ namespace asivamosffie.services
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
 
                 SolicitudPago.TablaPorcentajeParticipacion = GetTablaPorcentajeParticipacion(SolicitudPago);
-
+                SolicitudPago.TablaInformacionFuenteRecursos = GetTablaInformacionFuenteRecursos(SolicitudPago);
 
             }
             catch (Exception ex)
             {
             }
             return SolicitudPago;
+        }
+
+        private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)
+        {
+
+            List<dynamic> List = new List<dynamic>();
+
+            List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
+                _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId).ToList();
+
+
+            foreach (var Fuentes in ListDescuentos)
+            {
+
+                decimal ValorDrpXaportante =
+                    _context.VAportanteFuenteUso
+                    .Where(r => r.FuenteRecursosCodigo == Fuentes.TipoRecursosCodigo
+                        && r.CofinanciacionAportanteId == Fuentes.AportanteId)
+                    .Sum(v => v.ValorUso);
+
+                string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
+
+                List<dynamic> List2 = new List<dynamic>();
+                List.Add(new
+                {
+                    FuenteRecursos = Fuentes.Nombre,
+                    NombreAportante = NombreAportante,
+                    SaldoActual = ValorDrpXaportante,
+                    SaldoAfectado = ValorDrpXaportante - Fuentes.ValorDescuento
+                });
+            } 
+            return List;
         }
 
         private dynamic GetTablaPorcentajeParticipacion(SolicitudPago solicitudPago)
@@ -874,7 +906,7 @@ namespace asivamosffie.services
                         decimal ValorAportante = ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId).Sum(r => r.ValorUso);
 
                         decimal TotalParticipacion = (ValorAportante / ValorDRP) * 100;
-                        string NomTotalParticipacion = "%" + String.Format("{0:n0}", (TotalParticipacion));
+                        string NomTotalParticipacion = String.Format("{0:n0}", (TotalParticipacion)) + "%";
                         ListAportantes.Add(new
                         {
                             NombreAportante,
