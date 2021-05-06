@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-ver-detalle-expensas',
@@ -10,6 +11,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 })
 export class VerDetalleExpensasComponent implements OnInit {
 
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     tipoSolicitudCodigo: any = {};
     solicitudPago: any;
 

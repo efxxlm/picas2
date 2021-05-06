@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados/dialog-proyectos-asociados.component';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-verdetalle-solicitud-pago',
@@ -16,6 +17,7 @@ import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados
 })
 export class VerdetalleSolicitudPagoComponent implements OnInit {
 
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     dataSource = new MatTableDataSource();
     dataSourceRegistrarSolicitud = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

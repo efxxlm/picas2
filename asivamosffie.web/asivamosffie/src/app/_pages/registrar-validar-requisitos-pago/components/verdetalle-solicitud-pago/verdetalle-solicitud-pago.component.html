@@ -297,4 +297,21 @@
             </mat-card>
         </mat-expansion-panel>
     </mat-accordion>
+
+    <div class="mt-3em">
+        <mat-card   class="shipping-card border"
+                    align="left"
+                    style="width: 80%;"
+                    *ngIf="contrato.solicitudPagoOnly.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorVerificacionFinanciera || contrato.solicitudPagoOnly.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorValidacionFinanciera && contrato.solicitudPagoOnly.observacionRadicacionSacTecnica !== undefined">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text card-title-detalle">
+                    Razon del rechazo
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+                <section [innerHTML]="contrato.solicitudPagoOnly.observacionRadicacionSacTecnica" style="margin-left: 2em;"></section>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>
