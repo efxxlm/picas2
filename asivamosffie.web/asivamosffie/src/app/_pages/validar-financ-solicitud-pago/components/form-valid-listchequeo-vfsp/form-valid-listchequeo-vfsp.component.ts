@@ -314,6 +314,9 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         dialogRef.afterClosed()
             .subscribe(
                 value => {
+                    if ( value.observaciones !== undefined || value.tieneSubsanacion !== undefined ) {
+                        this.getRespuestasListaChequeo( index ).markAsDirty();
+                    }
                     
                     this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).setValue( value.observaciones !== undefined ? value.observaciones : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).value );
                     this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).setValue( value.tieneSubsanacion !== undefined ? value.tieneSubsanacion : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).value );
