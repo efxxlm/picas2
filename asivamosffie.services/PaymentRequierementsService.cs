@@ -469,7 +469,8 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
             bool blRegistroCompleto = true;
-            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true));
+            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true || s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+            ));
 
             bool blrechazado = SolicitudPagoListaChequeo
              .Any(r => r.SolicitudPagoListaChequeoRespuesta
