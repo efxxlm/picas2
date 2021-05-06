@@ -12,10 +12,14 @@ namespace asivamosffie.model.Models
     {
         public string NombreUso { get; set; }
         public string TipoUsoCodigo { get; set; }
+        public string FuenteFinanciacion { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
+         
         public List<Fuentes> Fuentes { get; set; }
     }
     public partial class Fuentes
     {
+        public string NombreUso { get; set; }
         public string TipoUsoCodigo { get; set; }
         public int? FuenteFinanciacionId { get; set; }
         public string NombreFuente { get; set; }
