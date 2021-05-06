@@ -3,7 +3,7 @@
         <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?descuento.get( 'estadoSemaforo' ).value: ''">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? descuento.get( 'estadoSemaforo' ).value : ''">
                         Descuento {{ i + 1 }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>

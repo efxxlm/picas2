@@ -20,6 +20,7 @@ export class DetalleGiroComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoRegistrarSolicitudPago: any;
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     ordenGiroObservacionId = 0;
@@ -40,6 +41,8 @@ export class DetalleGiroComponent implements OnInit {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDireccionTecnica: 'sin-diligenciar',
         semaforoTerceroCausacion: 'sin-diligenciar',
+        semaforoDescuentosDireccionTecnicaConstruccion: 'sin-diligenciar',
+        semaforoTerceroCausacionConstruccion: 'sin-diligenciar',
         semaforoObservaciones: 'sin-diligenciar',
         semaforoSoporte: 'sin-diligenciar'
     };
@@ -125,13 +128,8 @@ export class DetalleGiroComponent implements OnInit {
     }
 
     async getObservacion() {
-        this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
         this.ordenGiroDetalleEstrategiaPago = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleEstrategiaPago[ 0 ];
-
-        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase[ 0 ].solicitudPagoFaseFactura[ 0 ].tieneDescuento === false ) {
-            this.tieneDireccionTecnica = false;
-            delete this.listaSemaforos.semaforoDireccionTecnica;
-        }
 
         // Get observaciones
         const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
@@ -206,6 +204,31 @@ export class DetalleGiroComponent implements OnInit {
                 this.estadoSemaforo.emit( 'completo' );
             }
         }, 6000);
+    }
+
+    checkTieneDescuentos( esPreconstruccion: boolean ) {
+        const solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
+        
+        if ( solicitudPagoFase !== undefined ) {
+            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === true ) {
+                return true;
+            }
+
+            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === false ) {
+                if ( esPreconstruccion === true ) {
+                    if ( this.listaSemaforos.semaforoDireccionTecnica !== undefined ) {
+                        delete this.listaSemaforos.semaforoDireccionTecnica
+                    }
+                }
+                if ( esPreconstruccion === false ) {
+                    if ( this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion !== undefined ) {
+                        delete this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 
     getEstrategiaPago( codigo: string ) {
