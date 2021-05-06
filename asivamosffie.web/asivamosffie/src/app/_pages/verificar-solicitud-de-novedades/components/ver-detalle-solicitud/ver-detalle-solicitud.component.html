@@ -135,12 +135,13 @@
             </strong>
             {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
-          <!-- <p>
-            <strong>
-              Tipo de Novedad:
-            </strong>
-            Modificación de Condiciones Contractuales
-          </p> -->
+          <p>
+            <strong> Tipo de Novedad: </strong>
+            <span *ngFor="let tipoNovedad of novedad.novedadContractualDescripcion; let i = index">
+              {{ tipoNovedad.nombreTipoNovedad
+              }}<span *ngIf="i + 1 !== novedad.novedadContractualDescripcion.length">,</span>
+            </span>
+          </p>
 
         </mat-card-content>
       </mat-card>
