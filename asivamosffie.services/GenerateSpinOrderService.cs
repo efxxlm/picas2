@@ -873,7 +873,7 @@ namespace asivamosffie.services
                                    .Distinct()
                                    .ToList();
 
-                foreach (var Fuentes in usos.Fuentes)
+                foreach (var Fuentes in usos.Fuentes.Distinct().ToList())
                 {
                     Fuentes.Aportante = List
                                            .ConvertAll(x => new Aportante
@@ -885,7 +885,7 @@ namespace asivamosffie.services
                                            .Distinct()
                                            .ToList();
 
-                    foreach (var Aportante in Fuentes.Aportante)
+                    foreach (var Aportante in Fuentes.Aportante.Distinct().ToList())
                     {
                         decimal ValorUso = List.Where(r => r.AportanteProyecto == Aportante.AportanteId).Select(r => r.ValorUso).FirstOrDefault();
                         decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
