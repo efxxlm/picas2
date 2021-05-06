@@ -492,12 +492,17 @@ export class TerceroCausacionGogComponent implements OnInit {
     // Check valor del descuento del aportante
     validateDiscountAportanteValue( value: number, index: number, jIndex: number, kIndex: number ) {
         if ( value !== null ) {
-            this.checkTotalValueAportantes( totalValueAportante => {
-                if ( totalValueAportante > this.valorNetoGiro ) {
-                    this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
-                    this.openDialog( '', `<b>El valor del descuento del aportante no puede ser mayor al valor neto de giro.</b>` )
+            let totalValueAportante = 0;
+            this.getAportantes( index, jIndex ).controls.forEach( aportanteControl => {
+                if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
+                    totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
-            } );
+            } )
+
+            if ( totalValueAportante > this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).value ) {
+                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                this.openDialog( '', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto.</b>` )
+            }
         }
     }
     // Check valor del descuento de los conceptos
