@@ -323,8 +323,8 @@ namespace asivamosffie.services
                 intCantidadDependenciasSolicitudPago++;
 
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
-                { 
-                     
+                {
+
                     if (SolicitudPagoFase.EsPreconstruccion != true)
                     {
                         foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
@@ -665,6 +665,7 @@ namespace asivamosffie.services
                  || intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_subsanacion_por_validaccion_financiera
                     )
                 {
+                    NullSolicitudPagoRespuesta(pSolicitudPago);
                     ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailRejectedCorrectALL(pSolicitudPago.SolicitudPagoId);
                     await SendEmailRejectedCorrect(pSolicitudPago.SolicitudPagoId);
@@ -726,6 +727,30 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private void NullSolicitudPagoRespuesta(SolicitudPago pSolicitudPago)
+        {
+            pSolicitudPago = _context.SolicitudPago
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Include(s => s.SolicitudPagoListaChequeo)
+                .ThenInclude(s => s.SolicitudPagoListaChequeoRespuesta).FirstOrDefault();
+
+
+            foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
+            { 
+                _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                        .Where(s => s.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                        .Update(s => new SolicitudPagoListaChequeoRespuesta
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
+                             
+                            VerificacionRespuestaCodigo = null,
+                            ValidacionRespuestaCodigo = null
+
+                        });
+            } 
         }
 
         private void ReturnOrdenGiroSolicitudPago(SolicitudPago pSolicitudPago)
