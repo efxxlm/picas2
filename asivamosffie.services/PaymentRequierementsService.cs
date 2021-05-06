@@ -734,7 +734,9 @@ namespace asivamosffie.services
             pSolicitudPago = _context.SolicitudPago
                 .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                 .Include(s => s.SolicitudPagoListaChequeo)
-                .ThenInclude(s => s.SolicitudPagoListaChequeoRespuesta).FirstOrDefault();
+                .ThenInclude(s => s.SolicitudPagoListaChequeoRespuesta)
+                .AsNoTracking()
+                .FirstOrDefault();
 
 
             foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
