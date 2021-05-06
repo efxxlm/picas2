@@ -169,7 +169,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
-                this.estadoSemaforo.emit( 'completo' );
+                this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto === this.solicitudPago.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'completo' );
@@ -261,7 +261,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
-                this.estadoSemaforo.emit( 'completo' );
+                this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto === this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'completo' );
