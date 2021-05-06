@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
@@ -11,9 +11,15 @@ export class ExpansionPanelInterventoriaComponent implements OnInit {
   @Input() contrato:any;
   @Input() novedad:NovedadContractual;
 
+  @Output() guardar = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  cargarRegistro(){
+    this.guardar.emit(true);
   }
 
   validarRegistroCompletoBasico(){

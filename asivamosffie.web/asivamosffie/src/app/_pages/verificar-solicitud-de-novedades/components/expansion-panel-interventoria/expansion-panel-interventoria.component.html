@@ -18,7 +18,9 @@
     <app-form-registrar-novedad #formRegistrarNovedad
                                 [proyecto]=proyecto
                                 [contrato]=contrato
-                                [novedad]=novedad>
+                                [novedad]=novedad
+                                (guardar)="cargarRegistro()"
+                                >
     </app-form-registrar-novedad>
 
   </mat-expansion-panel>

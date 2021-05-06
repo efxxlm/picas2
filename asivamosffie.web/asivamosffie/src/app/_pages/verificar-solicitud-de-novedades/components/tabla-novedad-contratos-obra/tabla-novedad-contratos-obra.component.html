@@ -48,7 +48,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado de la novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.estadoDescripcion}}</td>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.estadoCodigo === '10' ">{{element.estadoCodigoNombre}}</span>
+        <span *ngIf="element.estadoCodigo !== '10' ">{{element.estadoDescripcion}}</span>
+      </td>
     </ng-container>
 
     <!-- estadoRegistro Column -->

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -117,6 +117,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   @Input() proyecto: any;
   @Input() contrato: any;
   @Input() novedad: NovedadContractual;
+
+  @Output() guardar = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -280,7 +282,11 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === '200')
-          this.router.navigate(['/verificarSolicitudDeNovedades']);
+          
+          if (novedad.novedadContractualId === undefined)
+            this.router.navigate(['/verificarSolicitudDeNovedades/registrarSolicitudInterventoria', respuesta.data.novedadContractualId]);
+          else
+            this.guardar.emit(true);
       });
 
       
