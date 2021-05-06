@@ -82,10 +82,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
-
-
+         
         public async Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -131,8 +128,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {
             bool blRegistroCompleto = false;
@@ -659,8 +655,15 @@ namespace asivamosffie.services
                      IsSuccessful = true,
                      IsException = false,
                      IsValidation = false,
-                     Code = GeneralCodes.OperacionExitosa,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.OperacionExitosa, idAccion, pAuthor, ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO)
+                     Code = GeneralCodes.EliminacionExitosa,
+                     Message = 
+                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
+                                                                                     GeneralCodes.EliminacionExitosa,
+                                                                                     idAccion, 
+                                                                                     pAuthor, 
+                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
+                                                                                 )
                  };
             }
             catch (Exception ex)
@@ -823,6 +826,12 @@ namespace asivamosffie.services
                     {
                         if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
                             OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+
+                        foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+                        {
+                            if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
+                                OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
+                        }
                     }
                 }
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
