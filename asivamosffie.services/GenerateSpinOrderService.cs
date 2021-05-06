@@ -837,12 +837,65 @@ namespace asivamosffie.services
 
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
+
+                SolicitudPago.TablaPorcentajeParticipacion = GetTablaPorcentajeParticipacion(SolicitudPago);
+
+
             }
             catch (Exception ex)
             {
             }
             return SolicitudPago;
         }
+
+        private dynamic GetTablaPorcentajeParticipacion(SolicitudPago solicitudPago)
+        {
+            List<VRpsPorContratacion> vRpsPorContratacions = _context.VRpsPorContratacion.Where(r => r.ContratacionId == solicitudPago.ContratoSon.ContratacionId).ToList();
+            List<VAportanteFuenteUso> ListVAportanteFuenteUso = _context.VAportanteFuenteUso.Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId).ToList();
+
+            List<dynamic> List = new List<dynamic>();
+            int Enum = 1;
+            foreach (var drp in vRpsPorContratacions)
+            {
+                List<dynamic> ListAportantes = new List<dynamic>();
+
+                decimal ValorDRP = drp.ValorSolicitud;
+
+                List<CofinanciacionAportante> ListCofinanciacion = new List<CofinanciacionAportante>();
+                foreach (var aportantes in ListVAportanteFuenteUso)
+                {
+                    CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId);
+                    if (ListCofinanciacion.Count() == 0 || !ListCofinanciacion.Any(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId))
+                    {
+                        ListCofinanciacion.Add(cofinanciacionAportante);
+
+
+                        string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId));
+                        decimal ValorAportante = ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId).Sum(r => r.ValorUso);
+
+                        decimal TotalParticipacion = (ValorAportante / ValorDRP) * 100;
+                        string NomTotalParticipacion = "%" + String.Format("{0:n0}", (TotalParticipacion));
+                        ListAportantes.Add(new
+                        {
+                            NombreAportante,
+                            NomTotalParticipacion
+                        });
+                    }
+                }
+                List.Add(new
+                {
+                    Enum,
+                    drp.NumeroDrp,
+                    ListAportantes
+                });
+                Enum++;
+            }
+
+            return List;
+        }
+
+
+
 
         private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
         {
@@ -925,7 +978,7 @@ namespace asivamosffie.services
                                 {
                                     AportanteId = Aportante.AportanteId,
                                     Valor = String.Format("{0:n0}", ValorUso),
-                                    ValorActual = String.Format("{0:n0}", (ValorUso- Descuento))
+                                    ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
                                 });
 
 
