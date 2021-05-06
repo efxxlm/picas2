@@ -469,8 +469,14 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
             bool blRegistroCompleto = true;
-            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true || s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
-            ));
+            bool blTieneSubsanacion =
+                                    SolicitudPagoListaChequeo
+                                    .Any(r => r.SolicitudPagoListaChequeoRespuesta
+                                    .Any(s => s.TieneSubsanacion == true &&
+                                           (s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                                        || s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                                        ))
+                                    );
 
             bool blrechazado = SolicitudPagoListaChequeo
              .Any(r => r.SolicitudPagoListaChequeoRespuesta
@@ -741,19 +747,19 @@ namespace asivamosffie.services
 
 
             foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
-            { 
+            {
                 _context.Set<SolicitudPagoListaChequeoRespuesta>()
                         .Where(s => s.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
                         .Update(s => new SolicitudPagoListaChequeoRespuesta
                         {
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
-                             
+
                             VerificacionRespuestaCodigo = null,
                             ValidacionRespuestaCodigo = null
 
                         });
-            } 
+            }
         }
 
         private void ReturnOrdenGiroSolicitudPago(SolicitudPago pSolicitudPago)
