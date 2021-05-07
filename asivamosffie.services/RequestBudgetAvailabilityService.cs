@@ -194,7 +194,7 @@ namespace asivamosffie.services
                                     decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
                                     //Valor nuevo SOLICITADO NUEVO
                                     decimal? valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId ==
-                                    proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+                                    proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitadoGenerado);
 
                                     decimal valorsolicitadoxotros = (decimal)_context.GestionFuenteFinanciacion
                                         .Where(x => !(bool)x.Eliminado &&
