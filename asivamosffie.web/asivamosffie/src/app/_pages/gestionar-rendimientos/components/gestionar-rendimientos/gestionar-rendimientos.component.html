@@ -58,7 +58,8 @@
                         Enviar inconsistencias
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" 
-                        *ngIf="element.registrosConsistentes > 0 || element.registrosInconsistentes > 0"
+                        *ngIf="(element.registrosConsistentes > 0 || element.registrosInconsistentes > 0) &&
+                            element.registrosInconsistentes !== element.totalRegistros"
                         (click)="downloadManagedPerformances(element.cargaPagosRendimientosId)"
                         >
                         Descargar resultado

@@ -20,10 +20,7 @@ using asivamosffie.model.AditionalModels;
 using asivamosffie.services.Helpers.Extensions;
 using DinkToPdf;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.Drawing;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace asivamosffie.services
 {
@@ -116,10 +113,7 @@ namespace asivamosffie.services
                            // worksheet.Cells[1, index].Style.Numberformat.Format = "0.0%";
                             worksheet.Column(index).Style.Numberformat.Format = "0.00";
                             worksheet.Column(index).AutoFit();
-                            //  worksheet.Cells[1, index].Style.DataType = ClosedXML.Excel.XLDataType.Number;
                         }
-
-                        // property.PropertyType
                     }                    
                     index++;
                 }
@@ -311,7 +305,7 @@ namespace asivamosffie.services
 
                 // TODO add validation to prevent query a column in a  not existing position
 
-                var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
+                var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList();
 
                 var bankAccounts = _context.CuentaBancaria.Where(
                     x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
@@ -321,7 +315,7 @@ namespace asivamosffie.services
 
                 // Query payment 
                 var paymentNumColum = worksheet.Cells[2, 1, worksheet.Dimension.Rows, 1].Select(v => v.Text).ToList();
-
+                HashSet<string> paymentNumbers = new HashSet<string>();
 
                 //Controlar Registros
 
@@ -336,7 +330,7 @@ namespace asivamosffie.services
                     {
                         if (fileType == CONSTPAGOS)
                         {
-                            var validatedValues = await ValidatePaymentFile(worksheet, indexWorkSheetRow);
+                            var validatedValues = await ValidatePaymentFile(worksheet, indexWorkSheetRow, paymentNumbers);
                             carguePagosRendimiento = validatedValues.list;
                             if(validatedValues.errors != null)
                                 errors.AddRange(validatedValues.errors);
@@ -440,7 +434,8 @@ namespace asivamosffie.services
         /// <param name="indexWorkSheetRow"></param>
         /// <param name="carguePagosRendimiento"></param>
         /// <returns></returns>
-        private async Task<(Dictionary<string, string> list, List<ExcelError> errors)> ValidatePaymentFile(ExcelWorksheet worksheet, int indexWorkSheetRow)
+        private async Task<(Dictionary<string, string> list, List<ExcelError> errors)> ValidatePaymentFile(ExcelWorksheet worksheet,
+            int indexWorkSheetRow, HashSet<string> paymentNumbers)
         {
             Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
             List<ExcelError> errors = new List<ExcelError>();
@@ -476,26 +471,13 @@ namespace asivamosffie.services
                     {
                         errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, ya tiene un pago registrado"));
                     }
+                    if(paymentNumbers.Contains(cellValue))
+                    {
 
-                    var solicitudPago = _context.SolicitudPago.Where(solicitud => solicitud.OrdenGiroId == ordenGiro.OrdenGiroId)
-                        .Include(x => x.SolicitudPagoRegistrarSolicitudPago)
-                        .ThenInclude(regi => regi.SolicitudPagoFase.Where(x => !x.EsPreconstruccion))
-                            .ThenInclude(r => r.SolicitudPagoFaseFactura)
-                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento).AsNoTracking();
-
-                   
-                        
-                        //  .Include(x => x.SolicitudPagoFaseCriterio)
-
-                    //.ThenInclude(r => r.SolicitudPagoFase)
-
-
-
-
-                    //ordenGiro.OrdenGiroDetalle.FirstOrDefault().OrdenGiroDetalleDescuentoTecnica.FirstOrDefault().
-                    //    OrdenGiroDetalleDescuentoTecnicaAportante.FirstOrDefault().SolicitudPagoFaseFacturaDescuento
-
-                }
+                        errors.Add(new ExcelError(indexWorkSheetRow, 2, $"Por favor ingrese una única vez la orden de giro, {cellValue} se encuentra más de una vez en el documento"));
+                    }
+                    paymentNumbers.Add(cellValue);
+                } 
 
             }
 
@@ -651,7 +633,7 @@ namespace asivamosffie.services
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
 
-                if (rowFormat.Value == "Date" && cellValue != dateObje.ToString())
+                if (rowFormat.Value == "Date" && ( cellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double") )
                 {
                     carguePagosRendimiento.Add(rowFormat.Key, guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
                    // guideDate = dateObje;
@@ -1092,15 +1074,14 @@ namespace asivamosffie.services
                 if (typeFile == "Pagos")
                 {
                     string cellValue = payment["Número de orden de giro"];
-                    var solicitud = await _context.SolicitudPago.Where(
+                    var ordenGiro = await _context.OrdenGiro.Where(
                     x => x.NumeroSolicitud == cellValue)
-                    .Include(solicitud => solicitud.OrdenGiro)
-                    .ThenInclude(detalle => detalle.OrdenGiroDetalle)
+                    .Include(detalle => detalle.OrdenGiroDetalle)
                     .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion)
                     .ThenInclude(detalle => detalle.OrdenGiroDetalleTerceroCausacionAportante)
                     .AsNoTracking().FirstOrDefaultAsync();
 
-                    var OrdenGiroDetalleTerceroCausacionAportante = solicitud?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.
+                    var OrdenGiroDetalleTerceroCausacionAportante = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.
                         OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante.FirstOrDefault();
                     var gestionFuenteFinanciacionId =  (int)OrdenGiroDetalleTerceroCausacionAportante.FuenteFinanciacionId;
                      
@@ -1129,7 +1110,7 @@ namespace asivamosffie.services
 
                     // cruce de pagos
                     var paymentOrder = new OrdenGiroPago();
-                    paymentOrder.OrdenGiroId = solicitud.OrdenGiro.OrdenGiroId;
+                    paymentOrder.OrdenGiroId = ordenGiro.OrdenGiroId;
                     carguePagosRendimientos.OrdenGiroPago.Add(paymentOrder);
                    // paymentOrder.RegistroPagoId = payment.;
 
