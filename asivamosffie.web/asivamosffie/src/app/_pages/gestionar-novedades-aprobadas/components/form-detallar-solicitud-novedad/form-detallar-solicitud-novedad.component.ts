@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -16,9 +16,10 @@ import { ComponenteAportanteNovedad, ComponenteFuenteNovedad, ComponenteUsoNoved
 })
 export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
+  
   @Input() novedad: NovedadContractual;
   @Output() guardar = new EventEmitter();
-
+  
   //idSolicitud: number;
   //municipio: string;
   //tipoIntervencion: string;
@@ -26,18 +27,26 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   fasesSelect: Dominio[] = [];
   listaUsos: any[] = [];
   listaAportantes: any[] = [];
+  tipoAportantes: any[] = [];
   listaComponentes: any[] = [];
   componentesSelect: Dominio[] = [];
   usosSelect: Dominio[] = [];
   realizoPeticion: boolean = false;
   esSaldoPermitido: boolean = false;
   listaFaseUsosComponentes: any[] = [];
+  nuevoAportante: FormControl;
+  listaDepartamentos: Localizacion[] = [];
+  listaMunicipios: Localizacion[] = [];
   estaEditando = false;
 
   createFormulario() {
     return this.fb.group({
       aportantes: this.fb.array([])
     });
+  }
+
+  private declararInputFile() {
+    this.nuevoAportante = new FormControl(false);
   }
 
   componentes(i: number) {
@@ -92,6 +101,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       saldoDisponible: [null],
       contratacionProyectoAportanteId: [],
       cofinanciacionAportanteId: [],
+      tipoAportante: [],
+      depaetamento: [],
+      municipio: [],
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
@@ -103,7 +115,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   ngOnInit(): void {
 
     this.addressForm = this.createFormulario();
-
+    this.declararInputFile();
     this.route.params.subscribe((params: Params) => {
       const id = params.id;
 
@@ -112,7 +124,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
         this.commonService.listaComponentes(),
         this.commonService.listaUsos(),
         this.projectContractingService.getListFaseComponenteUso(),
-        this.contractualNoveltyService.GetAportanteByContratacion(this.novedad.contrato.contratacionId)
+        this.contractualNoveltyService.GetAportanteByContratacion(this.novedad.contrato.contratacionId),
+        this.commonService.listaTipoAportante(),
+        this.commonService.listaDepartamentos(),
         //this.projectContractingService.getContratacionProyectoById(id),
       ])
 
@@ -124,7 +138,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.listaFaseUsosComponentes = response[3];
           this.listaAportantes = response[4];
           //this.contratacionProyecto = response[5];
-
+          this.tipoAportantes = response[5];
+          this.listaDepartamentos = response[6];
+          
           setTimeout(() => {
 
             if (this.componentesSelect.length > 0) {
@@ -140,6 +156,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
             this.novedad.novedadContractualAportante.forEach(apo => {
 
+              console.log(apo)
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
 
@@ -156,6 +173,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                   grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
                   grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
                   grupoAportante.get('cofinanciacionAportanteId').setValue(apo.cofinanciacionAportanteId);
+                  grupoAportante.get('nombreAportante').setValue(apo.nombreAportante);
 
                   if (apo.componenteAportanteNovedad.length > 0) {
                     apo.componenteAportanteNovedad.forEach(compoApo => {
@@ -249,6 +267,17 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
     });
 
+  }
+
+  changeDepartamento(e) {
+    const idDepartamento = e.localizacionId;
+    this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
+      this.listaMunicipios = mun.sort((a, b) => {
+        let textA = a.descripcion.toUpperCase();
+        let textB = b.descripcion.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+    });
   }
 
   changeFase(posicionAportante, posicionComponente) {

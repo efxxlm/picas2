@@ -61,10 +61,19 @@
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
+      
+      <section *ngIf=" element.estadoCodigo !== '4' && element.estadoCodigo !== '5' && element.estadoCodigo !== '16'">
+        <span class="info-text d-block m-0 completo" ></span>
+        Completo
+      </section>
+
+      <section *ngIf="element.estadoCodigo === '5' || element.estadoCodigo === '16' || element.estadoCodigo === '4'">
         <span class="info-text d-block m-0" 
           [class.sin-diligenciar]="element.registroCompletoValidacion !== true"
           [class.completo]="element.registroCompletoValidacion === true"></span>
         {{element.registroCompletoValidacion === true ? 'Completo' : 'Incompleto'}}
+      </section>
+
       </td>
     </ng-container>
 

@@ -62,19 +62,42 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
+                switch (sesionComiteSolicitudOld.TipoSolicitudCodigo)
+                {
+                    case ConstanCodigoTipoSolicitud.Contratacion:
+                        {
+                            Contratacion contratacion = _context.Contratacion
+                                .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                                .Include(r => r.Contrato)
+                                .Include(r => r.DisponibilidadPresupuestal)
+                                .FirstOrDefault();
 
-                Contratacion contratacion = _context.Contratacion
-                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                    .Include(r => r.Contrato)
-                    .Include(r => r.DisponibilidadPresupuestal)
-                    .FirstOrDefault();
-
-                contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                contratacion.FechaModificacion = DateTime.Now;
-                contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                sesionComiteSolicitudOld.Contratacion = contratacion;
+                            contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                            contratacion.FechaModificacion = DateTime.Now;
+                            contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                            sesionComiteSolicitudOld.Contratacion = contratacion;
+                            break;
+                        }
+                    case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                        {
+                            NovedadContractual novedadContractual = _context.NovedadContractual
+                                                    .Where(r => r.NovedadContractualId == pSesionComiteSolicitud.SolicitudId)
+                                                    .Include(r => r.Contrato)
+                                                        .ThenInclude(r => r.Contratacion)
+                                                    .FirstOrDefault();
+                            if (novedadContractual != null)
+                                novedadContractual.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                                novedadContractual.FechaModificacion = DateTime.Now;
+                                novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                                sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
+                            break;
+                        }
+                }
 
                 if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
+                    await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                
+                if (ConstanCodigoEstadoNovedadContractual.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
                     await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
                 _context.SaveChanges();
@@ -1083,8 +1106,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompleto(NovedadContractual pNovedadContractual)
         {
-            if (
-                   string.IsNullOrEmpty(pNovedadContractual.UrlSoporteGestionar)
+            if (string.IsNullOrEmpty(pNovedadContractual.UrlSoporteGestionar)
                 || !pNovedadContractual.FechaTramiteGestionar.HasValue
                 || string.IsNullOrEmpty(pNovedadContractual.ObservacionGestionar)
                 ) return false;

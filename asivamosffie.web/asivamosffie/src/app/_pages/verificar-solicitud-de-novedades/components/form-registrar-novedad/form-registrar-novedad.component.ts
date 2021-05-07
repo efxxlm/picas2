@@ -171,7 +171,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
           });
 
           this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
-
+          this.estaEditando = true;
+          this.addressForm.markAllAsTouched();
         
       });
 
@@ -191,7 +192,20 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       this.instanciaPresentoSolicitudArray = response;
     });
 
+    this.addressForm.get('instanciaPresentoSolicitud').valueChanges.subscribe((value: number) => {
+      this.onChange(value);
+    });
+  }
 
+  onChange(value: number) {
+    const fechaSesionInstancia = this.addressForm.get('fechaSesionInstancia');
+    if (value == 3) {
+      fechaSesionInstancia.setValue(null);
+      fechaSesionInstancia.clearValidators();
+    } else {
+      fechaSesionInstancia.setValidators(Validators.required);
+    }
+    fechaSesionInstancia.updateValueAndValidity();
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -281,12 +295,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     this.contractualNoveltyService.createEditNovedadContractual(novedad)
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code === '200')
-          
-          if (novedad.novedadContractualId === undefined)
-            this.router.navigate(['/verificarSolicitudDeNovedades/registrarSolicitudInterventoria', respuesta.data.novedadContractualId]);
-          else
-            this.guardar.emit(true);
       });
 
       

@@ -24,6 +24,11 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
+        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId(int pAportanteId)
+        {
+            return await _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == pAportanteId).ToListAsync();
+        }
+
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()
         {
             return await _context.FuenteFinanciacion.ToListAsync();
@@ -206,17 +211,17 @@ namespace asivamosffie.services
                         retorno = false;
                     }
 
-                    fuentefinanciacion.VigenciaAporte.Where( x => x.Eliminado != true).ToList().ForEach(vig =>
-                   {
-                        if (
-                                vig.ValorAporte == null ||
-                                vig.ValorAporte == 0 ||
-                                vig.VigenciaAporteId == null
-                       )
-                       {
-                           retorno = false;
-                       }
-                   });
+                    fuentefinanciacion.VigenciaAporte.Where(x => x.Eliminado != true).ToList().ForEach(vig =>
+                  {
+                      if (
+                               vig.ValorAporte == null ||
+                               vig.ValorAporte == 0 ||
+                               vig.VigenciaAporteId == null
+                      )
+                      {
+                          retorno = false;
+                      }
+                  });
                 }
                 else
                 {
@@ -429,7 +434,6 @@ namespace asivamosffie.services
                  };
             }
         }
-
 
         public async Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
@@ -690,14 +694,14 @@ namespace asivamosffie.services
                                                                             .ThenInclude(x => x.ComponenteUso)
                                                                         .FirstOrDefault();
 
-                if ( aportante != null)
+                if (aportante != null)
                 {
                     aportante.ComponenteAportante.ToList().ForEach(ca =>
                    {
                        ca.ComponenteUso.ToList().ForEach(cu =>
                       {
                           if (cu.FuenteFinanciacionId.HasValue)
-                          listaFuentesProyecto.Add(cu.FuenteFinanciacionId.Value);
+                              listaFuentesProyecto.Add(cu.FuenteFinanciacionId.Value);
                       });
                    });
                 }
@@ -735,18 +739,18 @@ namespace asivamosffie.services
                                                                                         .Sum(x => x.ValorSolicitado);
                 }
 
-                
+
 
                 decimal valorsolicitado = 0;
 
                 // cuando ya se guardó
-                if ( gestionFuenteFinanciacion.Count() > 0)
+                if (gestionFuenteFinanciacion.Count() > 0)
                 {
                     valorsolicitado = gestionFuenteFinanciacion
                                                     .Sum(x => x.ValorSolicitado);
                 }
 
-                 
+
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
@@ -761,6 +765,7 @@ namespace asivamosffie.services
             }
             return ListaRetorno;
         }
+
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(int NovedadContractualRegistroPresupuestalId, int aportanteID)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
@@ -796,21 +801,21 @@ namespace asivamosffie.services
            });
 
             var financiaciones = _context.FuenteFinanciacion
-                                               .Where(x => listaIds.Contains( x.FuenteFinanciacionId) && 
+                                               .Where(x => listaIds.Contains(x.FuenteFinanciacionId) &&
                                                       x.Eliminado == false)
                                                .ToList();
 
             foreach (var financiacion in financiaciones)
             {
                 var valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
-                                                                                        .Where(x => !(bool)x.Eliminado && 
-                                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                                                        .Where(x => !(bool)x.Eliminado &&
+                                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                                                                x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
                                                                                         .Sum(x => x.ValorSolicitado);
 
                 var valorsolicitado = _context.GestionFuenteFinanciacion
-                                                    .Where(x => !(bool)x.Eliminado && 
-                                                           x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                    .Where(x => !(bool)x.Eliminado &&
+                                                           x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                            x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                     .Sum(x => x.ValorSolicitado);
 
@@ -822,8 +827,8 @@ namespace asivamosffie.services
                     Saldo_actual_de_la_fuente = valorDisponible,
                     Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion
-                                                                .Where(x => !(bool)x.Eliminado && 
-                                                                       x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && 
+                                                                .Where(x => !(bool)x.Eliminado &&
+                                                                       x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                                        x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                                 .Select(x => x.GestionFuenteFinanciacionId)
                                                                 .FirstOrDefault(),

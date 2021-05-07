@@ -22,7 +22,8 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
   estadoCodigos = {
-    enviadaFiduciaria: '4'
+    enviadaFiduciaria: '4',
+    enviadaFiduciariaNovedad: '24'
   }
 
   constructor ( private routes: Router ) {
@@ -33,7 +34,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       let dataTable = [];
 
       response.forEach( lista => {
-        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad) {
           dataTable.push( lista );
         };
       } );
@@ -58,16 +59,11 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
   };
 
   gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
-    
     switch ( tipoSolicitud ) {
-
       case 'Contratación':
         this.routes.navigate( [ '/procesosContractuales/contratacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } )
       break;
-      case 'Modificación contractual':
-        /*Ejemplo para los 3 tipos de modificaciones contractuales*/
-        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { verDetalle: true } } )
-        //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { verDetalle: true } } );
+      case 'Novedad Contractual':
         this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } )
       break;
       case 'Liquidación':

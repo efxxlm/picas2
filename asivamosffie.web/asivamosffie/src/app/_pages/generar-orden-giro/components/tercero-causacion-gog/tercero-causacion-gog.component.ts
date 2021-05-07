@@ -492,12 +492,17 @@ export class TerceroCausacionGogComponent implements OnInit {
     // Check valor del descuento del aportante
     validateDiscountAportanteValue( value: number, index: number, jIndex: number, kIndex: number ) {
         if ( value !== null ) {
-            this.checkTotalValueAportantes( totalValueAportante => {
-                if ( totalValueAportante > this.valorNetoGiro ) {
-                    this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
-                    this.openDialog( '', `<b>El valor del descuento del aportante no puede ser mayor al valor neto de giro.</b>` )
+            let totalValueAportante = 0;
+            this.getAportantes( index, jIndex ).controls.forEach( aportanteControl => {
+                if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
+                    totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
-            } );
+            } )
+
+            if ( totalValueAportante > this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).value ) {
+                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                this.openDialog( '', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto.</b>` )
+            }
         }
     }
     // Check valor del descuento de los conceptos
@@ -526,6 +531,10 @@ export class TerceroCausacionGogComponent implements OnInit {
         const listaNombreAportantes: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'nombreDeAportantes' ).value;
         const filterAportantesDominioId = listaNombreAportantes.filter( aportante => aportante.tipoAportanteId === aportanteSeleccionado.dominioId );
 
+        if ( aportanteIndex !== -1 ) {
+            listaAportantes.splice( aportanteIndex, 1 )
+        }
+
         if ( filterAportantesDominioId.length > 0 ) {
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'listaNombreAportantes' ).setValue( filterAportantesDominioId );
         }
@@ -542,8 +551,11 @@ export class TerceroCausacionGogComponent implements OnInit {
                 value => {
                     if ( value === true ) {
                         const aportanteSeleccionado = this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'tipoAportante' ).value;
-                        const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
-                        listaTipoAportantes.push( aportanteSeleccionado );
+
+                        if ( aportanteSeleccionado !== null ) {
+                            const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
+                            listaTipoAportantes.push( aportanteSeleccionado );
+                        }
 
                         this.getAportantes( index, jIndex ).removeAt( kIndex );
                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );

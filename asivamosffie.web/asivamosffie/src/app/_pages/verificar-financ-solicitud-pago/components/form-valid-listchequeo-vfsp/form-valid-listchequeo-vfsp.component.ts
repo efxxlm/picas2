@@ -169,7 +169,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
-                this.estadoSemaforo.emit( 'completo' );
+                this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto === this.solicitudPago.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'completo' );
@@ -261,7 +261,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
-                this.estadoSemaforo.emit( 'completo' );
+                this.estadoSemaforo.emit( 'en-proceso' );
             }
             if ( semaforoCompleto > 0 && semaforoCompleto === this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'completo' );
@@ -310,6 +310,9 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         dialogRef.afterClosed()
             .subscribe(
                 value => {
+                    if ( value.observaciones !== undefined || value.tieneSubsanacion !== undefined ) {
+                        this.getRespuestasListaChequeo( index ).markAsDirty();
+                    }
                     
                     this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).setValue( value.observaciones !== undefined ? value.observaciones : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).value );
                     this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).setValue( value.tieneSubsanacion !== undefined ? value.tieneSubsanacion : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).value );

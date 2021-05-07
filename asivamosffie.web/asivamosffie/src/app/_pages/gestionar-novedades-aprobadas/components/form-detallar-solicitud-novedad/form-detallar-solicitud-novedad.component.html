@@ -7,7 +7,159 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Nombre del aportante:</label>
+                  <label class="label-left">Aportante nuevo:</label>
+                </div>
+                <div class="col mt-05em">
+                  <mat-checkbox class="example-margin" [formControl]="nuevoAportante"></mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row animatedDown" *ngIf="nuevoAportante.value">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="fase"
+                    [class.color-secondaryColor]="
+                      (aportante.get('tipoAportante')?.invalid && aportante.get('tipoAportante').touched) ||
+                      (aportante.get('tipoAportante')?.invalid && estaEditando)
+                    "
+                  >
+                    Tipo de aportante:
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required formControlName="tipoAportante">
+                      <mat-option *ngFor="let tipoAportante of tipoAportantes" [value]="tipoAportante.codigo">
+                        {{ tipoAportante.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('tipoAportante').invalid && aportante.get('tipoAportante').touched) ||
+                      (aportante.get('tipoAportante').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="aportante.get('tipoAportante').value === '2'">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="depaetamento"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (aportante.get('depaetamento').invalid && aportante.get('depaetamento').touched) ||
+                      (aportante.get('depaetamento').invalid && estaEditando)
+                    "
+                  >
+                    Departamento
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select
+                      formControlName="depaetamento"
+                      required
+                      (selectionChange)="changeDepartamento($event.value)"
+                    >
+                      <mat-option
+                        *ngFor="let departamento of listaDepartamentos"
+                        class="capitalize"
+                        [value]="departamento"
+                      >
+                        {{ departamento.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('depaetamento').invalid && aportante.get('depaetamento').touched) ||
+                      (aportante.get('depaetamento').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="aportante.get('tipoAportante').value === '2'">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="municipio"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (aportante.get('municipio').invalid && aportante.get('municipio').touched) ||
+                      (aportante.get('municipio').invalid && estaEditando)
+                    "
+                  >
+                    Municipio
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select formControlName="municipio" required>
+                      <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
+                        {{ municipio.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('municipio').invalid && aportante.get('municipio').touched) ||
+                      (aportante.get('municipio').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="!nuevoAportante.value || aportante.get('tipoAportante').value === '3'">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (aportante.get('cofinanciacionAportanteId').invalid &&
+                        aportante.get('cofinanciacionAportanteId').touched) ||
+                      (aportante.get('cofinanciacionAportanteId').invalid && estaEditando)
+                    "
+                  >
+                    Nombre del aportante:
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -25,6 +177,21 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('cofinanciacionAportanteId').invalid &&
+                        aportante.get('cofinanciacionAportanteId').touched) ||
+                      (aportante.get('cofinanciacionAportanteId').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -36,9 +203,9 @@
                     class="label-left"
                     for="valorAportanteProyecto"
                     [class.color-secondaryColor]="
-                      (addressForm.get('valorAportanteProyecto')?.invalid &&
-                        addressForm.get('valorAportanteProyecto').touched) ||
-                      (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
+                      (aportante.get('valorAportanteProyecto')?.invalid &&
+                        aportante.get('valorAportanteProyecto').touched) ||
+                      (aportante.get('valorAportanteProyecto')?.invalid && estaEditando)
                     "
                   >
                     Valor del aportante al proyecto
@@ -59,11 +226,7 @@
                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                       formControlName="valorAportanteProyecto"
                       (ngModelChange)="
-                        validarSaldoDisponible(
-                          $event,
-                          aportante.get('nombreAportante').value,
-                          aportante
-                        )
+                        validarSaldoDisponible($event, aportante.get('nombreAportante').value, aportante)
                       "
                     />
                     <input type="hidden" formControlName="contratacionProyectoAportanteId" />
@@ -86,9 +249,9 @@
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('valorAportanteProyecto')?.invalid &&
-                          addressForm.get('valorAportanteProyecto').touched) ||
-                        (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
+                        (aportante.get('valorAportanteProyecto')?.invalid &&
+                          aportante.get('valorAportanteProyecto').touched) ||
+                        (aportante.get('valorAportanteProyecto')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -438,7 +601,7 @@
           <img src="assets/img/icon/menos.svg" alt="Eliminar componente" />
           Eliminar Aportante
         </button>
-        {{ aportantes.controls.length }} {{ listaAportantes.length }}
+
         <button
           mat-button
           color="warn"

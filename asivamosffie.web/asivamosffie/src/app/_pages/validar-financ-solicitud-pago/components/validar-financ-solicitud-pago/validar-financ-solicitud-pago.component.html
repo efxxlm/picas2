@@ -81,7 +81,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === false">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.registroCompletoValidacionFinanciera === true && element.tieneSubsanacion === false">
                                 Enviar para orden de giro
                         </button>
 
@@ -134,7 +134,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === false">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.registroCompletoValidacionFinanciera === true && element.tieneSubsanacion === false">
                                 Enviar para orden de giro
                         </button>
 

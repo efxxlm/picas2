@@ -31,6 +31,32 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     ngOnInit(): void {
         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+        let tieneFasePreconstruccion = false;
+        let tieneFaseConstruccion = false;
+        // Verificar las fases diligenciadas en solicitud de pago;
+        if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                const fasePreconstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+                const faseConstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
+
+                if ( fasePreconstruccion !== undefined ) {
+                    tieneFasePreconstruccion = true;
+                }
+                if ( faseConstruccion !== undefined ) {
+                    tieneFaseConstruccion = true;
+                }
+            }
+        }
+
+        if ( tieneFasePreconstruccion === false ) {
+            delete this.listaSemaforos.semaforoDescuentosDireccionTecnica
+            delete this.listaSemaforos.semaforoTerceroCausacion
+        }
+        if ( tieneFaseConstruccion === false ) {
+            delete this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion
+            delete this.listaSemaforos.semaforoTerceroCausacionConstruccion
+        }
+
         // Get semaforo acordeones
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiro = this.solicitudPago.ordenGiro;

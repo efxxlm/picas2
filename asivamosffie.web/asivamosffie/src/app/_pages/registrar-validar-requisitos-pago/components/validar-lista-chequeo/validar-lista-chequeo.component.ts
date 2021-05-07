@@ -229,12 +229,22 @@ export class ValidarListaChequeoComponent implements OnInit {
     getEstadoSemaforo( solicitudPagoListaChequeo: any ) {
 
         let sinDiligenciar = 0;
+        let tieneSubsanacion: boolean;
 
         solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.forEach( value => {
             if ( value.respuestaCodigo === null ) {
                 sinDiligenciar++;
             }
+            if ( value.validacionObservacion !== undefined || value.verificacionObservacion !== undefined ) {
+                tieneSubsanacion = true;
+            }
         } );
+
+        if ( tieneSubsanacion === true ) {
+            this.semaforoObservacion.emit( true );
+
+            return 'sin-diligenciar';
+        }
 
         if ( sinDiligenciar === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
             return 'sin-diligenciar';
@@ -260,6 +270,18 @@ export class ValidarListaChequeoComponent implements OnInit {
     }
 
     guardar() {
+        this.solicitudPagoModificado.solicitudPagoListaChequeo.forEach( solicitudPagoListaChequeo => {
+            solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.forEach( solicitudPagoListaChequeoRespuesta => {
+                if ( solicitudPagoListaChequeoRespuesta.validacionObservacion !== undefined ) {
+                    solicitudPagoListaChequeoRespuesta.validacionObservacion = null
+                }
+
+                if ( solicitudPagoListaChequeoRespuesta.verificacionObservacion !== undefined ) {
+                    solicitudPagoListaChequeoRespuesta.verificacionObservacion = null
+                }
+            } );
+        } )
+
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPagoModificado )
         .subscribe(
             response => {

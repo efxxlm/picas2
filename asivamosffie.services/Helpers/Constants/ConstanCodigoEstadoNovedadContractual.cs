@@ -25,5 +25,6 @@
 		public const string rechazado_por_comite_tecnico = "21";
 		public const string devuelto_por_comite_fiduciario = "22";
 		public const string rechazado_por_comite_fiduciario = "23";
+		public const string Enviadas_a_la_Fiduciaria = "24";
 	}
 }

@@ -84,8 +84,6 @@ export class FormModificacionContractualComponent implements OnInit {
 
     this.procesosContractualesSvc.getNovedadById( id )
       .subscribe( novedadContractual => {
-
-        console.log( novedadContractual );
         this.dataNovedad = novedadContractual;
         this.dataNovedad.novedadContractualDescripcion.forEach(element => {
             if(this.tipoModificacion == null){
@@ -119,7 +117,7 @@ export class FormModificacionContractualComponent implements OnInit {
             this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
           };
         }
-
+        this.estadoCodigo = this.dataNovedad.estadoCodigo;
       });
 
   };

@@ -42,9 +42,9 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
       })
     ]),
     documentacionSuficiente: [null, Validators.required],
-    conceptoTecnico: [null, Validators.required],
-    fechaConceptoTecnico: [null, Validators.required],
-    numeroRadicadoSolicitud: [null, Validators.compose([Validators.required, Validators.maxLength(20)])]
+    conceptoTecnico: [null],
+    fechaConceptoTecnico: [null],
+    numeroRadicadoSolicitud: [null, Validators.maxLength(20)]
   });
 
   get plazoSolicitadoField() {
@@ -150,6 +150,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
 
     this.clausulaField.clear();
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
 
     if ( this.novedadDescripcion.tipoNovedadCodigo === '5' ){
       if ( this.novedadDescripcion.novedadContractualClausula && this.novedadDescripcion.novedadContractualClausula.length > 0 ){

@@ -323,8 +323,8 @@ namespace asivamosffie.services
                 intCantidadDependenciasSolicitudPago++;
 
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
-                { 
-                     
+                {
+
                     if (SolicitudPagoFase.EsPreconstruccion != true)
                     {
                         foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
@@ -469,7 +469,14 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
             bool blRegistroCompleto = true;
-            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true));
+            bool blTieneSubsanacion =
+                                    SolicitudPagoListaChequeo
+                                    .Any(r => r.SolicitudPagoListaChequeoRespuesta
+                                    .Any(s => s.TieneSubsanacion == true &&
+                                           (s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                                        || s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                                        ))
+                                    );
 
             bool blrechazado = SolicitudPagoListaChequeo
              .Any(r => r.SolicitudPagoListaChequeoRespuesta
@@ -490,8 +497,8 @@ namespace asivamosffie.services
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.ValidacionRespuestaCodigo != null).ToList().Count())
                             blRegistroCompleto = false;
 
-                        if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
-                            blRegistroCompleto = false;
+                        //if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                        //    blRegistroCompleto = false;
 
                         pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
                                                   .ToList().ForEach(res =>
@@ -519,8 +526,8 @@ namespace asivamosffie.services
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.VerificacionRespuestaCodigo != null).ToList().Count())
                             blRegistroCompleto = false;
 
-                        if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
-                            blRegistroCompleto = false;
+                        //if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                        //    blRegistroCompleto = false;
 
 
                         pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
@@ -665,6 +672,7 @@ namespace asivamosffie.services
                  || intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_subsanacion_por_validaccion_financiera
                     )
                 {
+                    NullSolicitudPagoRespuesta(pSolicitudPago);
                     ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailRejectedCorrectALL(pSolicitudPago.SolicitudPagoId);
                     await SendEmailRejectedCorrect(pSolicitudPago.SolicitudPagoId);
@@ -725,6 +733,32 @@ namespace asivamosffie.services
                         Code = GeneralCodes.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
+            }
+        }
+
+        private void NullSolicitudPagoRespuesta(SolicitudPago pSolicitudPago)
+        {
+            pSolicitudPago = _context.SolicitudPago
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Include(s => s.SolicitudPagoListaChequeo)
+                .ThenInclude(s => s.SolicitudPagoListaChequeoRespuesta)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+
+            foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
+            {
+                _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                        .Where(s => s.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                        .Update(s => new SolicitudPagoListaChequeoRespuesta
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
+
+                            VerificacionRespuestaCodigo = null,
+                            ValidacionRespuestaCodigo = null
+
+                        });
             }
         }
 

@@ -66,9 +66,9 @@ export class ProcesosContractualesService {
   getNovedadById ( id: number ) {
     return this.http.get<NovedadContractual>( `${ this.url }/getNovedadById?id=${id}` )
   }
-
-  registrarTramiteNovedadContractual(novedadContractual: any){
-    return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteNovedadContractual`, novedadContractual);
+  
+  registrarTramiteNovedadContractual( novedadContractual: NovedadContractual ) {
+    return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteNovedadContractual`, novedadContractual );
   }
 
 };

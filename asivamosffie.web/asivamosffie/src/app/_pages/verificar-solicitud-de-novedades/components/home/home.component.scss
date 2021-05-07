@@ -1,5 +1,6 @@
 .tabs--actions .tabs--btn {
   @media only screen and (min-width: 64em) {
-    width: 28%;
+      width: 28%;
+      min-width: 22.5em;
     }
   }

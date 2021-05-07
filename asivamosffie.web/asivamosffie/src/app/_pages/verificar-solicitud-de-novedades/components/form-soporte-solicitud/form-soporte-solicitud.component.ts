@@ -28,6 +28,8 @@ export class FormSoporteSolicitudComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes.novedad ){
       this.addressForm.get('urlSoporte').setValue(this.novedad.urlSoporte);
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     }
   }
 
@@ -39,7 +41,7 @@ export class FormSoporteSolicitudComponent implements OnChanges {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 

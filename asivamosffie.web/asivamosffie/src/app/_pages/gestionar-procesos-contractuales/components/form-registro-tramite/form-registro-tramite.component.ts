@@ -93,9 +93,12 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.routes.navigate(['/procesosContractuales']);
     });
   }
 
@@ -103,19 +106,16 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
     if (this.dataFormulario.valid) {
       this.camposFaltantes = false;
       if(this.esNovedad == true){
-        const fecha = Date.parse(this.dataFormulario.get('fechaEnvioTramite').value);
-        const novedad: NovedadContractual = {
+        let novedad: NovedadContractual = {
           novedadContractualId: this.novedadContractual.novedadContractualId,
-          //fechaTramiteGestionar: new Date(fecha),
+          fechaTramiteGestionar: this.dataFormulario.get('fechaEnvioTramite').value,
           urlSoporteGestionar: this.dataFormulario.get('rutaDocumento').value,
-          observacionTramite: this.dataFormulario.get('observaciones').value
+          observacionGestionar: this.dataFormulario.get('observaciones').value
         };
-
         this.procesosContractualesSvc.registrarTramiteNovedadContractual(novedad)
         .subscribe((response: Respuesta) => {
             this.seRealizoPeticion = true;
             this.openDialog('', response.message);
-            this.routes.navigate(['/procesosContractuales']);
           },
           err => this.openDialog('', err.message)
         );
@@ -157,7 +157,6 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
               response => {
                 this.seRealizoPeticion = true;
                 this.openDialog('', response.message);
-                this.routes.navigate(['/procesosContractuales']);
               },
               err => this.openDialog('', err.message)
             );

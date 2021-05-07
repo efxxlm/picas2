@@ -7,7 +7,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
+            <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -18,7 +18,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-info-fuenterec-gog></app-tabla-info-fuenterec-gog>
+            <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

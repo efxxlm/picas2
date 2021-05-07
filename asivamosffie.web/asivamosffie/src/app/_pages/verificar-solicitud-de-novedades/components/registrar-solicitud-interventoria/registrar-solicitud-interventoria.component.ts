@@ -25,6 +25,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     { name: 'Contrato', value: true },
     { name: 'Proyecto', value: false }
   ];
+  estaEditando = false;
 
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
@@ -75,6 +76,9 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
               this.options.push(this.contrato)
             }
 
+            this.estaEditando = true;
+            this.numeroContrato.markAllAsTouched();
+            this.novedadAplicada.markAllAsTouched();
           }
           
         });

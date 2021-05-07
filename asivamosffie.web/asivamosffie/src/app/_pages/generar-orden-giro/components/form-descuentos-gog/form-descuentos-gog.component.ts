@@ -385,12 +385,26 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     }
 
     checkTotalDiscountValues( index: number, jIndex: number, kIndex: number, lIndex: number ) {
-        this.totalDescuentos( totalDescuento => {
-            if ( totalDescuento > this.valorNetoGiro ) {
+        const solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFacturaDescuento.find( solicitudPagoFaseFacturaDescuento => solicitudPagoFaseFacturaDescuento.solicitudPagoFaseFacturaDescuentoId === this.descuentos.controls[ index ].get( 'solicitudPagoFaseFacturaDescuentoId' ).value )
+
+        if ( solicitudPagoFaseFacturaDescuento !== undefined ) {
+            let totalDescuentoCriterio = 0;
+            
+            this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
+                this.getConceptos( index, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                    this.getAportantes( index, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
+                        if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
+                            totalDescuentoCriterio += aportanteControl.get( 'valorDescuento' ).value
+                        }
+                    } )
+                } )
+            } )
+
+            if ( totalDescuentoCriterio > solicitudPagoFaseFacturaDescuento.valorDescuento ) {
                 this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
-                this.openDialog( '', '<b>El valor total de los descuentos no puede ser mayor al valor neto de giro.</b>' )
+                this.openDialog( '', '<b>El valor total de los descuentos no puede ser mayor al valor del descuento.</b>' )
             }
-        } );
+        }
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {

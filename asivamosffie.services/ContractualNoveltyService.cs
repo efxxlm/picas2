@@ -255,6 +255,10 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
                                                                 .ToList();
 
+            List<Dominio> listDominioEstado = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
+                                                                .ToList();
+
             List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
@@ -281,7 +285,10 @@ namespace asivamosffie.services
                                                                         .ThenInclude(r => r.ComponenteFuenteNovedad)
                                                                             .ThenInclude(r => r.ComponenteUsoNovedad)
                                                                 .Include( x => x.Contrato )
-                                                                    .ThenInclude( x => x.ContratoPoliza )
+                                                                    .ThenInclude(x => x.ContratoPoliza)
+                                                                .Include(r => r.NovedadContractualAportante)
+                                                                    .ThenInclude( r => r.CofinanciacionAportante )
+                                                                    
                                                                 .FirstOrDefault();
 
             if (novedadContractual != null)
@@ -306,6 +313,11 @@ namespace asivamosffie.services
 
                 novedadContractual.InstanciaNombre = listDominioInstancias
                                                             .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
+
+                novedadContractual.EstadoNovedadNombre = listDominioEstado
+                                                            .Where(r => r.Codigo == novedadContractual.EstadoCodigo)
                                                             ?.FirstOrDefault()
                                                             ?.Nombre;
 
@@ -361,7 +373,7 @@ namespace asivamosffie.services
 
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
-                    //novedadContractualAportante.NombreAportante = 
+                    novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
 
                     foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
                     {
@@ -2364,8 +2376,7 @@ namespace asivamosffie.services
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) &&
                         descripcion.EsDocumentacionSoporte == null &&
                         string.IsNullOrEmpty(descripcion.ConceptoTecnico) &&
-                        descripcion.FechaConcepto == null &&
-                        string.IsNullOrEmpty(descripcion.NumeroRadicado)
+                        descripcion.FechaConcepto == null
 
                     )
                 {
@@ -2785,6 +2796,37 @@ namespace asivamosffie.services
                 _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Canceladad");
 
 
+        }
+
+        private string getNombreAportante(CofinanciacionAportante confinanciacion)
+        {
+            string nombreAportante;
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                nombreAportante = ConstanStringTipoAportante.Ffie;
+            }
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                nombreAportante = confinanciacion.NombreAportanteId == null
+                    ? "Error" :
+                    _context.Dominio.Find(confinanciacion.NombreAportanteId).Nombre;
+            }
+            else
+            {
+                if (confinanciacion.MunicipioId == null)
+                {
+                    nombreAportante = confinanciacion.DepartamentoId == null
+                    ? "Error" :
+                    "Gobernación " + _context.Localizacion.Find(confinanciacion.DepartamentoId).Descripcion;
+                }
+                else
+                {
+                    nombreAportante = confinanciacion.MunicipioId == null
+                    ? "Error" :
+                    "Alcaldía " + _context.Localizacion.Find(confinanciacion.MunicipioId).Descripcion;
+                }
+            }
+            return nombreAportante;
         }
 
         #endregion private 

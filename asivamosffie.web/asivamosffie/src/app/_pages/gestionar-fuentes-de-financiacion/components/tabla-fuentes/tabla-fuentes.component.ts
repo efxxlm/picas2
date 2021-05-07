@@ -84,6 +84,8 @@ export class TablaFuentesComponent implements OnInit {
         ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : '';
       });
 
+      console.log(this.listaFF);
+      
       this.listaFF.forEach(element => {
         this.datosTabla.push({
           fechaCreacion: (element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/')),
@@ -123,7 +125,7 @@ export class TablaFuentesComponent implements OnInit {
   }
 
   verSaldosyRendimientos(e: number) {
-    this.router.navigate(['/gestionarFuentes/verSaldosyRendimientos', e, 0]);
+    this.router.navigate(['/gestionarFuentes/verSaldosyRendimientos', e]);
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {

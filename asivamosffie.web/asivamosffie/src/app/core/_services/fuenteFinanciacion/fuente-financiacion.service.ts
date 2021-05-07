@@ -102,6 +102,10 @@ export class FuenteFinanciacionService {
   eliminarCuentaBancaria(cuentaBancariaId: any) {
     return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarCuentaBancaria?id=${cuentaBancariaId}`);
   }
+  
+  getVSaldosFuenteXaportanteId( id: number ){
+    return this.http.get<any>(`${environment.apiUrl}/SourceFunding/GetVSaldosFuenteXaportanteId?pAportanteId=${id}`);
+  }
 
 }
 
