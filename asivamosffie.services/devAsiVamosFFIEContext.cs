@@ -269,6 +269,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRegistrarLiquidacionContrato> VRegistrarLiquidacionContrato { get; set; }
         public virtual DbSet<VRegistrarPersonalObra> VRegistrarPersonalObra { get; set; }
+        public virtual DbSet<VRendimientodXcuentaBancaria> VRendimientodXcuentaBancaria { get; set; }
         public virtual DbSet<VReporteProyectos> VReporteProyectos { get; set; }
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
@@ -295,6 +296,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -9390,6 +9393,20 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VRendimientodXcuentaBancaria>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RendimientodXCuentaBancaria");
+
+                entity.Property(e => e.CuentaBancaria)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalRendimientos).HasColumnType("decimal(38, 3)");
             });
 
             modelBuilder.Entity<VReporteProyectos>(entity =>
