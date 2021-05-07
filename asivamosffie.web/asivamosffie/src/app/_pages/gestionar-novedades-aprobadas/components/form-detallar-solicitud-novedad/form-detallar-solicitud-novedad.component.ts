@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
+import { CofinanciacionAportante, CofinanciacionService } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
+import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -27,7 +29,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   fasesSelect: Dominio[] = [];
   listaUsos: any[] = [];
   listaAportantes: any[] = [];
+  //tipoAportantes: any[] = [];
   tipoAportantes: any[] = [];
+  listaTipoAportante: Dominio[];
   listaComponentes: any[] = [];
   componentesSelect: Dominio[] = [];
   usosSelect: Dominio[] = [];
@@ -38,6 +42,13 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   listaDepartamentos: Localizacion[] = [];
   listaMunicipios: Localizacion[] = [];
   estaEditando = false;
+
+  listaVigencias: any[] = [];
+  listaAportante: any[] = [];
+  tipoAportante = TiposAportante;
+  listadoDepto: any[] = [];
+  listadoMun: any[] = [];
+  listaNombreAportantes: any[] = [];
 
   createFormulario() {
     return this.fb.group({
@@ -72,6 +83,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     private contractualNoveltyService: ContractualNoveltyService,
     private projectContractingService: ProjectContractingService,
     private commonService: CommonService,
+    private cofinancingService: CofinanciacionService,
     public dialog: MatDialog,
     private router: Router,
 
@@ -139,6 +151,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.listaAportantes = response[4];
           //this.contratacionProyecto = response[5];
           this.tipoAportantes = response[5];
+          this.listaTipoAportante = response[5];
           this.listaDepartamentos = response[6];
           
           setTimeout(() => {
@@ -251,14 +264,40 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
                     listaComponentes.push(grupoComponente);
                   }
-
                   this.aportantes.push(grupoAportante);
+                  if(this.aportantes.length > 0){
+                    this.aportantes.controls.forEach(aportante => {
+                      if(!this.listaAportante.some(e => e.cofinanciacionAportanteId === aportante.get('cofinanciacionAportanteId'))){
+                          this.nuevoAportante.setValue(true);
+                          console.log(this.novedad);
+                          let cofinanciacionAportante = this.novedad.novedadContractualAportante[0].cofinanciacionAportante;
+                          if(cofinanciacionAportante != null){
+                            aportante.get('tipoAportante').setValue(cofinanciacionAportante.tipoAportanteId); 
+                            this.getAportanteById(cofinanciacionAportante.tipoAportanteId,0);
+                            switch (aportante.get('tipoAportante').value) {
+                              case this.tipoAportante.ET:
+                                  aportante.get('depaetamento').setValue(cofinanciacionAportante.departamentoId); 
+                                  this.getMunAportante(cofinanciacionAportante.departamentoId,0);
+                                  aportante.get('municipio').setValue(cofinanciacionAportante.municipioId); 
+                                  this.getVigenciaByMun(cofinanciacionAportante.municipioId, 0);
+                                break;
+                              case this.tipoAportante.Tercero:
+                                  aportante.get('nombreAportante').setValue(this.novedad.novedadContractualAportante[0].nombreAportante); 
+                                  this.getVigencia(aportante.get('nombreAportante').value,0);
+                                  break;
+                              default:
+                                break;
+                            }
+                            aportante.get('cofinanciacionAportanteId').setValue(this.novedad.novedadContractualAportante[0].cofinanciacionAportanteId)
+                            //aportante.get('depaetamento').setValue(cofinanciacionAportante.tipoAportanteId); 
+                            //aportante.get('').setValue(cofinanciacionAportante.tipoAportanteId); 
+                          }
+                      }
+                    });
+                  }
                   this.estaEditando = true;
                   this.addressForm.markAllAsTouched();
                 });
-
-
-
             });
 
           }, 1000);
@@ -267,17 +306,6 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
     });
 
-  }
-
-  changeDepartamento(e) {
-    const idDepartamento = e.localizacionId;
-    this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
-      this.listaMunicipios = mun.sort((a, b) => {
-        let textA = a.descripcion.toUpperCase();
-        let textB = b.descripcion.toUpperCase();
-        return textA < textB ? -1 : textA > textB ? 1 : 0;
-      });
-    });
   }
 
   changeFase(posicionAportante, posicionComponente) {
@@ -527,6 +555,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     let totalAportantes = 0;
 
     this.novedad.novedadContractualAportante = [];
+    console.log("valores del nuevo aportante: ",this.nuevoAportante , this.aportantes);
 
     // aportantes
     this.aportantes.controls.forEach(controlAportante => {
@@ -573,7 +602,6 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
             componenteFuenteNovedadId: controlFuentes.get('componenteFuenteNovedadId').value,
             fuenteFinanciacionId: controlFuentes.get('fuenteId').value,
             componenteUsoNovedad: []
-
           }
 
           listaUsos.controls.forEach(controlUsos => {
@@ -612,5 +640,147 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
     }
 
+  }
+
+  getAportanteById(id: number, i: number) {
+    let cofinanciacionAportante = this.novedad.novedadContractualAportante[0].cofinanciacionAportante;
+
+    this.commonService.listaAportanteByTipoAportanteId(id).subscribe(
+      respuesta => {
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true);
+        this.listaVigencias[i] = [];
+        this.listaAportante[i] = [];
+        if (this.tipoAportante.FFIE.includes(id.toString())) {
+          this.listaVigencias[i] = respuestaok;
+        } else {
+          if (this.tipoAportante.ET.includes(id.toString())) {
+            this.listaAportante[i] = respuestaok;
+            // console.log(this.listaAportante[i]);
+            this.commonService.listaDepartamentos().subscribe(res => {
+              this.listadoDepto[i] = res.sort((a, b) => {
+                let textA = a.descripcion.toUpperCase();
+                let textB = b.descripcion.toUpperCase();
+                return textA < textB ? -1 : textA > textB ? 1 : 0;
+              });
+              //this.proyecto.proyectoAportante[i].depto = cofinanciacionAportante.departamentoId;
+              this.commonService
+                .listaMunicipiosByIdDepartamento(cofinanciacionAportante.departamentoId)
+                .subscribe(res => {
+                  this.listadoMun[i] = res.sort((a, b) => {
+                    let textA = a.descripcion.toUpperCase();
+                    let textB = b.descripcion.toUpperCase();
+                    return textA < textB ? -1 : textA > textB ? 1 : 0;
+                  });
+                  //this.proyecto.proyectoAportante[i].mun = this.proyecto.proyectoAportante[i].aportante.municipioId?.toString();
+                  this.getVigenciaByMun(null, i);
+                });
+            });
+            //this.listadoMun[i]=[]
+          } else {
+            this.listaAportante[i] = respuestaok;
+            this.listaNombreAportantes[i] = [];
+            respuestaok.forEach(element => {
+              if (!this.listaNombreAportantes[i].includes(element.nombre)) {
+                this.listaNombreAportantes[i].push(element.nombre);                
+              }
+            });
+            this.getVigencia(null, i);            
+          }
+        }
+      },
+      err => {
+        let mensaje: string;
+        // console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        } else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      }
+    );
+  }
+  getAportante(event: any, i: number) {
+    this.commonService.listaAportanteByTipoAportanteId(event).subscribe(
+      respuesta => {
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true);
+        this.listaVigencias[i] = [];
+        this.listaAportante[i] = [];
+        if (this.tipoAportante.FFIE.includes(event.toString())) {
+          this.listaVigencias[i] = respuestaok;
+        } else {
+          if (this.tipoAportante.ET.includes(event.toString())) {
+            this.listaAportante[i] = respuestaok;
+            this.listadoDepto[i] = [{ localizacionId: null, descripcion: 'un momento por favor.' }];
+            this.commonService.listaDepartamentos().subscribe(res => {
+              this.listadoDepto[i] = res.sort((a, b) => {
+                let textA = a.descripcion.toUpperCase();
+                let textB = b.descripcion.toUpperCase();
+                return textA < textB ? -1 : textA > textB ? 1 : 0;
+              });
+            });
+            this.listadoMun[i] = [];
+          } else {
+            this.listaAportante[i] = respuestaok;
+            this.listaNombreAportantes[i] = [];
+            respuestaok.forEach(element => {
+              if (!this.listaNombreAportantes[i].includes(element.nombre)) {
+                this.listaNombreAportantes[i].push(element.nombre);
+              }
+            });
+          }
+        }
+      },
+      err => {
+        let mensaje: string;
+        if (err.message) {
+          mensaje = err.message;
+        } else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+      }
+    );
+  }
+
+  changeDepartamento(e) {
+    const idDepartamento = e.localizacionId;
+    this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
+      this.listaMunicipios = mun.sort((a, b) => {
+        let textA = a.descripcion.toUpperCase();
+        let textB = b.descripcion.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+    });
+  }
+
+  getMunAportante(id: any, i: number) {
+    this.listaVigencias[i] = this.listaAportante[i].filter(
+      x => x.departamentoId == id && x.municipioId == null
+    );
+    this.commonService.listaMunicipiosByIdDepartamento(id).subscribe(res => {
+      this.listadoMun[i] = res.sort((a, b) => {
+        let textA = a.descripcion.toUpperCase();
+        let textB = b.descripcion.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      });
+    });
+  }
+
+  getVigenciaByMun(id: any, i: number) {
+    this.listaVigencias[i] = this.listaAportante[i].filter(
+      x => x.municipioId == id
+    );
+  }
+
+  getVigencia(nombre: any, i: number) {
+    this.listaVigencias[i] = this.listaAportante[i].filter(
+      x => x.nombre == nombre
+    );
   }
 }
