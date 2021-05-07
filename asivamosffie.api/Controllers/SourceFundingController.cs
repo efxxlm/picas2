@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class SourceFundingController : ControllerBase
     {
         public readonly ISourceFundingService _sourceFunding;
