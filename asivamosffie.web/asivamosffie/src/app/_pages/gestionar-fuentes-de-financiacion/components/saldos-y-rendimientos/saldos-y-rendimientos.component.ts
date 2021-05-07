@@ -34,7 +34,7 @@ export class SaldosYRendimientosComponent implements OnInit, AfterViewInit {
 
   getVSaldosFuenteXaportanteId() {
     forkJoin([this.fuenteFinanciacionService.getVSaldosFuenteXaportanteId(this.aportanteId)]).subscribe(res => {
-      if (res !== null) {
+      if (res[0].length > 0) {
         res.forEach(element => {
           this.datosTabla.push({
             saldoActual: element[0].saldoActual,
