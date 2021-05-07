@@ -34,7 +34,7 @@ const routes: Routes = [
     component: ControlDeRecursosComponent
   },
   {
-    path: 'verSaldosyRendimientos/:idFuente/:idControl',
+    path: 'verSaldosyRendimientos/:aportanteId',
     component: SaldosYRendimientosComponent
   }
 ];

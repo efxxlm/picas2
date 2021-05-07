@@ -3,19 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-
-const ELEMENT_DATA = [
-  {
-    saldoActual: 'Saldo actual',
-    comprometidoDDP: 'Comprometido en DDP',
-    rendimientosIncorporados: 'Rendimientos incorporados'
-  },
-  {
-    saldoActual: 'Saldo actual',
-    comprometidoDDP: 'Comprometido en DDP',
-    rendimientosIncorporados: 'Rendimientos incorporados'
-  }
-];
+import { forkJoin } from 'rxjs';
+import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 
 @Component({
   selector: 'app-saldos-y-rendimientos',
@@ -23,24 +12,38 @@ const ELEMENT_DATA = [
   styleUrls: ['./saldos-y-rendimientos.component.scss']
 })
 export class SaldosYRendimientosComponent implements OnInit, AfterViewInit {
-  idFuente: number = 0;
-  idControl: number = 0;
-
-  ELEMENT_DATA: any[];
-  displayedColumns: string[] = ['saldoActual', 'comprometidoDDP', 'rendimientosIncorporados'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  
+  aportanteId: number = 0;
+  displayedColumns: string[] = ['saldoActual', 'comprometidoEnDdp', 'rendimientosIncorporados'];
+  ELEMENT_DATA: any[] = [];
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  datosTabla = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(private activatedRoute: ActivatedRoute, private fuenteFinanciacionService: FuenteFinanciacionService) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idFuente = param['idFuente'];
-      this.idControl = param['idControl'];
+      this.aportanteId = param['aportanteId'];
 
-      console.log(this.idFuente, this.idControl);
+      this.getVSaldosFuenteXaportanteId();
+    });
+  }
+
+  getVSaldosFuenteXaportanteId() {
+    forkJoin([this.fuenteFinanciacionService.getVSaldosFuenteXaportanteId(this.aportanteId)]).subscribe(res => {
+      if (res !== null) {
+        res.forEach(element => {
+          this.datosTabla.push({
+            saldoActual: element[0].saldoActual,
+            comprometidoEnDdp: element[0].comprometidoEnDdp,
+            rendimientosIncorporados: element[0].rendimientosIncorporados
+          });
+        });
+        this.dataSource.data = this.datosTabla;
+      }
     });
   }
 
