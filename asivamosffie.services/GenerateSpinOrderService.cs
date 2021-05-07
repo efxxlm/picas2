@@ -855,8 +855,7 @@ namespace asivamosffie.services
 
             List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
                 _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId).ToList();
-
-
+             
             foreach (var Fuentes in ListDescuentos)
             {
 
@@ -876,7 +875,7 @@ namespace asivamosffie.services
                     SaldoActual = ValorDrpXaportante,
                     SaldoAfectado = ValorDrpXaportante - Fuentes.ValorDescuento
                 });
-            }
+            } 
             return List;
         }
 
@@ -943,14 +942,15 @@ namespace asivamosffie.services
                            .ConvertAll(x => new Usos
                            {
                                NombreUso = x.NombreUso,
-                               TipoUsoCodigo = x.TipoUso,
+                               TipoUsoCodigo = x.NombreUso,
                                FuenteFinanciacion = x.FuenteFinanciacion,
                                FuenteFinanciacionId = x.FuenteFinanciacionId
                            }).ToList()
             };
             List<VAportanteFuenteUso> ListVAportanteFuenteUso = _context.VAportanteFuenteUso
                   .Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId)
-                  .ToList(); 
+                  .ToList();
+
             foreach (var usos in tabla.Usos)
             {
                 List<VFuentesUsoXcontratoId> List2 = List.Where(r => r.NombreUso == usos.NombreUso).ToList();
@@ -964,70 +964,60 @@ namespace asivamosffie.services
                             NombreUso = usos.NombreUso
                         });
 
-                List<FuenteFinanciacion> ListFuenteFinanciacion = new List<FuenteFinanciacion>();
+
                 foreach (var Fuentes in usos.Fuentes)
                 {
-                    if (!ListFuenteFinanciacion.Any(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId))
+
+                    List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
+                        ListVAportanteFuenteUso
+                        .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
+
+                    foreach (var item in ListVAportanteFuenteUso2)
                     {
-                        FuenteFinanciacion fuenteFinanciacion = _context.FuenteFinanciacion.Find(Fuentes.FuenteFinanciacionId);
-                        ListFuenteFinanciacion.Add(fuenteFinanciacion);
-
-                        List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
-                            ListVAportanteFuenteUso
-                            .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
-
-                        List<CofinanciacionAportante> ListCofinanciacionAportante = new List<CofinanciacionAportante>();
-
-                        foreach (var item in ListVAportanteFuenteUso2)
+                        if (Fuentes.Aportante == null || !Fuentes.Aportante.Any(r => r.AportanteId == item.CofinanciacionAportanteId))
                         {
-                            if (!ListCofinanciacionAportante.Any(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId))
+
+                            if (Fuentes.Aportante == null)
+                                Fuentes.Aportante = new List<Aportante>();
+
+
+                            List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
+                                ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+
+                            Fuentes.Aportante.Add(new Aportante
                             {
+                                FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                AportanteId = item.CofinanciacionAportanteId
 
-                                CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(item.CofinanciacionAportanteId);
-                                ListCofinanciacionAportante.Add(cofinanciacionAportante);
-                                List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
-                                    ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+                            });
+                            foreach (var Aportante in Fuentes.Aportante)
+                            {
+                                decimal ValorUso = ListVAportanteFuenteUso3
+                                    .Where(r => r.Nombre == usos.NombreUso
+                                    && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                    ).Select(s => s.ValorUso).FirstOrDefault();
 
-                                if (Fuentes.Aportante == null)
-                                    Fuentes.Aportante = new List<Aportante>();
 
-                                Fuentes.Aportante.Add(new Aportante
+                                decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+
+                                Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
+                                if (Aportante.ValorUso == null)
+                                    Aportante.ValorUso = new List<ValorUso>();
+
+                                Aportante.ValorUso.Add(new ValorUso
                                 {
-                                    FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
-                                    AportanteId = item.CofinanciacionAportanteId
-
+                                    AportanteId = Aportante.AportanteId,
+                                    Valor = String.Format("{0:n0}", ValorUso),
+                                    ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
                                 });
-                                foreach (var Aportante in Fuentes.Aportante)
-                                {
-                                    decimal ValorUso = ListVAportanteFuenteUso3
-                                        .Where(r => r.Nombre == usos.NombreUso
-                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault();
 
 
-                                    decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
-
-                                    Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-
-                                    if (Aportante.ValorUso == null)
-                                        Aportante.ValorUso = new List<ValorUso>();
-
-                                    Aportante.ValorUso.Add(new ValorUso
-                                    {
-                                        AportanteId = Aportante.AportanteId,
-                                        Valor = String.Format("{0:n0}", ValorUso),
-                                        ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
-                                    });
-
-
-
-                                }
 
                             }
                         }
                     }
                 }
-
             }
             return tabla;
         }
