@@ -141,6 +141,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarNovedadDevuelta = 142,
         EnviarNovedadTramitar = 144,
         EnviarNovedadCancelar = 145,
+        EnviarNovedadEnviarTramite = 146,
+        EnviarNovedadComite = 147,
 
     }
 }

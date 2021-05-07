@@ -651,17 +651,17 @@ namespace asivamosffie.services
                             foreach (var Aportantes in DetailValidarDisponibilidadPresupuesal.Aportantes)
                             {
                                 if (Aportantes.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
-                                { 
+                                {
                                     gestion.SaldoActualGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Saldo_actual_de_la_fuente).FirstOrDefault();
                                     gestion.ValorSolicitadoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Valor_solicitado_de_la_fuente).FirstOrDefault();
                                     gestion.NuevoSaldoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Nuevo_saldo_de_la_fuente).FirstOrDefault();
-                                     
+
                                     _context.GestionFuenteFinanciacion.Update(gestion);
                                 }
                             }
                         }
 
-             
+
                     }
                 }
 
@@ -919,7 +919,7 @@ namespace asivamosffie.services
             if (id == 0)
             {
                 return Array.Empty<byte>();
-            }   
+            }
             DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                 .Where(r => r.DisponibilidadPresupuestalId == id)
                 .Include(r => r.Contratacion).FirstOrDefaultAsync();
@@ -1122,9 +1122,23 @@ namespace asivamosffie.services
 
                 List<GestionFuenteFinanciacion> gestionfuentes = new List<GestionFuenteFinanciacion>();
 
+
+                gestionfuentes = _context.GestionFuenteFinanciacion
+                .Where(x => !(bool)x.Eliminado
+                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+                Include(x => x.FuenteFinanciacion).
+                    ThenInclude(x => x.Aportante).
+                    ThenInclude(x => x.CofinanciacionDocumento).
+                Include(x => x.DisponibilidadPresupuestalProyecto).
+                    ThenInclude(x => x.Proyecto).
+                        ThenInclude(x => x.Sede).
+                ToList();
+
+
+
                 if (esNovedad)
                 {
-                    gestionfuentes = _context.GestionFuenteFinanciacion
+                    var gestionfuentesTemp = _context.GestionFuenteFinanciacion
                     .Where(x => !(bool)x.Eliminado
                         && x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId).
                     Include(x => x.FuenteFinanciacion).
@@ -1134,21 +1148,8 @@ namespace asivamosffie.services
                         ThenInclude(x => x.Proyecto).
                             ThenInclude(x => x.Sede).
                     ToList();
-                }
-                else
-                {
-                    gestionfuentes = _context.GestionFuenteFinanciacion
-                    .Where(x => !(bool)x.Eliminado
-                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
-                    Include(x => x.FuenteFinanciacion).
-                        ThenInclude(x => x.Aportante).
-                        ThenInclude(x => x.CofinanciacionDocumento).
-                    Include(x => x.DisponibilidadPresupuestalProyecto).
-                        ThenInclude(x => x.Proyecto).
-                            ThenInclude(x => x.Sede).
-                    ToList();
 
-
+                    gestionfuentes.AddRange(gestionfuentesTemp);
                 }
 
                 //empiezo con fuentes

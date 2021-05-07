@@ -259,6 +259,14 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
                                                                 .ToList();
 
+            List<Dominio> listDominioEstadoProceso = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades)
+                                                                .ToList();
+
+            List<Dominio> listDominioAbogado = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades)
+                                                                .ToList();
+
             List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
@@ -318,6 +326,16 @@ namespace asivamosffie.services
 
                 novedadContractual.EstadoNovedadNombre = listDominioEstado
                                                             .Where(r => r.Codigo == novedadContractual.EstadoCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
+
+                novedadContractual.EstadoProcesoNombre = listDominioEstadoProceso
+                                                            .Where(r => r.Codigo == novedadContractual.EstadoProcesoCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
+
+                novedadContractual.NombreAbogado = listDominioAbogado
+                                                            .Where(r => r.Codigo == novedadContractual.AbogadoRevisionId.ToString())
                                                             ?.FirstOrDefault()
                                                             ?.Nombre;
 
@@ -1949,7 +1967,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-
+                EnviarNotificacionEnvioComite(novedadContractual);
 
                 return respuesta = new Respuesta
                 {
@@ -2006,7 +2024,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-
+                EnviarNotificacionAJuridica(novedadContractual);
 
                 return respuesta = new Respuesta
                 {
@@ -2827,6 +2845,101 @@ namespace asivamosffie.services
                 }
             }
             return nombreAportante;
+        }
+
+        private async void EnviarNotificacionAJuridica(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Apoyo)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadEnviarTramite && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+            ;
+
+            List<UsuarioPerfil> ListUsuarios = _context.UsuarioPerfil
+                                                            .Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica)
+                                                            .ToList();
+
+            List<string> listaMails = new List<string>();
+
+            ListUsuarios.ForEach(u =>
+            {
+                Usuario usuario = _context.Usuario.Find(u.UsuarioId);
+
+                if (usuario != null)
+                {
+                    listaMails.Add(usuario.Email);
+                }
+
+            });
+
+            if (listaMails.Count() > 0)
+                _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual enviada");
+
+
+        }
+
+        private async void EnviarNotificacionEnvioComite(NovedadContractual novedadContractual)
+        {
+            VProyectosXcontrato proyecto = _context.VProyectosXcontrato
+                                                        .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato
+                                            .Where(x => x.ContratoId == novedadContractual.ContratoId)
+                                            .Include(x => x.Supervisor)
+                                            .Include(x => x.Apoyo)
+                                            .Include(x => x.Contratacion)
+                                                .ThenInclude(x => x.Contratista)
+                                                    .ThenInclude(x => x.ProcesoSeleccionProponente)
+                                            .FirstOrDefault();
+
+            Template templateEnviar = _context.Template
+                                                .Where(r => r.TemplateId == (int)enumeratorTemplate.EnviarNovedadComite && r.Activo == true)
+                                                .FirstOrDefault();
+
+            string template = templateEnviar.Contenido
+                                                      .Replace("[NUMERO_CONTRATO]", proyecto.NumeroContrato)
+                                                      .Replace("[NUMERO_SOLICITUD]", novedadContractual.NumeroSolicitud)
+                                                      .Replace("[JUSTIFICACION]", novedadContractual.NumeroSolicitud)
+
+            ;
+
+            List<string> listaMails = new List<string>();
+
+
+            if (!string.IsNullOrEmpty(contrato?.Supervisor?.Email))
+            {
+                listaMails.Add(contrato?.Supervisor?.Email);
+            }
+
+            if (!string.IsNullOrEmpty(contrato?.Apoyo?.Email))
+            {
+                listaMails.Add(contrato?.Apoyo?.Email);
+            }
+
+            if (!string.IsNullOrEmpty(contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente))
+            {
+                listaMails.Add(contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.EmailProponente);
+            }
+
+            if (listaMails.Count() > 0)
+                _commonService.EnviarCorreo(listaMails, template, "Novedad Contractual Canceladad");
+
+
         }
 
         #endregion private 

@@ -248,6 +248,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Motivos_Novedad_contractual = 174,
 
+        Estado_Proceso_Novedades = 177,
+
+        Abogado_Revision_Novedades = 178,
+
         Estados_validacion_liquidacion_codigo = 180,
 
         Tipo_Actualizacion_Polizas_y_garantias = 181,

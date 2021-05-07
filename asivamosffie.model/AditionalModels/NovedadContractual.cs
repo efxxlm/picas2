@@ -75,6 +75,12 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public List<SesionComiteSolicitud> sesionComiteSolicitud { get; set; }
 
+        [NotMapped]
+        public string EstadoProcesoNombre { get; set; }
+
+        [NotMapped]
+        public string NombreAbogado { get; set; }
+
     }
 
 }
