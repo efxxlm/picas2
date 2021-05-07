@@ -15,10 +15,12 @@
 
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
-      <strong>
-        Fecha de solicitud:
-      </strong>
-      {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
+      <p>
+        <strong>
+          Fecha de solicitud:
+        </strong>
+        {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
+      </p>
     <p>
       <strong>
         Fecha de aprobación del supervisor:
@@ -26,10 +28,11 @@
       {{ novedad.fechaValidacion | date: 'dd/MM/yyyy' }}
     </p>
     <p>
-      <strong>
-        Tipo de solicitud:
-      </strong>
-     {{ tipoNovedadNombre }}
+      <strong> Tipo de solicitud: </strong>
+      <span *ngFor="let tipoNovedad of novedad.novedadContractualDescripcion; let i = index">
+        {{ tipoNovedad.nombreTipoNovedad
+        }}<span *ngIf="i + 1 !== novedad.novedadContractualDescripcion.length">,</span>
+      </span>
     </p>
     </mat-card-content>
   </mat-card>

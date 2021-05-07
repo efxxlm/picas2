@@ -184,7 +184,9 @@
 
                 <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
                   <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
-                    <h3> <strong> CLAUSULA </strong> {{ i + 1 }} </h3>
+                    <mat-card-title class="header-card--text sub-text"> 
+                      Clausula {{ i + 1 }}
+                    </mat-card-title>
                     <p><strong>Cláusula a modificar: </strong> </p>
                     <section [innerHTML]="clausula.clausulaAmodificar" style="margin-left: 2em"></section>
                     <p><strong>Ajuste solicitado a la cláusula: </strong> </p>
