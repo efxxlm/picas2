@@ -214,7 +214,7 @@ namespace asivamosffie.services
         {
             try
             {
-                int intCantidadDependenciasOrdenGiro = 4;
+                int intCantidadDependenciasOrdenGiro = 3;
 
                 if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
                     intCantidadDependenciasOrdenGiro = 3;
