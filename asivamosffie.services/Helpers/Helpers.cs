@@ -376,5 +376,25 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
+
+        public static bool TryStringToDate(string sDate, out DateTime newDate)
+        {
+            newDate = DateTime.MinValue;
+            string[] dateElements = sDate.Split('/');
+
+            if (dateElements.Length == 0 || dateElements.Length < 3)
+            {
+                return false;
+            }
+
+            if (int.TryParse(dateElements[2], out int year) &&
+                int.TryParse(dateElements[1], out int month) &&
+                int.TryParse(dateElements[0], out int day))
+            {
+                newDate = new DateTime(year, month, day);
+                return true;
+            }
+            return false;
+        }
     }
 }
