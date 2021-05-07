@@ -74,6 +74,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<DefensaJudicialSeguimiento> DefensaJudicialSeguimiento { get; set; }
         public virtual DbSet<DemandadoConvocado> DemandadoConvocado { get; set; }
         public virtual DbSet<DemandanteConvocante> DemandanteConvocante { get; set; }
+        public virtual DbSet<DevMenu> DevMenu { get; set; }
         public virtual DbSet<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
         public virtual DbSet<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual DbSet<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
@@ -275,6 +276,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRpsPorContratacion> VRpsPorContratacion { get; set; }
         public virtual DbSet<VSaldoPresupuestalXcontrato> VSaldoPresupuestalXcontrato { get; set; }
         public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
+        public virtual DbSet<VSaldosFuenteXaportanteId> VSaldosFuenteXaportanteId { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
@@ -293,7 +295,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -2637,6 +2638,46 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.DemandanteConvocante)
                     .HasForeignKey(d => d.DefensaJucicialId)
                     .HasConstraintName("FK_Demandante_DefensaJucicial");
+            });
+
+            modelBuilder.Entity<DevMenu>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Dev_Menu");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FaseCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Icono)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaFormulario)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
@@ -9539,6 +9580,19 @@ namespace asivamosffie.model.Models
                     .HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(18, 0)");
+            });
+
+            modelBuilder.Entity<VSaldosFuenteXaportanteId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SaldosFuenteXAportanteId");
+
+                entity.Property(e => e.ComprometidoEnDdp).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.RendimientosIncorporados).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.SaldoActual).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VSesionParticipante>(entity =>

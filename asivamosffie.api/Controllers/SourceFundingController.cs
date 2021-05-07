@@ -58,6 +58,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetVSaldosFuenteXaportanteId")]
+        [HttpGet]
+        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId([FromQuery] int pAportanteId)
+        {
+            try
+            {
+                return await _sourceFunding.GetVSaldosFuenteXaportanteId(pAportanteId);
+
+            }
+            catch (Exception ex)
+            {
+                return new List<VSaldosFuenteXaportanteId>();
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<FuenteFinanciacion> GetById(int id)
         {
@@ -82,15 +97,15 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                if(fuentefinanciacion.FuenteFinanciacionId>0)
+                if (fuentefinanciacion.FuenteFinanciacionId > 0)
                 {
-                    fuentefinanciacion.UsuarioModificacion= HttpContext.User.FindFirst("User").Value.ToUpper();
+                    fuentefinanciacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 }
                 else
                 {
                     fuentefinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 }
-                
+
                 respuesta = await _sourceFunding.CreateEditFuentesFinanciacion(fuentefinanciacion);
                 return Ok(respuesta);
             }
@@ -154,7 +169,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListFuentesFinanciacionByAportanteId")]        
+        [Route("GetListFuentesFinanciacionByAportanteId")]
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int AportanteId)
         {
             try
