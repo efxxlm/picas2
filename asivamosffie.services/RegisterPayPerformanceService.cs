@@ -449,7 +449,7 @@ namespace asivamosffie.services
             //Número de orden de giro
             string cellValue = worksheet.Cells[indexWorkSheetRow, 1].Text;
             carguePagosRendimiento.Add("Número de orden de giro", cellValue);
-            SolicitudPago solicitud = new SolicitudPago();
+            OrdenGiro ordenGiro = new OrdenGiro();
 
 
             if (string.IsNullOrEmpty(cellValue) || cellValue.Length > 50)
@@ -458,15 +458,14 @@ namespace asivamosffie.services
             }
             else
             {
-                solicitud = await _context.SolicitudPago.Where(
-                     x => x.NumeroSolicitud == cellValue)
-                     .Include(solicitud => solicitud.OrdenGiro)
-                     .ThenInclude(detalle => detalle.OrdenGiroDetalle)
-                     .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion).AsNoTracking().FirstOrDefaultAsync();
-                var ordenGiro = solicitud?.OrdenGiro;
-                var valorNeto = solicitud?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
+                ordenGiro =  await _context.OrdenGiro.Where(x => x.NumeroSolicitud == cellValue 
+                        && x.EstadoCodigo == ((int)EnumEstadoOrdenGiro.Con_Orden_de_Giro_Tramitada).ToString())
+                    ?.Include(orden => orden.OrdenGiroDetalle)
+                    .ThenInclude(detalle => detalle.OrdenGiroDetalleTerceroCausacion).AsNoTracking().FirstOrDefaultAsync();
 
-                if (solicitud == null || valorNeto == null)
+                var valorNeto = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
+
+                if (ordenGiro == null || valorNeto == null)
                 {
                     errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, no tiene una Solicitud de Pago válida"));
                 }
@@ -477,6 +476,25 @@ namespace asivamosffie.services
                     {
                         errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, ya tiene un pago registrado"));
                     }
+
+                    var solicitudPago = _context.SolicitudPago.Where(solicitud => solicitud.OrdenGiroId == ordenGiro.OrdenGiroId)
+                        .Include(x => x.SolicitudPagoRegistrarSolicitudPago)
+                        .ThenInclude(regi => regi.SolicitudPagoFase.Where(x => !x.EsPreconstruccion))
+                            .ThenInclude(r => r.SolicitudPagoFaseFactura)
+                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento).AsNoTracking();
+
+                   
+                        
+                        //  .Include(x => x.SolicitudPagoFaseCriterio)
+
+                    //.ThenInclude(r => r.SolicitudPagoFase)
+
+
+
+
+                    //ordenGiro.OrdenGiroDetalle.FirstOrDefault().OrdenGiroDetalleDescuentoTecnica.FirstOrDefault().
+                    //    OrdenGiroDetalleDescuentoTecnicaAportante.FirstOrDefault().SolicitudPagoFaseFacturaDescuento
+
                 }
 
             }
@@ -486,21 +504,69 @@ namespace asivamosffie.services
             //string sDate = (worksheet.Cells[indexWorkSheetRow, 2] as DocumentFormat.OpenXml.Office.Excel.Range).Value2.ToString();
             //DateTime conv = DateTime.FromOADate(d);
 
-            carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[indexWorkSheetRow, 2].Text);
-            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 2].Text) ||
-                 !TryStringToDate(worksheet.Cells[indexWorkSheetRow, 2].Text, out DateTime fecha))
+            var dateObje = worksheet.Cells[indexWorkSheetRow, 2].Value;
+            DateTime guideDate = new DateTime();
+            var cellType = worksheet.Cells[indexWorkSheetRow, 2].Value.GetType().Name;
+            if (cellType == "DateTime")
+            {
+                var dtFormat = "dd/MM/yyyy";
+                worksheet.Cells[indexWorkSheetRow, 1].Style.Numberformat.Format = dtFormat;
+            }
+            string dateText = worksheet.Cells[indexWorkSheetRow, 2].Text;
+            bool isDate = TryStringToDate(dateText, out guideDate);
+
+            if (cellType == "Double")
+            {
+                Double d = Double.Parse(dateObje.ToString());
+                guideDate = DateTime.FromOADate(d);
+            }
+
+            string dateCellValue = worksheet.Cells[indexWorkSheetRow, 2].Text;
+
+            if (dateCellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double")
+            {
+                carguePagosRendimiento.Add("Fecha de pago", guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                // guideDate = dateObje;
+            }
+            else
+            {
+                carguePagosRendimiento.Add("Fecha de pago", dateCellValue);
+            }
+
+            if (string.IsNullOrEmpty(dateText) || (!isDate && guideDate == DateTime.MinValue))
             {
                 errors.Add(new ExcelError(indexWorkSheetRow, 3, "Por favor ingresa solo fechas en este campo"));
             }
+
 
             // #3
             //Impuestos
             carguePagosRendimiento.Add("Impuestos", worksheet.Cells[indexWorkSheetRow, 3].Text);
             string impuetoClean = worksheet.Cells[indexWorkSheetRow, 3].Text.Replace(".", "").Replace("$", "");
-            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out decimal respValNumber))
+            if (string.IsNullOrEmpty(worksheet.Cells[indexWorkSheetRow, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out decimal taxDecimal))
             {
                 errors.Add(new ExcelError(indexWorkSheetRow, 4, "Por favor ingresa solo datos numéricos en este campo"));
             }
+            else if (ordenGiro != null)
+            {
+                var solicitudQuery = await (from solicitud in _context.SolicitudPago
+                                            from sRegistroSolPago in solicitud.SolicitudPagoRegistrarSolicitudPago
+                                            from sFase in sRegistroSolPago.SolicitudPagoFase
+                                            from factura in sFase.SolicitudPagoFaseFactura
+                                            from descuento in factura.SolicitudPagoFaseFacturaDescuento
+                                            where solicitud.OrdenGiroId == ordenGiro.OrdenGiroId &&
+                                            sFase.EsPreconstruccion == false
+                                            select descuento).AsNoTracking().ToListAsync();
+
+                var valorTotalDescuentos = solicitudQuery.Sum(x => x.ValorDescuento);
+
+                if(solicitudQuery == null || taxDecimal != valorTotalDescuentos)
+                {
+                    errors.Add(new ExcelError(indexWorkSheetRow, 3, "Por favor ingresa el valor de Impuesto que coincida con la Solicitud de Pago almacenada"));
+                }
+                
+            }
+            
 
             // #4
             //Valor neto girado
@@ -510,9 +576,9 @@ namespace asivamosffie.services
             {
                 errors.Add(new ExcelError(indexWorkSheetRow, 5, "Por favor ingresa solo datos numéricos en este campo"));
             }
-            else if (solicitud != null)
+            else if (ordenGiro != null)
             {
-                var valorNeto = solicitud.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
+                var valorNeto = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
                 if (!valorNeto.HasValue || valorNeto.Value != respValNetoNumber)
                 {
                     errors.Add(new ExcelError(indexWorkSheetRow, 5, "La orden de giro tiene un valor diferente"));
