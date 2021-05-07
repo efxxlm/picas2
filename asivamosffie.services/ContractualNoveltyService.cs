@@ -259,6 +259,14 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
                                                                 .ToList();
 
+            List<Dominio> listDominioEstadoProceso = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades)
+                                                                .ToList();
+
+            List<Dominio> listDominioAbogado = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades)
+                                                                .ToList();
+
             List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
@@ -318,6 +326,16 @@ namespace asivamosffie.services
 
                 novedadContractual.EstadoNovedadNombre = listDominioEstado
                                                             .Where(r => r.Codigo == novedadContractual.EstadoCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
+
+                novedadContractual.EstadoProcesoNombre = listDominioEstadoProceso
+                                                            .Where(r => r.Codigo == novedadContractual.EstadoProcesoCodigo)
+                                                            ?.FirstOrDefault()
+                                                            ?.Nombre;
+
+                novedadContractual.NombreAbogado = listDominioAbogado
+                                                            .Where(r => r.Codigo == novedadContractual.AbogadoRevisionId.ToString())
                                                             ?.FirstOrDefault()
                                                             ?.Nombre;
 
