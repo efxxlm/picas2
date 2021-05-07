@@ -39,6 +39,20 @@
               >
                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaSolicitudNovedad').touched) ||
+                    (addressForm.get('fechaSolicitudNovedad').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -68,6 +82,21 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('instanciaPresentoSolicitud').invalid &&
+                    addressForm.get('instanciaPresentoSolicitud').touched) ||
+                  (addressForm.get('instanciaPresentoSolicitud').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -121,6 +150,21 @@
               >
                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                  (addressForm.get('fechaSesionInstancia').invalid &&
+                  addressForm.get('fechaSesionInstancia').touched) ||
+                (addressForm.get('fechaSesionInstancia').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -158,6 +202,20 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('tipoNovedad').invalid && addressForm.get('tipoNovedad').touched) ||
+                  (addressForm.get('tipoNovedad').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
