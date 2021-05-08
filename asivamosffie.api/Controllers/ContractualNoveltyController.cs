@@ -176,6 +176,39 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [HttpDelete]
+        [Route("EliminarComponenteFuenteNovedad")]
+        public async Task<IActionResult> EliminarComponenteFuenteNovedad([FromQuery] int pComponenteFuenteNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarComponenteFuenteNovedad(pComponenteFuenteNovedad, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        [Route("EliminarComponenteUsoNovedad")]
+        public async Task<IActionResult> EliminarComponenteUsoNovedad([FromQuery] int pComponenteUsoNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarComponenteUsoNovedad(pComponenteUsoNovedad, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpDelete]
         [Route("EliminarNovedadClausula")]
         public async Task<IActionResult> EliminarNovedadClausula([FromQuery] int pNovedadContractuaClausulalId)

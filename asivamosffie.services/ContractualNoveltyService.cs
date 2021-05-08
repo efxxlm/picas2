@@ -301,9 +301,26 @@ namespace asivamosffie.services
             {
                 List<ComponenteAportanteNovedad> componenteAportanteNovedades = _context.ComponenteAportanteNovedad
                             .Where(r => r.NovedadContractualAportanteId == apo.NovedadContractualAportanteId && (r.Eliminado == false | r.Eliminado == null))
-                            .Include(r => r.ComponenteFuenteNovedad)
-                                .ThenInclude(r => r.ComponenteUsoNovedad)
                             .ToList();
+
+                foreach (var cpa in componenteAportanteNovedades)
+                {
+                    List<ComponenteFuenteNovedad> componenteFuenteNovedades = _context.ComponenteFuenteNovedad
+                        .Where(r => r.ComponenteAportanteNovedadId == cpa.ComponenteAportanteNovedadId && (r.Eliminado == false | r.Eliminado == null))
+                        .ToList();
+                    
+                    foreach (var cfn in componenteFuenteNovedades)
+                    {
+                        List<ComponenteUsoNovedad> componenteUsoNovedades = _context.ComponenteUsoNovedad
+                        .Where(r => r.ComponenteFuenteNovedadId == cfn.ComponenteFuenteNovedadId && (r.Eliminado == false | r.Eliminado == null))
+                        .ToList();
+                        cfn.ComponenteUsoNovedad = componenteUsoNovedades;
+
+                    }
+
+                    cpa.ComponenteFuenteNovedad = componenteFuenteNovedades;
+                }
+
 
                 apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
             }
@@ -1600,6 +1617,116 @@ namespace asivamosffie.services
                     Data = componenteAportanteNovedad,
                     Code = ConstantMessagesContractualControversy.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        public async Task<Respuesta> EliminarComponenteFuenteNovedad(int pComponenteFuenteNovedad, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Componente_fuente_novedad, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            ComponenteFuenteNovedad componenteFuenteNovedad = _context.ComponenteFuenteNovedad.Find(pComponenteFuenteNovedad);
+
+            try
+            {
+
+                if (componenteFuenteNovedad != null)
+                {
+                    strCrearEditar = "Eliminar COMPONENTE FUENTE NOVEDAD";
+                    componenteFuenteNovedad.FechaModificacion = DateTime.Now;
+                    componenteFuenteNovedad.UsuarioModificacion = pUsuario;
+                    componenteFuenteNovedad.Eliminado = true;
+                    _context.ComponenteFuenteNovedad.Update(componenteFuenteNovedad);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = componenteFuenteNovedad,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.EliminacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = componenteFuenteNovedad,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+        public async Task<Respuesta> EliminarComponenteUsoNovedad(int pComponenteUsoNovedad, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Componente_uso_novedad, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            ComponenteUsoNovedad componenteUsoNovedad = _context.ComponenteUsoNovedad.Find(pComponenteUsoNovedad);
+
+            try
+            {
+
+                if (componenteUsoNovedad != null)
+                {
+                    strCrearEditar = "Eliminar COMPONENTE USO NOVEDAD";
+                    componenteUsoNovedad.FechaModificacion = DateTime.Now;
+                    componenteUsoNovedad.UsuarioModificacion = pUsuario;
+                    componenteUsoNovedad.Eliminado = true;
+                    _context.ComponenteUsoNovedad.Update(componenteUsoNovedad);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = componenteUsoNovedad,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.EliminacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = componenteUsoNovedad,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
                     ConstantMessagesContractualControversy.Error,
                     idAccion,
                     pUsuario,

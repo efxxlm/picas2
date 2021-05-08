@@ -35,5 +35,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> AprobacionTecnicaJuridica(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> EliminarNovedadContractualAportante(int pNovedadContractualAportante, string pUsuario);
         Task<Respuesta> EliminarComponenteAportanteNovedad(int pComponenteAportanteNovedad, string pUsuario);
+        Task<Respuesta> EliminarComponenteFuenteNovedad(int pComponenteFuenteNovedad, string pUsuario);
+        Task<Respuesta> EliminarComponenteUsoNovedad(int pComponenteUsoNovedad, string pUsuario);
+
     }
 }

@@ -127,4 +127,11 @@ export class ContractualNoveltyService {
     return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteAportanteNovedad?pComponenteAportanteNovedad=${ pComponenteAportanteNovedad }` ); 
   }
 
+  eliminarComponenteFuenteNovedad(pComponenteFuenteNovedad : number) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteFuenteNovedad?pComponenteFuenteNovedad=${ pComponenteFuenteNovedad }` ); 
+  }
+
+  eliminarComponenteUsoNovedad(pComponenteUsoNovedad : number) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteUsoNovedad?pComponenteUsoNovedad=${ pComponenteUsoNovedad }` ); 
+  }
 }

@@ -16,7 +16,7 @@
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="nuevoAportante" required>
                             <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button [value]="false" (change)="updateOldAportante()">No</mat-radio-button>
                         </mat-radio-group>
                         <span class="required-form-group" style="margin-left: 1px;">*</span>
                     </div>
@@ -669,6 +669,19 @@
                               </div>
                             </div>
                           </div>
+                        </div>
+                        <div class="col-md-12 text-right p-0">
+                          <button
+                            mat-button
+                            color="warn"
+                            type="button"
+                            class="btn-eliminar animatedOpacity"
+                            *ngIf="fuentes(j, i).length > 1"
+                            (click)="deleteFuente(fuentes(j, i), l)"
+                          >
+                            <img src="assets/img/icon/menos.svg" alt="Eliminar fuente" />
+                            Eliminar fuente
+                          </button>
                         </div>
                       </div>
                     </div>

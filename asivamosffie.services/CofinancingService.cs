@@ -416,62 +416,70 @@ namespace asivamosffie.services
 
         public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
         {
-            List<CofinanciacionAportante> ListCofinanciacionAportante =
-                await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && 
-                    r.TipoAportanteId == pTipoAportanteID 
-                    && !(bool)r.Cofinanciacion.Eliminado).Include(x=>x.Cofinanciacion)
-                .ToListAsync();
-
             List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
 
-            foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
+            try
             {
-                var nombre = "";
-                if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
-                {
-                    nombre = ConstanStringTipoAportante.Ffie;
-                }
-                else if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
-                {
-                    //verifico si tiene municipio
-                    if (cofinanciacionAportante.MunicipioId != null)
-                    {
-                        nombre = "Alcaldía de "+_context.Localizacion.Find(cofinanciacionAportante.MunicipioId).Descripcion;
-                    }
-                    else//solo departamento
-                    {
-                        if(cofinanciacionAportante.DepartamentoId == null)
-                        {
-                            nombre = "";
-                        }
-                        else
-                        {
-                            nombre = "Gobernación de " + cofinanciacionAportante.DepartamentoId == null ? "" :
-                            _context.Localizacion.Find(cofinanciacionAportante.DepartamentoId).Descripcion;
-                        }
-                        
-                    }
+                List<CofinanciacionAportante> ListCofinanciacionAportante =
+                await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado &&
+                    r.TipoAportanteId == pTipoAportanteID
+                    && !(bool)r.Cofinanciacion.Eliminado).Include(x => x.Cofinanciacion)
+                .ToListAsync();
 
-                }
-                else
+
+                foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
                 {
-                    nombre = _context.Dominio.Find(cofinanciacionAportante.NombreAportanteId).Nombre;
+                    var nombre = "";
+                    if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                    {
+                        nombre = ConstanStringTipoAportante.Ffie;
+                    }
+                    else if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
+                    {
+                        //verifico si tiene municipio
+                        if (cofinanciacionAportante.MunicipioId != null)
+                        {
+                            nombre = "Alcaldía de " + _context.Localizacion.Find(cofinanciacionAportante.MunicipioId).Descripcion;
+                        }
+                        else//solo departamento
+                        {
+                            if (cofinanciacionAportante.DepartamentoId == null)
+                            {
+                                nombre = "";
+                            }
+                            else
+                            {
+                                nombre = "Gobernación de " + cofinanciacionAportante.DepartamentoId == null ? "" :
+                                _context.Localizacion.Find(cofinanciacionAportante.DepartamentoId).Descripcion;
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+                        nombre = _context.Dominio.Find(cofinanciacionAportante.NombreAportanteId).Nombre;
+                    }
+                    CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                    {
+                        CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
+                        Nombre = nombre,
+                        TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId),
+                        Vigencia = cofinanciacionAportante.Cofinanciacion.VigenciaCofinanciacionId,
+                        FechaCreacion = cofinanciacionAportante.FechaCreacion,
+                        MunicipioId = cofinanciacionAportante.MunicipioId,
+                        DepartamentoId = cofinanciacionAportante.DepartamentoId,
+                        RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto
+                    };
+                    ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
                 }
-                CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
-                {
-                    CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
-                    Nombre = nombre,
-                    TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId),
-                    Vigencia = cofinanciacionAportante.Cofinanciacion.VigenciaCofinanciacionId,
-                    FechaCreacion = cofinanciacionAportante.FechaCreacion,
-                    MunicipioId = cofinanciacionAportante.MunicipioId,
-                    DepartamentoId = cofinanciacionAportante.DepartamentoId,
-                    RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto
-            };
-                ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
+
+                return ListCofinanicacionAportanteGrilla;
             }
-
-            return ListCofinanicacionAportanteGrilla;
+            catch (Exception ex)
+            {
+                return ListCofinanicacionAportanteGrilla;
+            }
         }
 
         public async Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID)
