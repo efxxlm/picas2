@@ -942,7 +942,7 @@ namespace asivamosffie.services
                            .ConvertAll(x => new Usos
                            {
                                NombreUso = x.NombreUso,
-                               TipoUsoCodigo = x.NombreUso,
+                               TipoUsoCodigo = x.TipoUso,
                                FuenteFinanciacion = x.FuenteFinanciacion,
                                FuenteFinanciacionId = x.FuenteFinanciacionId
                            }).ToList()
