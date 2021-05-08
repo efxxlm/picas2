@@ -3,13 +3,11 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace asivamosffie.services
 {
@@ -85,7 +83,7 @@ namespace asivamosffie.services
                                                     .Where(
                                                             r => r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor &&
-                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion   &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Sin_validar &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_validacion &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_supervisor &&
@@ -98,20 +96,20 @@ namespace asivamosffie.services
                     NovedadContractual novedadContractual = _context.NovedadContractual
                                                                         .Where(x => x.NovedadContractualId == novedad.NovedadContractualId)
                                                                         .Include(x => x.NovedadContractualObservaciones)
-                                                                        .Include( x => x.NovedadContractualDescripcion )
+                                                                        .Include(x => x.NovedadContractualDescripcion)
                                                                         .FirstOrDefault();
                     novedad.vaComite = true;
 
-                    foreach ( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
+                    foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
                     {
-                        if ( 
+                        if (
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión ||
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio
                             )
                         {
                             novedad.vaComite = false;
-                        }                            
+                        }
 
                     }
 
@@ -178,7 +176,7 @@ namespace asivamosffie.services
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
                                                                                     ) &&
                                                                                x.Eliminado != true)
-                                                                        .Include( x => x.NovedadContractualDescripcion )
+                                                                        .Include(x => x.NovedadContractualDescripcion)
                                                                         .ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
@@ -289,15 +287,28 @@ namespace asivamosffie.services
                                                                     .ThenInclude(r => r.Contratacion)
                                                                         .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                                 .Include(r => r.NovedadContractualAportante)
-                                                                    .ThenInclude(r => r.ComponenteAportanteNovedad)
-                                                                        .ThenInclude(r => r.ComponenteFuenteNovedad)
-                                                                            .ThenInclude(r => r.ComponenteUsoNovedad)
-                                                                .Include( x => x.Contrato )
+                                                                .Include(x => x.Contrato)
                                                                     .ThenInclude(x => x.ContratoPoliza)
                                                                 .Include(r => r.NovedadContractualAportante)
-                                                                    .ThenInclude( r => r.CofinanciacionAportante )
-                                                                    
+                                                                    .ThenInclude(r => r.CofinanciacionAportante)
                                                                 .FirstOrDefault();
+
+            List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
+                        .Where(r => r.NovedadContractualId == pId && (r.Eliminado == false || r.Eliminado == null))
+                        .ToList();
+
+            foreach (var apo in novedadContractualAportantes)
+            {
+                List<ComponenteAportanteNovedad> componenteAportanteNovedades = _context.ComponenteAportanteNovedad
+                            .Where(r => r.NovedadContractualAportanteId == apo.NovedadContractualAportanteId && (r.Eliminado == false | r.Eliminado == null))
+                            .Include(r => r.ComponenteFuenteNovedad)
+                                .ThenInclude(r => r.ComponenteUsoNovedad)
+                            .ToList();
+
+                apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
+            }
+
+            novedadContractual.NovedadContractualAportante = novedadContractualAportantes;
 
             if (novedadContractual != null)
             {
@@ -360,7 +371,7 @@ namespace asivamosffie.services
                     novedadContractual.Contrato.FechaActaInicioFase1 = fechaTemp;
                 }
 
-                if ( novedadContractual.Contrato.FechaTerminacionFase2 == null)
+                if (novedadContractual.Contrato.FechaTerminacionFase2 == null)
                 {
                     DateTime? fechaTemp = novedadContractual.Contrato.FechaActaInicioFase1.Value;
 
@@ -370,9 +381,9 @@ namespace asivamosffie.services
                     novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
                 }
 
-                
 
-                    foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+
+                foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
                 {
                     novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
                                                                             .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
@@ -553,7 +564,7 @@ namespace asivamosffie.services
             List<Dominio> listaDominio = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
 
             List<FuenteFinanciacion> listaFuentes = _context.FuenteFinanciacion
-                                                                .Where(x => x.AportanteId == pConfinanciacioAportanteId && 
+                                                                .Where(x => x.AportanteId == pConfinanciacioAportanteId &&
                                                                        x.Eliminado != true)
                                                                 .Include(x => x.Aportante)
                                                                 .ToList();
@@ -654,7 +665,7 @@ namespace asivamosffie.services
                             novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
                         }
 
-                        
+
 
                         if (novedadContractual.NovedadContractualDescripcion != null)
                         {
@@ -665,7 +676,7 @@ namespace asivamosffie.services
 
                             foreach (NovedadContractualDescripcion novedadContractualDescripcion in listaDescripciones)
                             {
-                                if (novedadContractual.NovedadContractualDescripcion.Where( x => x.NovedadContractualDescripcionId == novedadContractualDescripcion.NovedadContractualDescripcionId ).Count() == 0)
+                                if (novedadContractual.NovedadContractualDescripcion.Where(x => x.NovedadContractualDescripcionId == novedadContractualDescripcion.NovedadContractualDescripcionId).Count() == 0)
                                 {
                                     novedadContractualDescripcion.Eliminado = true;
                                 }
@@ -1484,6 +1495,119 @@ namespace asivamosffie.services
             }
         }
 
+
+        public async Task<Respuesta> EliminarNovedadContractualAportante(int pNovedadContractualAportante, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Novedad_Contractual_Aportante, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractualAportante novedadContractualAportante = _context.NovedadContractualAportante.Find(pNovedadContractualAportante);
+
+            try
+            {
+
+                if (novedadContractualAportante != null)
+                {
+                    strCrearEditar = "Eliminar NOVEDAD CONTRACTUAL APORTANTE";
+                    novedadContractualAportante.FechaModificacion = DateTime.Now;
+                    novedadContractualAportante.UsuarioModificacion = pUsuario;
+                    novedadContractualAportante.Eliminado = true;
+                    _context.NovedadContractualAportante.Update(novedadContractualAportante);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractualAportante,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.EliminacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractualAportante,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> EliminarComponenteAportanteNovedad(int pComponenteAportanteNovedad, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Componente_aportante_novedad, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            ComponenteAportanteNovedad componenteAportanteNovedad = _context.ComponenteAportanteNovedad.Find(pComponenteAportanteNovedad);
+
+            try
+            {
+
+                if (componenteAportanteNovedad != null)
+                {
+                    strCrearEditar = "Eliminar COMPONENTE APORTANTE NOVEDAD";
+                    componenteAportanteNovedad.FechaModificacion = DateTime.Now;
+                    componenteAportanteNovedad.UsuarioModificacion = pUsuario;
+                    componenteAportanteNovedad.Eliminado = true;
+                    _context.ComponenteAportanteNovedad.Update(componenteAportanteNovedad);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = componenteAportanteNovedad,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                    ConstantMessagesContractualControversy.EliminacionExitosa,
+                    idAccion,
+                    pUsuario,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = componenteAportanteNovedad,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    pUsuario,
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         public async Task<Respuesta> AprobarSolicitud(int pNovedadContractualId, string pUsuario)
         {
             Respuesta respuesta = new Respuesta();
@@ -1744,7 +1868,7 @@ namespace asivamosffie.services
                                                                                                    x.Eliminado != true)
                                                                                             .ToList();
 
-                    foreach( NovedadContractualObservaciones observacion in listaObservaciones)
+                    foreach (NovedadContractualObservaciones observacion in listaObservaciones)
                     {
                         observacion.Archivado = true;
 
@@ -2318,7 +2442,7 @@ namespace asivamosffie.services
                    (pNovedadContractual.DeseaContinuar == true && pNovedadContractual.FechaFirmaSupervisor == null) ||
                    (pNovedadContractual.DeseaContinuar == true && string.IsNullOrEmpty(pNovedadContractual.UrlSoporteFirmas)) ||
 
-                   (pNovedadContractual.DeseaContinuar == false && string.IsNullOrEmpty(pNovedadContractual.RazonesNoContinuaProceso)) 
+                   (pNovedadContractual.DeseaContinuar == false && string.IsNullOrEmpty(pNovedadContractual.RazonesNoContinuaProceso))
 
                )
             {
@@ -2383,7 +2507,7 @@ namespace asivamosffie.services
                 esCompleto = null;
             }
 
-            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion.Where( x => x.Eliminado != true ))
+            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
             {
                 // Suspension - Prórroga a la Suspensión -Reinicio
 
@@ -2407,10 +2531,10 @@ namespace asivamosffie.services
                         descripcion.NovedadContractualDescripcionMotivo == null ||
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
                         string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
-                        descripcion.EsDocumentacionSoporte == null 
-                        //string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
-                        //descripcion.FechaConcepto == null ||
-                        //string.IsNullOrEmpty(descripcion.NumeroRadicado)
+                        descripcion.EsDocumentacionSoporte == null
+                    //string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
+                    //descripcion.FechaConcepto == null ||
+                    //string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )
                     {
@@ -2500,7 +2624,7 @@ namespace asivamosffie.services
                 RegistrocompletoFirmas(pNovedadContractual) == null ||
                 RegistrocompletoFirmas(pNovedadContractual) == false ||
                 RegistrocompletoDetallar(pNovedadContractual) == null ||
-                RegistrocompletoDetallar(pNovedadContractual) == false 
+                RegistrocompletoDetallar(pNovedadContractual) == false
                 )
             {
                 esCompleto = false;
@@ -2774,7 +2898,7 @@ namespace asivamosffie.services
 
             Contrato contrato = _context.Contrato
                                             .Where(x => x.ContratoId == novedadContractual.ContratoId)
-                                            .Include( x => x.Supervisor )
+                                            .Include(x => x.Supervisor)
                                             .Include(x => x.Apoyo)
                                             .Include(x => x.Contratacion)
                                                 .ThenInclude(x => x.Contratista)
@@ -2795,12 +2919,12 @@ namespace asivamosffie.services
             List<string> listaMails = new List<string>();
 
 
-            if ( !string.IsNullOrEmpty(contrato?.Supervisor?.Email) )
+            if (!string.IsNullOrEmpty(contrato?.Supervisor?.Email))
             {
                 listaMails.Add(contrato?.Supervisor?.Email);
             }
 
-            if ( !string.IsNullOrEmpty( contrato?.Apoyo?.Email ) )
+            if (!string.IsNullOrEmpty(contrato?.Apoyo?.Email))
             {
                 listaMails.Add(contrato?.Apoyo?.Email);
             }

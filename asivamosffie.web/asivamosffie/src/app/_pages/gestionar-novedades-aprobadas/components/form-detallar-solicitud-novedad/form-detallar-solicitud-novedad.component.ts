@@ -38,13 +38,13 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   realizoPeticion: boolean = false;
   esSaldoPermitido: boolean = false;
   listaFaseUsosComponentes: any[] = [];
-  nuevoAportante: FormControl;
   listaDepartamentos: Localizacion[] = [];
   listaMunicipios: Localizacion[] = [];
   estaEditando = false;
 
   listaVigencias: any[] = [];
   listaAportante: any[] = [];
+  listaTotalNuevas: any[] = [];
   tipoAportante = TiposAportante;
   listadoDepto: any[] = [];
   listadoMun: any[] = [];
@@ -56,9 +56,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     });
   }
 
-  private declararInputFile() {
+  /*private declararInputFile() {
     this.nuevoAportante = new FormControl(false);
-  }
+  }*/
 
   componentes(i: number) {
     return this.aportantes.controls[i].get('componentes') as FormArray;
@@ -116,6 +116,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       tipoAportante: [],
       depaetamento: [],
       municipio: [],
+      nuevoAportante: false,
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
@@ -127,7 +128,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   ngOnInit(): void {
 
     this.addressForm = this.createFormulario();
-    this.declararInputFile();
+    //this.declararInputFile();
     this.route.params.subscribe((params: Params) => {
       const id = params.id;
 
@@ -154,7 +155,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.listaTipoAportante = response[5];
           this.listaDepartamentos = response[6];
           
-          setTimeout(() => {
+          //setTimeout(() => {
 
             if (this.componentesSelect.length > 0) {
               this.listaComponentes = this.componentesSelect.filter(value => this.novedad.contrato.contratacion.tipoSolicitudCodigo === value.codigo);
@@ -265,20 +266,31 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                     listaComponentes.push(grupoComponente);
                   }
                   this.aportantes.push(grupoAportante);
-                  if(this.aportantes.length > 0){
+                  console.log(this.aportantes.length , this.novedad.novedadContractualAportante.length);
+                  if(this.aportantes.length > 0 && this.aportantes.length === this.novedad.novedadContractualAportante.length){
+                    let i = 0;
                     this.aportantes.controls.forEach(aportante => {
-                      if(!this.listaAportantes.some(e => e.cofinanciacionAportanteId === aportante.get('cofinanciacionAportanteId'))){
-                          this.nuevoAportante.setValue(true);
-                          let cofinanciacionAportante = this.novedad.novedadContractualAportante[0].cofinanciacionAportante;
+                      console.log("1: ", aportante);
+                      console.log("2: ", this.listaAportantes);
+                      console.log("3: ", aportante.get('cofinanciacionAportanteId').value,this.listaAportantes.some(e => e.cofinanciacionAportanteId === aportante.get('cofinanciacionAportanteId')));
+                      if(!this.listaAportantes.some(e => e.cofinanciacionAportanteId === aportante.get('cofinanciacionAportanteId').value)){
+                        console.log("si entra");  
+                        aportante.get('nuevoAportante').setValue(true); 
+                          let cofinanciacionAportante = this.novedad.novedadContractualAportante[i].cofinanciacionAportante;
                           if(cofinanciacionAportante != null){
+                            console.log(i, ": ", cofinanciacionAportante.tipoAportanteId);
                             aportante.get('tipoAportante').setValue(cofinanciacionAportante.tipoAportanteId); 
-                            this.getAportanteById(cofinanciacionAportante.tipoAportanteId,0);
+                            this.getAportanteById(cofinanciacionAportante.tipoAportanteId,i);
                             aportante.get('depaetamento').setValue(cofinanciacionAportante.departamentoId); 
                             aportante.get('municipio').setValue(cofinanciacionAportante.municipioId); 
-                            aportante.get('nombreAportante').setValue(this.novedad.novedadContractualAportante[0].nombreAportante); 
-                            aportante.get('cofinanciacionAportanteId').setValue(this.novedad.novedadContractualAportante[0].cofinanciacionAportanteId)
+                            aportante.get('nombreAportante').setValue(this.novedad.novedadContractualAportante[i].nombreAportante); 
+                            aportante.get('cofinanciacionAportanteId').setValue(this.novedad.novedadContractualAportante[i].cofinanciacionAportanteId)
                           }
+                      }else{
+                        console.log("no entra");
+                        aportante.get('nuevoAportante').setValue(false); 
                       }
+                      i++;
                     });
                   }
                   this.estaEditando = true;
@@ -286,7 +298,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                 });
             });
 
-          }, 1000);
+          //}, 1000);
         });
 
 
@@ -484,12 +496,13 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   }
 
   borrarArray(j: number, i: number) {
+    console.log("j: ",j , " - ", i, this.componentes);
     this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>')
       .subscribe(
         value => {
           if (value === true) {
             if (this.componentes(j).at(i).get('componenteAportanteNovedadId').value !== null) {
-              this.projectContractingService.deleteComponenteAportante(this.componentes(j).at(i).get('componenteAportanteNovedadId').value)
+              this.contractualNoveltyService.eliminarComponenteAportanteNovedad(this.componentes(j).at(i).get('componenteAportanteNovedadId').value)
                 .subscribe(
                   () => {
                     this.componentes(j).removeAt(i);
@@ -499,6 +512,29 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                 );
             } else {
               this.componentes(j).removeAt(i);
+            }
+          }
+        }
+      );
+  }
+
+  borrarAportante(posicionAportante: number) {
+    console.log("posicionAportante: ",posicionAportante , " - ", this.novedad);
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>')
+      .subscribe(
+        value => {
+          if (value === true) {
+            if (this.novedad.novedadContractualAportante.length >= this.aportantes.length) {
+              this.contractualNoveltyService.eliminarNovedadContractualAportante(this.novedad.novedadContractualAportante[posicionAportante].novedadContractualAportanteId)
+                .subscribe(
+                  () => {
+                    this.aportantes.removeAt(posicionAportante);
+                    this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+                  },
+                  err => this.openDialog('', `<b>${err.message}</b>`)
+                );
+            } else {
+              this.aportantes.removeAt(posicionAportante);
             }
           }
         }
@@ -628,17 +664,24 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   }
 
   getAportanteById(id: number, i: number) {
-    let cofinanciacionAportante = this.novedad.novedadContractualAportante[0].cofinanciacionAportante;
+    console.log(id," - ", i);
+    let cofinanciacionAportante = this.novedad.novedadContractualAportante[i].cofinanciacionAportante;
 
     this.commonService.listaAportanteByTipoAportanteId(id).subscribe(
       respuesta => {
         let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
+        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
+
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
+        console.log(id.toString() , this.tipoAportante.FFIE );
         if (this.tipoAportante.FFIE.includes(id.toString())) {
+          console.log("entra en FFIE");
           this.listaVigencias[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
         } else {
+          console.log("entra en else");
           if (this.tipoAportante.ET.includes(id.toString())) {
+            console.log("entra en ET");
             this.listaAportante[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString.includes(x.nombre)));
 
             this.commonService.listaDepartamentos().subscribe(res => {
@@ -666,7 +709,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                 this.listaNombreAportantes[i].push(element.nombre);                
               }
             });
-            this.getVigencia(this.novedad.novedadContractualAportante[0].nombreAportante, i);            
+            this.getVigencia(this.novedad.novedadContractualAportante[i].nombreAportante, i);            
           }
         }
       },
@@ -687,6 +730,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     this.commonService.listaAportanteByTipoAportanteId(event).subscribe(
       respuesta => {
         let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
+        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
         if (this.tipoAportante.FFIE.includes(event.toString())) {

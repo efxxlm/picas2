@@ -378,6 +378,7 @@
 
 
         public const string Eliminar_Orden_Giro = "278";
-
+        public const string Eliminar_Novedad_Contractual_Aportante = "279";
+        public const string Eliminar_Componente_aportante_novedad = "280";
     }
 }

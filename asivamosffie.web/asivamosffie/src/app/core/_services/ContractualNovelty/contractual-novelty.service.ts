@@ -119,4 +119,12 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/AprobacionTecnicaJuridica?pNovedaContractual=${ id }`, null ); 
   }
 
+  eliminarNovedadContractualAportante(pNovedadContractualAportante : number) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadContractualAportante?pNovedadContractualAportante=${ pNovedadContractualAportante }` ); 
+  }
+
+  eliminarComponenteAportanteNovedad(pComponenteAportanteNovedad : number) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteAportanteNovedad?pComponenteAportanteNovedad=${ pComponenteAportanteNovedad }` ); 
+  }
+
 }
