@@ -1,22 +1,22 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="proyecto !== undefined">
     <div class="text-right">
-        <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos/validarBalance/1" mat-button color="primary"
+        <a (click)="getRutaAnterior()" mat-button color="primary"
             class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">Registrar traslado balance LL000000</h1>
+    <h1 class="title-menu--h1">Registrar traslado balance {{ proyecto.llaveMen }}</h1>
     <p class="info-sub-title">
-        <span>Número de contrato de obra: <b>N801801</b></span>
-        <span>Número de contrato de interventoría: <b>A513513</b></span>
+        <span>Número de contrato de obra: <b> {{ proyecto.numeroContratoObra }} </b></span>
+        <span>Número de contrato de interventoría: <b> {{ proyecto.numeroContratoInterventoria }} </b></span>
     </p>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
-            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
-            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
-            <p><strong>Sede educativa: </strong><em>Única Sede</em></p>
-            <p><strong>Departamento: </strong><em>Boyacá</em></p>
-            <p><strong>Municipio: </strong><em>Susacón</em></p>
+            <p><strong>Tipo de intervención: </strong><em> {{ proyecto.tipoIntervencion }} </em></p>
+            <p><strong>Institución Educativa: </strong><em> {{ proyecto.institucionEducativa }} </em></p>
+            <p><strong>Sede educativa: </strong><em> {{ proyecto.sedeEducativa }} </em></p>
+            <p><strong>Departamento: </strong><em> {{ proyecto.departamento }} </em></p>
+            <p><strong>Municipio: </strong><em> {{ proyecto.municipio }} </em></p>
             <p><strong>Número DDP: </strong><em>DDP_0001</em></p>
             <p><strong>Valor DDP: </strong><em>$100.000.000</em></p>
             <h2 class="card-subTitle">DRP</h2>
@@ -44,5 +44,6 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <app-control-solicitudes-traslado-gbftrec></app-control-solicitudes-traslado-gbftrec>
+
+    <app-control-solicitudes-traslado-gbftrec [proyectoId]="proyectoId"></app-control-solicitudes-traslado-gbftrec>
 </section>

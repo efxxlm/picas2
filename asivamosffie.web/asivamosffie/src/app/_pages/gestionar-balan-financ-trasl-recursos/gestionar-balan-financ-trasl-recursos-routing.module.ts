@@ -44,17 +44,21 @@ const routes: Routes = [
   {
     path: 'detalleOrdengiro/:id',
     component: DetalleOgGbftrecComponent
-  },
+  }
+  /*
+  ,
   {
     path: 'verDetalleEditarBalance/:id',
     component:VerdetalleeditarBalanceGbftrecComponent
-  },
+  }
+  */
+  ,
   {
     path: 'verDetalleBalance/:id',
     component: DetalleBalanceGbftrecComponent
   },
   {
-    path: 'registrarTraslado',
+    path: 'registrarTraslado/:id',
     component: RegistrarTrasladoGbftrecComponent
   },
   {
