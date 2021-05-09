@@ -19,7 +19,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     myFilter2 = new FormControl();
     var1: any;
     var2: any;
-    idContrato:any = null;
+    idContrato = null;
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
         tipoSolicitud: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ],
@@ -81,7 +81,6 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
 
         if ( this.addressForm.get( 'tipoSolicitud' ).value !== null && this.addressForm.get( 'numeroOrdenGiro' ).value !== null ) {
             this.dataTable = [];
-            console.log( this.addressForm.get( 'tipoSolicitud' ).value, this.addressForm.get( 'numeroOrdenGiro' ).value.length )
 
             this.dataTable.push(
                 {
@@ -112,42 +111,6 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
                     contratacionProyectoId: Math.round( Math.random() * 100 )
                 }
             )
-
-            for ( const ordenGiro of this.dataTable ) {
-                this.ordenesDeGiro.push(
-                    this.fb.group(
-                        {
-                            tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
-                            fechaAprobacionFiduciaria: [ moment( ordenGiro.fechaAprobacionFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            fechaPagoFiduciaria: [ moment( ordenGiro.fechaPagoFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            numeroOrdendeGiro: [ ordenGiro.numeroOrdendeGiro ],
-                            modalidadContrato: [ ordenGiro.modalidadContrato ],
-                            numeroContrato: [ ordenGiro.numeroContrato ],
-                            contratacionProyectoId: [ ordenGiro.contratacionProyectoId ],
-                            check: [ null ]
-                        }
-                    )
-                )
-            }
-
-            this.dataSource = new MatTableDataSource( this.ordenesDeGiro.controls );
-            setTimeout(() => {
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-                    if (length === 0 || pageSize === 0) {
-                      return '0 de ' + length;
-                    }
-                    length = Math.max(length, 0);
-                    const startIndex = page * pageSize;
-                    // If the start index exceeds the list length, do not try and fix the end index to the end.
-                    const endIndex = startIndex < length ?
-                      Math.min(startIndex + pageSize, length) :
-                      startIndex + pageSize;
-                    return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-                };
-            }, 200);
         }
     }
 
