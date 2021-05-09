@@ -216,8 +216,8 @@ namespace asivamosffie.services
             {
                 int intCantidadDependenciasOrdenGiro = 3;
 
-                if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
-                    intCantidadDependenciasOrdenGiro = 3;
+                //if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
+                //    intCantidadDependenciasOrdenGiro = 3;
 
 
 
@@ -404,6 +404,7 @@ namespace asivamosffie.services
             string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
             List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
 
+            UrlSoporte = "<a href='" + UrlSoporte+"'>Link</a>";
             try
             {
                 pContenido = pContenido

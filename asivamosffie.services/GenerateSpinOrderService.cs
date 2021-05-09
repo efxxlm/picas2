@@ -32,6 +32,7 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         #endregion
+     
 
         #region Create 
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
@@ -680,13 +681,13 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
         #region get
         /// <summary>
         /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
         /// </summary>
         /// <returns></returns>
         /// 
+
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
         {
             return _context.VValorUsoXcontratoAportante
@@ -855,7 +856,7 @@ namespace asivamosffie.services
 
             List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
                 _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId).ToList();
-             
+
             foreach (var Fuentes in ListDescuentos)
             {
 
@@ -875,7 +876,7 @@ namespace asivamosffie.services
                     SaldoActual = ValorDrpXaportante,
                     SaldoAfectado = ValorDrpXaportante - Fuentes.ValorDescuento
                 });
-            } 
+            }
             return List;
         }
 
@@ -924,9 +925,6 @@ namespace asivamosffie.services
 
             return List;
         }
-
-
-
 
         private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
         {
@@ -1054,7 +1052,6 @@ namespace asivamosffie.services
         }
 
         #endregion
-
         #region validate 
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
