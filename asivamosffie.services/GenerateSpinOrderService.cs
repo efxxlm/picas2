@@ -32,7 +32,7 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         #endregion
-     
+
 
         #region Create 
         public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
@@ -49,7 +49,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now
                         });
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -82,7 +82,7 @@ namespace asivamosffie.services
             }
 
         }
-    
+
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -97,7 +97,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now
                         });
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -878,6 +878,14 @@ namespace asivamosffie.services
                         if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
                             OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
                     }
+
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+                        if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                            OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).ToList();
+
+                    }
+
                 }
             }
             try

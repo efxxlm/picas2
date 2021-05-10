@@ -343,3 +343,4 @@ asivamosffie/.vs/asivamosffie/v16/.suo
 asivamosffie.web/asivamosffie/src/environments/environment.ts
 asivamosffie.web/package-lock.json
 asivamosffie.api/appsettings.json
+*.json
