@@ -30,6 +30,11 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         #endregion
+
+
+
+        #region Create 
+
         public async Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -74,6 +79,38 @@ namespace asivamosffie.services
             }
         }
 
+
+
+        private string ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro =
+                _context.OrdenGiro
+                                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                 .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
+                                .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
+                                .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
+                                .FirstOrDefault();
+
+            decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
+            string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
+            List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
+
+            try
+            {
+                pContenido = pContenido
+                       .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
+                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
+                       .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
+                       .Replace("[NUMERO_CONTRATO]", (ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato) ?? " ")
+                       .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
+                       .Replace("[URL]", UrlSoporte);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return pContenido;
+        }
         public async Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -133,161 +170,6 @@ namespace asivamosffie.services
                    };
             }
         }
-
-        private async Task<bool> ValidateCompleteObservation(OrdenGiroObservacion pOrdenGiroObservacion, string pUsuarioMod)
-        {
-            try
-            {
-
-                int intCantidadDependenciasOrdenGiro = 4;
-
-                OrdenGiro ordenGiro = _context.OrdenGiro
-                    .Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId)
-                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnica)
-                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacion).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacionDescuento)
-                    .AsNoTracking()
-                    .FirstOrDefault();
-
-                foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
-                {
-                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
-                    {
-                        intCantidadDependenciasOrdenGiro++;
-                    }
-
-                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-                    {
-                        intCantidadDependenciasOrdenGiro++;
-
-                    }
-                }
-
-
-                int intCantidadObservaciones = _context.OrdenGiroObservacion.Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
-                                                              && r.MenuId == pOrdenGiroObservacion.MenuId
-                                                              && r.Eliminado != true
-                                                              && r.RegistroCompleto == true
-                                                              && r.Archivada != true).Count();
-
-                bool TieneObservacion =
-                                 _context.OrdenGiroObservacion.Any
-                                                            (r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
-                                                            && r.MenuId == pOrdenGiroObservacion.MenuId
-                                                            && r.Eliminado != true
-                                                            && r.Archivada != true
-                                                            && r.TieneObservacion == true
-                                                            );
-
-                //Valida si la cantidad de relaciones  
-                //es igual a la cantidad de observaciones  
-                bool blRegistroCompleto = false;
-
-                DateTime? FechaRegistroCompleto = null;
-                if (intCantidadDependenciasOrdenGiro >= intCantidadObservaciones)
-                {
-                    FechaRegistroCompleto = DateTime.Now;
-                    blRegistroCompleto = true;
-                }
-
-
-                switch (pOrdenGiroObservacion.MenuId)
-                {
-                    case (int)enumeratorMenu.Verificar_orden_de_giro:
-                        await _context.Set<OrdenGiro>()
-                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
-                        .UpdateAsync(r => new OrdenGiro()
-                        {
-                            TieneObservacion = TieneObservacion,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioMod,
-                            EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_de_Verificacion_Orden_Giro).ToString(),
-                            RegistroCompletoVerificar = blRegistroCompleto,
-                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
-                        });
-                        break;
-
-                    case (int)enumeratorMenu.Aprobar_orden_de_giro:
-                        await _context.Set<OrdenGiro>()
-                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
-                        .UpdateAsync(r => new OrdenGiro()
-                        {
-                            TieneObservacion = TieneObservacion,
-                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_Aprobacion_Orden_Giro).ToString(),
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioMod,
-                            RegistroCompletoAprobar = blRegistroCompleto,
-                            FechaRegistroCompletoAprobar = FechaRegistroCompleto
-                        });
-                        break;
-
-                    case (int)enumeratorMenu.Tramitar_orden_de_giro:
-                        await _context.Set<OrdenGiro>()
-                       .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
-                       .UpdateAsync(r => new OrdenGiro()
-                       {
-                           TieneObservacion = TieneObservacion,
-                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_tramite_ante_fiduciaria).ToString(),
-                           FechaModificacion = DateTime.Now,
-                           UsuarioModificacion = pUsuarioMod,
-                           RegistroCompletoTramitar = blRegistroCompleto,
-                           FechaRegistroCompletoTramitar = FechaRegistroCompleto
-                       });
-                        break;
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool ValidateCompleteRecordOrdenGiroObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
-        {
-            if (pOrdenGiroObservacion.TieneObservacion == false)
-                return true;
-            else
-                if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
-                return false;
-
-            return true;
-        }
-
-        
-
-        private string ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
-        {
-            OrdenGiro ordenGiro =
-                _context.OrdenGiro
-                                .Where(o => o.OrdenGiroId == pOrdenGiroId)
-                                 .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
-                                .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
-                                .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
-                                .FirstOrDefault();
-
-            decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
-            string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
-            List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
-
-            try
-            {
-                pContenido = pContenido
-                       .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
-                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
-                       .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
-                       .Replace("[NUMERO_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato != null ? ordenGiro?.SolicitudPago?.FirstOrDefault().Contrato?.NumeroContrato : " ")
-                       .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
-                       .Replace("[URL]", UrlSoporte);
-            }
-            catch (Exception e)
-            {
-
-            }
-            return pContenido;
-        }
-
-        
-        #region Create 
 
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {
@@ -970,6 +852,125 @@ namespace asivamosffie.services
         #endregion
 
         #region validate 
+
+        private async Task<bool> ValidateCompleteObservation(OrdenGiroObservacion pOrdenGiroObservacion, string pUsuarioMod)
+        {
+            try
+            {
+
+                int intCantidadDependenciasOrdenGiro = 4;
+
+                OrdenGiro ordenGiro = _context.OrdenGiro
+                    .Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId)
+                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnica)
+                    .Include(r => r.OrdenGiroDetalle).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacion).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+                foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
+                {
+                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
+                    {
+                        intCantidadDependenciasOrdenGiro++;
+                    }
+
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+                        intCantidadDependenciasOrdenGiro++;
+
+                    }
+                }
+
+
+                int intCantidadObservaciones = _context.OrdenGiroObservacion.Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
+                                                              && r.MenuId == pOrdenGiroObservacion.MenuId
+                                                              && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
+                                                              && r.Archivada != true).Count();
+
+                bool TieneObservacion =
+                                 _context.OrdenGiroObservacion.Any
+                                                            (r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
+                                                            && r.MenuId == pOrdenGiroObservacion.MenuId
+                                                            && r.Eliminado != true
+                                                            && r.Archivada != true
+                                                            && r.TieneObservacion == true
+                                                            );
+
+                //Valida si la cantidad de relaciones  
+                //es igual a la cantidad de observaciones  
+                bool blRegistroCompleto = false;
+
+                DateTime? FechaRegistroCompleto = null;
+                if (intCantidadDependenciasOrdenGiro >= intCantidadObservaciones)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
+                    blRegistroCompleto = true;
+                }
+
+
+                switch (pOrdenGiroObservacion.MenuId)
+                {
+                    case (int)enumeratorMenu.Verificar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                        .UpdateAsync(r => new OrdenGiro()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_de_Verificacion_Orden_Giro).ToString(),
+                            RegistroCompletoVerificar = blRegistroCompleto,
+                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Aprobar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                        .UpdateAsync(r => new OrdenGiro()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_Aprobacion_Orden_Giro).ToString(),
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            RegistroCompletoAprobar = blRegistroCompleto,
+                            FechaRegistroCompletoAprobar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Tramitar_orden_de_giro:
+                        await _context.Set<OrdenGiro>()
+                       .Where(o => o.OrdenGiroId == ordenGiro.OrdenGiroId)
+                       .UpdateAsync(r => new OrdenGiro()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_tramite_ante_fiduciaria).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoTramitar = blRegistroCompleto,
+                           FechaRegistroCompletoTramitar = FechaRegistroCompleto
+                       });
+                        break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateCompleteRecordOrdenGiroObservacion(OrdenGiroObservacion pOrdenGiroObservacion)
+        {
+            if (pOrdenGiroObservacion.TieneObservacion == false)
+                return true;
+            else
+                if (string.IsNullOrEmpty(pOrdenGiroObservacion.Observacion))
+                return false;
+
+            return true;
+        }
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
         {

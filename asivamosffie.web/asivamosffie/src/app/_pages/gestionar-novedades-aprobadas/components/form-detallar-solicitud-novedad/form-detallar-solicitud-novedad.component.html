@@ -6,22 +6,39 @@
           <div class="row">
             <div class="col-md-8">
               <div class="row">
-                <div class="pr-1">
-                  <label class="label-left">Aportante nuevo:</label>
+                    <div class="pr-1">
+                        <label class="label-left" for="nuevoAportante" [ngClass]="{
+                            'color-secondaryColor':
+                              (aportante.get('nuevoAportante').invalid && aportante.get('nuevoAportante').touched) ||
+                              (aportante.get('nuevoAportante').invalid && estaEditando)
+                          }">Aportante nuevo?</label>
+                    </div>
+                    <div class="col">
+                        <mat-radio-group class="radioInput" formControlName="nuevoAportante" required>
+                            <mat-radio-button [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" (change)="updateOldAportante()">No</mat-radio-button>
+                        </mat-radio-group>
+                        <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    </div>
+                    <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido" [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                          (aportante.get('nuevoAportante').invalid && aportante.get('nuevoAportante').touched) ||
+                          (aportante.get('nuevoAportante').invalid && estaEditando)
+                          " />
+                    </span>
                 </div>
-                <div class="col mt-05em">
-                  <mat-checkbox class="example-margin" [formControl]="nuevoAportante"></mat-checkbox>
-                </div>
-              </div>
             </div>
-          </div>
-          <div class="row animatedDown" *ngIf="nuevoAportante.value">
+        </div>
+          <div class="row animatedDown" *ngIf="aportante.get('nuevoAportante').value">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
                   <label
                     class="label-left"
-                    for="fase"
+                    for="tipoAportante"
                     [class.color-secondaryColor]="
                       (aportante.get('tipoAportante')?.invalid && aportante.get('tipoAportante').touched) ||
                       (aportante.get('tipoAportante')?.invalid && estaEditando)
@@ -31,10 +48,16 @@
                   </label>
                 </div>
                 <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select required formControlName="tipoAportante">
-                      <mat-option *ngFor="let tipoAportante of tipoAportantes" [value]="tipoAportante.codigo">
-                        {{ tipoAportante.nombre }}
+                  <mat-form-field
+                    class="select-width"
+                  >
+                    <mat-select
+                      required
+                      formControlName="tipoAportante"
+                      (selectionChange)="getAportante($event.value, j)"
+                    >
+                      <mat-option *ngFor="let listado of listaTipoAportante" [value]="listado.dominioId">
+                       {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -56,7 +79,7 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="aportante.get('tipoAportante').value === '2'">
+          <div class="row" *ngIf="aportante.get('nuevoAportante').value && aportante.get('tipoAportante').value == this.tipoAportante.ET">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -71,19 +94,20 @@
                     Departamento
                   </label>
                 </div>
-                <div class="col">
-                  <mat-form-field class="select-width capitalize">
-                    <mat-select
-                      formControlName="depaetamento"
-                      required
-                      (selectionChange)="changeDepartamento($event.value)"
+                <div class="col capitalize">
+                  <mat-form-field
+                    class="select-width"
+                  >
+                    <mat-select required 
+                    formControlName="depaetamento"
+                    (selectionChange)="getMunAportante($event.value, j)"
                     >
                       <mat-option
-                        *ngFor="let departamento of listaDepartamentos"
+                        *ngFor="let listado of listadoDepto[j]"
+                        [value]="listado.localizacionId"
                         class="capitalize"
-                        [value]="departamento"
                       >
-                        {{ departamento.descripcion }}
+                        {{ listado.descripcion }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -105,7 +129,7 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="aportante.get('tipoAportante').value === '2'">
+          <div class="row" *ngIf="aportante.get('nuevoAportante').value && aportante.get('tipoAportante').value == this.tipoAportante.ET">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -120,11 +144,17 @@
                     Municipio
                   </label>
                 </div>
-                <div class="col">
-                  <mat-form-field class="select-width capitalize">
-                    <mat-select formControlName="municipio" required>
-                      <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                        {{ municipio.descripcion }}
+                <div class="col capitalize">
+                  <mat-form-field class="select-width">
+                    <mat-select 
+                    formControlName="municipio"
+                    (selectionChange)="getVigenciaByMun($event.value, j)">
+                      <mat-option
+                        *ngFor="let listado of listadoMun[j]"
+                        [value]="listado.localizacionId"
+                        class="capitalize"
+                      >
+                        {{ listado.descripcion }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -146,7 +176,93 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="!nuevoAportante.value || aportante.get('tipoAportante').value === '3'">
+          <div class="row" *ngIf="aportante.get('tipoAportante').value == this.tipoAportante.Tercero">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                  >
+                    Nombre del aportante
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field
+                    class="select-width"
+                  >
+                    <mat-select
+                      required
+                      formControlName="nombreAportante"
+                      (selectionChange)="getVigencia($event.value, j)"
+                    >
+                      <mat-option *ngFor="let listado of listaNombreAportantes[j]" [value]="listado">
+                        {{ listado }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('nombreAportante').invalid && aportante.get('nombreAportante').touched) ||
+                      (aportante.get('nombreAportante').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="aportante.get('nuevoAportante').value">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                  for="cofinanciacionAportanteId"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (aportante.get('cofinanciacionAportanteId').invalid && aportante.get('cofinanciacionAportanteId').touched) ||
+                    (aportante.get('cofinanciacionAportanteId').invalid && estaEditando)
+                  ">
+                  Vigencia del acuerdo de cofinanciación
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="select-width">
+                    <mat-select
+                      required
+                      formControlName="cofinanciacionAportanteId"
+                      (selectionChange)="changeAportante(j)"
+                    >
+                      <mat-option *ngFor="let listado of listaVigencias[j]" [value]="listado.cofinanciacionAportanteId">
+                        Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (aportante.get('cofinanciacionAportanteId').invalid && aportante.get('cofinanciacionAportanteId').touched) ||
+                      (aportante.get('cofinanciacionAportanteId').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="!aportante.get('nuevoAportante').value">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -554,6 +670,19 @@
                             </div>
                           </div>
                         </div>
+                        <div class="col-md-12 text-right p-0">
+                          <button
+                            mat-button
+                            color="warn"
+                            type="button"
+                            class="btn-eliminar animatedOpacity"
+                            *ngIf="fuentes(j, i).length > 1"
+                            (click)="deleteFuente(fuentes(j, i), l)"
+                          >
+                            <img src="assets/img/icon/menos.svg" alt="Eliminar fuente" />
+                            Eliminar fuente
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -596,7 +725,7 @@
           type="button"
           class="btn-eliminar animatedOpacity"
           *ngIf="aportantes.controls.length > 1"
-          (click)="borrarArray(j, i)"
+          (click)="borrarAportante(j)"
         >
           <img src="assets/img/icon/menos.svg" alt="Eliminar componente" />
           Eliminar Aportante
@@ -607,7 +736,7 @@
           color="warn"
           type="button"
           class="btn-eliminar animatedOpacity"
-          *ngIf="aportantes.controls.length < listaAportantes.length"
+          *ngIf="aportantes.controls.length < (listaAportantes.length + listaTotalNuevas.length) "
           (click)="addAportante()"
         >
           <img src="assets/img/icon/mas.svg" alt="Agregar otro componente" />

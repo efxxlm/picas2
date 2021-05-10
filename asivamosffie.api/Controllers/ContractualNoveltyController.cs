@@ -142,6 +142,71 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
+        }     
+
+        [HttpDelete]
+        [Route("EliminarNovedadContractualAportante")]
+        public async Task<IActionResult> EliminarNovedadContractualAportante([FromQuery] int pNovedadContractualAportante)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarNovedadContractualAportante(pNovedadContractualAportante, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        [Route("EliminarComponenteAportanteNovedad")]
+        public async Task<IActionResult> EliminarComponenteAportanteNovedad([FromQuery] int pComponenteAportanteNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarComponenteAportanteNovedad(pComponenteAportanteNovedad, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("EliminarComponenteFuenteNovedad")]
+        public async Task<IActionResult> EliminarComponenteFuenteNovedad([FromQuery] int pComponenteFuenteNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarComponenteFuenteNovedad(pComponenteFuenteNovedad, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        [Route("EliminarComponenteUsoNovedad")]
+        public async Task<IActionResult> EliminarComponenteUsoNovedad([FromQuery] int pComponenteUsoNovedad)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.EliminarComponenteUsoNovedad(pComponenteUsoNovedad, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpDelete]

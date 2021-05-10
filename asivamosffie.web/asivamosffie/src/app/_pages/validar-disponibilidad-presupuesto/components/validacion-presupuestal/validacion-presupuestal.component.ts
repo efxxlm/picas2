@@ -16,6 +16,8 @@ import { FormGestionarFuentesAdministrativasComponent } from '../form-gestionar-
 })
 export class ValidacionPresupuestalComponent implements OnInit {
 
+  valorGestionado = 0;
+
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router, private sanitized: DomSanitizer,
@@ -38,9 +40,25 @@ export class ValidacionPresupuestalComponent implements OnInit {
       //if ( esNovedad === 'true' ){
         this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(this.id, this.esNovedad, this.novedadId)
         .subscribe(listas => {
-          console.log(listas);
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
+            console.log( this.detailavailabilityBudget )
+
+            if ( this.detailavailabilityBudget.aportantes !== undefined ) {
+              if ( this.detailavailabilityBudget.aportantes.length > 0 ) {
+                this.detailavailabilityBudget.aportantes.forEach( aportante => {
+                  if ( aportante.fuentesFinanciacion !== undefined ) {
+                    if ( aportante.fuentesFinanciacion.length > 0 ) {
+                      aportante.fuentesFinanciacion.forEach( fuente => {
+                        if ( fuente.valor_solicitado_de_la_fuente !== undefined ) {
+                          this.valorGestionado += fuente.valor_solicitado_de_la_fuente
+                        }
+                      } )
+                    }
+                  }
+                } )
+              }
+            }
           }
         });  
       // }else{
@@ -81,7 +99,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
         this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
-        if (this.detailavailabilityBudget.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
+        if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
           return true;
         }
         else {
@@ -89,7 +107,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
         }
       }
       else {//para tradicional
-        if (this.detailavailabilityBudget.valorSolicitud == this.detailavailabilityBudget.valorGestionado) {
+        if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
           return true;
         }
         else {

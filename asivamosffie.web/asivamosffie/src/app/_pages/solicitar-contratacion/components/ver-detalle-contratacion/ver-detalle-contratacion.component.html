@@ -175,18 +175,16 @@
         </section>
 
         <section *ngFor="let contratacionProyectoAportante of contratacionProyecto.contratacionProyectoAportante;index as j">
-          <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
                 Aportante {{ j+1 }}
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-detalle-fuentes-uso 
-                                          [contratacionProyecto]="contratacionProyecto"
-                                          [contratacionProyectoAportanteId]="contratacionProyectoAportante.contratacionProyectoAportanteId">
+            <app-tabla-detalle-fuentes-uso  [contratacionProyecto]="contratacionProyecto"
+                                            [contratacionProyectoAportanteId]="contratacionProyectoAportante.contratacionProyectoAportanteId">
             </app-tabla-detalle-fuentes-uso>
-
           </mat-expansion-panel>
         </section>
       </mat-expansion-panel>

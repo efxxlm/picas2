@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
@@ -119,6 +120,22 @@ export class TerceroCausacionGogComponent implements OnInit {
         if ( this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length > 0 ) {
             this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
+
+        if ( this.solicitudPago.ordenGiro !== undefined ) {
+            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
+                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+                    const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.filter( ordenGiroDetalleDescuentoTecnica => ordenGiroDetalleDescuentoTecnica.esPreconstruccion === this.esPreconstruccion )
+
+                    if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                        ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnica => {
+                            descuentoTecnica.ordenGiroDetalleDescuentoTecnicaAportante.forEach( ordenGiroDetalleDescuentoTecnicaAportante => this.valorNetoGiro -= ordenGiroDetalleDescuentoTecnicaAportante.valorDescuento )
+                        } )
+                    }
+                }
+            }
+        }
+
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
@@ -492,6 +509,10 @@ export class TerceroCausacionGogComponent implements OnInit {
     // Check valor del descuento del aportante
     validateDiscountAportanteValue( value: number, index: number, jIndex: number, kIndex: number ) {
         if ( value !== null ) {
+            if ( value < 0 ) {
+                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null )
+                return
+            }
             let totalValueAportante = 0;
             this.getAportantes( index, jIndex ).controls.forEach( aportanteControl => {
                 if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
@@ -508,6 +529,13 @@ export class TerceroCausacionGogComponent implements OnInit {
     // Check valor del descuento de los conceptos
     validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number ) {
         let totalAportantePorConcepto = 0;
+
+        if ( value !== null ) {
+            if ( value < 0 ) {
+                this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null )
+                return
+            }
+        }
 
         for ( const aportante of this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ).value ) {
             totalAportantePorConcepto += aportante.valorDescuento;
@@ -755,7 +783,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             ]
         }
 
-        console.log( pOrdenGiro )
         this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
             .subscribe(
                 response => {
@@ -782,7 +809,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/generarOrdenDeGiro/generacionOrdenGiro', this.solicitudPago.solicitudPagoId
+                                '/generarOrdenDeGiro/verDetalleEditarOrdenGiro', this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );

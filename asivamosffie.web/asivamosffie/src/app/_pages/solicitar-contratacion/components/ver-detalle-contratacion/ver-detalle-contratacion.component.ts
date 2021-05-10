@@ -53,11 +53,13 @@ export class VerDetalleContratacionComponent implements OnInit {
 
   getProjectContracting ( id: any ) {
     this.projectContractingSvc.getContratacionByContratacionId( id )
-      .subscribe( resp => {
+      .subscribe( async resp => {
         this.contratacion = resp;
         console.log( this.contratacion );
         for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
-          
+          const contratacion = await this.projectContractingSvc.getContratacionProyectoById( contratacionProyecto.contratacionProyectoId ).toPromise();
+
+          contratacionProyecto.contratacionProyectoAportante = contratacion.contratacionProyectoAportante;
           contratacionProyecto.dataAportantes = this.getDataAportantes( contratacionProyecto.contratacionProyectoAportante );
 
           this.dataTable.push(
@@ -87,24 +89,24 @@ export class VerDetalleContratacionComponent implements OnInit {
       this.usosSelect = resp[2];
 
       for ( let cont of contratacionProyecto ) {
-
         for ( let componente of cont.componenteAportante ) {
 
           let componenteSeleccionado = this.componentesSelect.filter( value => value.codigo === componente.tipoComponenteCodigo );
           let faseSeleccionado = this.fasesSelect.filter( value => value.codigo === componente.faseCodigo );
 
           for ( let uso of componente.componenteUso ) {
-
             let usoSeleccionado = this.usosSelect.filter( value => value.codigo === uso.tipoUsoCodigo );
             let apor = { 
               componente: componenteSeleccionado[0].nombre,
               fase: faseSeleccionado[0].nombre,
-              tipoUso: [], 
+              tipoUso: [],
+              fuente: [],
               valorUso: [],
               contratacionProyectoAportanteId: cont.contratacionProyectoAportanteId,
               
             }
             apor.tipoUso.push( usoSeleccionado[0].nombre );
+            apor.fuente.push( uso.fuenteFinanciacionId )
             apor.valorUso.push( uso.valorUso  );
             aportante.push( apor );
           };

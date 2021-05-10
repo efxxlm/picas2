@@ -384,6 +384,14 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         cb( totaldescuentos() );
     }
 
+    checkValueDescuento( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        if ( value !== null ) {
+            if ( value < 0 ) {
+                this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+            }
+        }
+    }
+
     checkTotalDiscountValues( index: number, jIndex: number, kIndex: number, lIndex: number ) {
         const solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFacturaDescuento.find( solicitudPagoFaseFacturaDescuento => solicitudPagoFaseFacturaDescuento.solicitudPagoFaseFacturaDescuentoId === this.descuentos.controls[ index ].get( 'solicitudPagoFaseFacturaDescuentoId' ).value )
 
@@ -778,7 +786,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/generarOrdenDeGiro/generacionOrdenGiro', this.solicitudPago.solicitudPagoId
+                                '/generarOrdenDeGiro/verDetalleEditarOrdenGiro', this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );

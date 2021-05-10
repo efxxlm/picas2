@@ -133,6 +133,7 @@ export interface NovedadContractualAportante{
         componenteAportanteNovedad?: ComponenteAportanteNovedad[]
 
         nombreAportante?: string,
+        cofinanciacionAportante?: any
 }
 
 export interface ComponenteAportanteNovedad{
