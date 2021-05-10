@@ -35,6 +35,54 @@ namespace asivamosffie.services
      
 
         #region Create 
+        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionAportanteId == pOrdenGiroDetalleTerceroCausacionAportanteId)
+                        .Update(o => new OrdenGiroDetalleTerceroCausacionAportante
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now
+                        });
+                 
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+
+        }
+    
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -49,8 +97,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now
                         });
-
-
+                 
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -863,7 +910,10 @@ namespace asivamosffie.services
                 decimal ValorDrpXaportante =
                     _context.VAportanteFuenteUso
                     .Where(r => r.FuenteRecursosCodigo == Fuentes.TipoRecursosCodigo
-                        && r.CofinanciacionAportanteId == Fuentes.AportanteId)
+                        && r.CofinanciacionAportanteId == Fuentes.AportanteId
+                        && r.ContratoId == Fuentes.ContratoId
+
+                        )
                     .Sum(v => v.ValorUso);
 
                 string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
