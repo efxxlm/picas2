@@ -16,6 +16,10 @@ const routes: Routes = [
   {
     path: 'modificacionContractual/:id',
     component: FormModificacionContractualComponent
+  },
+  {
+    path: 'detalleModificacionContractual/:id',
+    component: FormModificacionContractualComponent
   }
 ];
 

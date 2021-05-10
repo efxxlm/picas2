@@ -32,7 +32,9 @@ export class TablaProcesoFirmasComponent implements OnInit {
     enFirmaFiduciaria: '5',
     enFirmaContratista: '10',
     firmado: '8',
-    registrado: '6'
+    registrado: '6',
+    firmadoNovedad: '25',
+    registradoNovedad: '26',
   };
 
   constructor(
@@ -52,9 +54,9 @@ export class TablaProcesoFirmasComponent implements OnInit {
         let firmado = 0;
         let firmaContratista = 0;
         for ( const contrataciones of resp ) {
-          if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria) {
             this.dataTable.push( contrataciones );
-          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.firmado ) {
+          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.firmado || contrataciones.estadoCodigo === this.estadoCodigos.firmadoNovedad) {
             this.dataTable.push( contrataciones );
             firmado++;
           } else if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaContratista ) {
@@ -100,8 +102,8 @@ export class TablaProcesoFirmasComponent implements OnInit {
         this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo } } );
         break;
 
-      case 'Modificación contractual':
-        this.routes.navigate( [ '/contratosModificacionesContractuales/modificacionContractual', id ] );
+      case "Novedad Contractual":
+          this.routes.navigate( [ '/contratosModificacionesContractuales/modificacionContractual', id ] );
         break;
       default:
         console.log( 'No es una opcion valida.' );
@@ -111,33 +113,45 @@ export class TablaProcesoFirmasComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+        () => this.routes.navigate( [ '/contratosModificacionesContractuales' ] )
+      );
     });
   }
 
   cambioEstadoRegistrado( elemento ) {
     const registro = elemento;
-    this.dataSource = new MatTableDataSource();
-    registro.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
-    registro.estadoCodigo = this.estadoCodigos.registrado;
-
-    const pContrato = new FormData();
-
-    pContrato.append( 'contratacionId', `${ registro.contratacion.contrato[0].contratacionId }` );
-    pContrato.append( 'contratoId', `${ registro.contratacion.contrato[0].contratoId }` );
-
-    this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
-      .subscribe(
-        response => {
-          this.openDialog( '', `<b>${response.message}</b>` );
-          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () => this.routes.navigate( [ '/contratosModificacionesContractuales' ] )
-          );
-        },
-        err => this.openDialog( '', `<b>${err.message}</b>` )
-      );
+    if(elemento.tipoSolicitud === 'Novedad Contractual'){
+      this.contratosContractualesSvc.changeStateTramiteNovedad( elemento.solicitudId )
+        .subscribe(
+          response => {
+            this.openDialog( '', `<b>${response.message}</b>` );
+          },
+          err => this.openDialog( '', `<b>${err.message}</b>` )
+        );
+    }else{
+      this.dataSource = new MatTableDataSource();
+      registro.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
+      registro.estadoCodigo = this.estadoCodigos.registrado;
+  
+      const pContrato = new FormData();
+  
+      pContrato.append( 'contratacionId', `${ registro.contratacion.contrato[0].contratacionId }` );
+      pContrato.append( 'contratoId', `${ registro.contratacion.contrato[0].contratoId }` );
+  
+      this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
+        .subscribe(
+          response => {
+            this.openDialog( '', `<b>${response.message}</b>` );
+          },
+          err => this.openDialog( '', `<b>${err.message}</b>` )
+        );
+    }
   }
 
 }

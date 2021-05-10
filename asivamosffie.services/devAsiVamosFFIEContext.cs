@@ -297,7 +297,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3982,13 +3981,21 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaEnvioActaSupervisor).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaEnvioFirmaContratista).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEnvioFirmaFiduciaria).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaEnvioGestionContractual).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaActaContratistaObra).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaApoyo).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaFirmaContratistaInterventoria).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFirmaSupervisor).HasColumnType("datetime");
 
@@ -4008,11 +4015,17 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NumeroOtroSi)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroSolicitud)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RazonesNoContinuaProceso).IsUnicode(false);
+
+                entity.Property(e => e.UrlDocumentoSuscrita).IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporte)
                     .HasMaxLength(1000)

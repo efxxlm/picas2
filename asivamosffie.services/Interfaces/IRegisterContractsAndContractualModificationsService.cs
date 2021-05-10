@@ -17,7 +17,9 @@ namespace asivamosffie.services.Interfaces
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 
         Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-
+        Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual);
         Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-     }
+        Task<Respuesta> ChangeStateTramiteNovedad(int pNovedadContractualId, string user);
+
+    }
 }

@@ -64,6 +64,15 @@ export interface NovedadContractual{
         observacionGestionar ?: string,
         registroCompletoGestionar ?: boolean,
 
+        numeroOtroSi ?: string,
+        fechaEnvioFirmaContratista ?: Date,
+        fechaFirmaContratista ?: Date,
+        fechaEnvioFirmaFiduciaria ?: Date,
+        fechaFirmaFiduciaria ?: Date,
+        observacionesTramite ?: string,
+        urlDocumentoSuscrita ?: string,
+        registroCompletoTramite ?: boolean,
+        
 }
 
 export interface NovedadContractualDescripcion{

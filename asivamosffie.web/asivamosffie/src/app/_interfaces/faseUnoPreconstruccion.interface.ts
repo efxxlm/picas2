@@ -69,6 +69,7 @@ export interface Contrato {
   contratoPerfil: ContratoPerfil[];
   contratoPoliza: ContratoPoliza[];
   fechaAprobacionRequisitosConstruccionInterventor?: string;
+  modalidadCodigo?: string;
 }
 
 interface ContratoPoliza {

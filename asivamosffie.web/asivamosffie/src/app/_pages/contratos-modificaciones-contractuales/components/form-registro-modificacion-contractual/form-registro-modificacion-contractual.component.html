@@ -43,11 +43,11 @@
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get('numeroOtroSi').value.length > 0">
       <label
         class="label-left"
-        for="fechaEnvioParaFirmaContratista"
+        for="fechaEnvioFirmaContratista"
         [class.color-secondaryColor]="
-          (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid &&
-            dataFormulario.get('fechaEnvioParaFirmaContratista').touched) ||
-          (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid && estaEditando)
+          (dataFormulario.get('fechaEnvioFirmaContratista').invalid &&
+            dataFormulario.get('fechaEnvioFirmaContratista').touched) ||
+          (dataFormulario.get('fechaEnvioFirmaContratista').invalid && estaEditando)
         "
       >
         <b>Fecha de envío para firma del contratista</b>
@@ -56,7 +56,7 @@
         <input
           matInput
           [matDatepicker]="pickerFechaEnvioTramite"
-          formControlName="fechaEnvioParaFirmaContratista"
+          formControlName="fechaEnvioFirmaContratista"
           placeholder="DD/MM/AAAA"
           readonly
           (click)="pickerFechaEnvioTramite.open()"
@@ -75,22 +75,22 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
           *ngIf="
-            (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid &&
-              dataFormulario.get('fechaEnvioParaFirmaContratista').touched) ||
-            (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid && estaEditando)
+            (dataFormulario.get('fechaEnvioFirmaContratista').invalid &&
+              dataFormulario.get('fechaEnvioFirmaContratista').touched) ||
+            (dataFormulario.get('fechaEnvioFirmaContratista').invalid && estaEditando)
           "
         />
       </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioParaFirmaContratista').value !== null">
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioFirmaContratista').value !== null">
       <label
         class="label-left"
-        for="fechaFirmaPorParteContratista"
+        for="fechaFirmaContratista"
         [class.color-secondaryColor]="
-          (dataFormulario.get('fechaFirmaPorParteContratista').invalid &&
-            dataFormulario.get('fechaFirmaPorParteContratista').touched) ||
-          (dataFormulario.get('fechaFirmaPorParteContratista').invalid && estaEditando)
+          (dataFormulario.get('fechaFirmaContratista').invalid &&
+            dataFormulario.get('fechaFirmaContratista').touched) ||
+          (dataFormulario.get('fechaFirmaContratista').invalid && estaEditando)
         "
       >
         <b> Fecha de firma por parte del contratista </b>
@@ -99,7 +99,7 @@
         <input
           matInput
           [matDatepicker]="pickerFechaFirmaContratista"
-          formControlName="fechaFirmaPorParteContratista"
+          formControlName="fechaFirmaContratista"
           placeholder="DD/MM/AAAA"
           readonly
           (click)="pickerFechaFirmaContratista.open()"
@@ -124,22 +124,22 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
           *ngIf="
-            (dataFormulario.get('fechaFirmaPorParteContratista').invalid &&
-              dataFormulario.get('fechaFirmaPorParteContratista').touched) ||
-            (dataFormulario.get('fechaFirmaPorParteContratista').invalid && estaEditando)
+            (dataFormulario.get('fechaFirmaContratista').invalid &&
+              dataFormulario.get('fechaFirmaContratista').touched) ||
+            (dataFormulario.get('fechaFirmaContratista').invalid && estaEditando)
           "
         />
       </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaFirmaPorParteContratista').value !== null">
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaFirmaContratista').value !== null">
       <label
         class="label-left"
-        for="fechaEnvioParaFirmaFiduciaria"
+        for="fechaEnvioFirmaFiduciaria"
         [class.color-secondaryColor]="
-          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
-            dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
-          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+          (dataFormulario.get('fechaEnvioFirmaFiduciaria').invalid &&
+            dataFormulario.get('fechaEnvioFirmaFiduciaria').touched) ||
+          (dataFormulario.get('fechaEnvioFirmaFiduciaria').invalid && estaEditando)
         "
       >
         <b> Fecha de envío para la firma de la fiduciaria </b>
@@ -148,7 +148,7 @@
         <input
           matInput
           [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
-          formControlName="fechaEnvioParaFirmaFiduciaria"
+          formControlName="fechaEnvioFirmaFiduciaria"
           placeholder="DD/MM/AAAA"
           readonly
           (click)="pickerFechaEnvioFirmaFiduciaria.open()"
@@ -173,22 +173,22 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
           *ngIf="
-            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
-              dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
-            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+            (dataFormulario.get('fechaEnvioFirmaFiduciaria').invalid &&
+              dataFormulario.get('fechaEnvioFirmaFiduciaria').touched) ||
+            (dataFormulario.get('fechaEnvioFirmaFiduciaria').invalid && estaEditando)
           "
         />
       </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioParaFirmaFiduciaria').value !== null">
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioFirmaFiduciaria').value !== null">
       <label
         class="label-left"
-        for="fechaEnvioParaFirmaFiduciaria"
+        for="fechaFirmaFiduciaria"
         [class.color-secondaryColor]="
-          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
-            dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
-          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+          (dataFormulario.get('fechaFirmaFiduciaria').invalid &&
+            dataFormulario.get('fechaFirmaFiduciaria').touched) ||
+          (dataFormulario.get('fechaFirmaFiduciaria').invalid && estaEditando)
         "
       >
         <b> Fecha de firma por parte de la fiduciaria </b>
@@ -197,7 +197,7 @@
         <input
           matInput
           [matDatepicker]="pickerFechaFirmaFiduciaria"
-          formControlName="fechaFirmaPorParteFiduciaria"
+          formControlName="fechaFirmaFiduciaria"
           placeholder="DD/MM/AAAA"
           readonly
           (click)="pickerFechaFirmaFiduciaria.open()"
@@ -222,98 +222,117 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
           *ngIf="
-            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
-              dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
-            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+            (dataFormulario.get('fechaFirmaFiduciaria').invalid &&
+              dataFormulario.get('fechaFirmaFiduciaria').touched) ||
+            (dataFormulario.get('fechaFirmaFiduciaria').invalid && estaEditando)
           "
         />
       </span>
     </div>
 
-    <div class="d-flex mt-1em">
-      <label class="label-left" for="observaciones">
-        <b> Observaciones </b>
-      </label>
-      <quill-editor
-        class="quill-editor-style w-65"
-        [styles]="editorStyle"
-        [modules]="config"
-        (onContentChanged)="maxLength($event, 2000)"
-        formControlName="observaciones"
-        [class.invalid]="
-          (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
-          (dataFormulario.get('observaciones').invalid && estaEditando)
-        "
-      ></quill-editor>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{
-          2000 -
-            (textoLimpio(dataFormulario.get('observaciones').value) > 2000
-              ? 2000
-              : textoLimpio(dataFormulario.get('observaciones').value))
-        }}
-      </span>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null"> 2000 </span>
-      <span class="icon-incompleto">
-        <img
-          class="icon-incompleto--img"
-          src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-          *ngIf="
-            (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
-            (dataFormulario.get('observaciones').invalid && estaEditando)
-          "
-        />
-      </span>
-    </div>
-
-    <div class="d-flex" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
-      <label
-        class="label-left"
-        for="documento"
-        [class.color-secondaryColor]="
-          (dataFormulario.get('documento').invalid && dataFormulario.get('documento').touched) ||
-          (dataFormulario.get('documento').invalid && estaEditando)
-        "
-      >
-        <b> Adjuntar documento suscrito </b>
-      </label>
-      <div class="input w-65">
-        <span class="input-file-text text-center">{{ archivo }}</span>
-        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
-          Adjuntar
-        </button>
-        <input
-          hidden
-          (change)="fileName($event)"
-          #fileInput
-          type="file"
-          id="file"
-          formControlName="documento"
-          accept=".pdf"
-        />
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              [class.color-secondaryColor]="
+                (dataFormulario.get('observacionesTramite').invalid && dataFormulario.get('observacionesTramite').touched) ||
+                (dataFormulario.get('observacionesTramite').invalid && estaEditando)
+              "
+            >
+              Observaciones
+            </label>
+          </div>
+          <div class="col d-flex">
+            <quill-editor
+              class="quill-editor-style ml-1em card position-relative"
+              [styles]="editorStyle"
+              [modules]="config"
+              (onContentChanged)="maxLength($event, 2000)"
+              formControlName="observacionesTramite"
+              [class.invalid]="
+                (dataFormulario.get('observacionesTramite').invalid && dataFormulario.get('observacionesTramite').touched) ||
+                (dataFormulario.get('observacionesTramite').invalid && estaEditando)
+              "
+              required
+            >
+            </quill-editor>
+            <span
+              class="contador miles"
+              *ngIf="dataFormulario.get('observacionesTramite').value !== null"
+              style="margin-top: 1.8em"
+            >
+              {{
+                2000 -
+                  (textoLimpio(dataFormulario.get('observacionesTramite').value) > 2000
+                    ? 2000
+                    : textoLimpio(dataFormulario.get('observacionesTramite').value))
+              }}
+            </span>
+            <span
+              class="contador miles"
+              *ngIf="dataFormulario.get('observacionesTramite').value === null"
+              style="margin-top: 1.8em"
+            >
+              2000
+            </span>
+            <span class="icon-incompleto" style="margin-top: 1.9em">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (dataFormulario.get('observacionesTramite').invalid && dataFormulario.get('observacionesTramite').touched) ||
+                  (dataFormulario.get('observacionesTramite').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
       </div>
-      <span class="icon-incompleto">
-        <img
-          class="icon-incompleto--img"
-          src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-          *ngIf="
-            (dataFormulario.get('documento').invalid && dataFormulario.get('documento').touched) ||
-            (dataFormulario.get('documento').invalid && estaEditando)
-          "
-        />
-      </span>
-    </div>
+    </div>  
 
-    <div class="container text-center" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
-      <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
+    <div class="row mt-1em" *ngIf="dataFormulario.get('fechaFirmaFiduciaria').value !== null">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="urlDocumentoSuscrita"
+              [class.color-secondaryColor]="
+                (dataFormulario.get('urlDocumentoSuscrita').invalid && dataFormulario.get('urlDocumentoSuscrita').touched) ||
+                (dataFormulario.get('urlDocumentoSuscrita').invalid && estaEditando)
+              "
+            >
+              Url con soporte
+            </label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field style="width: 92%;">
+              <input matInput type="text" maxlength="400" formControlName="urlDocumentoSuscrita" required />
+            </mat-form-field>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (dataFormulario.get('urlDocumentoSuscrita').invalid && dataFormulario.get('urlDocumentoSuscrita').touched) ||
+                  (dataFormulario.get('urlDocumentoSuscrita').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+        <span class="info-url">Indique la ruta en la que se encuentra el contrato suscrito.</span>
+      </div>
     </div>
 
     <div class="text-center w-90">
