@@ -1,27 +1,31 @@
-<p class="info-sub-title textoGrisVar">
-    <span>Número de DDP: <b>DDP_001</b></span>
-    <span>Valor del DDP: <b>$ 105.000.000</b></span>
-</p>
-<div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="drp">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>DRP </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
-        </ng-container>
-        <ng-container matColumnDef="numDRP">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.numDRP }} </td>
-        </ng-container>
-        <ng-container matColumnDef="valor">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
-        </ng-container>
-        <ng-container matColumnDef="saldo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-</div>
-<app-tabla-drp-gbftrec></app-tabla-drp-gbftrec>
+<section *ngIf="solicitudPago !== undefined">
+    <div class="d-flex justify-content-center mt-1em">
+        <p>Número de DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].numeroDdp }} </b></p>
+        <p style="margin-left: 2em;">Valor del DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </b></p>
+    </div>
+    
+    <div class="d-flex justify-content-center table-responsive tabla-gris">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 40%;">
+            <ng-container matColumnDef="drp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
+            </ng-container>
+            <ng-container matColumnDef="numeroDrp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDRP }} </td>
+            </ng-container>
+            <ng-container matColumnDef="valorSolicitudDdp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+            </ng-container>
+            <ng-container matColumnDef="saldoPresupuestal">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo actual DRP</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    
+    <app-tabla-drp-gbftrec *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-drp-gbftrec>
+</section>

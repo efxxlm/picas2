@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaDatosSolicitudComponent implements OnInit {
 
+    @Input() listProyectos
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = [
       'llaveMen',
@@ -21,16 +22,7 @@ export class TablaDatosSolicitudComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.dataSource = new MatTableDataSource( [
-            {
-                llaveMen: 'LL457326',
-                tipoIntervencion: 'Remodelación',
-                departamento: 'Boyacá',
-                municipio: 'Susacón',
-                institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-                sede: 'Única sede'
-            }
-        ] );
+        this.dataSource = new MatTableDataSource( this.listProyectos );
     }
 
 }

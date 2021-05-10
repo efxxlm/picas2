@@ -11,9 +11,9 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #nombre2 type="text" maxlength="100" formControlName="tipoSolicitud" (ngModelChange)="getParamsSearch()" required>
+                                <input matInput #nombre2 type="text" maxlength="100" formControlName="tipoSolicitud" required>
                             </mat-form-field>
-                            <button mat-button color="primary" class="busqueda--img">
+                            <button mat-button color="primary" class="busqueda--img" (click)="getParamsSearch()">
                                 <img src="assets/img/icon/lupa.svg" alt="Buscar">
                             </button>
                         </div>
@@ -30,9 +30,9 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #nombre3 type="text" maxlength="100" formControlName="numeroOrdenGiro" (ngModelChange)="getParamsSearch()" required>
+                                <input matInput #nombre3 type="text" maxlength="100" formControlName="numeroOrdenGiro" required>
                             </mat-form-field>
-                            <button mat-button color="primary" class="busqueda--img">
+                            <button mat-button color="primary" class="busqueda--img" (click)="getParamsSearch()">
                                 <img src="assets/img/icon/lupa.svg" alt="Buscar">
                             </button>
                         </div>
