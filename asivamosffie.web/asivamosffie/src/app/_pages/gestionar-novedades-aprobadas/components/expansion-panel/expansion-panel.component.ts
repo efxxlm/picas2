@@ -37,7 +37,8 @@ export class ExpansionPanelComponent implements OnInit {
       .subscribe( respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);
         if ( respuesta.code === '200' )
-          this.router.navigate(['/gestionarTramiteNovedadesContractualesAprobadas']);
+        location.reload();
+        //   this.router.navigate(['/gestionarTramiteNovedadesContractualesAprobadas']);
       });
 
   }
