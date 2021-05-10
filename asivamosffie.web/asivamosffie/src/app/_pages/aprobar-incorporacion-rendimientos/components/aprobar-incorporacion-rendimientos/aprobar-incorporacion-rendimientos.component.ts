@@ -119,8 +119,8 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
     });
   }
 
-  downloadMinute(uploadedOrderId: number){
-    
+  downloadMinute(minutePath: string){
+    window.open(minutePath , '_blank');
   }
 
 

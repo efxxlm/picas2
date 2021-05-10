@@ -351,9 +351,45 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("urlminute")]
+        [HttpPost]
+        public async Task<IActionResult> GetMinuteFromUrl(int uploadedOrderId)
+        {
+
+            try
+            {
+                var result = await _paymentAndPerformancesService.GetMinuteFromUrl(uploadedOrderId);
 
 
 
-       
+                if (result.IsSuccessful && !result.IsException)
+                {
+                    /*string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre + ".xlsx";
+                    */
+                    string ruta = result.Data.ToString();
+                    Stream stream = new FileStream(ruta, FileMode.Open, FileAccess.Read);
+
+                    if (stream == null)
+                        return NotFound();
+                    var file = File(stream, "application/octet-stream");
+                    return file;
+                }
+                else if (result.IsSuccessful && result.IsException)
+                {
+                    //Status409Conflict
+                    return Ok(result);
+                }
+
+                return BadRequest("Archivo no encontrado");
+            }
+            catch (Exception ex)
+            {
+                // throw ex;
+                return BadRequest("Archivo no encontrado"); /// ?
+            }
+        }
+
+
+
     }
 }
