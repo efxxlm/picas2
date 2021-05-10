@@ -582,6 +582,7 @@
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit" 
       [disabled]="
+        addressForm.get('continuarProceso').invalid ||
         addressForm.get('continuarProceso').value === true &&
         addressForm.get('urlFirmas').invalid ||
         addressForm.get('continuarProceso').value === false &&
