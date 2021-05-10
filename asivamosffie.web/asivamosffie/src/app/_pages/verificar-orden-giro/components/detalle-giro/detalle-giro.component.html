@@ -283,6 +283,7 @@
         <app-soporte-orden-giro [esVerDetalle]="esVerDetalle"
                                 [esRegistroNuevo]="esRegistroNuevo"
                                 [solicitudPago]="solicitudPago"
+                                *ngIf="solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroSoporte.length > 0"
                                 (estadoSemaforo)="listaSemaforos.semaforoSoporte = $event">
         </app-soporte-orden-giro>
     </mat-expansion-panel>

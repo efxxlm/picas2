@@ -58,7 +58,7 @@
                                                         </mat-card-title>
                                                         <div [formGroup]="discount">
                                                             <p><b>Tipo de descuento: </b> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </p>
-                                                            <p><b>Valor del descuento: </b> {{ discount.get( 'tipoDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                            <p><b>Valor del descuento: </b> {{ discount.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                                                         </div>
                                                     </div>
                                                 </div>
