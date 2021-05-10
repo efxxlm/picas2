@@ -583,10 +583,20 @@ export class TerceroCausacionGogComponent implements OnInit {
                         if ( aportanteSeleccionado !== null ) {
                             const listaTipoAportantes = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDeAportantes' ).value;
                             listaTipoAportantes.push( aportanteSeleccionado );
-                        }
 
-                        this.getAportantes( index, jIndex ).removeAt( kIndex );
-                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            if ( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value !== 0 ) {
+                                this.ordenGiroSvc.deleteOrdenGiroDetalleTerceroCausacionAportante( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value )
+                                    .subscribe(
+                                        response => {
+                                            this.getAportantes( index, jIndex ).removeAt( kIndex );
+                                            this.openDialog( '', `${ response.message }` );
+                                        }
+                                    )
+                            } else {
+                                this.getAportantes( index, jIndex ).removeAt( kIndex );
+                                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            }
+                        }
                     }
                 }
             )

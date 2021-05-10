@@ -203,7 +203,7 @@
                         </p>
                         <p>
                             <strong>Valor total del proyecto:</strong>
-                            {{proyecto.valorAportante| currency:'':'symbol':'3.0'}}
+                            {{ getTotalProyecto( proyecto.aportantes ) | currency:'':'symbol':'3.0' }}
                         </p>
 
                         <h2 class="card-subTitle">Aportantes</h2>
