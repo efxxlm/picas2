@@ -330,7 +330,8 @@ namespace asivamosffie.services
                 apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
             }
 
-            novedadContractual.NovedadContractualAportante = novedadContractualAportantes;
+            if(novedadContractualAportantes.Count() > 0)
+                novedadContractual.NovedadContractualAportante = novedadContractualAportantes;
 
             if (novedadContractual != null)
             {
