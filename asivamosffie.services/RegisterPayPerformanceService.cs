@@ -21,6 +21,7 @@ using asivamosffie.services.Helpers.Extensions;
 using DinkToPdf;
 using System.Reflection;
 using System.Drawing;
+using System.Net;
 
 namespace asivamosffie.services
 {
@@ -1118,13 +1119,6 @@ namespace asivamosffie.services
                         OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante.FirstOrDefault();
                     var gestionFuenteFinanciacionId =  (int)OrdenGiroDetalleTerceroCausacionAportante.FuenteFinanciacionId;
                      
-                    //J Martinez Te lo comente Pero igual la relacion ya esta directa con el aportante y la fuente de financiación
-                    //var gestionFuentesFinanciacion = _context.GestionFuenteFinanciacion
-                    //        .Where(x => x.GestionFuenteFinanciacionId == gestionFuenteFinanciacionId).FirstOrDefault();
-
-                    //if (gestionFuentesFinanciacion == null) 
-                    //    return false;
-                   
                     var valorSolicitado = payment["Valor neto girado"];
                     var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
                     pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuenteFinanciacionId;
@@ -1145,10 +1139,6 @@ namespace asivamosffie.services
                     var paymentOrder = new OrdenGiroPago();
                     paymentOrder.OrdenGiroId = ordenGiro.OrdenGiroId;
                     carguePagosRendimientos.OrdenGiroPago.Add(paymentOrder);
-                   // paymentOrder.RegistroPagoId = payment.;
-
-                    //    carguePagosRendimientos.
-                    //    _context.OrdenGiroPago.Add(paymentOrder);
                 }
             }
             return true;
@@ -1291,12 +1281,6 @@ namespace asivamosffie.services
             return response;
         }
 
-
-        //public async Task<Respuesta> DownloadPerformances(string menu, string actionMessage, int uploadedOrderId)
-        //{
-
-        //}
-
         public async Task<Respuesta> GetManagedPerformancesByStatus(string author, int uploadedOrderId, bool? withConsistentOrders = null)
         {
             Respuesta response = new Respuesta();
@@ -1422,11 +1406,11 @@ namespace asivamosffie.services
                 from performance in _context.RendimientosIncorporados
                 join register in _context.CarguePagosRendimientos 
                 on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId                                           
-                group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue, register.FechaActa } into g                                          
+                group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue, register.FechaActa, register.RutaActa } into g                                          
                 select new { RegisterId = g.Key.CarguePagosRendimientosId, 
                     RegistrosIncorporados = g.Sum(x => x.Aprobado.HasValue && x.Aprobado.Value == true ? 1: 0),
                     g.Key.FechaCargue,
-                    g.Key.FechaActa
+                    g.Key.FechaActa, g.Key.RutaActa
                 };
               //  Include(r => r.CarguePagosRendimientos).AsNoTracking(); ;
 
@@ -1837,6 +1821,20 @@ namespace asivamosffie.services
             plantilla.Contenido = "";
             return ConvertirPDF(plantilla);
         }
+
+        public async Task<Respuesta> GetMinuteFromUrl(int uploadedOrderId)
+        {
+            var performancesOrder = await _context.CarguePagosRendimientos.FindAsync(uploadedOrderId);
+
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(performancesOrder.RutaActa, "a.mpeg");
+            }
+
+            return new Respuesta { Data = performancesOrder.RutaActa , IsSuccessful= true};
+        }
+
+
 
     }
 

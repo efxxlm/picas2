@@ -33,5 +33,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DownloadApprovedIncorporatedPerfomances(int uploadedOrderId);
         Task<byte[]> GenerateMinute(int uploadOrderId);
         Task<Respuesta> UploadPerformanceUrlMinute(FileRequest pFile);
+
+        Task<Respuesta> GetMinuteFromUrl(int uploadOrderId);
     }
 }

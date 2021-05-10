@@ -93,7 +93,7 @@ export class FaseDosPagosRendimientosService {
   }
 
   downloadPerformanceUrlMinute(uploadedOrderId :number){
-    return this.http.post(`${this.urlApi}/performanceMinute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" })
+    return this.http.post(`${this.urlApi}/urlminute?uploadedOrderId=${uploadedOrderId}`, {} , {responseType: "blob" })
   }
   
 }
