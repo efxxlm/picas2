@@ -209,6 +209,7 @@ namespace asivamosffie.model.APIModels
 
     public class MinuteTemplate
     {
+        public string NextValue { get; set; }
         public string PerformancesDate { get; set; }
 
         public string Image { get; set; }

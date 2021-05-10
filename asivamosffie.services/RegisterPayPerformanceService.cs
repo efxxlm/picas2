@@ -1650,14 +1650,36 @@ namespace asivamosffie.services
         {
             var workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var uploadOrder  = await _context.CarguePagosRendimientos.FindAsync(uploadOrderId);
+            int nextVal = 0;
+            if (!uploadOrder.NumeroActa.HasValue)
+            {
+                var p = new Microsoft.Data.SqlClient.SqlParameter("@result", System.Data.SqlDbType.Int);
+                p.Direction = System.Data.ParameterDirection.Output;
+                _context.Database.ExecuteSqlRaw("set @result = next value for ConsecutivoActaRendimientos", p);
+                nextVal = (int)p.Value;
+
+                var modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                   .Where(order => order.CargaPagosRendimientosId == uploadOrderId)
+                   .UpdateAsync(o => new CarguePagosRendimientos()
+                   {
+                       FechaModificacion = DateTime.Now,
+                       UsuarioModificacion = _userName,
+                       NumeroActa = nextVal
+                   });
+            }
+            else
+            {
+                nextVal = uploadOrder.NumeroActa.Value;
+            }
 
             var report = await GenerarActaRendimientos(uploadOrder.FechaCargue.Month);
             decimal actual = report.Sum(x => x.Actual).HasValue ? report.Sum(x => x.Actual).Value: 0;
-            decimal anterior = report.Sum(x => x.Anterior).HasValue ? report.Sum(x => x.Actual).Value : 0;
+            decimal anterior = report.Sum(x => x.Anterior).HasValue ? report.Sum(x => x.Anterior).Value : 0;
             var image = ImageToBase64();
             // var templateFilePath = System.IO.Path.Combine(workingDirectory, @"Templates/PerformanceMinute.html");
             var minute = new MinuteTemplate
             {
+                NextValue = FormatNextValue(nextVal),
                 PerformancesDate = DateTime.Now.ToString(),
                 Registers = report,
                 Image = "data:image/png;base64," + image,
@@ -1685,18 +1707,18 @@ namespace asivamosffie.services
                 }
             }
 
-
-            // Datos 
-            // Leer estructura pdf
-            // Generar PDF
-            //Hash hash = Hash.FromAnonymousObject(new { Model = data });
-            //Template template = Template.Parse(liquidTemplateString);
-            //string renderedOutput = template.Render(hash);
-            // this.GetPDFMinutes();
             var plantilla = new Plantilla();
             plantilla.Contenido = htmlTemplate;
             return ConvertirPDF(plantilla);
         }
+
+
+        public string FormatNextValue(int sequence)
+        {
+            string consecutivo = (sequence).ToString("0000");
+            return consecutivo;
+        }
+
 
         public string ImageToBase64()
         {
