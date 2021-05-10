@@ -154,8 +154,9 @@
             </mat-card-header>
             <mat-card-content>
               <strong>Motivos de la novedad:</strong>
-              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo">
-                {{ motivo.nombreMotivo }},
+              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo; let i = index">
+                {{ motivo.nombreMotivo
+                }}<span *ngIf="i + 1 !== descripcion.novedadContractualDescripcionMotivo.length">,</span>
               </section>
 
               <p><strong>Resumen de la justificación de la novedad: </strong></p>

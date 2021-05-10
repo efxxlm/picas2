@@ -48,7 +48,8 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaSolicitudNovedad').touched) ||
+                    (addressForm.get('fechaSolicitudNovedad').invalid &&
+                      addressForm.get('fechaSolicitudNovedad').touched) ||
                     (addressForm.get('fechaSolicitudNovedad').invalid && estaEditando)
                   "
                 />
@@ -159,9 +160,9 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                  (addressForm.get('fechaSesionInstancia').invalid &&
-                  addressForm.get('fechaSesionInstancia').touched) ||
-                (addressForm.get('fechaSesionInstancia').invalid && estaEditando)
+                    (addressForm.get('fechaSesionInstancia').invalid &&
+                      addressForm.get('fechaSesionInstancia').touched) ||
+                    (addressForm.get('fechaSesionInstancia').invalid && estaEditando)
                   "
                 />
               </span>
@@ -191,11 +192,12 @@
                   formControlName="tipoNovedad"
                   #tipoNovedad
                   multiple
-                  
                   (selectionChange)="changeTipoNovedad()"
                 >
-                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad"
-                  [style.display]="habilitarTipoNovedad(tnovedad)"
+                  <mat-option
+                    *ngFor="let tnovedad of tipoNovedadArray"
+                    [value]="tnovedad"
+                    [style.display]="habilitarTipoNovedad(tnovedad)"
                   >
                     {{ tnovedad.nombreTipoNovedad }}
                   </mat-option>
