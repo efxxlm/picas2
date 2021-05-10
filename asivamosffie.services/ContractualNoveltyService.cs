@@ -104,7 +104,8 @@ namespace asivamosffie.services
                     {
                         if (
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión ||
-                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga ||
+                                //descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio
                             )
                         {
@@ -1345,7 +1346,12 @@ namespace asivamosffie.services
                             novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_aprobacion;
                             break;
                         }
-
+                    // devuelta
+                    case "3":
+                        {
+                            novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_tramite;
+                            break;
+                        }
                 }
 
 
@@ -2166,7 +2172,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                //EnviarNotificacionDevolucion(novedadContractual);
+                EnviarNotificacionDevolucion(novedadContractual);
 
                 return respuesta = new Respuesta
                 {
@@ -2750,16 +2756,31 @@ namespace asivamosffie.services
         {
             bool? esCompleto = true;
 
-            if (
-                RegistrocompletoRevisionJuridica(pNovedadContractual) == null ||
-                RegistrocompletoRevisionJuridica(pNovedadContractual) == false ||
-                RegistrocompletoFirmas(pNovedadContractual) == null ||
-                RegistrocompletoFirmas(pNovedadContractual) == false ||
-                RegistrocompletoDetallar(pNovedadContractual) == null ||
-                RegistrocompletoDetallar(pNovedadContractual) == false
-                )
+            if (pNovedadContractual.EstadoProcesoCodigo == "1")
             {
-                esCompleto = false;
+                if (RegistrocompletoRevisionJuridica(pNovedadContractual) == null ||
+                    RegistrocompletoRevisionJuridica(pNovedadContractual) == false ||
+                    RegistrocompletoFirmas(pNovedadContractual) == null ||
+                    RegistrocompletoFirmas(pNovedadContractual) == false ||
+                    RegistrocompletoDetallar(pNovedadContractual) == null ||
+                    RegistrocompletoDetallar(pNovedadContractual) == false
+                    )
+                {
+                    esCompleto = false;
+                }
+            }
+            else
+            {
+                if (RegistrocompletoRevisionJuridica(pNovedadContractual) == null ||
+                    RegistrocompletoRevisionJuridica(pNovedadContractual) == false ||
+                    //RegistrocompletoFirmas(pNovedadContractual) == null ||
+                    //RegistrocompletoFirmas(pNovedadContractual) == false ||
+                    RegistrocompletoDetallar(pNovedadContractual) == null ||
+                    RegistrocompletoDetallar(pNovedadContractual) == false
+                    )
+                                {
+                                    esCompleto = false;
+                                }
             }
 
             return esCompleto;
