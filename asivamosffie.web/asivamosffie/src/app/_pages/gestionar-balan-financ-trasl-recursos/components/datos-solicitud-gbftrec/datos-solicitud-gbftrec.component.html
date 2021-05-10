@@ -1,43 +1,39 @@
-<mat-card class="shipping-card var-main-gris">
-    <mat-card-content align="left">
-        <p><strong>Código SIFI: </strong><em>357233</em></p>
-        <p><strong>Coordinación responsable: </strong><em>Andina</em></p>
-        <p><strong>Grupo de contrato: </strong><em>Grupo 1</em></p>
-        <p><strong>Tipo de contrato: </strong><em>Obra</em></p>
-        <p><strong>Valor de la factura: </strong><em>$15.000.000</em></p>
-    </mat-card-content>
-</mat-card>
-<div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mr-table">
-
-        <ng-container matColumnDef="llaveMen">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.llaveMen }}</b>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="tipoIntervencion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.tipoIntervencion }}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="departamento">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.departamento }} </td>
-        </ng-container>
-        <ng-container matColumnDef="municipio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text">{{ element.municipio }} </td>
-        </ng-container>
-        <ng-container matColumnDef="institucionEducativa">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text">{{ element.institucionEducativa }}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="sede">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
-            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.sede }} </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-</div>
+<section *ngIf="solicitudPago !== undefined">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><b>Código SIFI:</b> <i>357233</i></p>
+            <p><strong>Tipo de contrato: </strong><em> {{ getTipoSolicitudContrato( solicitudPago.tipoSolicitudCodigo ) }} </em></p>
+            <p><strong>Valor de la factura: </strong><em> {{ valorTotalFactura | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="table-responsive tabla-gris">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="llaveMen">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="tipoIntervencion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+            </ng-container>
+            <ng-container matColumnDef="departamento">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+            </ng-container>
+            <ng-container matColumnDef="municipio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+            </ng-container>
+            <ng-container matColumnDef="institucionEducativa">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+            </ng-container>
+            <ng-container matColumnDef="sede">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</section>

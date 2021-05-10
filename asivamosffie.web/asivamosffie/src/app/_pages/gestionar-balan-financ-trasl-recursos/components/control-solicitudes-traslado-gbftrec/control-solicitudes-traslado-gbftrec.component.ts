@@ -23,8 +23,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
         tipoSolicitud: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ],
-        numeroOrdenGiro: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ],
-        ordenesDeGiro: this.fb.array( [] )
+        numeroOrdenGiro: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ]
     });
     displayedColumns: string[] = [
         'tipoSolicitudGiro',
@@ -37,10 +36,6 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     ];
     dataTable: any[] = [];
 
-    get ordenesDeGiro() {
-        return this.addressForm.get( 'ordenesDeGiro' ) as FormArray;
-    }
-
     constructor(
         private fb: FormBuilder )
     { }
@@ -50,36 +45,9 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
 
     loadDataSource() {
     }
-  
-    addProject( contratacionProyectoId: number, index: number ) {
-      console.log( contratacionProyectoId, this.ordenesDeGiro.controls[ index ] );
-    }
 
     getParamsSearch() {
-        this.ordenesDeGiro.clear();
-
-        if ( this.addressForm.get( 'tipoSolicitud' ).value === null ) {
-            this.dataTable = [];
-            return;
-        } else {
-            if ( this.addressForm.get( 'tipoSolicitud' ).value.length === 0 ) {
-                this.dataTable = [];
-                this.addressForm.get( 'tipoSolicitud' ).setValue( null )
-                return;
-            }
-        }
-        if ( this.addressForm.get( 'numeroOrdenGiro' ).value === null ) {
-            this.dataTable = [];
-            return;
-        } else {
-            if ( this.addressForm.get( 'numeroOrdenGiro' ).value.length === 0 ) {
-                this.dataTable = [];
-                this.addressForm.get( 'numeroOrdenGiro' ).setValue( null )
-                return;
-            }
-        }
-
-        if ( this.addressForm.get( 'tipoSolicitud' ).value !== null && this.addressForm.get( 'numeroOrdenGiro' ).value !== null ) {
+        if ( this.addressForm.get( 'tipoSolicitud' ).value !== null || this.addressForm.get( 'numeroOrdenGiro' ).value !== null ) {
             this.dataTable = [];
 
             this.dataTable.push(
@@ -97,17 +65,17 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
                     fechaAprobacionFiduciaria: new Date(),
                     fechaPagoFiduciaria: new Date(),
                     numeroOrdendeGiro: 'ODG_Obra_326',
-                    modalidadContrato: 'Modalidad 1',
-                    numeroContrato: 'N801801',
+                    modalidadContrato: 'Modalidad 2',
+                    numeroContrato: 'N801802',
                     contratacionProyectoId: Math.round( Math.random() * 100 )
                 },
                 {
                     tipoSolicitudGiro: 'Obra',
                     fechaAprobacionFiduciaria: new Date(),
                     fechaPagoFiduciaria: new Date(),
-                    numeroOrdendeGiro: 'ODG_Obra_326',
-                    modalidadContrato: 'Modalidad 1',
-                    numeroContrato: 'N801801',
+                    numeroOrdendeGiro: 'ODG_Obra_327',
+                    modalidadContrato: 'Modalidad 3',
+                    numeroContrato: 'N801803',
                     contratacionProyectoId: Math.round( Math.random() * 100 )
                 }
             )

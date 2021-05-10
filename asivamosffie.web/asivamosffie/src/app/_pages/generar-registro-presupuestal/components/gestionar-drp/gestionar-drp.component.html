@@ -39,9 +39,11 @@
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
             </p>
-            <p *ngIf="detailavailabilityBudget?.novedadContractual">
+            <div *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Detalle de la modificación:</strong>
-                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].resumenJustificacion}}
+                <div [innerHTML]="detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].resumenJustificacion"></div>
+            </div>
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
             </p>
 
             <div  *ngIf="detailavailabilityBudget?.aportantes.length>0">

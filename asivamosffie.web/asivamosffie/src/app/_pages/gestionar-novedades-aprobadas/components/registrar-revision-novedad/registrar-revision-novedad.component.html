@@ -39,6 +39,21 @@
               >
                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaEnvioGestionContractual').invalid &&
+                      addressForm.get('fechaEnvioGestionContractual').touched) ||
+                    (addressForm.get('fechaEnvioGestionContractual').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -67,6 +82,20 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('estadoProcesoCodigo').invalid && addressForm.get('estadoProcesoCodigo').touched) ||
+                  (addressForm.get('estadoProcesoCodigo').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -109,6 +138,21 @@
                 >
                   <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                 </button>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (addressForm.get('fechaAprobacionGestionContractual').invalid &&
+                        addressForm.get('fechaAprobacionGestionContractual').touched) ||
+                      (addressForm.get('fechaAprobacionGestionContractual').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -140,6 +184,20 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('abogadoRevisionId').invalid && addressForm.get('abogadoRevisionId').touched) ||
+                    (addressForm.get('abogadoRevisionId').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -200,7 +258,16 @@
     </span>
   </div>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="
+        addressForm.get('estadoProcesoCodigo').value == 3 &&
+        addressForm.get('observacionDevolver').invalid
+      "
+    >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

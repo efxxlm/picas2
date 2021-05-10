@@ -63,11 +63,11 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleEditarTraslado/:id',
-    component:VerdetalleeditarTrasladoGbftrecComponent
+    component: RegistrarTrasladoGbftrecComponent
   },
   {
     path: 'verDetalleTraslado/:id',
-    component:VerdetalleTrasladoGbftrecComponent
+    component: RegistrarTrasladoGbftrecComponent
   }
 ];
 @NgModule({

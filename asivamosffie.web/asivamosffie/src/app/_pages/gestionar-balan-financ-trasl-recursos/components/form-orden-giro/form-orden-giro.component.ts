@@ -15,9 +15,9 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     @Input() listaBusqueda = [];
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    idContrato = null;
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
+        resultadoBusqueda: this.fb.array( [] ),
         ordenesDeGiro: this.fb.array( [] )
     });
     displayedColumns: string[] = [
@@ -30,7 +30,11 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
         'seleccion',
     ];
 
-    get ordenesDeGiro() {
+    get resultadoBusqueda() {
+        return this.addressForm.get( 'resultadoBusqueda' ) as FormArray;
+    }
+
+    get ordenesGiro() {
         return this.addressForm.get( 'ordenesDeGiro' ) as FormArray;
     }
 
@@ -43,10 +47,10 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
 
         if ( changes.listaBusqueda.currentValue.length > 0 ) {
             listaResultado = changes.listaBusqueda.currentValue;
-            this.ordenesDeGiro.clear();
+            this.resultadoBusqueda.clear();
 
             for ( const ordenGiro of listaResultado ) {
-                this.ordenesDeGiro.push(
+                this.resultadoBusqueda.push(
                     this.fb.group(
                         {
                             tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
@@ -56,13 +60,15 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
                             modalidadContrato: [ ordenGiro.modalidadContrato ],
                             numeroContrato: [ ordenGiro.numeroContrato ],
                             contratacionProyectoId: [ ordenGiro.contratacionProyectoId ],
-                            check: [ null ]
+                            solicitudPagoId: [ 203 ],
+                            check: [ null ],
+
                         }
                     )
                 )
             }
 
-            this.dataSource = new MatTableDataSource( this.ordenesDeGiro.controls );
+            this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
@@ -86,8 +92,30 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     ngOnInit(): void {
     }
 
-    addProject( contratacionProyectoId: number, index: number ) {
-        console.log( contratacionProyectoId, this.ordenesDeGiro.controls[ index ] );
+    addProject( index: number ) {
+        if ( this.resultadoBusqueda.controls[ index ].get( 'check' ).value === true ) {
+            this.ordenesGiro.push(
+                this.fb.group(
+                    {
+                        contratacionProyectoId: [ this.resultadoBusqueda.controls[ index ].get( 'contratacionProyectoId' ).value ],
+                        solicitudPagoId: [ this.resultadoBusqueda.controls[ index ].get( 'solicitudPagoId' ).value ],
+                        numeroOrdendeGiro: [ this.resultadoBusqueda.controls[ index ].get( 'numeroOrdendeGiro' ).value ],
+                        modalidadContrato: [ this.resultadoBusqueda.controls[ index ].get( 'modalidadContrato' ).value ],
+                        numeroContrato: [ this.resultadoBusqueda.controls[ index ].get( 'numeroContrato' ).value ]
+                    }
+                )
+            )
+        }
+
+        if ( this.resultadoBusqueda.controls[ index ].get( 'check' ).value === false ) {
+            if ( this.ordenesGiro.length > 0 ) {
+                const ordenGiroIndex = this.ordenesGiro.controls.findIndex( control => control.get( 'contratacionProyectoId' ).value === this.resultadoBusqueda.controls[ index ].get( 'contratacionProyectoId' ).value );
+
+                if ( ordenGiroIndex !== -1 ) {
+                    this.ordenesGiro.removeAt( ordenGiroIndex );
+                }
+            }
+        }
     }
 
 }
