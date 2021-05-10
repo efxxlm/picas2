@@ -89,14 +89,13 @@ export class TablaSinRegistroContratoComponent implements OnInit {
   };
 
   gestionar ( tipoSolicitud: string, id: number, estadoCodigo: string ) {
-
     switch ( tipoSolicitud ) {
 
       case "Contratación":
         this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo } } );
       break;
 
-      case "Modificación contractual":
+      case "Novedad Contractual":
         this.routes.navigate( [ '/contratosModificacionesContractuales/modificacionContractual', id ] );
       break;
       default:

@@ -71,6 +71,40 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("RegistrarTramiteNovedadContractual")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarTramiteNovedadContractual([FromBody] NovedadContractual pNovedadContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pNovedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerContractsService.RegistrarTramiteNovedadContractual(pNovedadContractual);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("ChangeStateTramiteNovedad")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStateTramiteNovedad([FromQuery] int pNovedadContractualId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerContractsService.ChangeStateTramiteNovedad(pNovedadContractualId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [HttpGet]
         [Route("EnviarNotificaciones")]

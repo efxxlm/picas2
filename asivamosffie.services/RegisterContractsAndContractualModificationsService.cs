@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -35,7 +35,7 @@ namespace asivamosffie.services
                 .Where(r => !(bool)r.Eliminado
                    &&
                    ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                   || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual
+                   || (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual)
                    )
                 ).ToListAsync();
 
@@ -94,7 +94,7 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
                             break;
 
-                        case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
+                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
                             
                             NovedadContractual novedadContractual =
                                 _context.NovedadContractual
@@ -108,7 +108,7 @@ namespace asivamosffie.services
 
                             if (novedadContractual.Contrato != null)
                             {
-                                if (!string.IsNullOrEmpty(novedadContractual.Contrato.NumeroContrato))
+                                if (!string.IsNullOrEmpty(novedadContractual.NumeroOtroSi))
                                     sesionComiteSolicitud.EstaTramitado = true;
                                 else
                                     sesionComiteSolicitud.EstaTramitado = false;
@@ -128,7 +128,7 @@ namespace asivamosffie.services
                                 && r.Codigo == ConstanCodigoTipoSolicitud.Novedad_Contractual
                                 ).FirstOrDefault().Nombre;
 
-                            if (novedadContractual.Contrato.Contratacion.RegistroCompleto == null || !(bool)novedadContractual.Contrato.Contratacion.RegistroCompleto)
+                            if (novedadContractual.RegistroCompletoTramite == null || !(bool)novedadContractual.RegistroCompletoTramite)
                             {
                                 sesionComiteSolicitud.EstadoRegistro = false;
                                 sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
@@ -401,6 +401,69 @@ namespace asivamosffie.services
             return true;
         }
 
+        public async Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<NovedadContractual>()
+                        .Where(n => n.NovedadContractualId == pNovedadContractual.NovedadContractualId)
+                        .Update(n =>
+                        new NovedadContractual
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pNovedadContractual.UsuarioCreacion,
+                            NumeroOtroSi = pNovedadContractual.NumeroOtroSi,
+                            FechaEnvioFirmaContratista = pNovedadContractual.FechaEnvioFirmaContratista,
+                            FechaFirmaContratista = pNovedadContractual.FechaFirmaContratista,
+                            FechaEnvioFirmaFiduciaria = pNovedadContractual.FechaEnvioFirmaFiduciaria,
+                            FechaFirmaFiduciaria = pNovedadContractual.FechaFirmaFiduciaria,
+                            ObservacionesTramite = pNovedadContractual.ObservacionesTramite,
+                            UrlDocumentoSuscrita = pNovedadContractual.UrlDocumentoSuscrita,
+                            EstadoCodigo = !string.IsNullOrEmpty(pNovedadContractual.NumeroOtroSi) && pNovedadContractual.FechaEnvioFirmaContratista.HasValue ? ConstanCodigoEstadoNovedadContractual.Firmado : ConstanCodigoEstadoNovedadContractual.Enviadas_a_la_Fiduciaria,
+                            RegistroCompletoTramite = ValidarRegistroCompletoTramiteNovedad(pNovedadContractual)
+                        });
+
+
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, pNovedadContractual.UsuarioCreacion, "REGISTRAR SOLICITUD")
+                  };
+
+            }
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.Error, idAccion, pNovedadContractual.UsuarioCreacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
+        private bool ValidarRegistroCompletoTramiteNovedad(NovedadContractual pNovedadContractual)
+        {
+            if (string.IsNullOrEmpty(pNovedadContractual.NumeroOtroSi)
+                || !pNovedadContractual.FechaEnvioFirmaContratista.HasValue
+                || !pNovedadContractual.FechaFirmaContratista.HasValue
+                || !pNovedadContractual.FechaEnvioFirmaFiduciaria.HasValue
+                || !pNovedadContractual.FechaFirmaFiduciaria.HasValue
+                || string.IsNullOrEmpty(pNovedadContractual.ObservacionesTramite)
+                || string.IsNullOrEmpty(pNovedadContractual.UrlDocumentoSuscrita)
+                ) return false;
+            return true;
+        }
+
         public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
@@ -422,6 +485,46 @@ namespace asivamosffie.services
 
             _commonService.EnviarCorreo(emails, template, TemplateRecoveryPassword.Asunto);
             return blEnvioCorreo;
+        }
+
+        public async Task<Respuesta> ChangeStateTramiteNovedad(int pNovedadContractualId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Tramitar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                _context.Set<NovedadContractual>()
+                        .Where(n => n.NovedadContractualId == pNovedadContractualId)
+                        .Update(n =>
+                        new NovedadContractual
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = user,
+                            EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Registrado
+                        });
+
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, user, "REGISTRAR SOLICITUD")
+                  };
+
+            }
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.Error, idAccion, user, ex.InnerException.ToString())
+              };
+            }
         }
 
     }

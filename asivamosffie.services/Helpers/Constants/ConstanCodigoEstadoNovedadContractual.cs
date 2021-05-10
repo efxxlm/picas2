@@ -26,5 +26,8 @@
 		public const string devuelto_por_comite_fiduciario = "22";
 		public const string rechazado_por_comite_fiduciario = "23";
 		public const string Enviadas_a_la_Fiduciaria = "24";
+		public const string Firmado = "25";
+		public const string Registrado = "26";
+
 	}
 }
