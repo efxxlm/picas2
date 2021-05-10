@@ -69,7 +69,7 @@ export class TablaRegistradosComponent implements OnInit {
         this.routes.navigate( [ '/procesosContractuales/contratacionRegistrados', id ], { state: { estadoCodigo } } );
       break;
 
-      case "Modificación contractual":
+      case "Novedad Contractual":
         this.routes.navigate( [ '/procesosContractuales', id ] );
       break;
       default:

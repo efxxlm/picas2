@@ -169,7 +169,8 @@ export interface ComponenteFuenteNovedad {
         fuenteFinanciacionId?: number,
         eliminado?: boolean,
         
-        componenteUsoNovedad?: ComponenteUsoNovedad[]
+        componenteUsoNovedad?: ComponenteUsoNovedad[],
+        fuenteFinanciacion?: any,
 }
 
 export interface ComponenteUsoNovedad {
