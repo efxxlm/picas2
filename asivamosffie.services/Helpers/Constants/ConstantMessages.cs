@@ -860,6 +860,10 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorEnviarCorreo = "107";
     }
 
+    public class ConstMessagesPayments
+    {
+        public const string ErrorDescargarArchivo = "501";
+    }
 
     //public class ConstantMessagesJudicialDefense
     //{

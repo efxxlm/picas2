@@ -117,12 +117,29 @@ namespace asivamosffie.services
                     }                    
                     index++;
                 }
-                if(errors != null)
-                foreach (var item in errors)
+                if (errors != null)
                 {
-                    worksheet.Cells[item.Row, item.Column].AddComment(item.Error, "Admin");
-                    worksheet.Cells[item.Row, item.Column].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    worksheet.Cells[item.Row, item.Column].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                    var errorGroup = errors.GroupBy(x => new { x.Column, x.Row }).Select(err => new {
+                        err.Key.Column,
+                        err.Key.Row,
+                        Error = string.Join(",", err.Select(i => i.Error))
+                    }).ToList<dynamic>();
+
+                    foreach (var item in errorGroup)
+                    {
+                        ExcelComment? existingError = null;
+                        try
+                        {
+                            existingError = worksheet.Cells[item.Row, item.Column].Comment;
+                        }
+                        catch (Exception ex) { }
+                        if (existingError == null)
+                        {
+                            worksheet.Cells[item.Row, item.Column].AddComment(item.Error, "Admin");
+                        }
+                        worksheet.Cells[item.Row, item.Column].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[item.Row, item.Column].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                    }
                 }
 
                 var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + listType.Name + ".xlsx");
@@ -462,7 +479,7 @@ namespace asivamosffie.services
 
                 if (ordenGiro == null || valorNeto == null)
                 {
-                    errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, no tiene una Solicitud de Pago válida"));
+                    errors.Add(new ExcelError(indexWorkSheetRow, 2, $"El orden de giro  número{cellValue}, no tiene una Orden de Giro válida"));
                 }
                 else
                 {
@@ -544,7 +561,7 @@ namespace asivamosffie.services
 
                 if(solicitudQuery == null || taxDecimal != valorTotalDescuentos)
                 {
-                    errors.Add(new ExcelError(indexWorkSheetRow, 3, "Por favor ingresa el valor de Impuesto que coincida con la Solicitud de Pago almacenada"));
+                    errors.Add(new ExcelError(indexWorkSheetRow, 4, "Por favor ingresa el valor de Impuesto que coincida con la Orden de Giro almacenada"));
                 }
                 
             }
@@ -776,12 +793,28 @@ namespace asivamosffie.services
             {
                 response.IsException = true;
                 response.IsSuccessful = true;
-                response.Code = GeneralCodes.OperacionExitosa;
+                response.Code = ConstMessagesPayments.ErrorDescargarArchivo;
                 response.Data = jsonString;
                 response.Message = await SaveAuditAction(_userName, actionId,
                                         enumeratorMenu.RegistrarPagosRendimientos,
-                                        GeneralCodes.Error,
+                                        response.Code,
                                          ex.SubstringValid(_500));
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                response.IsException = true;
+                response.IsSuccessful = true;
+                response.Code = ConstMessagesPayments.ErrorDescargarArchivo;
+                response.Data = jsonString;
+                response.Message = await SaveAuditAction(_userName, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        response.Code,
+                                         ex.SubstringValid(_500));
+
+                return response;
+
             }
 
             response.Data = filePath;
