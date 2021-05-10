@@ -186,10 +186,9 @@ namespace asivamosffie.services
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
-
-                        listaNovedadesActivas
-                                    .Where(x => x.ContratoId == contrato.ContratoId)
-                                    .Count() == 0
+                        (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ?
+                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0 :
+                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0)
                     )
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
