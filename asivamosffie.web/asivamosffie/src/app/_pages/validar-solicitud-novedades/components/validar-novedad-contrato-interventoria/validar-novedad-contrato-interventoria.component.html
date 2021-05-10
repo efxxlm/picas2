@@ -169,7 +169,15 @@
 
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
               <section class="text-justify" [innerHTML]="descripcion.resumenJustificacion"></section>
-              <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
+              <mat-card-title
+                class="header-card--text sub-text"
+                *ngIf="
+                  descripcion.tipoNovedadCodigo == '1' ||
+                  descripcion.tipoNovedadCodigo == '2' ||
+                  descripcion.tipoNovedadCodigo == '4' ||
+                  descripcion.tipoNovedadCodigo == '6'
+                "
+              >
                 Plazo solicitado
               </mat-card-title>
               <p *ngIf="descripcion.tipoNovedadCodigo == '4'">
@@ -179,13 +187,17 @@
                 <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
               </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
-                <strong>Fecha de inicio de la suspensión: </strong>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '1'">Fecha de inicio de la suspensión: </strong>
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '2'">Fecha de inicio de la prórroga a las suspensión: </strong>
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '6'">Fecha de inicio del reinicio: </strong>
                 {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
               </p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
-                <strong>Fecha final de la suspensión: </strong>
-                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '1'">Fecha final de la suspensión: </strong>
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '2'">Fecha final de la prórroga a las suspensión: </strong>
+                <strong *ngIf="descripcion.tipoNovedadCodigo == '6'">Fecha final del reinicio: </strong>
+                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} 
               </p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'">
