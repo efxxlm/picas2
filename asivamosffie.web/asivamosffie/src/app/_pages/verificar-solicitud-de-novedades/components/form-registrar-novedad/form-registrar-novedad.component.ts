@@ -219,6 +219,16 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     });
   }
 
+  openDialogReload(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+        location.reload();
+    });
+  }
+
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
@@ -298,9 +308,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
     this.contractualNoveltyService.createEditNovedadContractual(novedad)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
         this.router.navigate(["/verificarSolicitudDeNovedades/registrarSolicitudInterventoria",respuesta.data.novedadContractualDescripcion[0].novedadContractualId]);
-        location.reload();
+        this.openDialogReload('', respuesta.message);
       });
 
       
