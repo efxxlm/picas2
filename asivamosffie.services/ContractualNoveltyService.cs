@@ -170,6 +170,7 @@ namespace asivamosffie.services
                                                                                     ) &&
                                                                                x.Eliminado != true)
                                                                         .ToList();*/
+
             List<NovedadContractual> listaNovedadesActivas = new List<NovedadContractual>();
 
             List <NovedadContractual> listaNovedadesActivasTemp = _context.NovedadContractual
@@ -215,10 +216,13 @@ namespace asivamosffie.services
 
             foreach (var contrato in contratos)
             {
+                int existeNovedad = _context.NovedadContractual.Where(x=> x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
+
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
-                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0
+                        (existeNovedad > 0 ? listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0 :
+                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0)
                     )
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
