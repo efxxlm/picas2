@@ -140,6 +140,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
         this.contractualNoveltyService.GetAportanteByContratacion(this.novedad.contrato.contratacionId),
         this.commonService.listaTipoAportante(),
         this.commonService.listaDepartamentos(),
+        this.commonService.listaAportanteByTipoAportanteId(Number(this.tipoAportante.ET)),
+        this.commonService.listaAportanteByTipoAportanteId(Number(this.tipoAportante.FFIE)),
+        this.commonService.listaAportanteByTipoAportanteId(Number(this.tipoAportante.Tercero))
         //this.projectContractingService.getContratacionProyectoById(id),
       ])
 
@@ -154,6 +157,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.tipoAportantes = response[5];
           this.listaTipoAportante = response[5];
           this.listaDepartamentos = response[6];
+          this.listaTotalNuevas += response[7].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+          this.listaTotalNuevas += response[8].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+          this.listaTotalNuevas += response[9].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
           
           setTimeout(() => {
 

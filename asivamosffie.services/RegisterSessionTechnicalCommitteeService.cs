@@ -6820,7 +6820,7 @@ namespace asivamosffie.services
                 {
                     string motivoString = string.Empty;
 
-                    if (item.Eliminado == null || novedadContractual.Eliminado == false)
+                    if (item.Eliminado == null || item.Eliminado == false)
                     {
                         string codigotipoNovedadTemp = item.TipoNovedadCodigo;
                         string tipoNovedadTemp = ListaParametricas.Where(r => r.Codigo == item.TipoNovedadCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).FirstOrDefault().Nombre;
@@ -7301,7 +7301,7 @@ namespace asivamosffie.services
                     List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).ToList();
                     foreach (var item in novedadContractualDescripcion)
                     {
-                        if (item.Eliminado == null || novedadContractual.Eliminado == false)
+                        if (item.Eliminado == null || item.Eliminado == false)
                         {
                             string codigotipoNovedadTemp = item.TipoNovedadCodigo;
                             string tipoNovedadTemp = ListaParametricas.Where(r => r.Codigo == item.TipoNovedadCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).FirstOrDefault().Nombre;
