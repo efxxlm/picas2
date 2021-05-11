@@ -98,18 +98,17 @@ namespace asivamosffie.services
                                                                         .Include(x => x.NovedadContractualObservaciones)
                                                                         .Include(x => x.NovedadContractualDescripcion)
                                                                         .FirstOrDefault();
-                    novedad.vaComite = true;
+                    novedad.vaComite = false;
 
                     foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true))
                     {
                         if (
-                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión ||
-                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga ||
-                                //descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión ||
-                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Adición ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión
                             )
                         {
-                            novedad.vaComite = false;
+                            novedad.vaComite = true;
                         }
 
                     }
