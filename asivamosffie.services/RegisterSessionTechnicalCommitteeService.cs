@@ -6579,8 +6579,8 @@ namespace asivamosffie.services
                                 if (codigotipoNovedadTemp == ConstanTiposNovedades.Prórroga)
                                 {
                                     existeProrroga = true;
-                                    NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? item.PlazoAdicionalDias.ToString() : "");
-                                    NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? item.PlazoAdicionalMeses.ToString() : "");
+                                    NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? Math.Round((decimal)item.PlazoAdicionalDias, 0).ToString() : "");
+                                    NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? Math.Round((decimal)item.PlazoAdicionalMeses, 0).ToString() : "");
                                 }
 
                                 if (codigotipoNovedadTemp == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
@@ -6929,8 +6929,8 @@ namespace asivamosffie.services
                         if (codigotipoNovedadTemp == ConstanTiposNovedades.Prórroga)
                         {
                             existeProrrogaDetalle = true;
-                            NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? item.PlazoAdicionalDias.ToString() : "");
-                            NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? item.PlazoAdicionalMeses.ToString() : "");
+                            NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? Math.Round((decimal)item.PlazoAdicionalDias, 0).ToString() : "");
+                            NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? Math.Round((decimal)item.PlazoAdicionalMeses, 0).ToString() : "");
                         }
 
                         if (codigotipoNovedadTemp == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
@@ -7391,8 +7391,8 @@ namespace asivamosffie.services
                             if (codigotipoNovedadTemp == ConstanTiposNovedades.Prórroga)
                             {
                                 existeProrroga = true;
-                                NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? item.PlazoAdicionalDias.ToString() : "");
-                                NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? item.PlazoAdicionalMeses.ToString() : "");
+                                NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_DIAS]", item.PlazoAdicionalDias != null ? Math.Round((decimal)item.PlazoAdicionalDias,0).ToString() : "");
+                                NovedadesProrroga = NovedadesProrroga.Replace("[TP_PLAZO_MESES]", item.PlazoAdicionalMeses != null ? Math.Round((decimal)item.PlazoAdicionalMeses,0).ToString() : "");
                             }
 
                             if (codigotipoNovedadTemp == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
@@ -7520,7 +7520,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
-                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratacion != null ? contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + " Días " + contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses  + " Meses" : " ");
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratacion != null ? contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses  + " Meses " + contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + " Días ": " ");
                             break;
 
                         //
