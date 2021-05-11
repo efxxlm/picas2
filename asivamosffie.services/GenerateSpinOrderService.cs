@@ -482,7 +482,7 @@ namespace asivamosffie.services
                     OrdenGiroDetalleTerceroCausacionDescuento.FechaCreacion = DateTime.Now;
                     OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
                     OrdenGiroDetalleTerceroCausacionDescuento.AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId;
-                    OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId;
+                    OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo = OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo;
                     OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
 
                     _context.OrdenGiroDetalleTerceroCausacionDescuento.Add(OrdenGiroDetalleTerceroCausacionDescuento);
@@ -918,8 +918,7 @@ namespace asivamosffie.services
                     _context.VAportanteFuenteUso
                     .Where(r => r.FuenteRecursosCodigo == Fuentes.TipoRecursosCodigo
                         && r.CofinanciacionAportanteId == Fuentes.AportanteId
-                        && r.ContratoId == Fuentes.ContratoId
-
+                        && r.ContratoId == Fuentes.ContratoId 
                         )
                     .Sum(v => v.ValorUso);
 
@@ -1116,7 +1115,7 @@ namespace asivamosffie.services
             if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
                || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
-               || ordenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId == 0
+               ||  string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                 ) return false;
 
