@@ -151,21 +151,6 @@ export class TerceroCausacionComponent implements OnInit {
         if ( this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length > 0 ) {
             this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
-
-        if ( this.solicitudPago.ordenGiro !== undefined ) {
-            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
-                if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
-                    this.ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
-                    const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.filter( ordenGiroDetalleDescuentoTecnica => ordenGiroDetalleDescuentoTecnica.esPreconstruccion === this.esPreconstruccion )
-
-                    if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
-                        ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnica => {
-                            descuentoTecnica.ordenGiroDetalleDescuentoTecnicaAportante.forEach( ordenGiroDetalleDescuentoTecnicaAportante => this.valorNetoGiro -= ordenGiroDetalleDescuentoTecnicaAportante.valorDescuento )
-                        } )
-                    }
-                }
-            }
-        }
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
@@ -227,6 +212,8 @@ export class TerceroCausacionComponent implements OnInit {
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
+                                            this.valorNetoGiro -= descuento.valorDescuento;
+
                                             listaDescuentos.push(
                                                 this.fb.group(
                                                     {

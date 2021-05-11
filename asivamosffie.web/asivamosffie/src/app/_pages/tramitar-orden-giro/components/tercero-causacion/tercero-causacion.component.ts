@@ -212,6 +212,8 @@ export class TerceroCausacionComponent implements OnInit {
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
+                                            this.valorNetoGiro -= descuento.valorDescuento;
+
                                             listaDescuentos.push(
                                                 this.fb.group(
                                                     {
