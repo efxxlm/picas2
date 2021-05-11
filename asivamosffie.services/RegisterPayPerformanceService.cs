@@ -506,7 +506,7 @@ namespace asivamosffie.services
 
             var dateObje = worksheet.Cells[indexWorkSheetRow, 2].Value;
             DateTime guideDate = new DateTime();
-            var cellType = worksheet.Cells[indexWorkSheetRow, 2].Value.GetType().Name;
+            var cellType = worksheet.Cells[indexWorkSheetRow, 2].Value?.GetType().Name;
             if (cellType == "DateTime")
             {
                 var dtFormat = "dd/MM/yyyy";
@@ -523,7 +523,7 @@ namespace asivamosffie.services
 
             string dateCellValue = worksheet.Cells[indexWorkSheetRow, 2].Text;
 
-            if (dateCellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double")
+            if (dateObje != null && (dateCellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double"))
             {
                 carguePagosRendimiento.Add("Fecha de pago", guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
                 // guideDate = dateObje;
@@ -549,18 +549,32 @@ namespace asivamosffie.services
             }
             else if (ordenGiro != null)
             {
-                var solicitudQuery = await (from solicitud in _context.SolicitudPago
-                                            from sRegistroSolPago in solicitud.SolicitudPagoRegistrarSolicitudPago
-                                            from sFase in sRegistroSolPago.SolicitudPagoFase
-                                            from factura in sFase.SolicitudPagoFaseFactura
-                                            from descuento in factura.SolicitudPagoFaseFacturaDescuento
-                                            where solicitud.OrdenGiroId == ordenGiro.OrdenGiroId &&
-                                            sFase.EsPreconstruccion == false
-                                            select descuento).AsNoTracking().ToListAsync();
+                               
+                var queryOrden = (from orden in _context.OrdenGiro.Where(x => x.OrdenGiroId == 26)
+                                  join detalle in _context.OrdenGiroDetalle.DefaultIfEmpty() on orden.OrdenGiroId equals detalle.OrdenGiroId
+                                  join tecnica in _context.OrdenGiroDetalleDescuentoTecnica.DefaultIfEmpty() on detalle.OrdenGiroDetalleId equals tecnica.OrdenGiroDetalleId
+                                  join aportante in _context.OrdenGiroDetalleDescuentoTecnicaAportante.DefaultIfEmpty() on tecnica.OrdenGiroDetalleDescuentoTecnicaId equals aportante.OrdenGiroDetalleDescuentoTecnicaId
+                                  join causacion in _context.OrdenGiroDetalleTerceroCausacion.DefaultIfEmpty() on detalle.OrdenGiroDetalleId equals causacion.OrdenGiroDetalleId
+                                  join descuento in _context.OrdenGiroDetalleTerceroCausacionDescuento.DefaultIfEmpty() on causacion.OrdenGiroDetalleTerceroCausacionId equals descuento.OrdenGiroDetalleTerceroCausacionId
+                                  group new { descuento, aportante } by new
+                                  {
+                                      orden.OrdenGiroId,
+                                      orden.NumeroSolicitud,
+                                      causacion.ValorNetoGiro
+                                  } into g
+                                  select new
+                                  {
+                                      g.Key.OrdenGiroId,
+                                      g.Key.NumeroSolicitud,
+                                      DescuentoTecnica = g.Sum(x => x.aportante.ValorDescuento),
+                                      DescuentoCausacion = g.Sum(x => x.descuento.ValorDescuento),
+                                  }).FirstOrDefault();
+               
+              
 
-                var valorTotalDescuentos = solicitudQuery.Sum(x => x.ValorDescuento);
+                var valorTotalDescuentos = queryOrden.DescuentoTecnica + queryOrden.DescuentoCausacion;
 
-                if(solicitudQuery == null || taxDecimal != valorTotalDescuentos)
+                if(queryOrden == null || taxDecimal != valorTotalDescuentos)
                 {
                     errors.Add(new ExcelError(indexWorkSheetRow, 4, "Por favor ingresa el valor de Impuesto que coincida con la Orden de Giro almacenada"));
                 }
@@ -629,7 +643,7 @@ namespace asivamosffie.services
 
             var dateObje = worksheet.Cells[indexRow, 1].Value;
             DateTime guideDate = new DateTime();
-            var cellType = worksheet.Cells[indexRow, 1].Value.GetType().Name;
+            var cellType = worksheet.Cells[indexRow, 1].Value?.GetType().Name;
             if (cellType ==  "DateTime")
             {
                 var dtFormat = "dd/MM/yyyy";
@@ -651,7 +665,7 @@ namespace asivamosffie.services
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
 
-                if (rowFormat.Value == "Date" && ( cellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double") )
+                if (rowFormat.Value == "Date" && (dateObje != null && ( cellValue != dateObje.ToString() || cellType == "DateTime" || cellType == "Double")) )
                 {
                     carguePagosRendimiento.Add(rowFormat.Key, guideDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
                    // guideDate = dateObje;
