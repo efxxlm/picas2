@@ -36,7 +36,7 @@
                                     <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
                                     <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
                                     <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </p>
-                                    <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                                    <p><b>Valor facturado por el concepto para el aportante, después del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
                                 </div>
 
                                 <div>
@@ -58,7 +58,7 @@
                                                         </mat-card-title>
                                                         <div [formGroup]="discount">
                                                             <p><b>Tipo de descuento: </b> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </p>
-                                                            <p><b>Valor del descuento: </b> {{ discount.get( 'tipoDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                            <p><b>Valor del descuento: </b> {{ discount.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -204,11 +204,11 @@
                                                             <label  class="label-left"
                                                                     for="valorDescuento"
                                                                     [ngClass]="{ 'color-secondaryColor': (aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando) }">
-                                                                    Valor facturado por el concepto para el aportante
+                                                                    Valor facturado por el concepto para el aportante, después del descuento
                                                             </label>
                                                         </div>
-                                                        <div class="col d-flex">
-                                                            <mat-form-field class="full-width">
+                                                        <div class="col d-flex" style="width: 20%;">
+                                                            <mat-form-field style="width: 73%;">
                                                                 <input  matInput
                                                                         #valorDescuento
                                                                         min="0"

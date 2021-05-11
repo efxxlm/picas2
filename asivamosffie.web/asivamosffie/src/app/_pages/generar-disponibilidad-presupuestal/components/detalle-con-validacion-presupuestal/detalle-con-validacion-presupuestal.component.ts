@@ -94,4 +94,12 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
 
   }
 
+  getTotalProyecto( aportantes: any[] ) {
+    let totalProyecto = 0;
+
+    aportantes.forEach( aportante => totalProyecto += aportante.valorAportanteAlProyecto )
+
+    return totalProyecto;
+  }
+
 }

@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
             FuenteFinanciacion = new HashSet<FuenteFinanciacion>();
             NovedadContractualAportante = new HashSet<NovedadContractualAportante>();
             OrdenGiroDetalleTerceroCausacionAportante = new HashSet<OrdenGiroDetalleTerceroCausacionAportante>();
+            OrdenGiroDetalleTerceroCausacionDescuento = new HashSet<OrdenGiroDetalleTerceroCausacionDescuento>();
             ProyectoAportante = new HashSet<ProyectoAportante>();
             RegistroPresupuestal = new HashSet<RegistroPresupuestal>();
         }
@@ -45,6 +46,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<FuenteFinanciacion> FuenteFinanciacion { get; set; }
         public virtual ICollection<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
+        public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
         public virtual ICollection<RegistroPresupuestal> RegistroPresupuestal { get; set; }
     }

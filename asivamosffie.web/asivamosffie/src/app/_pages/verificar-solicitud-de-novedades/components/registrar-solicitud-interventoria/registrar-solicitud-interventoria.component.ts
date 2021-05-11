@@ -7,6 +7,7 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-solicitud-interventoria',
@@ -26,11 +27,12 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     { name: 'Proyecto', value: false }
   ];
   estaEditando = false;
+  detalleId: any;
 
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
     private activatedRoute: ActivatedRoute,
-
+    private router: Router
     ) 
     
   { 
@@ -46,6 +48,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   ngOnInit() {
 
     this.activatedRoute.params.subscribe( parametros => {
+      this.detalleId = parametros.id;
       this.contractualNoveltyService.getNovedadContractualById( parametros.id )
         .subscribe( novedad => {
           console.log( novedad );
@@ -98,6 +101,14 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     
   }
 
+  guardar() {
+    if (this.detalleId !== 0) {
+      this.ngOnInit();
+    } else {
+      this.router.navigate(["/verificarSolicitudDeNovedades/registrarSolicitudInterventoria",0])
+    }
+  }
+
   private _filter(value: string): string[] {
     console.log( typeof value )
     const filterValue = value.toLowerCase();
@@ -108,6 +119,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   public seleccionAutocomplete(numeroContrato)
   {
     this.numeroContratoSeleccionado=numeroContrato;
+    console.warn(this.numeroContratoSeleccionado);
   }
 
   public changeNovedadAplicada()

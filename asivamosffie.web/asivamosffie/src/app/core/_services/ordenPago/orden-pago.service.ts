@@ -53,6 +53,10 @@ export class OrdenPagoService {
         return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleDescuentoTecnicaAportante?pOrdenGiroDetalleDescuentoTecnicaAportanteId=${ pOrdenGiroDetalleDescuentoTecnicaAportanteId }`, '' );
     }
 
+    deleteOrdenGiroDetalleTerceroCausacionAportante( pOrdenGiroDetalleTerceroCausacionAportanteId: number ) {
+        return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleTerceroCausacionAportante?pOrdenGiroDetalleTerceroCausacionAportanteId=${ pOrdenGiroDetalleTerceroCausacionAportanteId }`, '' );
+    }
+
     async getAportantes( solicitudPago: any ) {
         if ( solicitudPago !== undefined ) {
             // constantes y variables

@@ -32,9 +32,57 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         #endregion
-     
+
 
         #region Create 
+        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionAportanteId == pOrdenGiroDetalleTerceroCausacionAportanteId)
+                        .Update(o => new OrdenGiroDetalleTerceroCausacionAportante
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+
+        }
+
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -49,7 +97,6 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now
                         });
-
 
                 return new Respuesta
                 {
@@ -434,6 +481,8 @@ namespace asivamosffie.services
                     OrdenGiroDetalleTerceroCausacionDescuento.UsuarioCreacion = pUsuarioCreacion;
                     OrdenGiroDetalleTerceroCausacionDescuento.FechaCreacion = DateTime.Now;
                     OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
+                    OrdenGiroDetalleTerceroCausacionDescuento.AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId;
+                    OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId;
                     OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
 
                     _context.OrdenGiroDetalleTerceroCausacionDescuento.Add(OrdenGiroDetalleTerceroCausacionDescuento);
@@ -448,10 +497,7 @@ namespace asivamosffie.services
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
 
-                            }); ;
-
-
-
+                            });  
                 }
             }
         }
@@ -831,6 +877,14 @@ namespace asivamosffie.services
                         if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
                             OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
                     }
+
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+                        if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                            OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).ToList();
+
+                    }
+
                 }
             }
             try
@@ -863,7 +917,10 @@ namespace asivamosffie.services
                 decimal ValorDrpXaportante =
                     _context.VAportanteFuenteUso
                     .Where(r => r.FuenteRecursosCodigo == Fuentes.TipoRecursosCodigo
-                        && r.CofinanciacionAportanteId == Fuentes.AportanteId)
+                        && r.CofinanciacionAportanteId == Fuentes.AportanteId
+                        && r.ContratoId == Fuentes.ContratoId
+
+                        )
                     .Sum(v => v.ValorUso);
 
                 string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
@@ -1058,6 +1115,8 @@ namespace asivamosffie.services
         {
             if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId == 0
                || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                 ) return false;
 

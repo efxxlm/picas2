@@ -71,6 +71,7 @@ export class GestionarDrpComponent implements OnInit {
 
         if (listas.length > 0) {
           this.detailavailabilityBudget = listas[0];
+          console.log( this.detailavailabilityBudget )
           this.detailavailabilityBudget.proyectos.forEach(element => {
             listaComponentesUsoAportante = [];
             element.aportantes.forEach(aportante => {
@@ -134,17 +135,51 @@ export class GestionarDrpComponent implements OnInit {
 
   }
   descargarDRPBoton() {
-    console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((listas: any) => {
-      console.log(listas);
-      const documento = `DRP ${this.detailavailabilityBudget.id}.pdf`;
-      const text = documento,
-        blob = new Blob([listas], { type: 'application/pdf' }),
-        anchor = document.createElement('a');
-      anchor.download = documento;
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-      anchor.click();
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((response: any) => {
+      console.log(response);
+
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId)
+      .subscribe(listas => {
+        let listaComponentesUsoAportante=[];
+
+        if (listas.length > 0) {
+          this.detailavailabilityBudget = listas[0];
+          console.log( this.detailavailabilityBudget )
+          this.detailavailabilityBudget.proyectos.forEach(element => {
+            listaComponentesUsoAportante = [];
+            element.aportantes.forEach(aportante => {
+
+              this.listacomponentes = [];
+              // filtro por aportante
+              element.componenteGrilla.filter( r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId).forEach(element2 => {
+                this.listacomponentes.push({
+                  componente: element2.componente, uso: [
+                    { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
+                  ], valorUso: [
+                    { valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
+                  ], valorTotal: element2.valorTotal,
+                  fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
+                });
+              });
+              //dataSource.push(new MatTableDataSource(this.listacomponentes));
+              listaComponentesUsoAportante.push( new MatTableDataSource(this.listacomponentes) )
+            });
+            element['listaComponentesUsoAportante'] = listaComponentesUsoAportante
+          });
+
+          const documento = `${this.detailavailabilityBudget.numeroDRP}.pdf`;
+          const text = documento,
+            blob = new Blob([response], { type: 'application/pdf' }),
+            anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+        }
+        else {
+          this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
+        }
+      });
     });
 
   }

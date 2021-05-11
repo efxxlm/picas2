@@ -67,7 +67,7 @@
           </mat-card>
         </div>
 
-        <div align="left" style="margin-top: 2em;">
+        <div align="left" style="margin-top: 2em;" *ngIf="estadoCodigo === estadoCodigos.firmado">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>

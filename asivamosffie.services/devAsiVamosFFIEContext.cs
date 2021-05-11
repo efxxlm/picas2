@@ -4537,6 +4537,16 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 0)");
 
+                entity.HasOne(d => d.Aportante)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .HasForeignKey(d => d.AportanteId)
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionDescuento_AportanteId");
+
+                entity.HasOne(d => d.FuenteFinanciacion)
+                    .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .HasForeignKey(d => d.FuenteFinanciacionId)
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionDescuento_FuenteFinanciacionId");
+
                 entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
                     .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionId)
