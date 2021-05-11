@@ -481,6 +481,8 @@ namespace asivamosffie.services
                     OrdenGiroDetalleTerceroCausacionDescuento.UsuarioCreacion = pUsuarioCreacion;
                     OrdenGiroDetalleTerceroCausacionDescuento.FechaCreacion = DateTime.Now;
                     OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
+                    OrdenGiroDetalleTerceroCausacionDescuento.AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId;
+                    OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId;
                     OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
 
                     _context.OrdenGiroDetalleTerceroCausacionDescuento.Add(OrdenGiroDetalleTerceroCausacionDescuento);
@@ -495,10 +497,7 @@ namespace asivamosffie.services
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
 
-                            }); ;
-
-
-
+                            });  
                 }
             }
         }
@@ -1116,6 +1115,8 @@ namespace asivamosffie.services
         {
             if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId == 0
                || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
                 ) return false;
 
