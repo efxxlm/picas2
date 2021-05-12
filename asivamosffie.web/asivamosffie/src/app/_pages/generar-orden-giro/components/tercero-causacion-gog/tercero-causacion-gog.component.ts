@@ -166,6 +166,32 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
 
+                    if ( this.solicitudPago.tablaUsoFuenteAportante !== undefined ) {
+                        if ( this.solicitudPago.tablaUsoFuenteAportante.usos !== undefined ) {
+                            if ( this.solicitudPago.tablaUsoFuenteAportante.usos.length > 0 ) {
+                                this.solicitudPago.tablaUsoFuenteAportante.usos.forEach( uso => {
+                                    if ( uso.fuentes !== undefined ) {
+                                        if ( uso.fuentes.length > 0 ) {
+                                            uso.fuentes.forEach( fuente => {
+                                                if ( fuente.aportante !== undefined ) {
+                                                    if ( fuente.aportante.length > 0 ) {
+                                                        fuente.aportante.forEach( aportante => {
+                                                            dataAportantes.listaNombreAportante.find( nombreAportante => {
+                                                                if ( nombreAportante.cofinanciacionAportanteId === aportante.aportanteId ) {
+                                                                    nombreAportante.valorActual = Number( aportante.valorUso[ 0 ].valorActual.split( '.' ).join( '' ) )
+                                                                }
+                                                            } )
+                                                        } )
+                                                    }
+                                                }
+                                            } )
+                                        }
+                                    }
+                                } )
+                            }
+                        }
+                    }
+
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
@@ -583,6 +609,14 @@ export class TerceroCausacionGogComponent implements OnInit {
                     totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
             } )
+
+            if ( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value !== null ) {
+                if ( value > this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value.valorActual ) {
+                    this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                    this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor asignado por DRP al aportante.</b>` )
+                    return
+                }
+            }
 
             if ( totalValueAportante > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
