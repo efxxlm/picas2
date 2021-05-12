@@ -6250,6 +6250,7 @@ namespace asivamosffie.services
                 string TipoPlantillaAportantes = ((int)ConstanCodigoPlantillas.Tipo_de_novedad_adicion_aportante).ToString();
                 string Aportante = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaAportantes).Select(r => r.Contenido).FirstOrDefault();
                 string Aportantes = " ";
+                decimal presupuestoAdicion = 0;
 
                 List<Dominio> ListaParametricas = _context.Dominio.ToList();
                 List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
@@ -6532,6 +6533,8 @@ namespace asivamosffie.services
                                 if (codigotipoNovedadTemp == ConstanTiposNovedades.Adición)
                                 {
                                     existeAdicion = true;
+                                    presupuestoAdicion += item.PresupuestoAdicionalSolicitado != null ? (decimal)item.PresupuestoAdicionalSolicitado : 0;
+
                                     NovedadesAdicion = NovedadesAdicion.Replace("[TP_PLAZO_SOLICITADO]", item.PresupuestoAdicionalSolicitado != null ? "$" + String.Format("{0:n0}", item.PresupuestoAdicionalSolicitado) : string.Empty);
                                     Aportantes = Aportantes + Aportante;
 
@@ -6783,7 +6786,7 @@ namespace asivamosffie.services
                 string TipoPlantillaAportantes = ((int)ConstanCodigoPlantillas.Tipo_de_novedad_adicion_aportante).ToString();
                 string Aportante = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaAportantes).Select(r => r.Contenido).FirstOrDefault();
                 string Aportantes = " ";
-
+                decimal presupuestoAdicion = 0;
 
                 //Detalle solicitud
                 string TipoPlantillaDetalleSolicitud = ((int)ConstanCodigoPlantillas.Detalle_solicitud_novedad).ToString();
@@ -6864,8 +6867,9 @@ namespace asivamosffie.services
                         if (codigotipoNovedadTemp == ConstanTiposNovedades.Adición)
                         {
                             existeAdicionDetalle = true;
+                            presupuestoAdicion += item.PresupuestoAdicionalSolicitado != null ? (decimal)item.PresupuestoAdicionalSolicitado : 0;
                             NovedadesAdicion = NovedadesAdicion.Replace("[TP_PLAZO_SOLICITADO]", item.PresupuestoAdicionalSolicitado != null ? "$" + String.Format("{0:n0}", item.PresupuestoAdicionalSolicitado) : string.Empty);
-                            Aportantes = Aportantes + Aportante;
+                            //Aportantes = Aportantes + Aportante;
 
                             #region Aportantes
 
@@ -6881,6 +6885,7 @@ namespace asivamosffie.services
 
                             foreach (var aportante in novedadContractual.NovedadContractualAportante)
                             {
+                                Aportantes += Aportante;
                                 foreach (var cpa in aportante.ComponenteAportanteNovedad)
                                 {
                                     List<ComponenteFuenteNovedad> componenteFuenteNovedades = _context.ComponenteFuenteNovedad
@@ -7326,7 +7331,7 @@ namespace asivamosffie.services
                             {
                                 existeAdicion = true;
                                 NovedadesAdicion = NovedadesAdicion.Replace("[TP_PLAZO_SOLICITADO]", item.PresupuestoAdicionalSolicitado != null ? "$" + String.Format("{0:n0}", item.PresupuestoAdicionalSolicitado) : string.Empty);
-                                Aportantes = Aportantes + Aportante;
+                                //Aportantes = Aportantes + Aportante;
 
                                 #region Aportantes
 
@@ -7342,6 +7347,8 @@ namespace asivamosffie.services
 
                                 foreach (var aportante in novedadContractual.NovedadContractualAportante)
                                 {
+                                    Aportantes += Aportante;
+
                                     foreach (var cpa in aportante.ComponenteAportanteNovedad)
                                     {
                                         List<ComponenteFuenteNovedad> componenteFuenteNovedades = _context.ComponenteFuenteNovedad
@@ -7533,7 +7540,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_APORTANTE:
-                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, disponibilidadPresupuestal != null ? " " : " ");
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, disponibilidadPresupuestal != null ? "$" + String.Format("{0:n0}", disponibilidadPresupuestal.ValorSolicitud + presupuestoAdicion) : " ");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.DETALLES_PROYECTOS:
