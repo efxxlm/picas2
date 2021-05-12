@@ -18,7 +18,7 @@ namespace asivamosffie.services
 {
     public class GenerateSpinOrderService : IGenerateSpinOrderService
     {
-        #region constructor
+        #region Constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IBudgetAvailabilityService _budgetAvailabilityService;
@@ -33,7 +33,7 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region get
+        #region Get
         /// <summary>
         /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
         /// </summary>
@@ -954,6 +954,7 @@ namespace asivamosffie.services
                     OrdenGiroDetalleTerceroCausacionDescuento.Eliminado = false;
                     OrdenGiroDetalleTerceroCausacionDescuento.AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId;
                     OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo = OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo;
+                    OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId;
                     OrdenGiroDetalleTerceroCausacionDescuento.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento);
 
                     _context.OrdenGiroDetalleTerceroCausacionDescuento.Add(OrdenGiroDetalleTerceroCausacionDescuento);
@@ -1153,7 +1154,7 @@ namespace asivamosffie.services
         #endregion
         #endregion
 
-        #region validate 
+        #region Validate 
 
         public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {
