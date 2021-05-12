@@ -965,6 +965,9 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId)
                             .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
                             {
+                                FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId,
+                                FuenteRecursosCodigo = OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo,
+                                AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId,
                                 TipoDescuentoCodigo = OrdenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo,
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento) 
