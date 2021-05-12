@@ -166,18 +166,12 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
 
-                        // Get boolean si es uno o varios aportantes
-                        if ( dataAportantes.listaTipoAportante.length > 1 ) {
-                            this.variosAportantes = true;
-                        } else {
-                            
-                            this.variosAportantes = false
-                        }
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
                             const listDescuento = [ ...this.tipoDescuentoArray ];
+                            const listaAportanteDescuentos = [];
 
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
                                 const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion );
@@ -187,32 +181,62 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+
+
+                                        for ( const descuento of listDescuento ) {
+                                            const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
+                                            const listaAportanteDescuentos = [];
+
+                                            if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                                for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
+                                                    const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
+                                                    let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
+                                                    
+                                                    listaAportanteDescuentos.push(
+                                                        this.fb.group(
+                                                            {
+                                                                nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
+                                                                valorDescuento: [ terceroCausacionDescuento.valorDescuento, Validators.required ],
+                                                                fuente: [ { value: fuente !== undefined ? fuente : null, disabled: true }, Validators.required ]
+                                                            }
+                                                        )
+                                                    )
+                                                }
+
+                                                if ( listaAportanteDescuentos.length === 0 )  {
+                                                    listaAportanteDescuentos.push(
+                                                        this.fb.group(
+                                                            {
+                                                                nombreAportante: [ null, Validators.required ],
+                                                                valorDescuento: [ null, Validators.required ],
+                                                                fuente: [ { value: null, disabled: true }, Validators.required ]
+                                                            }
+                                                        )
+                                                    )
+                                                }
+
+                                                listaDescuentos.push(
+                                                    this.fb.group(
+                                                        {
+                                                            ordenGiroDetalleTerceroCausacionDescuentoId: [ ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? ordenGiroDetalleTerceroCausacionDescuento[ 0 ].ordenGiroDetalleTerceroCausacionDescuentoId : 0 ],
+                                                            tipoDescuento: [ descuento.codigo, Validators.required ],
+                                                            aportantesDescuento: this.fb.array( listaAportanteDescuentos )
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }
+
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
 
-                                            if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
+                                            if ( descuento.tipoDescuentoCodigo !== undefined ) {
                                                 const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
     
                                                 if ( descuentoIndex !== -1 ) {
                                                     listDescuento.splice( descuentoIndex, 1 );
                                                 }
                                             }
-                                            listaDescuentos.push(
-                                                this.fb.group(
-                                                    {
-                                                        ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
-                                                        tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
-                                                        valorDescuento: [ descuento.valorDescuento, Validators.required ],
-                                                        aportantesDescuento: this.fb.array( [
-                                                            this.fb.group(
-                                                                {
-                                                                    nombreAportante: [ null, Validators.required ],
-                                                                    fuente: [ { value: null, disabled: true }, Validators.required ]
-                                                                }
-                                                            )
-                                                        ] )
-                                                    }
-                                                )
-                                            );
                                         } )
                                     }
                                     // Get lista de aportantes
@@ -228,6 +252,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 const tipoAportanteIndex = dataAportantes.listaTipoAportante.findIndex( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
                                                 let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                                 const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+                                                listaAportanteDescuentos.push( nombreAportante )
         
                                                 listaAportantes.push(
                                                     this.fb.group(
@@ -235,7 +260,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                             ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
                                                             tipoAportante: [ tipoAportante, Validators.required ],
                                                             listaNombreAportantes: [ [ nombreAportante ] ],
-                                                            nombreAportante: [ null, Validators.required ],
+                                                            nombreAportante: [ nombreAportante, Validators.required ],
                                                             fuenteDeRecursos: [ listaFuenteRecursos ],
                                                             fuenteRecursos: [ fuente, Validators.required ],
                                                             fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
@@ -291,7 +316,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                     {
                                                         aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
                                                         numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
-                                                        listaAportanteDescuentos: [ [], Validators.required ],
+                                                        listaAportanteDescuentos: [ listaAportanteDescuentos, Validators.required ],
                                                         descuentos: this.fb.array( listaDescuentos )
                                                     }
                                                 ),
@@ -599,11 +624,13 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     getAportanteDescuento( aportante: any, index: number, jIndex: number, kIndex: number, lIndex: number ) {
-        console.log( this.getConceptos( index ).controls[ jIndex ], aportante );
 
         const aportantes = this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ) as FormArray;
 
         const aportanteControl = aportantes.controls.find( aportanteControl => aportanteControl.get( 'nombreAportante' ).value.tipoAportanteId === aportante.tipoAportanteId ) as FormGroup;
+        console.log( aportantes )
+        console.log( aportante )
+        console.log( aportanteControl )
 
         if ( aportanteControl !== undefined ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'fuente' ).setValue( aportanteControl.get( 'fuenteRecursos' ).value )
@@ -670,6 +697,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 this.fb.group(
                     {
                         nombreAportante: [ null, Validators.required ],
+                        valorDescuento: [ null, Validators.required ],
                         fuente: [ { value: null, disabled: true }, Validators.required ]
                     }
                 )
@@ -751,9 +779,16 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
                                     tipoDescuento: [ null, Validators.required ],
-                                    nombreAportante: [ null, Validators.required ],
-                                    fuente: [ null, Validators.required ],
-                                    valorDescuento: [ null, Validators.required ]
+                                    valorDescuento: [ null, Validators.required ],
+                                    aportantesDescuento: this.fb.array( [
+                                        this.fb.group(
+                                            {
+                                                nombreAportante: [ null, Validators.required ],
+                                                valorDescuento: [ null, Validators.required ],
+                                                fuente: [ { value: null, disabled: true }, Validators.required ]
+                                            }
+                                        )
+                                    ] )
                                 }
                             )
                         )
@@ -778,9 +813,16 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
                                     tipoDescuento: [ null, Validators.required ],
-                                    nombreAportante: [ null, Validators.required ],
-                                    fuente: [ null, Validators.required ],
-                                    valorDescuento: [ null, Validators.required ]
+                                    valorDescuento: [ null, Validators.required ],
+                                    aportantesDescuento: this.fb.array( [
+                                        this.fb.group(
+                                            {
+                                                nombreAportante: [ null, Validators.required ],
+                                                valorDescuento: [ null, Validators.required ],
+                                                fuente: [ { value: null, disabled: true }, Validators.required ]
+                                            }
+                                        )
+                                    ] )
                                 }
                             )
                         )
@@ -845,8 +887,10 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                     if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
-                        this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( descuentoControl => {
-                            this.valorNetoGiro -= descuentoControl.get( 'valorDescuento' ).value
+                        this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( descuentoControl, indexDescuento ) => {
+                            this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach( aportanteDescuento => {
+                                this.valorNetoGiro -= aportanteDescuento.get( 'valorDescuento' ).value
+                            } )
                         } )
                     }
                 } )
@@ -883,16 +927,21 @@ export class TerceroCausacionGogComponent implements OnInit {
                     } )
 
                     if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
-                        this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( descuentoControl => {
+                        this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( descuentoControl, indexDescuento ) => {
 
-                            terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.push(
-                                {
-                                    ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
-                                    ordenGiroDetalleTerceroCausacionDescuentoId: descuentoControl.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
-                                    tipoDescuentoCodigo: descuentoControl.get( 'tipoDescuento' ).value,
-                                    valorDescuento: descuentoControl.get( 'valorDescuento' ).value
-                                }
-                            )
+                            this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach( aportanteDescuento => {
+                                terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.push(
+                                    {
+                                        ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+                                        ordenGiroDetalleTerceroCausacionDescuentoId: descuentoControl.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
+                                        tipoDescuentoCodigo: descuentoControl.get( 'tipoDescuento' ).value,
+                                        aportanteId: aportanteDescuento.get( 'nombreAportante' ).value.cofinanciacionAportanteId,
+                                        fuenteRecursosCodigo: aportanteDescuento.get( 'fuente' ).value.codigo,
+                                        fuenteFinanciacionId: aportanteDescuento.get( 'fuente' ).value.fuenteFinanciacionId,
+                                        valorDescuento: aportanteDescuento.get( 'valorDescuento' ).value
+                                    }
+                                )
+                            } )
                         } )
                     }
                 } )
@@ -915,6 +964,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             ]
         }
 
+        console.log( pOrdenGiro )
         this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
             .subscribe(
                 response => {
