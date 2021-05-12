@@ -673,7 +673,7 @@ namespace asivamosffie.services
                                                                                 .Update(s => new SolicitudPagoListaChequeoRespuesta
                                                                                 {
                                                                                     ValidacionObservacion = SolicitudPagoListaChequeoRespuesta.ValidacionObservacion,
-                                                                                    VerificacionObservacion  = SolicitudPagoListaChequeoRespuesta.VerificacionObservacion,
+                                                                                    VerificacionObservacion = SolicitudPagoListaChequeoRespuesta.VerificacionObservacion,
                                                                                     TieneSubsanacion = SolicitudPagoListaChequeoRespuesta.TieneSubsanacion,
                                                                                     FechaModificacion = DateTime.Now,
                                                                                     RegistroCompleto = RegistroCompletoItem,
@@ -685,7 +685,7 @@ namespace asivamosffie.services
                 _context.Set<SolicitudPagoListaChequeo>()
                                                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
                                                                                             .Update(s => new SolicitudPagoListaChequeo
-                                                                                            { 
+                                                                                            {
                                                                                                 RegistroCompleto = blRegistroCompletoListaChequeo,
                                                                                                 FechaModificacion = DateTime.Now,
                                                                                                 UsuarioModificacion = usuarioCreacion
@@ -1533,6 +1533,55 @@ namespace asivamosffie.services
             });
             return grind;
         }
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
+        {
+
+            Contrato contrato = await _context.Contrato
+                    .Where(c => c.ContratoId == pContratoId)
+                    .Include(c => c.ContratoConstruccion)
+                    .Include(c => c.ContratoPoliza)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                    .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoRegistrarSolicitudPago).ThenInclude(r => r.SolicitudPagoFase).ThenInclude(r => r.SolicitudPagoFaseCriterio).ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            if (contrato.SolicitudPago.Count() > 0)
+                contrato.SolicitudPago = contrato.SolicitudPago
+                    .Where(s => s.Eliminado != true).ToList();
+
+            if (pSolicitudPago > 0)
+            {
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
+                contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
+            }
+            //contrato.ValorFacturadoContrato =
+            //    _context.VValorFacturadoContrato
+            //    .Where(v => v.ContratoId == pContratoId)
+            //    .ToList();
+            try
+            {
+                contrato.VContratoPagosRealizados =
+                    _context.VContratoPagosRealizados
+                       .Where(v => v.ContratoId == pContratoId)
+                       .ToList();
+
+                contrato.TablaDRP = GetDrpContrato(contrato);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return contrato;
+
+        }
 
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
@@ -1546,13 +1595,17 @@ namespace asivamosffie.services
                 {
                     if (pTipoSolicitud == ConstanCodigoTipoContrato.Obra)
                     {
+
                         ListContratos = await _context.Contrato
                                         .Include(c => c.Contratacion)
                                                  .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                           && c.ModalidadCodigo == pModalidadContrato
                                                           && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                          && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
-                                                       ).ToListAsync();
+                                                          && (
+                                                                c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                             || c.EstadoActa.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                             )
+                                                             ).ToListAsync();
                     }
                     else
                     {
@@ -1561,8 +1614,10 @@ namespace asivamosffie.services
                                                .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                         && c.ModalidadCodigo == pModalidadContrato
                                                         && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                        && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
-                                                     ).ToListAsync();
+                                                        && (  c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                           || c.EstadoActa.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada)
+                                                           )
+                                                      .ToListAsync();
                     }
                     foreach (var Contrato in ListContratos)
                     {
@@ -1617,57 +1672,7 @@ namespace asivamosffie.services
                 return null;
             }
         }
-
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
-        {
-
-            Contrato contrato = await _context.Contrato
-                    .Where(c => c.ContratoId == pContratoId)
-                    .Include(c => c.ContratoConstruccion)
-                    .Include(c => c.ContratoPoliza)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                    .Include(c => c.Contratacion).ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoCargarFormaPago)
-                    .Include(r => r.SolicitudPago).ThenInclude(r => r.SolicitudPagoRegistrarSolicitudPago).ThenInclude(r => r.SolicitudPagoFase).ThenInclude(r => r.SolicitudPagoFaseCriterio).ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.FuenteFinanciacion).ThenInclude(t => t.CuentaBancaria)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.NombreAportante)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync();
-
-            if (contrato.SolicitudPago.Count() > 0)
-                contrato.SolicitudPago = contrato.SolicitudPago
-                    .Where(s => s.Eliminado != true).ToList();
-
-            if (pSolicitudPago > 0)
-            {
-                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
-            }
-            //contrato.ValorFacturadoContrato =
-            //    _context.VValorFacturadoContrato
-            //    .Where(v => v.ContratoId == pContratoId)
-            //    .ToList();
-            try
-            {
-                contrato.VContratoPagosRealizados =
-                    _context.VContratoPagosRealizados
-                       .Where(v => v.ContratoId == pContratoId)
-                       .ToList();
-
-                contrato.TablaDRP = GetDrpContrato(contrato);
-            }
-            catch (Exception e) 
-            {
-            
-            }
-
-            return contrato;
-
-        }
-
+         
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
