@@ -102,7 +102,9 @@
         Ficha_novedad_contractual = 91,
         Detalle_proyecto_no_alcance = 92,
         Detalle_solicitud_novedad = 93,
-        Novedades_detalles = 94
-
+        Novedades_detalles = 94,
+        Tabla_Solicitud_Novedades = 95,
+        Votacion_Unanime_Fiduciaria = 56,
+        Votacion_No_Unanime_Fiduciaria = 57,
     }
 }
