@@ -57,6 +57,10 @@ export class OrdenPagoService {
         return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleTerceroCausacionAportante?pOrdenGiroDetalleTerceroCausacionAportanteId=${ pOrdenGiroDetalleTerceroCausacionAportanteId }`, '' );
     }
 
+    deleteOrdenGiroDetalleTerceroCausacionDescuento( pOrdenGiroDetalleTerceroCausacionDescuentoId: number[] ) {
+        return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleTerceroCausacionDescuento`, pOrdenGiroDetalleTerceroCausacionDescuentoId );
+    }
+
     async getAportantes( solicitudPago: any ) {
         if ( solicitudPago !== undefined ) {
             // constantes y variables
