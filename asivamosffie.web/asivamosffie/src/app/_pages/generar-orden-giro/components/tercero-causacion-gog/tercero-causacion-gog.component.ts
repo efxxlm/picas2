@@ -181,8 +181,6 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
-
-
                                         for ( const descuento of listDescuento ) {
                                             const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
                                             const listaAportanteDescuentos = [];
@@ -929,6 +927,48 @@ export class TerceroCausacionGogComponent implements OnInit {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
 
+        let aportantesPorDiligenciar: boolean;
+        let ordenGiroDetalleDescuentoTecnica = [];
+        const ordenGiroDetalleDescuentoTecnicaAportante = [];
+        const aportantesDiligenciados = [];
+        let totalDescuentoAportante = 0;
+        if ( this.ordenGiroDetalle !== undefined ) {
+            if ( this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica !== undefined ) {
+                ordenGiroDetalleDescuentoTecnica = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.filter( ordenGiroDetalleDescuentoTecnica => ordenGiroDetalleDescuentoTecnica.esPreconstruccion === this.esPreconstruccion );
+            }
+        }
+
+        if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+            this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
+                this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                    this.getAportantes( indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
+                        if ( aportanteControl.get( 'nombreAportante' ).value !== null ) {
+                            aportantesDiligenciados.push( aportanteControl.value )
+                        }
+                    } )
+                } )
+            } );
+
+            ordenGiroDetalleDescuentoTecnica.forEach( descuentoTecnica => {
+                descuentoTecnica.ordenGiroDetalleDescuentoTecnicaAportante.forEach( descuentoAportanteTecnica => ordenGiroDetalleDescuentoTecnicaAportante.push( descuentoAportanteTecnica ) )
+            } )
+
+            if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
+                ordenGiroDetalleDescuentoTecnicaAportante.forEach( descuentoAportanteTecnica => {
+                    const aportante = aportantesDiligenciados.find( aportante => descuentoAportanteTecnica.aportanteId === aportante.nombreAportante.cofinanciacionAportanteId )
+
+                    if ( aportante === undefined ) {
+                        aportantesPorDiligenciar = true;
+                    }
+                } )
+            }
+        }
+
+        if ( aportantesPorDiligenciar === true ) {
+            this.openDialog( '', `<b>Debe diligenciar como minimo los aportantes seleccionados en el acordeon descuentos de dirección tecnica - ${ this.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }.</b>` );
+            return
+        }
+
         const getOrdenGiroDetalleTerceroCausacion = ( ) => {
             const listaTerceroCausacion = [];
 
@@ -1012,7 +1052,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             ]
         }
 
-        console.log( pOrdenGiro )
         this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
             .subscribe(
                 response => {

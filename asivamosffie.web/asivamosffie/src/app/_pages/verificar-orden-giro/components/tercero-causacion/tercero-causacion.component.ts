@@ -84,6 +84,10 @@ export class TerceroCausacionComponent implements OnInit {
         return this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'descuentos' ) as FormArray;
     }
 
+    getAportanteDescuentos( index: number, jIndex: number, kIndex: number ) {
+        return this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'aportantesDescuento' ) as FormArray;
+    }
+
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -191,18 +195,12 @@ export class TerceroCausacionComponent implements OnInit {
                         }
                     }
                     const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
-
-                        // Get boolean si es uno o varios aportantes
-                        if ( dataAportantes.listaTipoAportante.length > 1 ) {
-                            this.variosAportantes = true;
-                        } else {
-                            
-                            this.variosAportantes = false
-                        }
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
+                            const listDescuento = [ ...this.tipoDescuentoArray ];
+
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
                                 const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion );
                                 const listaDescuentos = [];
@@ -211,19 +209,38 @@ export class TerceroCausacionComponent implements OnInit {
 
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-                                            this.valorNetoGiro -= descuento.valorDescuento;
+                                        for ( const descuento of listDescuento ) {
+                                            const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
+                                            const listaAportanteDescuentos = [];
 
-                                            listaDescuentos.push(
-                                                this.fb.group(
-                                                    {
-                                                        ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
-                                                        tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
-                                                        valorDescuento: [ descuento.valorDescuento, Validators.required ]
-                                                    }
-                                                )
-                                            );
-                                        } )
+                                            if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                                for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
+                                                    const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
+                                                    let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
+                                                    
+                                                    listaAportanteDescuentos.push(
+                                                        this.fb.group(
+                                                            {
+                                                                ordenGiroDetalleTerceroCausacionDescuentoId: [ terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
+                                                                nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
+                                                                valorDescuento: [ terceroCausacionDescuento.valorDescuento, Validators.required ],
+                                                                fuente: [ { value: fuente !== undefined ? fuente : null, disabled: true }, Validators.required ]
+                                                            }
+                                                        )
+                                                    )
+                                                }
+
+                                                listaDescuentos.push(
+                                                    this.fb.group(
+                                                        {
+                                                            tipoDescuento: [ descuento.codigo, Validators.required ],
+                                                            aportantesDescuento: this.fb.array( listaAportanteDescuentos )
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }
                                     }
                                     // Get lista de aportantes
                                     // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario

@@ -58,7 +58,11 @@
                                                         </mat-card-title>
                                                         <div [formGroup]="discount">
                                                             <p><b>Tipo de descuento: </b> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </p>
-                                                            <p><b>Valor del descuento: </b> {{ discount.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                            <div *ngFor="let aportanteDescuento of getAportanteDescuentos( i, j, k ).controls">
+                                                                <p><b>Nombre del aportante: </b> {{ aportanteDescuento.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                                                <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportanteDescuento.get( 'fuente' ).value.nombre ) }} </p>
+                                                                <p><b>Valor del descuento: </b> {{ aportanteDescuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

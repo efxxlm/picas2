@@ -23,18 +23,25 @@ export class TablaAportantesComponent implements OnInit {
 
     ngOnInit(): void {
         this.tablaUsoFuenteAportante.forEach( registro => {
+            const aportantes = []
             const valorUso = [];
             const saldoActualUso = [];
 
-            registro.fuentes[ registro.fuentes.length -1 ].aportante.forEach( aportante => {
-                valorUso.push( aportante.valorUso[ 0 ].valor )
-                saldoActualUso.push( aportante.valorUso[ 0 ].valorActual )
+            registro.fuentes.forEach( fuente => {
+                aportantes.push( fuente.aportante[ 0 ] )
+                valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
+                saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
             } )
+
+            // registro.fuentes[ registro.fuentes.length -1 ].aportante.forEach( aportante => {
+            //     valorUso.push( aportante.valorUso[ 0 ].valor )
+            //     saldoActualUso.push( aportante.valorUso[ 0 ].valorActual )
+            // } )
 
             const registroObj = {
                 nombreUso: registro.nombreUso,
                 fuentes: registro.fuentes,
-                aportante: registro.fuentes[ registro.fuentes.length -1 ].aportante,
+                aportante: aportantes,
                 valorUso,
                 saldoActualUso
             }
