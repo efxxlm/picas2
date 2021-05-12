@@ -26,7 +26,40 @@ namespace asivamosffie.api.Controllers
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
         }
-      
+        //   Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor);
+        [HttpPost]
+        [Route("DeleteOrdenGiroDetalleTerceroCausacionDescuento")]
+        public async Task<IActionResult> DeleteOrdenGiroDetalleTerceroCausacionDescuento([FromBody] List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleTerceroCausacionDescuento(pOrdenGiroDetalleTerceroCausacionDescuentoId, User.Identity.Name);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        [HttpPost]
+        [Route("DeleteOrdenGiroDetalleDescuentoTecnicaAportante")]
+        public async Task<IActionResult> DeleteOrdenGiroDetalleDescuentoTecnicaAportante([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaAportanteId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportanteId, User.Identity.Name);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [Route("DeleteOrdenGiroDetalleTerceroCausacionAportante")]
         [HttpPost]
         public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante([FromQuery] int pOrdenGiroDetalleTerceroCausacionAportanteId)
@@ -40,7 +73,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("DeleteOrdenGiroDetalleDescuentoTecnica")]
         [HttpPost]
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaId)
@@ -54,7 +87,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-        
+
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)
@@ -99,23 +132,6 @@ namespace asivamosffie.api.Controllers
             {
                 pOrdenGiro.UsuarioCreacion = User.Identity.Name;
                 respuesta = await _generateSpinOrderService.CreateEditOrdenGiro(pOrdenGiro);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
-            }
-        }
-
-        [HttpPost]
-        [Route("DeleteOrdenGiroDetalleDescuentoTecnicaAportante")]
-        public async Task<IActionResult> DeleteOrdenGiroDetalleDescuentoTecnicaAportante([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaAportanteId)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportanteId, User.Identity.Name);
                 return Ok(respuesta);
             }
             catch (Exception ex)

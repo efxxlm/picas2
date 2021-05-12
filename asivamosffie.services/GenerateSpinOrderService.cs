@@ -32,6 +32,7 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         #endregion
+
         #region get
         /// <summary>
         /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
@@ -228,7 +229,9 @@ namespace asivamosffie.services
                         )
                     .Sum(v => v.ValorUso);
 
-                string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
+                string NombreAportante = 
+                    _budgetAvailabilityService
+                    .getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
 
                 List<dynamic> List2 = new List<dynamic>();
                 List.Add(new
@@ -435,7 +438,56 @@ namespace asivamosffie.services
         }
 
         #endregion
-        #region Create 
+
+        #region C R U D
+
+        #region Delete
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportanteId)
+                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
+                          {
+                              Eliminado = true,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pAuthor
+                          });
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = GeneralCodes.EliminacionExitosa,
+                     Message =
+                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
+                                                                                     GeneralCodes.EliminacionExitosa,
+                                                                                     idAccion,
+                                                                                     pAuthor,
+                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
+                                                                                 )
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
+                     };
+            }
+        }
+         
         public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -481,7 +533,59 @@ namespace asivamosffie.services
                          ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
                 };
             }
+        }
 
+        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                foreach (var id in pOrdenGiroDetalleTerceroCausacionDescuentoId)
+                {
+                    _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
+                     .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == id)
+                     .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
+                     {
+                         Eliminado = true,
+                         UsuarioModificacion = pAuthor,
+                         FechaModificacion = DateTime.Now
+                     });
+                }
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message =
+                      await _commonService.GetMensajesValidacionesByModuloAndCodigo
+                      (
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO
+                       )
+                };
+            }
         }
 
         public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
@@ -578,30 +682,9 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
-        {
-            bool blRegistroCompleto = false;
-            try
-            {
-                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
-                blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
-                _context.Set<OrdenGiro>()
-                        .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
-                        .Update(o => new OrdenGiro
-                        {
-                            RegistroCompleto = blRegistroCompleto,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pAuthor
-                        });
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+        #endregion
 
-            return blRegistroCompleto;
-        }
-
+        #region Create
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -860,19 +943,6 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
-        {
-            if (
-                    string.IsNullOrEmpty(terceroCausacionAportante.FuenteRecursoCodigo)
-                  || terceroCausacionAportante.AportanteId == 0
-                  || string.IsNullOrEmpty(terceroCausacionAportante.ConceptoPagoCodigo)
-                  || terceroCausacionAportante.ValorDescuento == 0
-                  || terceroCausacionAportante.FuenteFinanciacionId == 0)
-                return false;
-
-            return true;
-        }
-
         private void CreateEditOrdenGiroDetalleTerceroCausacionDescuento(ICollection<OrdenGiroDetalleTerceroCausacionDescuento> pListOrdenGiroDetalleTerceroCausacionDescuento, string pUsuarioCreacion)
         {
             foreach (var OrdenGiroDetalleTerceroCausacionDescuento in pListOrdenGiroDetalleTerceroCausacionDescuento)
@@ -896,8 +966,7 @@ namespace asivamosffie.services
                             {
                                 TipoDescuentoCodigo = OrdenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo,
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
-
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento) 
                             });
                 }
             }
@@ -1081,55 +1150,47 @@ namespace asivamosffie.services
                         });
             }
         }
+        #endregion
+        #endregion
 
-        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
+        #region validate 
+
+        public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
+            bool blRegistroCompleto = false;
             try
             {
-                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
-                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportanteId)
-                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
-                          {
-                              Eliminado = true,
-                              FechaModificacion = DateTime.Now,
-                              UsuarioModificacion = pAuthor
-                          });
-
-                return
-                 new Respuesta
-                 {
-                     IsSuccessful = true,
-                     IsException = false,
-                     IsValidation = false,
-                     Code = GeneralCodes.EliminacionExitosa,
-                     Message =
-                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
-                                                                                     GeneralCodes.EliminacionExitosa,
-                                                                                     idAccion,
-                                                                                     pAuthor,
-                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
-                                                                                 )
-                 };
+                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
+                blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+                _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
+                        .Update(o => new OrdenGiro
+                        {
+                            RegistroCompleto = blRegistroCompleto,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pAuthor
+                        });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return
-                     new Respuesta
-                     {
-                         IsSuccessful = false,
-                         IsException = true,
-                         IsValidation = false,
-                         Code = GeneralCodes.Error,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
-                     };
+                return false;
             }
+
+            return blRegistroCompleto;
         }
-        #endregion
-  
-        #region validate 
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
+        {
+            if (
+                    string.IsNullOrEmpty(terceroCausacionAportante.FuenteRecursoCodigo)
+                  || terceroCausacionAportante.AportanteId == 0
+                  || string.IsNullOrEmpty(terceroCausacionAportante.ConceptoPagoCodigo)
+                  || terceroCausacionAportante.ValorDescuento == 0
+                  || terceroCausacionAportante.FuenteFinanciacionId == 0)
+                return false;
+
+            return true;
+        }
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
         {

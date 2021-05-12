@@ -98,7 +98,7 @@ namespace asivamosffie.services
             });
             return ListDynamics;
         }
-        //4# Traer  Uso Por Concepto de pago
+        //4# Traer Uso Por Concepto de pago
         public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId)
         {
             try
