@@ -123,17 +123,8 @@
                     <app-tabla-infofrecursos-gbftrec *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-infofrecursos-gbftrec>
                 </mat-expansion-panel>
             </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
-                            Tercero de causación
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
 
-                    <app-form-tercero-causacion [solicitudPago]="solicitudPago"></app-form-tercero-causacion>
-                </mat-expansion-panel>
-            </mat-accordion>
+            <app-form-tercero-causacion [solicitudPago]="solicitudPago"></app-form-tercero-causacion>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

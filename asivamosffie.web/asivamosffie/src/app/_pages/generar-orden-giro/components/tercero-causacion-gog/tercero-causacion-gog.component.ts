@@ -59,6 +59,10 @@ export class TerceroCausacionGogComponent implements OnInit {
         return this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'descuentos' ) as FormArray;
     }
 
+    getAportanteDescuentos( index: number, jIndex: number, kIndex: number ) {
+        return this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'aportantesDescuento' ) as FormArray;
+    }
+
     constructor (
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -184,7 +188,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 if ( terceroCausacion !== undefined ) {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-                                            this.valorNetoGiro -= descuento.valorDescuento;
 
                                             if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
                                                 const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
@@ -198,7 +201,15 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                     {
                                                         ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
                                                         tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
-                                                        valorDescuento: [ descuento.valorDescuento, Validators.required ]
+                                                        valorDescuento: [ descuento.valorDescuento, Validators.required ],
+                                                        aportantesDescuento: this.fb.array( [
+                                                            this.fb.group(
+                                                                {
+                                                                    nombreAportante: [ null, Validators.required ],
+                                                                    fuente: [ { value: null, disabled: true }, Validators.required ]
+                                                                }
+                                                            )
+                                                        ] )
                                                     }
                                                 )
                                             );
@@ -224,7 +235,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                             ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
                                                             tipoAportante: [ tipoAportante, Validators.required ],
                                                             listaNombreAportantes: [ [ nombreAportante ] ],
-                                                            nombreAportante: [ nombreAportante, Validators.required ],
+                                                            nombreAportante: [ null, Validators.required ],
                                                             fuenteDeRecursos: [ listaFuenteRecursos ],
                                                             fuenteRecursos: [ fuente, Validators.required ],
                                                             fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
@@ -234,9 +245,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                     )
                                                 )
 
-                                                if ( tipoAportanteIndex !== -1 ) {
-                                                    dataAportantes.listaTipoAportante.splice( tipoAportanteIndex, 1 )
-                                                }
+                                                // if ( tipoAportanteIndex !== -1 ) {
+                                                //     dataAportantes.listaTipoAportante.splice( tipoAportanteIndex, 1 )
+                                                // }
                                             }
                                         }
                                     } else {
@@ -258,6 +269,16 @@ export class TerceroCausacionGogComponent implements OnInit {
                                     }
     
                                     for ( const concepto of criterio.listConceptos ) {
+                                        /*
+                                        Validacion del uso por concepto
+
+                                        const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
+                                        let valorTotalUso = 0;
+                                        if ( usoByConcepto.length > 0 ) {
+                                            usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
+                                        }
+                                        */
+
                                         conceptosDePago.push( this.fb.group(
                                             {
                                                 conceptoPagoCriterio: [ concepto.codigo ],
@@ -270,6 +291,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                     {
                                                         aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
                                                         numeroDescuentos: [ terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ? terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length : null, Validators.required ],
+                                                        listaAportanteDescuentos: [ [], Validators.required ],
                                                         descuentos: this.fb.array( listaDescuentos )
                                                     }
                                                 ),
@@ -358,6 +380,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                     {
                                                         aplicaDescuentos:[ null, Validators.required ],
                                                         numeroDescuentos: [ null, Validators.required ],
+                                                        listaAportanteDescuentos: [ [], Validators.required ],
                                                         descuentos: this.fb.array( [] )
                                                     }
                                                 ),
@@ -410,6 +433,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 {
                                                     aplicaDescuentos:[ null, Validators.required ],
                                                     numeroDescuentos: [ null, Validators.required ],
+                                                    listaAportanteDescuentos: [ [], Validators.required ],
                                                     descuentos: this.fb.array( [] )
                                                 }
                                             ),
@@ -543,13 +567,10 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
 
             if ( ordenGiroDetalleDescuentoTecnicaAportante.length > 0 ) {
-                console.log( ordenGiroDetalleDescuentoTecnicaAportante )
                 ordenGiroDetalleDescuentoTecnicaAportante.forEach( descuentoTecnica => totalDescuentoAportante += descuentoTecnica.valorDescuento );
             }
             
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuentoTecnica' ).setValue( totalDescuentoAportante );
-
-            console.log( this.getAportantes( index, jIndex ).controls[ kIndex ] )
             if ( totalValueAportante > this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).value ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                 this.openDialog( '', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto.</b>` )
@@ -577,6 +598,18 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
 
+    getAportanteDescuento( aportante: any, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        console.log( this.getConceptos( index ).controls[ jIndex ], aportante );
+
+        const aportantes = this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ) as FormArray;
+
+        const aportanteControl = aportantes.controls.find( aportanteControl => aportanteControl.get( 'nombreAportante' ).value.tipoAportanteId === aportante.tipoAportanteId ) as FormGroup;
+
+        if ( aportanteControl !== undefined ) {
+            this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'fuente' ).setValue( aportanteControl.get( 'fuenteRecursos' ).value )
+        }
+    }
+
     validateNumberKeypress(event: KeyboardEvent) {
         const alphanumeric = /[0-9]/;
         const inputChar = String.fromCharCode(event.charCode);
@@ -599,8 +632,49 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     getListaFuenteRecursos( nombreAportante: any, index: number, jIndex: number, kIndex: number ) {
+        const listaAportanteDescuentos: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'listaAportanteDescuentos' ).value;
+
+        if ( listaAportanteDescuentos.length > 0 ) {
+            const aportante = listaAportanteDescuentos.find( aportante => aportante.tipoAportanteId === nombreAportante.tipoAportanteId );
+
+            if ( aportante === undefined ) {
+                listaAportanteDescuentos.push( nombreAportante );
+            }
+        } else {
+            listaAportanteDescuentos.push( nombreAportante );
+        }
+
+        this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'listaAportanteDescuentos' ).setValue( listaAportanteDescuentos )
+
         this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
             .subscribe( fuenteRecursos => this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'fuenteDeRecursos' ).setValue( fuenteRecursos ) );
+    }
+
+    deleteAportanteDescuento( index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+            .subscribe(
+                value => {
+                    if ( value === true ) {
+                        this.getAportanteDescuentos( index, jIndex, kIndex ).removeAt( lIndex );
+                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    }
+                }
+            )
+    }
+
+    addAportanteDescuento( index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        const listaAportanteDescuentos: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'descuento' ).get( 'listaAportanteDescuentos' ).value;
+
+        if ( this.getAportanteDescuentos( index, jIndex, kIndex ).length < listaAportanteDescuentos.length ) {
+            this.getAportanteDescuentos( index, jIndex, kIndex ).push(
+                this.fb.group(
+                    {
+                        nombreAportante: [ null, Validators.required ],
+                        fuente: [ { value: null, disabled: true }, Validators.required ]
+                    }
+                )
+            )
+        }
     }
 
     deleteAportante( index: number, jIndex: number, kIndex: number ) {
@@ -677,6 +751,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
                                     tipoDescuento: [ null, Validators.required ],
+                                    nombreAportante: [ null, Validators.required ],
+                                    fuente: [ null, Validators.required ],
                                     valorDescuento: [ null, Validators.required ]
                                 }
                             )
@@ -702,6 +778,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
                                     tipoDescuento: [ null, Validators.required ],
+                                    nombreAportante: [ null, Validators.required ],
+                                    fuente: [ null, Validators.required ],
                                     valorDescuento: [ null, Validators.required ]
                                 }
                             )

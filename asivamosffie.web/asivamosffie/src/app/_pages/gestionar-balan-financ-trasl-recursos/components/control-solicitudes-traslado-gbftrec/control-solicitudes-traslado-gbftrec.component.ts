@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-control-solicitudes-traslado-gbftrec',
@@ -15,6 +16,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     @Input() proyectoId: number;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    listaTipoSolicitudContrato: Dominio[] = [];
     myFilter = new FormControl();
     myFilter2 = new FormControl();
     var1: any;
@@ -37,10 +39,12 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     dataTable: any[] = [];
 
     constructor(
-        private fb: FormBuilder )
+        private fb: FormBuilder,
+        private commonSvc: CommonService )
     { }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.listaTipoSolicitudContrato = await this.commonSvc.listaTipoSolicitudContrato().toPromise()
     }
 
     loadDataSource() {
