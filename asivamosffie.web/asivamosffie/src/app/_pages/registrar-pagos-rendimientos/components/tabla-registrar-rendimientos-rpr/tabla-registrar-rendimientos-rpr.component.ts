@@ -114,4 +114,8 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
       })
     
   }
+
+  downloadTemplate(){
+    location.href ="./assets/files/TemplateRegistrarRendimientos.xlsx";
+  }
 }

@@ -1,3 +1,10 @@
+<div style="text-align: center;">
+<button mat-button color="warn" class="btn-descargar-plantilla mb-1em"
+        (click)="downloadTemplate()">
+        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+        Descargar plantilla
+</button>
+</div>
 <div class="tabs--actions">
     <button mat-raised-button color="accent" class="tabs--btn" (click)="this.cargarNuevoReportedeRendimiento()">
         Cargar nuevo reporte de rendimientos
@@ -7,7 +14,7 @@
     <table mat-table [dataSource]="dataSource" matSort matSortActive="fechaCargue"  matSortDirection="desc" class="mat-elevation-z8">
         <ng-container matColumnDef="fechaCargue">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Fecha de cargue </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue | date: 'dd/MM/yyyy' }}</b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue | date: 'dd/MM/yyyy hh:mm' }}</b> </td>
         </ng-container>
         <ng-container matColumnDef="totalRegistros">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Número total de registros </th>
