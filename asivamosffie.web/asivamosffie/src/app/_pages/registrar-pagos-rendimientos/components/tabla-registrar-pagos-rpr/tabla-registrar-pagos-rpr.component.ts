@@ -141,6 +141,10 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
     
   }
 
+  downloadTemplate(){
+    location.href ="./assets/files/TemplateRegistrarPagos.xlsx";
+  }
+
   abrirObservaciones(cargaPagosRendimientosId: number, element: any) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.height = 'auto'

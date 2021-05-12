@@ -548,15 +548,13 @@ namespace asivamosffie.services
                 errors.Add(new ExcelError(indexWorkSheetRow, 4, "Por favor ingresa solo datos numéricos en este campo"));
             }
             else if (ordenGiro != null)
-            {
-                               
-                var queryOrden = (from orden in _context.OrdenGiro.Where(x => x.OrdenGiroId == 26)
+            {           
+                var queryOrden = (from orden in _context.OrdenGiro.Where(x => x.OrdenGiroId == ordenGiro.OrdenGiroId)
                                   join detalle in _context.OrdenGiroDetalle.DefaultIfEmpty() on orden.OrdenGiroId equals detalle.OrdenGiroId
-                                  join tecnica in _context.OrdenGiroDetalleDescuentoTecnica.DefaultIfEmpty() on detalle.OrdenGiroDetalleId equals tecnica.OrdenGiroDetalleId
-                                  join aportante in _context.OrdenGiroDetalleDescuentoTecnicaAportante.DefaultIfEmpty() on tecnica.OrdenGiroDetalleDescuentoTecnicaId equals aportante.OrdenGiroDetalleDescuentoTecnicaId
                                   join causacion in _context.OrdenGiroDetalleTerceroCausacion.DefaultIfEmpty() on detalle.OrdenGiroDetalleId equals causacion.OrdenGiroDetalleId
                                   join descuento in _context.OrdenGiroDetalleTerceroCausacionDescuento.DefaultIfEmpty() on causacion.OrdenGiroDetalleTerceroCausacionId equals descuento.OrdenGiroDetalleTerceroCausacionId
-                                  group new { descuento, aportante } by new
+                                  where descuento.Eliminado == false 
+                                  group new { descuento } by new
                                   {
                                       orden.OrdenGiroId,
                                       orden.NumeroSolicitud,
@@ -566,13 +564,27 @@ namespace asivamosffie.services
                                   {
                                       g.Key.OrdenGiroId,
                                       g.Key.NumeroSolicitud,
-                                      DescuentoTecnica = g.Sum(x => x.aportante.ValorDescuento),
                                       DescuentoCausacion = g.Sum(x => x.descuento.ValorDescuento),
                                   }).FirstOrDefault();
-               
-              
 
-                var valorTotalDescuentos = queryOrden.DescuentoTecnica + queryOrden.DescuentoCausacion;
+                var queryOrdenDescuentoTecnica = (from orden in _context.OrdenGiro.Where(x => x.OrdenGiroId == ordenGiro.OrdenGiroId)
+                                                  join detalle in _context.OrdenGiroDetalle.DefaultIfEmpty() on orden.OrdenGiroId equals detalle.OrdenGiroId
+                                                  join tecnica in _context.OrdenGiroDetalleDescuentoTecnica.DefaultIfEmpty() on detalle.OrdenGiroDetalleId equals tecnica.OrdenGiroDetalleId
+                                                  join aportante in _context.OrdenGiroDetalleDescuentoTecnicaAportante.DefaultIfEmpty() on tecnica.OrdenGiroDetalleDescuentoTecnicaId equals aportante.OrdenGiroDetalleDescuentoTecnicaId
+                                                  where aportante.Eliminado == false
+                                                  group new {  aportante } by new
+                                                  {
+                                                      orden.OrdenGiroId,
+                                                      orden.NumeroSolicitud,
+                                                  } into g
+                                                  select new
+                                                  {
+                                                      g.Key.OrdenGiroId,
+                                                      g.Key.NumeroSolicitud,
+                                                      DescuentoTecnica = g.Sum(x => x.aportante.ValorDescuento)
+                                                  }).FirstOrDefault();
+
+                var valorTotalDescuentos = queryOrdenDescuentoTecnica.DescuentoTecnica + queryOrden.DescuentoCausacion;
 
                 if(queryOrden == null || taxDecimal != valorTotalDescuentos)
                 {
