@@ -150,9 +150,6 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <pre>
-          {{ descripcion | json }}
-        </pre>
         <strong>Motivos de la novedad:</strong> 
             <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo; let i = index">
               {{ motivo.nombreMotivo

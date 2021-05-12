@@ -358,7 +358,7 @@ namespace asivamosffie.services
                         {
                             SesionComiteSolicitudComiteTecnico.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
                         }
-                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual)
                         {
                             if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                             {
@@ -442,7 +442,7 @@ namespace asivamosffie.services
                         {
                             SesionComiteSolicitudComiteTecnico.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
                         }
-                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual)
                         {
                             if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                             {

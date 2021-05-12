@@ -57,14 +57,14 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b
                     >Solicitud
                     {{
-                      sesionComite.novedadContractual !== undefined
-                        ? sesionComite.novedadContractual.numeroSolicitud
+                      sesionComite.modificacionContractual !== undefined
+                        ? sesionComite.modificacionContractual.numeroSolicitud
                         : sesionComite.numeroSolicitud
                     }}
                   </b>
@@ -138,10 +138,10 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.novedadContractual.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.modificacionContractual.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-expansion-panel-header

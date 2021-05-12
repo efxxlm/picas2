@@ -52,7 +52,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     defensaJudicial: '5',
     actualizacionProcesoSeleccion: '6',
     evaluacionProceso: '7',
-    ActuacionesControversias: '8'
+    ActuacionesControversias: '8',
+    novedadContractual: '11',
   }
 
   constructor(private routes: Router,

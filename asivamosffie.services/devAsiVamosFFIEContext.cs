@@ -242,6 +242,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
+        public virtual DbSet<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante> VDescuentosFinancieraOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
@@ -296,6 +297,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -4523,6 +4525,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.TipoDescuentoCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -4545,7 +4551,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
-                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionDescuento_FuenteFinanciacionId");
+                    .HasConstraintName("FK_OrdenGiroDetalleTerceroCausacionDescuento_FuenteFinanciacion");
 
                 entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacion)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
@@ -8441,6 +8447,19 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DefensaJudicialContratacionProyecto");
+            });
+
+            modelBuilder.Entity<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosFinancieraODGX_FuenteFinanciacionXAportante");
+
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VDescuentosOdgxFuenteFinanciacionXaportante>(entity =>

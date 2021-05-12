@@ -51,7 +51,6 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
       this.detalleId = parametros.id;
       this.contractualNoveltyService.getNovedadContractualById( parametros.id )
         .subscribe( novedad => {
-          console.log( novedad );
           
           if (novedad.novedadContractualId !== 0) {
 
@@ -104,8 +103,6 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   guardar() {
     if (this.detalleId !== 0) {
       this.ngOnInit();
-    } else {
-      this.router.navigate(["/verificarSolicitudDeNovedades/registrarSolicitudInterventoria",0])
     }
   }
 
@@ -119,7 +116,6 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   public seleccionAutocomplete(numeroContrato)
   {
     this.numeroContratoSeleccionado=numeroContrato;
-    console.warn(this.numeroContratoSeleccionado);
   }
 
   public changeNovedadAplicada()

@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IGenerateSpinOrderService
     {
+        Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor);
+
         Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor);
 
         Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor);
