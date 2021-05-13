@@ -1373,7 +1373,7 @@ namespace asivamosffie.services
                             )
                             {
                                 bool esNodedadNoFirma = false;
-                                foreach(var item in novedadContractualOld.NovedadContractualDescripcion)
+                                foreach(var item in novedadContractual.NovedadContractualDescripcion)
                                 {
                                     if (item.TipoNovedadCodigo == ConstanTiposNovedades.Adición || item.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga || item.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
                                     {
@@ -1381,7 +1381,7 @@ namespace asivamosffie.services
                                         break;
                                     }
                                 }
-                                if (esNodedadNoFirma)
+                                if (!esNodedadNoFirma)
                                 {
                                     novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_registro_de_firmas;
                                 }

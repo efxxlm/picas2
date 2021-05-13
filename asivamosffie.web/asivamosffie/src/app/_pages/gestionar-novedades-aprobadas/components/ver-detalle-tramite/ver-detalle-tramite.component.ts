@@ -36,7 +36,7 @@ export class VerDetalleTramiteComponent implements OnInit {
             if (d.tipoNovedadCodigo === '3')
               this.tieneAdicion = true;
 
-            if(d.tipoNovedadCodigo === '3 '|| d.tipoNovedadCodigo === '4' || d.tipoNovedadCodigo === '5')
+            if(d.tipoNovedadCodigo === '3'|| d.tipoNovedadCodigo === '4' || d.tipoNovedadCodigo === '5')
               this.esNoFirma = true;
 
             this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 

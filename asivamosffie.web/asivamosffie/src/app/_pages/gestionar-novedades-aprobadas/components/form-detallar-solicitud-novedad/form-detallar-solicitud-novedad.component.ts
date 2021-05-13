@@ -781,11 +781,19 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   getAportante(event: any, i: number) {
     this.commonService.listaAportanteByTipoAportanteId(event).subscribe(
       respuesta => {
-        console.log(respuesta);
         let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
         this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
+        this.listadoDepto[i] = [];
+        this.listaNombreAportantes[i] = [];
+
+        this.aportantes.controls[i].get('cofinanciacionAportanteId').setValue(null);
+        this.aportantes.controls[i].get('depaetamento').setValue(null);
+        this.aportantes.controls[i].get('municipio').setValue(null);
+        this.aportantes.controls[i].get('nombreAportante').setValue(null);
+
         if (this.tipoAportante.FFIE.includes(event.toString())) {
           this.listaVigencias[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
         } else {
