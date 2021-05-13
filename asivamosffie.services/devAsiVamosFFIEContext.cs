@@ -24,7 +24,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<BalanceFinanciero> BalanceFinanciero { get; set; }
-        public virtual DbSet<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
         public virtual DbSet<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
         public virtual DbSet<CarguePagosRendimientos> CarguePagosRendimientos { get; set; }
@@ -90,6 +89,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
         public virtual DbSet<GestionObraCalidadEnsayoLaboratorio> GestionObraCalidadEnsayoLaboratorio { get; set; }
         public virtual DbSet<GrupoMunicipios> GrupoMunicipios { get; set; }
+        public virtual DbSet<IndicadorReporte> IndicadorReporte { get; set; }
         public virtual DbSet<InformeFinal> InformeFinal { get; set; }
         public virtual DbSet<InformeFinalAnexo> InformeFinalAnexo { get; set; }
         public virtual DbSet<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
@@ -530,21 +530,6 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_BalanceFinanciero_ContratacionProyecto");
             });
 
-            modelBuilder.Entity<BalanceFinancieroTraslado>(entity =>
-            {
-                entity.HasOne(d => d.BalanceFinanciero)
-                    .WithMany(p => p.BalanceFinancieroTraslado)
-                    .HasForeignKey(d => d.BalanceFinancieroId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BalanceFinancieroTranslado_BalanceFinanciero");
-
-                entity.HasOne(d => d.OrdenGiro)
-                    .WithMany(p => p.BalanceFinancieroTraslado)
-                    .HasForeignKey(d => d.OrdenGiroId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BalanceFinancieroTranslado_OrdenGiro");
-            });
-
             modelBuilder.Entity<BalanceFinancieroTrasladoValor>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -566,11 +551,20 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorTraslado).HasColumnType("decimal(38, 0)");
 
-                entity.HasOne(d => d.BalanceFinancieroTraslado)
+                entity.HasOne(d => d.BalanceFinanciero)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
-                    .HasForeignKey(d => d.BalanceFinancieroTrasladoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_BalanceFinancieroTrasladoValor");
+                    .HasForeignKey(d => d.BalanceFinancieroId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_BalanceFinanciero");
+
+                entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnicaAportante)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaAportanteId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleDescuentoTecnicaAportanteId");
+
+                entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnica)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleDescuentoTecnicaId");
 
                 entity.HasOne(d => d.OrdenGiroDetalleTerceroCausacionAportante)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
@@ -581,6 +575,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
                     .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionDescuentoId)
                     .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleTerceroCausacionDescuentoId");
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiro");
             });
 
             modelBuilder.Entity<CargueObservacion>(entity =>
@@ -3218,6 +3217,31 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ProcesoSeleccionGrupoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GrupoMunicipios_ProcesoSeleccionGrupo");
+            });
+
+            modelBuilder.Entity<IndicadorReporte>(entity =>
+            {
+                entity.Property(e => e.Etapa)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasComment("Va al tipo de dominio 194 Etapas de reportes");
+
+                entity.Property(e => e.GroupId)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Proceso)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasComment("Va al tipo de dominio 195 Proceso de reportes");
+
+                entity.Property(e => e.ReportId)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<InformeFinal>(entity =>

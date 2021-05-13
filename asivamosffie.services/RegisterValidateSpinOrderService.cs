@@ -24,6 +24,7 @@ namespace asivamosffie.services
         private readonly ICommitteeSessionFiduciarioService _committeeSessionFiduciarioService;
         private readonly IPaymentRequierementsService _paymentRequierementsService;
 
+
         public RegisterValidateSpinOrderService(IPaymentRequierementsService paymentRequierementsService, ICommitteeSessionFiduciarioService committeeSessionFiduciarioService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _paymentRequierementsService = paymentRequierementsService;
@@ -44,7 +45,7 @@ namespace asivamosffie.services
             if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Orden_de_giro_devuelta_por_verificacion
               && intEstadoCodigo <= (int)EnumEstadoOrdenGiro.Orden_de_giro_devuelta_por_tramite_fiduciario)
                 ReturnOrdenGiro(pOrdenGiro);
-             
+
             //Crear URl Verificar
             if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
                 UpdateUrlVerify(pOrdenGiro);
@@ -56,7 +57,7 @@ namespace asivamosffie.services
             if ((intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro))
                 ResetObservations(pOrdenGiro);
 
-             
+
             try
             {
                 _context.Set<OrdenGiro>()
@@ -103,8 +104,8 @@ namespace asivamosffie.services
                     .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                     .Update(o => new OrdenGiroObservacion
                     {
-                        Archivada =  true
-                    }); 
+                        Archivada = true
+                    });
         }
 
         private void UpdateUrlVerify(OrdenGiro pOrdenGiro)
@@ -149,7 +150,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pOrdenGiro.UsuarioCreacion
                         });
         }
-         
+
         public async Task<Respuesta> CreateEditSpinOrderObservations(OrdenGiroObservacion pOrdenGiroObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -263,7 +264,7 @@ namespace asivamosffie.services
                 bool blRegistroCompleto = false;
 
                 DateTime? FechaRegistroCompleto = null;
-                if (intCantidadObservaciones  >= intCantidadDependenciasOrdenGiro)
+                if (intCantidadObservaciones >= intCantidadDependenciasOrdenGiro)
                 {
                     FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
@@ -355,11 +356,11 @@ namespace asivamosffie.services
 
             if (pDescargarOrdenGiro.RegistrosAprobados)
             {
-                ListOrdenGiroIds =await _context.OrdenGiro
-                    .Include(s=> s.SolicitudPago)
-                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue 
+                ListOrdenGiroIds = await _context.OrdenGiro
+                    .Include(s => s.SolicitudPago)
+                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue
                        && !r.FechaRegistroCompletoTramitar.HasValue
-                       && r.SolicitudPago.Count() >0  
+                       && r.SolicitudPago.Count() > 0
                     )
                     .Select(r => r.OrdenGiroId)
 
@@ -369,9 +370,9 @@ namespace asivamosffie.services
             {
                 ListOrdenGiroIds = await _context.OrdenGiro
                       .Include(s => s.SolicitudPago)
-                        .Where(r => r.FechaRegistroCompletoTramitar.HasValue
-                            && r.FechaRegistroCompletoTramitar >= pDescargarOrdenGiro.FechaInicial
-                            && r.FechaRegistroCompletoTramitar <= pDescargarOrdenGiro.FechaFinal
+                        .Where(r => r.FechaRegistroCompletoAprobar.HasValue
+                            && r.FechaRegistroCompletoAprobar >= pDescargarOrdenGiro.FechaInicial
+                            && r.FechaRegistroCompletoAprobar <= pDescargarOrdenGiro.FechaFinal
                             && r.SolicitudPago.Count() > 0)
                         .Select(r => r.OrdenGiroId).ToListAsync();
             }
@@ -391,28 +392,64 @@ namespace asivamosffie.services
 
         private string ReplaceVariablesOrdenGiro(string pContenido, int pOrdenGiroId)
         {
-            OrdenGiro ordenGiro =
-                _context.OrdenGiro
-                                .Where(o => o.OrdenGiroId == pOrdenGiroId)
-                                 .Include(s => s.SolicitudPago).ThenInclude(s => s.Contrato)
-                                .Include(s => s.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroSoporte)
-                                .Include(s => s.OrdenGiroDetalle).ThenInclude(s => s.OrdenGiroDetalleTerceroCausacion)
-                            
-                                .FirstOrDefault();
+            OrdenGiro ordenGiro = _context.OrdenGiro
+                    .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                        .Include(r=> r.SolicitudPago).ThenInclude(r=> r.Contrato)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
+                        .Include(d => d.SolicitudPago)
+                    .AsNoTracking().FirstOrDefault();
 
-            decimal? ValorOrdenGiro = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion.FirstOrDefault()?.ValorNetoGiro;
+            foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
+            {
+                if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
+                    OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+
+                foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+                {
+                    if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
+                        OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
+                }
+
+                foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                {
+                    if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).ToList();
+
+                    if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
+                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Where(r => r.Eliminado != true).ToList();
+                }
+
+            }
+
+            decimal? ValorOrdenGiro = ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionAportante?.Sum(r => r.ValorDescuento)));
             string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
             List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
 
-            UrlSoporte = "<a href='" + UrlSoporte+"'>Link</a>";
+
+
+            Decimal? Descuentos = ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionDescuento?.Sum(r => r.ValorDescuento)));
+            // Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionAportante?.Sum(r => r.ValorDescuento)));
+            Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleDescuentoTecnica?.Sum(r => r.OrdenGiroDetalleDescuentoTecnicaAportante?.Sum(r => r.ValorDescuento)));
+
+
+            UrlSoporte = "<a href='" + UrlSoporte + "'>Link</a>";
             try
             {
                 pContenido = pContenido
                        .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
-                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
+                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud) 
                        .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
                        .Replace("[NUMERO_CONTRATO]", (ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato) ?? " ")
                        .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
+                       .Replace("[VALOR_DESCUENTO]", +Descuentos != null ? "$ " + String.Format("{0:n0}", Descuentos) : "$ 0") 
                        .Replace("[URL]", UrlSoporte);
             }
             catch (Exception e)
