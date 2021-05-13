@@ -725,7 +725,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     let cofinanciacionAportante = this.novedad.novedadContractualAportante[i].cofinanciacionAportante;
     this.commonService.listaAportanteByTipoAportanteId(id).subscribe(
       respuesta => {
-        let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
         this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
 
         this.listaVigencias[i] = [];
@@ -781,8 +781,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   getAportante(event: any, i: number) {
     this.commonService.listaAportanteByTipoAportanteId(event).subscribe(
       respuesta => {
-        let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
-        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        console.log(respuesta);
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
         if (this.tipoAportante.FFIE.includes(event.toString())) {

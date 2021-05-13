@@ -25,5 +25,6 @@ namespace asivamosffie.model.APIModels
         public string DepartamentoId { get; set; }
         public bool? RegistroCompleto { get; set; }
         public decimal ValorGestionado { get; set; }
+        public bool? TieneFuentes { get; set; }
     }
 }
