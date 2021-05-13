@@ -624,6 +624,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 return
             }
 
+
             let ordenGiroDetalleDescuentoTecnica = [];
             const ordenGiroDetalleDescuentoTecnicaAportante = [];
             let totalDescuentoAportante = 0;
@@ -663,7 +664,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
     // Check valor del descuento de los conceptos
-    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number ) {
+    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
         let totalAportantePorConcepto = 0;
 
         if ( value !== null ) {
@@ -678,7 +679,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
 
         if ( value > totalAportantePorConcepto ) {
-            this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+            this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
         }
     }
