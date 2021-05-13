@@ -345,9 +345,12 @@ namespace asivamosffie.services
                     foreach (var cfn in componenteFuenteNovedades)
                     {
                         FuenteFinanciacion fuentesFinanciacion = _context.FuenteFinanciacion.Find(cfn.FuenteFinanciacionId);
-
-                        fuentesFinanciacion.NombreFuente = fuentesFinanciacion != null ? !string.IsNullOrEmpty(fuentesFinanciacion.FuenteRecursosCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(fuentesFinanciacion.FuenteRecursosCodigo, (int)EnumeratorTipoDominio.Fuentes_de_financiacion) : "" : "";
-                        cfn.FuenteFinanciacion = fuentesFinanciacion;
+                        
+                        if (fuentesFinanciacion != null)
+                        {
+                            fuentesFinanciacion.NombreFuente = fuentesFinanciacion != null ? !string.IsNullOrEmpty(fuentesFinanciacion.FuenteRecursosCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(fuentesFinanciacion.FuenteRecursosCodigo, (int)EnumeratorTipoDominio.Fuentes_de_financiacion) : "" : "";
+                            cfn.FuenteFinanciacion = fuentesFinanciacion;
+                        }
 
                         List<ComponenteUsoNovedad> componenteUsoNovedades = _context.ComponenteUsoNovedad
                         .Where(r => r.ComponenteFuenteNovedadId == cfn.ComponenteFuenteNovedadId && (r.Eliminado == false | r.Eliminado == null))
