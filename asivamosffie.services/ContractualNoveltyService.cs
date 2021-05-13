@@ -1372,7 +1372,23 @@ namespace asivamosffie.services
                                 novedadContractualOld.AbogadoRevisionId != null
                             )
                             {
-                                novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_registro_de_firmas;
+                                bool esNodedadNoFirma = false;
+                                foreach(var item in novedadContractualOld.NovedadContractualDescripcion)
+                                {
+                                    if (item.TipoNovedadCodigo == ConstanTiposNovedades.Adición || item.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga || item.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
+                                    {
+                                        esNodedadNoFirma = true;
+                                        break;
+                                    }
+                                }
+                                if (esNodedadNoFirma)
+                                {
+                                    novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_registro_de_firmas;
+                                }
+                                else
+                                {
+                                    novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Aprobada_para_envio_comite;
+                                }
                             }
                             break;
                         }
@@ -2792,7 +2808,7 @@ namespace asivamosffie.services
         {
             bool? esCompleto = true;
 
-            if (pNovedadContractual.EstadoProcesoCodigo == "1")
+            if (pNovedadContractual.EstadoProcesoCodigo == "1" && pNovedadContractual.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Aprobada_para_envio_comite)
             {
                 if (RegistrocompletoRevisionJuridica(pNovedadContractual) == null ||
                     RegistrocompletoRevisionJuridica(pNovedadContractual) == false ||

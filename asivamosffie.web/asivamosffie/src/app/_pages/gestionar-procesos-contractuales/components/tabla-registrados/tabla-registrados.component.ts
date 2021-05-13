@@ -22,7 +22,8 @@ export class TablaRegistradosComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
   dataTable: any[] = [];
   estadoCodigos = {
-    registrado: '6'
+    registrado: '6',
+    registradoNovedad: '26'
   };
 
   constructor (
@@ -39,7 +40,7 @@ export class TablaRegistradosComponent implements OnInit {
     this.$data.subscribe( ( resp: any ) => {
 
         for ( let contrataciones of resp ) {
-          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado || contrataciones.estadoCodigo === this.estadoCodigos.registradoNovedad ) {
             this.dataTable.push( contrataciones );
           };
         };
@@ -70,7 +71,7 @@ export class TablaRegistradosComponent implements OnInit {
       break;
 
       case "Novedad Contractual":
-        this.routes.navigate( [ '/procesosContractuales', id ] );
+        this.routes.navigate( [ '/procesosContractuales/modificacionContractual', id ] );
       break;
       default:
         console.log( 'No es una opcion valida.' );

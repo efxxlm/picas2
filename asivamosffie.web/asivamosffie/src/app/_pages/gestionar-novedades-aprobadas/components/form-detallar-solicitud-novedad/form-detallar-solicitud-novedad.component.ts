@@ -195,8 +195,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
               this.contractualNoveltyService.GetFuentesByAportante(apo.cofinanciacionAportanteId)
                 .subscribe(respuesta => {
+                  console.log(respuesta);
                   grupoAportante.get('listaFuentes').setValue(respuesta);
-
 
                   grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.novedadContractualAportanteId);
                   grupoAportante.get('proyectoAportanteId').setValue(apo.cofinanciacionAportanteId);

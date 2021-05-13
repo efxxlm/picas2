@@ -28,6 +28,7 @@
 		public const string Enviadas_a_la_Fiduciaria = "24";
 		public const string Firmado = "25";
 		public const string Registrado = "26";
+		public const string Aprobada_para_envio_comite = "27";
 
 	}
 }
