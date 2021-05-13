@@ -21,10 +21,11 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   
   @Input() novedad: NovedadContractual;
   @Output() guardar = new EventEmitter();
-  
+  tipoNovedadAdicion = '3';
   //idSolicitud: number;
   //municipio: string;
   //tipoIntervencion: string;
+  presupuestoAdicionalSolicitado = 0;
   addressForm = this.fb.group([]);
   fasesSelect: Dominio[] = [];
   listaUsos: any[] = [];
@@ -126,6 +127,18 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   };
 
   ngOnInit(): void {
+
+    if ( this.novedad.novedadContractualDescripcion !== undefined ) {
+      if ( this.novedad.novedadContractualDescripcion.length > 0 ) {
+        const novedadAdicion = this.novedad.novedadContractualDescripcion.find( novedadAdicion => novedadAdicion.tipoNovedadCodigo === this.tipoNovedadAdicion )
+
+        if ( novedadAdicion !== undefined ) {
+          if ( novedadAdicion.presupuestoAdicionalSolicitado !== undefined ) {
+            this.presupuestoAdicionalSolicitado = novedadAdicion.presupuestoAdicionalSolicitado;
+          }
+        }
+      }
+    }
 
     this.addressForm = this.createFormulario();
     //this.declararInputFile();
@@ -371,16 +384,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   };
 
   validarSaldoDisponible(saldoIngresado: number, nombreAportante: string, aportante) {
-
-    console.log('apo',aportante);
-    let saldoDisponible = 0;
-
-    this.novedad.novedadContractualDescripcion.forEach( descripcion => {
-      // Adicion
-      if ( descripcion.tipoNovedadCodigo === "3" ){
-        saldoDisponible = descripcion.presupuestoAdicionalSolicitado; 
-      }
-    });
+    let saldoDisponible = this.presupuestoAdicionalSolicitado;
 
      if (saldoIngresado > saldoDisponible) {
        this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);
@@ -616,8 +620,15 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;
+    let totalValorAportanteProyecto = 0;
 
     this.novedad.novedadContractualAportante = [];
+
+    this.aportantes.controls.forEach( controlAportante => {
+      if ( controlAportante.get( 'valorAportanteProyecto' ).value !== null ) {
+        totalValorAportanteProyecto += controlAportante.get( 'valorAportanteProyecto' ).value
+      }
+    } )
 
     // aportantes
     this.aportantes.controls.forEach(controlAportante => {
@@ -693,6 +704,12 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
       this.novedad.novedadContractualAportante.push(aportante);
     });
+
+    if ( totalValorAportanteProyecto !== this.presupuestoAdicionalSolicitado ) {
+      this.openDialog('', '<b>No coincide el valor de los aportes con el presupuesto adicional solicitado.</b>')
+
+      return
+    }
 
     if (valoresCorrectos) {
 

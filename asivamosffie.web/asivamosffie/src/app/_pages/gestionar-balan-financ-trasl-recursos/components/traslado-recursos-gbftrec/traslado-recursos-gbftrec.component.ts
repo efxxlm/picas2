@@ -14,6 +14,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
   @Input() esVerDetalle: boolean;
+  balanceFinancieroId = 0;
 
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
@@ -71,6 +72,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       this.id
     ).subscribe(response => {
       if(response != null){
+        this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }
     });
