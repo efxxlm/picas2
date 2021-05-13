@@ -13,6 +13,7 @@ export class VerDetalleTramiteComponent implements OnInit {
   detalleId: string;
   novedad: NovedadContractual;
   tieneAdicion: boolean = false;
+  esNoFirma: boolean = false;
 
   detallarSolicitud = []
   tipoNovedadNombre: string = '';
@@ -35,7 +36,10 @@ export class VerDetalleTramiteComponent implements OnInit {
             if (d.tipoNovedadCodigo === '3')
               this.tieneAdicion = true;
 
-              this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 
+            if(d.tipoNovedadCodigo === '3 '|| d.tipoNovedadCodigo === '4' || d.tipoNovedadCodigo === '5')
+              this.esNoFirma = true;
+
+            this.tipoNovedadNombre = this.tipoNovedadNombre + d.nombreTipoNovedad + ', ' 
           });
 
 
