@@ -33,8 +33,9 @@
         {{ novedad.proyectosContrato[0].tipoIntervencion }}
       </p>
       <p>
-        <strong> Valor del contrato: </strong>
-        {{ novedad.proyectosContrato[0].valorTotal | currency: '':'symbol':'3.0' }}
+        <strong>Valor del contrato:</strong>
+        <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+          novedad.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}</span>
       </p>
       <p>
         <strong> Plazo: </strong>

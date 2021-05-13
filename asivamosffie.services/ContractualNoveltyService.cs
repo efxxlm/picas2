@@ -981,7 +981,7 @@ namespace asivamosffie.services
                     componenteFuenteNovedadOld.UsuarioCreacion = componenteFuenteNovedadOld.UsuarioCreacion;
 
                     //Registros
-
+                    componenteFuenteNovedadOld.FuenteFinanciacionId = componenteFuenteNovedad.FuenteFinanciacionId;
                     componenteFuenteNovedadOld.FuenteRecursosCodigo = componenteFuenteNovedad.FuenteRecursosCodigo;
 
 
@@ -991,7 +991,7 @@ namespace asivamosffie.services
                 foreach (ComponenteUsoNovedad uso in componenteFuenteNovedad.ComponenteUsoNovedad)
                 {
                     uso.UsuarioCreacion = componenteFuenteNovedad.UsuarioCreacion;
-
+                    uso.ComponenteFuenteNovedadId = componenteFuenteNovedad.ComponenteFuenteNovedadId;
                     await CreateEditNovedadContractualUso(uso);
                 }
 

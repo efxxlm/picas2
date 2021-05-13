@@ -7,7 +7,7 @@
     </div>
     <h1 class="title-menu--h1">
       <span *ngIf="novedad.estadoCodigo === '5'"> Ver detalle/Editar </span>
-      <span *ngIf="true"> Verificar </span>
+      <span *ngIf="true"> Validar </span>
       solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
@@ -42,9 +42,8 @@
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        <span>
-          {{ novedad.proyectosContrato[0].valorTotal | currency: '':'symbol-narrow':'.0-0' }}
-        </span>
+        <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+          novedad.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}</span>
       </p>
       <p>
         <strong>Plazo:</strong>
