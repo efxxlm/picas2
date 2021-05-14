@@ -43,7 +43,19 @@ export class ValidacionPresupuestalComponent implements OnInit {
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
             console.log( this.detailavailabilityBudget )
-
+          if(this.esNovedad){
+            if ( this.detailavailabilityBudget.novedadContractual !== undefined ) {
+              if ( this.detailavailabilityBudget.novedadContractual.novedadContractualDescripcion !== undefined ) {
+                if ( this.detailavailabilityBudget.novedadContractual.novedadContractualDescripcion.length > 0 ) {
+                  this.detailavailabilityBudget.novedadContractual.novedadContractualDescripcion.forEach( descripcion => {
+                    if ( descripcion.presupuestoAdicionalSolicitado !== undefined ) {
+                      this.valorGestionado += descripcion.presupuestoAdicionalSolicitado
+                    }
+                  } )
+                }
+              }
+            }
+          }else{
             if ( this.detailavailabilityBudget.aportantes !== undefined ) {
               if ( this.detailavailabilityBudget.aportantes.length > 0 ) {
                 this.detailavailabilityBudget.aportantes.forEach( aportante => {
@@ -59,6 +71,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
                 } )
               }
             }
+          }
           }
         });  
       // }else{
@@ -97,24 +110,25 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
   sePuedeValidarFuente() {
     if (this.detailavailabilityBudget) {
+      console.log(this.valorGestionado , " - ", this.detailavailabilityBudget.valorSolicitud);
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
-        this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
-        if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
-          return true;
+          this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
+          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
+            return true;
+          }
+          else {
+            return false;
+          }
         }
-        else {
-          return false;
+        else {//para tradicional
+          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
+            return true;
+          }
+          else {
+            return false;
+          }
+  
         }
-      }
-      else {//para tradicional
-        if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
-          return true;
-        }
-        else {
-          return false;
-        }
-
-      }
     }
     else {
       return false;
