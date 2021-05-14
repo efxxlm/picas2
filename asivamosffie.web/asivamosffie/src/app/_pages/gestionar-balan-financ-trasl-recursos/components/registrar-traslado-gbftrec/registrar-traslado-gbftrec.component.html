@@ -5,7 +5,13 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">Registrar traslado balance {{ proyecto.llaveMen }}</h1>
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <h1 class="title-menu--h1">Ver detalle traslado balance {{ proyecto.llaveMen }}</h1>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <h1 class="title-menu--h1">{{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} traslado balance {{ proyecto.llaveMen }}</h1>
+    </ng-template>
+
     <p class="info-sub-title">
         <span>Número de contrato de obra: <b> {{ proyecto.numeroContratoObra }} </b></span>
         <span>Número de contrato de interventoría: <b> {{ proyecto.numeroContratoInterventoria }} </b></span>
@@ -45,5 +51,8 @@
         </mat-card-content>
     </mat-card>
 
-    <app-control-solicitudes-traslado-gbftrec [proyectoId]="proyectoId"></app-control-solicitudes-traslado-gbftrec>
+    <app-control-solicitudes-traslado-gbftrec   [proyectoId]="proyectoId"
+                                                [esRegistroNuevo]="esRegistroNuevo"
+                                                [esVerDetalle]="esVerDetalle">
+    </app-control-solicitudes-traslado-gbftrec>
 </section>

@@ -4,7 +4,7 @@
             <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Tercero de causación  - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
+                        Tercero de causación - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
         
@@ -65,6 +65,7 @@
                                                                     required
                                                                     formControlName="nuevoValorDescuento"
                                                                     (keypress)="validateNumberKeypress($event)"
+                                                                    (ngModelChange)="checkValueAportante( $event, i, j, k, l, 'aportante' )"
                                                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                                                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
@@ -128,6 +129,7 @@
                                                                                             required
                                                                                             formControlName="nuevoValorDescuento"
                                                                                             (keypress)="validateNumberKeypress($event)"
+                                                                                            (ngModelChange)="checkValueAportante( $event, i, j, k, l, 'descuentoFinanciera' )"
                                                                                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                                                                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
@@ -158,6 +160,7 @@
                                         </div>
                                     </div>
             
+                                    <!--
                                     <div>
                                         <h2 class="card-subTitle">Descuentos Dirección técnica</h2>
             
@@ -197,6 +200,7 @@
                                                                                             required
                                                                                             formControlName="nuevoValorDescuento"
                                                                                             (keypress)="validateNumberKeypress($event)"
+                                                                                            (ngModelChange)="checkValueAportante( $event, i, j, k, l, 'descuentoTecnica' )"
                                                                                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                                                                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
@@ -226,6 +230,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    -->
                                 </mat-card-content>
                             </mat-card>
 

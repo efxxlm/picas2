@@ -124,7 +124,15 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
-            <app-form-tercero-causacion [solicitudPago]="solicitudPago"></app-form-tercero-causacion>
+            <app-form-descuentos-direccion-tecnica  [solicitudPago]="solicitudPago"
+                                                    [esVerDetalle]="esVerDetalle"
+                                                    [esRegistroNuevo]="esRegistroNuevo">
+            </app-form-descuentos-direccion-tecnica>
+
+            <app-form-tercero-causacion [solicitudPago]="solicitudPago"
+                                        [esVerDetalle]="esVerDetalle"
+                                        [esRegistroNuevo]="esRegistroNuevo">
+            </app-form-tercero-causacion>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

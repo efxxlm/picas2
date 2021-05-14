@@ -45,6 +45,9 @@
 <!--Solo para efectos de maquetación-->
 <div *ngIf="ordenesGiro.length > 0">
     <div *ngFor="let ordenGiro of ordenesGiro.controls; index as i">
-        <app-form-orden-giro-seleccionada [ordenGiro]="ordenGiro"></app-form-orden-giro-seleccionada>
+        <app-form-orden-giro-seleccionada   [ordenGiro]="ordenGiro"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [esRegistroNuevo]="esRegistroNuevo">
+        </app-form-orden-giro-seleccionada>
     </div>
 </div>

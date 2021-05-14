@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-control-solicitudes-traslado-gbftrec',
@@ -14,6 +15,8 @@ import { Dominio, CommonService } from 'src/app/core/_services/common/common.ser
 export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
 
     @Input() proyectoId: number;
+    @Input() esVerDetalle: boolean;
+    @Input() esRegistroNuevo: boolean;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     listaTipoSolicitudContrato: Dominio[] = [];
@@ -24,8 +27,8 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     idContrato = null;
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
-        tipoSolicitud: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ],
-        numeroOrdenGiro: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ]
+        tipoSolicitud: [ null ],
+        numeroOrdenGiro: [ null ]
     });
     displayedColumns: string[] = [
         'tipoSolicitudGiro',
@@ -40,6 +43,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private balanceSvc: FinancialBalanceService,
         private commonSvc: CommonService )
     { }
 
@@ -53,6 +57,8 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     getParamsSearch() {
         if ( this.addressForm.get( 'tipoSolicitud' ).value !== null || this.addressForm.get( 'numeroOrdenGiro' ).value !== null ) {
             this.dataTable = [];
+
+            
 
             this.dataTable.push(
                 {

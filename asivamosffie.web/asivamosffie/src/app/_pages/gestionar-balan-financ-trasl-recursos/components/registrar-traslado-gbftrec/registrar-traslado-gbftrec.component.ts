@@ -1,4 +1,4 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Location } from '@angular/common';
@@ -14,6 +14,8 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
 
     proyecto: any;
     proyectoId = 0;
+    esRegistroNuevo = true;
+    esVerDetalle = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
@@ -43,6 +45,17 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
         private location: Location,
         private financialBalanceSvc: FinancialBalanceService )
     {
+        this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+            if ( urlSegment.path === 'verDetalleEditarTraslado' ) {
+                this.esRegistroNuevo = false
+                return
+            }
+
+            if ( urlSegment.path === 'verDetalleTraslado' ) {
+                this.esVerDetalle = true
+                return
+            }
+        } )
         this.getProyectoId()
     }
 
@@ -61,7 +74,7 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
         .subscribe( getDataByProyectoId => {
             if( getDataByProyectoId.length > 0 ){
                 this.proyecto = getDataByProyectoId[0]
-                console.log( this.proyecto );
+                console.log( this.proyecto, this.esRegistroNuevo );
             }
         } );
     }

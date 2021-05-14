@@ -13,6 +13,8 @@ import moment from 'moment';
 export class FormOrdenGiroComponent implements OnInit, OnChanges {
 
     @Input() listaBusqueda = [];
+    @Input() esVerDetalle: boolean;
+    @Input() esRegistroNuevo: boolean;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     dataSource: MatTableDataSource<any>;

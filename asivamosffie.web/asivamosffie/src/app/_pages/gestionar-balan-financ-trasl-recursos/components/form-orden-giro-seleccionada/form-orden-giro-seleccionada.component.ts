@@ -12,6 +12,8 @@ import { MediosPagoCodigo } from 'src/app/_interfaces/estados-solicitudPago-orde
 export class FormOrdenGiroSeleccionadaComponent implements OnInit {
 
     @Input() ordenGiro: FormGroup;
+    @Input() esVerDetalle: boolean;
+    @Input() esRegistroNuevo: boolean;
     listaMediosPagoCodigo = MediosPagoCodigo;
     addressForm: FormGroup;
     listaModalidad: Dominio[] = [];

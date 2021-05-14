@@ -214,9 +214,13 @@ export class TerceroCausacionGogComponent implements OnInit {
                                             if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                                 for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
                                                     const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
-                                                    let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-                                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
-                                                    
+                                                    let listaFuenteRecursos: any[];
+                                                    let fuente: any;
+                                                    if ( nombreAportante !== undefined ) {
+                                                        listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                        fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
+                                                    }
+
                                                     listaAportanteDescuentos.push(
                                                         this.fb.group(
                                                             {
