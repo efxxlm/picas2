@@ -212,7 +212,7 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
+               // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
 
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
                 {
@@ -229,7 +229,7 @@ namespace asivamosffie.services
                         pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
                 }
 
-                if (pBalanceFinanciero.BalanceFinancieroId == 0 || balanceFinanciero == null)
+                if (pBalanceFinanciero.BalanceFinancieroId == 0)
                 {
                     strCrearEditar = "CREAR BALANCE FINANCIERO";
                     pBalanceFinanciero.FechaCreacion = DateTime.Now;
@@ -246,12 +246,12 @@ namespace asivamosffie.services
                                                                        RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
                                                                        JustificacionTrasladoAportanteFuente = pBalanceFinanciero.JustificacionTrasladoAportanteFuente,
                                                                        UrlSoporte = pBalanceFinanciero.UrlSoporte,
-                                                                       NumeroTraslado = pBalanceFinanciero.NumeroTraslado > 0 ? pBalanceFinanciero.NumeroTraslado : balanceFinanciero.NumeroTraslado,
+                                                                       NumeroTraslado = pBalanceFinanciero.NumeroTraslado > 0 ? pBalanceFinanciero.NumeroTraslado : pBalanceFinanciero.NumeroTraslado,
                                                                        RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
                                                                        EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
                                                                    });
 
-                    CreateEditBalanceFinancieroTrasladoValor(balanceFinanciero.BalanceFinancieroTrasladoValor, pBalanceFinanciero.UsuarioCreacion);
+                    CreateEditBalanceFinancieroTrasladoValor(pBalanceFinanciero.BalanceFinancieroTrasladoValor, pBalanceFinanciero.UsuarioCreacion);
                 }
                 return
                 new Respuesta
@@ -359,7 +359,6 @@ namespace asivamosffie.services
             }
         }
 
-        #endregion
-         
+        #endregion 
     }
 }

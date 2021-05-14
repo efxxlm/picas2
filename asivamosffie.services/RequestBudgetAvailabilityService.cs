@@ -189,6 +189,8 @@ namespace asivamosffie.services
 
                                 foreach (var font in ppapor.Aportante.FuenteFinanciacion)
                                 {
+
+                                    int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
                                     //el saldo de la fuente realmente es lo que tengo en control de recursos
                                     //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                                     decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
@@ -204,11 +206,11 @@ namespace asivamosffie.services
 
                                     var gestionAlGuardar = _context.GestionFuenteFinanciacion
                                             .Where(x => x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId &&
-                                                x.FuenteFinanciacionId == font.FuenteFinanciacionId)
+                                                        x.FuenteFinanciacionId == font.FuenteFinanciacionId)
                                             .FirstOrDefault();
 
-                                    var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteRecursosCodigo
-                                              && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+                                    var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteRecursosCodigo &&
+                                                                                x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
                                     string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
                                     fuentes.Add(new GrillaFuentesFinanciacion
                                     {
@@ -245,7 +247,7 @@ namespace asivamosffie.services
                                                     {
                                                         cfn.ComponenteUsoNovedad.ToList().ForEach(cun =>
                                                         {
-                                                            valorproyecto = valorproyecto + cun.ValorUso;
+                                                            valorproyecto += cun.ValorUso;
                                                         });
                                                     });
                                                 });

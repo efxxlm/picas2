@@ -29,6 +29,8 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
 
         }
+
+        //OLD
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
