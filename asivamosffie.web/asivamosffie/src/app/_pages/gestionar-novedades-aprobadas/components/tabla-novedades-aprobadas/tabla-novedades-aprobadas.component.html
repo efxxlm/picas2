@@ -91,20 +91,25 @@
         
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         (click)="EnviarAComite(element.novedadContractualId)"
-        *ngIf="(element.estadoCodigo === '17' || element.estadoCodigo === '27') && 
+        *ngIf="(element.estadoCodigo === '17'&& 
                element.registroCompletoTramiteNovedades === true &&
                element.vaComite === true &&
                !(element.novedadContractual.deseaContinuar === false && 
-               element.novedadContractual.razonesNoContinuaProceso)" >
+               element.novedadContractual.razonesNoContinuaProceso)) || 
+               (element.estadoCodigo === '27' && 
+               element.registroCompletoTramiteNovedades === true &&
+               element.vaComite === true)" >
           Enviar a comité técnico
         </button>
 
           <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="AprobacionTecnicaJuridica(element.novedadContractualId)"
-          *ngIf="(element.estadoCodigo === '17'  || element.estadoCodigo === '27') && 
+          *ngIf="(element.estadoCodigo === '17' && 
                  element.novedadContractual.deseaContinuar === true && 
                  element.registroCompletoTramiteNovedades === true &&
-                 element.vaComite === false" >
+                 element.vaComite === false) || (element.estadoCodigo === '27'  && 
+                 element.registroCompletoTramiteNovedades === true &&
+                 element.vaComite === false)" >
           Enviar trámite
         
         </button>
@@ -123,7 +128,7 @@
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
       (click)="cancelarNovedad(element.novedadContractualId)"
       *ngIf="
-              (element.estadoCodigo === '17' || element.estadoCodigo === '27') && 
+              (element.estadoCodigo === '17') && 
               element.novedadContractual.deseaContinuar === false && 
               element.novedadContractual.razonesNoContinuaProceso">
         Cancelar novedad
