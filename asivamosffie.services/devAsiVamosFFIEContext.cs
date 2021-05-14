@@ -257,6 +257,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
         public virtual DbSet<VNovedadContractualReporteHist> VNovedadContractualReporteHist { get; set; }
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
+        public virtual DbSet<VOrdenGiroXproyecto> VOrdenGiroXproyecto { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VProcesoSeleccionIntegrante> VProcesoSeleccionIntegrante { get; set; }
@@ -297,6 +298,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -8915,6 +8917,31 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoSolicitud)
                     .IsRequired()
                     .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VOrdenGiroXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_OrdenGiroXProyecto");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NumeroOrdenGiro)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()

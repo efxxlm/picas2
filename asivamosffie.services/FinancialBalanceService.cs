@@ -100,35 +100,65 @@ namespace asivamosffie.services
             return ProyectoAjustado;
         }
 
-        public async Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro)
+        public async Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
         {
             if (string.IsNullOrEmpty(pNumeroOrdenGiro))
-            {
-                return (
-                          await _context.VOrdenGiro
-                                                    .Where(v => v.TipoSolicitudCodigo == pTipoSolicitudCodigo 
-                                                        && v.RegistroCompletoTramitar)
-                                                    .Select(v => new
-                                                    {
+            { 
+                List<VOrdenGiroXproyecto> ListOrdenGiroId =
+                       _context.VOrdenGiroXproyecto
+                       .Where(r => r.LlaveMen == pLLaveMen
+                           && r.TipoSolicitudCodigo == pTipoSolicitudCodigo)
+                       .ToList();
+
+                List<VOrdenGiroXproyecto> vOrdenGiroXproyectosNoRepetidos = new List<VOrdenGiroXproyecto>();
+                List<VOrdenGiro> VOrdenGiro = new List<VOrdenGiro>();
+
+                List<VOrdenGiro> ListOrdenGiro = await _context.VOrdenGiro.ToListAsync();
+                 
+                foreach (var item in ListOrdenGiroId)
+                {
+                    if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
+                    {
+                        vOrdenGiroXproyectosNoRepetidos.Add(item); 
+                        VOrdenGiro.Add(ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
+                    } 
+                } 
+                return (  VOrdenGiro.Select(v => new {
 
                                                         v.FechaAprobacionFinanciera,
                                                         v.TipoSolicitud,
                                                         v.NumeroSolicitudOrdenGiro,
                                                         v.OrdenGiroId
-                                                    }).ToListAsync());
+                                                     }).ToList());
             }
             else
             {
-                return (
-                   await _context.VOrdenGiro
-                                            .Where(v => v.TipoSolicitudCodigo == pTipoSolicitudCodigo
-                                                && v.NumeroSolicitudOrdenGiro == pNumeroOrdenGiro
-                                                && v.RegistroCompletoTramitar)
-                                            .Select(v => new
-                                            {
-                                                v.NumeroSolicitudOrdenGiro,
-                                                v.OrdenGiroId
-                                            }).ToListAsync());
+                List<VOrdenGiroXproyecto> ListOrdenGiroId =
+                          _context.VOrdenGiroXproyecto
+                          .Where(r => r.LlaveMen == pLLaveMen
+                              && r.NumeroOrdenGiro == pNumeroOrdenGiro)
+                          .ToList();
+
+                List<VOrdenGiroXproyecto> vOrdenGiroXproyectosNoRepetidos = new List<VOrdenGiroXproyecto>();
+                List<VOrdenGiro> VOrdenGiro = new List<VOrdenGiro>();
+
+                List<VOrdenGiro> ListOrdenGiro = await _context.VOrdenGiro.ToListAsync();
+
+                foreach (var item in ListOrdenGiroId)
+                {
+                    if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
+                    {
+                        vOrdenGiroXproyectosNoRepetidos.Add(item);
+                        VOrdenGiro.Add(ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
+                    }
+                }
+                return (VOrdenGiro.Select(v =>
+                new { 
+                    v.FechaAprobacionFinanciera,
+                    v.TipoSolicitud,
+                    v.NumeroSolicitudOrdenGiro,
+                    v.OrdenGiroId
+                }).ToList());
             }
         }
 
@@ -136,7 +166,7 @@ namespace asivamosffie.services
         {
             return await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
-                                                    .Include(r=> r.BalanceFinancieroTrasladoValor)
+                                                    .Include(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
         }
 
@@ -212,7 +242,7 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-               // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
+                // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
 
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
                 {
@@ -288,6 +318,13 @@ namespace asivamosffie.services
                     BalanceFinancieroTrasladoValor.Eliminado = false;
 
                     _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
+                     
+                    _context.Set<OrdenGiro>()
+                            .Where(o => o.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId)
+                            .Update(o=> new OrdenGiro
+                            { 
+                                TieneBalance = true
+                            });
                 }
                 else
                 {
@@ -303,7 +340,6 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
 
         private async Task<bool> RegistroCompletoBalanceFinanciero(BalanceFinanciero balanceFinanciero)
         {

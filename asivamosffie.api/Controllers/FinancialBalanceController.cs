@@ -30,22 +30,58 @@ namespace asivamosffie.api.Controllers
         [Route("GridBalance")]
         public async Task<IActionResult> GridBalance()
         {
-            return Ok(await _finalBalanceService.GridBalance());
+            try
+            { 
+                return Ok(await _finalBalanceService.GridBalance()); 
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+ 
+        [HttpGet]
+        [Route("GetOrdenGiroBy")]
+        public async Task<IActionResult> GetOrdenGiroBy([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.GetOrdenGiroBy(pTipoSolicitudCodigo, pNumeroOrdenGiro, pLLaveMen));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [HttpGet]
         [Route("GetContratoByProyectoId")]
         public async Task<IActionResult> GetContratoByProyectoId([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
+            try
+            {
+                return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
         }
 
         [HttpGet]
         [Route("GetDataByProyectoId")]
         public async Task<IActionResult> GetDataByProyectoId([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId));
-        }
+            try
+            {
+                return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId)); 
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+       }
 
         [HttpPost]
         [Route("CreateEditBalanceFinanciero")]
@@ -69,7 +105,14 @@ namespace asivamosffie.api.Controllers
         [Route("GetBalanceFinanciero")]
         public async Task<IActionResult> GetBalanceFinanciero([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
+            try
+            {
+                return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            } 
         }
 
         [HttpPost]
