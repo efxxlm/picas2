@@ -386,6 +386,11 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=192`);
   }
 
+  listaTrasladoCodigo() {
+    // Lista del campo tipo traslado codigo para el guardado de la tabla "BalanceFinancieroTrasladoValor" CU 5.3.1
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=196`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

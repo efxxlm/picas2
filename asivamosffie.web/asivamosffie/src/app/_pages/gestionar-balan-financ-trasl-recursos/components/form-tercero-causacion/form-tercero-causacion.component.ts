@@ -1,9 +1,14 @@
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormBuilder, FormArray, Validators, FormGroup } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import humanize from 'humanize-plus';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { TipoTrasladoCodigo } from 'src/app/_interfaces/balance-financiero.interface';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-tercero-causacion',
@@ -13,10 +18,15 @@ import humanize from 'humanize-plus';
 export class FormTerceroCausacionComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    tipoTrasladoCodigo = TipoTrasladoCodigo;
+    balanceFinanciero: any;
+    balanceFinancieroId = 0;
+    ordenGiroId = 0;
     tipoDescuentoArray: Dominio[] = [];
     tipoDescuentoTecnicaArray: Dominio[] = [];
     fasePreConstruccionFormaPagoCodigo: any;
     ordenGiroDetalleTerceroCausacion: any[];
+    ordenGiroDetalleDescuentoTecnica: any[];
     esRegistroNuevo = true;
     formTerceroCausacion = this.fb.group(
         {
@@ -50,21 +60,37 @@ export class FormTerceroCausacionComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private activatedRoute: ActivatedRoute,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private ordenGiroSvc: OrdenPagoService,
+        private routes: Router,
+        private balanceSvc: FinancialBalanceService,
+        private dialog: MatDialog,
         private commonSvc: CommonService )
-    { }
+    {
+    }
 
     async ngOnInit() {
         let ordenGiroDetalle: any;
+        this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero( this.activatedRoute.snapshot.params.id ).toPromise();
         this.tipoDescuentoTecnicaArray = await this.commonSvc.tiposDescuento().toPromise();
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
+        console.log( this.balanceFinanciero )
+
+        this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
 
         if ( this.solicitudPago.ordenGiro !== undefined ) {
+            this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
     
             if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
                 if ( this.solicitudPago.ordenGiro.ordenGiroDetalle.length > 0 ) {
                     ordenGiroDetalle = this.solicitudPago.ordenGiro.ordenGiroDetalle[0];
+
+                    if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica !== undefined ) {
+                        if ( ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                            this.ordenGiroDetalleDescuentoTecnica = ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
+                        }
+                    }
 
                     if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
                         if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
@@ -81,6 +107,7 @@ export class FormTerceroCausacionComponent implements OnInit {
             let nuevoValorRegistrado = 0;
             const solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
             const solicitudPagoFaseFactura = solicitudPagoFase.solicitudPagoFaseFactura[0];
+            const detalleDescuentoTecnica = this.ordenGiroDetalleDescuentoTecnica.filter( ordenGiroDetalleDescuentoTecnica => ordenGiroDetalleDescuentoTecnica.esPreconstruccion === solicitudPagoFase.esPreconstruccion );
 
             if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
                 this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
@@ -136,7 +163,6 @@ export class FormTerceroCausacionComponent implements OnInit {
                     if ( terceroCausacion !== undefined ) {
                         if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                             terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-
                                 if ( descuento.tipoDescuentoCodigo !== undefined ) {                                            
                                     const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
 
@@ -144,10 +170,13 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         listDescuento.splice( descuentoIndex, 1 );
                                     }
                                 }
+
                                 listaDescuentos.push(
                                     this.fb.group(
                                         {
                                             ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
+                                            balanceFinancieroTrasladoValorId: [ 0 ],
+                                            tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionFinanciera ) ],
                                             tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
                                             valorDescuento: [ descuento.valorDescuento, Validators.required ],
                                             nuevoValorDescuento: [ null, Validators.required ]
@@ -171,6 +200,8 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         this.fb.group(
                                             {
                                                 ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                balanceFinancieroTrasladoValorId: [ 0 ],
+                                                tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.aportante ) ],
                                                 tipoAportante: [ tipoAportante, Validators.required ],
                                                 listaNombreAportantes: [ [ nombreAportante ] ],
                                                 nombreAportante: [ nombreAportante, Validators.required ],
@@ -193,16 +224,23 @@ export class FormTerceroCausacionComponent implements OnInit {
                                 if ( solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento !== undefined ) {
                                     if ( solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length > 0 ) {
                                         solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuentoTecnica => {
-                                            listaDescuentoTecnica.push(
-                                                this.fb.group(
-                                                    {
-                                                        solicitudPagoFaseFacturaDescuentoId: [ descuentoTecnica.solicitudPagoFaseFacturaDescuentoId ],
-                                                        tipoDescuento: [ descuentoTecnica.tipoDescuentoCodigo, Validators.required ],
-                                                        valorDescuento: [ descuentoTecnica.valorDescuento, Validators.required ],
-                                                        nuevoValorDescuento: [ null, Validators.required ]
-                                                    }
+                                            const descuentoTecnicaOrdenGiro = detalleDescuentoTecnica.find( detalleDescuentoTecnica => detalleDescuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuentoTecnica.solicitudPagoFaseFacturaDescuentoId )
+
+                                            if ( descuentoTecnicaOrdenGiro !== undefined ) {
+                                                listaDescuentoTecnica.push(
+                                                    this.fb.group(
+                                                        {
+                                                            ordenGiroDetalleDescuentoTecnicaId: [ descuentoTecnicaOrdenGiro.ordenGiroDetalleDescuentoTecnicaId ],
+                                                            solicitudPagoFaseFacturaDescuentoId: [ descuentoTecnica.solicitudPagoFaseFacturaDescuentoId ],
+                                                            balanceFinancieroTrasladoValorId: [ 0 ],
+                                                            tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionTecnica ) ],
+                                                            tipoDescuento: [ descuentoTecnica.tipoDescuentoCodigo, Validators.required ],
+                                                            valorDescuento: [ descuentoTecnica.valorDescuento, Validators.required ],
+                                                            nuevoValorDescuento: [ null, Validators.required ]
+                                                        }
+                                                    )
                                                 )
-                                            )
+                                            }
                                         } )
                                     }
                                 }
@@ -296,16 +334,91 @@ export class FormTerceroCausacionComponent implements OnInit {
         return alphanumeric.test(inputChar) ? true : false;
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     guardar( index: number ) {
-        const pBalanceFinanciero = [];
+        const getBalanceFinancieroTrasladoValor = () => {
+            const balanceFinancieroTraslado = [];
 
-        this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
-            pBalanceFinanciero.push(
-                {
-
+            this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
+                if ( criterioControl.dirty === true ) {
+                    this.getConceptos( index, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                        this.getAportantes( index, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
+                            if ( aportanteControl.dirty === true ) {
+                                balanceFinancieroTraslado.push(
+                                    {
+                                        ordenGiroId: this.ordenGiroId,
+                                        balanceFinancieroId: this.balanceFinancieroId,
+                                        balanceFinancieroTrasladoValorId: aportanteControl.get( 'balanceFinancieroTrasladoValorId' ).value,
+                                        tipoTrasladoCodigo: aportanteControl.get( 'tipoTrasladoCodigo' ).value,
+                                        ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value,
+                                        valorTraslado: aportanteControl.get( 'nuevoValorDescuento' ).value
+                                    }
+                                )
+                            }
+                        } )
+                        
+                        if ( this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).length > 0 ) {
+                            this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).controls.forEach( descuentoFinanciera => {
+                                if ( descuentoFinanciera.dirty === true ) {
+                                    balanceFinancieroTraslado.push(
+                                        {
+                                            ordenGiroId: this.ordenGiroId,
+                                            balanceFinancieroId: this.balanceFinancieroId,
+                                            balanceFinancieroTrasladoValorId: descuentoFinanciera.get( 'balanceFinancieroTrasladoValorId' ).value,
+                                            tipoTrasladoCodigo: descuentoFinanciera.get( 'tipoTrasladoCodigo' ).value,
+                                            ordenGiroDetalleTerceroCausacionDescuentoId: descuentoFinanciera.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
+                                            valorTraslado: descuentoFinanciera.get( 'nuevoValorDescuento' ).value
+                                        }
+                                    )
+                                }
+                            } )
+                        }
+                        if ( this.getDescuentosTecnica( index, indexCriterio, indexConcepto ).length > 0 ) {
+                            this.getDescuentosTecnica( index, indexCriterio, indexConcepto ).controls.forEach( descuentoTecnica => {
+                                if ( descuentoTecnica.dirty === true ) {
+                                    balanceFinancieroTraslado.push(
+                                        {
+                                            ordenGiroId: this.ordenGiroId,
+                                            balanceFinancieroId: this.balanceFinancieroId,
+                                            balanceFinancieroTrasladoValorId: descuentoTecnica.get( 'balanceFinancieroTrasladoValorId' ).value,
+                                            tipoTrasladoCodigo: descuentoTecnica.get( 'tipoTrasladoCodigo' ).value,
+                                            ordenGiroDetalleDescuentoTecnicaId: descuentoTecnica.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
+                                            valorTraslado: descuentoTecnica.get( 'nuevoValorDescuento' ).value
+                                        }
+                                    )
+                                }
+                            } )
+                        }
+                    } )
                 }
+            } )
+
+            return balanceFinancieroTraslado.length > 0 ? balanceFinancieroTraslado : null;
+        }
+
+        this.balanceFinanciero.balanceFinancieroTrasladoValor = getBalanceFinancieroTrasladoValor()
+
+        this.balanceSvc.createEditBalanceFinanciero( this.balanceFinanciero )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado', this.activatedRoute.snapshot.params.id
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
-        } )
     }
 
 }

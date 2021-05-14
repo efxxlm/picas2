@@ -1,3 +1,4 @@
+import { Respuesta } from './../common/common.service';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -20,7 +21,7 @@ export class FinancialBalanceService {
     }
 
     createEditBalanceFinanciero( pBalanceFinanciero: any ){
-      return this.http.post(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
+      return this.http.post<Respuesta>(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
     }
  
     getBalanceFinanciero( pProyectoId: number) {
