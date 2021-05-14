@@ -358,12 +358,10 @@ namespace asivamosffie.services
             {
                 ListOrdenGiroIds = await _context.OrdenGiro
                     .Include(s => s.SolicitudPago)
-                    .Where(r => r.FechaRegistroCompletoAprobar.HasValue
-                       && !r.FechaRegistroCompletoTramitar.HasValue
+                    .Where(r => r.FechaRegistroCompletoTramitar.HasValue
                        && r.SolicitudPago.Count() > 0
                     )
-                    .Select(r => r.OrdenGiroId)
-
+                    .Select(r => r.OrdenGiroId) 
                     .ToListAsync();
             }
             else
@@ -440,7 +438,7 @@ namespace asivamosffie.services
             Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleDescuentoTecnica?.Sum(r => r.OrdenGiroDetalleDescuentoTecnicaAportante?.Sum(r => r.ValorDescuento)));
 
 
-            UrlSoporte = "<a href='" + UrlSoporte + "'>Link</a>";
+            UrlSoporte = "<a href=' target='_blank'" + UrlSoporte + "'>Link</a>";
             try
             {
                 pContenido = pContenido

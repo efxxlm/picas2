@@ -388,8 +388,7 @@ namespace asivamosffie.api.Controllers
         [Route("CreateDRP")]
         [HttpPost]
         public async Task<IActionResult> CreateDRP(int id, bool esNovedad, int RegistroPresupuestalId)
-        {
-
+        { 
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
@@ -411,8 +410,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                //return File(respuesta, "application/octet-stream");
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value; 
                 return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
