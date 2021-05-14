@@ -15,7 +15,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
   @Input() esVerDetalle: boolean;
   balanceFinancieroId = 0;
-
+  balanceFinancieroTrasladoValor: any;
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
     proyectoId: [ɵNullViewportScroller, Validators.required],
@@ -72,6 +72,11 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       this.id
     ).subscribe(response => {
       if(response != null){
+        if ( response[ 'balanceFinancieroTrasladoValor' ] !== undefined ) {
+          if ( response[ 'balanceFinancieroTrasladoValor' ].length > 0 ) {
+            this.balanceFinancieroTrasladoValor = response[ 'balanceFinancieroTrasladoValor' ];
+          }
+        }
         this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }
@@ -92,7 +97,8 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
         requiereTransladoRecursos: this.addressForm.get( 'requiereTransladoRecursos' ).value,
         justificacionTrasladoAportanteFuente: this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).value,
         urlSoporte: this.addressForm.get( 'urlSoporte' ).value,
-      };
+        balanceFinancieroTrasladoValor: this.balanceFinancieroTrasladoValor !== undefined ? this.balanceFinancieroTrasladoValor : null
+    };
 
     this.financialBalanceService.createEditBalanceFinanciero( pBalanceFinanciero )
     .subscribe((respuesta: Respuesta) => {
