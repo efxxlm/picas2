@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/solicitarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -21,7 +21,7 @@
             {{fechaComite| date:'dd/MM/yyyy'}}
         </p>
     </div>
-    <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitudColdigo === '3'">
+    <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitud == 2">
         <mat-card-content align="left">
             <p>
                 <b>DDP:</b>
@@ -31,10 +31,10 @@
                 <b>Valor DDP:</b>
                 {{ddpvalor|currency:'':'symbol':'3.0'}}
             </p>
-            <p>
+            <p class="mb-0">
                 <b>Detalle de la modificación:</b>
-                {{ddpdetalle}}
             </p>
+            <div [innerHtml]="ddpdetalle"></div>
         </mat-card-content>
     </mat-card>
     <mat-accordion>

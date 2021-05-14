@@ -24,7 +24,7 @@ const routes: Routes = [
     component: RegistrarInformacionAdicionalComponent
   },
   {
-    path: 'crearSolicitudTradicional/verDetalle/:idDisponibilidadPresupuestal/:idTipoSolicitud/:id/:idNovedad',
+    path: 'crearSolicitudTradicional/verDetalle/:id/:idDisponibilidadPresupuestal/:idTipoSolicitud/:idNovedad',
     component: DetalleDisponibilidadPresupuestalComponent
   },
   {
