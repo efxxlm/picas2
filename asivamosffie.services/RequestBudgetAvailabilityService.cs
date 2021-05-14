@@ -216,7 +216,7 @@ namespace asivamosffie.services
                                     //.Sum(x => x.ValorFuente));
 
                                     //Valor nuevo SOLICITADO NUEVO
-                                    decimal? valorsolicitado =
+                                    decimal valorsolicitado =
                                         _context.GestionFuenteFinanciacion
                                         .Where(x => !(bool)x.Eliminado
                                             && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId
@@ -237,14 +237,19 @@ namespace asivamosffie.services
                                     var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteRecursosCodigo &&
                                                                                 x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
                                     string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : string.Empty;
+
+                                    Decimal SaldoActualFuente = saldo - valorsolicitadoxotros;
+                                    Decimal NuevoSaldoFuente = Math.Abs(saldo - valorsolicitadoxotros - valorsolicitado);
+ 
+
                                     fuentes.Add(new GrillaFuentesFinanciacion
                                     {
                                         Fuente = namefuente,
                                         Estado_de_las_fuentes = string.Empty,
                                         FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                        Valor_solicitado_de_la_fuente = valorsolicitado ?? 0,
-                                        Nuevo_saldo_de_la_fuente = saldo - valorsolicitadoxotros - valorsolicitado ?? 0,
-                                        Saldo_actual_de_la_fuente = saldo - valorsolicitadoxotros,
+                                        Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                        Valor_solicitado_de_la_fuente = valorsolicitado,
+                                        Nuevo_saldo_de_la_fuente = NuevoSaldoFuente, 
                                         Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
                                         Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                                     });
