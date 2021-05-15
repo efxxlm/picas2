@@ -270,7 +270,7 @@ namespace asivamosffie.services
                     strCrearEditar = "ACTUALIZAR BALANCE FINANCIERO";
                     await _context.Set<BalanceFinanciero>().Where(r => r.BalanceFinancieroId == pBalanceFinanciero.BalanceFinancieroId)
                                                                    .UpdateAsync(r => new BalanceFinanciero()
-                                                                   {
+                                                                   { 
                                                                        FechaModificacion = DateTime.Now,
                                                                        UsuarioModificacion = pBalanceFinanciero.UsuarioCreacion,
                                                                        RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
@@ -280,7 +280,7 @@ namespace asivamosffie.services
                                                                        RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
                                                                        EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
                                                                    });
-
+                     
                     CreateEditBalanceFinancieroTrasladoValor(pBalanceFinanciero.BalanceFinancieroTrasladoValor, pBalanceFinanciero.UsuarioCreacion);
                 }
                 return
@@ -316,15 +316,17 @@ namespace asivamosffie.services
                     BalanceFinancieroTrasladoValor.UsuarioCreacion = pAuthor;
                     BalanceFinancieroTrasladoValor.FechaCreacion = DateTime.Now;
                     BalanceFinancieroTrasladoValor.Eliminado = false;
-
+                    BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
+                    
                     _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
                      
                     _context.Set<OrdenGiro>()
                             .Where(o => o.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId)
                             .Update(o=> new OrdenGiro
                             { 
-                                TieneBalance = true
-                            });
+                                ValorNetoGiroTraslado = ListBalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId).Sum(r => r.ValorTraslado) ?? 0,
+                                TieneTraslado = true
+                            });;
                 }
                 else
                 {
@@ -332,9 +334,11 @@ namespace asivamosffie.services
                             .Where(r => r.BalanceFinancieroTrasladoValorId == BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId)
                             .Update(r => new BalanceFinancieroTrasladoValor
                             {
+                                EsPreconstruccion = BalanceFinancieroTrasladoValor.EsPreconstruccion,
                                 UsuarioModificacion = pAuthor,
                                 FechaModificacion = DateTime.Now,
-                                ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado
+                                ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado,
+                                RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null 
                             });
                 }
             }

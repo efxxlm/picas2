@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class BalanceFinancieroTrasladoValor
     {
         public int BalanceFinancieroTrasladoValorId { get; set; }
-        public int BalanceFinancieroTrasladoId { get; set; }
         public string TipoTrasladoCodigo { get; set; }
         public int? OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
         public int? OrdenGiroDetalleTerceroCausacionDescuentoId { get; set; }
@@ -21,6 +20,7 @@ namespace asivamosffie.model.Models
         public int? OrdenGiroDetalleDescuentoTecnicaAportanteId { get; set; }
         public int? OrdenGiroId { get; set; }
         public int? BalanceFinancieroId { get; set; }
+        public bool? EsPreconstruccion { get; set; }
 
         public virtual BalanceFinanciero BalanceFinanciero { get; set; }
         public virtual OrdenGiro OrdenGiro { get; set; }

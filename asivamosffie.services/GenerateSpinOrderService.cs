@@ -231,7 +231,7 @@ namespace asivamosffie.services
                         )
                     .Sum(v => v.ValorUso);
 
-                string NombreAportante = 
+                string NombreAportante =
                     _budgetAvailabilityService
                     .getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
 
@@ -413,15 +413,13 @@ namespace asivamosffie.services
             String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
-            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneBalance == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroBalance ?? 0;
-
-
+            decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneTraslado == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroTraslado ?? 0;
+             
             List<VRpsPorContratacion> vRpsPorContratacion =
                                                            _context.VRpsPorContratacion
                                                            .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
                                                            .OrderBy(C => C.ContratacionId)
-                                                           .ToList();
-
+                                                           .ToList(); 
             int Enum = 1;
             foreach (var DPR in vRpsPorContratacion)
             {
@@ -489,7 +487,7 @@ namespace asivamosffie.services
                      };
             }
         }
-         
+
         public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -972,7 +970,7 @@ namespace asivamosffie.services
                                 AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId,
                                 TipoDescuentoCodigo = OrdenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo,
                                 ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento) 
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento)
                             });
                 }
             }
