@@ -270,6 +270,10 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
                                                                 .ToList();
 
+            List<Dominio> listDominioTipoAportante = _context.Dominio
+                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
+                                                    .ToList();
+
             List<Dominio> listDominioInstancias = _context.Dominio
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico)
                                                                 .ToList();
@@ -362,7 +366,6 @@ namespace asivamosffie.services
                     cpa.ComponenteFuenteNovedad = componenteFuenteNovedades;
                 }
 
-
                 apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
             }
 
@@ -448,6 +451,7 @@ namespace asivamosffie.services
                                                                             .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
                                                                             ?.FirstOrDefault()
                                                                             ?.Nombre;
+
                     foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
                     {
                         motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
@@ -462,7 +466,12 @@ namespace asivamosffie.services
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
                     novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
-
+                    
+                    if(novedadContractualAportante.CofinanciacionAportante != null)
+                        novedadContractualAportante.TipoAportante = listDominioTipoAportante
+                                    .Where(r => r.Codigo == novedadContractualAportante.CofinanciacionAportante.TipoAportanteId.ToString())
+                                    ?.FirstOrDefault()
+                                    ?.Nombre;
                     foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
                     {
                         componenteAportanteNovedad.NombreTipoComponente = listDominioComponente

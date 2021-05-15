@@ -110,7 +110,6 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
   sePuedeValidarFuente() {
     if (this.detailavailabilityBudget) {
-      console.log(this.valorGestionado , " - ", this.detailavailabilityBudget.valorSolicitud);
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
           this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
           if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
