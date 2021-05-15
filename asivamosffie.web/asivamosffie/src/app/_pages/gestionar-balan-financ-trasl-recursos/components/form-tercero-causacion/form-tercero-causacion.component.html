@@ -43,7 +43,7 @@
                                         <p><b>Tipo de aportante: </b> <i> {{ aportante.get( 'tipoAportante' ).value.nombre }} </i> </p>
                                         <p><b>Nombre del aportante: </b> <i> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </i> </p>
                                         <p><b>Fuente de los recursos: </b> <i> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </i> </p>
-                                        <p><b>Valor facturado por el concepto para el aportante, después del descuento: </b> <i> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
+                                        <p><b>Valor facturado por el concepto para el aportante: </b> <i> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
 
                                         <div class="row" [formGroup]="aportante">
                                             <div class="col-md-8">

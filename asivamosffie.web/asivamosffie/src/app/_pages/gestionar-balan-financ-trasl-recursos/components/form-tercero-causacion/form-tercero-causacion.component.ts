@@ -77,7 +77,7 @@ export class FormTerceroCausacionComponent implements OnInit {
         this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero( this.activatedRoute.snapshot.params.id ).toPromise();
         this.tipoDescuentoTecnicaArray = await this.commonSvc.tiposDescuento().toPromise();
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
-        console.log( this.balanceFinanciero, this.esVerDetalle, this.esRegistroNuevo )
+        console.log( this.balanceFinanciero )
 
         this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
         this.balanceFinancieroTrasladoValor = this.balanceFinanciero.balanceFinancieroTrasladoValor;
@@ -167,17 +167,19 @@ export class FormTerceroCausacionComponent implements OnInit {
                     if ( terceroCausacion !== undefined ) {
                         if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                             terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-                                let valorTraslado = 0;
+                                let valorTraslado: number;
+                                let balanceFinancieroTrasladoValorId = 0;
 
                                 if ( this.balanceFinancieroTrasladoValor !== undefined ) {
                                     if ( this.balanceFinancieroTrasladoValor.length > 0 ) {
                                         const balanceFinancieroTrasladoValor = this.balanceFinancieroTrasladoValor.find(
-                                            balanceFinancieroTrasladoValor => balanceFinancieroTrasladoValor.ordenGiroDetalleTerceroCausacionDescuentoId === descuento.ordenGiroDetalleTerceroCausacionDescuentoI
+                                            balanceFinancieroTrasladoValor => balanceFinancieroTrasladoValor.ordenGiroDetalleTerceroCausacionDescuentoId === descuento.ordenGiroDetalleTerceroCausacionDescuentoId
                                             && balanceFinancieroTrasladoValor.tipoTrasladoCodigo === String( this.tipoTrasladoCodigo.direccionFinanciera )
                                         )
 
                                         if ( balanceFinancieroTrasladoValor !== undefined ) {
                                             valorTraslado = balanceFinancieroTrasladoValor.valorTraslado
+                                            balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId
                                         }
                                     }
                                 }
@@ -186,11 +188,11 @@ export class FormTerceroCausacionComponent implements OnInit {
                                     this.fb.group(
                                         {
                                             ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
-                                            balanceFinancieroTrasladoValorId: [ 0 ],
+                                            balanceFinancieroTrasladoValorId: [ balanceFinancieroTrasladoValorId ],
                                             tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionFinanciera ) ],
                                             tipoDescuento: [ descuento.tipoDescuentoCodigo, Validators.required ],
                                             valorDescuento: [ descuento.valorDescuento, Validators.required ],
-                                            nuevoValorDescuento: [ valorTraslado <= 0 ? null : valorTraslado, Validators.required ]
+                                            nuevoValorDescuento: [ valorTraslado !== undefined ? ( valorTraslado < 0 ? null : valorTraslado ) : null, Validators.required ]
                                         }
                                     )
                                 );
@@ -206,7 +208,8 @@ export class FormTerceroCausacionComponent implements OnInit {
                                     const tipoAportanteIndex = dataAportantes.listaTipoAportante.findIndex( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
                                     let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                     const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
-                                    let valorTraslado = 0;
+                                    let valorTraslado: number;
+                                    let balanceFinancieroTrasladoValorId = 0;
 
                                     if ( this.balanceFinancieroTrasladoValor !== undefined ) {
                                         if ( this.balanceFinancieroTrasladoValor.length > 0 ) {
@@ -217,6 +220,7 @@ export class FormTerceroCausacionComponent implements OnInit {
 
                                             if ( balanceFinancieroTrasladoValor !== undefined ) {
                                                 valorTraslado = balanceFinancieroTrasladoValor.valorTraslado
+                                                balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId
                                             }
                                         }
                                     }
@@ -225,7 +229,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         this.fb.group(
                                             {
                                                 ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                balanceFinancieroTrasladoValorId: [ 0 ],
+                                                balanceFinancieroTrasladoValorId: [ balanceFinancieroTrasladoValorId ],
                                                 tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.aportante ) ],
                                                 tipoAportante: [ tipoAportante, Validators.required ],
                                                 listaNombreAportantes: [ [ nombreAportante ] ],
@@ -234,15 +238,13 @@ export class FormTerceroCausacionComponent implements OnInit {
                                                 fuenteRecursos: [ fuente, Validators.required ],
                                                 fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
                                                 valorDescuento: [ aportante.valorDescuento, Validators.required ],
-                                                nuevoValorDescuento: [ valorTraslado <= 0 ? null : valorTraslado, Validators.required ]
+                                                nuevoValorDescuento: [ valorTraslado !== undefined ? ( valorTraslado < 0 ? null : valorTraslado ) : null, Validators.required ]
                                             }
                                         )
                                     )
                                 }
                             }
                         }
-
-                        console.log( solicitudPagoFaseFactura )
 
                         if ( solicitudPagoFaseFactura !== undefined ) {
                             if ( solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento !== undefined ) {
@@ -251,7 +253,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         const descuentoTecnicaOrdenGiro = detalleDescuentoTecnica.find( detalleDescuentoTecnica => detalleDescuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuentoTecnica.solicitudPagoFaseFacturaDescuentoId && detalleDescuentoTecnica.esPreconstruccion === solicitudPagoFase.esPreconstruccion )
 
                                         if ( descuentoTecnicaOrdenGiro !== undefined ) {
-                                            let valorTraslado = 0;
+                                            let valorTraslado: number;
 
                                             if ( this.balanceFinancieroTrasladoValor !== undefined ) {
                                                 if ( this.balanceFinancieroTrasladoValor.length > 0 ) {
@@ -276,7 +278,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                                         tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionTecnica ) ],
                                                         tipoDescuento: [ descuentoTecnica.tipoDescuentoCodigo, Validators.required ],
                                                         valorDescuento: [ descuentoTecnica.valorDescuento, Validators.required ],
-                                                        nuevoValorDescuento: [ valorTraslado <= 0 ? null : valorTraslado, Validators.required ]
+                                                        nuevoValorDescuento: [ valorTraslado !== undefined ? ( valorTraslado < 0 ? null : valorTraslado ) : null, Validators.required ]
                                                     }
                                                 )
                                             )
@@ -413,6 +415,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                     {
                                         ordenGiroId: this.ordenGiroId,
                                         balanceFinancieroId: this.balanceFinancieroId,
+                                        esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
                                         balanceFinancieroTrasladoValorId: aportanteControl.get( 'balanceFinancieroTrasladoValorId' ).value,
                                         tipoTrasladoCodigo: aportanteControl.get( 'tipoTrasladoCodigo' ).value,
                                         ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value,
@@ -429,6 +432,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         {
                                             ordenGiroId: this.ordenGiroId,
                                             balanceFinancieroId: this.balanceFinancieroId,
+                                            esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
                                             balanceFinancieroTrasladoValorId: descuentoFinanciera.get( 'balanceFinancieroTrasladoValorId' ).value,
                                             tipoTrasladoCodigo: descuentoFinanciera.get( 'tipoTrasladoCodigo' ).value,
                                             ordenGiroDetalleTerceroCausacionDescuentoId: descuentoFinanciera.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
@@ -445,6 +449,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         {
                                             ordenGiroId: this.ordenGiroId,
                                             balanceFinancieroId: this.balanceFinancieroId,
+                                            esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
                                             balanceFinancieroTrasladoValorId: descuentoTecnica.get( 'balanceFinancieroTrasladoValorId' ).value,
                                             tipoTrasladoCodigo: descuentoTecnica.get( 'tipoTrasladoCodigo' ).value,
                                             ordenGiroDetalleDescuentoTecnicaId: descuentoTecnica.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
