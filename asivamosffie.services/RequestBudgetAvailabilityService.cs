@@ -32,29 +32,6 @@ namespace asivamosffie.services
             _commonService = commonService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
-      
-        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId(int pProyectoId, int pTipoAportanteId)
-        {
-            try
-            {
-                return await _context.ProyectoAportante
-                        .Where(r => r.ProyectoId == pProyectoId)
-                        .Include(r => r.Aportante)
-                        .ThenInclude(r => r.Departamento)
-                        .Include(r => r.Aportante)
-                        .ThenInclude(r => r.Municipio)
-                           .Include(r => r.Aportante)
-                        .ThenInclude(r => r.NombreAportante)
-                        .Select(r => r.Aportante)
-                        .Where(r => r.TipoAportanteId == pTipoAportanteId)
-                     .ToListAsync();
-            }
-            catch (Exception)
-            {
-                return new CofinanciacionAportante();
-            }
-        }
-
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
@@ -238,9 +215,9 @@ namespace asivamosffie.services
                                                                                 x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
                                     string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : string.Empty;
 
-                                    Decimal SaldoActualFuente = saldo - valorsolicitadoxotros;
+                                    Decimal SaldoActualFuente = Math.Abs(saldo - valorsolicitadoxotros);
                                     Decimal NuevoSaldoFuente = Math.Abs(saldo - valorsolicitadoxotros - valorsolicitado);
- 
+
 
                                     fuentes.Add(new GrillaFuentesFinanciacion
                                     {
@@ -249,7 +226,7 @@ namespace asivamosffie.services
                                         FuenteFinanciacionID = font.FuenteFinanciacionId,
                                         Saldo_actual_de_la_fuente = SaldoActualFuente,
                                         Valor_solicitado_de_la_fuente = valorsolicitado,
-                                        Nuevo_saldo_de_la_fuente = NuevoSaldoFuente, 
+                                        Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
                                         Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
                                         Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                                     });
@@ -565,6 +542,28 @@ namespace asivamosffie.services
                 }
             }
             return ListDetailValidarDisponibilidadPresupuesal;
+        }
+
+        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId(int pProyectoId, int pTipoAportanteId)
+        {
+            try
+            {
+                return await _context.ProyectoAportante
+                        .Where(r => r.ProyectoId == pProyectoId)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r => r.Departamento)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r => r.Municipio)
+                           .Include(r => r.Aportante)
+                        .ThenInclude(r => r.NombreAportante)
+                        .Select(r => r.Aportante)
+                        .Where(r => r.TipoAportanteId == pTipoAportanteId)
+                     .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new CofinanciacionAportante();
+            }
         }
          
         public async Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato)
