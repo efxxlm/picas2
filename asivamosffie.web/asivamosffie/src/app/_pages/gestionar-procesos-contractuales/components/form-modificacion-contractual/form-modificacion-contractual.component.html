@@ -58,7 +58,7 @@
 
       </mat-expansion-panel>
 
-      <mat-expansion-panel class="expansion-style" *ngIf="suspensionBoolean || reinicioBoolean">
+      <!--<mat-expansion-panel class="expansion-style" *ngIf="suspensionBoolean || reinicioBoolean">
         <mat-expansion-panel-header class="expansion-style--header w-50">
           <mat-panel-title class="expansion-style--title">
             Detalle de la novedad contractual
@@ -81,9 +81,9 @@
           </mat-card>
         </div>
 
-      </mat-expansion-panel>
+      </mat-expansion-panel>-->
 
-      <mat-expansion-panel class="expansion-style" *ngIf="!suspensionBoolean && !reinicioBoolean">
+      <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-50">
           <mat-panel-title class="expansion-style--title">
             Detalle de la modificación contractual
@@ -95,32 +95,37 @@
             <mat-card-content>
               <p><b>Número de la solicitud de modificación</b>: {{ dataNovedad.numeroSolicitud }}</p>
               <p><b>Tipo de modificación</b>: {{ tipoModificacion }}</p>
-              <p><b>Valor después de la modificación</b>:{{dataNovedad?.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
-              <p><b>Plazo después de la modificación</b>: <span *ngIf="dataNovedad?.novedadContractualDescripcion[0].plazoAdicionalDias != null && dataNovedad?.novedadContractualDescripcion[0].plazoAdicionalMeses != null ">{{dataNovedad?.novedadContractualDescripcion[0].plazoAdicionalDias }} días / {{dataNovedad?.novedadContractualDescripcion[0].plazoAdicionalMeses }} meses</span></p>
-              <p><b>Detalle de la modificación</b>: <span [innerHTML]="dataNovedad?.novedadContractualDescripcion[0].resumenJustificacion"></span></p>
-
+              <div *ngFor="let element of dataNovedad.novedadContractualDescripcion; let f = index">
+                <h3 *ngIf="dataNovedad?.novedadContractualDescripcion.length > 1"><b>Novedad {{ f+1 }}</b></h3>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>: <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalDias }} días / {{element.plazoAdicionalMeses }} meses</span></p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha de inicio de la suspensión</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha final de la suspensión</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha de inicio del reinicio</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha final del reinicio</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.modificacion_de_Condiciones_Contractuales">
+                  <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0].clausulaAmodificar"></span>
+                  <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0].ajusteSolicitadoAclausula"></span>
+                </p>
+                <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>  
+              </div>
               <h2 class="card-subTitle back-color" *ngIf="adicionBoolean">Aportantes</h2>
               
               <div *ngFor="let aportante of dataNovedad.novedadContractualAportante; let i = index">
-        
-                <div>
-                  <h3><b>Aportante {{ i+1 }}</b></h3>
-                  <div>
-                    <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
-                    <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
-                    <p><b>Valor del aportante al proyecto</b>: {{ aportante.valorAporte | currency: '':'symbol':'3.0' }}</p>
-                  </div>
-                </div>
-                <div *ngFor="let componente of aportante.componenteAportanteNovedad; let componenteIndex = index">
+                <section>
+                  <h1 style="margin-bottom: .2em;margin-top: 1em;"><b>Aportante {{ i+1 }}</b></h1>
+                  <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
+                  <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
+                  <p><b>Valor del aportante al proyecto</b>: {{ aportante.valorAporte | currency: '':'symbol':'3.0' }}</p>
+                </section>
+                <section *ngFor="let componente of aportante.componenteAportanteNovedad; let componenteIndex = index">
+                  <h2 style="margin-bottom: .2em;margin-top: 1em;"><b>Fase {{ componente.nombrefase }}</b></h2>
                   <div *ngFor="let fuente of componente.componenteFuenteNovedad; let f = index">
                     <h3><b>Fuente {{ f+1 }}</b></h3>
-                    <div>
-                      <p><b>Fuente</b>: {{ fuente.fuenteFinanciacion.nombreFuente }}</p>
-                      <p><b>Valor solicitado de la fuente</b>: {{ fuente.fuenteFinanciacion.valorFuente | currency: '':'symbol':'3.0' }}</p>
-                    </div>
+                    <p><b>Fuente</b>: {{ fuente.fuenteFinanciacion.nombreFuente }}</p>
+                    <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency: '':'symbol':'3.0' }}</p>
                   </div>
-                </div>
-        
+                </section>
               </div>
         
             </mat-card-content>

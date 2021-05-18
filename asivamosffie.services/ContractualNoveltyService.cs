@@ -469,7 +469,7 @@ namespace asivamosffie.services
                     
                     if(novedadContractualAportante.CofinanciacionAportante != null)
                         novedadContractualAportante.TipoAportante = listDominioTipoAportante
-                                    .Where(r => r.Codigo == novedadContractualAportante.CofinanciacionAportante.TipoAportanteId.ToString())
+                                    .Where(r => r.DominioId == novedadContractualAportante.CofinanciacionAportante.TipoAportanteId)
                                     ?.FirstOrDefault()
                                     ?.Nombre;
                     foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
@@ -486,14 +486,16 @@ namespace asivamosffie.services
 
                         foreach (ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
                         {
-
+                            decimal valorFuentexUso = 0;
                             foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
                             {
+                                valorFuentexUso += componenteUsoNovedad.ValorUso;
                                 componenteUsoNovedad.NombreUso = listDominioUso
                                                                             .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
                                                                             ?.FirstOrDefault()
                                                                             ?.Nombre;
                             }
+                            componenteFuenteNovedad.ValorFuente = valorFuentexUso;
                         }
 
 
