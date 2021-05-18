@@ -3,7 +3,7 @@
         <mat-accordion formArrayName="terceroCausacion" *ngFor="let solicitudPagoFase of terceroCausacion.controls; index as i">
             <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="solicitudPagoFase.get( 'semaforo' ).value">
                         Tercero de causación - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -23,7 +23,7 @@
                 <mat-accordion formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
                     <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="criterio.get( 'semaforo' ).value">
                                 {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                             </mat-panel-title>
                         </mat-expansion-panel-header>

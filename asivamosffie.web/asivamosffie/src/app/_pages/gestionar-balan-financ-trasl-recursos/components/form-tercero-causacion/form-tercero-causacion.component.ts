@@ -2,7 +2,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormBuilder, FormArray, Validators, FormGroup } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import humanize from 'humanize-plus';
@@ -20,6 +20,7 @@ export class FormTerceroCausacionComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     tipoTrasladoCodigo = TipoTrasladoCodigo;
     balanceFinanciero: any;
     balanceFinancieroId = 0;
@@ -187,6 +188,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                 listaDescuentos.push(
                                     this.fb.group(
                                         {
+                                            registroCompleto: [ valorTraslado !== undefined ? true : false ],
                                             ordenGiroDetalleTerceroCausacionDescuentoId: [ descuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
                                             balanceFinancieroTrasladoValorId: [ balanceFinancieroTrasladoValorId ],
                                             tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionFinanciera ) ],
@@ -228,6 +230,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                     listaAportantes.push(
                                         this.fb.group(
                                             {
+                                                registroCompleto: [ valorTraslado !== undefined ? true : false ],
                                                 ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
                                                 balanceFinancieroTrasladoValorId: [ balanceFinancieroTrasladoValorId ],
                                                 tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.aportante ) ],
@@ -315,11 +318,51 @@ export class FormTerceroCausacionComponent implements OnInit {
                                 }
                             ) )
                         }
-
                         valorNetoGiro = terceroCausacion.valorNetoGiro;
+                        let semaforoCriterio = 'sin-diligenciar'
+                        let cantidadRegistroCompletoAportante = 0
+                        let cantidadRegistroCompletoDescuento = 0
+
+                        listaAportantes.forEach( aportante => {
+                            if ( aportante.get( 'registroCompleto' ).value === true ) {
+                                cantidadRegistroCompletoAportante++;
+                            }
+                        } )
+
+                        if ( terceroCausacion.tieneDescuento === true ) {
+                            listaDescuentos.forEach( descuento => {
+                                if ( descuento.get( 'registroCompleto' ).value === true ) {
+                                    cantidadRegistroCompletoDescuento++;
+                                }
+                            } )
+                        }
+
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                            semaforoCriterio = 'en-proceso'
+                        }
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                            semaforoCriterio = 'en-proceso'
+                        }
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante < listaAportantes.length && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                            semaforoCriterio = 'en-proceso'
+                        }
+                        if ( cantidadRegistroCompletoAportante === 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                            semaforoCriterio = 'en-proceso'
+                        }
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoAportante < listaAportantes.length ) {
+                            semaforoCriterio = 'en-proceso'
+                        }
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === listaDescuentos.length ) {
+                            semaforoCriterio = 'completo'
+                        }
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento === listaDescuentos.length ) {
+                            semaforoCriterio = 'completo'
+                        }
+
                         criteriosArray.push(
                             this.fb.group(
                                 {
+                                    semaforo: [ semaforoCriterio ],
                                     ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                     tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                     nombre: [ criterio.nombre ],
@@ -331,18 +374,57 @@ export class FormTerceroCausacionComponent implements OnInit {
                     }
                 }
             }
+            
+            const sinDiligenciarCriterio = criteriosArray.find( descuento => descuento.get( 'semaforo' ).value === 'sin-diligenciar' )
+            const enProcesoCriterio = criteriosArray.find( descuento => descuento.get( 'semaforo' ).value === 'en-proceso' )
+            const completoCriterio = criteriosArray.find( descuento => descuento.get( 'semaforo' ).value === 'completo' )
+            let semaforoFase = 'sin-diligenciar'
+
+            if ( sinDiligenciarCriterio !== undefined && enProcesoCriterio !== undefined && completoCriterio === undefined ) {
+                semaforoFase = 'en-proceso'
+            }
+            if ( sinDiligenciarCriterio !== undefined && completoCriterio !== undefined && enProcesoCriterio === undefined ) {
+                semaforoFase = 'en-proceso'
+            }
+            if ( sinDiligenciarCriterio === undefined && completoCriterio !== undefined && enProcesoCriterio !== undefined ) {
+                semaforoFase = 'en-proceso'
+            }
+            if ( sinDiligenciarCriterio === undefined && completoCriterio !== undefined && enProcesoCriterio === undefined ) {
+                semaforoFase = 'completo'
+            }
 
             this.terceroCausacion.push(
                 this.fb.group(
                     {
                         valorNetoGiro,
                         nuevoValorRegistrado,
+                        semaforo: [ semaforoFase ],
                         esPreconstruccion: solicitudPagoFase.esPreconstruccion,
                         criterios: this.fb.array( criteriosArray )
                     }
                 )
             )
         }
+
+        const sinDiligenciarfase = this.terceroCausacion.controls.find( descuento => descuento.get( 'semaforo' ).value === 'sin-diligenciar' )
+        const enProcesofase = this.terceroCausacion.controls.find( descuento => descuento.get( 'semaforo' ).value === 'en-proceso' )
+        const completofase = this.terceroCausacion.controls.find( descuento => descuento.get( 'semaforo' ).value === 'completo' )
+        let estadoSemaforo = 'sin-diligenciar'
+
+        if ( sinDiligenciarfase !== undefined && enProcesofase !== undefined && completofase === undefined ) {
+            estadoSemaforo = 'en-proceso'
+        }
+        if ( sinDiligenciarfase !== undefined && completofase !== undefined && enProcesofase === undefined ) {
+            estadoSemaforo = 'en-proceso'
+        }
+        if ( sinDiligenciarfase === undefined && completofase !== undefined && enProcesofase !== undefined ) {
+            estadoSemaforo = 'en-proceso'
+        }
+        if ( sinDiligenciarfase === undefined && completofase !== undefined && enProcesofase === undefined ) {
+            estadoSemaforo = 'completo'
+        }
+
+        this.estadoSemaforo.emit( estadoSemaforo )
     }
 
     firstLetterUpperCase( texto:string ) {

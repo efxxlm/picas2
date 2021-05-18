@@ -24,6 +24,9 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     ordenGiroTercero: any;
     ordenGiroId: 0;
     ordenGiroTerceroId: 0;
+    semaforoDetalle = 'sin-diligenciar';
+    semaforoTerceroCausacion: string;
+    semaforoDescuentos: string;
 
     constructor(
         private ordenPagoSvc: OrdenPagoService,
@@ -153,6 +156,27 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
             if ( banco !== undefined ) {
                 return banco.nombre
             }
+        }
+    }
+
+    checkEstadoSemaforo() {
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === 'en-proceso' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'en-proceso' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'completo';
+        }
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === undefined ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === undefined ) {
+            this.semaforoDetalle = 'completo';
         }
     }
 

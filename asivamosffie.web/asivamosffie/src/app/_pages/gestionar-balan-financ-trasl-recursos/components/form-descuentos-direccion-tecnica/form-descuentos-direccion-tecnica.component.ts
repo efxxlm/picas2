@@ -1,6 +1,6 @@
 import { Dominio } from './../../../../core/_services/common/common.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
@@ -21,6 +21,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     tipoTrasladoCodigo = TipoTrasladoCodigo;
     balanceFinanciero: any;
     balanceFinancieroId = 0;
@@ -157,6 +158,9 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                     const listaConceptos = [];
                                     const formArrayConceptos = [];
                                     const ordenGiroDetalleDescuentoTecnicaAportante = [];
+                                    let registroCompleto: boolean;
+                                    let cantidadRegistroAportantes = 0;
+                                    let cantidadRegistroCompleto = 0;
     
                                     listaCriterios.push( descuento.criterioCodigo )
     
@@ -205,6 +209,10 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                                             }
                                                         }
 
+                                                        if ( valorTraslado !== undefined ) {
+                                                            cantidadRegistroCompleto++;
+                                                        }
+
                                                         formArrayAportantes.push(
                                                             this.fb.group(
                                                                 {
@@ -224,6 +232,10 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                                     }
                                                 }
                                             }
+
+                                            if ( formArrayAportantes.length > 0 ) {
+                                                cantidadRegistroAportantes = formArrayAportantes.length;
+                                            }
     
                                             formArrayConceptos.push( this.fb.group(
                                                 {
@@ -236,11 +248,21 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                             ) );
                                         }
                                     }
+
+                                    if ( cantidadRegistroAportantes > 0 ) {
+                                        if ( cantidadRegistroCompleto > 0 && cantidadRegistroCompleto < cantidadRegistroAportantes ) {
+                                            registroCompleto = false
+                                        }
+                                        if ( cantidadRegistroCompleto > 0 && cantidadRegistroCompleto === cantidadRegistroAportantes ) {
+                                            registroCompleto = true
+                                        }
+                                    }
     
                                     // Set formulario de los criterios
                                     formArrayCriterios.push(
                                         this.fb.group(
                                             {
+                                                registroCompleto,
                                                 nombre: [ descuento.criterioCodigo !== undefined ? listaCriteriosFormaPago.find( criterio => criterio.codigo === descuento.criterioCodigo ).nombre : null ],
                                                 ordenGiroDetalleDescuentoTecnicaId: [ descuento.ordenGiroDetalleDescuentoTecnicaId !== undefined ? descuento.ordenGiroDetalleDescuentoTecnicaId : 0 ],
                                                 criterioCodigo: [ descuento.criterioCodigo !== undefined ? listaCriteriosFormaPago.find( criterio => criterio.codigo === descuento.criterioCodigo ).codigo : null ],
@@ -253,9 +275,28 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                         )
                                     )
                                 }
+
+                                const sinDiligenciar = formArrayCriterios.find( criterio => criterio.get( 'registroCompleto' ).value === null )
+                                const enProceso = formArrayCriterios.find( criterio => criterio.get( 'registroCompleto' ).value === false )
+                                const completo = formArrayCriterios.find( criterio => criterio.get( 'registroCompleto' ).value === true )
+                                let semaforoDescuento = 'sin-diligenciar'
+
+                                if ( sinDiligenciar !== undefined && enProceso !== undefined && completo === undefined ) {
+                                    semaforoDescuento = 'en-proceso'
+                                }
+                                if ( sinDiligenciar !== undefined && completo !== undefined && enProceso === undefined ) {
+                                    semaforoDescuento = 'en-proceso'
+                                }
+                                if ( sinDiligenciar === undefined && enProceso !== undefined && completo !== undefined ) {
+                                    semaforoDescuento = 'en-proceso'
+                                }
+                                if ( sinDiligenciar === undefined && enProceso === undefined && completo !== undefined ) {
+                                    semaforoDescuento = 'completo'
+                                }
     
                                 descuentos.push( this.fb.group(
                                     {
+                                        semaforo: [ semaforoDescuento ],
                                         solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
                                         listaCriteriosFormaPago: [ listaCriteriosFormaPago ],
@@ -267,10 +308,30 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                         }
                     }
                 }
+
+                const sinDiligenciarDescuento = descuentos.find( descuento => descuento.get( 'semaforo' ).value === 'sin-diligenciar' )
+                const enProcesoDescuento = descuentos.find( descuento => descuento.get( 'semaforo' ).value === 'en-proceso' )
+                const completoDescuento = descuentos.find( descuento => descuento.get( 'semaforo' ).value === 'completo' )
+                let semaforoFase = 'sin-diligenciar'
+
+                if ( sinDiligenciarDescuento !== undefined && enProcesoDescuento !== undefined && completoDescuento === undefined ) {
+                    semaforoFase = 'en-proceso'
+                }
+                if ( sinDiligenciarDescuento !== undefined && completoDescuento !== undefined && enProcesoDescuento === undefined ) {
+                    semaforoFase = 'en-proceso'
+                }
+                if ( sinDiligenciarDescuento === undefined && completoDescuento !== undefined && enProcesoDescuento !== undefined ) {
+                    semaforoFase = 'en-proceso'
+                }
+                if ( sinDiligenciarDescuento === undefined && completoDescuento !== undefined && enProcesoDescuento === undefined ) {
+                    semaforoFase = 'completo'
+                }
+
     
                 this.fases.push(
                     this.fb.group(
                         {
+                            semaforo: [ semaforoFase ],
                             valorNetoGiro: [ listData.valorNetoGiro ],
                             nuevoValorRegistrado,
                             esPreconstruccion: [ solicitudPagoFase.esPreconstruccion ],
@@ -279,6 +340,28 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                     )
                 )
             }
+        }
+
+        if ( this.fases.length > 0 ) {
+            const sinDiligenciarFase = this.fases.controls.find( descuento => descuento.get( 'semaforo' ).value === 'sin-diligenciar' )
+            const enProcesoFase = this.fases.controls.find( descuento => descuento.get( 'semaforo' ).value === 'en-proceso' )
+            const completoFase = this.fases.controls.find( descuento => descuento.get( 'semaforo' ).value === 'completo' )
+            let estadoSemaforo = 'sin-diligenciar'
+    
+            if ( sinDiligenciarFase !== undefined && enProcesoFase !== undefined && completoFase === undefined ) {
+                estadoSemaforo = 'en-proceso'
+            }
+            if ( sinDiligenciarFase !== undefined && completoFase !== undefined && enProcesoFase === undefined ) {
+                estadoSemaforo = 'en-proceso'
+            }
+            if ( sinDiligenciarFase === undefined && completoFase !== undefined && enProcesoFase !== undefined ) {
+                estadoSemaforo = 'en-proceso'
+            }
+            if ( sinDiligenciarFase === undefined && completoFase !== undefined && enProcesoFase === undefined ) {
+                estadoSemaforo = 'completo'
+            }
+    
+            this.estadoSemaforo.emit( estadoSemaforo )
         }
     }
 
