@@ -257,48 +257,64 @@ namespace asivamosffie.services
         }
 
         public async Task<NovedadContractual> GetNovedadContractualById(int pId)
-        {
-            List<Dominio> listDominioTipoDocumento = _context.Dominio
+        { 
+            List<Dominio> LisDominios = _context.Dominio
+                                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante
+
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Componentes
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Fases
+
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Usos
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades
+                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades
+                                                         ).ToList();
+
+            List<Dominio> listDominioTipoDocumento = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento)
                                                                 .ToList();
 
-            List<Dominio> listDominioTipoNovedad = _context.Dominio
+            List<Dominio> listDominioTipoNovedad = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
                                                                 .ToList();
 
-            List<Dominio> listDominioMotivos = _context.Dominio
+            List<Dominio> listDominioMotivos = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
                                                                 .ToList();
 
-            List<Dominio> listDominioTipoAportante = _context.Dominio
+            List<Dominio> listDominioTipoAportante = LisDominios
                                                     .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
                                                     .ToList();
 
-            List<Dominio> listDominioInstancias = _context.Dominio
+            List<Dominio> listDominioInstancias = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico)
                                                                 .ToList();
 
-            List<Dominio> listDominioComponente = _context.Dominio
+            List<Dominio> listDominioComponente = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes)
                                                                 .ToList();
 
-            List<Dominio> listDominioFase = _context.Dominio
+            List<Dominio> listDominioFase = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fases)
                                                                 .ToList();
 
-            List<Dominio> listDominioUso = _context.Dominio
+            List<Dominio> listDominioUso = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
                                                                 .ToList();
 
-            List<Dominio> listDominioEstado = _context.Dominio
+            List<Dominio> listDominioEstado = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
                                                                 .ToList();
 
-            List<Dominio> listDominioEstadoProceso = _context.Dominio
+            List<Dominio> listDominioEstadoProceso = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades)
                                                                 .ToList();
 
-            List<Dominio> listDominioAbogado = _context.Dominio
+            List<Dominio> listDominioAbogado = LisDominios
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades)
                                                                 .ToList();
 
@@ -309,6 +325,8 @@ namespace asivamosffie.services
                                                                                x.Eliminado != true)
                                                                         .Include(x => x.NovedadContractualDescripcion)
                                                                         .ToList();
+
+
 
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where(r => r.NovedadContractualId == pId)
