@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class BankAccountController : ControllerBase
     {
         public readonly IBankAccountService _bankAccount;
-         
+
         public BankAccountController(IBankAccountService bankAccount)
         {
             _bankAccount = bankAccount;
@@ -50,14 +49,14 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [HttpPost]
         [Route("CreateEditarCuentasBancarias")]
         public async Task<IActionResult> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _bankAccount.CreateEditarCuentasBancarias(cuentaBancaria);
                 return Ok(respuesta);

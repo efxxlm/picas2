@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.APIModels;
-using System.IO;
 using Microsoft.Extensions.Options;
-using System.Reflection;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class RegisterValidatePaymentRequierementsController : Controller
     {
         public readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
@@ -41,8 +33,8 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(SolicitudPagoId, strFormaPago, EsPreConstruccion));
-        }  
-        
+        }
+
         [HttpGet]
         [Route("GetMontoMaximo")]
         public async Task<IActionResult> GetMontoMaximo([FromQuery] int SolicitudPagoId, bool EsPreConstruccion)
@@ -60,7 +52,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetMontoMaximoProyecto")]
         public async Task<IActionResult> GetMontoMaximoProyecto([FromQuery] int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
-        { 
+        {
             return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato, pContratacionProyectoId, EsPreConstruccion));
 
         }

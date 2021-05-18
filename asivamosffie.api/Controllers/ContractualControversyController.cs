@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace asivamosffie.api.Controllers
@@ -106,7 +105,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("CreateEditarActuacionReclamacion")]
         public async Task<IActionResult> CreateEditarActuacionReclamacion(ActuacionSeguimiento actuacionSeguimiento)
@@ -153,10 +152,10 @@ namespace asivamosffie.api.Controllers
         //[Route("CreateEditNuevaActualizacionTramite")]
         //public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
 
-        [HttpPost]        
+        [HttpPost]
         [Route("CreateEditControversiaOtros")]
         public async Task<IActionResult> CreateEditControversiaOtros(ControversiaActuacion controversiaActuacion)
-        
+
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -176,7 +175,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [HttpGet]
         [Route("GetListGrillaActuacionSeguimiento")]
         public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionSeguimiento(int pControversiaContractualId = 0, int pControversiaActuacionId = 0)
@@ -236,11 +235,11 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetListGrillaControversiaActuacion")]
 
-        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion(int id = 0, int pControversiaContractualId= 0, bool esActuacionReclamacion = false)
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion(int id = 0, int pControversiaContractualId = 0, bool esActuacionReclamacion = false)
         {
             try
             {
-                return await _contractualControversy.ListGrillaControversiaActuacion(id,pControversiaContractualId,  esActuacionReclamacion);
+                return await _contractualControversy.ListGrillaControversiaActuacion(id, pControversiaContractualId, esActuacionReclamacion);
             }
             catch (Exception ex)
             {
@@ -249,7 +248,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListGrillaControversiaReclamacion")] 
+        [Route("GetListGrillaControversiaReclamacion")]
         public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaReclamacion(int id = 0)
         {
             try
@@ -292,7 +291,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [Route("EliminarControversiaContractual")]
         [HttpPost]
         public async Task<IActionResult> EliminarControversiaContractual(int pControversiaContractualId)
@@ -310,7 +309,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("GetControversiaContractualById")]
         [HttpGet]
 
@@ -320,7 +319,7 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
-        
+
         [Route("GetActuacionSeguimientoById")]
         [HttpGet]
 
@@ -411,7 +410,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
 
         [HttpPut]
         [Route("CambiarEstadoActuacionSeguimiento")]
@@ -499,7 +498,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPut]
         [Route("CambiarEstadoControversiaActuacion2")]
-        public async Task<IActionResult> CambiarEstadoControversiaActuacion2( int pControversiaActuacionId, string pNuevoCodigoProximaActuacion)
+        public async Task<IActionResult> CambiarEstadoControversiaActuacion2(int pControversiaActuacionId, string pNuevoCodigoProximaActuacion)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -584,7 +583,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        
+
         [HttpPost]
         [Route("EliminacionActuacionDerivada")]
         public async Task<IActionResult> EliminacionActuacionDerivada([FromQuery] int pControversiaActuacionId)
@@ -672,7 +671,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 return await _contractualControversy.GetMesasByControversiaActuacionId(pControversiaID);
-                
+
             }
             catch (Exception ex)
             {

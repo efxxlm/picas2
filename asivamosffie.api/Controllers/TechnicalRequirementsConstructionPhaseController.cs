@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -56,7 +54,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value
+                respuesta = await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value
                     , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
@@ -66,7 +64,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
+
 
         [Route("CreateEditObservacion")]
         [HttpPost]
@@ -195,7 +193,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionConstruccionPerfilSave(pObservacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
@@ -205,7 +203,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [Route("CreateEditObservacionDiagnostico")]
         [HttpPost]
         public async Task<Respuesta> CreateEditObservacionDiagnostico(ContratoConstruccion pContratoConstruccion, bool esSupervisor)
@@ -601,7 +599,7 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateAdjustmentProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario,pAjusteProgramacionId,pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId );
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateAdjustmentProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario, pAjusteProgramacionId, pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId);
                 }
                 return Ok(respuesta);
             }
@@ -689,7 +687,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateEditObservacionAjusteProgramacion")]
         [HttpPost]
-        public async Task<Respuesta> CreateEditObservacionAjusteProgramacion([FromBody] AjusteProgramacion pAjusteProgramacion, bool esObra )
+        public async Task<Respuesta> CreateEditObservacionAjusteProgramacion([FromBody] AjusteProgramacion pAjusteProgramacion, bool esObra)
         {
             try
             {

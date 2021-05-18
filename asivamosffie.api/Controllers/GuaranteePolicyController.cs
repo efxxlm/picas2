@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -29,7 +29,7 @@ namespace asivamosffie.api.Controllers
             return appSettingsService;
 
         }
-         
+
         [HttpGet]
         [Route("GetContratoByContratoId")]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -55,7 +55,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("ChangeStatusEstadoPoliza")]
         public async Task<IActionResult> ChangeStatusEstadoPoliza([FromBody] ContratoPoliza pContratoPoliza)

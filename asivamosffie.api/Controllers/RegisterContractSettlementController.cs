@@ -1,16 +1,10 @@
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
-using Microsoft.Extensions.Options;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
@@ -46,7 +40,7 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
-            } 
-        } 
+            }
+        }
     }
 }

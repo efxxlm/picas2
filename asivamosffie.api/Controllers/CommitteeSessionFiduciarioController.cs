@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -36,11 +34,11 @@ namespace asivamosffie.api.Controllers
         #region "ORDEN DEL DIA";
 
         [Route("GetCommitteeSessionFiduciario")]
-         public async Task<IActionResult> GetCommitteeSessionFiduciario()
-         {
-             try
-             {
-                 var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
+        public async Task<IActionResult> GetCommitteeSessionFiduciario()
+        {
+            try
+            {
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -52,16 +50,16 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]
         [HttpPost]
-        public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody]  ComiteTecnico pComiteTecnico)
+        public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody] ComiteTecnico pComiteTecnico)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
 
                 pComiteTecnico.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _committeeSessionFiduciarioService.CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( pComiteTecnico );
+                respuesta = await _committeeSessionFiduciarioService.CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(pComiteTecnico);
                 return Ok(respuesta);
-                
+
             }
             catch (Exception ex)
             {
@@ -70,7 +68,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-       
+
         [Route("GetCommitteeSession")]
         public async Task<IActionResult> GetCommitteeSession()
         {
@@ -119,7 +117,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        
+
 
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
@@ -136,9 +134,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetProcesoSeleccionMonitoreo")]
-        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId )
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo(int pProcesoSeleccionMonitoreoId)
         {
-            return await _committeeSessionFiduciarioService.GetProcesoSeleccionMonitoreo( pProcesoSeleccionMonitoreoId );
+            return await _committeeSessionFiduciarioService.GetProcesoSeleccionMonitoreo(pProcesoSeleccionMonitoreoId);
         }
 
         [HttpPost]
@@ -179,9 +177,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetSesionParticipantesByIdComite")]
-        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId)
         {
-            return await _committeeSessionFiduciarioService.GetSesionParticipantesByIdComite( pComiteId );
+            return await _committeeSessionFiduciarioService.GetSesionParticipantesByIdComite(pComiteId);
         }
 
         [HttpDelete]
@@ -406,7 +404,7 @@ namespace asivamosffie.api.Controllers
         //     }
         // }
 
-        
+
 
 
         // [Route("CreateOrEditTema")]
@@ -525,7 +523,7 @@ namespace asivamosffie.api.Controllers
         //     }
         // }
 
-        
+
         #endregion
 
 
@@ -598,9 +596,9 @@ namespace asivamosffie.api.Controllers
         //     }
         // }
 
-         
 
-        
+
+
 
 
 
@@ -707,7 +705,7 @@ namespace asivamosffie.api.Controllers
         //         return BadRequest(respuesta);
         //     }
         // }
-        
+
         // //Declarar fallida
         // [Route("SessionDeclaredFailed")]
         // [HttpGet]

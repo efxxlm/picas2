@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -29,7 +28,7 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> CreateCofinancing([FromBody] Cofinanciacion pCofinanciacion)
         {
             try
-            { 
+            {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
@@ -39,13 +38,13 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
-            } 
+            }
         }
 
         [Route("GetListCofinancing")]
         [HttpGet]
         public async Task<List<Cofinanciacion>> GetCofinancing()
-        {  
+        {
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
@@ -106,7 +105,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("EliminarVigenciaAportanteId")]
         [HttpPost]
         public async Task<IActionResult> EliminarVigenciaAportanteId(int pVigenciaAportanteId)
@@ -157,7 +156,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-        
+
 
         [Route("GetAportantesByTipoAportante")]
         [HttpGet]

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
+﻿using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -59,8 +56,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-               return await _contributor.GetControlGrid(ContributorId);
-              
+                return await _contributor.GetControlGrid(ContributorId);
+
             }
             catch (Exception ex)
             {
@@ -139,7 +136,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("GetRegisterBudgetById/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetRegisterBudgetById(int id)
@@ -161,7 +158,7 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
             try
-            { 
+            {
                 registroPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 var result = await _contributor.CreateEditBudgetRecords(registroPresupuestal);
                 return Ok(result);

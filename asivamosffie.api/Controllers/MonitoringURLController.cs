@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -14,18 +13,18 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     [Authorize]
     public class MonitoringURLController : ControllerBase
-    { 
+    {
         private readonly IDocumentService _documentService;
         private readonly IMonitoringURL _monitoringURLService;
-        
 
-        public MonitoringURLController(IDocumentService documentService,  IMonitoringURL monitoringURLService)
+
+        public MonitoringURLController(IDocumentService documentService, IMonitoringURL monitoringURLService)
         {
             _monitoringURLService = monitoringURLService;
-            
+
             _documentService = documentService;
         }
-  
+
 
         [Route("GetListContratoProyectos")]
         [HttpGet]
@@ -35,14 +34,14 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
         [HttpPost]
-        [Route("EditarURLMonitoreo")]        
+        [Route("EditarURLMonitoreo")]
         public async Task<IActionResult> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                string UsuarioModificacion= HttpContext.User.FindFirst("User").Value;                
-                respuesta = await _monitoringURLService.EditarURLMonitoreo( pProyectoId,  URLMonitoreo,  UsuarioModificacion);
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _monitoringURLService.EditarURLMonitoreo(pProyectoId, URLMonitoreo, UsuarioModificacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)

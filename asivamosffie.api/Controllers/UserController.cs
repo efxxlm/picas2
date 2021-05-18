@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
-using asivamosffie.api.Responses;
-using System.Security.Claims;
-using asivamosffie.model.APIModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -45,7 +42,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
- 
+
 
         [Route("ActivateDeActivateUsuario")]
         [HttpPost]
@@ -130,9 +127,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByTipo")]
-        public Task<dynamic> GetContratoByTipo([FromQuery]string strTipoRolAsignadoContratoCodigo , int pUsuarioId)
+        public Task<dynamic> GetContratoByTipo([FromQuery] string strTipoRolAsignadoContratoCodigo, int pUsuarioId)
         {
-            return _user.GetContratoByTipo(strTipoRolAsignadoContratoCodigo , pUsuarioId);
+            return _user.GetContratoByTipo(strTipoRolAsignadoContratoCodigo, pUsuarioId);
         }
 
         [HttpGet]

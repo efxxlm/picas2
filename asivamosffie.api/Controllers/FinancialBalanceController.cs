@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -31,15 +27,15 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> GridBalance()
         {
             try
-            { 
-                return Ok(await _finalBalanceService.GridBalance()); 
+            {
+                return Ok(await _finalBalanceService.GridBalance());
             }
             catch (Exception e)
             {
                 return BadRequest(e);
             }
         }
- 
+
         [HttpGet]
         [Route("GetOrdenGiroBy")]
         public async Task<IActionResult> GetOrdenGiroBy([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
@@ -75,13 +71,13 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId)); 
+                return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId));
             }
             catch (Exception)
             {
                 return BadRequest();
             }
-       }
+        }
 
         [HttpPost]
         [Route("CreateEditBalanceFinanciero")]
@@ -112,7 +108,7 @@ namespace asivamosffie.api.Controllers
             catch (Exception)
             {
                 return BadRequest();
-            } 
+            }
         }
 
         [HttpPost]

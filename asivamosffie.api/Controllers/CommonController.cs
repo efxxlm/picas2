@@ -1,14 +1,14 @@
-﻿using System;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
-using asivamosffie.model.APIModels;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
@@ -51,7 +51,7 @@ namespace asivamosffie.api.Controllers
         {
             return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
-         
+
         [HttpGet]
         [Route("TienePermisos")]
         public Task<VPermisosMenus> VPermisosMenus([FromQuery] int idPerfil, string pRuta)
@@ -65,7 +65,7 @@ namespace asivamosffie.api.Controllers
         {
             return common.GetUsuarioByPerfil(idPerfil);
         }
-         
+
         [HttpGet]
         [Route("GetMenuByRol")]
         [Authorize]
@@ -121,7 +121,7 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
-         
+
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListMunicipioByMunicipio(string idMunicipio)

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using Microsoft.Extensions.Options;
-using asivamosffie.api.Responses;
-using System.Security.Claims;
-using asivamosffie.model.APIModels;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -31,7 +26,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _updatePoliciesGuaranteesService.GetContratoPoliza(pContratoPolizaId);
             return respuesta;
         }
-         
+
         [Route("GetContratoByNumeroContrato")]
         [HttpGet]
         public async Task<dynamic> GetContratoByNumeroContrato(string pNumeroContrato)
@@ -64,7 +59,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(result);
             }
         }
-      
+
         [Route("DeleteContratoPolizaActualizacion")]
         [HttpPost]
         public async Task<IActionResult> DeleteContratoPolizaActualizacion([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
@@ -82,7 +77,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(result);
             }
         }
-          [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
+        [Route("ChangeStatusContratoPolizaActualizacionSeguro")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatusContratoPolizaActualizacionSeguro([FromBody] ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {

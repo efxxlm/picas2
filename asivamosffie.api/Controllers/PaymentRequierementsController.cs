@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.model.APIModels;
-using System.IO;
-using Microsoft.Extensions.Options;
-using System.Reflection;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -54,8 +50,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-         
-                respuesta = await _paymentRequierementsService.CreateEditObservacionFinancieraListaChequeo(pSolicitudPagoListaChequeo , HttpContext.User.FindFirst("User").Value);
+
+                respuesta = await _paymentRequierementsService.CreateEditObservacionFinancieraListaChequeo(pSolicitudPagoListaChequeo, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -84,9 +80,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId")]
         [HttpGet]
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pSolicitudPagoId, int pPadreId ,string pTipoObservacionCodigo)
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
         {
-            return await _paymentRequierementsService.GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(pMenuId, pSolicitudPagoId, pPadreId , pTipoObservacionCodigo);
+            return await _paymentRequierementsService.GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(pMenuId, pSolicitudPagoId, pPadreId, pTipoObservacionCodigo);
         }
 
         [Route("GetListSolicitudPago")]

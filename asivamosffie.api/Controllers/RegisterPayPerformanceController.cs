@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
-using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -23,7 +20,7 @@ namespace asivamosffie.api.Controllers
         private readonly IRegisterPayPerformanceService _paymentAndPerformancesService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
-         
+
         public RegisterPayPerformanceController(IOptions<AppSettings> settings, IConverter converter, IRegisterPayPerformanceService registerPayPerformanceService)
         {
             _paymentAndPerformancesService = registerPayPerformanceService;
@@ -148,7 +145,7 @@ namespace asivamosffie.api.Controllers
         #region managedperformances
         [Route("downloadManagedPerformances")]
         [HttpPost]
-        public async Task<IActionResult> DownloadManagedPerformances([FromQuery]int uploadedOrderId, [FromQuery] bool? queryConsistentOrders)
+        public async Task<IActionResult> DownloadManagedPerformances([FromQuery] int uploadedOrderId, [FromQuery] bool? queryConsistentOrders)
         {
             try
             {
@@ -178,7 +175,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("downloadPaymentPerformance")]
         [HttpPost]
-        public async Task<IActionResult> DownloadPaymentPerformance([FromBody] FileRequest fileRequest, [FromQuery]string fileType)
+        public async Task<IActionResult> DownloadPaymentPerformance([FromBody] FileRequest fileRequest, [FromQuery] string fileType)
         {
             //if (String.IsNullOrEmpty(pNameFiles))
             //    return BadRequest();
@@ -214,7 +211,7 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> GetPerformancesInconsistencies(int uploadedOrderId)
         {
-           
+
             try
             {
                 string author = User.Identity.Name;
@@ -257,7 +254,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var  list =  await _paymentAndPerformancesService.GetRequestedApprovalPerformances();
+                var list = await _paymentAndPerformancesService.GetRequestedApprovalPerformances();
                 return list;
             }
             catch (Exception ex)
@@ -288,7 +285,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                
+
                 var result = await _paymentAndPerformancesService.DownloadApprovedIncorporatedPerfomances
                     (uploadedOrderId);
                 if (result.IsSuccessful && !result.IsException)
@@ -316,7 +313,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("uploadMinutes")]
-        public async Task<IActionResult> UploadSignedMinutes([FromQuery] int uploadedOrderId,  FileRequest minuteRequest)
+        public async Task<IActionResult> UploadSignedMinutes([FromQuery] int uploadedOrderId, FileRequest minuteRequest)
         {
             Respuesta response = new Respuesta();
             try
@@ -339,8 +336,8 @@ namespace asivamosffie.api.Controllers
             {
                 Respuesta respuesta = new Respuesta();
 
-                    string strUsuario = User.Identity.Name;
-               var  fileBytes = await _paymentAndPerformancesService.GenerateMinute(uploadedOrderId) ;
+                string strUsuario = User.Identity.Name;
+                var fileBytes = await _paymentAndPerformancesService.GenerateMinute(uploadedOrderId);
 
 
                 return File(fileBytes, "application/pdf", "archs" + ".pdf");

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -38,7 +37,7 @@ namespace asivamosffie.api.Controllers
             return appSettingsService;
 
         }
-         
+
         [HttpGet]
         [Route("GetPlantillaActaInicio")]
         public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)
@@ -64,7 +63,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [Route("GetVistaGenerarActaInicio")]
         [HttpGet]
         public async Task<ActionResult<VistaGenerarActaInicioContrato>> GetVistaGenerarActaInicio(int pContratoId)
@@ -220,7 +219,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreatePlazoEjecucionFase2Construccion")] 
+        [Route("CreatePlazoEjecucionFase2Construccion")]
         public async Task<IActionResult> CreatePlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta respuesta = new Respuesta();
@@ -236,14 +235,14 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
-        [Route("CreateTieneObservacionesActaInicio")] 
+        [Route("CreateTieneObservacionesActaInicio")]
         public async Task<IActionResult> CreateTieneObservacionesActaInicio(int pContratoId, string pObservacionesActa, string pUsuarioModificacion, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.GuardarTieneObservacionesActaInicio(pContratoId, pObservacionesActa, pUsuarioModificacion, pEsSupervisor, pEsActa);
                 return Ok(respuesta);
@@ -279,7 +278,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.EditarContratoObservacion(pContratoId, pPlazoFase2PreMeses, pPlazoFase2PreDias, pConstruccionObservacion.Observaciones, pUsuarioModificacion, pFechaActaInicioFase1, pFechaTerminacionFase2, pEsSupervisor, pEsActa);
                 return Ok(respuesta);
@@ -303,6 +302,6 @@ namespace asivamosffie.api.Controllers
         public async Task GetDiasHabilesActaRegistrada()
         {
             await _ActBegin.GetDiasHabilesActaRegistrada(toAppSettingsService(_settings));
-        } 
-    } 
+        }
+    }
 }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -53,13 +48,13 @@ namespace asivamosffie.api.Controllers
         {
             return await _parametricService.GetParametricas();
         }
-         
+
         [HttpGet]
         [Route("GetDominioByTipoDominioId")]
         public async Task<List<VDominio>> GetDominioByTipoDominioId([FromQuery] int TipoDominioId)
         {
             return await _parametricService.GetDominioByTipoDominioId(TipoDominioId);
         }
-         
+
     }
 }

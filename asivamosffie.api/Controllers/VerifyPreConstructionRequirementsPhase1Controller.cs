@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
-using Microsoft.Extensions.Options;
-using asivamosffie.api.Responses;
-using System.Security.Claims;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -20,12 +16,12 @@ namespace asivamosffie.api.Controllers
     public class VerifyPreConstructionRequirementsPhase1Controller : ControllerBase
     {
         public readonly IVerifyPreConstructionRequirementsPhase1Service _verifyPreConstruction;
-         
+
         public VerifyPreConstructionRequirementsPhase1Controller(IVerifyPreConstructionRequirementsPhase1Service verifyPreConstructionRequirementsPhase1Service)
         {
             _verifyPreConstruction = verifyPreConstructionRequirementsPhase1Service;
         }
-         
+
         [HttpGet]
         [Route("GetListContratacionInterventoria")]
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
@@ -54,7 +50,7 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CrearContratoPerfilObservacion")]
         public async Task<IActionResult> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion)
-        { 
+        {
             Respuesta respuesta = new Respuesta();
             try
             {
@@ -68,6 +64,6 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
             }
-        } 
+        }
     }
 }

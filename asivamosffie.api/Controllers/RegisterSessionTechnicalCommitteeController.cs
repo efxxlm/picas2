@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace asivamosffie.api.Controllers
@@ -36,21 +36,21 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetProcesoSeleccionMonitoreo")]
-        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId )
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo(int pProcesoSeleccionMonitoreoId)
         {
-            return await _registerSessionTechnicalCommitteeService.GetProcesoSeleccionMonitoreo( pProcesoSeleccionMonitoreoId );
+            return await _registerSessionTechnicalCommitteeService.GetProcesoSeleccionMonitoreo(pProcesoSeleccionMonitoreoId);
         }
- 
+
         [HttpGet]
         [Route("ListMonitoreo")]
-        public async Task<dynamic> ListMonitoreo([FromQuery]bool EsFiduciario)
+        public async Task<dynamic> ListMonitoreo([FromQuery] bool EsFiduciario)
         {
-            return   await _registerSessionTechnicalCommitteeService.ListMonitoreo(EsFiduciario); 
+            return await _registerSessionTechnicalCommitteeService.ListMonitoreo(EsFiduciario);
         }
 
         [HttpDelete]
         [Route("DeleteComiteTecnicoByComiteTecnicoId")]
-        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery]int pComiteTecnicoId)
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -174,8 +174,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _registerSessionTechnicalCommitteeService.CambiarEstadoActa(pSesionComiteSolicitud,  pCodigoEstado , HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.CambiarEstadoActa(pSesionComiteSolicitud, pCodigoEstado, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -308,7 +308,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("VerificarTemasCompromisos")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] ComiteTecnico pComiteTecnico)
@@ -327,7 +327,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("ObservacionesCompromisos")]
         public async Task<IActionResult> ObservacionesCompromisos([FromBody] ObservacionComentario pObservacionComentario)
@@ -346,7 +346,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
@@ -438,7 +438,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId, pEsFiduciario);
         }
-         
+
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {
@@ -469,7 +469,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 respuesta = await _registerSessionTechnicalCommitteeService.EliminarSesionComiteTema(pSesionComiteTemaId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
@@ -486,7 +486,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisoSolicitud(pSesionComiteTemaId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
@@ -503,7 +503,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 respuesta = await _registerSessionTechnicalCommitteeService.EliminarCompromisoTema(pTemaCompromisoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
@@ -523,9 +523,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetSesionParticipantesByIdComite")]
-        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite( int pComiteId )
+        public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId)
         {
-            return await _registerSessionTechnicalCommitteeService.GetSesionParticipantesByIdComite( pComiteId );
+            return await _registerSessionTechnicalCommitteeService.GetSesionParticipantesByIdComite(pComiteId);
         }
 
         [HttpGet]
@@ -546,10 +546,10 @@ namespace asivamosffie.api.Controllers
         [Route("GetCometariosDelActa")]
         public async Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId)
         {
-            return await _registerSessionTechnicalCommitteeService.GetCometariosDelActa( pComietTecnicoId );
+            return await _registerSessionTechnicalCommitteeService.GetCometariosDelActa(pComietTecnicoId);
         }
 
-        
+
 
     }
 }

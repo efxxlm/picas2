@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -207,7 +204,7 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreateEditInformeFinalAnexo/{pInformeFinalInterventoriaId:int}")]
 
-        public async Task<IActionResult> CreateEditInformeFinalAnexo([FromBody] InformeFinalAnexo pInformeFinalAnexoId,[FromRoute()] int pInformeFinalInterventoriaId)
+        public async Task<IActionResult> CreateEditInformeFinalAnexo([FromBody] InformeFinalAnexo pInformeFinalAnexoId, [FromRoute()] int pInformeFinalInterventoriaId)
         {
             Respuesta respuesta = new Respuesta();
             try

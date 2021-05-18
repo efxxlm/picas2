@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
@@ -18,7 +17,7 @@ namespace asivamosffie.api.Controllers
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
         private readonly IOptions<AppSettings> _settings;
-         
+
         public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings)
         {
             _managePreContruction = managePreContructionActPhase1Service;
@@ -40,7 +39,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetActaByIdPerfil")]
-        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId , bool pEsContruccion)
+        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId, bool pEsContruccion)
         {
             ///Temp
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
@@ -60,7 +59,7 @@ namespace asivamosffie.api.Controllers
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
-        } 
+        }
 
         [HttpGet]
         [Route("GetListGrillaActaInicio")]
@@ -68,7 +67,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _managePreContruction.GetListGrillaActaInicio(pPerfilId , Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
+                return await _managePreContruction.GetListGrillaActaInicio(pPerfilId, Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {
@@ -158,6 +157,6 @@ namespace asivamosffie.api.Controllers
                 };
                 return respuesta;
             }
-        } 
+        }
     }
 }

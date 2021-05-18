@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -30,7 +27,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridRegisterContractualLiquidationObra")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationObra([FromQuery]  int pMenuId)
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationObra([FromQuery] int pMenuId)
         {
             try
             {
@@ -44,7 +41,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridRegisterContractualLiquidationInterventoria")]
         [HttpGet]
-        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationInterventoria([FromQuery]  int pMenuId)
+        public async Task<ActionResult<List<VContratacionProyectoSolicitudLiquidacion>>> GridRegisterContractualLiquidationInterventoria([FromQuery] int pMenuId)
         {
             try
             {
@@ -58,7 +55,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratacionProyectoByContratacionProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetContratacionProyectoByContratacionProyectoId([FromQuery]  int pContratacionProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GetContratacionProyectoByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
         {
             try
             {
@@ -72,7 +69,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridInformeFinal")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GridInformeFinal([FromQuery]  int pContratacionProyectoId, int pMenuId)
+        public async Task<ActionResult<List<dynamic>>> GridInformeFinal([FromQuery] int pContratacionProyectoId, int pMenuId)
         {
             try
             {
@@ -86,7 +83,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInformeFinalByProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery]  int pProyectoId, int pContratacionProyectoId, int pMenuId)
+        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery] int pProyectoId, int pContratacionProyectoId, int pMenuId)
         {
             try
             {
@@ -100,7 +97,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInformeFinalAnexoByInformeFinalId")]
         [HttpGet]
-        public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId([FromQuery]  int pInformeFinalId)
+        public async Task<ActionResult<List<InformeFinalInterventoria>>> GetInformeFinalAnexoByInformeFinalId([FromQuery] int pInformeFinalId)
         {
             try
             {

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.api.Responses;
-using asivamosffie.model.Models;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.model.APIModels;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -324,7 +319,7 @@ namespace asivamosffie.api.Controllers
         }
 
         #endregion
-         
+
         #region Other
         [HttpGet("GetDiasHabilesActaConstruccionEnviada")]
         public async Task GetDiasHabilesActaConstruccionEnviada()
