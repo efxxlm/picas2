@@ -8,6 +8,11 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
+                <p class="info-sub-title textoGrisVar">
+                    <span>Valor neto de giro: <em> {{ solicitudPagoFase.get( 'valorNetoGiro' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
+                    <span>Nuevo valor registrado: <em> {{ solicitudPagoFase.get( 'nuevoValorRegistrado' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
+                </p>
+
                 <mat-accordion *ngIf="getDescuentos( i ).length > 0">
                     <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of getDescuentos( i ).controls; index as j">
                         <mat-expansion-panel-header class="expansion-style--header">

@@ -210,6 +210,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                                                         }
 
                                                         if ( valorTraslado !== undefined ) {
+                                                            nuevoValorRegistrado += valorTraslado;
                                                             cantidadRegistroCompleto++;
                                                         }
 
@@ -368,7 +369,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
     checkValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, mIndex: number ) {
         if ( value !== null ) {
             if ( value < 0 ) {
-                this.getAportantes( index, jIndex, kIndex, lIndex ).controls[ 'nuevoValorDescuento' ].setValue( null )
+                this.getAportantes( index, jIndex, kIndex, lIndex ).controls[ mIndex ].get( 'nuevoValorDescuento' ).setValue( null )
             }
         }
     }

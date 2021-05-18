@@ -61,6 +61,10 @@ export class FormTerceroCausacionComponent implements OnInit {
         return this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'descuentoTecnica' ).get( 'descuentos' ) as FormArray;
     }
 
+    getAportanteDescuentos( index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        return this.getDescuentosFinanciera( index, jIndex, kIndex ).controls[ lIndex ].get( 'aportantesDescuento' ) as FormArray;
+    }
+
     constructor(
         private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -166,6 +170,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                     const listaDescuentoTecnica = [];
 
                     if ( terceroCausacion !== undefined ) {
+                        /*
                         if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                             terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
                                 let valorTraslado: number;
@@ -181,6 +186,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         if ( balanceFinancieroTrasladoValor !== undefined ) {
                                             valorTraslado = balanceFinancieroTrasladoValor.valorTraslado
                                             balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId
+                                            nuevoValorRegistrado += valorTraslado
                                         }
                                     }
                                 }
@@ -198,6 +204,78 @@ export class FormTerceroCausacionComponent implements OnInit {
                                         }
                                     )
                                 );
+                            } )
+                        }
+                        */
+
+                        if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                            for ( const descuento of listDescuento ) {
+                                const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
+                                const listaAportanteDescuentos = [];
+
+                                if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                    for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
+                                        let valorTraslado: number;
+                                        let balanceFinancieroTrasladoValorId = 0;
+        
+                                        if ( this.balanceFinancieroTrasladoValor !== undefined ) {
+                                            if ( this.balanceFinancieroTrasladoValor.length > 0 ) {
+                                                const balanceFinancieroTrasladoValor = this.balanceFinancieroTrasladoValor.find(
+                                                    balanceFinancieroTrasladoValor => balanceFinancieroTrasladoValor.ordenGiroDetalleTerceroCausacionDescuentoId === terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId
+                                                    && balanceFinancieroTrasladoValor.tipoTrasladoCodigo === String( this.tipoTrasladoCodigo.direccionFinanciera )
+                                                )
+        
+                                                if ( balanceFinancieroTrasladoValor !== undefined ) {
+                                                    valorTraslado = balanceFinancieroTrasladoValor.valorTraslado
+                                                    balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId
+                                                    nuevoValorRegistrado += valorTraslado
+                                                }
+                                            }
+                                        }
+                                        const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
+                                        let listaFuenteRecursos: any[];
+                                        let fuente: any;
+                                        if ( nombreAportante !== undefined ) {
+                                            listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                            fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
+                                        }
+
+                                        listaAportanteDescuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    registroCompleto: [ valorTraslado !== undefined ? true : false ],
+                                                    ordenGiroDetalleTerceroCausacionDescuentoId: [ terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
+                                                    balanceFinancieroTrasladoValorId: [ balanceFinancieroTrasladoValorId ],
+                                                    tipoTrasladoCodigo: [ String( this.tipoTrasladoCodigo.direccionFinanciera ) ],
+                                                    nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
+                                                    valorDescuento: [ terceroCausacionDescuento.valorDescuento, Validators.required ],
+                                                    fuente: [ { value: fuente !== undefined ? fuente : null, disabled: true }, Validators.required ],
+                                                    nuevoValorDescuento: [ valorTraslado !== undefined ? ( valorTraslado < 0 ? null : valorTraslado ) : null, Validators.required ]
+                                                }
+                                            )
+                                        )
+                                    }
+
+                                    listaDescuentos.push(
+                                        this.fb.group(
+                                            {
+                                                tipoDescuento: [ descuento.codigo, Validators.required ],
+                                                aportantesDescuento: this.fb.array( listaAportanteDescuentos )
+                                            }
+                                        )
+                                    );
+                                }
+                            }
+
+                            terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
+
+                                if ( descuento.tipoDescuentoCodigo !== undefined ) {
+                                    const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
+
+                                    if ( descuentoIndex !== -1 ) {
+                                        listDescuento.splice( descuentoIndex, 1 );
+                                    }
+                                }
                             } )
                         }
                         // Get lista de aportantes
@@ -223,6 +301,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                                             if ( balanceFinancieroTrasladoValor !== undefined ) {
                                                 valorTraslado = balanceFinancieroTrasladoValor.valorTraslado
                                                 balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId
+                                                nuevoValorRegistrado += valorTraslado
                                             }
                                         }
                                     }
@@ -331,9 +410,13 @@ export class FormTerceroCausacionComponent implements OnInit {
 
                         if ( terceroCausacion.tieneDescuento === true ) {
                             listaDescuentos.forEach( descuento => {
-                                if ( descuento.get( 'registroCompleto' ).value === true ) {
-                                    cantidadRegistroCompletoDescuento++;
-                                }
+                                const descuentoAportantes = descuento.get( 'aportantesDescuento' ) as FormArray;
+
+                                descuentoAportantes.controls.forEach( descuentoControl => {
+                                    if ( descuentoControl.get( 'registroCompleto' ).value === true ) {
+                                        cantidadRegistroCompletoDescuento++;
+                                    }
+                                } )
                             } )
                         }
 
@@ -453,7 +536,7 @@ export class FormTerceroCausacionComponent implements OnInit {
         }
     }
 
-    checkValueAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, tipoValor: string ) {
+    checkValueAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, mIndex: number, tipoValor: string ) {
         if ( value !== null ) {
             if ( value < 0 ) {
                 if ( tipoValor === 'aportante' ) {
@@ -461,7 +544,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                 }
 
                 if ( tipoValor === 'descuentoFinanciera' ) {
-                    this.getDescuentosFinanciera( index, jIndex, kIndex ).controls[ lIndex ].get( 'nuevoValorDescuento' ).setValue( null )
+                    this.getAportanteDescuentos( index, jIndex, kIndex, lIndex ).controls[ mIndex ].get( 'nuevoValorDescuento' ).setValue( null )
                 }
 
                 if ( tipoValor === 'descuentoTecnica' ) {
@@ -508,20 +591,22 @@ export class FormTerceroCausacionComponent implements OnInit {
                         } )
                         
                         if ( this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).length > 0 ) {
-                            this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).controls.forEach( descuentoFinanciera => {
-                                if ( descuentoFinanciera.dirty === true ) {
-                                    balanceFinancieroTraslado.push(
-                                        {
-                                            ordenGiroId: this.ordenGiroId,
-                                            balanceFinancieroId: this.balanceFinancieroId,
-                                            esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
-                                            balanceFinancieroTrasladoValorId: descuentoFinanciera.get( 'balanceFinancieroTrasladoValorId' ).value,
-                                            tipoTrasladoCodigo: descuentoFinanciera.get( 'tipoTrasladoCodigo' ).value,
-                                            ordenGiroDetalleTerceroCausacionDescuentoId: descuentoFinanciera.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
-                                            valorTraslado: descuentoFinanciera.get( 'nuevoValorDescuento' ).value
-                                        }
-                                    )
-                                }
+                            this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).controls.forEach( ( descuentoFinanciera, indexDescFinanciera ) => {
+                                this.getAportanteDescuentos( index, indexCriterio, indexConcepto, indexDescFinanciera ).controls.forEach( aportanteDescControl => {
+                                    if ( aportanteDescControl.dirty === true ) {
+                                        balanceFinancieroTraslado.push(
+                                            {
+                                                ordenGiroId: this.ordenGiroId,
+                                                balanceFinancieroId: this.balanceFinancieroId,
+                                                esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
+                                                balanceFinancieroTrasladoValorId: aportanteDescControl.get( 'balanceFinancieroTrasladoValorId' ).value,
+                                                tipoTrasladoCodigo: aportanteDescControl.get( 'tipoTrasladoCodigo' ).value,
+                                                ordenGiroDetalleTerceroCausacionDescuentoId: aportanteDescControl.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
+                                                valorTraslado: aportanteDescControl.get( 'nuevoValorDescuento' ).value
+                                            }
+                                        )
+                                    }
+                                } )
                             } )
                         }
                         if ( this.getDescuentosTecnica( index, indexCriterio, indexConcepto ).length > 0 ) {
