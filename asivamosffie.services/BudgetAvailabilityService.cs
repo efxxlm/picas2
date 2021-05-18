@@ -1166,14 +1166,15 @@ namespace asivamosffie.services
 
 
                 gestionfuentes = _context.GestionFuenteFinanciacion
-                .Where(x => !(bool)x.Eliminado
-                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
-                Include(x => x.FuenteFinanciacion).
+                 .Include(x => x.FuenteFinanciacion).
                     ThenInclude(x => x.Aportante).
                     ThenInclude(x => x.CofinanciacionDocumento).
                 Include(x => x.DisponibilidadPresupuestalProyecto).
                     ThenInclude(x => x.Proyecto).
-                        ThenInclude(x => x.Sede).
+                        ThenInclude(x => x.Sede)
+                .Where(x => !(bool)x.Eliminado
+                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+              
                 ToList();
 
                 if (esNovedad)

@@ -173,7 +173,7 @@ namespace asivamosffie.services
 
             List<NovedadContractual> listaNovedadesActivas = new List<NovedadContractual>();
 
-            List <NovedadContractual> listaNovedadesActivasTemp = _context.NovedadContractual
+            List<NovedadContractual> listaNovedadesActivasTemp = _context.NovedadContractual
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico
@@ -216,7 +216,7 @@ namespace asivamosffie.services
 
             foreach (var contrato in contratos)
             {
-                int existeNovedad = _context.NovedadContractual.Where(x=> x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
+                int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
 
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
@@ -349,7 +349,7 @@ namespace asivamosffie.services
                     foreach (var cfn in componenteFuenteNovedades)
                     {
                         FuenteFinanciacion fuentesFinanciacion = _context.FuenteFinanciacion.Find(cfn.FuenteFinanciacionId);
-                        
+
                         if (fuentesFinanciacion != null)
                         {
                             fuentesFinanciacion.NombreFuente = fuentesFinanciacion != null ? !string.IsNullOrEmpty(fuentesFinanciacion.FuenteRecursosCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(fuentesFinanciacion.FuenteRecursosCodigo, (int)EnumeratorTipoDominio.Fuentes_de_financiacion) : "" : "";
@@ -435,12 +435,27 @@ namespace asivamosffie.services
 
                 if (novedadContractual.Contrato.FechaTerminacionFase2 == null)
                 {
-                    DateTime? fechaTemp = novedadContractual.Contrato.FechaActaInicioFase1.Value;
 
-                    fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias.Value);
-                    fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses.Value);
+                    if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
+                    {
+                        DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
+                                                                            .OrderBy(x => x.FechaAprobacion)?
+                                                                            .FirstOrDefault()?
+                                                                            .FechaAprobacion
+                                                                            .Value;
 
-                    novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+                        novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+
+                    }
+                    else
+                    {
+                        DateTime? fechaTemp = novedadContractual?.Contrato?.FechaActaInicioFase1.Value != null ? novedadContractual?.Contrato?.FechaActaInicioFase1.Value : DateTime.Now;
+
+                        fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias.Value);
+                        fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses.Value);
+
+                        novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+                    }
                 }
 
 
@@ -466,8 +481,8 @@ namespace asivamosffie.services
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
                     novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
-                    
-                    if(novedadContractualAportante.CofinanciacionAportante != null)
+
+                    if (novedadContractualAportante.CofinanciacionAportante != null)
                         novedadContractualAportante.TipoAportante = listDominioTipoAportante
                                     .Where(r => r.DominioId == novedadContractualAportante.CofinanciacionAportante.TipoAportanteId)
                                     ?.FirstOrDefault()
@@ -1384,7 +1399,7 @@ namespace asivamosffie.services
                             )
                             {
                                 bool esNodedadNoFirma = false;
-                                foreach(var item in novedadContractual.NovedadContractualDescripcion)
+                                foreach (var item in novedadContractual.NovedadContractualDescripcion)
                                 {
                                     if (item.TipoNovedadCodigo == ConstanTiposNovedades.Adición || item.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga || item.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales)
                                     {
