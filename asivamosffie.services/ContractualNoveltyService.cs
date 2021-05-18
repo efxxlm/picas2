@@ -1425,7 +1425,7 @@ namespace asivamosffie.services
                     await CreateEditNovedadContractualAportante(aportante);
                 }
 
-                novedadContractualOld.RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractualOld);
+                novedadContractualOld.RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractual);
 
                 _context.SaveChanges();
 
