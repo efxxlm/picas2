@@ -18,8 +18,11 @@ namespace asivamosffie.services
     {
         #region Constructor
         private readonly devAsiVamosFFIEContext _context;
+
         private readonly ICommonService _commonService;
+
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
+
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
 
         public FinancialBalanceService(devAsiVamosFFIEContext context,
@@ -54,7 +57,9 @@ namespace asivamosffie.services
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
                                                        .Include(r => r.InstitucionEducativa)
-                                                       .Include(r => r.BalanceFinanciero).ThenInclude(r => r.BalanceFinancieroTrasladoValor)
+                                                       .Include(r => r.BalanceFinanciero)
+                                                          .ThenInclude(r => r.BalanceFinancieroTraslado)
+                                                              .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                        .FirstOrDefaultAsync();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
@@ -168,7 +173,8 @@ namespace asivamosffie.services
         {
             return await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
-                                                    .Include(r => r.BalanceFinancieroTrasladoValor)
+                                                    .Include(r => r.BalanceFinancieroTraslado )
+                                                          .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
         }
 
@@ -247,8 +253,7 @@ namespace asivamosffie.services
                 // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
 
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
-                {
-                    pBalanceFinanciero.NumeroTraslado = 0;
+                { 
                     pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
                     pBalanceFinanciero.RegistroCompleto = true;
                 }
@@ -277,13 +282,12 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pBalanceFinanciero.UsuarioCreacion,
                                                                        RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
                                                                        JustificacionTrasladoAportanteFuente = pBalanceFinanciero.JustificacionTrasladoAportanteFuente,
-                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte,
-                                                                       NumeroTraslado = pBalanceFinanciero.NumeroTraslado > 0 ? pBalanceFinanciero.NumeroTraslado : pBalanceFinanciero.NumeroTraslado,
+                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte, 
                                                                        RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
                                                                        EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
                                                                    });
 
-                    CreateEditBalanceFinancieroTrasladoValor(pBalanceFinanciero.BalanceFinancieroTrasladoValor, pBalanceFinanciero.UsuarioCreacion);
+                    CreateEditBalanceFinancieroTrasladoValor(pBalanceFinanciero.BalanceFinancieroTraslado, pBalanceFinanciero.UsuarioCreacion);
                 }
                 return
                 new Respuesta
@@ -309,41 +313,49 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTrasladoValor> ListBalanceFinancieroTrasladoValor, string pAuthor)
-        {
-            foreach (var BalanceFinancieroTrasladoValor in ListBalanceFinancieroTrasladoValor)
-            {
-                if (BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId == 0)
-                {
-                    BalanceFinancieroTrasladoValor.UsuarioCreacion = pAuthor;
-                    BalanceFinancieroTrasladoValor.FechaCreacion = DateTime.Now;
-                    BalanceFinancieroTrasladoValor.Eliminado = false;
-                    BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
+        private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTraslado> ListBalanceFinancieroTraslado, string pAuthor)
+        { 
+            foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
+            { 
 
-                    _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
-
-                    _context.Set<OrdenGiro>()
-                            .Where(o => o.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId)
-                            .Update(o => new OrdenGiro
-                            {
-                                ValorNetoGiroTraslado = ListBalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId).Sum(r => r.ValorTraslado) ?? 0,
-                                TieneTraslado = true
-                            }); ;
-                }
-                else
+                 
+                foreach (var BalanceFinancieroTrasladoValor in BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
                 {
-                    _context.Set<BalanceFinancieroTrasladoValor>()
-                            .Where(r => r.BalanceFinancieroTrasladoValorId == BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId)
-                            .Update(r => new BalanceFinancieroTrasladoValor
-                            {
-                                EsPreconstruccion = BalanceFinancieroTrasladoValor.EsPreconstruccion,
-                                UsuarioModificacion = pAuthor,
-                                FechaModificacion = DateTime.Now,
-                                ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado,
-                                RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null
-                            });
+                    if (BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId == 0)
+                    {
+                        BalanceFinancieroTrasladoValor.UsuarioCreacion = pAuthor;
+                        BalanceFinancieroTrasladoValor.FechaCreacion = DateTime.Now;
+                        BalanceFinancieroTrasladoValor.Eliminado = false;
+                        BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
+
+                        _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
+
+                     
+                    }
+                    else
+                    {
+                        _context.Set<BalanceFinancieroTrasladoValor>()
+                                .Where(r => r.BalanceFinancieroTrasladoValorId == BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId)
+                                .Update(r => new BalanceFinancieroTrasladoValor
+                                {
+                                    EsPreconstruccion = BalanceFinancieroTrasladoValor.EsPreconstruccion,
+                                    UsuarioModificacion = pAuthor,
+                                    FechaModificacion = DateTime.Now,
+                                    ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado,
+                                    RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null
+                                });
+                    }
                 }
+
+                //_context.Set<OrdenGiro>()
+                //             .Where(o => o.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId)
+                //             .Update(o => new OrdenGiro
+                //             {
+                //                 ValorNetoGiroTraslado = ListBalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId).Sum(r => r.ValorTraslado) ?? 0,
+                //                 TieneTraslado = true
+                //             });
             }
+            
         }
         #endregion
 

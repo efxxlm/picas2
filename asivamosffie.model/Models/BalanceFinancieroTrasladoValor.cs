@@ -18,12 +18,10 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public int? OrdenGiroDetalleDescuentoTecnicaId { get; set; }
         public int? OrdenGiroDetalleDescuentoTecnicaAportanteId { get; set; }
-        public int? OrdenGiroId { get; set; }
-        public int? BalanceFinancieroId { get; set; }
         public bool? EsPreconstruccion { get; set; }
+        public int? BalanceFinancieroTrasladoId { get; set; }
 
-        public virtual BalanceFinanciero BalanceFinanciero { get; set; }
-        public virtual OrdenGiro OrdenGiro { get; set; }
+        public virtual BalanceFinancieroTraslado BalanceFinancieroTraslado { get; set; }
         public virtual OrdenGiroDetalleDescuentoTecnica OrdenGiroDetalleDescuentoTecnica { get; set; }
         public virtual OrdenGiroDetalleDescuentoTecnicaAportante OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
         public virtual OrdenGiroDetalleTerceroCausacionAportante OrdenGiroDetalleTerceroCausacionAportante { get; set; }

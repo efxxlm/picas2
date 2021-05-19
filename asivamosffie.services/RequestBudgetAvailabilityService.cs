@@ -32,6 +32,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
+        
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
@@ -725,15 +726,12 @@ namespace asivamosffie.services
         }
         //Avance compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento)
-        {
-            Respuesta respuesta = new Respuesta();
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
-
-            string strCrearEditar = string.Empty;
-            CompromisoSeguimiento compromisoSeguimientoAntiguo = null;
+           
             try
-            {
-
+            { 
+                string strCrearEditar;
                 if (string.IsNullOrEmpty(compromisoSeguimiento.CompromisoSeguimientoId.ToString()) || compromisoSeguimiento.CompromisoSeguimientoId == 0)
                 {
                     //Auditoria
@@ -747,7 +745,7 @@ namespace asivamosffie.services
                 else
                 {
                     strCrearEditar = "EDIT AVANCE COMPROMISOS";
-                    compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
+                    CompromisoSeguimiento compromisoSeguimientoAntiguo = _context.CompromisoSeguimiento.Find(compromisoSeguimiento.CompromisoSeguimientoId);
 
                     //Auditoria
                     compromisoSeguimientoAntiguo.UsuarioModificacion = compromisoSeguimiento.UsuarioModificacion;
@@ -762,7 +760,7 @@ namespace asivamosffie.services
 
                 }
 
-                return respuesta = new Respuesta
+                return  new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
@@ -776,7 +774,7 @@ namespace asivamosffie.services
 
             catch (Exception ex)
             {
-                return respuesta = new Respuesta
+                return  new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,

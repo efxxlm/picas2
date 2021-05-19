@@ -24,6 +24,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<BalanceFinanciero> BalanceFinanciero { get; set; }
+        public virtual DbSet<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
         public virtual DbSet<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
         public virtual DbSet<CarguePagosRendimientos> CarguePagosRendimientos { get; set; }
@@ -531,6 +532,44 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_BalanceFinanciero_ContratacionProyecto");
             });
 
+            modelBuilder.Entity<BalanceFinancieroTraslado>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaAnulacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroTraslado)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(8, 2)");
+
+                entity.HasOne(d => d.BalanceFinanciero)
+                    .WithMany(p => p.BalanceFinancieroTraslado)
+                    .HasForeignKey(d => d.BalanceFinancieroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BalanceFinanciero_BalanceFinancieroTraslado");
+            });
+
             modelBuilder.Entity<BalanceFinancieroTrasladoValor>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -552,10 +591,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorTraslado).HasColumnType("decimal(38, 0)");
 
-                entity.HasOne(d => d.BalanceFinanciero)
+                entity.HasOne(d => d.BalanceFinancieroTraslado)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
-                    .HasForeignKey(d => d.BalanceFinancieroId)
-                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_BalanceFinanciero");
+                    .HasForeignKey(d => d.BalanceFinancieroTrasladoId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_BalanceFinancieroTrasladoId");
 
                 entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
@@ -576,11 +615,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
                     .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionDescuentoId)
                     .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiroDetalleTerceroCausacionDescuentoId");
-
-                entity.HasOne(d => d.OrdenGiro)
-                    .WithMany(p => p.BalanceFinancieroTrasladoValor)
-                    .HasForeignKey(d => d.OrdenGiroId)
-                    .HasConstraintName("FK_BalanceFinancieroTrasladoValor_OrdenGiro");
             });
 
             modelBuilder.Entity<CargueObservacion>(entity =>

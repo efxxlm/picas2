@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public BalanceFinanciero()
         {
-            BalanceFinancieroTrasladoValor = new HashSet<BalanceFinancieroTrasladoValor>();
+            BalanceFinancieroTraslado = new HashSet<BalanceFinancieroTraslado>();
         }
 
         public int BalanceFinancieroId { get; set; }
@@ -25,9 +25,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public int? NumeroTraslado { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
-        public virtual ICollection<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
+        public virtual ICollection<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
     }
 }
