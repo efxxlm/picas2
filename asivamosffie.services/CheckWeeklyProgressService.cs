@@ -239,16 +239,16 @@ namespace asivamosffie.services
             {
                 foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
                 {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
+                    //if (item.RegistroCompletoObservacionSupervisor != true)
+                    //    return false;
                 }
             }
             else
             {
                 foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
                 {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
+                    //if (item.RegistroCompletoObservacionApoyo != true)
+                    //    return false;
                 }
             }
             return true;

@@ -99,7 +99,8 @@ namespace asivamosffie.services
                 departamento = proyecto.DepartamentoObj.Descripcion,
                 municipio = proyecto.MunicipioObj.Descripcion,
                 numeroContratoObra = numeroContratoObra,
-                numeroContratoInterventoria = numeroContratoInterventoria
+                numeroContratoInterventoria = numeroContratoInterventoria,
+                proyecto.BalanceFinanciero
             });
 
             return ProyectoAjustado;
