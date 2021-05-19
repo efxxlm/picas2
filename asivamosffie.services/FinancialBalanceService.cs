@@ -41,7 +41,7 @@ namespace asivamosffie.services
         public async Task<List<VProyectosBalance>> GridBalance()
         {
             return await _context.VProyectosBalance
-                                 .OrderByDescending(r => r.ProyectoId)
+                                 .OrderByDescending(r => r.FechaTerminacionProyecto)
                                  .ToListAsync();
         }
 
@@ -318,7 +318,7 @@ namespace asivamosffie.services
             foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
             {
                 if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
-                { 
+                {
                     BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
                     BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
                     BalanceFinancieroTraslado.Eliminado = false;
@@ -339,9 +339,9 @@ namespace asivamosffie.services
                               ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)
                           });
                 }
-                 
+
                 CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
-               
+
                 _context.Set<OrdenGiro>()
                              .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
                              .Update(o => new OrdenGiro
@@ -349,7 +349,7 @@ namespace asivamosffie.services
                                  ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0,
                                  TieneTraslado = true
                              });
-            } 
+            }
         }
 
         private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTrasladoValor> ListBalanceFinancieroTrasladoValor, string pAuthor)
@@ -378,7 +378,7 @@ namespace asivamosffie.services
                                 RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null
                             });
                 }
-            } 
+            }
         }
         #endregion
 
@@ -389,9 +389,9 @@ namespace asivamosffie.services
             if (balanceFinanciero != null)
             {
                 if (balanceFinanciero.RequiereTransladoRecursos == false)
-                    state = true;
+                    return true;
                 else
-                    state = balanceFinanciero.RegistroCompleto;
+                    return balanceFinanciero.RegistroCompleto;
             }
             return state;
         }
@@ -402,11 +402,6 @@ namespace asivamosffie.services
 
             try
             {
-                BalanceFinanciero balanceFinanciero =
-                                                    _context.BalanceFinanciero
-                                                    .Where(r => r.ProyectoId == pProyectoId)
-                                                    .FirstOrDefault();
-
                 _context.Set<BalanceFinanciero>()
                         .Where(b => b.ProyectoId == pProyectoId)
                         .Update(b => new BalanceFinanciero
