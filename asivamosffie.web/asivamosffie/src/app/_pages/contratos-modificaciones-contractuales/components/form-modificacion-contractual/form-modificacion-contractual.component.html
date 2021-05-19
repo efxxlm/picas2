@@ -80,12 +80,42 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de modificación</b>: Adición, Prorroga</p>
-              <p><b>Presupuesto adicional solicitado</b>: $7.000.000</p>
-              <p><b>Valor después de la modificación</b>: $72.000.000</p>
-              <p><b>Plazo adicional solicitado</b>: 23 meses, 13 días</p>
-              <p><b>Plazo después de la modificación</b>: 33 meses, 11 días</p>
-              <p><b>Detalle de la modificación</b>: Se solicita adición y plazo para realizar obras extras en el proyecto</p>
+              <p><b>Número de la solicitud de modificación</b>: {{ dataNovedad.numeroSolicitud }}</p>
+              <p><b>Tipo de modificación</b>: {{ tipoModificacion }}</p>
+              <p><b>Url con soporte</b>: {{ dataNovedad.urlSoporteGestionar }}</p>  
+              <div *ngFor="let element of dataNovedad.novedadContractualDescripcion; let f = index">
+                <h3 *ngIf="dataNovedad?.novedadContractualDescripcion.length > 1"><b>Novedad {{ f+1 }}</b></h3>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>: <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalDias }} días / {{element.plazoAdicionalMeses }} meses</span></p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha de inicio de la suspensión</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha final de la suspensión</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha de inicio del reinicio</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha final del reinicio</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.modificacion_de_Condiciones_Contractuales">
+                  <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0].clausulaAmodificar"></span>
+                  <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0].ajusteSolicitadoAclausula"></span>
+                </p>
+                <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>  
+              </div>
+              <h2 class="card-subTitle back-color" *ngIf="adicionBoolean">Aportantes</h2>
+              
+              <div *ngFor="let aportante of dataNovedad.novedadContractualAportante; let i = index">
+                <section>
+                  <h1 style="margin-bottom: .2em;margin-top: 1em;"><b>Aportante {{ i+1 }}</b></h1>
+                  <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
+                  <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
+                  <p><b>Valor del aportante al proyecto</b>: {{ aportante.valorAporte | currency: '':'symbol':'3.0' }}</p>
+                </section>
+                <section *ngFor="let componente of aportante.componenteAportanteNovedad; let componenteIndex = index">
+                  <h2 style="margin-bottom: .2em;margin-top: 1em;"><b>Fase {{ componente.nombrefase }}</b></h2>
+                  <div *ngFor="let fuente of componente.componenteFuenteNovedad; let f = index">
+                    <h3><b>Fuente {{ f+1 }}</b></h3>
+                    <p><b>Fuente</b>: {{ fuente.fuenteFinanciacion.nombreFuente }}</p>
+                    <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency: '':'symbol':'3.0' }}</p>
+                  </div>
+                </section>
+              </div>
+        
             </mat-card-content>
           </mat-card>
         </div>

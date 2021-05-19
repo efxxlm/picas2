@@ -33,7 +33,7 @@
 
     <ng-container matColumnDef="estadoDocumento">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del documento </th>
-      <td mat-cell *matCellDef="let element" align="center"> En revisión </td>
+      <td mat-cell *matCellDef="let element" align="center"><span *ngIf="!element.estaTramitado"> Sin registro</span><span *ngIf="element.estaTramitado"> En revisión</span> </td>
     </ng-container>
 
     <ng-container matColumnDef="solicitudId">
