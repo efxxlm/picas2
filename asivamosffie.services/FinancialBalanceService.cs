@@ -135,7 +135,8 @@ namespace asivamosffie.services
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
-                    v.OrdenGiroId
+                    v.OrdenGiroId,
+                    v.SolicitudPagoId
                 }).ToList());
             }
             else
@@ -165,7 +166,8 @@ namespace asivamosffie.services
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
-                    v.OrdenGiroId
+                    v.OrdenGiroId,
+                    v.SolicitudPagoId
                 }).ToList());
             }
         }
