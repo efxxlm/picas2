@@ -465,10 +465,10 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion)
         {
             if (
-                   pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() > 0
-                || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() > 0
-                || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count() > 0
-                || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count(r => r.Archivada == false) > 0
+                   pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() == 0
+                || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() == 0
+                || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count() == 0
+                || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count(r => r.Archivada == false) == 0
                 )
                 return false;
 
