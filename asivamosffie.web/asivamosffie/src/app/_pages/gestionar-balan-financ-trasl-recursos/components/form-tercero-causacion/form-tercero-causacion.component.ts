@@ -22,6 +22,7 @@ export class FormTerceroCausacionComponent implements OnInit {
     @Input() esRegistroNuevo: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     tipoTrasladoCodigo = TipoTrasladoCodigo;
+    balanceFinancieroTraslado: any;
     balanceFinancieroTrasladoId = 0;
     balanceFinanciero: any;
     balanceFinancieroId = 0;
@@ -106,6 +107,18 @@ export class FormTerceroCausacionComponent implements OnInit {
                             this.ordenGiroDetalleTerceroCausacion = ordenGiroDetalle.ordenGiroDetalleTerceroCausacion;
                         }
                     }
+                }
+            }
+        }
+
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+            if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+                const traslado = this.balanceFinanciero.balanceFinancieroTraslado.find( traslado => traslado.ordenGiroId === this.ordenGiroId )
+
+                if ( traslado !== undefined ) {
+                    this.balanceFinancieroTraslado = traslado
+                    this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId
+                    this.balanceFinancieroTrasladoValor = this.balanceFinancieroTraslado.balanceFinancieroTrasladoValor
                 }
             }
         }
@@ -615,11 +628,41 @@ export class FormTerceroCausacionComponent implements OnInit {
             return balanceFinancieroTraslado.length > 0 ? balanceFinancieroTraslado : null;
         }
 
-        this.balanceFinanciero.balanceFinancieroTraslado = {
-            ordenGiroId: this.ordenGiroId,
-            balanceFinancieroId: this.balanceFinancieroId,
-            balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
-            balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+            if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+                const trasladoIndex = this.balanceFinanciero.balanceFinancieroTraslado.findIndex( traslado => traslado.ordenGiroId === this.ordenGiroId )
+
+                if ( trasladoIndex !== -1 ) {
+                    this.balanceFinanciero.balanceFinancieroTraslado.splice( trasladoIndex, 1 )
+                }
+
+                this.balanceFinanciero.balanceFinancieroTraslado.push(
+                    {
+                        ordenGiroId: this.ordenGiroId,
+                        balanceFinancieroId: this.balanceFinancieroId,
+                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                        balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                    }
+                )
+            } else {
+                this.balanceFinanciero.balanceFinancieroTraslado = [
+                    {
+                        ordenGiroId: this.ordenGiroId,
+                        balanceFinancieroId: this.balanceFinancieroId,
+                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                        balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                    }
+                ]
+            }
+        } else {
+            this.balanceFinanciero.balanceFinancieroTraslado = [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    balanceFinancieroId: this.balanceFinancieroId,
+                    balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                    balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                }
+            ]
         }
 
         this.balanceSvc.createEditBalanceFinanciero( this.balanceFinanciero )

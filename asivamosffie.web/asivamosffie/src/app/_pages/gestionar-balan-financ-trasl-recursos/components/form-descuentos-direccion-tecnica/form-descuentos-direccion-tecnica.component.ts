@@ -28,6 +28,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
     balanceFinancieroId = 0;
     ordenGiroId = 0;
     ordenGiroDetalle: any;
+    balanceFinancieroTraslado: any;
     balanceFinancieroTrasladoValor: any;
     fasePreConstruccionFormaPagoCodigo: any;
     listaTipoDescuento: Dominio[] = [];
@@ -80,7 +81,6 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
         this.listaDescuentosDireccionTecnica = await this.commonSvc.tiposDescuento().toPromise()
 
         this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
-        this.balanceFinancieroTrasladoValor = this.balanceFinanciero.balanceFinancieroTrasladoValor;
 
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
@@ -94,6 +94,18 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                             this.ordenGiroDetalleDescuentoTecnica = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
                         }
                     }
+                }
+            }
+        }
+
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+            if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+                const traslado = this.balanceFinanciero.balanceFinancieroTraslado.find( traslado => traslado.ordenGiroId === this.ordenGiroId )
+
+                if ( traslado !== undefined ) {
+                    this.balanceFinancieroTraslado = traslado
+                    this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId
+                    this.balanceFinancieroTrasladoValor = this.balanceFinancieroTraslado.balanceFinancieroTrasladoValor
                 }
             }
         }
@@ -463,11 +475,41 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
             return balanceFinancieroTraslado.length > 0 ? balanceFinancieroTraslado : null;
         }
 
-        this.balanceFinanciero.balanceFinancieroTraslado = {
-            ordenGiroId: this.ordenGiroId,
-            balanceFinancieroId: this.balanceFinancieroId,
-            balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
-            balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+            if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+                const trasladoIndex = this.balanceFinanciero.balanceFinancieroTraslado.findIndex( traslado => traslado.ordenGiroId === this.ordenGiroId )
+
+                if ( trasladoIndex !== -1 ) {
+                    this.balanceFinanciero.balanceFinancieroTraslado.splice( trasladoIndex, 1 )
+                }
+
+                this.balanceFinanciero.balanceFinancieroTraslado.push(
+                    {
+                        ordenGiroId: this.ordenGiroId,
+                        balanceFinancieroId: this.balanceFinancieroId,
+                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                        balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                    }
+                )
+            } else {
+                this.balanceFinanciero.balanceFinancieroTraslado = [
+                    {
+                        ordenGiroId: this.ordenGiroId,
+                        balanceFinancieroId: this.balanceFinancieroId,
+                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                        balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                    }
+                ]
+            }
+        } else {
+            this.balanceFinanciero.balanceFinancieroTraslado = [
+                {
+                    ordenGiroId: this.ordenGiroId,
+                    balanceFinancieroId: this.balanceFinancieroId,
+                    balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+                    balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+                }
+            ]
         }
 
         this.balanceSvc.createEditBalanceFinanciero( this.balanceFinanciero )
