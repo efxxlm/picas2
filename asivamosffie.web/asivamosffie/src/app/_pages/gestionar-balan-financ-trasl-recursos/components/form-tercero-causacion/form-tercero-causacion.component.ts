@@ -22,6 +22,7 @@ export class FormTerceroCausacionComponent implements OnInit {
     @Input() esRegistroNuevo: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     tipoTrasladoCodigo = TipoTrasladoCodigo;
+    balanceFinancieroTrasladoId = 0;
     balanceFinanciero: any;
     balanceFinancieroId = 0;
     ordenGiroId = 0;
@@ -578,8 +579,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                             if ( aportanteControl.dirty === true ) {
                                 balanceFinancieroTraslado.push(
                                     {
-                                        ordenGiroId: this.ordenGiroId,
-                                        balanceFinancieroId: this.balanceFinancieroId,
+                                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
                                         esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
                                         balanceFinancieroTrasladoValorId: aportanteControl.get( 'balanceFinancieroTrasladoValorId' ).value,
                                         tipoTrasladoCodigo: aportanteControl.get( 'tipoTrasladoCodigo' ).value,
@@ -589,15 +589,14 @@ export class FormTerceroCausacionComponent implements OnInit {
                                 )
                             }
                         } )
-                        
+
                         if ( this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).length > 0 ) {
                             this.getDescuentosFinanciera( index, indexCriterio, indexConcepto ).controls.forEach( ( descuentoFinanciera, indexDescFinanciera ) => {
                                 this.getAportanteDescuentos( index, indexCriterio, indexConcepto, indexDescFinanciera ).controls.forEach( aportanteDescControl => {
                                     if ( aportanteDescControl.dirty === true ) {
                                         balanceFinancieroTraslado.push(
                                             {
-                                                ordenGiroId: this.ordenGiroId,
-                                                balanceFinancieroId: this.balanceFinancieroId,
+                                                balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
                                                 esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
                                                 balanceFinancieroTrasladoValorId: aportanteDescControl.get( 'balanceFinancieroTrasladoValorId' ).value,
                                                 tipoTrasladoCodigo: aportanteDescControl.get( 'tipoTrasladoCodigo' ).value,
@@ -609,23 +608,6 @@ export class FormTerceroCausacionComponent implements OnInit {
                                 } )
                             } )
                         }
-                        if ( this.getDescuentosTecnica( index, indexCriterio, indexConcepto ).length > 0 ) {
-                            this.getDescuentosTecnica( index, indexCriterio, indexConcepto ).controls.forEach( descuentoTecnica => {
-                                if ( descuentoTecnica.dirty === true ) {
-                                    balanceFinancieroTraslado.push(
-                                        {
-                                            ordenGiroId: this.ordenGiroId,
-                                            balanceFinancieroId: this.balanceFinancieroId,
-                                            esPreconstruccion: this.terceroCausacion.controls[ index ].get( 'esPreconstruccion' ).value,
-                                            balanceFinancieroTrasladoValorId: descuentoTecnica.get( 'balanceFinancieroTrasladoValorId' ).value,
-                                            tipoTrasladoCodigo: descuentoTecnica.get( 'tipoTrasladoCodigo' ).value,
-                                            ordenGiroDetalleDescuentoTecnicaId: descuentoTecnica.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
-                                            valorTraslado: descuentoTecnica.get( 'nuevoValorDescuento' ).value
-                                        }
-                                    )
-                                }
-                            } )
-                        }
                     } )
                 }
             } )
@@ -633,7 +615,12 @@ export class FormTerceroCausacionComponent implements OnInit {
             return balanceFinancieroTraslado.length > 0 ? balanceFinancieroTraslado : null;
         }
 
-        this.balanceFinanciero.balanceFinancieroTrasladoValor = getBalanceFinancieroTrasladoValor()
+        this.balanceFinanciero.balanceFinancieroTraslado = {
+            ordenGiroId: this.ordenGiroId,
+            balanceFinancieroId: this.balanceFinancieroId,
+            balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+            balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+        }
 
         this.balanceSvc.createEditBalanceFinanciero( this.balanceFinanciero )
             .subscribe(

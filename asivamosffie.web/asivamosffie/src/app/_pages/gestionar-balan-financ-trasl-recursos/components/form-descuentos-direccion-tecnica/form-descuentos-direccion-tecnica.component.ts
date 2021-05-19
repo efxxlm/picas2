@@ -22,6 +22,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    balanceFinancieroTrasladoId = 0;
     tipoTrasladoCodigo = TipoTrasladoCodigo;
     balanceFinanciero: any;
     balanceFinancieroId = 0;
@@ -445,8 +446,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                             if ( aportanteControl.dirty === true ) {
                                 balanceFinancieroTraslado.push(
                                     {
-                                        ordenGiroId: this.ordenGiroId,
-                                        balanceFinancieroId: this.balanceFinancieroId,
+                                        balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
                                         esPreconstruccion: this.fases.controls[ index ].get( 'esPreconstruccion' ).value,
                                         balanceFinancieroTrasladoValorId: aportanteControl.get( 'balanceFinancieroTrasladoValorId' ).value,
                                         tipoTrasladoCodigo: aportanteControl.get( 'tipoTrasladoCodigo' ).value,
@@ -463,7 +463,12 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
             return balanceFinancieroTraslado.length > 0 ? balanceFinancieroTraslado : null;
         }
 
-        this.balanceFinanciero.balanceFinancieroTrasladoValor = getBalanceFinancieroTrasladoValor()
+        this.balanceFinanciero.balanceFinancieroTraslado = {
+            ordenGiroId: this.ordenGiroId,
+            balanceFinancieroId: this.balanceFinancieroId,
+            balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
+            balanceFinancieroTrasladoValor: getBalanceFinancieroTrasladoValor()
+        }
 
         this.balanceSvc.createEditBalanceFinanciero( this.balanceFinanciero )
             .subscribe(

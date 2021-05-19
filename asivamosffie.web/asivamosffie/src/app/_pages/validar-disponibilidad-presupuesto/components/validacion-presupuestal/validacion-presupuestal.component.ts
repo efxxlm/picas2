@@ -43,7 +43,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
             console.log( this.detailavailabilityBudget )
-          if(this.esNovedad){
+          if(this.esNovedad === 'true'){
             if ( this.detailavailabilityBudget.novedadContractual !== undefined ) {
               if ( this.detailavailabilityBudget.novedadContractual.novedadContractualDescripcion !== undefined ) {
                 if ( this.detailavailabilityBudget.novedadContractual.novedadContractualDescripcion.length > 0 ) {

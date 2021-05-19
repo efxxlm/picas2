@@ -178,6 +178,8 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
         if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === undefined ) {
             this.semaforoDetalle = 'completo';
         }
+
+        
     }
 
 }
