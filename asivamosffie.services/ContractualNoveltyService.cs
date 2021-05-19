@@ -226,8 +226,11 @@ namespace asivamosffie.services
                         listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0)
                     )
                 {
-                    contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
-                    contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                    if(contrato?.Contratacion?.Contratista != null)
+                    {
+                        contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
+                        contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                    }
 
                     NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == contrato.ContratoId).FirstOrDefault();
 

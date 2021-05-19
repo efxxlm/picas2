@@ -22,10 +22,14 @@
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número de comité técnico</b>: CT_0016</p>
-        <p><b>Fecha de comité técnico</b>: 12/06/2020</p>
-        <p><b>Número de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
-        <p><b>Fecha de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
+       <div  *ngIf="dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != 'undefined' && dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != null">
+          <p><b>Número de comité fiduciario</b>:{{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+          <p><b>Fecha de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>  
+        </div>
+        <div *ngIf="dataNovedad['sesionComiteSolicitud'][0].comiteTecnico != 'undefined' && dataNovedad['sesionComiteSolicitud'][0].comiteTecnico != null">
+          <p><b>Número de comité técnico</b>:{{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnico.numeroComite }}</p>
+          <p><b>Fecha de comité técnico</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>  
+        </div>
       </mat-card-content>
   </mat-card>
   </div>

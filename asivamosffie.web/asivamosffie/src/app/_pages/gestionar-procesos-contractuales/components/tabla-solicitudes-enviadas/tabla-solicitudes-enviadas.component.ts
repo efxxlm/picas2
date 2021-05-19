@@ -23,7 +23,8 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
   estadoCodigo: string;
   estadoCodigos = {
     enviadaFiduciaria: '4',
-    enviadaFiduciariaNovedad: '24'
+    enviadaFiduciariaNovedad: '24',
+    firmadoNovedad: '25',
   }
 
   constructor ( private routes: Router ) {
@@ -34,7 +35,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       let dataTable = [];
 
       response.forEach( lista => {
-        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad) {
+        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad || lista.estadoCodigo === this.estadoCodigos.firmadoNovedad) {
           dataTable.push( lista );
         };
       } );
