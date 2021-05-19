@@ -173,7 +173,7 @@ namespace asivamosffie.services
         {
             return await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
-                                                    .Include(r => r.BalanceFinancieroTraslado )
+                                                    .Include(r => r.BalanceFinancieroTraslado)
                                                           .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
         }
@@ -253,7 +253,7 @@ namespace asivamosffie.services
                 // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
 
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
-                { 
+                {
                     pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
                     pBalanceFinanciero.RegistroCompleto = true;
                 }
@@ -282,7 +282,7 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pBalanceFinanciero.UsuarioCreacion,
                                                                        RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
                                                                        JustificacionTrasladoAportanteFuente = pBalanceFinanciero.JustificacionTrasladoAportanteFuente,
-                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte, 
+                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte,
                                                                        RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
                                                                        EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
                                                                    });
@@ -314,32 +314,32 @@ namespace asivamosffie.services
         }
 
         private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTraslado> ListBalanceFinancieroTraslado, string pAuthor)
-        { 
+        {
             foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
-            { 
-                if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0) {
-
+            {
+                if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
+                { 
                     BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
                     BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
-                    BalanceFinancieroTraslado.Eliminado = false;    
+                    BalanceFinancieroTraslado.Eliminado = false;
                     BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
                     BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado);
-
+                    BalanceFinancieroTraslado.NumeroTraslado = _commonService.EnumeradorTrasladoBalanceFinanciero();
                     _context.BalanceFinancieroTraslado.Add(BalanceFinancieroTraslado);
                 }
                 else
-                { 
+                {
                     _context.Set<BalanceFinancieroTraslado>()
                           .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                           .Update(r => new BalanceFinancieroTraslado
-                          { 
+                          {
                               UsuarioModificacion = pAuthor,
                               FechaModificacion = DateTime.Now,
                               RegistroCompleto = BalanceFinancieroTraslado.RegistroCompleto,
-                              ValorTraslado =  BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)  
-                          }); 
+                              ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)
+                          });
                 }
-                 
+
                 foreach (var BalanceFinancieroTrasladoValor in BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
                 {
                     if (BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId == 0)
@@ -349,7 +349,7 @@ namespace asivamosffie.services
                         BalanceFinancieroTrasladoValor.Eliminado = false;
                         BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
 
-                        _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor); 
+                        _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
                     }
                     else
                     {
@@ -373,8 +373,7 @@ namespace asivamosffie.services
                                  ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0,
                                  TieneTraslado = true
                              });
-            }
-            
+            } 
         }
         #endregion
 
@@ -410,9 +409,9 @@ namespace asivamosffie.services
                             FechaAprobacion = DateTime.Now,
                             EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado,
                             UsuarioModificacion = pUsuario,
-                            FechaModificacion = DateTime.Now, 
+                            FechaModificacion = DateTime.Now,
                         });
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,

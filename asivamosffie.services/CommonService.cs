@@ -136,7 +136,7 @@ namespace asivamosffie.services
                 pContenido = pContenido
                     .Replace("_LinkF_", _mailSettings.DominioFront)
                     .Replace("[URL]", _mailSettings.DominioFront);
-                 
+
                 MailMessage mail = new MailMessage
                 {
                     From = new MailAddress(_mailSettings.Sender)
@@ -148,7 +148,7 @@ namespace asivamosffie.services
                 }
 
                 mail.Subject = pAsunto;
-                mail.IsBodyHtml = true; 
+                mail.IsBodyHtml = true;
                 mail.Body = pContenido;
 
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer)
@@ -215,13 +215,13 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorOrdenGiro(int SolicitudPagoId)
         {
-            SolicitudPago solicitudPago = _context.SolicitudPago.Where(s=> s.SolicitudPagoId == SolicitudPagoId)
-                                 .Include(c=> c.Contrato) 
+            SolicitudPago solicitudPago = _context.SolicitudPago.Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                                 .Include(c => c.Contrato)
                                  .ThenInclude(c => c.Contratacion)
                                  .FirstOrDefault();
 
 
-            int cantidadDeResgistros = _context.OrdenGiro.Where(r=> !string.IsNullOrEmpty(r.NumeroSolicitud)).Count();
+            int cantidadDeResgistros = _context.OrdenGiro.Where(r => !string.IsNullOrEmpty(r.NumeroSolicitud)).Count();
             string Nomeclatura = "ODG_";
 
             if (solicitudPago.Contrato.Contratacion.TipoContratacionCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
@@ -242,6 +242,14 @@ namespace asivamosffie.services
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
+        public string EnumeradorTrasladoBalanceFinanciero()
+        {
+            int cantidadDeResgistros = _context.BalanceFinancieroTraslado.Count();
+            string Nomeclatura = "Tras_";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
 
         public async Task<string> EnumeradorSolicitudPago(bool esObra)
         {
