@@ -317,7 +317,28 @@ namespace asivamosffie.services
         { 
             foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
             { 
+                if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0) {
 
+                    BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
+                    BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
+                    BalanceFinancieroTraslado.Eliminado = false;    
+                    BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
+                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado);
+
+                    _context.BalanceFinancieroTraslado.Add(BalanceFinancieroTraslado);
+                }
+                else
+                { 
+                    _context.Set<BalanceFinancieroTraslado>()
+                          .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                          .Update(r => new BalanceFinancieroTraslado
+                          { 
+                              UsuarioModificacion = pAuthor,
+                              FechaModificacion = DateTime.Now,
+                              RegistroCompleto = BalanceFinancieroTraslado.RegistroCompleto,
+                              ValorTraslado =  BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)  
+                          }); 
+                }
                  
                 foreach (var BalanceFinancieroTrasladoValor in BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
                 {
@@ -328,9 +349,7 @@ namespace asivamosffie.services
                         BalanceFinancieroTrasladoValor.Eliminado = false;
                         BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
 
-                        _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
-
-                     
+                        _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor); 
                     }
                     else
                     {
@@ -347,13 +366,13 @@ namespace asivamosffie.services
                     }
                 }
 
-                //_context.Set<OrdenGiro>()
-                //             .Where(o => o.OrdenGiroId == BalanceFinancieroTrasladoValor.OrdenGiroId)
-                //             .Update(o => new OrdenGiro
-                //             {
-                //                 ValorNetoGiroTraslado = ListBalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId).Sum(r => r.ValorTraslado) ?? 0,
-                //                 TieneTraslado = true
-                //             });
+                _context.Set<OrdenGiro>()
+                             .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
+                             .Update(o => new OrdenGiro
+                             {
+                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0,
+                                 TieneTraslado = true
+                             });
             }
             
         }
