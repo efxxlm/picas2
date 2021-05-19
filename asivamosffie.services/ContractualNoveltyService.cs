@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -474,7 +475,7 @@ namespace asivamosffie.services
 
                         novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
                     }
-                }
+                } 
 
 
 
@@ -1458,9 +1459,17 @@ namespace asivamosffie.services
                     await CreateEditNovedadContractualAportante(aportante);
                 }
 
-                novedadContractualOld.RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractual);
+                //novedadContractualOld.RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractual);
 
                 _context.SaveChanges();
+
+                NovedadContractual novedadContractualNew = await GetNovedadContractualById(novedadContractual.NovedadContractualId);
+
+                _context.Set<NovedadContractual>().Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId)
+                                               .Update(r => new NovedadContractual()
+                                               {
+                                                   RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractualNew)
+                                               });
 
                 await CreateEditObservacion(novedadContractual, null, true);
 
