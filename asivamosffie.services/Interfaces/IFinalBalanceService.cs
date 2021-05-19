@@ -17,5 +17,6 @@ namespace asivamosffie.services.Interfaces
         Task<BalanceFinanciero> GetBalanceFinanciero(int pProyectoId);
         Task<Respuesta> ApproveBalance(int pProyectoId, string pUsuario);
         Task<dynamic> GetDataByProyectoId(int pProyectoId);
+        Task<dynamic> GetOrdenGiroByNumeroOrdenGiro(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen);
     }
 }

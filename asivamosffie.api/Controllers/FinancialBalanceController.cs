@@ -23,6 +23,20 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetOrdenGiroByNumeroOrdenGiro")]
+        public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.GetOrdenGiroByNumeroOrdenGiro(pTipoSolicitudCodigo, pNumeroOrdenGiro, pLLaveMen));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet]
         [Route("GridBalance")]
         public async Task<IActionResult> GridBalance()
         {

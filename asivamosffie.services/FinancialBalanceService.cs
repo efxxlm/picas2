@@ -172,6 +172,41 @@ namespace asivamosffie.services
             }
         }
 
+
+        public async Task<dynamic> GetOrdenGiroByNumeroOrdenGiro(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
+        {
+
+            List<VOrdenGiroXproyecto> ListOrdenGiroId =
+                      _context.VOrdenGiroXproyecto
+                      .Where(r => r.LlaveMen == pLLaveMen
+                          && r.NumeroOrdenGiro == pNumeroOrdenGiro)
+                      .ToList();
+
+            List<VOrdenGiroXproyecto> vOrdenGiroXproyectosNoRepetidos = new List<VOrdenGiroXproyecto>();
+            List<VOrdenGiro> VOrdenGiro = new List<VOrdenGiro>();
+
+            List<VOrdenGiro> ListOrdenGiro = await _context.VOrdenGiro.ToListAsync();
+
+            foreach (var item in ListOrdenGiroId)
+            {
+               // if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
+                {
+                    vOrdenGiroXproyectosNoRepetidos.Add(item);
+                    VOrdenGiro.Add(ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
+                }
+            }
+            return (VOrdenGiro.Select(v =>
+            new
+            {
+                v.FechaAprobacionFinanciera,
+                v.TipoSolicitud,
+                v.NumeroSolicitudOrdenGiro,
+                v.OrdenGiroId,
+                v.SolicitudPagoId
+            }).ToList()); 
+        }
+
+
         public async Task<BalanceFinanciero> GetBalanceFinanciero(int pProyectoId)
         {
             return await _context.BalanceFinanciero
