@@ -27,10 +27,10 @@ export class TablaTrasladosGbftrecComponent implements OnInit {
     fechaTraslado: '09/08/2021',
     numTraslado: 'Tras_001',
     numContrato: 'N000000',
-    numOrdenGiro: 'ODG_obra_222',
+    numOrdenGiro: 'ODG_IntCI PI 224026',
     valorTraslado: '$5.000.000',
     estadoTraslado: 'Con registro',
-    id: 1
+    id: 557
   }];
   constructor(public dialog: MatDialog) { }
 

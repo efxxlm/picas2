@@ -1,5 +1,5 @@
 <form [formGroup]="addressForm">
-    <mat-card class="shipping-card">
+    <mat-card class="shipping-card" *ngIf="esRegistroNuevo === true">
         <mat-card-content align="left">
             <div class="row" style="height: 45px;">
                 <div class="col-md-6">

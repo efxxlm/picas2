@@ -341,7 +341,6 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                     semaforoFase = 'completo'
                 }
 
-    
                 this.fases.push(
                     this.fb.group(
                         {

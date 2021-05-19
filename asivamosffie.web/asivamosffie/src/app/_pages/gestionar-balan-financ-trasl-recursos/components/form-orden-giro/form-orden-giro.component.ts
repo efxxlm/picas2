@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -41,7 +42,8 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     }
 
     constructor(
-        private fb: FormBuilder )
+        private fb: FormBuilder,
+        private activatedRoute: ActivatedRoute )
     { }
 
     ngOnChanges( changes: SimpleChanges ): void {
@@ -52,42 +54,58 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
             this.resultadoBusqueda.clear();
 
             for ( const ordenGiro of listaResultado ) {
-                this.resultadoBusqueda.push(
-                    this.fb.group(
-                        {
-                            tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
-                            fechaAprobacionFiduciaria: [ moment( ordenGiro.fechaAprobacionFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            fechaPagoFiduciaria: [ moment( ordenGiro.fechaPagoFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            numeroOrdendeGiro: [ ordenGiro.numeroOrdendeGiro ],
-                            modalidadContrato: [ ordenGiro.modalidadContrato ],
-                            numeroContrato: [ ordenGiro.numeroContrato ],
-                            contratacionProyectoId: [ ordenGiro.contratacionProyectoId ],
-                            solicitudPagoId: [ 203 ],
-                            check: [ null ],
-
-                        }
+                if ( this.esRegistroNuevo === true ) {
+                    this.resultadoBusqueda.push(
+                        this.fb.group(
+                            {
+                                tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
+                                fechaAprobacionFiduciaria: [ ordenGiro.fechaAprobacionFiduciaria ],
+                                fechaPagoFiduciaria: [ ordenGiro.fechaPagoFiduciaria ],
+                                numeroOrdendeGiro: [ ordenGiro.numeroOrdendeGiro ],
+                                modalidadContrato: [ ordenGiro.modalidadContrato ],
+                                numeroContrato: [ ordenGiro.numeroContrato ],
+                                solicitudPagoId: [ ordenGiro.solicitudPagoId ],
+                                check: [ null ],
+    
+                            }
+                        )
                     )
-                )
+                }
+
+                if ( this.esRegistroNuevo === false ) {
+                    this.ordenesGiro.push(
+                        this.fb.group(
+                            {
+                                solicitudPagoId: [ ordenGiro.solicitudPagoId ],
+                                numeroOrdendeGiro: [ this.activatedRoute.snapshot.params.numeroOrdenGiro ],
+                                modalidadContrato: [ ordenGiro.modalidadContrato ],
+                                numeroContrato: [ ordenGiro.numeroContrato ]
+                            }
+                        )
+                    )
+                }
             }
 
-            this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
-            setTimeout(() => {
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-                    if (length === 0 || pageSize === 0) {
-                      return '0 de ' + length;
-                    }
-                    length = Math.max(length, 0);
-                    const startIndex = page * pageSize;
-                    // If the start index exceeds the list length, do not try and fix the end index to the end.
-                    const endIndex = startIndex < length ?
-                      Math.min(startIndex + pageSize, length) :
-                      startIndex + pageSize;
-                    return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-                };
-            }, 200);
+            if ( this.esRegistroNuevo === true ) {
+                this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
+                setTimeout(() => {
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.paginator = this.paginator;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+                        if (length === 0 || pageSize === 0) {
+                          return '0 de ' + length;
+                        }
+                        length = Math.max(length, 0);
+                        const startIndex = page * pageSize;
+                        // If the start index exceeds the list length, do not try and fix the end index to the end.
+                        const endIndex = startIndex < length ?
+                          Math.min(startIndex + pageSize, length) :
+                          startIndex + pageSize;
+                        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+                    };
+                }, 200);
+            }
         }
     }
 
@@ -99,7 +117,6 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
             this.ordenesGiro.push(
                 this.fb.group(
                     {
-                        contratacionProyectoId: [ this.resultadoBusqueda.controls[ index ].get( 'contratacionProyectoId' ).value ],
                         solicitudPagoId: [ this.resultadoBusqueda.controls[ index ].get( 'solicitudPagoId' ).value ],
                         numeroOrdendeGiro: [ this.resultadoBusqueda.controls[ index ].get( 'numeroOrdendeGiro' ).value ],
                         modalidadContrato: [ this.resultadoBusqueda.controls[ index ].get( 'modalidadContrato' ).value ],
