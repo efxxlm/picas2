@@ -350,7 +350,7 @@ namespace asivamosffie.services
                                                                     .ThenInclude(x => x.ContratoPoliza)
                                                                 .Include(r => r.NovedadContractualAportante)
                                                                     .ThenInclude(r => r.CofinanciacionAportante)
-                                                                .FirstOrDefault();
+                                                                .AsNoTracking().FirstOrDefault();
 
             List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
                         .Where(r => r.NovedadContractualId == pId && (r.Eliminado == false || r.Eliminado == null))
@@ -502,7 +502,8 @@ namespace asivamosffie.services
 
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
-                    novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
+                    if(novedadContractualAportante.CofinanciacionAportante != null)
+                        novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
 
                     if (novedadContractualAportante.CofinanciacionAportante != null)
                         novedadContractualAportante.TipoAportante = listDominioTipoAportante
@@ -1268,7 +1269,9 @@ namespace asivamosffie.services
                         NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
 
                         if (observacionDelete != null)
+                        {
                             observacionDelete.Eliminado = true;
+                        }
                     }
                 }
                 else
@@ -1331,13 +1334,6 @@ namespace asivamosffie.services
                         }
                     }
                 }
-
-
-
-
-
-
-
                 _context.SaveChanges();
 
                 return
@@ -1474,7 +1470,7 @@ namespace asivamosffie.services
                                                    RegistroCompletoTramiteNovedades = RegistrocompletoTramite(novedadContractualNew)
                                                });
 
-                await CreateEditObservacion(novedadContractual, null, true);
+                await CreateEditObservacion(novedadContractualNew, null, true);
 
                 return
                     new Respuesta
