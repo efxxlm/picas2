@@ -375,6 +375,7 @@ namespace asivamosffie.services
 
                     ListContratos.Add(new
                     {
+                        tablaOrdeneGiroValorTotal = GetTablaOrdeneGiroValorTotal(contrato.SolicitudPago),
                         contrato,
                         tipoSolicitudCodigo = contratacionProyecto.Contratacion.TipoSolicitudCodigo
                     });
@@ -387,7 +388,35 @@ namespace asivamosffie.services
                 return new List<dynamic>();
             }
         }
-        #endregion 
+
+        private object GetTablaOrdeneGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
+        {
+            List<dynamic> TablaOrdenesGiro = new List<dynamic>();
+
+            if (pListSolicitudPago.Count() > 0)
+                pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro.RegistroCompletoTramitar == true).ToList();
+
+            foreach (var SolicitudPago in pListSolicitudPago)
+            {
+                TablaOrdenesGiro.Add(
+                    new
+                    {
+                        NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
+                        Contratista = SolicitudPago?.ContratacionProyecto?.Contratacion?.Contratista.Nombre,
+                        Facturado = SolicitudPago.OrdenGiro.ValorNetoGiro,
+                        AnsAplicado = 0,
+                        ReteGarantia = 0,
+                        OtrosDescuentos = _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(o => o.OrdenGiroId == (int)SolicitudPago.OrdenGiroId).Sum(r => r.ValorDescuento),
+                        ApagarAntesImpuestos = 0,
+                        SolicitudId = SolicitudPago.SolicitudPagoId,
+                        OrdenGiro = SolicitudPago.OrdenGiroId
+                    });
+            } 
+            return TablaOrdenesGiro;
+        }
+
+
+        #endregion
 
         #region C R U D
 
