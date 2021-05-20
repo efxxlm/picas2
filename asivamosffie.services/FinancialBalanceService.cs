@@ -108,6 +108,7 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
         {
+
             if (string.IsNullOrEmpty(pNumeroOrdenGiro))
             {
                 List<VOrdenGiroXproyecto> ListOrdenGiroId =
@@ -123,6 +124,11 @@ namespace asivamosffie.services
 
                 foreach (var item in ListOrdenGiroId)
                 {
+                    OrdenGiro ordenGiro =
+                        _context.OrdenGiro.Where(r => r.OrdenGiroId == item.OrdenGiroId)
+                                          .Include(r => r.SolicitudPago)
+                                          .ThenInclude(r => r.Contrato).FirstOrDefault();
+
                     if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
                     {
                         vOrdenGiroXproyectosNoRepetidos.Add(item);
@@ -131,7 +137,6 @@ namespace asivamosffie.services
                 }
                 return (VOrdenGiro.Select(v => new
                 {
-
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
@@ -171,28 +176,28 @@ namespace asivamosffie.services
                 }).ToList());
             }
         }
-         
+
         public async Task<dynamic> GetOrdenGiroByNumeroOrdenGiro(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
-        { 
+        {
             return (
                _context.OrdenGiro
                 .Where(r => r.NumeroSolicitud == pNumeroOrdenGiro)
-                .Include(r=> r.SolicitudPago)
-                .ThenInclude(r=> r.Contrato)
-                .ThenInclude(r=> r.Contratacion).Select(v =>
-            new
-            {
-                FechaAprobacionFinanciera =  v.SolicitudPago.FirstOrDefault().FechaRegistroCompletoValidacionFinanciera,
-                TipoSolicitud =  v.SolicitudPago.FirstOrDefault().Contrato.Contratacion.TipoSolicitudCodigo,
-                NumeroSolicitudOrdenGiro =   v.NumeroSolicitud,
-                v.OrdenGiroId,
-                v.SolicitudPagoId,
-                OrdenGiro = v,
-                SolicitudPago = v.SolicitudPago,
-                Contrato = v.SolicitudPago.FirstOrDefault().Contrato
-            })); 
+                .Include(r => r.SolicitudPago)
+                .ThenInclude(r => r.Contrato)
+                .ThenInclude(r => r.Contratacion).Select(v =>
+             new
+             {
+                 FechaAprobacionFinanciera = v.SolicitudPago.FirstOrDefault().FechaRegistroCompletoValidacionFinanciera,
+                 TipoSolicitud = v.SolicitudPago.FirstOrDefault().Contrato.Contratacion.TipoSolicitudCodigo,
+                 NumeroSolicitudOrdenGiro = v.NumeroSolicitud,
+                 v.OrdenGiroId,
+                 v.SolicitudPagoId,
+                 OrdenGiro = v,
+                 SolicitudPago = v.SolicitudPago,
+                 Contrato = v.SolicitudPago.FirstOrDefault().Contrato
+             }));
         }
-         
+
         public async Task<BalanceFinanciero> GetBalanceFinanciero(int pProyectoId)
         {
             return await _context.BalanceFinanciero
@@ -268,6 +273,18 @@ namespace asivamosffie.services
         #region C R U D
 
         #region create
+        public async Task<Respuesta> ValidateCompleteBalanceFinanciero(int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
+        {
+            await _context.Set<BalanceFinancieroTraslado>()
+                      .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+                      .UpdateAsync 
+                      (b => new BalanceFinancieroTraslado
+                      {
+                          RegistroCompleto = pEstaCompleto
+                      });
+            return new Respuesta();
+        }
+
         public async Task<Respuesta> CreateEditBalanceFinanciero(BalanceFinanciero pBalanceFinanciero)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);

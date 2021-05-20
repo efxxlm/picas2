@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IFinalBalanceService
     {
+        Task<Respuesta> ValidateCompleteBalanceFinanciero(int pBalanceFinancieroTrasladoId, bool pEstaCompleto);
         Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen);
         Task<List<VProyectosBalance>> GridBalance();
         Task<List<dynamic>> GetContratoByProyectoId(int pProyectoId);

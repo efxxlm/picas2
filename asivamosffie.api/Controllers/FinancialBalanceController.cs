@@ -22,6 +22,24 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [HttpPost]
+        [Route("ValidateCompleteBalanceFinanciero")]
+        public async Task<IActionResult> ValidateCompleteBalanceFinanciero([FromQuery] int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _finalBalanceService.ValidateCompleteBalanceFinanciero(pBalanceFinancieroTrasladoId, pEstaCompleto);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
         [HttpGet]
         [Route("GetOrdenGiroByNumeroOrdenGiro")]
         public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
