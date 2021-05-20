@@ -248,7 +248,7 @@ namespace asivamosffie.services
             {
                 OrdenGiro OrdenGiro = _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
-                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato)
+                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r=> r.Contratacion)
                     .FirstOrDefault();
                  
                 BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
@@ -260,7 +260,7 @@ namespace asivamosffie.services
 
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
-            String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
+            String strTipoSolicitud = SolicitudPago.Contrato.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
             decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneTraslado == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroTraslado ?? 0;
@@ -560,9 +560,9 @@ namespace asivamosffie.services
         {
 
             //BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
-            //    .Where(r=> r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
-            //    .Include(r=> r.orde)
-
+            //    .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+            //    .Include(r => r.OrdenGiro)
+            //      .Include(r => r.p)
                return string.Empty;
 
         }
