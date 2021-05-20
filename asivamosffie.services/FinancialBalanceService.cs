@@ -89,6 +89,22 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now
                         });
 
+                switch (pBalanceFinancieroTraslado.EstadoCodigo)
+                {
+                    case ConstanCodigoEstadoBalanceFinancieroTraslado.Traslado_Aprobado:
+
+                        GetRestaurarFuentesPorAportante(pBalanceFinancieroTraslado);
+                        break;
+
+                    case ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado:
+
+                        break;
+
+                    case ConstanCodigoEstadoBalanceFinancieroTraslado.Notificado_a_fiduciaria:
+
+                        break;
+                }
+
                 return
                 new Respuesta
                 {
@@ -112,6 +128,46 @@ namespace asivamosffie.services
                   };
             }
         }
+
+        private void GetRestaurarFuentesPorAportante(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor =
+                _context.BalanceFinancieroTrasladoValor
+                                                       .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                                                       .Include(r => r.OrdenGiroDetalleTerceroCausacionAportante)
+                                                       .Include(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
+                                                       .Include(r => r.OrdenGiroDetalleDescuentoTecnica)
+                                                       .ToList();
+
+
+            foreach (var BalanceFinancieroTrasladoValor in pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
+            {
+                switch (BalanceFinancieroTrasladoValor.TipoTrasladoCodigo)
+                {
+
+                    case ConstantCodigoTipoTrasladoCodigo.Aportante_Tercero_Causacion:
+
+                        break;
+
+                    case ConstantCodigoTipoTrasladoCodigo.Descuento_Tercero_Causacion:
+
+                        break;
+
+                    case ConstantCodigoTipoTrasladoCodigo.Descuento_Direccion_Tecnica:
+
+                        break;
+
+                } 
+            }
+        }
+
+
+        //private bool GetIngresarValorAFuentes()
+        //{
+        //    GestionFuenteFinanciacion gestionFuenteFinanciacion 
+ 
+
+        //}
 
         public async Task<List<VProyectosBalance>> GridBalance()
         {
@@ -372,10 +428,10 @@ namespace asivamosffie.services
                            .ToList();
 
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
-                     
+
                     ListContratos.Add(new
                     {
-                        tablaOrdenGiroValorTotal = GetTablaOrdeneGiroValorTotal(contrato.SolicitudPago),
+                        tablaOrdenGiroValorTotal = GetTablaOrdenGiroValorTotal(contrato.SolicitudPago),
                         contrato,
                         tipoSolicitudCodigo = contratacionProyecto.Contratacion.TipoSolicitudCodigo
                     });
@@ -389,7 +445,7 @@ namespace asivamosffie.services
             }
         }
 
-        private object GetTablaOrdeneGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
+        private object GetTablaOrdenGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
         {
             List<dynamic> TablaOrdenesGiro = new List<dynamic>();
 
@@ -398,11 +454,19 @@ namespace asivamosffie.services
 
             foreach (var SolicitudPago in pListSolicitudPago)
             {
+                string NombreContratista = _context.SolicitudPago
+                     .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
+                     .Include(r => r.Contrato)
+                        .ThenInclude(r => r.Contratacion)
+                            .ThenInclude(r => r.Contratista)
+                     .AsNoTracking()
+                     .FirstOrDefault().Contrato.Contratacion.Contratista.Nombre;
+
                 TablaOrdenesGiro.Add(
                     new
                     {
                         NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
-                        Contratista = SolicitudPago?.ContratacionProyecto?.Contratacion?.Contratista.Nombre,
+                        Contratista = NombreContratista,
                         Facturado = SolicitudPago.OrdenGiro.ValorNetoGiro,
                         AnsAplicado = 0,
                         ReteGarantia = 0,
@@ -638,6 +702,18 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
                 };
             }
+        }
+
+        public async Task<dynamic> GetVerDetalleOrdenGiro(int pSolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago
+                .Where(r => r.SolicitudPagoId == pSolicitudPagoId)
+                .Include(r => r.Contrato)
+                .ThenInclude(r => r.Contratacion).FirstOrDefault();
+
+            List<dynamic> OrdenGiro = new List<dynamic>();
+
+            return OrdenGiro;
         }
 
         private string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
