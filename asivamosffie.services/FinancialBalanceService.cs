@@ -35,6 +35,44 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+        public async Task<Respuesta> ChangeStatudBalanceFinancieroTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Traslado_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+                _context.Set<BalanceFinancieroTraslado>()
+                        .Where(b => b.BalanceFinancieroId == pBalanceFinancieroTraslado.BalanceFinancieroId)
+                        .Update(b => new BalanceFinancieroTraslado
+                        {
+                            EstadoCodigo = pBalanceFinancieroTraslado.EstadoCodigo,
+                            UsuarioModificacion = pBalanceFinancieroTraslado.UsuarioModificacion,
+                            FechaModificacion = DateTime.Now
+                        }); 
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinancieroTraslado.UsuarioCreacion, "CAMBIAR ESTADO BALANCE FINANCIERO TRASLADO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, pBalanceFinancieroTraslado.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
 
         public async Task<List<VProyectosBalance>> GridBalance()
         {
@@ -212,10 +250,11 @@ namespace asivamosffie.services
                     .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
                     .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato)
                     .FirstOrDefault();
+
                 BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
                 BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
-            } 
-            return balanceFinanciero; 
+            }
+            return balanceFinanciero;
         }
 
         public async Task<List<dynamic>> GetContratoByProyectoId(int pProyectoId)
