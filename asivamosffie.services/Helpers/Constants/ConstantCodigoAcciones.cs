@@ -382,5 +382,7 @@
         public const string Eliminar_Componente_aportante_novedad = "280";
         public const string Eliminar_Componente_fuente_novedad = "281";
         public const string Eliminar_Componente_uso_novedad = "282";
+
+        public const string Cambiar_Estado_Traslado_Balance_Financiero ="283";
     }
 }

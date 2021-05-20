@@ -21,8 +21,6 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
 
-        private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
-
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
 
         public FinancialBalanceService(devAsiVamosFFIEContext context,
@@ -124,12 +122,12 @@ namespace asivamosffie.services
 
                 foreach (var item in ListOrdenGiroId)
                 {
-                   
+
                     if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
                     {
                         vOrdenGiroXproyectosNoRepetidos.Add(item);
                         VOrdenGiro vOrdenGiro = (ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
-         
+
                         VOrdenGiro.Add(vOrdenGiro);
                     }
                 }
@@ -202,11 +200,22 @@ namespace asivamosffie.services
 
         public async Task<BalanceFinanciero> GetBalanceFinanciero(int pProyectoId)
         {
-            return await _context.BalanceFinanciero
+            BalanceFinanciero balanceFinanciero = await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
                                                     .Include(r => r.BalanceFinancieroTraslado)
                                                           .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
+
+            foreach (var BalanceFinancieroTraslado in balanceFinanciero.BalanceFinancieroTraslado)
+            {
+                OrdenGiro OrdenGiro = _context.OrdenGiro
+                    .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
+                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato)
+                    .FirstOrDefault();
+                BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
+                BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
+            } 
+            return balanceFinanciero; 
         }
 
         public async Task<List<dynamic>> GetContratoByProyectoId(int pProyectoId)
