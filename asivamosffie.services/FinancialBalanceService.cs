@@ -40,7 +40,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Traslado_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 _context.Set<BalanceFinancieroTraslado>()
                         .Where(b => b.BalanceFinancieroId == pBalanceFinancieroTraslado.BalanceFinancieroId)
                         .Update(b => new BalanceFinancieroTraslado
@@ -48,7 +48,7 @@ namespace asivamosffie.services
                             EstadoCodigo = pBalanceFinancieroTraslado.EstadoCodigo,
                             UsuarioModificacion = pBalanceFinancieroTraslado.UsuarioModificacion,
                             FechaModificacion = DateTime.Now
-                        }); 
+                        });
 
                 return
                 new Respuesta
@@ -241,16 +241,16 @@ namespace asivamosffie.services
             BalanceFinanciero balanceFinanciero = await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
                                                     .Include(r => r.BalanceFinancieroTraslado)
-                                                          .ThenInclude(r => r.BalanceFinancieroTrasladoValor) 
+                                                          .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
-       
+
             foreach (var BalanceFinancieroTraslado in balanceFinanciero.BalanceFinancieroTraslado)
             {
                 OrdenGiro OrdenGiro = _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
-                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r=> r.Contratacion)
+                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r => r.Contratacion)
                     .FirstOrDefault();
-                 
+
                 BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
                 BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
                 BalanceFinancieroTraslado.TablaDRP = GetDrpContrato(OrdenGiro.SolicitudPago.FirstOrDefault());
@@ -554,17 +554,17 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
-       private  string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
+         
+        private string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
         {
+            BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
+                .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+                .Include(r => r.OrdenGiro)
+                .Include(r => r.BalanceFinanciero)
+                .ThenInclude(r => r.Proyecto)
+                .FirstOrDefault();
 
-            //BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
-            //    .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
-            //    .Include(r => r.OrdenGiro)
-            //      .Include(r => r.p)
-               return string.Empty;
-
+            return string.Empty; 
         }
         #endregion 
     }
