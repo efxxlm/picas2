@@ -6,6 +6,9 @@ import { ValidarRequerimientosLiquidacionesComponent } from './components/valida
 import { ValidarBalanceComponent } from './components/validar-balance/validar-balance.component';
 import { RecursosComprometidosPagadosComponent } from './components/recursos-comprometidos-pagados/recursos-comprometidos-pagados.component';
 import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
+import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
+import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
+import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 
 const routes: Routes = [
   {
@@ -87,6 +90,18 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/recursos',
     component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados/verDetalle/:id',
+    component: DetalleTrasladosComponent
   }
 ];
 

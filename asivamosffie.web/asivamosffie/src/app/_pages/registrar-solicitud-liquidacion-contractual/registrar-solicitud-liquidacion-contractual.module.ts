@@ -27,6 +27,9 @@ import { TablaInformeFinalComponent } from './components/tabla-informe-final/tab
 import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
 import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
 import { FormObservacionInformeFinalComponent } from './components/form-observacion-informe-final/form-observacion-informe-final.component';
+import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
+import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
+import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +54,9 @@ import { FormObservacionInformeFinalComponent } from './components/form-observac
     ValidarInformeFinalComponent,
     TablaInformeAnexosComponent,
     FormObservacionInformeFinalComponent,
+    VerEjecucionFinancieraComponent,
+    VerTrasladosRecursosComponent,
+    DetalleTrasladosComponent,
   ],
   imports: [
     CommonModule,

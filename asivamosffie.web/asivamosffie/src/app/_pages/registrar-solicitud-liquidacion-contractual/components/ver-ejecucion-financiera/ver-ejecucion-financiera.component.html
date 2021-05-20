@@ -1,0 +1,157 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="./.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Ejecución financiera por componente
+      LL457326
+    </h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em"> Número de contrato de obra: <b> N801801 </b> </span>
+      <span class="mx-1em"> Número de contrato de interventoria: <b> A513513 </b> </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Ejecución presupuestal
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Componente
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Total comprometido
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Facturado antes de impuestos
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Saldo
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Porcentaje de ejecución presupuestal
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaejecucionPresupuestal">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.componente }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.totalComprometido }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.facturadoAntesImpuestos }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.saldo }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.porcentajeEjecucionPresupuestal }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Ejecución financiera
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Componente
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Total comprometido
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Facturado antes de impuestos
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Saldo
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Porcentaje de ejecución presupuestal
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaejecucionPresupuestal">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.componente }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.totalComprometido }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.facturadoAntesImpuestos }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.saldo }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.porcentajeEjecucionPresupuestal }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>
+
