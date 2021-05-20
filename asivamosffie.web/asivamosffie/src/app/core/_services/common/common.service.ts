@@ -376,6 +376,11 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
   }
 
+  listaEstadoBalance() {
+    // Lista de estados del balance
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=190`);
+  }
+
   listaActuacionesAdelantadasNoTAI() {
     // Lista de estados del CU 4.2.1 No tai en actuacion adelantada 
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=191`);

@@ -729,7 +729,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                     this.getConceptos( indexDescuento, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
     
                         this.getAportantes( indexDescuento, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
-    
+                            let fuenteFinanciacionId = 0;
+                            
+                            if ( aportanteControl.get( 'fuenteDeRecursos' ).value !== null && aportanteControl.get( 'fuenteRecursos' ).value !== null ) {
+                                const fuenteDeRecursos = aportanteControl.get( 'fuenteDeRecursos' ).value
+                                const fuente = fuenteDeRecursos.find( fuente => fuente.codigo === aportanteControl.get( 'fuenteRecursos' ).value )
+
+                                if ( fuente !== undefined ) {
+                                    fuenteFinanciacionId = fuente.fuenteFinanciacionId
+                                }
+                            }
+
                             ordenGiroDetalleDescuento.ordenGiroDetalleDescuentoTecnicaAportante.push(
                                 {
                                     ordenGiroDetalleDescuentoTecnicaAportanteId: aportanteControl.get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value,
@@ -738,7 +748,8 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     aportanteId: aportanteControl.get( 'nombreAportante' ).value !== null ? aportanteControl.get( 'nombreAportante' ).value.cofinanciacionAportanteId : null,
                                     valorDescuento: aportanteControl.get( 'valorDescuento' ).value,
                                     conceptoPagoCodigo: conceptoControl.get( 'conceptoCodigo' ).value,
-                                    fuenteRecursosCodigo: aportanteControl.get( 'fuenteRecursos' ).value
+                                    fuenteRecursosCodigo: aportanteControl.get( 'fuenteRecursos' ).value,
+                                    fuenteFinanciacionId: fuenteFinanciacionId
                                 }
                             )
     

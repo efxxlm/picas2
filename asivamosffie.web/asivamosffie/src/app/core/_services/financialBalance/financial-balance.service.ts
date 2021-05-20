@@ -43,7 +43,7 @@ export class FinancialBalanceService {
     approveBalance(pProyectoId: number){
       return this.http.post(`${ this.apiUrl }/ApproveBalance?pProyectoId=${ pProyectoId }`,null);
     }
-    
+
     getDataByProyectoId( pProyectoId: number) {
       return this.http.get<any[]>( `${ this.apiUrl }/GetDataByProyectoId?pProyectoId=${ pProyectoId }` );
     }
@@ -51,4 +51,9 @@ export class FinancialBalanceService {
     changeStatudBalanceFinancieroTraslado( pBalanceFinancieroTraslado: any ) {
         return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinancieroTraslado`, pBalanceFinancieroTraslado );
     }
+
+    changeStatudBalanceFinanciero( pBalanceFinanciero: any ) {
+        return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinanciero`, pBalanceFinanciero );
+    }
+
 }

@@ -72,7 +72,7 @@
                     >
                         Validar balance
                     </a> 
-                    <a *ngIf="element.estadoBalanceCodigo !== '0' && element.estadoBalanceCodigo !== '4'"
+                    <a *ngIf="element.estadoBalanceCodigo !== '0' && element.estadoBalanceCodigo !== estadoBalance.balanceAprobado"
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -81,7 +81,7 @@
                     >
                         Ver detalle/Editar
                     </a> 
-                    <a *ngIf="element.estadoBalanceCodigo === '4'"
+                    <a *ngIf="element.estadoBalanceCodigo === estadoBalance.balanceAprobado"
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -89,15 +89,15 @@
                         [routerLink]="['verDetalleBalance', element.proyectoId]"
                     >
                         Ver detalle
-                    </a> 
+                    </a>
                     <button
-                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === '2'"
+                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado"
                         mat-button
                         mat-raised-button
                         color="accent"
                         class="btn-table"
                         type="button"
-                        (click)="aprobarBalance(element.proyectoId)"
+                        (click)="getAprobarBalance(element)"
                     >
                         Aprobar Balance
                     </button>

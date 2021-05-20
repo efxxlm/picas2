@@ -6,11 +6,11 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><strong>Fecha de aprobación fiduciaria: </strong><em>15/11/2020</em></p>
+            <p><strong>Fecha de aprobación fiduciaria: </strong><em> {{ solicitudPago.ordenGiro.fechaRegistroCompletoTramitar | date: 'dd/MM/yyyy' }} </em></p>
             <p><strong>Modalidad del contrato: </strong><em> {{ getModalidadContrato( solicitudPago.contratoSon.modalidadCodigo ) }} </em></p>
             <p><strong>Número del contrato: </strong><em> {{ solicitudPago.contratoSon.numeroContrato }} </em></p>
-            <p><strong>Valor facturado: </strong><em>$15.000.000</em></p>
-            <p><strong>Valor pagado: </strong><em>$10.000.000</em></p>
+            <p><strong>Valor facturado: </strong><em> {{ solicitudPago.valorFacturado | currency: '':'symbol-narrow':'.0-0' }} </em></p>
+            <p><strong>Valor pagado: </strong><em> {{ solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleTerceroCausacion[ 0 ].valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }} </em></p>
         </mat-card-content>
     </mat-card>
     <p class="info-container" style="margin-top: 2em;" *ngIf="esVerDetalle === false">
