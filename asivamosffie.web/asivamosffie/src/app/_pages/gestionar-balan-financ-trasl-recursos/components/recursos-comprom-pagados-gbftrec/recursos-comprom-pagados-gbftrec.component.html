@@ -25,14 +25,14 @@
                 <app-contratistas-gbftrec *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
-        <mat-accordion *ngIf="contratoObra.tablaOrdeneGiroValorTotal.length > 0">
+        <mat-accordion *ngIf="contratoObra.tablaOrdenGiroValorTotal.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title ">
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec [tablaOrdeneGiroValorTotal]="contratoObra.tablaOrdeneGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec [tablaOrdenGiroValorTotal]="contratoObra.tablaOrdenGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>
@@ -63,13 +63,13 @@
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="contratoInterventoria.tablaOrdeneGiroValorTotal.length > 0">
+            <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="contratoInterventoria.tablaOrdenGiroValorTotal.length > 0">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title ">
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec [tablaOrdeneGiroValorTotal]="contratoInterventoria.tablaOrdeneGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec [tablaOrdenGiroValorTotal]="contratoInterventoria.tablaOrdenGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>

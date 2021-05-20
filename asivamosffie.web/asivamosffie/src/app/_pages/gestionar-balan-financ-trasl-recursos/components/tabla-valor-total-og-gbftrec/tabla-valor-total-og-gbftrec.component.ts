@@ -12,7 +12,7 @@ import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.se
 })
 export class TablaValorTotalOgGbftrecComponent implements OnInit {
 
-  @Input() tablaOrdeneGiroValorTotal: any[] = [];
+  @Input() tablaOrdenGiroValorTotal: any[] = [];
   dataSource = new MatTableDataSource();
   dataTable: any[] = [];
 
@@ -38,8 +38,8 @@ export class TablaValorTotalOgGbftrecComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if(this.tablaOrdeneGiroValorTotal.length > 0){
-      this.dataSource.data = this.tablaOrdeneGiroValorTotal;
+    if(this.tablaOrdenGiroValorTotal.length > 0){
+      this.dataSource.data = this.tablaOrdenGiroValorTotal;
     }
   }
 

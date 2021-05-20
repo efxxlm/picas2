@@ -23,15 +23,13 @@ export class RecursosCompromPagadosGbftrecComponent implements OnInit {
   getContratoByProyectoId() {
     this.financialBalanceService.getContratoByProyectoId(this.id).subscribe(data => {
       data.forEach(element => {
-        console.log( element.tablaOrdeneGiroValorTotal )
         if(element.tipoSolicitudCodigo === '1'){
           this.contratoObra = element.contrato
-          this.contratoObra.tablaOrdeneGiroValorTotal = element.tablaOrdeneGiroValorTotal
+          this.contratoObra.tablaOrdenGiroValorTotal = element.tablaOrdenGiroValorTotal
         }
         if(element.tipoSolicitudCodigo === '2'){
           this.contratoInterventoria = element.contrato
-          this.contratoInterventoria.tablaOrdeneGiroValorTotal = element.tablaOrdeneGiroValorTotal
-          console.log( this.contratoInterventoria )
+          this.contratoInterventoria.tablaOrdenGiroValorTotal = element.tablaOrdenGiroValorTotal
         }
       });  
     });
