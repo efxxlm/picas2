@@ -300,6 +300,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -553,14 +554,14 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(20)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(20)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(8, 2)");
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.BalanceFinanciero)
                     .WithMany(p => p.BalanceFinancieroTraslado)
@@ -588,7 +589,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorTraslado).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.BalanceFinancieroTraslado)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
@@ -8355,8 +8356,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.EstadoBalanceCodigo)
-                    .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoTramiteLiquidacion)
@@ -9223,7 +9223,6 @@ namespace asivamosffie.model.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
                     .HasColumnName("institucionEducativa")
                     .HasMaxLength(300)
                     .IsUnicode(false);
@@ -9234,7 +9233,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SedeEducativa)
-                    .IsRequired()
                     .HasColumnName("sedeEducativa")
                     .HasMaxLength(300)
                     .IsUnicode(false);

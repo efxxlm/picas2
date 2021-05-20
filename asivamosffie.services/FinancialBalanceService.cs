@@ -137,6 +137,7 @@ namespace asivamosffie.services
                 }
                 return (VOrdenGiro.Select(v => new
                 {
+                    
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
