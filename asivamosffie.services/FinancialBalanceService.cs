@@ -267,7 +267,7 @@ namespace asivamosffie.services
 
             List<VRpsPorContratacion> vRpsPorContratacion =
                                                            _context.VRpsPorContratacion
-                                                           .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
+                                                           .Where(c => c.ContratacionId == SolicitudPago.Contrato.ContratacionId)
                                                            .OrderBy(C => C.ContratacionId)
                                                            .ToList();
             int Enum = 1;
