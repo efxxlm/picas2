@@ -3,7 +3,7 @@
         <mat-accordion formArrayName="fases" *ngFor="let solicitudPagoFase of fases.controls; index as i">
             <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="solicitudPagoFase.get( 'semaforo' ).value">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? solicitudPagoFase.get( 'semaforo' ).value : ''">
                         Descuentos Dirección Técnica - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -16,7 +16,7 @@
                 <mat-accordion *ngIf="getDescuentos( i ).length > 0">
                     <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of getDescuentos( i ).controls; index as j">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="descuento.get( 'semaforo' ).value">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? descuento.get( 'semaforo' ).value : ''">
                                 Descuento {{ j + 1 }}
                             </mat-panel-title>
                         </mat-expansion-panel-header>
@@ -121,7 +121,7 @@
                                 </section>
                         </section>
 
-                        <div class="text-center mb-2em">
+                        <div class="text-center mb-2em" *ngIf="esVerDetalle === false">
                             <button mat-button
                                     color="warn"
                                     class="btn-guardar"

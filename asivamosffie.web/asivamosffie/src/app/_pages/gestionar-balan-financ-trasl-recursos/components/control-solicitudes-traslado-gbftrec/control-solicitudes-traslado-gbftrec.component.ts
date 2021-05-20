@@ -54,7 +54,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     async ngOnInit() {
         this.listaTipoSolicitudContrato = await this.commonSvc.listaTipoSolicitudContrato().toPromise()
 
-        if ( this.esRegistroNuevo === false ) {
+        if ( this.esRegistroNuevo === false || this.esVerDetalle === true ) {
             const numeroOrdenGiro = this.activatedRoute.snapshot.params.numeroOrdenGiro;
             this.addressForm.get( 'numeroOrdenGiro' ).setValue( numeroOrdenGiro )
             this.getParamsSearch()
@@ -70,17 +70,14 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
             let listaOrdenGiro: any[];
 
             if ( this.esRegistroNuevo === true ) {
-                console.log( 'test 1' )
                 listaOrdenGiro = await this.balanceSvc.getOrdenGiroBy(
                     this.addressForm.get( 'tipoSolicitud' ).value !== null ? this.addressForm.get( 'tipoSolicitud' ).value : '',
                     this.addressForm.get( 'numeroOrdenGiro').value !== null ? this.addressForm.get( 'numeroOrdenGiro').value : '',
                     this.proyecto.llaveMen ).toPromise()
             }
-            if ( this.esRegistroNuevo === false ) {
-                console.log( 'test 2' )
+            if ( this.esRegistroNuevo === false || this.esVerDetalle === true ) {
                 listaOrdenGiro = await this.balanceSvc.getOrdenGiroByNumeroOrdenGiro( this.addressForm.get( 'numeroOrdenGiro').value, this.proyecto.llaveMen ).toPromise()
             }
-            console.log( listaOrdenGiro )
 
             if ( listaOrdenGiro.length > 0 ) {
                 listaOrdenGiro.forEach( ordenGiro => {

@@ -72,7 +72,7 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
                     )
                 }
 
-                if ( this.esRegistroNuevo === false ) {
+                if ( this.esRegistroNuevo === false || this.esVerDetalle === true ) {
                     this.ordenesGiro.push(
                         this.fb.group(
                             {
@@ -86,7 +86,7 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
                 }
             }
 
-            if ( this.esRegistroNuevo === true ) {
+            if ( this.esRegistroNuevo === true && this.esVerDetalle === false ) {
                 this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
                 setTimeout(() => {
                     this.dataSource.sort = this.sort;

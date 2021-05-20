@@ -21,6 +21,7 @@ export class FormTerceroCausacionComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    @Output() trasladoId = new EventEmitter<number>();
     tipoTrasladoCodigo = TipoTrasladoCodigo;
     balanceFinancieroTraslado: any;
     balanceFinancieroTrasladoId = 0;
@@ -84,7 +85,6 @@ export class FormTerceroCausacionComponent implements OnInit {
         this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero( this.activatedRoute.snapshot.params.id ).toPromise();
         this.tipoDescuentoTecnicaArray = await this.commonSvc.tiposDescuento().toPromise();
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
-        console.log( this.balanceFinanciero )
 
         this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
         this.balanceFinancieroTrasladoValor = this.balanceFinanciero.balanceFinancieroTrasladoValor;
@@ -119,6 +119,8 @@ export class FormTerceroCausacionComponent implements OnInit {
                     this.balanceFinancieroTraslado = traslado
                     this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId
                     this.balanceFinancieroTrasladoValor = this.balanceFinancieroTraslado.balanceFinancieroTrasladoValor
+
+                    this.trasladoId.emit( this.balanceFinancieroTrasladoId )
                 }
             }
         }
@@ -415,6 +417,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                         let semaforoCriterio = 'sin-diligenciar'
                         let cantidadRegistroCompletoAportante = 0
                         let cantidadRegistroCompletoDescuento = 0
+                        let cantidadDescuentosAportantes = 0;
 
                         listaAportantes.forEach( aportante => {
                             if ( aportante.get( 'registroCompleto' ).value === true ) {
@@ -430,29 +433,31 @@ export class FormTerceroCausacionComponent implements OnInit {
                                     if ( descuentoControl.get( 'registroCompleto' ).value === true ) {
                                         cantidadRegistroCompletoDescuento++;
                                     }
+
+                                    cantidadDescuentosAportantes++;
                                 } )
                             } )
                         }
 
-                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'en-proceso'
                         }
-                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'en-proceso'
                         }
-                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante < listaAportantes.length && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante < listaAportantes.length && cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'en-proceso'
                         }
-                        if ( cantidadRegistroCompletoAportante === 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante === 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'en-proceso'
                         }
                         if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoAportante < listaAportantes.length ) {
                             semaforoCriterio = 'en-proceso'
                         }
-                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoDescuento > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'completo'
                         }
-                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento === listaDescuentos.length ) {
+                        if ( cantidadRegistroCompletoAportante > 0 && cantidadRegistroCompletoAportante === listaAportantes.length && cantidadRegistroCompletoDescuento === 0 && cantidadRegistroCompletoDescuento === cantidadDescuentosAportantes ) {
                             semaforoCriterio = 'completo'
                         }
 
@@ -673,7 +678,7 @@ export class FormTerceroCausacionComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id
+                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id, this.solicitudPago.ordenGiro.numeroSolicitud
                             ]
                         )
                     );

@@ -99,7 +99,7 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoDetalle">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
                     Detalle del giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -133,6 +133,7 @@
             <app-form-tercero-causacion [solicitudPago]="solicitudPago"
                                         [esVerDetalle]="esVerDetalle"
                                         [esRegistroNuevo]="esRegistroNuevo"
+                                        (trasladoId)="balanceFinancieroTrasladoId = $event"
                                         (estadoSemaforo)="semaforoTerceroCausacion = $event; checkEstadoSemaforo()">
             </app-form-tercero-causacion>
         </mat-expansion-panel>

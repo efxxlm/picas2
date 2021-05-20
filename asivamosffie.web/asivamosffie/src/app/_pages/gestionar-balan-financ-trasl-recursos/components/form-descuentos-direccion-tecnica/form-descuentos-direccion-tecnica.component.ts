@@ -519,7 +519,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id
+                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id, this.solicitudPago.ordenGiro.numeroSolicitud
                             ]
                         )
                     );

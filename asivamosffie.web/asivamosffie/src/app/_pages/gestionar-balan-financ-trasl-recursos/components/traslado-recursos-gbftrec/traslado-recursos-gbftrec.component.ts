@@ -16,6 +16,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() esVerDetalle: boolean;
   balanceFinanciero: any;
   balanceFinancieroId = 0;
+  balanceFinancieroTraslado = [];
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
     proyectoId: [ɵNullViewportScroller, Validators.required],
@@ -74,6 +75,13 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       if(response != null){
         console.log( response )
         this.balanceFinanciero = response;
+
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+          if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+            this.balanceFinancieroTraslado = this.balanceFinanciero.balanceFinancieroTraslado
+          }
+        }
+
         this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }

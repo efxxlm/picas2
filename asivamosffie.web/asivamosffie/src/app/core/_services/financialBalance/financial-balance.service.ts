@@ -28,6 +28,10 @@ export class FinancialBalanceService {
       return this.http.get<any[]>( `${ this.apiUrl }/getOrdenGiroByNumeroOrdenGiro?pNumeroOrdenGiro=${ pNumeroOrdenGiro }&pLLaveMen=${ pLLaveMen }` );
     }
 
+    validateCompleteBalanceFinanciero( pBalanceFinancieroTrasladoId: number, pEstaCompleto: string ) {
+      return this.http.post<Respuesta>(`${ this.apiUrl }/ValidateCompleteBalanceFinanciero?pBalanceFinancieroTrasladoId=${ pBalanceFinancieroTrasladoId }&pEstaCompleto=${ pEstaCompleto }`, '' );
+    }
+
     createEditBalanceFinanciero( pBalanceFinanciero: any ){
       return this.http.post<Respuesta>(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
     }
@@ -42,5 +46,9 @@ export class FinancialBalanceService {
     
     getDataByProyectoId( pProyectoId: number) {
       return this.http.get<any[]>( `${ this.apiUrl }/GetDataByProyectoId?pProyectoId=${ pProyectoId }` );
+    }
+
+    changeStatudBalanceFinancieroTraslado( pBalanceFinancieroTraslado: any ) {
+        return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinancieroTraslado`, pBalanceFinancieroTraslado );
     }
 }
