@@ -374,9 +374,7 @@
         public const string Aprobar_Balance_Financiero = "274";
         public const string Aprobar_tecnica_y_juridica_novedad = "275";
         public const string Registrar_Tramite_Novedad_Contractual = "276";
-
-
-
+         
         public const string Eliminar_Orden_Giro = "278";
         public const string Eliminar_Novedad_Contractual_Aportante = "279";
         public const string Eliminar_Componente_aportante_novedad = "280";

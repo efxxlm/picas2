@@ -12,5 +12,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string NumeroOrdenGiro { get; set; }
-    } 
+
+        [NotMapped]
+        public List<TablaDRP> TablaDRP { get; set; }
+    }
 }
