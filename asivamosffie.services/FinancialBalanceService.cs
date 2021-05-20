@@ -161,11 +161,11 @@ namespace asivamosffie.services
             }
         }
 
-
-        //private bool GetIngresarValorAFuentes()
+         
+        //private bool GetTrasladarRecursosxAportantexFuente(int pAportanteId , int pFuenteFinanciacionId )
         //{
-        //    GestionFuenteFinanciacion gestionFuenteFinanciacion 
-
+        //    GestionFuenteFinanciacion gestionFuenteFinanciacion
+                 
 
         //}
 

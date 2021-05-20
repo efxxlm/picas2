@@ -57,6 +57,8 @@ namespace asivamosffie.services
             if ((intEstadoCodigo == (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro))
                 ResetObservations(pOrdenGiro);
 
+            if ((intEstadoCodigo == (int)EnumEstadoOrdenGiro.Con_Orden_de_Giro_Tramitada))
+                UpdateDateRegistroCompletoTramitar(pOrdenGiro);
 
             try
             {
@@ -96,6 +98,16 @@ namespace asivamosffie.services
                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiro.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
+        }
+
+        private void UpdateDateRegistroCompletoTramitar(OrdenGiro pOrdenGiro)
+        {
+            _context.Set<OrdenGiro>()
+                 .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                 .Update(o => new OrdenGiro
+                 { 
+                     FechaRegistroCompletoTramitar = DateTime.Now 
+                 });
         }
 
         private void ResetObservations(OrdenGiro pOrdenGiro)
