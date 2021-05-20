@@ -372,10 +372,10 @@ namespace asivamosffie.services
                            .ToList();
 
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
-
+                     
                     ListContratos.Add(new
                     {
-                        tablaOrdeneGiroValorTotal = GetTablaOrdeneGiroValorTotal(contrato.SolicitudPago),
+                        tablaOrdenGiroValorTotal = GetTablaOrdeneGiroValorTotal(contrato.SolicitudPago),
                         contrato,
                         tipoSolicitudCodigo = contratacionProyecto.Contratacion.TipoSolicitudCodigo
                     });
@@ -406,16 +406,14 @@ namespace asivamosffie.services
                         Facturado = SolicitudPago.OrdenGiro.ValorNetoGiro,
                         AnsAplicado = 0,
                         ReteGarantia = 0,
-                        OtrosDescuentos = _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(o => o.OrdenGiroId == (int)SolicitudPago.OrdenGiroId).Sum(r => r.ValorDescuento),
+                        OtrosDescuentos = _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(o => o.OrdenGiroId == (int)SolicitudPago.OrdenGiroId).Sum(r => r.ValorDescuento) ?? 0,
                         ApagarAntesImpuestos = 0,
                         SolicitudId = SolicitudPago.SolicitudPagoId,
                         OrdenGiro = SolicitudPago.OrdenGiroId
                     });
-            } 
+            }
             return TablaOrdenesGiro;
         }
-
-
         #endregion
 
         #region C R U D
