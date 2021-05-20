@@ -42,7 +42,7 @@ namespace asivamosffie.services
             try
             {
                 _context.Set<BalanceFinancieroTraslado>()
-                        .Where(b => b.BalanceFinancieroId == pBalanceFinancieroTraslado.BalanceFinancieroId)
+                        .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                         .Update(b => new BalanceFinancieroTraslado
                         {
                             EstadoCodigo = pBalanceFinancieroTraslado.EstadoCodigo,
