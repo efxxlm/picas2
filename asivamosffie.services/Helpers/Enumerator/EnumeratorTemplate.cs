@@ -144,5 +144,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarNovedadEnviarTramite = 146,
         EnviarNovedadComite = 147,
 
+
+        //Balance Financiero 5.3.1
+        EnviarBalanceFinanciero = 148,
+
+
     }
 }

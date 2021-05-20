@@ -569,6 +569,11 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.BalanceFinancieroId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BalanceFinanciero_BalanceFinancieroTraslado");
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.BalanceFinancieroTraslado)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("FK_BalanceFinanciero_OrdenGiro");
             });
 
             modelBuilder.Entity<BalanceFinancieroTrasladoValor>(entity =>

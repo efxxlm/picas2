@@ -26,6 +26,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
 
         public virtual BalanceFinanciero BalanceFinanciero { get; set; }
+        public virtual OrdenGiro OrdenGiro { get; set; }
         public virtual ICollection<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
     }
 }

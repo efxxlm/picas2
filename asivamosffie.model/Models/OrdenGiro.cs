@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public OrdenGiro()
         {
+            BalanceFinancieroTraslado = new HashSet<BalanceFinancieroTraslado>();
             OrdenGiroDetalle = new HashSet<OrdenGiroDetalle>();
             OrdenGiroObservacion = new HashSet<OrdenGiroObservacion>();
             OrdenGiroPago = new HashSet<OrdenGiroPago>();
@@ -38,6 +39,7 @@ namespace asivamosffie.model.Models
         public bool? TieneTraslado { get; set; }
         public decimal? ValorNetoGiroTraslado { get; set; }
 
+        public virtual ICollection<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroObservacion> OrdenGiroObservacion { get; set; }
         public virtual ICollection<OrdenGiroPago> OrdenGiroPago { get; set; }

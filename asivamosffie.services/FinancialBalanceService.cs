@@ -241,7 +241,7 @@ namespace asivamosffie.services
             BalanceFinanciero balanceFinanciero = await _context.BalanceFinanciero
                                                     .Where(r => r.ProyectoId == pProyectoId)
                                                     .Include(r => r.BalanceFinancieroTraslado)
-                                                          .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
+                                                          .ThenInclude(r => r.BalanceFinancieroTrasladoValor) 
                                                     .FirstOrDefaultAsync();
        
             foreach (var BalanceFinancieroTraslado in balanceFinanciero.BalanceFinancieroTraslado)
@@ -555,6 +555,17 @@ namespace asivamosffie.services
             }
         }
 
+
+       private  string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
+        {
+
+            //BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
+            //    .Where(r=> r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+            //    .Include(r=> r.orde)
+
+               return string.Empty;
+
+        }
         #endregion 
     }
 }

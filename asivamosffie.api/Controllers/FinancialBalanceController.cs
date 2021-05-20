@@ -29,6 +29,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
+                pBalanceFinancieroTraslado.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _finalBalanceService.ChangeStatudBalanceFinancieroTraslado(pBalanceFinancieroTraslado);
                 return Ok(respuesta);
             }
