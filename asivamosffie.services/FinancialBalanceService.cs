@@ -124,20 +124,19 @@ namespace asivamosffie.services
 
                 foreach (var item in ListOrdenGiroId)
                 {
-                    OrdenGiro ordenGiro =
-                        _context.OrdenGiro.Where(r => r.OrdenGiroId == item.OrdenGiroId)
-                                          .Include(r => r.SolicitudPago)
-                                          .ThenInclude(r => r.Contrato).FirstOrDefault();
-
+                   
                     if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
                     {
                         vOrdenGiroXproyectosNoRepetidos.Add(item);
-                        VOrdenGiro.Add(ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
+                        VOrdenGiro vOrdenGiro = (ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
+         
+                        VOrdenGiro.Add(vOrdenGiro);
                     }
                 }
                 return (VOrdenGiro.Select(v => new
                 {
-                    
+                    v.FechaPagoFiduciaria,
+                    v.NumeroContrato,
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
@@ -169,6 +168,8 @@ namespace asivamosffie.services
                 return (VOrdenGiro.Select(v =>
                 new
                 {
+                    v.FechaPagoFiduciaria,
+                    v.NumeroContrato,
                     v.FechaAprobacionFinanciera,
                     v.TipoSolicitud,
                     v.NumeroSolicitudOrdenGiro,
@@ -278,7 +279,7 @@ namespace asivamosffie.services
         {
             await _context.Set<BalanceFinancieroTraslado>()
                       .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
-                      .UpdateAsync 
+                      .UpdateAsync
                       (b => new BalanceFinancieroTraslado
                       {
                           RegistroCompleto = pEstaCompleto

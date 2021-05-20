@@ -301,6 +301,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -8925,6 +8926,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaAprobacionFinanciera).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaPagoFiduciaria).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaRegistroCompletoTramitar).HasColumnType("datetime");
 
