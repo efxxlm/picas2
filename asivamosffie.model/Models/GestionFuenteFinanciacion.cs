@@ -24,7 +24,9 @@ namespace asivamosffie.model.Models
         public decimal? SaldoActualGenerado { get; set; }
         public decimal? ValorSolicitadoGenerado { get; set; }
         public decimal? NuevoSaldoGenerado { get; set; }
+        public int? BalanceFinancieroTrasladoValorId { get; set; }
 
+        public virtual BalanceFinancieroTrasladoValor BalanceFinancieroTrasladoValor { get; set; }
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual DisponibilidadPresupuestalProyecto DisponibilidadPresupuestalProyecto { get; set; }
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }

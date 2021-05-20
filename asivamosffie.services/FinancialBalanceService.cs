@@ -137,37 +137,87 @@ namespace asivamosffie.services
                                                        .Include(r => r.OrdenGiroDetalleTerceroCausacionAportante)
                                                        .Include(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
                                                        .Include(r => r.OrdenGiroDetalleDescuentoTecnica)
+                                                       .Include(r => r.BalanceFinancieroTraslado)
+                                                       .ThenInclude(r => r.OrdenGiro)
+                                                       .ThenInclude(r => r.SolicitudPago)
+                                                       .ThenInclude(r => r.Contrato)
+                                                       .ThenInclude(r => r.Contratacion)
+                                                       .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                        .ToList();
-
 
             foreach (var BalanceFinancieroTrasladoValor in pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
             {
+                int FuenteFinanciacionId = 0;
                 switch (BalanceFinancieroTrasladoValor.TipoTrasladoCodigo)
                 {
-
                     case ConstantCodigoTipoTrasladoCodigo.Aportante_Tercero_Causacion:
-
+                        FuenteFinanciacionId = BalanceFinancieroTrasladoValor?.OrdenGiroDetalleTerceroCausacionAportante?.FuenteFinanciacionId ?? 0;
                         break;
 
                     case ConstantCodigoTipoTrasladoCodigo.Descuento_Tercero_Causacion:
-
+                        FuenteFinanciacionId = BalanceFinancieroTrasladoValor?.OrdenGiroDetalleTerceroCausacionDescuento?.FuenteFinanciacionId ?? 0;
                         break;
 
                     case ConstantCodigoTipoTrasladoCodigo.Descuento_Direccion_Tecnica:
-
-                        break;
-
+                        FuenteFinanciacionId = BalanceFinancieroTrasladoValor?.OrdenGiroDetalleDescuentoTecnicaAportante?.FuenteFinanciacionId ?? 0;
+                        break; 
                 }
+
+                GetTrasladarRecursosxAportantexFuente(
+                   0,
+                   FuenteFinanciacionId,
+                   BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId,
+                   pBalanceFinancieroTraslado.UsuarioCreacion,
+                   BalanceFinancieroTrasladoValor?.BalanceFinancieroTraslado?.OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.DisponibilidadPresupuestalId ?? 0,
+                   BalanceFinancieroTrasladoValor.ValorTraslado ?? 0
+                   );
             }
         }
-
          
-        //private bool GetTrasladarRecursosxAportantexFuente(int pAportanteId , int pFuenteFinanciacionId )
-        //{
-        //    GestionFuenteFinanciacion gestionFuenteFinanciacion
-                 
+        private bool GetTrasladarRecursosxAportantexFuente(
+            int pAportanteId,
+            int pFuenteFinanciacionId,
+            int pBalanceFinancieroTrasladoValorId,
+            string pAuthor,
+            int pDisponibilidadPresupuestalId,
+            decimal pValorTraslado)
+        {
+            try
+            {
+                GestionFuenteFinanciacion gestionFuenteFinanciacion =
+                    _context.GestionFuenteFinanciacion
+                    .Where(r => r.FuenteFinanciacionId == pFuenteFinanciacionId)
+                    .AsNoTracking()
+                    .LastOrDefault();
 
-        //}
+                GestionFuenteFinanciacion gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion
+                {
+                    FechaCreacion = DateTime.Now,
+                    UsuarioCreacion = pAuthor,
+                    Eliminado = false,
+
+                    FuenteFinanciacionId = pFuenteFinanciacionId,
+                    SaldoActual = gestionFuenteFinanciacion.SaldoActual,
+                    ValorSolicitado = gestionFuenteFinanciacion.ValorSolicitado,
+                    NuevoSaldo = gestionFuenteFinanciacion.NuevoSaldo,
+                    DisponibilidadPresupuestalId = pDisponibilidadPresupuestalId,
+
+                    SaldoActualGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado,
+                    ValorSolicitadoGenerado = pValorTraslado,
+                    NuevoSaldoGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado + pValorTraslado,
+                    BalanceFinancieroTrasladoValorId = pBalanceFinancieroTrasladoValorId
+                };
+
+                _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacionNew);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+
+            }
+            return false;
+        }
 
         public async Task<List<VProyectosBalance>> GridBalance()
         {
@@ -508,13 +558,13 @@ namespace asivamosffie.services
                 strEstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
 
 
-                await _context.Set<BalanceFinanciero>()
-                              .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
-                              .UpdateAsync (b => new BalanceFinanciero
-                                          {
-                                              EstadoBalanceCodigo = strEstadoBalanceCodigo,
-                                              RegistroCompleto = pEstaCompleto
-                                          });
+            await _context.Set<BalanceFinanciero>()
+                          .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
+                          .UpdateAsync(b => new BalanceFinanciero
+                          {
+                              EstadoBalanceCodigo = strEstadoBalanceCodigo,
+                              RegistroCompleto = pEstaCompleto
+                          });
 
             return new Respuesta();
         }

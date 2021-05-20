@@ -3173,6 +3173,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorSolicitadoGenerado).HasColumnType("numeric(18, 2)");
 
+                entity.HasOne(d => d.BalanceFinancieroTrasladoValor)
+                    .WithMany(p => p.GestionFuenteFinanciacion)
+                    .HasForeignKey(d => d.BalanceFinancieroTrasladoValorId)
+                    .HasConstraintName("FK_BalanceFinancieroTrasladoValorId");
+
                 entity.HasOne(d => d.DisponibilidadPresupuestal)
                     .WithMany(p => p.GestionFuenteFinanciacion)
                     .HasForeignKey(d => d.DisponibilidadPresupuestalId)
