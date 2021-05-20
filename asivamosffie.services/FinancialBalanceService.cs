@@ -92,16 +92,15 @@ namespace asivamosffie.services
                 switch (pBalanceFinancieroTraslado.EstadoCodigo)
                 {
                     case ConstanCodigoEstadoBalanceFinancieroTraslado.Traslado_Aprobado:
-
                         GetRestaurarFuentesPorAportante(pBalanceFinancieroTraslado);
                         break;
 
                     case ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado:
-
+                        GetRemoveFuentesXBalanceFinancieroTraslado(pBalanceFinancieroTraslado);
                         break;
 
                     case ConstanCodigoEstadoBalanceFinancieroTraslado.Notificado_a_fiduciaria:
-
+                        GetNotificarFiduciariaxTraslado(pBalanceFinancieroTraslado);
                         break;
                 }
 
@@ -127,6 +126,53 @@ namespace asivamosffie.services
                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, pBalanceFinancieroTraslado.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
+        }
+
+        private async Task<bool> GetNotificarFiduciariaxTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarBalanceFinanciero));
+            string strContenido = ReplaceVariables(template.Contenido, pBalanceFinancieroTraslado);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                            new List<EnumeratorPerfil>
+                                                      {
+                                                        EnumeratorPerfil.Fiduciaria,
+                                                        EnumeratorPerfil.Fiduciaria_Equipo_Financiero
+                                                      };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        private string ReplaceVariables(string template, BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            BalanceFinanciero balanceFinanciero =
+                           _context.BalanceFinanciero
+                           .Where(b => b.BalanceFinancieroId == pBalanceFinancieroTraslado.BalanceFinancieroId)
+                           .Include(b => b.BalanceFinancieroTraslado)
+                           .ThenInclude(r => r.OrdenGiro)
+                           .ThenInclude(r => r.SolicitudPago)
+                           .ThenInclude(r => r.Contrato)
+                           .Include(b => b.Proyecto).FirstOrDefault();
+
+            template = template
+                     .Replace("[LLAVE_MEN]", balanceFinanciero.Proyecto.LlaveMen)
+                     .Replace("[NUMERO_CONTRATO]", balanceFinanciero.BalanceFinancieroTraslado.FirstOrDefault().OrdenGiro.SolicitudPago.FirstOrDefault().Contrato.NumeroContrato)
+                     .Replace("[FECHA_TRASLADO]", ((DateTime)balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().FechaCreacion).ToString("dd-MMM-yy"))
+                     .Replace("[NUMERO_TRASLADO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().NumeroTraslado
+                     .Replace("[NUMERO_ORDEN_GIRO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().OrdenGiro.NumeroSolicitud)
+                     .Replace("[VALOR_ORDEN_GIRO]", String.Format("{0:n0}", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().ValorTraslado) ?? "0"));
+
+
+            return template;
+        }
+
+        private void GetRemoveFuentesXBalanceFinancieroTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            GestionFuenteFinanciacion gestionFuenteFinanciacion =
+                _context.GestionFuenteFinanciacion
+                .Where(r => r.BalanceFinancieroTrasladoValorId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                .FirstOrDefault();
+
+            _context.GestionFuenteFinanciacion.Remove(gestionFuenteFinanciacion);
         }
 
         private void GetRestaurarFuentesPorAportante(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
@@ -160,7 +206,7 @@ namespace asivamosffie.services
 
                     case ConstantCodigoTipoTrasladoCodigo.Descuento_Direccion_Tecnica:
                         FuenteFinanciacionId = BalanceFinancieroTrasladoValor?.OrdenGiroDetalleDescuentoTecnicaAportante?.FuenteFinanciacionId ?? 0;
-                        break; 
+                        break;
                 }
 
                 GetTrasladarRecursosxAportantexFuente(
@@ -173,7 +219,7 @@ namespace asivamosffie.services
                    );
             }
         }
-         
+
         private bool GetTrasladarRecursosxAportantexFuente(
             int pAportanteId,
             int pFuenteFinanciacionId,
@@ -188,7 +234,8 @@ namespace asivamosffie.services
                     _context.GestionFuenteFinanciacion
                     .Where(r => r.FuenteFinanciacionId == pFuenteFinanciacionId)
                     .AsNoTracking()
-                    .LastOrDefault();
+                    .OrderByDescending(r=> r.GestionFuenteFinanciacionId)
+                    .FirstOrDefault();
 
                 GestionFuenteFinanciacion gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion
                 {
@@ -209,7 +256,7 @@ namespace asivamosffie.services
                 };
 
                 _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacionNew);
-
+                _context.SaveChanges();
                 return true;
             }
             catch (Exception e)
