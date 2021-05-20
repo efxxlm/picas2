@@ -2053,7 +2053,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(8, 2)");
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.ContratoPolizaActualizacion)
                     .WithMany(p => p.ContratoPolizaActualizacionSeguro)
@@ -4443,6 +4443,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.FuenteFinanciacion)
+                    .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
+                    .HasForeignKey(d => d.FuenteFinanciacionId)
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_FuenteFinanciacion");
+
                 entity.HasOne(d => d.OrdenGiroDetalleDescuentoTecnica)
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .HasForeignKey(d => d.OrdenGiroDetalleDescuentoTecnicaId)
@@ -4452,7 +4457,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaDescuentoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuentoId");
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuento");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleEstrategiaPago>(entity =>

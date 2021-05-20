@@ -157,7 +157,7 @@ namespace asivamosffie.services
 
                         break;
 
-                } 
+                }
             }
         }
 
@@ -165,7 +165,7 @@ namespace asivamosffie.services
         //private bool GetIngresarValorAFuentes()
         //{
         //    GestionFuenteFinanciacion gestionFuenteFinanciacion 
- 
+
 
         //}
 
@@ -501,15 +501,20 @@ namespace asivamosffie.services
                 .AsNoTracking()
                 .FirstOrDefault();
 
-            bool BlRegistroCompleto = balanceFinanciero.BalanceFinancieroTraslado.All(r => r.RegistroCompleto == true);
+            string strEstadoBalanceCodigo = balanceFinanciero.EstadoBalanceCodigo;
 
-            await _context.Set<BalanceFinanciero>()
-                          .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
-                          .UpdateAsync
-                          (b => new BalanceFinanciero
-                          {
-                              RegistroCompleto = pEstaCompleto
-                          });
+            bool BlRegistroCompleto = balanceFinanciero.BalanceFinancieroTraslado.All(r => r.RegistroCompleto == true);
+            if (BlRegistroCompleto)
+                strEstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+
+
+                await _context.Set<BalanceFinanciero>()
+                              .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
+                              .UpdateAsync (b => new BalanceFinanciero
+                                          {
+                                              EstadoBalanceCodigo = strEstadoBalanceCodigo,
+                                              RegistroCompleto = pEstaCompleto
+                                          });
 
             return new Respuesta();
         }
@@ -529,22 +534,22 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    pBalanceFinanciero.RegistroCompleto = await RegistroCompletoBalanceFinanciero(pBalanceFinanciero);
-                    if (pBalanceFinanciero.RegistroCompleto == false)
-                        pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.En_proceso_de_validacion;
-                    else
-                        pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+                    //pBalanceFinanciero.RegistroCompleto = await RegistroCompletoBalanceFinanciero(pBalanceFinanciero);
+                    //if (pBalanceFinanciero.RegistroCompleto == false)
+                    //    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.En_proceso_de_validacion;
+                    //else
+                    //    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+
+                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_necesidad_de_traslado;
                 }
 
                 if (pBalanceFinanciero.BalanceFinancieroId == 0)
                 {
-                    strCrearEditar = "CREAR BALANCE FINANCIERO";
                     pBalanceFinanciero.FechaCreacion = DateTime.Now;
                     _context.BalanceFinanciero.Add(pBalanceFinanciero);
                 }
                 else
                 {
-                    strCrearEditar = "ACTUALIZAR BALANCE FINANCIERO";
                     await _context.Set<BalanceFinanciero>().Where(r => r.BalanceFinancieroId == pBalanceFinanciero.BalanceFinancieroId)
                                                                    .UpdateAsync(r => new BalanceFinanciero()
                                                                    {
@@ -566,7 +571,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinanciero.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinanciero.UsuarioCreacion, !pBalanceFinanciero.FechaCreacion.HasValue ? "CREAR BALANCE FINANCIERO" : "ACTUALIZAR BALANCE FINANCIERO")
                 };
             }
             catch (Exception ex)

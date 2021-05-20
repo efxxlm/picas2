@@ -1,5 +1,5 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
-{
+{ 
     public static class ConstanCodigoEstadoBalanceFinanciero
     { 
         public const string En_proceso_de_validacion = "1";

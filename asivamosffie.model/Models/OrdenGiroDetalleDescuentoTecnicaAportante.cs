@@ -24,7 +24,9 @@ namespace asivamosffie.model.Models
         public bool? RequiereDescuento { get; set; }
         public string FuenteRecursosCodigo { get; set; }
         public int? OrdenGiroDetalleDescuentoTecnicaId { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
 
+        public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
         public virtual OrdenGiroDetalleDescuentoTecnica OrdenGiroDetalleDescuentoTecnica { get; set; }
         public virtual SolicitudPagoFaseFacturaDescuento SolicitudPagoFaseFacturaDescuento { get; set; }
         public virtual ICollection<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }

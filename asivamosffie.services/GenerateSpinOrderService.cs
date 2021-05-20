@@ -414,12 +414,12 @@ namespace asivamosffie.services
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
             decimal ValorFacturado = SolicitudPago?.OrdenGiro?.TieneTraslado == false ? SolicitudPago?.OrdenGiro?.ValorNetoGiro ?? 0 : SolicitudPago?.OrdenGiro?.ValorNetoGiroTraslado ?? 0;
-             
+
             List<VRpsPorContratacion> vRpsPorContratacion =
                                                            _context.VRpsPorContratacion
                                                            .Where(c => c.ContratacionId == SolicitudPago.ContratoSon.ContratacionId)
                                                            .OrderBy(C => C.ContratacionId)
-                                                           .ToList(); 
+                                                           .ToList();
             int Enum = 1;
             foreach (var DPR in vRpsPorContratacion)
             {
@@ -1034,8 +1034,7 @@ namespace asivamosffie.services
                                      ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
                                      RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
                                      FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo,
-
-
+                                     FuenteFinanciacionId = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteFinanciacionId
                                  });
                 }
             }
