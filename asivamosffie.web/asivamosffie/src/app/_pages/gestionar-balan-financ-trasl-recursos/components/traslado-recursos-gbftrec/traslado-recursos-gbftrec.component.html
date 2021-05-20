@@ -112,9 +112,10 @@
       ></p>
     </mat-card-content>
   </mat-card>
-<!--SOLO PARA EFECTOS DE MAQUETACIÓN-->
+
 <div  class="text-center mb-3em mt-2em animatedDown"
       *ngIf="addressForm.get('requiereTransladoRecursos').value === true && addressForm.get( 'justificacionTrasladoAportanteFuente' ).value !== null && balanceFinancieroId > 0">
     <a [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado', id ]" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>  
 </div>
+
 <app-tabla-traslados-gbftrec *ngIf="addressForm.get('requiereTransladoRecursos').value === true && balanceFinancieroTraslado.length > 0" [balanceFinancieroTraslado]="balanceFinancieroTraslado"></app-tabla-traslados-gbftrec>

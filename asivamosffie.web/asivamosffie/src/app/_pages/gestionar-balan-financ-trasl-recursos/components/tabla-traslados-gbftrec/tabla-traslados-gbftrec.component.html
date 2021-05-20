@@ -53,6 +53,13 @@
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
+                        *ngIf="estadoTraslado.notificadoFiduciaria === element.estadoCodigo"
+                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro ]">
+                        Modificar traslado
+                </button>
+                <button mat-raised-button
+                        color="accent"
+                        class="btn-table"
                         *ngIf="estadoTraslado.anulado === element.estadoCodigo || estadoTraslado.trasladoAprobado === element.estadoCodigo"
                         [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleTraslado', this.proyectoId, element.numeroOrdenGiro ]">
                         Ver detalle
@@ -60,7 +67,14 @@
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.conRegistro === element.estadoCodigo && element.registroCompleto === true"
+                        *ngIf="estadoTraslado.trasladoAprobado === element.estadoCodigo"
+                        (click)="getNotificarFiduciaria( element )">
+                        Notificar a fiduciaria
+                </button>
+                <button mat-raised-button
+                        color="accent"
+                        class="btn-table"
+                        *ngIf="( estadoTraslado.conRegistro === element.estadoCodigo || estadoTraslado.notificadoFiduciaria === element.estadoCodigo ) && element.registroCompleto === true"
                         (click)="getAnularTraslado( element )">
                         Anular traslado
                 </button>

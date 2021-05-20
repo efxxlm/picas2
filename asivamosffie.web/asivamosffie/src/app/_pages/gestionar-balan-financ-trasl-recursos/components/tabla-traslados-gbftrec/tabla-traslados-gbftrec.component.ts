@@ -126,6 +126,29 @@ export class TablaTrasladosGbftrecComponent implements OnInit {
             )
     }
 
+    getNotificarFiduciaria( registro: any ) {
+        const pBalanceFinancieroTraslado = {
+            balanceFinancieroTrasladoId: registro.balanceFinancieroTrasladoId,
+            estadoCodigo: this.estadoTraslado.notificadoFiduciaria
+        }
+
+        this.balanceSvc.changeStatudBalanceFinancieroTraslado( pBalanceFinancieroTraslado )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', this.proyectoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `${ err.message }` )
+            )
+    }
+
     getAnularTraslado( registro: any ) {
         this.openDialogTrueFalse( '', '<b>¿Esta seguro que desea anular el traslado?, tenga en cuenta que puede afectar el balance</b>' )
             .subscribe(
