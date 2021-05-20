@@ -24,6 +24,10 @@ export class FinancialBalanceService {
       return this.http.get<any[]>( `${ this.apiUrl }/GetOrdenGiroBy?pTipoSolicitudCodigo=${ pTipoSolicitudCodigo }&pNumeroOrdenGiro=${ pNumeroOrdenGiro }&pLLaveMen=${ pLLaveMen }` );
     }
 
+    getOrdenGiroByNumeroOrdenGiro( pNumeroOrdenGiro: string, pLLaveMen: string ) {
+      return this.http.get<any[]>( `${ this.apiUrl }/getOrdenGiroByNumeroOrdenGiro?pNumeroOrdenGiro=${ pNumeroOrdenGiro }&pLLaveMen=${ pLLaveMen }` );
+    }
+
     createEditBalanceFinanciero( pBalanceFinanciero: any ){
       return this.http.post<Respuesta>(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
     }

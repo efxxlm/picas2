@@ -169,6 +169,12 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
         if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'en-proceso' ) {
             this.semaforoDetalle = 'en-proceso';
         }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'sin-diligenciar' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'sin-diligenciar' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
         if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'completo' ) {
             this.semaforoDetalle = 'completo';
         }
@@ -178,8 +184,6 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
         if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === undefined ) {
             this.semaforoDetalle = 'completo';
         }
-
-        
     }
 
 }

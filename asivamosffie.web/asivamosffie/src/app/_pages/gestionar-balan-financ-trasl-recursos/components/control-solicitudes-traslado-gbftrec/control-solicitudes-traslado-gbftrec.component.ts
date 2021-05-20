@@ -67,11 +67,19 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
     async getParamsSearch() {
         if ( this.addressForm.get( 'tipoSolicitud' ).value !== null || this.addressForm.get( 'numeroOrdenGiro' ).value !== null ) {
             this.dataTable = [];
+            let listaOrdenGiro: any[];
 
-            const listaOrdenGiro = await this.balanceSvc.getOrdenGiroBy(
-                this.addressForm.get( 'tipoSolicitud' ).value !== null ? this.addressForm.get( 'tipoSolicitud' ).value : '',
-                this.addressForm.get( 'numeroOrdenGiro').value !== null ? this.addressForm.get( 'numeroOrdenGiro').value : '',
-                this.proyecto.llaveMen ).toPromise()
+            if ( this.esRegistroNuevo === true ) {
+                console.log( 'test 1' )
+                listaOrdenGiro = await this.balanceSvc.getOrdenGiroBy(
+                    this.addressForm.get( 'tipoSolicitud' ).value !== null ? this.addressForm.get( 'tipoSolicitud' ).value : '',
+                    this.addressForm.get( 'numeroOrdenGiro').value !== null ? this.addressForm.get( 'numeroOrdenGiro').value : '',
+                    this.proyecto.llaveMen ).toPromise()
+            }
+            if ( this.esRegistroNuevo === false ) {
+                console.log( 'test 2' )
+                listaOrdenGiro = await this.balanceSvc.getOrdenGiroByNumeroOrdenGiro( this.addressForm.get( 'numeroOrdenGiro').value, this.proyecto.llaveMen ).toPromise()
+            }
             console.log( listaOrdenGiro )
 
             if ( listaOrdenGiro.length > 0 ) {
@@ -81,10 +89,10 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
                             tipoSolicitudGiro: ordenGiro.tipoSolicitud,
                             fechaAprobacionFiduciaria: moment( ordenGiro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ),
                             fechaPagoFiduciaria: moment( ordenGiro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ),
-                            numeroOrdendeGiro: 'ODG_Obra_001',
+                            numeroOrdendeGiro: ordenGiro.numeroSolicitudOrdenGiro,
                             modalidadContrato: 'Modalidad 1',
                             numeroContrato: 'N801801',
-                            solicitudPagoId: ordenGiro.solicitudPagoId
+                            solicitudPagoId: ordenGiro.solicitudPago[ 0 ].solicitudPagoId
                         }
                     )
                 } )
