@@ -53,24 +53,40 @@ const routes: Routes = [
     component: ValidarInformeFinalComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/validarBalance',
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'validarRequisitos/:id/validarBalance',
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarValidarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarValidarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: ValidarBalanceComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarValidarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
   }
 ];
 

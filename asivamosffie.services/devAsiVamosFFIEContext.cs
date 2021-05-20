@@ -8353,6 +8353,8 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ContratacionProyectoSolicitudLiquidacion");
 
+                entity.Property(e => e.BalanceFinancieroId).HasColumnName("balanceFinancieroId");
+
                 entity.Property(e => e.EstadoAprobacionLiquidacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -9219,6 +9221,8 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_ProyectosBalance");
+
+                entity.Property(e => e.BalanceFinancieroId).HasColumnName("BalanceFInancieroId");
 
                 entity.Property(e => e.EstadoBalance).HasMaxLength(250);
 

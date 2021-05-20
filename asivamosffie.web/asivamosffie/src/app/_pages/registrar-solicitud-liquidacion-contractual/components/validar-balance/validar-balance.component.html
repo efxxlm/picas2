@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="data != null">
   <div class="text-right">
     <a routerLink="../../" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar" />
@@ -7,20 +7,20 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-          Ver detalle validación balance LL457326
+          Ver detalle validación balance {{ data.llaveMen }}
       </ng-container>
       <ng-template #noEsVerDetalle>
-          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance LL457326
+          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
       </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">
       <span class="mx-1em">
         Número de contrato de obra:
-        <b> N801801 </b>
+        <b> {{ data.numeroContratoObra }} </b>
       </span>
       <span class="mx-1em">
         Número de contrato de interventoria:
-        <b> A513513 </b>
+        <b> {{ data.numeroContratoInterventoria }} </b>
       </span>
     </p>
   </div>
@@ -31,37 +31,37 @@
         <strong>
           Llave MEN:
         </strong>
-        LL457326
+        {{ data.llaveMen }}
       </p>
       <p>
         <strong>
           Tipo de intervención:
         </strong>
-        Remodelación
+        {{ data.tipoIntervencion }}
       </p>
       <p>
         <strong>
           Institución Educativa:
         </strong>
-        I.E Nuestra Señora Del Carmen
+        {{ data.institucionEducativa }}
       </p>
       <p>
         <strong>
           Sede:
         </strong>
-        Única Sede
+        {{ data.sedeEducativa }}
       </p>
       <p>
         <strong>
           Departamento:
         </strong>
-        Boyacá
+        {{ data.departamento }}
       </p>
       <p>
         <strong>
           Municipio:
         </strong>
-        Susacón
+        {{ data.municipio }}
       </p>
     </mat-card-content>
   </mat-card>

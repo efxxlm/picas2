@@ -281,6 +281,35 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region balance
+        public async Task<dynamic> GetBalanceByContratacionProyectoId(int pContratacionProyectoId, int pMenuId)
+        {
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+            List<dynamic> Balance = new List<dynamic>();
+
+            if (contratacionProyecto != null)
+            {
+                VProyectosBalance vProyectosBalance  = await _context.VProyectosBalance.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefaultAsync();
+                LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                                                              && r.MenuId == pMenuId
+                                                              && r.IdPadre == vProyectosBalance.BalanceFinancieroId
+                                                              && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
+                                                              && r.Archivado != true
+                                                              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Balance_financiero).FirstOrDefault();
+
+                Balance.Add(new
+                {
+                    balance = vProyectosBalance,
+                    registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
+                });
+            }
+
+            return Balance;
+        }
+
+        #endregion
+
         #region manejo de observaciones 
         public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
         {

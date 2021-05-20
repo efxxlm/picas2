@@ -166,5 +166,21 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+
+        [HttpGet]
+        [Route("GetBalanceByContratacionProyectoId")]
+        public async Task<dynamic> GetBalanceByContratacionProyectoId([FromQuery] int pContratacionProyectoId, int pMenuId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetBalanceByContratacionProyectoId(pContratacionProyectoId, pMenuId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

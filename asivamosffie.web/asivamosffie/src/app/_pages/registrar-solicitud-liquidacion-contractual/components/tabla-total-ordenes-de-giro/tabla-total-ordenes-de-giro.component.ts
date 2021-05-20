@@ -1,19 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    numeroOrdenGiro: 'ODG_Obra_001',
-    contratista: 'Construir futuro',
-    facturado: '$67.000.000',
-    ANSaplicado: '$500.000',
-    reteGarantia: '$3.500.000',
-    otrosDescuentos: '$2.110.000',
-    pagarAntes: '$61.890.000'
-  }
-];
+import { Router } from '@angular/router';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 
 @Component({
   selector: 'app-tabla-total-ordenes-de-giro',
@@ -22,23 +12,54 @@ const ELEMENT_DATA = [
 })
 export class TablaTotalOrdenesDeGiroComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
+  @Input() solicitudPago: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataTable: any[] = [];
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   displayedColumns: string[] = [
-    'numeroOrdenGiro',
+    'numOrdenGiro',
     'contratista',
     'facturado',
-    'ANSaplicado',
-    'reteGarantia',
+    'ansAplicado',
+    'reteGarantiaAPagar',
     'otrosDescuentos',
-    'pagarAntes',
-    'id'
+    'aPagarAntesImpuestos',
+    'gestion'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    private routes: Router,
+    private ordenGiroSvc: OrdenPagoService
+  ) { }
 
   ngOnInit(): void {
+    if(this.solicitudPago.length > 0){
+      this.dataSource.data = this.solicitudPago;
+    }
   }
 
+  loadDataSource() {
+    //this.dataSource = new MatTableDataSource(this.dataTable);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
+  }
+  verDetalle(solicitudPagoId :number){
+    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/detalleOrdengiro', solicitudPagoId]);
+  }
 }

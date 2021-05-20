@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
@@ -11,6 +11,8 @@ import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObs
 export class ValidarBalanceComponent implements OnInit {
 
   contratacionProyectoId: number;
+  proyectoId: number;
+  data : any;
   balanceFinancieroId: number;//definir
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
@@ -20,10 +22,11 @@ export class ValidarBalanceComponent implements OnInit {
   constructor(
     private routes: Router,
     private route: ActivatedRoute,
-    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+    private financialBalanceService: FinancialBalanceService
   ) {
     this.route.params.subscribe((params: Params) => {
       this.contratacionProyectoId = params.id;
+      this.proyectoId = params.proyectoId;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'validarBalance' ) {
@@ -44,6 +47,7 @@ export class ValidarBalanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getBalanceByProyectoId(this.proyectoId);
   }  
 
   redirectToParent(): void{
@@ -55,4 +59,12 @@ export class ValidarBalanceComponent implements OnInit {
     });
   }
   
+  getBalanceByProyectoId(proyectoId: number) {
+    this.financialBalanceService.getDataByProyectoId(proyectoId)
+    .subscribe( getDataByProyectoId => {
+        if( getDataByProyectoId.length > 0 ){
+            this.data = getDataByProyectoId[0];
+        }
+    });
+  }
 }

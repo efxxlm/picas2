@@ -1,33 +1,13 @@
-<mat-card class="shipping-card var-main-gris">
+<mat-card class="shipping-card mainGris" *ngIf="contratista">
   <mat-card-header class="header-card header-card--margin">
-    <mat-card-title class="header-card--text">
-      Construir Futuro
-    </mat-card-title>
+      <mat-card-title class="header-card--text textoGris">
+          {{ contratista.nombre }}
+      </mat-card-title>
   </mat-card-header>
-  <mat-card-content>
-    <p>
-      <strong>
-        Nit:
-      </strong>
-      900.879-765-2
-    </p>
-    <p>
-      <strong>
-        Representante lega:
-      </strong>
-      Juan Pablo Tello Posada
-    </p>
-    <p>
-      <strong>
-        Número de identificación del representante:
-      </strong>
-      103456783
-    </p>
-    <p>
-      <strong>
-        Valor pagado:
-      </strong>
-      $67.000.000
-    </p>
+  <mat-card-content style="text-align: left;">
+      <p><strong>Nit: </strong><em>{{ contratista.numeroIdentificacion}}</em></p>
+      <p><strong>Representante legal: </strong><em>{{ contratista.representanteLegal}}</em></p>
+      <p><strong>Número de identificación del representante: </strong><em>{{ contratista.representanteLegalNumeroIdentificacion}}</em></p>
+      <p><strong>Valor pagado: </strong><em></em></p>
   </mat-card-content>
 </mat-card>
