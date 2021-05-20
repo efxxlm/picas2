@@ -481,11 +481,11 @@ namespace asivamosffie.services
                     return false;
             }
 
-            foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion)
-            {
-                if (!ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item))
+            //foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion)
+            //{
+                if (!ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.OrderByDescending(r=> r.ContratoPolizaActualizacionRevisionAprobacionObservacionId).FirstOrDefault()))
                     return false;
-            }
+            //}
 
             foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo)
             {

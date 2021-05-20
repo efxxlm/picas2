@@ -362,6 +362,25 @@ namespace asivamosffie.services
                       {
                           RegistroCompleto = pEstaCompleto
                       });
+
+            //Validar registro Completo BalanceFinanciero
+            BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero
+                .Include(b => b.BalanceFinancieroTraslado)
+                .Where(b => b.BalanceFinancieroTraslado
+                  .Any(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId))
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            bool BlRegistroCompleto = balanceFinanciero.BalanceFinancieroTraslado.All(r => r.RegistroCompleto == true);
+
+            await _context.Set<BalanceFinanciero>()
+                          .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
+                          .UpdateAsync
+                          (b => new BalanceFinanciero
+                          {
+                              RegistroCompleto = pEstaCompleto
+                          });
+             
             return new Respuesta();
         }
 
@@ -554,7 +573,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         private string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
         {
             BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
@@ -564,7 +583,7 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.Proyecto)
                 .FirstOrDefault();
 
-            return string.Empty; 
+            return string.Empty;
         }
         #endregion 
     }
