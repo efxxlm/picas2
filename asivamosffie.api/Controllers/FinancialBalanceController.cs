@@ -21,7 +21,25 @@ namespace asivamosffie.api.Controllers
             _finalBalanceService = finalBalanceService;
             _settings = settings;
         }
- 
+
+        [HttpPost]
+        [Route("ChangeStatudBalanceFinanciero")]
+        public async Task<IActionResult> ChangeStatudBalanceFinanciero([FromBody] BalanceFinanciero pBalanceFinanciero)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pBalanceFinanciero.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _finalBalanceService.ChangeStatudBalanceFinanciero(pBalanceFinanciero);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpPost]
         [Route("ChangeStatudBalanceFinancieroTraslado")]
         public async Task<IActionResult> ChangeStatudBalanceFinancieroTraslado([FromBody] BalanceFinancieroTraslado pBalanceFinancieroTraslado)
@@ -39,7 +57,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("ValidateCompleteBalanceFinanciero")]
         public async Task<IActionResult> ValidateCompleteBalanceFinanciero([FromQuery] int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
@@ -56,7 +74,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpGet]
         [Route("GetOrdenGiroByNumeroOrdenGiro")]
         public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)

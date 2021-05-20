@@ -35,6 +35,45 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+        public async Task<Respuesta> ChangeStatudBalanceFinanciero(BalanceFinanciero pBalanceFinanciero)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<BalanceFinanciero>()
+                        .Where(b => b.BalanceFinancieroId == pBalanceFinanciero.BalanceFinancieroId)
+                        .Update(b => new BalanceFinanciero
+                        {
+                            EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo,
+                            UsuarioModificacion = pBalanceFinanciero.UsuarioModificacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinanciero.UsuarioCreacion, "CAMBIAR ESTADO BALANCE FINANCIERO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, pBalanceFinanciero.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
+
         public async Task<Respuesta> ChangeStatudBalanceFinancieroTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Traslado_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
@@ -380,7 +419,7 @@ namespace asivamosffie.services
                           {
                               RegistroCompleto = pEstaCompleto
                           });
-             
+
             return new Respuesta();
         }
 
