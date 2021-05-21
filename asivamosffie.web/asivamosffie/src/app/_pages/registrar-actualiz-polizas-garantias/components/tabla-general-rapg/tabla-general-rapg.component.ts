@@ -25,13 +25,13 @@ export class TablaGeneralRapgComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
-      'fechaActualizacion',
-      'numContrato',
-      'contratista',
+      'fechaExpedicionActualizacionPoliza',
+      'numeroContrato',
+      'nombreContratista',
       'numeroPoliza',
       'numeroActualizacion',
-      'estadoActualizacionPoliza',
-      'estadoRegistro',
+      'estadoActualizacion',
+      'registroCompleto',
       'gestion'
     ];
 
@@ -127,5 +127,14 @@ export class TablaGeneralRapgComponent implements OnInit {
                 err => this.openDialog( '', `<b> ${ err.message } </b>` )
             )
     }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+      }
 
 }

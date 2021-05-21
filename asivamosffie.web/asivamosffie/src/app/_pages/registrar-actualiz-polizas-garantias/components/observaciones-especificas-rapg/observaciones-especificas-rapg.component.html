@@ -1,12 +1,12 @@
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
     <div style="text-align: center;">
-        <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>Si</em></p>
-        <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>No</em></p>
+        <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><strong>¿Tiene observaciones específicas de la actualización?: </strong><em>Si</em></p>
+        <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><strong>¿Tiene observaciones específicas de la actualización?: </strong><em>No</em></p>
     </div>
     <mat-card class="shipping-card border" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text card-title-detalle">
-                Observaciones especificas de la actualización
+                Observaciones específicas de la actualización
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
@@ -22,7 +22,7 @@
           (addressForm.get('tieneObservaciones').invalid &&
             addressForm.get('tieneObservaciones').touched) ||
           (addressForm.get('tieneObservaciones').invalid && estaEditando)
-        ">¿Tiene observaciones especificas de la actualización?</label>
+        ">¿Tiene observaciones específicas de la actualización?</label>
             </div>
             <div class="col-md-2">
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -49,7 +49,7 @@
               ">
                 <label for="observacionesEspecificas" class="text-area-quill--label" style="font-size: 16px" [ngStyle]="{ color: (addressForm.get('observacionesEspecificas').invalid && addressForm.get('observacionesEspecificas').touched) ||
                 (addressForm.get('observacionesEspecificas').invalid && estaEditando) ? '#d21e18' : '#174193' }">
-                    Observaciones especificas de la actualización
+                    Observaciones específicas de la actualización
                 </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
                     (onContentChanged)="maxLength($event, 1000)" formControlName="observacionesEspecificas"
