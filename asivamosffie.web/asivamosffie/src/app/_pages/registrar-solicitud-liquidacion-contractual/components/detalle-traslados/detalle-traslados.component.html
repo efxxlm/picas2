@@ -158,7 +158,64 @@
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title"> Información general </mat-panel-title>
       </mat-expansion-panel-header>
-      
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Datos de la solicitud </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-card class="shipping-card var-main-gris" style="margin-top: 3em">
+            <mat-card-content style="text-align: left">
+              <p><strong>Código SIFI:</strong> 357233</p>
+              <div>
+                <p><strong>Tipo de contrato:</strong> Tipo de contrato</p>
+                <p><strong>Valor de la factura:</strong> Valor de la factura</p>
+              </div>
+              <div>
+                <p><strong>Llave MEN: </strong> Llave MEN</p>
+                <p><strong>Valor de la factura:</strong> Valor de la factura</p>
+              </div>
+              <div>
+                <p><strong>Tipo de contrato:</strong> Tipo de contrato</p>
+                <p><strong>Valor de la factura:</strong> Valor de la factura</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <app-tabla-datos-solicitud></app-tabla-datos-solicitud>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Datos DDP y DRP </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="d-flex justify-content-center colorMainColor mt-1em">
+            <p>Número de DDP: <b> DDP_PI_125 </b></p>
+            <p style="margin-left: 2em">Valor del DDP: <b> $16,000,000 </b></p>
+          </div>
+          <app-tabla-datos-ddp></app-tabla-datos-ddp>
+          <app-tabla-datos-ddp-gog></app-tabla-datos-ddp-gog>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Soportes de factura </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-card class="shipping-card var-main-gris" style="margin-top: 3em">
+            <mat-card-content style="text-align: left">
+              <p>
+                <strong>URL con soporte:</strong>
+                http://localhost:4200/registrarValidarRequisitosPago/verDetalleEditar/274/203
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                  Tercero de giro
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-form-tercero-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'; tieneObservacion.emit( true )"></app-form-tercero-giro-gog>
+      </mat-expansion-panel>
+      </mat-accordion>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -169,14 +226,14 @@
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Porcentajes de participación </mat-panel-title>
           </mat-expansion-panel-header>
-
+          <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Información fuente de recursos </mat-panel-title>
           </mat-expansion-panel-header>
-
+          <app-tabla-info-fuenterec-gog></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -204,13 +261,13 @@
             <span class="mx-1em"> Valor neto de giro: <b> $ 15.000.000 </b> </span>
             <span class="mx-1em"> Nuevo valor resgistrado: <b> $ 15.000.000 </b> </span>
           </p>
-  
+
           <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion-black">
               <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title"> Costo variable </mat-panel-title>
               </mat-expansion-panel-header>
-  
+
               <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card header-card--margin">
                   <mat-card-title class="header-card--text"> Demolición </mat-card-title>
@@ -237,7 +294,7 @@
                     <strong> Nuevo valor por el concepto para el aportante: </strong>
                     $13.000.000
                   </p>
-  
+
                   <div>
                     <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
                     <p>
@@ -248,7 +305,7 @@
                       <strong> ¿Cuántos descuentos se aplican sobre el concepto de pago?: </strong>
                       2
                     </p>
-  
+
                     <div>
                       <mat-card-title class="header-card--text sub-text"> Aportante 1 </mat-card-title>
                       <p>
@@ -270,7 +327,6 @@
             </mat-expansion-panel>
           </mat-accordion>
         </mat-expansion-panel>
-
       </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>

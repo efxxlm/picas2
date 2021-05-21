@@ -30,6 +30,12 @@ import { FormObservacionInformeFinalComponent } from './components/form-observac
 import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
 import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
 import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
+import { TablaDatosSolicitudComponent } from './components/tabla-datos-solicitud/tabla-datos-solicitud.component';
+import { TablaDatosDdpGogComponent } from './components/tabla-datos-ddp-gog/tabla-datos-ddp-gog.component';
+import { TablaDatosDdpComponent } from './components/tabla-datos-ddp/tabla-datos-ddp.component';
+import { FormTerceroGiroGogComponent } from './components/form-tercero-giro-gog/form-tercero-giro-gog.component';
+import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
+import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +63,12 @@ import { DetalleTrasladosComponent } from './components/detalle-traslados/detall
     VerEjecucionFinancieraComponent,
     VerTrasladosRecursosComponent,
     DetalleTrasladosComponent,
+    TablaDatosSolicitudComponent,
+    TablaDatosDdpGogComponent,
+    TablaDatosDdpComponent,
+    FormTerceroGiroGogComponent,
+    TablaPorcntjParticGogComponent,
+    TablaInfoFuenterecGogComponent,
   ],
   imports: [
     CommonModule,
