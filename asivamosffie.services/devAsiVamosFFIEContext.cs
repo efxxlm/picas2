@@ -245,6 +245,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante> VDescuentosFinancieraOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
+        public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
@@ -299,7 +300,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -8553,6 +8553,23 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
+            modelBuilder.Entity<VDescuentosXordenGiro>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosXOrdenGiro");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoDescuentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
             modelBuilder.Entity<VDominio>(entity =>
             {
                 entity.HasNoKey();
@@ -9271,9 +9288,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ProyectosCierre");
 
-                entity.Property(e => e.EstadoInforme)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoInforme).HasMaxLength(250);
 
                 entity.Property(e => e.EstadoInformeCod)
                     .HasMaxLength(2)
@@ -9307,8 +9322,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .IsRequired()
                     .HasColumnName("tipoIntervencion")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VProyectosXcontrato>(entity =>

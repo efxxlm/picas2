@@ -11,6 +11,7 @@ using asivamosffie.model.APIModels;
 using System.Globalization;
 using Microsoft.Extensions.Hosting;
 using Z.EntityFramework.Plus;
+using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -234,7 +235,7 @@ namespace asivamosffie.services
                     _context.GestionFuenteFinanciacion
                     .Where(r => r.FuenteFinanciacionId == pFuenteFinanciacionId)
                     .AsNoTracking()
-                    .OrderByDescending(r=> r.GestionFuenteFinanciacionId)
+                    .OrderByDescending(r => r.GestionFuenteFinanciacionId)
                     .FirstOrDefault();
 
                 GestionFuenteFinanciacion gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion
@@ -336,7 +337,6 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetOrdenGiroBy(string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
         {
-
             if (string.IsNullOrEmpty(pNumeroOrdenGiro))
             {
                 List<VOrdenGiroXproyecto> ListOrdenGiroId =
@@ -549,8 +549,12 @@ namespace asivamosffie.services
             if (pListSolicitudPago.Count() > 0)
                 pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro.RegistroCompletoTramitar == true).ToList();
 
+            List<VDescuentosXordenGiro> ListvDescuentosXordenGiro = _context.VDescuentosXordenGiro.ToList();
+
             foreach (var SolicitudPago in pListSolicitudPago)
             {
+                List<VDescuentosXordenGiro> descuentosXordenGiro = ListvDescuentosXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
+
                 string NombreContratista = _context.SolicitudPago
                      .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
                      .Include(r => r.Contrato)
@@ -565,10 +569,10 @@ namespace asivamosffie.services
                         NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
                         Contratista = NombreContratista,
                         Facturado = SolicitudPago.OrdenGiro.ValorNetoGiro,
-                        AnsAplicado = 0,
-                        ReteGarantia = 0,
-                        OtrosDescuentos = _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(o => o.OrdenGiroId == (int)SolicitudPago.OrdenGiroId).Sum(r => r.ValorDescuento) ?? 0,
-                        ApagarAntesImpuestos = 0,
+                        AnsAplicado = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento),
+                        ReteGarantia = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento),
+                        OtrosDescuentos = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento),
+                        ApagarAntesImpuestos = SolicitudPago.OrdenGiro.ValorNetoGiro - descuentosXordenGiro.Sum(d => d.ValorDescuento),
                         SolicitudId = SolicitudPago.SolicitudPagoId,
                         OrdenGiro = SolicitudPago.OrdenGiroId
                     });
