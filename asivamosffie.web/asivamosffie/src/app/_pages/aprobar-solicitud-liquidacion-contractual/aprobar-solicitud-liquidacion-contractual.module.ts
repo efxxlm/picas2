@@ -30,6 +30,7 @@ import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/t
 import { ObservacionesInformeFinalComponent } from './components/observaciones-informe-final/observaciones-informe-final.component';
 import { TablaLiquidacionContratoInterventoriaComponent } from './components/tabla-liquidacion-contrato-interventoria/tabla-liquidacion-contrato-interventoria.component';
 import { ObservacionesSupervisorComponent } from './components/observaciones-supervisor/observaciones-supervisorcomponent';
+import { TablaTotalOrdenesDeGiroComponent } from './components/tabla-total-ordenes-de-giro/tabla-total-ordenes-de-giro.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ObservacionesSupervisorComponent } from './components/observaciones-sup
     TablaInformeAnexosComponent,
     ObservacionesInformeFinalComponent,
     TablaLiquidacionContratoInterventoriaComponent,
-    ObservacionesSupervisorComponent
+    ObservacionesSupervisorComponent,
+    TablaTotalOrdenesDeGiroComponent
   ],
   imports: [
     CommonModule,

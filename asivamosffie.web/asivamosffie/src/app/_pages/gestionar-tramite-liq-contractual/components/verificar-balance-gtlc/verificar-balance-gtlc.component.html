@@ -1,44 +1,94 @@
-<section class="container text-center">
+<section class="container"  *ngIf="data!= null">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteLiquidacionContractual/verificarRequisitos/1" mat-button color="primary"
-            class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
+      <a routerLink="./../" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
     </div>
-    <h1 class="title-menu--h1">
+    <div class="text-center">
+      <h1 class="title-menu--h1">
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-            Ver detalle verificación balance LL457326
+            Ver detalle verificación balance {{ data.llaveMen }}
         </ng-container>
         <ng-template #noEsVerDetalle>
-            {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar' }} balance LL457326
+            {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
         </ng-template>  
-    </h1>
-    <p class="info-sub-title">
-        <span>Número de contrato de obra: <b>N801801</b></span>
-        <span>Número de contrato de interventoria: <b>A513513</b></span>
-    </p>
+      </h1>
+      <p class="colorMainColor mt-05em">
+        <span class="mx-1em">
+          Número de contrato de obra:
+          <b> {{ data.numeroContratoObra }} </b>
+        </span>
+        <span class="mx-1em">
+          Número de contrato de interventoria:
+          <b> {{ data.numeroContratoInterventoria }} </b>
+        </span>
+      </p>
+    </div>
+  
     <mat-card class="shipping-card var-main-gris">
-        <mat-card-content align="left">
-            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
-            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
-            <p><strong>Sede: </strong><em>Única Sede</em></p>
-            <p><strong>Departamento: </strong><em>Boyacá</em></p>
-            <p><strong>Municipio: </strong><em>Susacón</em></p>
-        </mat-card-content>
+      <mat-card-content>
+        <p>
+          <strong>
+            Llave MEN:
+          </strong>
+          {{ data.llaveMen }}
+        </p>
+        <p>
+          <strong>
+            Tipo de intervención:
+          </strong>
+          {{ data.tipoIntervencion }}
+        </p>
+        <p>
+          <strong>
+            Institución Educativa:
+          </strong>
+          {{ data.institucionEducativa }}
+        </p>
+        <p>
+          <strong>
+            Sede:
+          </strong>
+          {{ data.sedeEducativa }}
+        </p>
+        <p>
+          <strong>
+            Departamento:
+          </strong>
+          {{ data.departamento }}
+        </p>
+        <p>
+          <strong>
+            Municipio:
+          </strong>
+          {{ data.municipio }}
+        </p>
+      </mat-card-content>
     </mat-card>
+  
     <div class="tabs--actions">
-        <button mat-raised-button color="accent" class="tabs--btn"
-            (click)="this.irRecursosComprometidos(this.balanceFinancieroId)">
+        <!--<button mat-raised-button color="accent" class="tabs--btn"
+            (click)="this.irRecursosComprometidos()">
             Recursos comprometidos y pagados
         </button>
         <button mat-raised-button color="accent" class="tabs--btn"
-            (click)="this.verEjecucionFinanciera(this.balanceFinancieroId)">
+            (click)="this.verEjecucionFinanciera()">
             Ejecución financiera por componente
         </button>
-        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos(this.balanceFinancieroId)">
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
             Traslados de recursos
-        </button>
+        </button>-->
+      <a [routerLink]="['recursosComprometidos']" mat-raised-button color="accent" class="tabs--btn">
+        Ver recursos comprometidos y pagados
+      </a>
+      <a [routerLink]="['ejecucionFinanciera']" mat-raised-button color="accent" class="tabs--btn">
+          Ver ejecución financiera por componente
+      </a>
+      <a [routerLink]="['trasladoRecursos']" mat-raised-button color="accent" class="tabs--btn">
+          Ver traslados de recursos
+      </a>
     </div>
+    
     <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
     <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
 </section>

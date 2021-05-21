@@ -96,7 +96,19 @@ const routes: Routes = [
     component: VerEjecucionFinancieraComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
     path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/traslados',
     component: VerTrasladosRecursosComponent
   },
   {

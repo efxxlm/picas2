@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-ver-ejecucion-financiera',
@@ -6,27 +8,54 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ver-ejecucion-financiera.component.scss']
 })
 export class VerEjecucionFinancieraComponent implements OnInit {
-
-  listaejecucionPresupuestal = [
-    {
-      componente: 'Obra',
-      totalComprometido: '$65.000.000',
-      facturadoAntesImpuestos: '$40.000.000',
-      saldo: '$25.000.000',
-      porcentajeEjecucionPresupuestal: '65%'
-    },
-    {
-      componente: 'Interventoría',
-      totalComprometido: '$40.000.000',
-      facturadoAntesImpuestos: '$28.000.000',
-      saldo: '$12.000.000',
-      porcentajeEjecucionPresupuestal: '70%'
-    }
-  ]
+  proyectoId: number;
+  dataTable: any[] = [];
+  data : any;
+  dataTablaFinanciera : any[] = [];
+  vContratoPagosRealizados: any;
+  total: any;
+  listaejecucionPresupuestal: any[] = [];
   
-  constructor() { }
+  constructor(
+    private financialBalanceService: FinancialBalanceService,
+    private route: ActivatedRoute,
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.proyectoId = params.proyectoId;
+    }); 
+   }
 
   ngOnInit(): void {
+    this.getBalanceByProyectoId(this.proyectoId);
+    this.getContratoByProyectoId();
   }
+
+  getBalanceByProyectoId(proyectoId: number) {
+    this.financialBalanceService.getDataByProyectoId(proyectoId)
+    .subscribe( getDataByProyectoId => {
+        if( getDataByProyectoId.length > 0 ){
+            this.data = getDataByProyectoId[0];
+        }
+    });
+  }
+
+  getContratoByProyectoId() {
+    this.financialBalanceService.getContratoByProyectoId(this.proyectoId).subscribe(data => {
+      data.forEach(element => {
+        this.dataTable.push({
+          vContratoPagosRealizados: element.contrato.vContratoPagosRealizados,
+          tipoSolicitudCodigo: element.tipoSolicitudCodigo
+        });
+        this.listaejecucionPresupuestal.push({
+          componente: element.tipoSolicitudCodigo === '1' ? 'Obra' : element.tipoSolicitudCodigo === '2' ? 'Interventoria' : '',
+          totalComprometido: element.contrato.vContratoPagosRealizados.valorSolicitud != null ? element.contrato.vContratoPagosRealizados.valorSolicitud: 0,
+          facturadoAntesdeImpuestos: 0,
+          saldo: element.contrato.vContratoPagosRealizados.saldoPorPagar != null ? element.contrato.vContratoPagosRealizados.saldoPorPagar: 0,
+          porcentajeEjecucionPresupuestal: element.contrato.vContratoPagosRealizados.porcentajeFacturado != null ? element.contrato.vContratoPagosRealizados.porcentajeFacturado : 0,
+        });
+      });  
+    });
+  }
+
 
 }

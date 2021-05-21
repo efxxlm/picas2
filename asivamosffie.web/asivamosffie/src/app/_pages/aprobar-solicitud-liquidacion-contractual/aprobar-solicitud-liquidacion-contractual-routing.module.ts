@@ -29,39 +29,51 @@ const routes: Routes = [
     component: AprobarRequisitosLiquidacionComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance',
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/aprobarBalance',
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/recursos',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/recursos',
     component: RecursosComprometidosPagadosComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/recursos/verDetalle/:id',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/recursos/verDetalle/:id',
     component: VerDetalleComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/verEjecucionFinanciera',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verEjecucionFinanciera',
     component: VerEjecucionFinancieraComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/verTrasladosRecursos',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verTrasladosRecursos',
     component: VerTrasladosRecursosComponent
   },
   {
@@ -89,7 +101,7 @@ const routes: Routes = [
     component: AprobarInformeFinalComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: AprobarBalanceComponent
   }
 ];

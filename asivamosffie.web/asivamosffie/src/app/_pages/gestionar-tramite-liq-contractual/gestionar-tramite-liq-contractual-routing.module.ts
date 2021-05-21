@@ -51,16 +51,8 @@ const routes: Routes = [
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'recursosComprometidos/:id',
-    component: RecursosComproPagadosGtlcComponent
-  },
-  {
     path: 'detalleOrdengiro/:id',
     component: DetalleOgGtlcComponent
-  },
-  {
-    path: 'ejecucionFinanciera/:id',
-    component: EjecucionFinancieraGtlcComponent
   },
   {
     path: 'trasladoRecursos/:id',
@@ -107,16 +99,48 @@ const routes: Routes = [
     component: VerificarInformeGtlcComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verificarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
   },
 ]; 
 @NgModule({

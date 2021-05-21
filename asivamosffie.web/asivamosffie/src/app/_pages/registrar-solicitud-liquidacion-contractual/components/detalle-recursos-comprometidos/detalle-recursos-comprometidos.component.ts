@@ -21,22 +21,6 @@ export class DetalleRecursosComprometidosComponent implements OnInit {
     'valorAportante',
     'valorTotalAportantes'
   ];
-  tablaEjemplo: any[] = [
-    {
-      aportante: [
-        { nombre: "Alcaldía de Susacón" }, 
-        { nombre: "Gobernación de Boyacá" }, 
-        { nombre: "FFIE" }
-      ],
-      valorAportante: [
-        { valor: "$45.000.000" }, 
-        { valor: "$40.000.000" }, 
-        { valor: "$20.000.000" }
-      ], 
-      valorTotalAportantes: "$105.000.000", 
-
-    },
-  ];
   constructor() { }
 
   ngOnInit(): void {
@@ -81,7 +65,6 @@ export class DetalleRecursosComprometidosComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.dataTable);
   }
   loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.tablaEjemplo);
     this.dataSource.sort = this.sort;
   }
 

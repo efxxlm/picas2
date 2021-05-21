@@ -1,28 +1,28 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="data != null">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteLiquidacionContractual/verificarBalance/1" mat-button color="primary" class="btn-regresar">
+        <a routerLink="./../" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <h1 class="title-menu--h1">Recursos comprometidos y pagados LL457326</h1>
+    <h1 class="title-menu--h1">Recursos comprometidos y pagados  {{ data.llaveMen }}</h1>
     <p class="info-sub-title">
-        <span>Número de contrato de obra: <b>N801801</b></span>
-        <span>Número de contrato de interventoria: <b>A513513</b></span>
+        <span>Número de contrato de obra: <b>{{ data.numeroContratoObra }}</b></span>
+        <span>Número de contrato de interventoria: <b>{{ data.numeroContratoInterventoria }}</b></span>
     </p>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
-            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
-            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
-            <p><strong>Sede: </strong><em>Única Sede</em></p>
-            <p><strong>Departamento: </strong><em>Boyacá</em></p>
-            <p><strong>Municipio: </strong><em>Susacón</em></p>
+            <p><strong>Tipo de intervención: </strong><em>{{ data.tipoIntervencion }}</em></p>
+            <p><strong>Institución Educativa: </strong><em>{{ data.institucionEducativa }}</em></p>
+            <p><strong>Sede: </strong><em>{{ data.sedeEducativa }}</em></p>
+            <p><strong>Departamento: </strong><em>{{ data.departamento }}</em></p>
+            <p><strong>Municipio: </strong><em>{{ data.municipio }}</em></p>
         </mat-card-content>
     </mat-card>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                    Contrato de obra N801801
+                    Contrato de obra &nbsp;<span *ngIf="contratoObra">{{ contratoObra.numeroContrato }}</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
@@ -32,7 +32,7 @@
                             Recursos comprometidos
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-acordion-recursos-compro-pagados-gtlc></app-acordion-recursos-compro-pagados-gtlc>
+                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-acordion-recursos-compro-pagados-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -40,7 +40,7 @@
                             Contratistas
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-lista-contratistas-gtlc></app-lista-contratistas-gtlc>
+                    <app-lista-contratistas-gtlc *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-lista-contratistas-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -48,14 +48,14 @@
                             Valor total ordenes de giro
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-tabla-valtotal-og-gtlc></app-tabla-valtotal-og-gtlc>
+                    <app-tabla-valtotal-og-gtlc *ngIf="contratoObra" [solicitudPago]="contratoObra.solicitudPago"></app-tabla-valtotal-og-gtlc>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                    Contrato de interventoria A513513
+                    Contrato de interventoria &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
@@ -65,7 +65,7 @@
                             Recursos comprometidos
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-acordion-recursos-compro-pagados-gtlc></app-acordion-recursos-compro-pagados-gtlc>
+                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto"></app-acordion-recursos-compro-pagados-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -73,7 +73,7 @@
                             Contratistas
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-lista-contratistas-gtlc></app-lista-contratistas-gtlc>
+                    <app-lista-contratistas-gtlc *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista"></app-lista-contratistas-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -81,7 +81,7 @@
                             Valor total ordenes de giro
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-tabla-valtotal-og-gtlc></app-tabla-valtotal-og-gtlc>
+                    <app-tabla-valtotal-og-gtlc *ngIf="contratoInterventoria" [solicitudPago]="contratoInterventoria.solicitudPago"></app-tabla-valtotal-og-gtlc>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>

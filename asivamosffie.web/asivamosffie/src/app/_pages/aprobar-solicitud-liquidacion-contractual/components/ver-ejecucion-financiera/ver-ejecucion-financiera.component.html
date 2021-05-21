@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="data != null">
   <div class="text-center">
     <div class="text-right">
       <a routerLink="./.." mat-button color="primary" class="btn-regresar">
@@ -7,11 +7,11 @@
     </div>
     <h1 class="title-menu--h1">
       Ejecución financiera por componente
-      LL457326
+      {{ data.llaveMen }}
     </h1>
     <p class="colorMainColor mt-1em">
-      <span class="mx-1em"> Número de contrato de obra: <b> N801801 </b> </span>
-      <span class="mx-1em"> Número de contrato de interventoria: <b> A513513 </b> </span>
+      <span class="mx-1em"> Número de contrato de obra: <b> {{ data.numeroContratoObra }} </b> </span>
+      <span class="mx-1em"> Número de contrato de interventoria: <b> {{ data.numeroContratoInterventoria }} </b> </span>
     </p>
   </div>
 
@@ -21,31 +21,31 @@
         <strong>
           Tipo de intervención:
         </strong>
-        Remodelación
+        {{ data.tipoIntervencion }}
       </p>
       <p>
         <strong>
           Institución Educativa:
         </strong>
-        I.E Nuestra Señora Del Carmen
+        {{ data.institucionEducativa }}
       </p>
       <p>
         <strong>
           Sede:
         </strong>
-        Única Sede
+        {{ data.sedeEducativa }}
       </p>
       <p>
         <strong>
           Departamento:
         </strong>
-        Boyacá
+        {{ data.departamento }}
       </p>
       <p>
         <strong>
           Municipio:
         </strong>
-        Susacón
+        {{ data.municipio }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -87,7 +87,7 @@
                 {{ element.totalComprometido }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.facturadoAntesImpuestos }}
+                {{ element.facturadoAntesdeImpuestos }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 {{ element.saldo }}
@@ -139,7 +139,7 @@
                 {{ element.totalComprometido }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.facturadoAntesImpuestos }}
+                {{ element.facturadoAntesdeImpuestos }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 {{ element.saldo }}
