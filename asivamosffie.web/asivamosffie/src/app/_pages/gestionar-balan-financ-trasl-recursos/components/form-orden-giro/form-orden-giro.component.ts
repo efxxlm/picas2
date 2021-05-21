@@ -1,3 +1,4 @@
+import { CommonService } from './../../../../core/_services/common/common.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
@@ -5,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
+import { Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-orden-giro',
@@ -18,6 +20,8 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     @Input() esRegistroNuevo: boolean;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    listaModalidad: Dominio[] = [];
+    listaTipoSolicitud: Dominio[] = [];
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
         resultadoBusqueda: this.fb.array( [] ),
@@ -43,7 +47,8 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
 
     constructor(
         private fb: FormBuilder,
-        private activatedRoute: ActivatedRoute )
+        private activatedRoute: ActivatedRoute,
+        private commonSvc: CommonService )
     { }
 
     ngOnChanges( changes: SimpleChanges ): void {
@@ -109,7 +114,29 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.listaModalidad = await this.commonSvc.modalidadesContrato().toPromise()
+        this.listaTipoSolicitud = await this.commonSvc.listaTipoSolicitudContrato().toPromise()
+    }
+
+    getTipoSolicitud( codigo: string ) {
+        if ( this.listaTipoSolicitud.length > 0 ) {
+            const solicitud = this.listaTipoSolicitud.find( solicitud => solicitud.codigo === codigo )
+            
+            if ( solicitud !== undefined ) {
+                return solicitud.nombre
+            }
+        }
+    }
+
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.listaModalidad.length > 0 ) {
+            const modalidad = this.listaModalidad.find( modalidad => modalidad.codigo === modalidadCodigo )
+            
+            if ( modalidad !== undefined ) {
+                return modalidad.nombre
+            }
+        }
     }
 
     addProject( index: number ) {

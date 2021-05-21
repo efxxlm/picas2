@@ -94,37 +94,6 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
                     )
                 } )
             }
-            /*
-            this.dataTable.push(
-                {
-                    tipoSolicitudGiro: 'Obra',
-                    fechaAprobacionFiduciaria: new Date(),
-                    fechaPagoFiduciaria: new Date(),
-                    numeroOrdendeGiro: 'ODG_Obra_001',
-                    modalidadContrato: 'Modalidad 1',
-                    numeroContrato: 'N801801',
-                    contratacionProyectoId: Math.round( Math.random() * 100 )
-                },
-                {
-                    tipoSolicitudGiro: 'Obra',
-                    fechaAprobacionFiduciaria: new Date(),
-                    fechaPagoFiduciaria: new Date(),
-                    numeroOrdendeGiro: 'ODG_Obra_326',
-                    modalidadContrato: 'Modalidad 2',
-                    numeroContrato: 'N801802',
-                    contratacionProyectoId: Math.round( Math.random() * 100 )
-                },
-                {
-                    tipoSolicitudGiro: 'Obra',
-                    fechaAprobacionFiduciaria: new Date(),
-                    fechaPagoFiduciaria: new Date(),
-                    numeroOrdendeGiro: 'ODG_Obra_327',
-                    modalidadContrato: 'Modalidad 3',
-                    numeroContrato: 'N801803',
-                    contratacionProyectoId: Math.round( Math.random() * 100 )
-                }
-            )
-            */
         }
     }
 

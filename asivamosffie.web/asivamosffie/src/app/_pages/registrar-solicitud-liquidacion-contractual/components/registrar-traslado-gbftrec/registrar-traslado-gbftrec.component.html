@@ -1,23 +1,19 @@
 <section class="container text-center" *ngIf="proyecto !== undefined">
     <div class="text-right">
-        <a  (click)="getRutaAnterior()"
-            mat-button
-            color="primary"
+        <a (click)="getRutaAnterior()" mat-button color="primary"
             class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-        <h1 class="title-menu--h1">Ver detalle traslado balance {{ proyecto.llaveMen }}</h1>
-    </ng-container>
-    <ng-template #noEsVerDetalle>
-        <h1 class="title-menu--h1">{{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} traslado balance {{ proyecto.llaveMen }}</h1>
-    </ng-template>
+    <div class="text-center">
+        <h1 class="title-menu--h1">Ver detalle {{ numeroTraslado }}</h1>
+        <p class="colorMainColor mt-1em">
+          <span class="mx-1em"> Llave MEN: <b> {{ proyecto.llaveMen }} </b> </span>
+          <span class="mx-1em"> Número de contrato de obra: <b> {{ proyecto.numeroContratoObra }} </b> </span>
+          <span class="mx-1em"> Número de contrato de interventoria: <b> {{ proyecto.numeroContratoInterventoria }} </b> </span>
+        </p>
+    </div>
 
-    <p class="info-sub-title">
-        <span>Número de contrato de obra: <b> {{ proyecto.numeroContratoObra }} </b></span>
-        <span>Número de contrato de interventoría: <b> {{ proyecto.numeroContratoInterventoria }} </b></span>
-    </p>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
             <p><strong>Tipo de intervención: </strong><em> {{ proyecto.tipoIntervencion }} </em></p>
@@ -27,6 +23,12 @@
             <p><strong>Municipio: </strong><em> {{ proyecto.municipio }} </em></p>
             <p><strong>Número DDP: </strong><em>DDP_0001 *</em></p>
             <p><strong>Valor DDP: </strong><em>$100.000.000 *</em></p>
+            <p>
+                <strong> Justificación del traslado entre aportantes y fuentes del proyecto: </strong>
+                <span class="d-block">Se requiere el traslados ya que el aportante Gobernación de Boyacá No cuenta con los recursos necesarios y seran solventados por la Alcaldía de Susacón</span>
+            </p>
+              <p><strong> Url con soporte: </strong> http//:onedrive/traslado0001</p>
+
             <h2 class="card-subTitle">DRP *</h2>
             <div class="table-responsive">
                 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

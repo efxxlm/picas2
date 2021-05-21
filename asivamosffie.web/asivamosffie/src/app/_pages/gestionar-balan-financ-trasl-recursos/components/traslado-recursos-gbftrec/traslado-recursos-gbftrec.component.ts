@@ -17,6 +17,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
   balanceFinanciero: any;
   balanceFinancieroId = 0;
   balanceFinancieroTraslado = [];
+  trasladoPendiente = false;
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
     proyectoId: [ɵNullViewportScroller, Validators.required],
@@ -79,6 +80,12 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
         if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
           if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
             this.balanceFinancieroTraslado = this.balanceFinanciero.balanceFinancieroTraslado
+
+            const trasladoIncompleto = this.balanceFinancieroTraslado.find( traslado => traslado.registroCompleto === false )
+
+            if ( trasladoIncompleto !== undefined ) {
+              this.trasladoPendiente = true;
+            }
           }
         }
 

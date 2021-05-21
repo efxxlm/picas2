@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 @Component({
@@ -8,7 +8,8 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class FormTerceroGiroGogComponent implements OnInit {
 
-  esVerDetalle = false;
+  @Input() solicitudPago: any;
+  @Input() esVerDetalle: boolean;
   addressForm: FormGroup;
 
   constructor(

@@ -141,14 +141,18 @@ export class ActualizarPolizaRapgComponent implements OnInit {
                     this.semaforoAcordeones.acordeonTipoActualizacion = 'en-proceso';
                 }
                 if ( completo > 0 && completo === contratoPolizaActualizacionSeguro.length ) {
-                    this.semaforoAcordeones.acordeonTipoActualizacion = 'completo';
-                    this.semaforoAcordeones.acordeonVigenciaValor = 'sin-diligenciar';
-                    this.acordeonRegistroCompleto.acordeonTipoActualizacion = true;
+                    if ( this.contratoPolizaActualizacion.razonActualizacionCodigo !== undefined && this.contratoPolizaActualizacion.fechaExpedicionActualizacionPoliza !== undefined ) {
+                        this.semaforoAcordeones.acordeonTipoActualizacion = 'completo';
+                        this.semaforoAcordeones.acordeonVigenciaValor = 'sin-diligenciar';
+                        this.acordeonRegistroCompleto.acordeonTipoActualizacion = true;
+                    } else {
+                        this.semaforoAcordeones.acordeonTipoActualizacion = 'en-proceso';
+                    }
                 }
             }
         }
         // Semaforo del acordeon "Vigencias y valor"
-        if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro !== undefined ) {
+        if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro !== undefined && this.acordeonRegistroCompleto.acordeonTipoActualizacion === true ) {
             if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro.length > 0 ) {
                 const contratoPolizaActualizacionSeguro: any[] = this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro;
                 let enProceso = 0;

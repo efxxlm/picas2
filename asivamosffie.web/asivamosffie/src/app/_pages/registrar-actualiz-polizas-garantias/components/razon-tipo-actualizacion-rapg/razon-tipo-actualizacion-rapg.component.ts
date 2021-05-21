@@ -269,7 +269,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
             contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
             contratoPolizaId: this.contratoPoliza.contratoPolizaId,
             razonActualizacionCodigo: this.addressForm.get( 'razonActualizacion' ).value,
-            fechaExpedicionActualizacionPoliza: new Date( this.addressForm.get( 'fechaExpedicion' ).value ).toISOString(),
+            fechaExpedicionActualizacionPoliza: this.addressForm.get( 'fechaExpedicion' ).value !== null ? new Date( this.addressForm.get( 'fechaExpedicion' ).value ).toISOString() : null,
             contratoPolizaActualizacionSeguro: contratoPolizaActualizacionSeguro()
         }
 

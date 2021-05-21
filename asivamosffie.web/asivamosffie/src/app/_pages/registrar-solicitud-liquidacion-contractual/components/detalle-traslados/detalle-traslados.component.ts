@@ -7,14 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleTrasladosComponent implements OnInit {
 
-  lista = [
-    {
-      drp: '1',
-      numeroDRP: 'IP_00090',
-      valor: '$100.000.000',
-      saldo: '$100.000.000'
-    }
-  ];
+    solicitudPago: any;
+    esVerDetalle: any;
+    lista = [
+        {
+          drp: '1',
+          numeroDRP: 'IP_00090',
+          valor: '$100.000.000',
+          saldo: '$100.000.000'
+        }
+    ];
 
   listaSolicitud = [
     {

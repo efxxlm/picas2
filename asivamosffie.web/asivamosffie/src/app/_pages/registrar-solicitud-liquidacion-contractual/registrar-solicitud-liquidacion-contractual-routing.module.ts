@@ -1,3 +1,4 @@
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -112,8 +113,8 @@ const routes: Routes = [
     component: VerTrasladosRecursosComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados/verDetalle/:id',
-    component: DetalleTrasladosComponent
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
   }
 ];
 

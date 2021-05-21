@@ -1,3 +1,13 @@
+import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
+import { FormTerceroCausacionComponent } from './components/form-tercero-causacion/form-tercero-causacion.component';
+import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
+import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
+import { DatosSolicitudGbftrecComponent } from './components/datos-solicitud-gbftrec/datos-solicitud-gbftrec.component';
+import { DatosDdpDrpGbftrecComponent } from './components/datos-ddp-drp-gbftrec/datos-ddp-drp-gbftrec.component';
+import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro-seleccionada/form-orden-giro-seleccionada.component';
+import { FormOrdenGiroComponent } from './components/form-orden-giro/form-orden-giro.component';
+import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -39,6 +49,16 @@ import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuentere
 
 @NgModule({
   declarations: [
+    RegistrarTrasladoGbftrecComponent,
+    ControlSolicitudesTrasladoGbftrecComponent,
+    FormOrdenGiroComponent,
+    DatosDdpDrpGbftrecComponent,
+    DatosSolicitudGbftrecComponent,
+    TablaInfofrecursosGbftrecComponent,
+    TablaPorcParticipacionGbftrecComponent,
+    FormTerceroCausacionComponent,
+    FormDescuentosDireccionTecnicaComponent,
+    FormOrdenGiroSeleccionadaComponent,
     HomeComponent,
     ExpansionPanelComponent,
     TablaLiquidacionContratoObraComponent,
