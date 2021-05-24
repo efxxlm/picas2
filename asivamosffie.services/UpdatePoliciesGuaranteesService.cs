@@ -34,8 +34,11 @@ namespace asivamosffie.services
             {
                 return await _context.Contrato
                                .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                               .Include(c => c.ContratoPoliza)
-                               .Where(c => c.NumeroContrato.ToLower().Trim().Contains(pNumeroContrato.ToLower().Trim()) && c.ContratoPoliza.Count() > 0)
+                               .Include(c => c.ContratoPoliza).ThenInclude(c => c.ContratoPolizaActualizacion)
+                               .Where(c => c.NumeroContrato.ToLower().Trim().Contains(pNumeroContrato.ToLower().Trim())
+                                   && c.ContratoPoliza.Count() > 0
+                                   && c.ContratoPoliza.All(r => r.ContratoPolizaActualizacion.Count() == 0)
+                                   )
                                       .Select(r => new
                                       {
                                           r.Contratacion.Contratista.Nombre,
@@ -64,9 +67,8 @@ namespace asivamosffie.services
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
-
-
             GetRemoveDeleteItems(contratoPoliza);
 
             return contratoPoliza;
@@ -79,11 +81,14 @@ namespace asivamosffie.services
 
         private void GetRemoveDeleteItems(ContratoPoliza contratoPoliza)
         {
-            foreach (var ContratoPolizaActualizacion in contratoPoliza.ContratoPolizaActualizacion)
-            {
-                if (ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() > 0)
-                    ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro = ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Where(c => c.Eliminado != true).ToList();
-            }
+
+            if (contratoPoliza.ContratoPolizaActualizacion.Count() > 0)
+                contratoPoliza.ContratoPolizaActualizacion = contratoPoliza.ContratoPolizaActualizacion.Where(r => r.Eliminado != true).ToList();
+                foreach (var ContratoPolizaActualizacion in contratoPoliza.ContratoPolizaActualizacion)
+                {
+                    if (ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() > 0)
+                        ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro = ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Where(c => c.Eliminado != true).ToList();
+                }
         }
 
         #endregion
@@ -250,7 +255,6 @@ namespace asivamosffie.services
                                 FechaExpedicionActualizacionPoliza = pContratoPolizaActualizacion.FechaExpedicionActualizacionPoliza,
                                 ObservacionEspecifica = pContratoPolizaActualizacion.ObservacionEspecifica,
                                 TieneObservacionEspecifica = pContratoPolizaActualizacion.TieneObservacionEspecifica,
-                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacion(pContratoPolizaActualizacion),
                                 RegistroCompletoObservacionEspecifica = ValidarRegistroCompletoObservacionEspecifica(pContratoPolizaActualizacion)
                             });
                 }
@@ -263,6 +267,9 @@ namespace asivamosffie.services
 
                 if (pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() > 0)
                     CreateEditContratoPolizaActualizacionListaChequeo(pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo, pContratoPolizaActualizacion.UsuarioCreacion);
+
+                _context.SaveChanges();
+                await ValidarRegistroCompletoContratoPolizaActualizacion((int)pContratoPolizaActualizacion.ContratoPolizaId);
 
                 return new Respuesta
                 {
@@ -293,111 +300,6 @@ namespace asivamosffie.services
                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pContratoPolizaActualizacion.UsuarioCreacion, ex.InnerException.ToString())
                    };
             }
-        }
-
-        private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
-        {
-            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == false)
-                return true;
-            else
-                if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
-                return false;
-
-            return true;
-        }
-
-        private void CreateEditContratoPolizaActualizacionListaChequeo(ICollection<ContratoPolizaActualizacionListaChequeo> pContratoPolizaActualizacionListaChequeo, string pAuthor)
-        {
-            foreach (var item in pContratoPolizaActualizacionListaChequeo)
-            {
-                if (item.ContratoPolizaActualizacionListaChequeoId == 0)
-                {
-                    item.UsuarioCreacion = pAuthor;
-                    item.FechaCreacion = DateTime.Now;
-                    item.Eliminado = false;
-                    item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item);
-                    _context.ContratoPolizaActualizacionListaChequeo.Add(item);
-                }
-                else
-                {
-                    _context.Set<ContratoPolizaActualizacionListaChequeo>()
-                            .Where(c => c.ContratoPolizaActualizacionListaChequeoId == item.ContratoPolizaActualizacionListaChequeoId)
-                            .Update(c => new ContratoPolizaActualizacionListaChequeo
-                            {
-                                FechaModificacion = DateTime.Now,
-                                UsuarioModificacion = pAuthor,
-                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item),
-                                CumpleDatosAseguradoBeneficiario = item.CumpleDatosAseguradoBeneficiario,
-                                CumpleDatosBeneficiarioGarantiaBancaria = item.CumpleDatosBeneficiarioGarantiaBancaria,
-                                CumpleDatosTomadorAfianzado = item.CumpleDatosTomadorAfianzado,
-                                TieneReciboPagoDatosRequeridos = item.TieneReciboPagoDatosRequeridos,
-                                TieneCondicionesGeneralesPoliza = item.TieneCondicionesGeneralesPoliza
-                            });
-                }
-            }
-        }
-
-        private bool ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(ContratoPolizaActualizacionListaChequeo item)
-        {
-            if (
-                  item.CumpleDatosAseguradoBeneficiario != true 
-               || item.CumpleDatosTomadorAfianzado != true
-               || item.TieneReciboPagoDatosRequeridos != true
-               || item.TieneCondicionesGeneralesPoliza != true
-            ) return false;
-
-            return true;
-        }
-
-        private void CreateEditContratoPolizaActualizacionRevisionAprobacionObservacion(ICollection<ContratoPolizaActualizacionRevisionAprobacionObservacion> pListContratoPolizaActualizacionRevisionAprobacionObservacion, string pAuthor)
-        {
-            foreach (var item in pListContratoPolizaActualizacionRevisionAprobacionObservacion)
-            {
-                if (item.ContratoPolizaActualizacionRevisionAprobacionObservacionId == 0)
-                {
-                    item.UsuarioCreacion = pAuthor;
-                    item.FechaCreacion = DateTime.Now;
-                    item.Eliminado = false;
-                    item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item);
-
-                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item);
-
-                }
-                else
-                {
-                    _context.Set<ContratoPolizaActualizacionRevisionAprobacionObservacion>()
-                            .Where(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacionId == item.ContratoPolizaActualizacionRevisionAprobacionObservacionId)
-                            .Update(c => new ContratoPolizaActualizacionRevisionAprobacionObservacion
-                            {
-                                UsuarioModificacion = pAuthor,
-                                FechaModificacion = DateTime.Now,
-
-                                SegundaFechaRevision = item.SegundaFechaRevision,
-                                EstadoSegundaRevision = item.EstadoSegundaRevision,
-                                FechaAprobacion = item.FechaAprobacion,
-                                ResponsableAprobacionId = item.ResponsableAprobacionId,
-                                ObservacionGeneral = item.ObservacionGeneral,
-                                Archivada = false,
-                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item)
-                            });
-
-                }
-            }
-        }
-
-        private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
-        {
-            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision)
-                return false;
-
-            if (
-                    !pItem.SegundaFechaRevision.HasValue
-                 || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
-                 || !pItem.FechaAprobacion.HasValue
-                 || pItem.ResponsableAprobacionId == 0
-                 ) return false;
-
-            return true;
         }
 
         private void CreateEditContratoPolizaActualizacionSeguro(ICollection<ContratoPolizaActualizacionSeguro> pListContratoPolizaActualizacionSeguro, string pAuthor)
@@ -437,6 +339,134 @@ namespace asivamosffie.services
                             });
                 }
             }
+        }
+
+        private void CreateEditContratoPolizaActualizacionRevisionAprobacionObservacion(ICollection<ContratoPolizaActualizacionRevisionAprobacionObservacion> pListContratoPolizaActualizacionRevisionAprobacionObservacion, string pAuthor)
+        {
+            foreach (var item in pListContratoPolizaActualizacionRevisionAprobacionObservacion)
+            {
+                if (item.ContratoPolizaActualizacionRevisionAprobacionObservacionId == 0)
+                {
+                    item.UsuarioCreacion = pAuthor;
+                    item.FechaCreacion = DateTime.Now;
+                    item.Eliminado = false;
+                    item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item);
+
+                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item);
+
+                }
+                else
+                {
+                    _context.Set<ContratoPolizaActualizacionRevisionAprobacionObservacion>()
+                            .Where(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacionId == item.ContratoPolizaActualizacionRevisionAprobacionObservacionId)
+                            .Update(c => new ContratoPolizaActualizacionRevisionAprobacionObservacion
+                            {
+                                UsuarioModificacion = pAuthor,
+                                FechaModificacion = DateTime.Now,
+
+                                SegundaFechaRevision = item.SegundaFechaRevision,
+                                EstadoSegundaRevision = item.EstadoSegundaRevision,
+                                FechaAprobacion = item.FechaAprobacion,
+                                ResponsableAprobacionId = item.ResponsableAprobacionId,
+                                ObservacionGeneral = item.ObservacionGeneral,
+                                Archivada = false,
+                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item)
+                            });
+
+                }
+            }
+        }
+
+        private void CreateEditContratoPolizaActualizacionListaChequeo(ICollection<ContratoPolizaActualizacionListaChequeo> pContratoPolizaActualizacionListaChequeo, string pAuthor)
+        {
+            foreach (var item in pContratoPolizaActualizacionListaChequeo)
+            {
+                if (item.ContratoPolizaActualizacionListaChequeoId == 0)
+                {
+                    item.UsuarioCreacion = pAuthor;
+                    item.FechaCreacion = DateTime.Now;
+                    item.Eliminado = false;
+                    item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item);
+                    _context.ContratoPolizaActualizacionListaChequeo.Add(item);
+                }
+                else
+                {
+                    _context.Set<ContratoPolizaActualizacionListaChequeo>()
+                            .Where(c => c.ContratoPolizaActualizacionListaChequeoId == item.ContratoPolizaActualizacionListaChequeoId)
+                            .Update(c => new ContratoPolizaActualizacionListaChequeo
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pAuthor,
+                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item),
+                                CumpleDatosAseguradoBeneficiario = item.CumpleDatosAseguradoBeneficiario,
+                                CumpleDatosBeneficiarioGarantiaBancaria = item.CumpleDatosBeneficiarioGarantiaBancaria,
+                                CumpleDatosTomadorAfianzado = item.CumpleDatosTomadorAfianzado,
+                                TieneReciboPagoDatosRequeridos = item.TieneReciboPagoDatosRequeridos,
+                                TieneCondicionesGeneralesPoliza = item.TieneCondicionesGeneralesPoliza
+                            });
+                }
+            }
+        }
+
+        public async Task ValidarRegistroCompletoContratoPolizaActualizacion(int GetContratoPoliza)
+        {
+            try
+            {
+                ContratoPoliza contratoPoliza = await this.GetContratoPoliza(GetContratoPoliza);
+
+                foreach (var item in contratoPoliza.ContratoPolizaActualizacion)
+                {
+                    _context.Set<ContratoPolizaActualizacion>()
+                            .Where(r => r.ContratoPolizaActualizacionId == item.ContratoPolizaActualizacionId)
+                            .Update(r => new ContratoPolizaActualizacion
+                            {
+                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionList(contratoPoliza.ContratoPolizaActualizacion)
+                            });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private bool ValidarRegistroCompletoObservacionEspecifica(ContratoPolizaActualizacion pContratoPolizaActualizacion)
+        {
+            if (pContratoPolizaActualizacion.TieneObservacionEspecifica == false)
+                return true;
+            else
+                if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(ContratoPolizaActualizacionListaChequeo item)
+        {
+            if (
+                  item.CumpleDatosAseguradoBeneficiario != true
+               || item.CumpleDatosTomadorAfianzado != true
+               || item.TieneReciboPagoDatosRequeridos != true
+               || item.TieneCondicionesGeneralesPoliza != true
+            ) return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
+        {
+            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision)
+                return false;
+
+            if (
+                    !pItem.SegundaFechaRevision.HasValue
+                 || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
+                 || !pItem.FechaAprobacion.HasValue
+                 || pItem.ResponsableAprobacionId == 0
+                 ) return false;
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
@@ -490,6 +520,40 @@ namespace asivamosffie.services
             {
                 if (!ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item))
                     return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoContratoPolizaActualizacionList(ICollection<ContratoPolizaActualizacion> ListContratoPolizaActualizacion)
+        {
+            foreach (var pContratoPolizaActualizacion in ListContratoPolizaActualizacion)
+            {
+                if (
+                        pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() == 0
+                     || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() == 0
+                     || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count() == 0
+                     || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count(r => r.Archivada == false) == 0
+                     )
+                    return false;
+
+                foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro)
+                {
+                    if (!ValidarRegistroCompletoContratoPolizaActualizacionSeguro(item))
+                        return false;
+
+                    if (!ValidarRegistroCompletoContratoPolizaActualizacion(item))
+                        return false;
+                }
+
+                if (!ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.OrderByDescending(r => r.ContratoPolizaActualizacionRevisionAprobacionObservacionId).FirstOrDefault()))
+                    return false;
+
+                foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo)
+                {
+                    if (!ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(item))
+                        return false;
+                }
             }
 
             return true;

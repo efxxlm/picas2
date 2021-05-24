@@ -243,6 +243,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
+        public virtual DbSet<VDescuentoTecnicaXordenGiro> VDescuentoTecnicaXordenGiro { get; set; }
         public virtual DbSet<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante> VDescuentosFinancieraOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
@@ -300,6 +301,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -4371,9 +4373,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorNetoGiroTraslado).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorNetoGiroTraslado).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>
@@ -8523,6 +8525,13 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DefensaJudicialContratacionProyecto");
+            });
+
+            modelBuilder.Entity<VDescuentoTecnicaXordenGiro>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentoTecnicaXOrdenGiro");
             });
 
             modelBuilder.Entity<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante>(entity =>

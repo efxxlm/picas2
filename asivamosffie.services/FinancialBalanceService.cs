@@ -550,10 +550,13 @@ namespace asivamosffie.services
                 pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro.RegistroCompletoTramitar == true).ToList();
 
             List<VDescuentosXordenGiro> ListvDescuentosXordenGiro = _context.VDescuentosXordenGiro.ToList();
+            List<VDescuentoTecnicaXordenGiro> ListVDescuentoTecnicaXordenGiro = _context.VDescuentoTecnicaXordenGiro.ToList();
 
             foreach (var SolicitudPago in pListSolicitudPago)
             {
                 List<VDescuentosXordenGiro> descuentosXordenGiro = ListvDescuentosXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
+                VDescuentoTecnicaXordenGiro vDescuentosXordenGiro = ListVDescuentoTecnicaXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).FirstOrDefault();
+
 
                 string NombreContratista = _context.SolicitudPago
                      .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
@@ -568,16 +571,25 @@ namespace asivamosffie.services
                     {
                         NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
                         Contratista = NombreContratista,
-                        Facturado = SolicitudPago.OrdenGiro.ValorNetoGiro,
-                        AnsAplicado = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento),
-                        ReteGarantia = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento),
-                        OtrosDescuentos = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento),
-                        ApagarAntesImpuestos = SolicitudPago.OrdenGiro.ValorNetoGiro - descuentosXordenGiro.Sum(d => d.ValorDescuento),
+                        Facturado = FormattedAmount(SolicitudPago.OrdenGiro.ValorNetoGiro + descuentosXordenGiro.Sum(r => r.ValorDescuento)),
+                        AnsAplicado = FormattedAmount(descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento)),
+                        ReteGarantia = FormattedAmount(descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento)),
+                        OtrosDescuentos = FormattedAmount(vDescuentosXordenGiro.ValorDescuento),
+                        ApagarAntesImpuestos = FormattedAmount(
+                            SolicitudPago.OrdenGiro.ValorNetoGiro -
+                            vDescuentosXordenGiro.ValorDescuento - 
+                            descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia 
+                                                    && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento)),
                         SolicitudId = SolicitudPago.SolicitudPagoId,
                         OrdenGiro = SolicitudPago.OrdenGiroId
                     });
             }
             return TablaOrdenesGiro;
+        }
+
+        public string FormattedAmount(decimal? pValue)
+        {
+            return string.Concat("$", String.Format("{0:n0}", pValue));
         }
         #endregion
 
