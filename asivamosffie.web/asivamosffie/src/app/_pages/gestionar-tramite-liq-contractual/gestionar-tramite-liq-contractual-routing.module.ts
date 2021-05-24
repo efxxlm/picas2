@@ -8,6 +8,7 @@ import { DetalleTrasladoGtlcComponent } from "./components/detalle-traslado-gtlc
 import { EjecucionFinancieraGtlcComponent } from "./components/ejecucion-financiera-gtlc/ejecucion-financiera-gtlc.component";
 import { GestionarTramiteLiqContractualComponent } from "./components/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.component";
 import { RecursosComproPagadosGtlcComponent } from "./components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component";
+import { RegistrarTrasladoGbftrecComponent } from "./components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component";
 import { TrasladoRecursosGtlcComponent } from "./components/traslado-recursos-gtlc/traslado-recursos-gtlc.component";
 import { VerDetalleEditarVerificacionComponent } from "./components/ver-detalle-editar-verificacion/ver-detalle-editar-verificacion.component";
 import { VerDetalleVerificacionGtlcComponent } from "./components/ver-detalle-verificacion-gtlc/ver-detalle-verificacion-gtlc.component";
@@ -142,6 +143,26 @@ const routes: Routes = [
     path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/ejecucionFinanciera',
     component: EjecucionFinancieraGtlcComponent
   },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalle/:id/verDetalleBalance/:proyectoId/trasladoRecursos/verDetalle/:id',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  }
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

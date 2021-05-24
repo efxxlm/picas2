@@ -10,6 +10,7 @@ import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-fina
 import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
 import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 import { AprobarInformeFinalComponent } from './components/aprobar-informe-final/aprobar-informe-final.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 
 const routes: Routes = [
   {
@@ -103,6 +104,10 @@ const routes: Routes = [
   {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: AprobarBalanceComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
   }
 ];
 

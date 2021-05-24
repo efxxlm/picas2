@@ -67,7 +67,7 @@
     </mat-card>
   
     <div class="tabs--actions">
-        <!--<button mat-raised-button color="accent" class="tabs--btn"
+        <button mat-raised-button color="accent" class="tabs--btn"
             (click)="this.irRecursosComprometidos()">
             Recursos comprometidos y pagados
         </button>
@@ -77,16 +77,7 @@
         </button>
         <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
             Traslados de recursos
-        </button>-->
-      <a [routerLink]="['recursosComprometidos']" mat-raised-button color="accent" class="tabs--btn">
-        Ver recursos comprometidos y pagados
-      </a>
-      <a [routerLink]="['ejecucionFinanciera']" mat-raised-button color="accent" class="tabs--btn">
-          Ver ejecución financiera por componente
-      </a>
-      <a [routerLink]="['trasladoRecursos']" mat-raised-button color="accent" class="tabs--btn">
-          Ver traslados de recursos
-      </a>
+        </button>
     </div>
     
     <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>

@@ -68,4 +68,14 @@ export class VerificarBalanceGtlcComponent implements OnInit {
         }
     });
   }
+
+  irRecursosComprometidos(){
+    this.router.navigate([`${ this.router.url }/recursosComprometidos`]);
+  }
+  verEjecucionFinanciera(){
+    this.router.navigate([`${ this.router.url }/ejecucionFinanciera`]);
+  }
+  verTrasladoRecursos(){
+    this.router.navigate([`${ this.router.url }/trasladoRecursos`]);
+  }
 }
