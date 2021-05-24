@@ -24,12 +24,12 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
-      'fechaSolicitud',
+      'fechaCreacion',
       'numeroSolicitud',
-      'modalidadContrato',
+      'modalidadNombre',
       'numeroContrato',
-      'estadoValidacion',
-      'estadoRegistro',
+      'estadoCodigo',
+      'registroCompletoValidacionFinanciera',
       'gestion'
     ];
 
