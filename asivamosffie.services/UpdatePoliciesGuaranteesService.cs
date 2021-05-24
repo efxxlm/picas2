@@ -60,16 +60,16 @@ namespace asivamosffie.services
                 .Include(c => c.PolizaGarantiaActualizacion)
                 .Include(c => c.PolizaListaChequeo)
                 .Include(c => c.PolizaObservacion)
-                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c=> c.Contratista)
+                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
                 .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
                 .FirstOrDefaultAsync();
 
-         
+
             GetRemoveDeleteItems(contratoPoliza);
 
-            return contratoPoliza; 
+            return contratoPoliza;
         }
 
         public async Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias()
@@ -144,7 +144,7 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPolizaActualizacionId == pContratoPolizaActualizacion.ContratoPolizaActualizacionId)
                         .Update(c => new ContratoPolizaActualizacion
                         {
-                            Eliminado= true,
+                            Eliminado = true,
                             UsuarioModificacion = pContratoPolizaActualizacion.UsuarioCreacion,
                             FechaModificacion = DateTime.Now
                         });
@@ -177,7 +177,7 @@ namespace asivamosffie.services
                    };
             }
         }
-         
+
         public async Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguros_Actualizacion_Polizas_y_garantias, (int)EnumeratorTipoDominio.Acciones);
@@ -301,7 +301,7 @@ namespace asivamosffie.services
                 return true;
             else
                 if (string.IsNullOrEmpty(pContratoPolizaActualizacion.ObservacionEspecifica))
-                    return false;
+                return false;
 
             return true;
         }
@@ -332,7 +332,7 @@ namespace asivamosffie.services
                                 CumpleDatosTomadorAfianzado = item.CumpleDatosTomadorAfianzado,
                                 TieneReciboPagoDatosRequeridos = item.TieneReciboPagoDatosRequeridos,
                                 TieneCondicionesGeneralesPoliza = item.TieneCondicionesGeneralesPoliza
-                            }); 
+                            });
                 }
             }
         }
@@ -340,11 +340,10 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(ContratoPolizaActualizacionListaChequeo item)
         {
             if (
-                  !item.CumpleDatosAseguradoBeneficiario.HasValue
-               || !item.CumpleDatosBeneficiarioGarantiaBancaria.HasValue
-               || !item.CumpleDatosTomadorAfianzado.HasValue
-               || !item.TieneReciboPagoDatosRequeridos.HasValue
-               || !item.TieneCondicionesGeneralesPoliza.HasValue
+                  item.CumpleDatosAseguradoBeneficiario != true 
+               || item.CumpleDatosTomadorAfianzado != true
+               || item.TieneReciboPagoDatosRequeridos != true
+               || item.TieneCondicionesGeneralesPoliza != true
             ) return false;
 
             return true;
@@ -360,8 +359,8 @@ namespace asivamosffie.services
                     item.FechaCreacion = DateTime.Now;
                     item.Eliminado = false;
                     item.RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(item);
-                     
-                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item); 
+
+                    _context.ContratoPolizaActualizacionRevisionAprobacionObservacion.Add(item);
 
                 }
                 else
@@ -388,13 +387,13 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
         {
-            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision) 
-                return false; 
+            if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision)
+                return false;
 
             if (
-                    !pItem.SegundaFechaRevision.HasValue 
+                    !pItem.SegundaFechaRevision.HasValue
                  || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
-                 || !pItem.FechaAprobacion.HasValue 
+                 || !pItem.FechaAprobacion.HasValue
                  || pItem.ResponsableAprobacionId == 0
                  ) return false;
 
@@ -483,8 +482,8 @@ namespace asivamosffie.services
 
             //foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion)
             //{
-                if (!ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.OrderByDescending(r=> r.ContratoPolizaActualizacionRevisionAprobacionObservacionId).FirstOrDefault()))
-                    return false;
+            if (!ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.OrderByDescending(r => r.ContratoPolizaActualizacionRevisionAprobacionObservacionId).FirstOrDefault()))
+                return false;
             //}
 
             foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo)
