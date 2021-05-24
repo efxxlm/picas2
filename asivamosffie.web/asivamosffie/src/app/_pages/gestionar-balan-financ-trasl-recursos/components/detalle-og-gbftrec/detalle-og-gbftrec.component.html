@@ -19,7 +19,10 @@
         </mat-card-content>
     </mat-card>
     <p class="info-sub-title textoGris">
-        <span><b>{{ solicitudPago.valorFacturado }}</b></span>
+        <b>
+          Valor total facturado:
+          {{ solicitudPago.valorFacturado | currency: '':'symbol-narrow':'.0-0' }}
+        </b>
     </p>
     <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
         <mat-card-header class="header-card header-card--margin">

@@ -16,6 +16,15 @@
         u Otros costos/servicios, que le han sido asignadas a usted, que han sido verificados financieramente y que son ejecutados en el marco de la
         gestión del FFIE.
     </div>
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)" />
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+        </button>
+    </div>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaSolicitud">

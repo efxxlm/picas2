@@ -7,21 +7,21 @@
     <div class="row">
         <div class="col-md-12" style="padding-left: 0;">
             <div class="row">
-                <div class="col">
+                <div class="col d-flex justify-content-center">
                     <mat-radio-group class="radioInput" formControlName="requiereTransladoRecursos" required>
                         <mat-radio-button [value]="true">Sí</mat-radio-button>
                         <mat-radio-button [value]="false">No</mat-radio-button>
                     </mat-radio-group>
                     <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    <span class="icon-incompleto min-0">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                            [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                          (addressForm.get('requiereTransladoRecursos').invalid && addressForm.get('requiereTransladoRecursos').touched) ||
+                          (addressForm.get('requiereTransladoRecursos').invalid && estaEditando)
+                        " />
+                    </span>
                 </div>
-                <span class="icon-incompleto">
-                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-                        [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip" *ngIf="
-                      (addressForm.get('requiereTransladoRecursos').invalid && addressForm.get('requiereTransladoRecursos').touched) ||
-                      (addressForm.get('requiereTransladoRecursos').invalid && estaEditando)
-                    " />
-                </span>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
         </button>
     </div>
 </form>
-<mat-card class="shipping-card var-main-gris" *ngIf="esVerDetalle">
+<mat-card class="shipping-card var-main-gris text-left" *ngIf="esVerDetalle">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Validación de balance financiero
@@ -99,11 +99,11 @@
         <strong>
             ¿Se requiere registrar un traslado de
             recursos entre los aportantes y fuentes que financian este proyecto, antes de aprobar el
-            balance financiero?
+            balance financiero?:
         </strong>
         
-        <span *ngIf="addressForm.get('requiereTransladoRecursos').value == true"> Si </span>
-        <span *ngIf="addressForm.get('requiereTransladoRecursos').value != true"> No </span>
+        <i *ngIf="addressForm.get('requiereTransladoRecursos').value == true"> Si </i>
+        <i *ngIf="addressForm.get('requiereTransladoRecursos').value != true"> No </i>
       </p>
       <p
         class="text-justify"

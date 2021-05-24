@@ -62,7 +62,7 @@
               <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.opcionContratarCodigo }} </p>
               <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
               <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0]?.plazoDias }} días</p>
-              <p><b>Url con soporte: </b> {{ contratacion?.rutaMinuta }} </p>
+              <p><b>URL con soporte: </b> {{ contratacion?.rutaMinuta }} </p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -83,7 +83,7 @@
                   
                 </div>
               </section>
-              <p><b>Url con soporte</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+              <p><b>URL con soporte</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
             </mat-card-content>
           </mat-card>
         </div>

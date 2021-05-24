@@ -86,7 +86,7 @@
             <mat-card-content>
               <p><b>Número de la solicitud de modificación</b>: {{ dataNovedad.numeroSolicitud }}</p>
               <p><b>Tipo de modificación</b>: {{ tipoModificacion }}</p>
-              <p><b>Url con soporte</b>: {{ dataNovedad.urlSoporteGestionar }}</p>  
+              <p><b>URL con soporte</b>: {{ dataNovedad.urlSoporteGestionar }}</p>  
               <div *ngFor="let element of dataNovedad.novedadContractualDescripcion; let f = index">
                 <h3 *ngIf="dataNovedad?.novedadContractualDescripcion.length > 1"><b>Novedad {{ f+1 }}</b></h3>
                 <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
@@ -153,7 +153,7 @@
         <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ dataNovedad.fechaEnvioFirmaFiduciaria | date: 'dd/MM/yyyy' }}</p>
         <p><b>Fecha de firma por parte de la fiduciaria</b>: {{ dataNovedad.fechaFirmaFiduciaria | date: 'dd/MM/yyyy' }}</p>
         <p><b>Observaciones</b>: <span class="text-justify" [innerHTML]="dataNovedad.observacionesTramite"></span></p>
-        <p><b>Url con soporte</b>: {{ dataNovedad.urlDocumentoSuscrita }}</p>
+        <p><b>URL con soporte</b>: {{ dataNovedad.urlDocumentoSuscrita }}</p>
       </mat-card-content>
     </mat-card>
   </div>
