@@ -691,8 +691,6 @@ namespace asivamosffie.services
 
             try
             {
-                decimal? ValorNetoGiro = pOrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.ValorNetoGiro;
-
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.ConsecutivoOrigen = await _commonService.EnumeradorOrigenOrdenGiro();
@@ -700,8 +698,7 @@ namespace asivamosffie.services
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
-                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
-                    pOrdenGiro.ValorNetoGiro = ValorNetoGiro;
+                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(); 
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
 
@@ -721,7 +718,7 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(o => new OrdenGiro
                             {
-                                ValorNetoGiro = ValorNetoGiro,
+                                ValorNetoGiro = pOrdenGiro.ValorNetoGiro,
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
