@@ -8,29 +8,19 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title
-          class="expansion-style--title"
-          [class.sin-diligenciar]="true"
-          [class.en-proceso]="false"
-          [class.completo]="false"
-        >
+        <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonObra">
           Liquidación de contrato de obra
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-liquidacion-contrato-obra></app-tabla-liquidacion-contrato-obra>
+      <app-tabla-liquidacion-contrato-obra (estadoSemaforo)="estadoAcordeonObra = $event"></app-tabla-liquidacion-contrato-obra>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title
-          class="expansion-style--title"
-          [class.sin-diligenciar]="true"
-          [class.en-proceso]="false"
-          [class.completo]="false"
-        >
+        <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonInterventoria">
           Liquidación de contrato de interventoria
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-tabla-liquidacion-contrato-interventoria></app-tabla-liquidacion-contrato-interventoria>
+      <app-tabla-liquidacion-contrato-interventoria (estadoSemaforo)="estadoAcordeonInterventoria = $event"></app-tabla-liquidacion-contrato-interventoria>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

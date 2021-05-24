@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionarTramiteLiqContractualComponent implements OnInit {
   verAyuda = false;
+  estadoAcordeonObra: string;
+  estadoAcordeonInterventoria: string;
+  
   constructor() { }
 
   ngOnInit(): void {

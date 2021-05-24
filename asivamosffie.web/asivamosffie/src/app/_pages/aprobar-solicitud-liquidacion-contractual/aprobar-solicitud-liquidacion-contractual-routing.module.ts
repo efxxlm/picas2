@@ -54,6 +54,14 @@ const routes: Routes = [
     component: RecursosComprometidosPagadosComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursos',
     component: RecursosComprometidosPagadosComponent
   },
@@ -66,11 +74,27 @@ const routes: Routes = [
     component: VerEjecucionFinancieraComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verEjecucionFinanciera',
     component: VerEjecucionFinancieraComponent
   },
   {
     path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos',
     component: VerTrasladosRecursosComponent
   },
   {
@@ -108,7 +132,19 @@ const routes: Routes = [
   {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
     component: RegistrarTrasladoGbftrecComponent
-  }
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
 ];
 
 @NgModule({

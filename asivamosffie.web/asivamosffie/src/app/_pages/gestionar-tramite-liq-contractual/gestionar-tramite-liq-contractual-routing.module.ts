@@ -108,6 +108,10 @@ const routes: Routes = [
     component: VerificarBalanceGtlcComponent
   },
   {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
@@ -124,7 +128,15 @@ const routes: Routes = [
     component: RecursosComproPagadosGtlcComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursosComprometidos',
     component: RecursosComproPagadosGtlcComponent
   },
   {
@@ -133,6 +145,18 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
     component: EjecucionFinancieraGtlcComponent
   },
   {
@@ -145,6 +169,14 @@ const routes: Routes = [
   },
   {
     path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos',
     component: TrasladoRecursosGtlcComponent
   },
   {
@@ -161,6 +193,14 @@ const routes: Routes = [
   },
   {
     path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
     component: RegistrarTrasladoGbftrecComponent
   }
 ]; 

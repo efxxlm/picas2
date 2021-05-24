@@ -65,6 +65,10 @@ export class AprobarBalanceComponent implements OnInit {
     .subscribe( getDataByProyectoId => {
         if( getDataByProyectoId.length > 0 ){
             this.data = getDataByProyectoId[0];
+            if(this.data != null){
+              if(this.data.balanceFinanciero.length > 0)
+                this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
+            }
         }
     });
   }

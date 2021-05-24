@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit,Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,12 +29,19 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  @Output() estadoSemaforo = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   datosTabla = [];
   listaEstadoLiquidacionSolicitud: EstadosSolicitudLiquidacionContractual = EstadosSolicitudLiquidacionContractualCodigo;
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
+  estadoCodigos = {
+    enProcesoDeValidacion: '1',
+    conValidacion: '2',
+    enviadoAlSupervisor: '3'
+  }
 
   constructor(
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
@@ -49,6 +56,10 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
   getListContractualLiquidationInterventoria(menuId: number) {
     this.registerContractualLiquidationRequestService.getListContractualLiquidationInterventoria(menuId).subscribe(report => {
       if(report != null){
+        //semaforo
+        let sinDiligenciar = 0;
+        let enProceso = 0;
+        let completo = 0;
         report.forEach(element => {
           this.datosTabla.push({
             fechaPoliza : element.fechaPoliza.split('T')[0].split('-').reverse().join('/'),
@@ -60,7 +71,34 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
             contratacionProyectoId: element.contratacionProyectoId
           });
-        })
+          if (element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.enProcesoDeValidacion || element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.conValidacion ) {
+            enProceso++;
+          }else if(element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.enviadoAlSupervisor){
+            completo++;
+          }else{
+            sinDiligenciar++;
+          }
+        });
+        //semaforo
+        if ( sinDiligenciar === this.datosTabla.length ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        };
+
+        if ( enProceso === this.datosTabla.length ) {
+          this.estadoSemaforo.emit( 'en-proceso' );
+        };
+
+        if ( completo === this.datosTabla.length ) {
+          this.estadoSemaforo.emit( 'completo' );
+        };
+
+        if ( ( sinDiligenciar > 0 && sinDiligenciar < this.datosTabla.length ) && ( enProceso > 0 && enProceso < this.datosTabla.length ) ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        };
+
+        if ( this.datosTabla.length === 0 ) {
+          this.estadoSemaforo.emit( 'completo' );
+        }
       }
       this.dataSource.data = this.datosTabla;
     });

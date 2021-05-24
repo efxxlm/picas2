@@ -47,6 +47,7 @@ export class ValidarBalanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.proyectoId);
     this.getBalanceByProyectoId(this.proyectoId);
   }  
 
@@ -64,6 +65,10 @@ export class ValidarBalanceComponent implements OnInit {
     .subscribe( getDataByProyectoId => {
         if( getDataByProyectoId.length > 0 ){
             this.data = getDataByProyectoId[0];
+            if(this.data != null){
+              if(this.data.balanceFinanciero.length > 0)
+                this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
+            }
         }
     });
   }
