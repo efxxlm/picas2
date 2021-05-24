@@ -1082,6 +1082,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
+            valorNetoGiro: this.valorNetoGiro,
             ordenGiroDetalle: [
                 {
                     ordenGiroId: this.ordenGiroId,
