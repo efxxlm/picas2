@@ -22,11 +22,11 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.GetTablaUsoFuenteAportanteXContratoId();
+    this.getTablaUsoFuenteAportanteXContratoId();
   }
   
-  GetTablaUsoFuenteAportanteXContratoId() {
-    this.financialBalanceService.GetTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
+  getTablaUsoFuenteAportanteXContratoId() {
+    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
       this.data = data.usos;
       if (this.data) {
         this.data.forEach( registro => {

@@ -74,7 +74,7 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
         .subscribe( getDataByProyectoId => {
             if( getDataByProyectoId.length > 0 ){
                 this.proyecto = getDataByProyectoId[0]
-                console.log( this.proyecto, this.esRegistroNuevo );
+                // console.log( this.proyecto, this.esRegistroNuevo );
             }
         } );
     }
