@@ -503,16 +503,19 @@ namespace asivamosffie.services
                                                           .ThenInclude(r => r.BalanceFinancieroTrasladoValor)
                                                     .FirstOrDefaultAsync();
 
-            foreach (var BalanceFinancieroTraslado in balanceFinanciero.BalanceFinancieroTraslado)
+            if (balanceFinanciero != null)
             {
-                OrdenGiro OrdenGiro = _context.OrdenGiro
-                    .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
-                    .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r => r.Contratacion)
-                    .FirstOrDefault();
+                foreach (var BalanceFinancieroTraslado in balanceFinanciero.BalanceFinancieroTraslado)
+                {
+                    OrdenGiro OrdenGiro = _context.OrdenGiro
+                        .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
+                        .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r => r.Contratacion)
+                        .FirstOrDefault();
 
-                BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
-                BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
-                BalanceFinancieroTraslado.TablaDRP = GetDrpContrato(OrdenGiro.SolicitudPago.FirstOrDefault());
+                    BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
+                    BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
+                    BalanceFinancieroTraslado.TablaDRP = GetDrpContrato(OrdenGiro.SolicitudPago.FirstOrDefault());
+                }
             }
             return balanceFinanciero;
         }
@@ -807,7 +810,7 @@ namespace asivamosffie.services
             return new List<dynamic>
             {
               await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync(),
-              await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync() 
+              await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
             };
         }
         #endregion
