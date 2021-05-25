@@ -192,8 +192,7 @@ namespace asivamosffie.services
 
                         if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
                             OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Where(r => r.Eliminado != true).ToList();
-                    }
-
+                    } 
                 }
             }
             try
@@ -698,7 +697,7 @@ namespace asivamosffie.services
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
-                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(); 
+                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
 
@@ -1374,5 +1373,8 @@ namespace asivamosffie.services
         }
 
         #endregion
+
+
+      
     }
 }

@@ -38,6 +38,70 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+
+        public async Task<OrdenGiro> GetOrdenGiroById(int pOrdenGiroId)
+        {
+            OrdenGiro OrdenGiro = await _context.OrdenGiro
+                                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                    .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                                    .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
+                                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
+
+                                    .Include(d => d.SolicitudPago)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync();
+
+            foreach (var OrdenGiroDetalle in OrdenGiro.OrdenGiroDetalle)
+            {
+                if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
+                    OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+
+                foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+                {
+                    if (OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Count() > 0)
+                        OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante = OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).ToList();
+                }
+
+                foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                {
+                    if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).ToList();
+
+                    if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
+                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Where(r => r.Eliminado != true).ToList();
+                }
+            }
+
+            return OrdenGiro;
+        }
+
+        //private async Task<dynamic> GetTablaOtrosDescuentos(OrdenGiro pOrdenGiro)
+        //{
+        //    List<dynamic> dynamics = new List<dynamic>();
+        //    List<Dominio> ListDominio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Descuento);
+
+        //    foreach (var OrdenGiroDetalle in pOrdenGiro.OrdenGiroDetalle)
+        //    {
+        //        foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+        //        {
+        //            dynamics.Add(new
+        //            { 
+
+        //                Tipo
+        //                Descuento = FormattedAmount(OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.FirstOrDefault().ValorDescuento),
+                      
+        //            });
+        //        }
+        //    }
+        //}
+
+
         public async Task<Respuesta> ChangeStatudBalanceFinanciero(BalanceFinanciero pBalanceFinanciero)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
@@ -681,7 +745,7 @@ namespace asivamosffie.services
             List<dynamic> TablaOrdenesGiro = new List<dynamic>();
 
             if (pListSolicitudPago.Count() > 0)
-                pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro.RegistroCompletoTramitar == true).ToList();
+                pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro?.RegistroCompletoTramitar == true).ToList();
 
             List<VDescuentosXordenGiro> ListvDescuentosXordenGiro = _context.VDescuentosXordenGiro.ToList();
             List<VDescuentoTecnicaXordenGiro> ListVDescuentoTecnicaXordenGiro = _context.VDescuentoTecnicaXordenGiro.ToList();
