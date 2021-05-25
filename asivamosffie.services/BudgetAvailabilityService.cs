@@ -361,7 +361,7 @@ namespace asivamosffie.services
 
             foreach (var RegistroPresupuestal in listRegistroPresupuestal)
             {
-
+                NovedadContractual novedadContractual = _context.NovedadContractual.Find(RegistroPresupuestal.NovedadContractualId);
 
                 RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId;
                 RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualId = RegistroPresupuestal.NovedadContractualId;
@@ -377,9 +377,10 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
+                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;
 
 
-                //ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
+                ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
             }
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
@@ -442,7 +443,7 @@ namespace asivamosffie.services
                     TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
                     DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
-                    DisponibilidadPresupuestal.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadPresupuestal.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual,
+                    DisponibilidadPresupuestal.EsNovedad == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadPresupuestal.EsNovedad) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
                     FechaFirmaContrato = fechaContrato == null ? string.Empty : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
@@ -451,6 +452,7 @@ namespace asivamosffie.services
                          x.Codigo == DisponibilidadPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
                     NovedadContractualRegistroPresupuestalId = DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId,
                     EsNovedad = DisponibilidadPresupuestal.EsNovedad,
+                    NumeroOtroSi = DisponibilidadPresupuestal.NumeroOtroSi
 
                 };
 
@@ -1547,7 +1549,8 @@ namespace asivamosffie.services
             {
                 if (esNovedad == true)
                 {
-
+                    //NovedadContractualRegistroPresupuestal -- CAMBIARLE EL ESTADO
+                    //NovedadContractualObservaciones -- agregar un campo esNovedad
                 }
                 else
                 {

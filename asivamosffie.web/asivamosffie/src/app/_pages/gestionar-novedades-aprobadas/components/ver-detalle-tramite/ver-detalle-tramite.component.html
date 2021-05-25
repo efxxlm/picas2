@@ -81,56 +81,74 @@
             Detallar solicitud
           </mat-panel-title>
         </mat-expansion-panel-header>
-
-        <div class="table-responsive mb-2em px-table">
-          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
-            <thead>
-              <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Aportante
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Valor del aportante
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Componente
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Fase
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Uso
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Valor de uso
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let observacion of detallarSolicitud">
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.aportante }}
+        <div class="table-responsive tabla-gris text-center">
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+              <ng-container matColumnDef="aportante">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Aportante </th>
+                  <td mat-cell *matCellDef="let element"> <b>{{ element.nombreAportante }}</b></td>
+              </ng-container>
+              <ng-container matColumnDef="valorAportante">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor del Aportante </th>
+                  <td mat-cell *matCellDef="let element"> <b>{{element.valorAporte | currency:'':'symbol-narrow':'.0-0'}}</b></td>
+              </ng-container>
+              <ng-container matColumnDef="componente">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                    <div class="sub-item-table justify-content-center align-items-center"
+                        *ngFor="let el of element.componenteAportanteNovedad ; let i = index">
+                        <div [ngClass]="{'h-3em': el.componenteFuenteNovedad.length==1, 'h-6em': el.componenteFuenteNovedad.length>1}">
+                            {{el.nombreTipoComponente}}
+                        </div>
+                    </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.valorAportante }}
+              </ng-container>
+              <ng-container matColumnDef="fuenteAportante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuente </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                    <div class="sub-item-table justify-content-center align-items-center"
+                        *ngFor="let el of element.componenteAportanteNovedad ; let i = index">
+                        <div *ngFor="let el2 of el.componenteFuenteNovedad ; let j = index">
+                          <div [ngClass]="{'h-3em': el2.componenteUsoNovedad.length==1, 'h-6em': el2.componenteUsoNovedad.length>1}">
+                            {{el2.fuenteFinanciacion.nombreFuente}}
+                          </div>
+                        </div>
+                    </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.componente }}
+              </ng-container>
+              <ng-container matColumnDef="uso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                  <div class="sub-item-table justify-content-center align-items-center"
+                      *ngFor="let el of element.componenteAportanteNovedad ; let i = index">
+                      <div *ngFor="let el2 of el.componenteFuenteNovedad ; let j = index">
+                        <div *ngFor="let el3 of el2.componenteUsoNovedad ; let j = index">
+                          <div class="h-3em">
+                              {{el3.nombreUso}}
+                          </div>
+                        </div>
+                      </div>
+                  </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.fase }}
+              </ng-container>
+              <ng-container matColumnDef="valorUso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor uso </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                  <div class="sub-item-table justify-content-center align-items-center"
+                  *ngFor="let el of element.componenteAportanteNovedad ; let i = index">
+                    <div *ngFor="let el2 of el.componenteFuenteNovedad ; let j = index">
+                      <div *ngFor="let el3 of el2.componenteUsoNovedad ; let j = index">
+                        <div class="h-3em">
+                            {{el3.valorUso | currency:'':'symbol-narrow':'.0-0'}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.uso }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ observacion.valorUso }}
-                </td>
-              </tr>
-            </tbody>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
-        </div>
-
+      </div>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">

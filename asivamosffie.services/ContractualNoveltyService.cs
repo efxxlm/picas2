@@ -502,12 +502,13 @@ namespace asivamosffie.services
 
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
-                    if(novedadContractualAportante.CofinanciacionAportante != null)
-                        novedadContractualAportante.NombreAportante = getNombreAportante(novedadContractualAportante.CofinanciacionAportante);
+                    CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(novedadContractualAportante.CofinanciacionAportanteId);
+                    if(cofinanciacion != null)
+                        novedadContractualAportante.NombreAportante = getNombreAportante(cofinanciacion);
 
-                    if (novedadContractualAportante.CofinanciacionAportante != null)
+                    if (cofinanciacion != null)
                         novedadContractualAportante.TipoAportante = listDominioTipoAportante
-                                    .Where(r => r.DominioId == novedadContractualAportante.CofinanciacionAportante.TipoAportanteId)
+                                    .Where(r => r.DominioId == cofinanciacion.TipoAportanteId)
                                     ?.FirstOrDefault()
                                     ?.Nombre;
                     foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)

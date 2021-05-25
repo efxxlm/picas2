@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { NovedadContractual, NovedadContractualAportante } from 'src/app/_interfaces/novedadContractual';
@@ -14,8 +15,18 @@ export class VerDetalleTramiteComponent implements OnInit {
   novedad: NovedadContractual;
   tieneAdicion: boolean = false;
   esNoFirma: boolean = false;
+  dataSource = new MatTableDataSource();
+  dataTable: any[] = [];
 
-  detallarSolicitud = []
+  detallarSolicitud = [];
+  displayedColumns: string[] = [
+    'aportante',
+    'valorAportante',
+    'componente',    
+    'fuenteAportante',
+    'uso',    
+    'valorUso'
+  ];
   tipoNovedadNombre: string = '';
 
   constructor(
@@ -44,36 +55,12 @@ export class VerDetalleTramiteComponent implements OnInit {
 
 
           if (this.tieneAdicion === true) {
-            this.novedad.novedadContractualAportante.forEach( na => {
-              na.componenteAportanteNovedad.forEach( ca => {
-                ca.componenteFuenteNovedad.forEach( cf => {
-
-                  cf.componenteUsoNovedad.forEach( cu => {
-
-                    this.detallarSolicitud.push(
-                      { 
-                        aportante: na.nombreAportante,
-                        valorAportante: na.valorAporte,
-                        componente: ca.nombreTipoComponente,
-                        fase: ca.nombrefase,
-                        uso: cu.nombreUso,
-                        valorUso: cu.valorUso 
-                      })
-  
-                  });
-
-                });
-                
-
-              });
-
-            });
+            if(this.novedad.novedadContractualAportante.length>0){
+              this.dataTable = this.novedad.novedadContractualAportante;
+              this.dataSource = new MatTableDataSource ( this.dataTable );
+            }
           }
-
-
         });
-
-      console.log(this.detalleId);
     });
   }
 

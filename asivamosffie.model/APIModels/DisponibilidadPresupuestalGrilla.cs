@@ -23,6 +23,7 @@ namespace asivamosffie.model.APIModels
         public string NumeroDDP { get; set; }
         public NovedadContractual? NovedadContractual { get; set; }
         public int? NovedadContractualId { get; set; }
+        public string NumeroOtroSi { get; set; }
     }
 
     /*autor: jflorez
