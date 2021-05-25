@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IFinalBalanceService
     {
+          Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId);
         TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId(int pContratoId);
         Task<Respuesta> ChangeStatudBalanceFinanciero(BalanceFinanciero pBalanceFinanciero);
         Task<Respuesta> ChangeStatudBalanceFinancieroTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado);

@@ -801,11 +801,12 @@ namespace asivamosffie.services
 
 
         public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
-        { 
+        {
             return new List<dynamic>
             {
-              await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
-            }; 
+              await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync(),
+              await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync() 
+            };
         }
         #endregion
 
