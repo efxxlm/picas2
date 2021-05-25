@@ -228,7 +228,7 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.2*/
         [Route("SetRechazarValidacionDDP")]
         [HttpPost]
-        public async Task<IActionResult> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion)
+        public async Task<IActionResult> SetRechazarValidacionDDP([FromBody] DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, [FromQuery] bool esNovedad)
         {
 
             try
@@ -236,7 +236,7 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
-                Task<Respuesta> result = _budgetAvailabilityService.SetRechazarValidacionDDP(pDisponibilidadPresObservacion,
+                Task<Respuesta> result = _budgetAvailabilityService.SetRechazarValidacionDDP(pDisponibilidadPresObservacion, esNovedad,
                     _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);

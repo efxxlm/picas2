@@ -101,22 +101,19 @@ export class DevolverPorValidacionComponent implements OnInit {
   }
 
   devolverSolicitud() {
-    //console.log(this.observaciones.value);
     let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.solicitudID,Observacion:this.observaciones.value,NovedadContractualRegistroPresupuestalId:null};
+    if(this.esNovedad){
+      DisponibilidadPresupuestalObservacion.NovedadContractualRegistroPresupuestalId = this.novedadId;
+    }
     if(this.tipo==0)
     {
-
-        if(this.esNovedad){
-          DisponibilidadPresupuestalObservacion.NovedadContractualRegistroPresupuestalId = this.novedadId;
-        }
-
        this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion, this.esNovedad, 0).subscribe(listas => {
          this.openDialog('', '<b>La solicitud ha sido devuelta al responsable técnico.</b>');
       });
     }
     else
     {
-      this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+      this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion, this.esNovedad).subscribe(listas => {
       this.openDialog('', '<b>La solicitud ha sido rechazada.</b>');
 
       });

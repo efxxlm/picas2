@@ -1616,21 +1616,43 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: rechaza disponibilidad por validacion pres
         impacto: CU 3.3.2*/
-        public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+        public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-                int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
-                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
-                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                if (esNovedad == true)
+                {
+                    NovedadContractualRegistroPresupuestal novedad = _context.NovedadContractualRegistroPresupuestal.Find(pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId);
+                    if (novedad != null)
+                    {
+                        int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
+                        novedad.FechaModificacion = DateTime.Now;
+                        novedad.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                        novedad.EstadoSolicitudCodigo = estado.ToString();
 
-                pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
-                pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
-                _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                        pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                        pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                        pDisponibilidadPresObservacion.EsNovedad = esNovedad;
+
+                        _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                    }
+                }
+                else
+                {
+
+                    int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
+                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                    DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+
+                    pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                    pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                    _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+
+                }
                 _context.SaveChanges();
                 //envio correo a técnico
                 var usuarioTecnico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario).FirstOrDefault();
