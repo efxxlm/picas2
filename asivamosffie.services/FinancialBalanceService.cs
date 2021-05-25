@@ -550,6 +550,7 @@ namespace asivamosffie.services
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
                 .Include(r => r.Contrato)
                 .FirstOrDefault();
+
             solicitudPago.OrdenGiro = _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
@@ -578,9 +579,7 @@ namespace asivamosffie.services
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
-
             }
-
 
             TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
             {
