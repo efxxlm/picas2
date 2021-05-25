@@ -105,11 +105,12 @@ namespace asivamosffie.services
                 foreach (var property in properties)
                 {
                     var customAtt = (JsonPropertyAttribute)Attribute.GetCustomAttribute(property, typeof(JsonPropertyAttribute));
+                    var typeAttribute = (FieldTypeAttribute)Attribute.GetCustomAttribute(property, typeof(FieldTypeAttribute));
                     if (customAtt != null)
                     {
                         worksheet.Cells[1, index].Value = customAtt.PropertyName;
                        // worksheet.Column(index).CellsUsed().SetDataType(XLDataType.Number);
-                        if (property.PropertyType.Name == "Decimal")
+                        if (property.PropertyType.Name == "Decimal" || typeAttribute?.Name == "Decimal")
                         {
                            // worksheet.Cells[1, index].Style.Numberformat.Format = "0.0%";
                             worksheet.Column(index).Style.Numberformat.Format = "0.00";
@@ -812,7 +813,9 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    List<EntryPerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
+                    // List<EntryPerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
+                    List<OutputPerformanceOrder> list2 = JsonConvert.DeserializeObject<List<OutputPerformanceOrder>>(collection.ArchivoJson);
+
                     filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2, errors);
                 }
             }
@@ -911,7 +914,7 @@ namespace asivamosffie.services
             DateTime firstDayMonth = new DateTime(lastDayMonth.Year, lastDayMonth.Month, 1);
 
             var performancesIncorporated = await _context.RendimientosIncorporados
-                .Where(x => x.FechaRendimientos >= firstDayMonth && x.FechaRendimientos <= lastDayMonth)
+                .Where(x => x.FechaRendimientos <= lastDayMonth)
                 .AsNoTracking().ToListAsync();
 
 
@@ -962,7 +965,7 @@ namespace asivamosffie.services
                 // Rendimientos a incorporar
 
                 accountOrder.PerformancesToAdd = accountOrder.GeneratedPerformances
-                    - (performances.HasValue ? performances.Value : 0)
+                    - (performances.HasValue ? performances.Value : 0) 
                     - accountOrder.FinancialLienProvision
                     - accountOrder.BankCharges
                     - accountOrder.DiscountedCharge
@@ -1583,7 +1586,7 @@ namespace asivamosffie.services
                                             {
                                                 CuentaBancaria  = performance.CuentaBancaria,
                                                 TotalRendimientosGenerados = performance.TotalRendimientosGenerados,
-                                                Incorporados = performance.Incorporados,
+                                                Incorporados = performance.Incorporados + performance.RendimientoIncorporar,
                                                 ProvisionGravamenFinanciero = performance.ProvisionGravamenFinanciero,
                                                 TotalGastosBancarios = performance.TotalGastosBancarios,
                                                 TotalGravamenFinancieroDescontado = performance.TotalGravamenFinancieroDescontado,
@@ -1591,8 +1594,6 @@ namespace asivamosffie.services
                                                 RendimientoIncorporar = performance.RendimientoIncorporar
                                             }).ToList();
 
-
-        
             string directory = CheckFileDownloadDirectory();
             string filePath = WriteCollectionToPath("RendimientosTramitados", directory, rendimientosIncorporados, null);
             ////the path of the file
