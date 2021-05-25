@@ -803,8 +803,7 @@ namespace asivamosffie.services
         {
             return string.Concat("$", String.Format("{0:n0}", pValue));
         }
-
-
+         
         public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
         {
             return new List<dynamic>

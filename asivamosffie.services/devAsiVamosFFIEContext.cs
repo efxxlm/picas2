@@ -298,12 +298,12 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorFacturadoProyecto> VValorFacturadoProyecto { get; set; }
         public virtual DbSet<VValorFacturadoSolicitudPago> VValorFacturadoSolicitudPago { get; set; }
         public virtual DbSet<VValorFacturadoXfasesSolicitudPago> VValorFacturadoXfasesSolicitudPago { get; set; }
+        public virtual DbSet<VValorTrasladoXproyecto> VValorTrasladoXproyecto { get; set; }
         public virtual DbSet<VValorUsoXcontratoAportante> VValorUsoXcontratoAportante { get; set; }
         public virtual DbSet<VValorUsoXcontratoId> VValorUsoXcontratoId { get; set; }
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -8667,6 +8667,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Saldo).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorNetoOdg).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VEjecucionPresupuestalXproyecto>(entity =>
@@ -10196,6 +10200,20 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_ValorFacturadoXFasesSolicitudPago");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+            });
+
+            modelBuilder.Entity<VValorTrasladoXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ValorTrasladoXProyecto");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VValorUsoXcontratoAportante>(entity =>
