@@ -459,21 +459,23 @@ namespace asivamosffie.services
         public async Task<List<Contratacion>> GetListContratacion()
         {
             List<Contratacion> ListContratacion = new List<Contratacion>();
-            try
-            {
-                ListContratacion = await _context.Contratacion
-                    .Where(r => !(bool)r.Eliminado)
-                    .ToListAsync();
 
-                //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
-                //                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Include(r => r.ComiteTecnico)
-                //                    .FirstOrDefault();
+            ListContratacion = await _context.Contratacion
+                .Where(r => !(bool)r.Eliminado)
+                .ToListAsync();
 
-                List<Dominio> ListParametricas =
-                    _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
-                                        || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
+            //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
+            //                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Include(r => r.ComiteTecnico)
+            //                    .FirstOrDefault();
 
-                ListContratacion.ForEach(Contratacion =>
+            List<Dominio> ListParametricas =
+                _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
+                                    || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
+
+            ListContratacion.ForEach(Contratacion =>
+               {
+
+                   try
                    {
                        if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                            Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
@@ -481,14 +483,14 @@ namespace asivamosffie.services
                        if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                            Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
 
-                       //  Contratacion.sesionComiteSolicitud = ListSesionComiteSolicitud.Where(t => t.SolicitudId == Contratacion.ContratacionId).ToList();
-                   });
-                return ListContratacion.OrderByDescending(r => r.ContratacionId).ToList();
-            }
-            catch (Exception ex)
-            {
-                return ListContratacion;
-            }
+                   }
+                   catch (Exception e)
+                   {
+
+                   }
+               });
+            return ListContratacion.OrderByDescending(r => r.ContratacionId).ToList();
+
         }
 
         public async Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio)
