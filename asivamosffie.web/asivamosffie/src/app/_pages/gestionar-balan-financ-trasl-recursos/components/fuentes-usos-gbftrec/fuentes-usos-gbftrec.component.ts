@@ -28,27 +28,29 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   GetTablaUsoFuenteAportanteXContratoId() {
     this.financialBalanceService.GetTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
       this.data = data.usos;
-      this.data.forEach( registro => {
-        const aportantes = []
-        const valorUso = [];
-        const saldoActualUso = [];
-
-        registro.fuentes.forEach( fuente => {
-            aportantes.push( fuente.aportante[ 0 ] )
-            valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
-            saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
-        } )
-
-        const registroObj = {
-            nombreUso: registro.nombreUso,
-            fuentes: registro.fuentes,
-            aportante: aportantes,
-            valorUso,
-            saldoActualUso
-        }
-
-        this.dataTable.push( registroObj );
-      })
+      if (this.data) {
+        this.data.forEach( registro => {
+          const aportantes = []
+          const valorUso = [];
+          const saldoActualUso = [];
+  
+          registro.fuentes.forEach( fuente => {
+              aportantes.push( fuente.aportante[ 0 ] )
+              valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
+              saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
+          } )
+  
+          const registroObj = {
+              nombreUso: registro.nombreUso,
+              fuentes: registro.fuentes,
+              aportante: aportantes,
+              valorUso,
+              saldoActualUso
+          }
+  
+          this.dataTable.push( registroObj );
+        })
+      }
       
       this.loadDataSource();
       
