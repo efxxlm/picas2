@@ -428,6 +428,7 @@ namespace asivamosffie.services
                 }
                 return (VOrdenGiro.Select(v => new
                 {
+                    v.Modalidad,
                     v.FechaPagoFiduciaria,
                     v.NumeroContrato,
                     v.FechaAprobacionFinanciera,
@@ -461,6 +462,7 @@ namespace asivamosffie.services
                 return (VOrdenGiro.Select(v =>
                 new
                 {
+                    v.Modalidad,
                     v.FechaPagoFiduciaria,
                     v.NumeroContrato,
                     v.FechaAprobacionFinanciera,
