@@ -37,14 +37,16 @@ namespace asivamosffie.services
             List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion).Select(r => r.FormaPagoCodigo).ToList();
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
 
-            strCriterios.ForEach(l =>
+
+            foreach (var l in strCriterios)
             {
                 ListDynamics.Add(new
                 {
                     Codigo = l,
                     Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
                 });
-            });
+            }
+
             return ListDynamics;
         }
         //1# Traer criterio de pago por Forma de pago
@@ -1614,7 +1616,7 @@ namespace asivamosffie.services
                                                .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                         && c.ModalidadCodigo == pModalidadContrato
                                                         && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                        && (  c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
+                                                        && (c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada
                                                            || c.EstadoActa.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada)
                                                            )
                                                       .ToListAsync();
@@ -1672,7 +1674,7 @@ namespace asivamosffie.services
                 return null;
             }
         }
-         
+
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;

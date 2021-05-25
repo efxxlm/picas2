@@ -10,11 +10,20 @@
         Cargar nuevo reporte de rendimientos
     </button>
 </div>
+<div class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)" />
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+    </button>
+  </div>
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort matSortActive="fechaCargue"  matSortDirection="desc" class="mat-elevation-z8">
         <ng-container matColumnDef="fechaCargue">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Fecha de cargue </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue | date: 'dd/MM/yyyy hh:mm' }}</b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue }}</b> </td>
         </ng-container>
         <ng-container matColumnDef="totalRegistros">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Número total de registros </th>
@@ -34,7 +43,7 @@
             </th>
             <td mat-cell *matCellDef="let element" align="center"> {{ element.registrosInconsistentes && element.mostrarInconsistencias ? element.registrosInconsistentes : '--' }} </td>
         </ng-container>
-        <ng-container matColumnDef="estadoCargue">
+        <ng-container matColumnDef="cargueValido">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Estado del cargue </th>
             <td mat-cell *matCellDef="let element" align="center">
                 <span class="info-text info-text__table" style="margin-right: 0em;"

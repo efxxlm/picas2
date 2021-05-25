@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        string  EnumeradorTrasladoBalanceFinanciero();
+         
         Task<string> EnumeradorActualizarPoliza();
 
         Task<string> EnumeradorOrigenOrdenGiro();

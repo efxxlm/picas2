@@ -1,0 +1,113 @@
+<section *ngIf="terceroCausacion.length > 0">
+    <form [formGroup]="formTerceroCausacion">
+        <mat-accordion formArrayName="terceroCausacion" *ngFor="let solicitudPagoFase of terceroCausacion.controls; index as i">
+            <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? solicitudPagoFase.get( 'semaforo' ).value : ''">
+                        Tercero de causación - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+        
+                <mat-card class="shipping-card var-main-gris">
+                    <mat-card-content align="left">
+                        <p><b>Número de identificación del contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </p>
+                        <p><b>Nombre de contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </p>
+                        <p><b>Número de factura:</b> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }} </p>
+                    </mat-card-content>
+                </mat-card>
+                <p class="info-sub-title textoGrisVar">
+                    <span>Valor neto de giro: <em> {{ solicitudPagoFase.get( 'valorNetoGiro' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
+                    <span>Nuevo valor registrado: <em> {{ solicitudPagoFase.get( 'nuevoValorRegistrado' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
+                </p>
+    
+                <mat-accordion formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
+                    <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? criterio.get( 'semaforo' ).value : ''">
+                                {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+            
+                            <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
+                                <mat-card-header class="header-card header-card--margin">
+                                    <mat-card-title class="header-card--text">
+                                        {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content style="text-align: left;" [formGroup]="concepto">
+                                    <p><strong>Valor facturado por concepto: </strong> <i> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </i> </p>
+            
+                                    <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
+                                        <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ l + 1 }} </mat-card-title>
+
+                                        <p><b>Tipo de aportante: </b> <i> {{ aportante.get( 'tipoAportante' ).value.nombre }} </i> </p>
+                                        <p><b>Nombre del aportante: </b> <i> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </i> </p>
+                                        <p><b>Fuente de los recursos: </b> <i> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </i> </p>
+                                        <p><b>Valor facturado por el concepto para el aportante: </b> <i> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
+                                        <p><b>Nuevo valor por el concepto para el aportante: </b> <i> {{ aportante.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
+                                    </div>
+            
+                                    <div>
+                                        <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+            
+                                        <div [formGroup]="getConceptos( i, j ).controls[ k ].get( 'descuento' )">
+                                            <p *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> Si </i> </p>
+                                            <p *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === false"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> No </i> </p>
+            
+                                            <div *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true">
+                                                <p><b>¿Cuántos descuentos se aplican sobre el concepto de pago? : </b> <i> {{ getDescuentosFinanciera( i, j, k ).length }} </i> </p>
+            
+                                                <div *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true">
+                                                    <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentosFinanciera( i, j, k ).length > 0">
+                                                        <div *ngFor="let discount of getDescuentosFinanciera( i, j, k ).controls; index as l">
+                                                            <mat-card-title class="header-card--text sub-text">
+                                                                Descuento {{ l + 1 }}
+                                                            </mat-card-title>
+                                                            <div [formGroup]="discount">
+                                                                <p><b>Tipo de descuento: </b> <i> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </i> </p>
+                                                                <div *ngFor="let aportanteDescuento of getAportanteDescuentos( i, j, k, l ).controls; index as m">
+                                                                    <p><b>Nombre del aportante: </b> {{ aportanteDescuento.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                                                    <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportanteDescuento.get( 'fuente' ).value.nombre ) }} </p>
+                                                                    <p><b>Valor del descuento: </b> {{ aportanteDescuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                                    <p><b>Nuevo valor por el concepto para el aportante: </b> {{ aportanteDescuento.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                    </mat-expansion-panel> 
+                </mat-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</section>
+
+<!--
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Costo variable
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <app-form-costo-variable-gbftrec></app-form-costo-variable-gbftrec>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Tipo de pago 3
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+           <app-form-tipo-pago-gbftrec></app-form-tipo-pago-gbftrec>
+        </mat-expansion-panel>
+    </mat-accordion>
+-->

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -142,7 +141,7 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
-        }     
+        }
 
         [HttpDelete]
         [Route("EliminarNovedadContractualAportante")]
@@ -369,7 +368,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetFuentesByAportante")]
-        public async Task<List<FuenteFinanciacion>> GetFuentesByAportante([FromQuery]int pConfinanciacioAportanteId)
+        public async Task<List<FuenteFinanciacion>> GetFuentesByAportante([FromQuery] int pConfinanciacioAportanteId)
         {
             try
             {

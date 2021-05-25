@@ -302,6 +302,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                 obsTramitar: [ obsTramitar !== undefined ? obsTramitar : null ],
                                 solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                                 tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                                valorDescuento: [ descuento.valorDescuento ],
                                 criterio: [ listaCriterios.length > 0 ? listaCriterios : null, Validators.required ],
                                 criterios: this.fb.array( formArrayCriterios.length > 0 ? formArrayCriterios : [] )
                             }
@@ -315,6 +316,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                 obsTramitar: [ null ],
                                 solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                                 tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                                valorDescuento: [ descuento.valorDescuento ],
                                 criterio: [ null, Validators.required ],
                                 criterios: this.fb.array( [] )
                             }
@@ -332,6 +334,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             obsTramitar: [ null ],
                             solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                             tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                            valorDescuento: [ descuento.valorDescuento ],
                             criterio: [ null, Validators.required ],
                             criterios: this.fb.array( [] )
                         }
@@ -350,6 +353,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         obsTramitar: [ null ],
                         solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
                         tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                        valorDescuento: [ descuento.valorDescuento ],
                         criterio: [ null, Validators.required ],
                         criterios: this.fb.array( [] )
                     }
@@ -393,26 +397,30 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     }
 
     checkTotalDiscountValues( index: number, jIndex: number, kIndex: number, lIndex: number ) {
-        const solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFacturaDescuento.find( solicitudPagoFaseFacturaDescuento => solicitudPagoFaseFacturaDescuento.solicitudPagoFaseFacturaDescuentoId === this.descuentos.controls[ index ].get( 'solicitudPagoFaseFacturaDescuentoId' ).value )
+        // const solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFacturaDescuento.find( solicitudPagoFaseFacturaDescuento => solicitudPagoFaseFacturaDescuento.solicitudPagoFaseFacturaDescuentoId === this.descuentos.controls[ index ].get( 'solicitudPagoFaseFacturaDescuentoId' ).value )
 
-        if ( solicitudPagoFaseFacturaDescuento !== undefined ) {
-            let totalDescuentoCriterio = 0;
+        let totalDescuentoCriterio = 0;
             
-            this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
-                this.getConceptos( index, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
-                    this.getAportantes( index, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
-                        if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
-                            totalDescuentoCriterio += aportanteControl.get( 'valorDescuento' ).value
-                        }
-                    } )
+        this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
+            this.getConceptos( index, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                this.getAportantes( index, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
+                    if ( aportanteControl.get( 'valorDescuento' ).value !== null ) {
+                        totalDescuentoCriterio += aportanteControl.get( 'valorDescuento' ).value
+                    }
                 } )
             } )
+        } )
 
+        if ( totalDescuentoCriterio > this.descuentos.controls[ index ].get( 'valorDescuento' ).value ) {
+            this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+            this.openDialog( '', `<b>El valor total de los descuentos no puede ser mayor al valor del descuento de la dirección tecnica <br> ${ this.getTipoDescuento( this.descuentos.controls[ index ].get( 'tipoDescuentoCodigo' ).value ) }.</b>` )
+        }
+
+        /*if ( solicitudPagoFaseFacturaDescuento !== undefined ) {
             if ( totalDescuentoCriterio > solicitudPagoFaseFacturaDescuento.valorDescuento ) {
-                this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
                 this.openDialog( '', '<b>El valor total de los descuentos no puede ser mayor al valor del descuento.</b>' )
             }
-        }
+        }*/
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {
@@ -721,7 +729,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                     this.getConceptos( indexDescuento, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
     
                         this.getAportantes( indexDescuento, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
-    
+                            let fuenteFinanciacionId = 0;
+                            
+                            if ( aportanteControl.get( 'fuenteDeRecursos' ).value !== null && aportanteControl.get( 'fuenteRecursos' ).value !== null ) {
+                                const fuenteDeRecursos = aportanteControl.get( 'fuenteDeRecursos' ).value
+                                const fuente = fuenteDeRecursos.find( fuente => fuente.codigo === aportanteControl.get( 'fuenteRecursos' ).value )
+
+                                if ( fuente !== undefined ) {
+                                    fuenteFinanciacionId = fuente.fuenteFinanciacionId
+                                }
+                            }
+
                             ordenGiroDetalleDescuento.ordenGiroDetalleDescuentoTecnicaAportante.push(
                                 {
                                     ordenGiroDetalleDescuentoTecnicaAportanteId: aportanteControl.get( 'ordenGiroDetalleDescuentoTecnicaAportanteId' ).value,
@@ -730,7 +748,8 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     aportanteId: aportanteControl.get( 'nombreAportante' ).value !== null ? aportanteControl.get( 'nombreAportante' ).value.cofinanciacionAportanteId : null,
                                     valorDescuento: aportanteControl.get( 'valorDescuento' ).value,
                                     conceptoPagoCodigo: conceptoControl.get( 'conceptoCodigo' ).value,
-                                    fuenteRecursosCodigo: aportanteControl.get( 'fuenteRecursos' ).value
+                                    fuenteRecursosCodigo: aportanteControl.get( 'fuenteRecursos' ).value,
+                                    fuenteFinanciacionId: fuenteFinanciacionId
                                 }
                             )
     

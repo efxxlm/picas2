@@ -54,7 +54,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
           dataTable.push( solicitud );
         };
 
-        if (solicitud.tipoSolicitud === 'Novedad Contractual' && solicitud.estadoCodigo === '12'){
+        if (solicitud.tipoSolicitud === 'Novedad Contractual' && (solicitud.estadoCodigo === '12' || solicitud.estadoCodigo === '19')){
           this.enviarFiduciaria = '24';
           solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
 

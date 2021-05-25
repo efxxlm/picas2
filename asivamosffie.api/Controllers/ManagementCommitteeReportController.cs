@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using DinkToPdf;
@@ -12,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -29,10 +28,10 @@ namespace asivamosffie.api.Controllers
         {
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
-            _converter = converter; 
+            _converter = converter;
         }
 
- 
+
         [Route("EnviarActaAprobada")]
         [HttpGet]
         public async Task<bool> EnviarActaAprobada(int pComiteTecnicoId)
@@ -44,17 +43,17 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetListCompromisoSeguimiento")]
         [HttpGet]
-        public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId , int pTipoCompromiso)
+        public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId, int pTipoCompromiso)
         {
-            return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId, pTipoCompromiso); 
+            return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId, pTipoCompromiso);
         }
-         
+
         [Route("GetListCompromisos")]
         [HttpGet]
         public async Task<List<dynamic>> GetListCompromisos()
         {
             return await _managementCommitteeReportService.GetListCompromisos(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
-        } 
+        }
 
         [Route("GetManagementCommitteeReport")]
         [HttpGet]
@@ -155,7 +154,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [Route("CreateOrEditCommentReport")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditCommentReport([FromBody] SesionComentario SesionComentario)
@@ -200,7 +199,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         //Descargar acta
         [HttpGet]
         [Route("StartDownloadPDF")]

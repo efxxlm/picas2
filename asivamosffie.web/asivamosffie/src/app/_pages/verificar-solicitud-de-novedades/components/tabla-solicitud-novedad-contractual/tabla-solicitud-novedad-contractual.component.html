@@ -34,8 +34,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la novedad</th>
       <td mat-cell *matCellDef="let element">
         <span *ngIf="element.estadoCodigo === '9'">Con novedad rechazada por apoyo</span>
-        <span *ngIf="element.estadoCodigo === '10' ">{{element.estadoDescripcion}}</span>
-        <span *ngIf="element.estadoCodigo !== '9' && element.estadoCodigo !== '10' ">{{element.estadoCodigoNombre}}</span>
+        <span *ngIf="element.estadoCodigo === '10' || element.estadoCodigo === '2' || element.estadoCodigo === '5' ">{{element.estadoDescripcion}}</span>
+        <span *ngIf="element.estadoCodigo !== '9' && element.estadoCodigo !== '10' && element.estadoCodigo !== '2' && element.estadoCodigo !== '5' ">{{element.estadoCodigoNombre}}</span>
       </td>
     </ng-container>
 

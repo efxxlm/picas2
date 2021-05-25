@@ -214,9 +214,13 @@ export class TerceroCausacionGogComponent implements OnInit {
                                             if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
                                                 for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
                                                     const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
-                                                    let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-                                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
-                                                    
+                                                    let listaFuenteRecursos: any[];
+                                                    let fuente: any;
+                                                    if ( nombreAportante !== undefined ) {
+                                                        listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                        fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
+                                                    }
+
                                                     listaAportanteDescuentos.push(
                                                         this.fb.group(
                                                             {
@@ -624,6 +628,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 return
             }
 
+
             let ordenGiroDetalleDescuentoTecnica = [];
             const ordenGiroDetalleDescuentoTecnicaAportante = [];
             let totalDescuentoAportante = 0;
@@ -663,7 +668,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
     // Check valor del descuento de los conceptos
-    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number ) {
+    validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
         let totalAportantePorConcepto = 0;
 
         if ( value !== null ) {
@@ -678,7 +683,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
 
         if ( value > totalAportantePorConcepto ) {
-            this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+            this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
         }
     }
@@ -1077,6 +1082,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
+            valorNetoGiro: this.valorNetoGiro,
             ordenGiroDetalle: [
                 {
                     ordenGiroId: this.ordenGiroId,

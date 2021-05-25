@@ -20,7 +20,7 @@ export interface Contrato {
   estado: string;
   esNovedad: boolean;
   novedadId: number;
-
+  numeroOtroSi: string;
 }
 
 @Component({
@@ -29,7 +29,7 @@ export interface Contrato {
   styleUrls: ['./tabla-registro-presupuestal.component.scss']
 })
 export class TablaRegistroPresupuestalComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estado', 'id'];
+  displayedColumns: string[] = [ 'fechaFirma', 'numeroContrato','numeroOtroSi', 'tipoSolicitud', 'estado', 'id'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -44,7 +44,6 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
     this.disponibilidadServices.GetListGenerarRegistroPresupuestal().subscribe(listas => {
       
       listas.disponibilidadPresupuestal.forEach(element => {
-        console.log(element);
         elementos.push({
           id:element.disponibilidadPresupuestalId,
           estado:element.estado,
@@ -52,7 +51,8 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
           numeroContrato:element.numeroContrato,
           tipoSolicitud:element.tipoSolicitudEspecial, 
           esNovedad: element.esNovedad,
-          novedadId: element.novedadContractualRegistroPresupuestalId});
+          novedadId: element.novedadContractualRegistroPresupuestalId,
+          numeroOtroSi: element.numeroOtroSi != null ? element.numeroOtroSi : "" });
       });
       this.dataSource = new MatTableDataSource(elementos);
       this.dataSource.sort = this.sort;

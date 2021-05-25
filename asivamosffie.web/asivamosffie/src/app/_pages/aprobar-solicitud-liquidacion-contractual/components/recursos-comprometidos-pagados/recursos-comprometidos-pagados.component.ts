@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-recursos-comprometidos-pagados',
@@ -6,23 +8,46 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./recursos-comprometidos-pagados.component.scss']
 })
 export class RecursosComprometidosPagadosComponent implements OnInit {
+  
+  proyectoId: number;
+  contratoObra: any;
+  contratoInterventoria: any;
+  data : any;
 
-  listaValorTotalOrdenesGiro = [
-    {
-      id: '1',
-      numeroOrdenGiro: 'ODG_Obra_001',
-      contratista: 'Construir futuro',
-      facturado: '$67.000.000',
-      adn: '$500.000',
-      reteGarantia: '$3.500.000',
-      otrosDescuentos: '$1.110.000',
-      pagarAntesImpuestos: '$61.000.000',
-    }
-  ]
-
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    private financialBalanceService: FinancialBalanceService,
+    private route: ActivatedRoute,
+  ) { 
+    this.route.params.subscribe((params: Params) => {
+      this.proyectoId = params.proyectoId;
+    });
   }
 
+  ngOnInit(): void {
+    this.getContratoByProyectoId();
+    this.getBalanceByProyectoId(this.proyectoId);
+  }
+  
+
+  getContratoByProyectoId() {
+    this.financialBalanceService.getContratoByProyectoId(this.proyectoId).subscribe(data => {
+      data.forEach(element => {
+        if(element.tipoSolicitudCodigo === '1'){
+          this.contratoObra = element.contrato;
+        }
+        if(element.tipoSolicitudCodigo === '2'){
+          this.contratoInterventoria = element.contrato;
+        }
+      });  
+    });
+  }
+
+  getBalanceByProyectoId(proyectoId: number) {
+    this.financialBalanceService.getDataByProyectoId(proyectoId)
+    .subscribe( getDataByProyectoId => {
+        if( getDataByProyectoId.length > 0 ){
+            this.data = getDataByProyectoId[0];
+        }
+    });
+  }
 }

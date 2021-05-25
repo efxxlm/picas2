@@ -31,5 +31,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool EsNovedad { get; set; }
+
+        [NotMapped]
+        public string NumeroOtroSi { get; set; }
     }
 }

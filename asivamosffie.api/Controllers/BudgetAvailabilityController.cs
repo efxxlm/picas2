@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -30,7 +26,7 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-         
+
         [Route("GetDisponibilidadPresupuestalByID")]
         [HttpGet]
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int DisponibilidadPresupuestalId)
@@ -389,7 +385,6 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDRP(int id, bool esNovedad, int RegistroPresupuestalId)
         {
-
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
@@ -412,14 +407,13 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                //return File(respuesta, "application/octet-stream");
                 return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
-        } 
+        }
 
     }
 }

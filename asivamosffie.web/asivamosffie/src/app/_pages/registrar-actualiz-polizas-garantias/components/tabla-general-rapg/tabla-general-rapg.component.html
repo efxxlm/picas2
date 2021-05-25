@@ -1,78 +1,103 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)" />
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+  </button>
+</div>
 <div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="fechaActualizacion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de actualización </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaExpedicionActualizacionPoliza }}</b> </td>
-        </ng-container>
-        <ng-container matColumnDef="numContrato">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de contrato </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
-        </ng-container>
-        <ng-container matColumnDef="contratista">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Contratista </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ firstLetterUpperCase( element.nombreContratista ) }} </td>
-        </ng-container>
-        <ng-container matColumnDef="numeroPoliza">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de póliza </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroPoliza }} </td>
-        </ng-container>
-        <ng-container matColumnDef="numeroActualizacion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actualización </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActualizacion }} </td>
-        </ng-container>
-        <ng-container matColumnDef="estadoActualizacionPoliza">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actualización de póliza </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ getEstadoRegistro( element.estadoActualizacion ) }} </td>
-        </ng-container>
-        <ng-container matColumnDef="estadoRegistro">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element" align="center"> 
-                <span   class="info-text info-text__table"
-                        [ngClass]="{'sin-diligenciar' : element.registroCompleto === false, 'completo' : element.registroCompleto === true}"
-                        style="margin-right: 0em;">
-                </span>
-                <br>
-                {{ element.registroCompleto?"Completo":"Incompleto" }}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="gestion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element" align="center">
-                <button mat-raised-button
-                        color="accent"
-                        class="btn-table"
-                        [routerLink]="[ 'verDetalleEditarPoliza', element.contratoPolizaId ]"
-                        *ngIf="estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion">
-                        Ver detalle/Editar
-                </button>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="fechaExpedicionActualizacionPoliza">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de actualización</th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <b>{{ element.fechaExpedicionActualizacionPoliza }}</b>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número de contrato</th>
+      <td mat-cell *matCellDef="let element" align="center">{{ element.numeroContrato }}</td>
+    </ng-container>
+    <ng-container matColumnDef="nombreContratista">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contratista</th>
+      <td mat-cell *matCellDef="let element" align="center">{{ firstLetterUpperCase(element.nombreContratista) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numeroPoliza">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número de póliza</th>
+      <td mat-cell *matCellDef="let element" align="center">{{ element.numeroPoliza }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numeroActualizacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número de actualización</th>
+      <td mat-cell *matCellDef="let element" align="center">{{ element.numeroActualizacion }}</td>
+    </ng-container>
+    <ng-container matColumnDef="estadoActualizacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la actualización de póliza</th>
+      <td mat-cell *matCellDef="let element" align="center">{{ getEstadoRegistro(element.estadoActualizacion) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="registroCompleto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado del registro</th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <span
+          class="info-text info-text__table"
+          [ngClass]="{
+            'sin-diligenciar': element.registroCompleto === false,
+            completo: element.registroCompleto === true
+          }"
+          style="margin-right: 0em"
+        >
+        </span>
+        <br />
+        {{ element.registroCompleto ? 'Completo' : 'Incompleto' }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="gestion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['verDetalleEditarPoliza', element.contratoPolizaId]"
+          *ngIf="estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion"
+        >
+          Ver detalle/Editar
+        </button>
 
-                <!--
-                <button mat-raised-button
-                        color="accent"
-                        class="btn-table">
-                        Eliminar
-                </button>
-                -->
+        <!--
+            <button mat-raised-button
+                    color="accent"
+                    class="btn-table">
+                    Eliminar
+            </button>
+            -->
 
-                <button mat-raised-button
-                        color="accent"
-                        class="btn-table"
-                        *ngIf="estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion && element.registroCompleto === true"
-                        (click)="aprobarActualizacion( element.contratoPolizaActualizacionId )">
-                        Aprobar actualización
-                </button>
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          *ngIf="
+            estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion &&
+            element.registroCompleto === true
+          "
+          (click)="aprobarActualizacion(element.contratoPolizaActualizacionId)"
+        >
+          Aprobar actualización
+        </button>
 
-                <button mat-raised-button
-                        color="accent"
-                        class="btn-table"
-                        *ngIf="estadosActualizacionPoliza.conAprobacionActualizacionPoliza === element.estadoActualizacion"
-                        [routerLink]="[ 'verDetallePoliza', element.contratoPolizaId ]">
-                        Ver detalle
-                </button>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          *ngIf="estadosActualizacionPoliza.conAprobacionActualizacionPoliza === element.estadoActualizacion"
+          [routerLink]="['verDetallePoliza', element.contratoPolizaId]"
+        >
+          Ver detalle
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

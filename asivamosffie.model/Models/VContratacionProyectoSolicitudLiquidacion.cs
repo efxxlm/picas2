@@ -27,9 +27,10 @@ namespace asivamosffie.model.Models
         public string LlaveMen { get; set; }
         public int? ContratoId { get; set; }
         public int? ContratoPolizaId { get; set; }
-        public int ContratoPolizaActualizacionId { get; set; }
-        public DateTime FechaBalance { get; set; }
+        public int? ContratoPolizaActualizacionId { get; set; }
+        public DateTime? FechaBalance { get; set; }
         public string EstadoBalanceCodigo { get; set; }
         public DateTime? FechaInformeFinal { get; set; }
+        public int BalanceFinancieroId { get; set; }
     }
 }

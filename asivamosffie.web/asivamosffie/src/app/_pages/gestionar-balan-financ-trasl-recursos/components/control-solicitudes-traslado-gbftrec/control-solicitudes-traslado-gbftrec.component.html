@@ -1,5 +1,5 @@
 <form [formGroup]="addressForm">
-    <mat-card class="shipping-card">
+    <mat-card class="shipping-card" *ngIf="esRegistroNuevo === true && esVerDetalle === false">
         <mat-card-content align="left">
             <div class="row" style="height: 45px;">
                 <div class="col-md-6">
@@ -9,13 +9,22 @@
                                 Tipo de solicitud
                             </label>
                         </div>
-                        <div class="col d-flex">
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="tipoSolicitud" required>
+                                    <mat-option *ngFor="let solicitud of listaTipoSolicitudContrato" [value]="solicitud.codigo">
+                                        {{ solicitud.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!--
                             <mat-form-field class="full-width">
                                 <input matInput #nombre2 type="text" maxlength="100" formControlName="tipoSolicitud" required>
                             </mat-form-field>
                             <button mat-button color="primary" class="busqueda--img" (click)="getParamsSearch()">
                                 <img src="assets/img/icon/lupa.svg" alt="Buscar">
                             </button>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -42,5 +51,9 @@
         </mat-card-content>
     </mat-card>
 
-    <app-form-orden-giro [listaBusqueda]="dataTable" *ngIf="dataTable.length > 0"></app-form-orden-giro>
+    <app-form-orden-giro    [listaBusqueda]="dataTable"
+                            [esVerDetalle]="esVerDetalle"
+                            [esRegistroNuevo]="esRegistroNuevo"
+                            *ngIf="dataTable.length > 0">
+    </app-form-orden-giro>
 </form>

@@ -1,3 +1,13 @@
+import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
+import { FormTerceroCausacionComponent } from './components/form-tercero-causacion/form-tercero-causacion.component';
+import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
+import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
+import { DatosSolicitudGbftrecComponent } from './components/datos-solicitud-gbftrec/datos-solicitud-gbftrec.component';
+import { DatosDdpDrpGbftrecComponent } from './components/datos-ddp-drp-gbftrec/datos-ddp-drp-gbftrec.component';
+import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro-seleccionada/form-orden-giro-seleccionada.component';
+import { FormOrdenGiroComponent } from './components/form-orden-giro/form-orden-giro.component';
+import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -27,9 +37,28 @@ import { TablaInformeFinalComponent } from './components/tabla-informe-final/tab
 import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
 import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
 import { FormObservacionInformeFinalComponent } from './components/form-observacion-informe-final/form-observacion-informe-final.component';
+import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
+import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
+import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
+import { TablaDatosSolicitudComponent } from './components/tabla-datos-solicitud/tabla-datos-solicitud.component';
+import { TablaDatosDdpGogComponent } from './components/tabla-datos-ddp-gog/tabla-datos-ddp-gog.component';
+import { TablaDatosDdpComponent } from './components/tabla-datos-ddp/tabla-datos-ddp.component';
+import { FormTerceroGiroGogComponent } from './components/form-tercero-giro-gog/form-tercero-giro-gog.component';
+import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
+import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 
 @NgModule({
   declarations: [
+    RegistrarTrasladoGbftrecComponent,
+    ControlSolicitudesTrasladoGbftrecComponent,
+    FormOrdenGiroComponent,
+    DatosDdpDrpGbftrecComponent,
+    DatosSolicitudGbftrecComponent,
+    TablaInfofrecursosGbftrecComponent,
+    TablaPorcParticipacionGbftrecComponent,
+    FormTerceroCausacionComponent,
+    FormDescuentosDireccionTecnicaComponent,
+    FormOrdenGiroSeleccionadaComponent,
     HomeComponent,
     ExpansionPanelComponent,
     TablaLiquidacionContratoObraComponent,
@@ -51,6 +80,15 @@ import { FormObservacionInformeFinalComponent } from './components/form-observac
     ValidarInformeFinalComponent,
     TablaInformeAnexosComponent,
     FormObservacionInformeFinalComponent,
+    VerEjecucionFinancieraComponent,
+    VerTrasladosRecursosComponent,
+    DetalleTrasladosComponent,
+    TablaDatosSolicitudComponent,
+    TablaDatosDdpGogComponent,
+    TablaDatosDdpComponent,
+    FormTerceroGiroGogComponent,
+    TablaPorcntjParticGogComponent,
+    TablaInfoFuenterecGogComponent,
   ],
   imports: [
     CommonModule,

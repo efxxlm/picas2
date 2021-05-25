@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -27,14 +25,14 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpPost]
-        [Route("CreateOrEditDemandadoConvocado")]        
+        [Route("CreateOrEditDemandadoConvocado")]
         public async Task<IActionResult> CreateOrEditDemandadoConvocado([FromBody] DemandadoConvocado demandadoConvocado)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                if (demandadoConvocado.DemandadoConvocadoId  == 0)
+                if (demandadoConvocado.DemandadoConvocadoId == 0)
                     demandadoConvocado.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     demandadoConvocado.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
@@ -62,7 +60,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-        
+
 
         [HttpGet]
         [Route("GetPlantillaDefensaJudicial")]
@@ -72,7 +70,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetVistaDatosBasicosProceso")]        
+        [Route("GetVistaDatosBasicosProceso")]
         public async Task<ActionResult<DefensaJudicial>> GetVistaDatosBasicosProceso(int pDefensaJudicialId)
         {
             try
@@ -110,12 +108,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetNombreContratistaByContratoId")]
         [HttpGet]
-        
+
         public async Task<string> GetNombreContratistaByContratoId(int pContratoId)
         {
             var respuesta = await _judicialDefense.GetNombreContratistaByContratoId(pContratoId);
             return respuesta;
-        }        
+        }
 
         [HttpPost]
         [Route("CreateOrEditFichaEstudio")]
@@ -139,7 +137,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-                
+
         /*jflorez deprecated, no entendi su funcionalidad*/
         [HttpGet]
         [Route("GetListProyects")]
@@ -157,7 +155,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPut]
         [Route("CambiarEstadoDefensaJudicial")]
-        
+
         public async Task<IActionResult> CambiarEstadoDefensaJudicial([FromQuery] int pDefensaJudicialId, string pCodigoEstado)
         {
             Respuesta respuesta = new Respuesta();
@@ -237,7 +235,7 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        
+
         [Route("EnviarAComite")]
         [HttpPost]
         public async Task<IActionResult> EnviarAComite(int pDefensaJudicialId)

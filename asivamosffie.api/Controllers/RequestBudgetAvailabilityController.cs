@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -27,14 +25,14 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
 
         }
- 
+
         [Route("GetDetailAvailabilityBudgetProyectNew")]
         [HttpGet]
-        public async Task<dynamic> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad , int RegistroNovedadId)
+        public async Task<dynamic> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
-            return await _managementCommitteeReportService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad , RegistroNovedadId);
+            return await _managementCommitteeReportService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
         }
-         
+
         [Route("GetListAportanteByTipoAportanteByProyectoId")]
         public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId([FromQuery] int pProyectoId, int pTipoAportanteId)
         {
@@ -46,7 +44,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
         }
-         
+
         [Route("GetContratoByNumeroContrato")]
         public async Task<Contrato> GetContratoByNumeroContrato([FromQuery] string pNumero)
         {
@@ -372,14 +370,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("GetContratos")]
         public async Task<dynamic> GetContratos()
         {
             return await _managementCommitteeReportService.GetContratos();
         }
 
-        
+
         [Route("getNovedadContractualByContratacionId")]
         public async Task<dynamic> getNovedadContractualByContratacionId(int contratacionId)
         {

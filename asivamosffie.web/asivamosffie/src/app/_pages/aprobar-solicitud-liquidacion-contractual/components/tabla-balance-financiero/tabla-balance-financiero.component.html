@@ -15,7 +15,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Llave MEN
       </th>
-      <td mat-cell *matCellDef="let element">{{ element.llaveMEN }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.llaveMen }}</td>
     </ng-container>
 
     <!-- tipoIntervencion Column -->
@@ -65,7 +65,7 @@
     </ng-container>
 
     <!-- id Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="contratacionProyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Gestión
       </th>
@@ -75,7 +75,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['aprobarBalance']"
+          [routerLink]="['aprobarBalance',element.proyectoId]"
         >
         Aprobar
         </a> 
@@ -84,7 +84,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['verDetalleEditarBalance']"
+          [routerLink]="['verDetalleEditarBalance',element.proyectoId]"
         >
           Ver detalle/Editar
         </a>
@@ -93,7 +93,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['verDetalleBalance']"
+          [routerLink]="['verDetalleBalance',element.proyectoId]"
         >
          Ver detalle
         </a>

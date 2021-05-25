@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ProcesosContractualesService } from 'src/app/core/_services/procesosContractuales/procesos-contractuales.service';
+import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 
@@ -20,6 +21,8 @@ export class FormModificacionContractualComponent implements OnInit {
   modalidadContratoArray: Dominio[] = [];
   modalidadContrato : string;
   esVerDetalle: boolean;
+  tipoNovedad = TipoNovedadCodigo;
+  adicionBoolean : boolean = false;
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -70,6 +73,8 @@ export class FormModificacionContractualComponent implements OnInit {
             }else{
               this.tipoModificacion = this.tipoModificacion + "," + element.nombreTipoNovedad;
             }
+            if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
+              this.adicionBoolean = true;
         });
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {

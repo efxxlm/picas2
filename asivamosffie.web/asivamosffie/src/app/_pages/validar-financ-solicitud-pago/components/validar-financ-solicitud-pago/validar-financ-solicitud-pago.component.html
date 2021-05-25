@@ -16,9 +16,18 @@
         u Otros costos/servicios, que le han sido asignadas a usted, que han sido verificados financieramente y que son ejecutados en el marco de la
         gestión del FFIE.
     </div>
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)" />
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+        </button>
+    </div>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="fechaSolicitud">
+            <ng-container matColumnDef="fechaCreacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de verificación financiera </th>
                 <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCreacion }}</b> </td>
             </ng-container>
@@ -26,7 +35,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroSolicitud }} </td>
             </ng-container>
-            <ng-container matColumnDef="modalidadContrato">
+            <ng-container matColumnDef="modalidadNombre">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Modalidad del contrato </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.modalidadNombre }} </td>
             </ng-container>
@@ -34,11 +43,11 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
             </ng-container>
-            <ng-container matColumnDef="estadoValidacion">
+            <ng-container matColumnDef="estadoCodigo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera ? element.estadoNombre2 : element.estadoNombre }} </td>
             </ng-container>
-            <ng-container matColumnDef="estadoRegistro">
+            <ng-container matColumnDef="registroCompletoValidacionFinanciera">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <span class="info-text info-text__table"

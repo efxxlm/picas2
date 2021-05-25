@@ -1,3 +1,4 @@
+import { Respuesta } from './../common/common.service';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -19,8 +20,20 @@ export class FinancialBalanceService {
       return this.http.get<any[]>( `${ this.apiUrl }/GetContratoByProyectoId?pProyectoId=${ pProyectoId }` );
     }
 
+    getOrdenGiroBy( pTipoSolicitudCodigo: string, pNumeroOrdenGiro: string, pLLaveMen: string ) {
+      return this.http.get<any[]>( `${ this.apiUrl }/GetOrdenGiroBy?pTipoSolicitudCodigo=${ pTipoSolicitudCodigo }&pNumeroOrdenGiro=${ pNumeroOrdenGiro }&pLLaveMen=${ pLLaveMen }` );
+    }
+
+    getOrdenGiroByNumeroOrdenGiro( pNumeroOrdenGiro: string, pLLaveMen: string ) {
+      return this.http.get<any[]>( `${ this.apiUrl }/getOrdenGiroByNumeroOrdenGiro?pNumeroOrdenGiro=${ pNumeroOrdenGiro }&pLLaveMen=${ pLLaveMen }` );
+    }
+
+    validateCompleteBalanceFinanciero( pBalanceFinancieroTrasladoId: number, pEstaCompleto: string ) {
+      return this.http.post<Respuesta>(`${ this.apiUrl }/ValidateCompleteBalanceFinanciero?pBalanceFinancieroTrasladoId=${ pBalanceFinancieroTrasladoId }&pEstaCompleto=${ pEstaCompleto }`, '' );
+    }
+
     createEditBalanceFinanciero( pBalanceFinanciero: any ){
-      return this.http.post(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
+      return this.http.post<Respuesta>(`${ this.apiUrl }/CreateEditBalanceFinanciero`, pBalanceFinanciero );
     }
  
     getBalanceFinanciero( pProyectoId: number) {
@@ -30,8 +43,17 @@ export class FinancialBalanceService {
     approveBalance(pProyectoId: number){
       return this.http.post(`${ this.apiUrl }/ApproveBalance?pProyectoId=${ pProyectoId }`,null);
     }
-    
+
     getDataByProyectoId( pProyectoId: number) {
       return this.http.get<any[]>( `${ this.apiUrl }/GetDataByProyectoId?pProyectoId=${ pProyectoId }` );
     }
+
+    changeStatudBalanceFinancieroTraslado( pBalanceFinancieroTraslado: any ) {
+        return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinancieroTraslado`, pBalanceFinancieroTraslado );
+    }
+
+    changeStatudBalanceFinanciero( pBalanceFinanciero: any ) {
+        return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinanciero`, pBalanceFinanciero );
+    }
+
 }

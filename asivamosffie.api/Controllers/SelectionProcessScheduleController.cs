@@ -33,9 +33,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 return await _selectionProcessScheduleService.GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(pProcesoSeleccionId);
-             }
+            }
             catch (Exception ex)
-            { 
+            {
                 throw ex;
             }
         }
@@ -73,7 +73,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta _response = new Respuesta();
             try
-            {                
+            {
                 string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
                 procesoSeleccionCronograma.UsuarioCreacion = usermodified;
                 _response = await _selectionProcessScheduleService.Insert(procesoSeleccionCronograma);
@@ -122,7 +122,7 @@ namespace asivamosffie.api.Controllers
             {
                 _reponse.Data = ex.ToString();
                 return Ok(_reponse);
-            }   
+            }
         }
 
         /*autor: jflorez
@@ -153,8 +153,8 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                procesoSeleccionCronograma.UsuarioCreacion  = HttpContext.User.FindFirst("User").Value.ToUpper();
-                
+                procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+
                 _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma,
                      _settings.Value.DominioFront,
                     _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
@@ -16,14 +16,18 @@ export class AprobarBalanceComponent implements OnInit {
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
   esRegistroNuevo: boolean;
   esVerDetalle: boolean;
+  proyectoId: number;
+  data : any;
 
   constructor(
     private routes: Router,
     private route: ActivatedRoute,
-    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+    private financialBalanceService: FinancialBalanceService
+
   ) {
     this.route.params.subscribe((params: Params) => {
       this.contratacionProyectoId = params.id;
+      this.proyectoId = params.proyectoId;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'aprobarBalance' ) {
@@ -44,6 +48,7 @@ export class AprobarBalanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getBalanceByProyectoId(this.proyectoId);
   }  
 
   redirectToParent(): void{
@@ -52,6 +57,19 @@ export class AprobarBalanceComponent implements OnInit {
         this.routes.navigate(['/aprobarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
         return;
       }
+    });
+  }
+
+  getBalanceByProyectoId(proyectoId: number) {
+    this.financialBalanceService.getDataByProyectoId(proyectoId)
+    .subscribe( getDataByProyectoId => {
+        if( getDataByProyectoId.length > 0 ){
+            this.data = getDataByProyectoId[0];
+            if(this.data != null){
+              if(this.data.balanceFinanciero.length > 0)
+                this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
+            }
+        }
     });
   }
 

@@ -1,0 +1,7 @@
+<form [formGroup]="addressForm">
+    <app-form-orden-giro    [listaBusqueda]="dataTable"
+                            [esVerDetalle]="esVerDetalle"
+                            [esRegistroNuevo]="esRegistroNuevo"
+                            *ngIf="dataTable.length > 0">
+    </app-form-orden-giro>
+</form>

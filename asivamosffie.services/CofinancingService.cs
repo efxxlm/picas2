@@ -430,6 +430,10 @@ namespace asivamosffie.services
                 foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
                 {
                     var nombre = "";
+
+                    int fuentesNum = _context.FuenteFinanciacion.Where(x => x.AportanteId == cofinanciacionAportante.CofinanciacionAportanteId &&
+                                                                               x.Eliminado != true).Count();
+
                     if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                     {
                         nombre = ConstanStringTipoAportante.Ffie;
@@ -469,7 +473,8 @@ namespace asivamosffie.services
                         FechaCreacion = cofinanciacionAportante.FechaCreacion,
                         MunicipioId = cofinanciacionAportante.MunicipioId,
                         DepartamentoId = cofinanciacionAportante.DepartamentoId,
-                        RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto
+                        RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto,
+                        TieneFuentes = fuentesNum > 0 ? true : false
                     };
                     ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
                 }

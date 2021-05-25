@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using asivamosffie.services.Interfaces;
-using asivamosffie.model.Models;
 using Microsoft.Extensions.Options;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -19,7 +16,7 @@ namespace asivamosffie.api.Controllers
     [Authorize]
     public class DailyFollowUpController : ControllerBase
     {
-        public readonly IDailyFollowUpService  _dailyFollowUp;
+        public readonly IDailyFollowUpService _dailyFollowUp;
         private readonly IOptions<AppSettings> _settings;
 
         public DailyFollowUpController(IDailyFollowUpService pDailyFollowUpService, IOptions<AppSettings> settings)
@@ -60,7 +57,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pSeguimientoDiario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.CreateEditDailyFollowUp( pSeguimientoDiario );
+                respuesta = await _dailyFollowUp.CreateEditDailyFollowUp(pSeguimientoDiario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -78,7 +75,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.DeleteDailyFollowUp( pId, usuario );
+                respuesta = await _dailyFollowUp.DeleteDailyFollowUp(pId, usuario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -96,7 +93,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.SendToSupervisionSupport( pId, usuario );
+                respuesta = await _dailyFollowUp.SendToSupervisionSupport(pId, usuario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -114,7 +111,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.SendToSupervision( pId, usuario );
+                respuesta = await _dailyFollowUp.SendToSupervision(pId, usuario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -126,17 +123,17 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetDailyFollowUpById")]
-        public async Task< SeguimientoDiario > GetDailyFollowUpById([FromQuery] int pId )
+        public async Task<SeguimientoDiario> GetDailyFollowUpById([FromQuery] int pId)
         {
-            var result = await _dailyFollowUp.GetDailyFollowUpById( pId );
+            var result = await _dailyFollowUp.GetDailyFollowUpById(pId);
             return result;
         }
 
         [HttpGet]
         [Route("GetDatesAvailableByContratacioProyectoId")]
-        public async Task<List<string>> GetDatesAvailableByContratacioProyectoId([FromQuery] int pId )
+        public async Task<List<string>> GetDatesAvailableByContratacioProyectoId([FromQuery] int pId)
         {
-            var result = await _dailyFollowUp.GetDatesAvailableByContratacioProyectoId( pId );
+            var result = await _dailyFollowUp.GetDatesAvailableByContratacioProyectoId(pId);
             return result;
         }
 
@@ -144,13 +141,13 @@ namespace asivamosffie.api.Controllers
         [Route("GetDailyFollowUpByContratacionProyectoId")]
         public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId([FromQuery] int pId)
         {
-            var result = await _dailyFollowUp.GetDailyFollowUpByContratacionProyectoId( pId);
+            var result = await _dailyFollowUp.GetDailyFollowUpByContratacionProyectoId(pId);
             return result;
         }
 
         [Route("CreateEditObservacion")]
         [HttpPost]
-        public async Task<Respuesta> CreateEditObservacion([FromBody]SeguimientoDiario pSeguimientoDiario, [FromQuery]bool esSupervisor)
+        public async Task<Respuesta> CreateEditObservacion([FromBody] SeguimientoDiario pSeguimientoDiario, [FromQuery] bool esSupervisor)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -173,7 +170,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.ApproveDailyFollowUp( pId, usuario );
+                respuesta = await _dailyFollowUp.ApproveDailyFollowUp(pId, usuario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -191,7 +188,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _dailyFollowUp.ReturnToComptroller( pId, usuario );
+                respuesta = await _dailyFollowUp.ReturnToComptroller(pId, usuario);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -200,6 +197,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
+
     }
 }

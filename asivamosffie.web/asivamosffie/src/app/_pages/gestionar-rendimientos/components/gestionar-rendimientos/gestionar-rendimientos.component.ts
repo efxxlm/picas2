@@ -63,6 +63,11 @@ export class GestionarRendimientosComponent implements OnInit {
       if (response.length === 0) {
         return
       }
+      response.forEach(element => {
+        element.fechaCargue = element.fechaCargue
+          ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+          : '';
+      });
       this.dataSource = new MatTableDataSource(response)
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
@@ -96,7 +101,11 @@ export class GestionarRendimientosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }; 
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   managePerformance(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc

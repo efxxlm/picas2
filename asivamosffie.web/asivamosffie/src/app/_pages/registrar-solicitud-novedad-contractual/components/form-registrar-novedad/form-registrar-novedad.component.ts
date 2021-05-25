@@ -12,6 +12,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { Proyecto } from 'src/app/core/_services/project/project.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
@@ -21,7 +22,7 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
 })
 export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   @Input() estaEditando: boolean;
-
+  tipoNovedadCodigo = TipoNovedadCodigo;
   addressForm = this.fb.group({
     novedadContractualId: [],
     fechaSolicitudNovedad: [null, Validators.required],
@@ -69,6 +70,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
   motivosNovedadArray = [];
+  tipoNovedadSuspension = [];
 
   // minDate: Date;
   editorStyle = {
@@ -134,14 +136,22 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
     this.tipoNovedadArray = [];
+    this.tipoNovedadSuspension = [];
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       response.forEach(n => {
-        let novedadContractualDescripcion: NovedadContractualDescripcion = {
-          tipoNovedadCodigo: n.codigo,
-          nombreTipoNovedad: n.nombre
-        };
-
-        this.tipoNovedadArray.push(novedadContractualDescripcion);
+        if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
+          let novedadContractualDescripcion: NovedadContractualDescripcion = {
+            tipoNovedadCodigo: n.codigo,
+            nombreTipoNovedad: n.nombre
+          };
+          this.tipoNovedadArray.push(novedadContractualDescripcion);
+        }else{
+          let novedadContractualDescripcion: NovedadContractualDescripcion = {
+            tipoNovedadCodigo: n.codigo,
+            nombreTipoNovedad: n.nombre
+          };
+          this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+        }
       });
 
       this.addressForm.get('novedadContractualId').setValue(this.novedad.novedadContractualId);
@@ -153,16 +163,29 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
       let listaDescripcion: NovedadContractualDescripcion[] = [];
 
-      console.log(this.contrato)
+      console.log(this.contrato);
+      if((this.novedad.novedadContractualId == null || this.novedad.novedadContractualId.toString() == 'undefined') && this.contrato.novedadContractual.length > 0){
+          this.novedad = this.contrato.novedadContractual[0];
+      }
+      console.log(this.novedad);
+      console.log(this.novedad.novedadContractualDescripcion, this.tipoNovedadArray, listaDescripcion);
       if (this.novedad.novedadContractualDescripcion) {
+        let existeSuspension = false;
         this.novedad.novedadContractualDescripcion.forEach(n => {
-          let tipoNovedadseleccionada = this.tipoNovedadArray
-            .filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo)
-            .shift();
-          this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo);
-          this.tipoNovedadArray.push(n);
-          listaDescripcion.push(n);
+          if(n.tipoNovedadCodigo == this.tipoNovedadCodigo.suspension){
+            existeSuspension = true;
+          }
+          //this.tipoNovedadArray.push(n);
+          //listaDescripcion.push(n);
         });
+        console.log(this.tipoNovedadSuspension);
+        if(existeSuspension){
+          this.tipoNovedadSuspension.forEach(element => {
+            this.tipoNovedadArray.push(element);
+          });
+        }
+        console.log(this.tipoNovedadArray);
+        console.log(listaDescripcion);
       }
 
       this.addressForm.get('tipoNovedad').setValue(listaDescripcion);

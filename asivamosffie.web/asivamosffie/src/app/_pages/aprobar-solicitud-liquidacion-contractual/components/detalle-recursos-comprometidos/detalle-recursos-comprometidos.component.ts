@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-detalle-recursos-comprometidos',
@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./detalle-recursos-comprometidos.component.scss']
 })
 export class DetalleRecursosComprometidosComponent implements OnInit {
-
+  
+  @Input() contratacionProyecto: any[] = [];
+  
   constructor() { }
 
   ngOnInit(): void {

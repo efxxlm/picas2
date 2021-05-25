@@ -10,6 +10,7 @@ import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-fina
 import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
 import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 import { AprobarInformeFinalComponent } from './components/aprobar-informe-final/aprobar-informe-final.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 
 const routes: Routes = [
   {
@@ -29,39 +30,75 @@ const routes: Routes = [
     component: AprobarRequisitosLiquidacionComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance',
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/aprobarBalance',
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: AprobarBalanceComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/recursos',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/recursos',
     component: RecursosComprometidosPagadosComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/recursos/verDetalle/:id',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/recursos/verDetalle/:id',
     component: VerDetalleComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/verEjecucionFinanciera',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verEjecucionFinanciera',
     component: VerEjecucionFinancieraComponent
   },
   {
-    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/verTrasladosRecursos',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verTrasladosRecursos',
     component: VerTrasladosRecursosComponent
   },
   {
@@ -89,9 +126,25 @@ const routes: Routes = [
     component: AprobarInformeFinalComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: AprobarBalanceComponent
-  }
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
 ];
 
 @NgModule({

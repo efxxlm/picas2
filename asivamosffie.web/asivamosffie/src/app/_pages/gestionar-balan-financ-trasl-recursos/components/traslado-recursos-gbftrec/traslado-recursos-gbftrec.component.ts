@@ -14,7 +14,10 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
   @Input() esVerDetalle: boolean;
-
+  balanceFinanciero: any;
+  balanceFinancieroId = 0;
+  balanceFinancieroTraslado = [];
+  trasladoPendiente = false;
   addressForm = this.fb.group({
     balanceFinancieroId: [null, Validators.required],
     proyectoId: [ɵNullViewportScroller, Validators.required],
@@ -71,6 +74,22 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       this.id
     ).subscribe(response => {
       if(response != null){
+        console.log( response )
+        this.balanceFinanciero = response;
+
+        if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
+          if ( this.balanceFinanciero.balanceFinancieroTraslado.length > 0 ) {
+            this.balanceFinancieroTraslado = this.balanceFinanciero.balanceFinancieroTraslado
+
+            const trasladoIncompleto = this.balanceFinancieroTraslado.find( traslado => traslado.registroCompleto === false )
+
+            if ( trasladoIncompleto !== undefined ) {
+              this.trasladoPendiente = true;
+            }
+          }
+        }
+
+        this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }
     });
@@ -84,15 +103,21 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
         this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).setValue( '' );
     }
 
+    if ( this.balanceFinanciero !== undefined ) {
+      this.balanceFinanciero.requiereTransladoRecursos = this.addressForm.get( 'requiereTransladoRecursos' ).value;
+      this.balanceFinanciero.justificacionTrasladoAportanteFuente = this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).value;
+      this.balanceFinanciero.urlSoporte = this.addressForm.get( 'urlSoporte' ).value
+    }
+
     const pBalanceFinanciero = {
         balanceFinancieroId: this.addressForm.get( 'balanceFinancieroId' ).value,
         proyectoId:this.id,
         requiereTransladoRecursos: this.addressForm.get( 'requiereTransladoRecursos' ).value,
         justificacionTrasladoAportanteFuente: this.addressForm.get( 'justificacionTrasladoAportanteFuente' ).value,
-        urlSoporte: this.addressForm.get( 'urlSoporte' ).value,
-      };
+        urlSoporte: this.addressForm.get( 'urlSoporte' ).value
+    };
 
-    this.financialBalanceService.createEditBalanceFinanciero( pBalanceFinanciero )
+    this.financialBalanceService.createEditBalanceFinanciero( this.balanceFinanciero !== undefined ? this.balanceFinanciero : pBalanceFinanciero )
     .subscribe((respuesta: Respuesta) => {
         this.openDialog('', respuesta.message);
         this.ngOnInit();

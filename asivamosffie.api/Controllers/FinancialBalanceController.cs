@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -26,25 +22,128 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [HttpPost]
+        [Route("ChangeStatudBalanceFinanciero")]
+        public async Task<IActionResult> ChangeStatudBalanceFinanciero([FromBody] BalanceFinanciero pBalanceFinanciero)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pBalanceFinanciero.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _finalBalanceService.ChangeStatudBalanceFinanciero(pBalanceFinanciero);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("ChangeStatudBalanceFinancieroTraslado")]
+        public async Task<IActionResult> ChangeStatudBalanceFinancieroTraslado([FromBody] BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pBalanceFinancieroTraslado.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _finalBalanceService.ChangeStatudBalanceFinancieroTraslado(pBalanceFinancieroTraslado);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("ValidateCompleteBalanceFinanciero")]
+        public async Task<IActionResult> ValidateCompleteBalanceFinanciero([FromQuery] int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _finalBalanceService.ValidateCompleteBalanceFinanciero(pBalanceFinancieroTrasladoId, pEstaCompleto);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetOrdenGiroByNumeroOrdenGiro")]
+        public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.GetOrdenGiroByNumeroOrdenGiro(pTipoSolicitudCodigo, pNumeroOrdenGiro, pLLaveMen));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         [HttpGet]
         [Route("GridBalance")]
         public async Task<IActionResult> GridBalance()
         {
-            return Ok(await _finalBalanceService.GridBalance());
+            try
+            {
+                return Ok(await _finalBalanceService.GridBalance());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetOrdenGiroBy")]
+        public async Task<IActionResult> GetOrdenGiroBy([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.GetOrdenGiroBy(pTipoSolicitudCodigo, pNumeroOrdenGiro, pLLaveMen));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [HttpGet]
         [Route("GetContratoByProyectoId")]
         public async Task<IActionResult> GetContratoByProyectoId([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
+            try
+            {
+                return Ok(await _finalBalanceService.GetContratoByProyectoId(pProyectoId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
         }
 
         [HttpGet]
         [Route("GetDataByProyectoId")]
         public async Task<IActionResult> GetDataByProyectoId([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId));
+            try
+            {
+                return Ok(await _finalBalanceService.GetDataByProyectoId(pProyectoId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -69,7 +168,14 @@ namespace asivamosffie.api.Controllers
         [Route("GetBalanceFinanciero")]
         public async Task<IActionResult> GetBalanceFinanciero([FromQuery] int pProyectoId)
         {
-            return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
+            try
+            {
+                return Ok(await _finalBalanceService.GetBalanceFinanciero(pProyectoId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]

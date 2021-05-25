@@ -8,6 +8,7 @@ import { DetalleTrasladoGtlcComponent } from "./components/detalle-traslado-gtlc
 import { EjecucionFinancieraGtlcComponent } from "./components/ejecucion-financiera-gtlc/ejecucion-financiera-gtlc.component";
 import { GestionarTramiteLiqContractualComponent } from "./components/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.component";
 import { RecursosComproPagadosGtlcComponent } from "./components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component";
+import { RegistrarTrasladoGbftrecComponent } from "./components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component";
 import { TrasladoRecursosGtlcComponent } from "./components/traslado-recursos-gtlc/traslado-recursos-gtlc.component";
 import { VerDetalleEditarVerificacionComponent } from "./components/ver-detalle-editar-verificacion/ver-detalle-editar-verificacion.component";
 import { VerDetalleVerificacionGtlcComponent } from "./components/ver-detalle-verificacion-gtlc/ver-detalle-verificacion-gtlc.component";
@@ -51,16 +52,8 @@ const routes: Routes = [
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'recursosComprometidos/:id',
-    component: RecursosComproPagadosGtlcComponent
-  },
-  {
     path: 'detalleOrdengiro/:id',
     component: DetalleOgGtlcComponent
-  },
-  {
-    path: 'ejecucionFinanciera/:id',
-    component: EjecucionFinancieraGtlcComponent
   },
   {
     path: 'trasladoRecursos/:id',
@@ -107,17 +100,109 @@ const routes: Routes = [
     component: VerificarInformeGtlcComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verificarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance',
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
     component: VerificarBalanceGtlcComponent
   },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
+    component: VerificarBalanceGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalle/:id/verDetalleBalance/:proyectoId/trasladoRecursos/verDetalle/:id',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  }
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

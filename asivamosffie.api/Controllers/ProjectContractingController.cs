@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class ProjectContractingController : ControllerBase
     {
         private readonly IDocumentService _documentService;
         private readonly IProjectContractingService _projectContractingService;
         private readonly IOptions<AppSettings> _settings;
-   
+
         public ProjectContractingController(IDocumentService documentService, IOptions<AppSettings> settings, IProjectContractingService projectContractingService)
         {
             _projectContractingService = projectContractingService;
@@ -89,7 +87,7 @@ namespace asivamosffie.api.Controllers
             return await _projectContractingService.GetContratacionByContratacionId(pContratacionId);
         }
 
-       
+
         [Route("GetListContratacionObservacion")]
         [HttpGet]
         public async Task<Contratacion> GetListContratacionObservacion(int pContratacionId)
@@ -196,7 +194,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectContractingService.CreateEditContratacionProyectoAportanteByContratacionproyecto(pContratacionProyecto, false);
                 return Ok(respuesta);
@@ -214,7 +212,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pContratacionProyectoAportante.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectContractingService.CreateEditContratacionProyectoAportante(pContratacionProyectoAportante, false);
                 return Ok(respuesta);

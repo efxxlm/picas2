@@ -1,6 +1,9 @@
+using asivamosffie.api.Helpers;
 using asivamosffie.services;
 using asivamosffie.services.Filters;
 using asivamosffie.services.Interfaces;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,12 +17,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Text;
-using DinkToPdf.Contracts;
-using DinkToPdf;
 using System.IO;
-using asivamosffie.api.Helpers;
-using asivamosffie.api.Controllers;
+using System.Text;
 
 namespace asivamosffie.api
 {
@@ -115,7 +114,7 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-         
+
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
@@ -183,7 +182,7 @@ namespace asivamosffie.api
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IContractualNoveltyService, ContractualNoveltyService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
-            services.AddTransient<IMonitoringURL, MonitoringURLService>();       
+            services.AddTransient<IMonitoringURL, MonitoringURLService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

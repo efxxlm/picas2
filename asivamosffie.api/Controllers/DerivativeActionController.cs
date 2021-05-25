@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -16,7 +15,7 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     [Authorize]
     public class DerivativeActionController : ControllerBase
-    { 
+    {
         public readonly IDerivativeActionService _derivativeActionService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -36,8 +35,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                
-                    seguimientoActuacionDerivada.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                seguimientoActuacionDerivada.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
@@ -49,8 +48,8 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
-        }             
-            
+        }
+
         [Route("EliminarControversiaActuacionDerivada")]
         [HttpPost]
         public async Task<IActionResult> EliminarControversiaActuacionDerivada(int pId)
@@ -71,7 +70,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPut]
         [Route("CambiarEstadoControversiaActuacionDerivada")]
-        public async Task<IActionResult> CambiarEstadoControversiaActuacionDerivada( int pActuacionDerivadaId, string pCodigoEstado)
+        public async Task<IActionResult> CambiarEstadoControversiaActuacionDerivada(int pActuacionDerivadaId, string pCodigoEstado)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -179,7 +178,7 @@ namespace asivamosffie.api.Controllers
 //    {
 //        try
 //        {
-            
+
 //            List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion
 //      .Where(r => !(bool)r.Eliminado && r.ControversiaActuacionId == controversiaContractual.ControversiaActuacionId).ToListAsync();
 
@@ -212,7 +211,7 @@ namespace asivamosffie.api.Controllers
 
 //                    }
 
-          
+
 
 //                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
 //                    GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual

@@ -30,6 +30,17 @@ import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/t
 import { ObservacionesInformeFinalComponent } from './components/observaciones-informe-final/observaciones-informe-final.component';
 import { TablaLiquidacionContratoInterventoriaComponent } from './components/tabla-liquidacion-contrato-interventoria/tabla-liquidacion-contrato-interventoria.component';
 import { ObservacionesSupervisorComponent } from './components/observaciones-supervisor/observaciones-supervisorcomponent';
+import { TablaTotalOrdenesDeGiroComponent } from './components/tabla-total-ordenes-de-giro/tabla-total-ordenes-de-giro.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
+import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
+import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
+import { FormOrdenGiroComponent } from './components/form-orden-giro/form-orden-giro.component';
+import { DatosDdpDrpGbftrecComponent } from './components/datos-ddp-drp-gbftrec/datos-ddp-drp-gbftrec.component';
+import { DatosSolicitudGbftrecComponent } from './components/datos-solicitud-gbftrec/datos-solicitud-gbftrec.component';
+import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
+import { FormTerceroCausacionComponent } from './components/form-tercero-causacion/form-tercero-causacion.component';
+import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
+import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro-seleccionada/form-orden-giro-seleccionada.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +67,18 @@ import { ObservacionesSupervisorComponent } from './components/observaciones-sup
     TablaInformeAnexosComponent,
     ObservacionesInformeFinalComponent,
     TablaLiquidacionContratoInterventoriaComponent,
-    ObservacionesSupervisorComponent
+    ObservacionesSupervisorComponent,
+    TablaTotalOrdenesDeGiroComponent,
+    RegistrarTrasladoGbftrecComponent,
+    ControlSolicitudesTrasladoGbftrecComponent,
+    FormOrdenGiroComponent,
+    DatosDdpDrpGbftrecComponent,
+    DatosSolicitudGbftrecComponent,
+    TablaInfofrecursosGbftrecComponent,
+    TablaPorcParticipacionGbftrecComponent,
+    FormTerceroCausacionComponent,
+    FormDescuentosDireccionTecnicaComponent,
+    FormOrdenGiroSeleccionadaComponent
   ],
   imports: [
     CommonModule,

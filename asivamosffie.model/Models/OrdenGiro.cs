@@ -36,8 +36,8 @@ namespace asivamosffie.model.Models
         public string UrlSoporteFirmadoVerificar { get; set; }
         public string UrlSoporteFirmadoAprobar { get; set; }
         public decimal? ValorNetoGiro { get; set; }
-        public bool? TieneBalance { get; set; }
-        public decimal? ValorNetoGiroBalance { get; set; }
+        public bool? TieneTraslado { get; set; }
+        public decimal? ValorNetoGiroTraslado { get; set; }
 
         public virtual ICollection<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }

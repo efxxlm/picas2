@@ -1,9 +1,12 @@
+import { CommonService } from './../../../../core/_services/common/common.service';
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
+import { Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-orden-giro',
@@ -13,8 +16,12 @@ import moment from 'moment';
 export class FormOrdenGiroComponent implements OnInit, OnChanges {
 
     @Input() listaBusqueda = [];
+    @Input() esVerDetalle: boolean;
+    @Input() esRegistroNuevo: boolean;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    listaModalidad: Dominio[] = [];
+    listaTipoSolicitud: Dominio[] = [];
     dataSource: MatTableDataSource<any>;
     addressForm = this.fb.group({
         resultadoBusqueda: this.fb.array( [] ),
@@ -39,7 +46,9 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     }
 
     constructor(
-        private fb: FormBuilder )
+        private fb: FormBuilder,
+        private activatedRoute: ActivatedRoute,
+        private commonSvc: CommonService )
     { }
 
     ngOnChanges( changes: SimpleChanges ): void {
@@ -50,46 +59,84 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
             this.resultadoBusqueda.clear();
 
             for ( const ordenGiro of listaResultado ) {
-                this.resultadoBusqueda.push(
-                    this.fb.group(
-                        {
-                            tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
-                            fechaAprobacionFiduciaria: [ moment( ordenGiro.fechaAprobacionFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            fechaPagoFiduciaria: [ moment( ordenGiro.fechaPagoFiduciaria ).format( 'DD/MM/YYYY' ) ],
-                            numeroOrdendeGiro: [ ordenGiro.numeroOrdendeGiro ],
-                            modalidadContrato: [ ordenGiro.modalidadContrato ],
-                            numeroContrato: [ ordenGiro.numeroContrato ],
-                            contratacionProyectoId: [ ordenGiro.contratacionProyectoId ],
-                            solicitudPagoId: [ 203 ],
-                            check: [ null ],
-
-                        }
+                if ( this.esRegistroNuevo === true ) {
+                    this.resultadoBusqueda.push(
+                        this.fb.group(
+                            {
+                                tipoSolicitudGiro: [ ordenGiro.tipoSolicitudGiro ],
+                                fechaAprobacionFiduciaria: [ ordenGiro.fechaAprobacionFiduciaria ],
+                                fechaPagoFiduciaria: [ ordenGiro.fechaPagoFiduciaria ],
+                                numeroOrdendeGiro: [ ordenGiro.numeroOrdendeGiro ],
+                                modalidadContrato: [ ordenGiro.modalidadContrato ],
+                                numeroContrato: [ ordenGiro.numeroContrato ],
+                                solicitudPagoId: [ ordenGiro.solicitudPagoId ],
+                                check: [ null ],
+    
+                            }
+                        )
                     )
-                )
+                }
+
+                if ( this.esRegistroNuevo === false || this.esVerDetalle === true ) {
+                    this.ordenesGiro.push(
+                        this.fb.group(
+                            {
+                                solicitudPagoId: [ ordenGiro.solicitudPagoId ],
+                                numeroOrdendeGiro: [ this.activatedRoute.snapshot.params.numeroOrdenGiro ],
+                                modalidadContrato: [ ordenGiro.modalidadContrato ],
+                                numeroContrato: [ ordenGiro.numeroContrato ]
+                            }
+                        )
+                    )
+                }
             }
 
-            this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
-            setTimeout(() => {
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-                    if (length === 0 || pageSize === 0) {
-                      return '0 de ' + length;
-                    }
-                    length = Math.max(length, 0);
-                    const startIndex = page * pageSize;
-                    // If the start index exceeds the list length, do not try and fix the end index to the end.
-                    const endIndex = startIndex < length ?
-                      Math.min(startIndex + pageSize, length) :
-                      startIndex + pageSize;
-                    return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-                };
-            }, 200);
+            if ( this.esRegistroNuevo === true && this.esVerDetalle === false ) {
+                this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
+                setTimeout(() => {
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.paginator = this.paginator;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+                        if (length === 0 || pageSize === 0) {
+                          return '0 de ' + length;
+                        }
+                        length = Math.max(length, 0);
+                        const startIndex = page * pageSize;
+                        // If the start index exceeds the list length, do not try and fix the end index to the end.
+                        const endIndex = startIndex < length ?
+                          Math.min(startIndex + pageSize, length) :
+                          startIndex + pageSize;
+                        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+                    };
+                }, 200);
+            }
         }
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.listaModalidad = await this.commonSvc.modalidadesContrato().toPromise()
+        this.listaTipoSolicitud = await this.commonSvc.listaTipoSolicitudContrato().toPromise()
+    }
+
+    getTipoSolicitud( codigo: string ) {
+        if ( this.listaTipoSolicitud.length > 0 ) {
+            const solicitud = this.listaTipoSolicitud.find( solicitud => solicitud.codigo === codigo )
+            
+            if ( solicitud !== undefined ) {
+                return solicitud.nombre
+            }
+        }
+    }
+
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.listaModalidad.length > 0 ) {
+            const modalidad = this.listaModalidad.find( modalidad => modalidad.codigo === modalidadCodigo )
+            
+            if ( modalidad !== undefined ) {
+                return modalidad.nombre
+            }
+        }
     }
 
     addProject( index: number ) {
@@ -97,7 +144,6 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
             this.ordenesGiro.push(
                 this.fb.group(
                     {
-                        contratacionProyectoId: [ this.resultadoBusqueda.controls[ index ].get( 'contratacionProyectoId' ).value ],
                         solicitudPagoId: [ this.resultadoBusqueda.controls[ index ].get( 'solicitudPagoId' ).value ],
                         numeroOrdendeGiro: [ this.resultadoBusqueda.controls[ index ].get( 'numeroOrdendeGiro' ).value ],
                         modalidadContrato: [ this.resultadoBusqueda.controls[ index ].get( 'modalidadContrato' ).value ],

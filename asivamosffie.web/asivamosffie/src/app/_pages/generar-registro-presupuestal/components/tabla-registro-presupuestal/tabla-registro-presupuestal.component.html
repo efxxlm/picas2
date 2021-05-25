@@ -21,6 +21,11 @@
                 <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
             </ng-container>
 
+            <ng-container matColumnDef="numeroOtroSi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de Otrosi </th>
+                <td mat-cell *matCellDef="let element">{{element.numeroOtroSi}}</td>
+            </ng-container>
+
             <ng-container matColumnDef="tipoSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud </th>
                 <td mat-cell *matCellDef="let element"> {{element.tipoSolicitud}} </td>

@@ -376,6 +376,11 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
   }
 
+  listaEstadoBalance() {
+    // Lista de estados del balance
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=190`);
+  }
+
   listaActuacionesAdelantadasNoTAI() {
     // Lista de estados del CU 4.2.1 No tai en actuacion adelantada 
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=191`);
@@ -384,6 +389,16 @@ export class CommonService {
   listaEstadosAvanceTramiteNuevaNoTAI() {
     // Lista de estados del CU 4.2.1 para estados de avance de tramite
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=192`);
+  }
+
+  listaTrasladoCodigo() {
+    // Lista del campo tipo traslado codigo para el guardado de la tabla "BalanceFinancieroTrasladoValor" CU 5.3.1
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=196`);
+  }
+
+  listaEstadoTraslado() {
+    // Lista de estados del traslado
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=197`);
   }
 
   public listaUsuarios(){

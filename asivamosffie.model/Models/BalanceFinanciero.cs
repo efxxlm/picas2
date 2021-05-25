@@ -25,7 +25,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public int? NumeroTraslado { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }

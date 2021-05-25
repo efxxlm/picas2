@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-traslado-recursos-gtlc',
@@ -10,8 +13,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./traslado-recursos-gtlc.component.scss']
 })
 export class TrasladoRecursosGtlcComponent implements OnInit {
+  proyectoId = 0;
+  proyecto: any;
+  balanceFinanciero: any;
+  listaEstadoTraslado: Dominio[] = [];
   dataSource = new MatTableDataSource();
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  urlDetalle: string;
   displayedColumns: string[] = [
     'fechaTraslado',
     'numTraslado',
@@ -21,27 +28,42 @@ export class TrasladoRecursosGtlcComponent implements OnInit {
     'estadoTraslado',
     'gestion'
   ];
-  dataTable: any[] = [{
-    fechaTraslado: '09/08/2021',
-    numTraslado: 'Tras_001',
-    numContrato: 'N000000',
-    numOrdenGiro: 'ODG_obra_222',
-    valorTraslado: '$5.000.000',
-    estadoTraslado: 'Con registro',
-    id: 1
-  }];
-  constructor(public dialog: MatDialog,private router: Router) { }
 
-  ngOnInit(): void {
-    this.loadTable();
+  constructor(
+      private activatedRoute: ActivatedRoute,
+      private routes: Router,
+      private balanceSvc: FinancialBalanceService,
+      private commonSvc: CommonService )
+  {
+      this.proyectoId = this.activatedRoute.snapshot.params.proyectoId
+      this.urlDetalle = `${ this.routes.url }/verDetalle`
   }
 
-  loadTable(){
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.sort = this.sort;
-  } 
-  verDetalleTraslado(id){
-    this.router.navigate(['/gestionarTramiteLiquidacionContractual/detalleTraslado', id]);
+  async ngOnInit() {
+      this.listaEstadoTraslado = await this.commonSvc.listaEstadoTraslado().toPromise()
+      const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId( 557 /* this.proyectoId */ ).toPromise()
+      let balanceFinancieroTraslado = []
+
+      if( getDataByProyectoId.length > 0 ){
+          this.proyecto = getDataByProyectoId[0]
+          this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero( 557 /* this.proyectoId */ ).toPromise()
+          balanceFinancieroTraslado = this.balanceFinanciero.balanceFinancieroTraslado
+          console.log( this.proyecto )
+          console.log( this.balanceFinanciero )
+      }
+
+      balanceFinancieroTraslado.forEach( registro => registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) )
+      this.dataSource = new MatTableDataSource( balanceFinancieroTraslado )
+  }
+
+  getEstadoTraslado( codigo: string ) {
+      if ( this.listaEstadoTraslado.length > 0 ) {
+          const traslado = this.listaEstadoTraslado.find( traslado => traslado.codigo === codigo )
+
+          if ( traslado !== undefined ) {
+              return traslado.nombre
+          }
+      }
   }
 
 }

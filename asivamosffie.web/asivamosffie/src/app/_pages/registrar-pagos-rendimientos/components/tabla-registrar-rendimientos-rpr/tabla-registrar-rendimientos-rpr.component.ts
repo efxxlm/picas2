@@ -23,7 +23,7 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     'registrosValidos', // 'numRegistrosValidos',
     'registrosInvalidos',// 'numRegistrosInvalidos',
     'registrosInconsistentes',
-    'estadoCargue',
+    'cargueValido',
     'gestion'
   ];
 
@@ -40,16 +40,26 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
       if (response.length === 0) {
         return
       }
+      response.sort((a, b) => {
+        if (a.fechaCargue > b.fechaCargue) return 1;
+        if (a.fechaCargue < b.fechaCargue) return -1;
+        return 0;
+      });
+      response.forEach(element => {
+        element.fechaCargue = element.fechaCargue
+          ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+          : '';
+      });
       this.dataSource = new MatTableDataSource(response)
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
 
-      this.dataSource.sortingDataAccessor = (item: any , property): string | number => {
-        switch (property) {
-          case 'fechaCargue': return new Date(`${item.fechaCargue}`).toString();
-          default: return item[property];
-        }
-      };
+      // this.dataSource.sortingDataAccessor = (item: any , property): string | number => {
+      //   switch (property) {
+      //     case 'fechaCargue': return new Date(`${item.fechaCargue}`).toString();
+      //     default: return item[property];
+      //   }
+      // };
 
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página'
 
@@ -72,7 +82,11 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  };  
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   deleteUpload(uploadPaymentId: number){
     this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)

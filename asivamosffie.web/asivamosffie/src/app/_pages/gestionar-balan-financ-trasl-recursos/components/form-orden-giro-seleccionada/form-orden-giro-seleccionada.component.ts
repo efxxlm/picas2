@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { MediosPagoCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-form-orden-giro-seleccionada',
@@ -12,6 +13,9 @@ import { MediosPagoCodigo } from 'src/app/_interfaces/estados-solicitudPago-orde
 export class FormOrdenGiroSeleccionadaComponent implements OnInit {
 
     @Input() ordenGiro: FormGroup;
+    @Input() esVerDetalle: boolean;
+    @Input() esRegistroNuevo: boolean;
+    balanceFinancieroTrasladoId = 0;
     listaMediosPagoCodigo = MediosPagoCodigo;
     addressForm: FormGroup;
     listaModalidad: Dominio[] = [];
@@ -22,10 +26,14 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     ordenGiroTercero: any;
     ordenGiroId: 0;
     ordenGiroTerceroId: 0;
+    semaforoDetalle = 'sin-diligenciar';
+    semaforoTerceroCausacion: string;
+    semaforoDescuentos: string;
 
     constructor(
         private ordenPagoSvc: OrdenPagoService,
         private commonSvc: CommonService,
+        private balanceSvc: FinancialBalanceService,
         private fb: FormBuilder )
     {
         this.addressForm = this.crearFormulario()
@@ -151,6 +159,41 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
             if ( banco !== undefined ) {
                 return banco.nombre
             }
+        }
+    }
+
+    checkEstadoSemaforo() {
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === 'en-proceso' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'en-proceso' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'sin-diligenciar' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'sin-diligenciar' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === 'completo' ) {
+            this.semaforoDetalle = 'completo';
+        }
+        if ( this.semaforoTerceroCausacion === 'en-proceso' && this.semaforoDescuentos === undefined ) {
+            this.semaforoDetalle = 'en-proceso';
+        }
+        if ( this.semaforoTerceroCausacion === 'completo' && this.semaforoDescuentos === undefined ) {
+            this.semaforoDetalle = 'completo';
+        }
+
+        if ( this.balanceFinancieroTrasladoId !== 0 && this.semaforoDetalle === 'completo' ) {
+            this.balanceSvc.validateCompleteBalanceFinanciero( this.balanceFinancieroTrasladoId, 'True' ).subscribe()
+        }
+
+        if ( this.balanceFinancieroTrasladoId !== 0 && this.semaforoDetalle === 'en-proceso' ) {
+            this.balanceSvc.validateCompleteBalanceFinanciero( this.balanceFinancieroTrasladoId, 'False' ).subscribe()
         }
     }
 

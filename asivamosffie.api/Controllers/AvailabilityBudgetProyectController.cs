@@ -1,14 +1,14 @@
-﻿using DinkToPdf;
-using DinkToPdf.Contracts;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
-using System.Threading.Tasks;
-using System.IO;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -36,7 +36,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 return await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
-            
+
             }
             catch (Exception ex)
             {

@@ -1,5 +1,5 @@
 <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" *ngIf="contratoObra !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
                 Contrato de obra &nbsp;<span *ngIf="contratoObra">{{ contratoObra.numeroContrato }}</span>
@@ -25,18 +25,18 @@
                 <app-contratistas-gbftrec *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
-        <mat-accordion>
+        <mat-accordion *ngIf="contratoObra.tablaOrdenGiroValorTotal.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title ">
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec *ngIf="contratoObra" [solicitudPago]="contratoObra.solicitudPago"></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec [tablaOrdenGiroValorTotal]="contratoObra.tablaOrdenGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" *ngIf="contratoInterventoria !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
                 Contrato de interventoria &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
@@ -63,13 +63,13 @@
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="contratoInterventoria.tablaOrdenGiroValorTotal.length > 0">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title ">
                         Valor total ordenes de giro
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-tabla-valor-total-og-gbftrec *ngIf="contratoInterventoria" [solicitudPago]="contratoInterventoria.solicitudPago"></app-tabla-valor-total-og-gbftrec>
+                <app-tabla-valor-total-og-gbftrec [tablaOrdenGiroValorTotal]="contratoInterventoria.tablaOrdenGiroValorTotal"></app-tabla-valor-total-og-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>

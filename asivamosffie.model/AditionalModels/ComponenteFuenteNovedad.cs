@@ -9,7 +9,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped] 
         public FuenteFinanciacion FuenteFinanciacion { get; set; }
-         
+
+        [NotMapped]
+        public decimal? ValorFuente { get; set; }
     }
 
 }

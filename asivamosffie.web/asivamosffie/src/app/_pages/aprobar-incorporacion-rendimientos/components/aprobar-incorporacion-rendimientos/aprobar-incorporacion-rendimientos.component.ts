@@ -41,6 +41,11 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   }
 
   setDataSource(data: any[]){
+    data.forEach(element => {
+      element.fechaCargue = element.fechaCargue
+        ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+        : '';
+    });
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -70,7 +75,11 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   
   uploadSignedMinutes(uploadedOrder: any){

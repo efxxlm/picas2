@@ -45,6 +45,16 @@ import { ObservacionesSupervisorComponent } from './components/observaciones-sup
 import { ObservacionesInformeFinalComponent } from './components/observaciones-informe-final/observaciones-informe-final.component';
 import { FormObservacionActualizacionPolizaComponent } from './components/form-observacion-actualizacion-poliza/form-observacion-actualizacion-poliza.component';
 import { FormObservacionBalanceComponent } from './components/form-observacion-balance/form-observacion-balance.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
+import { FormOrdenGiroComponent } from './components/form-orden-giro/form-orden-giro.component';
+import { DatosDdpDrpGbftrecComponent } from './components/datos-ddp-drp-gbftrec/datos-ddp-drp-gbftrec.component';
+import { DatosSolicitudGbftrecComponent } from './components/datos-solicitud-gbftrec/datos-solicitud-gbftrec.component';
+import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
+import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
+import { FormTerceroCausacionComponent } from './components/form-tercero-causacion/form-tercero-causacion.component';
+import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
+import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro-seleccionada/form-orden-giro-seleccionada.component';
+import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
 
 
 @NgModule({
@@ -87,7 +97,17 @@ import { FormObservacionBalanceComponent } from './components/form-observacion-b
     ObservacionesSupervisorComponent,
     ObservacionesInformeFinalComponent,
     FormObservacionActualizacionPolizaComponent,
-    FormObservacionBalanceComponent
+    FormObservacionBalanceComponent,
+    RegistrarTrasladoGbftrecComponent,
+    ControlSolicitudesTrasladoGbftrecComponent,
+    FormOrdenGiroComponent,
+    DatosDdpDrpGbftrecComponent,
+    DatosSolicitudGbftrecComponent,
+    TablaInfofrecursosGbftrecComponent,
+    TablaPorcParticipacionGbftrecComponent,
+    FormTerceroCausacionComponent,
+    FormDescuentosDireccionTecnicaComponent,
+    FormOrdenGiroSeleccionadaComponent
   ],
   imports: [
     CommonModule,

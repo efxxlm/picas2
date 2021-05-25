@@ -269,5 +269,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estados_Actuacion_No_TAI = 191,
 
         Estados_Avance_Tramite = 192,
+
+        Estados_Traslado = 197,
     }
 }

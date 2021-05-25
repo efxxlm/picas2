@@ -55,7 +55,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("GetSelectionProcessById")]
         public async Task<ProcesoSeleccion> GetSelectionProcessById(int id)
         {
@@ -73,7 +73,7 @@ namespace asivamosffie.api.Controllers
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _selectionProcessService.ChangeStateProcesoSeleccion(proceso.ProcesoSeleccionId,
-                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo, 
+                    usuarioCreacion, proceso.EstadoProcesoSeleccionCodigo,
                     _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return respuesta;
             }
@@ -121,7 +121,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("DeleteProcesoSeleccionIntegrante")]
         [HttpDelete]
         public async Task<Respuesta> DeleteProcesoSeleccionIntegrante(Int32 pId)
@@ -432,7 +432,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        
+
         [Route("SetValidateMassiveLoadElegibilidad/{procesoSeleccionId}")]
         [HttpPost]
         public async Task<IActionResult> SetValidateMassiveLoadElegibilidad(IFormFile file, [FromRoute] int procesoSeleccionId)
@@ -445,7 +445,7 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario,procesoSeleccionId);
+                    respuesta = await _selectionProcessService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseOrdeELegibilidad), strUsuario, procesoSeleccionId);
                 }
                 return Ok(respuesta);
             }

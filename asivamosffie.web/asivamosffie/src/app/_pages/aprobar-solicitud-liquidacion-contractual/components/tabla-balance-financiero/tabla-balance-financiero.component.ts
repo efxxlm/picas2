@@ -1,19 +1,8 @@
 import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    fechaterminacionProyecto: '09/08/2021',
-    llaveMEN: 'LL457326',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-    sede: 'única sede',
-    numeroTraslados: '1',
-    estadoValidacion: 'Sin validación'
-  }
-];
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-tabla-balance-financiero',
@@ -22,7 +11,7 @@ const ELEMENT_DATA = [
 })
 export class TablaBalanceFinancieroComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = [
     'fechaterminacionProyecto',
     'llaveMEN',
@@ -31,18 +20,47 @@ export class TablaBalanceFinancieroComponent implements OnInit {
     'sede',
     'numeroTraslados',
     'estadoValidacion',
-    'id'
+    'contratacionProyectoId'
   ];
   @Input() contratacionProyectoId: number;
   @Input() esVerDetalle: boolean;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
-  
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+
+  datosTabla = [];
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
+  ) { }
 
   ngOnInit(): void {
+    this.getBalanceByContratacionProyectoId(this.contratacionProyectoId);
   }
 
+  getBalanceByContratacionProyectoId(contratacionProyectoId: number) {
+    this.registerContractualLiquidationRequestService.getBalanceByContratacionProyectoId(contratacionProyectoId, this.listaMenu.aprobarSolicitudLiquidacionContratacion).subscribe(report => {
+      if(report != null){
+        report.forEach(element => {
+          this.datosTabla.push({
+            fechaterminacionProyecto : element.balance.fechaTerminacionProyecto.split('T')[0].split('-').reverse().join('/'),
+            llaveMen: element.balance.llaveMen,
+            tipoIntervencion: element.balance.tipoIntervencion,
+            institucionEducativa: element.balance.institucionEducativa,
+            sede: element.balance.sedeEducativa,
+            numeroTraslados: element.balance.numeroTraslado,
+            estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
+            registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
+            contratacionProyectoId: contratacionProyectoId,
+            proyectoId: element.balance.proyectoId
+          });
+        })
+      }
+      this.dataSource.data = this.datosTabla;
+      if(this.datosTabla.length > 0){
+        this.semaforoBalanceFinanciero.emit(this.datosTabla[0].registroCompleto);
+      }
+    });
+  }
 }

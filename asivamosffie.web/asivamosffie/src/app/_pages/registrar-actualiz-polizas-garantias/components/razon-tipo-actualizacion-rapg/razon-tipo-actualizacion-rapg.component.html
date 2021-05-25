@@ -112,7 +112,7 @@
                                         multiple
                                         required
                                         (selectionChange)="getvalues( $event.value )">
-                                        <mat-option *ngFor="let seguro of polizasYSegurosArray" [value]="seguro.codigo">
+                                        <mat-option *ngFor="let seguro of listaGarantias" [value]="seguro.codigo">
                                             {{ seguro.nombre }}
                                         </mat-option>
                             </mat-select>

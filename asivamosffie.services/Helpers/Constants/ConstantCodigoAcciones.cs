@@ -352,8 +352,8 @@
 
         //5.4.1 
         public const string Crear_Editar_Actualizacion_Polizas_y_Garantias = "257";
-        public const string Eliminar_Seguros_Actualizacion_Polizas_y_garantias ="258";
-        public const string Cambiar_Estado_Actualizar_Polizas_Y_Garantias ="259";
+        public const string Eliminar_Seguros_Actualizacion_Polizas_y_garantias = "258";
+        public const string Cambiar_Estado_Actualizar_Polizas_Y_Garantias = "259";
         public const string Eliminar_Actualizacion_Polizas = "261";
 
 
@@ -362,7 +362,7 @@
         public const string Cambiar_estado_Contratacion_Proyecto_Liquidacion = "262";
 
         //5.4.2
-        public const string Crear_Editar_Liquidacion_Contrato ="267";
+        public const string Crear_Editar_Liquidacion_Contrato = "267";
 
         public const string EliminarNovedadContractual = "268";
         public const string EliminarNovedadContractualClausula = "269";
@@ -375,12 +375,14 @@
         public const string Aprobar_tecnica_y_juridica_novedad = "275";
         public const string Registrar_Tramite_Novedad_Contractual = "276";
 
-
-
         public const string Eliminar_Orden_Giro = "278";
         public const string Eliminar_Novedad_Contractual_Aportante = "279";
         public const string Eliminar_Componente_aportante_novedad = "280";
         public const string Eliminar_Componente_fuente_novedad = "281";
         public const string Eliminar_Componente_uso_novedad = "282";
+
+        public const string Cambiar_Estado_Traslado_Balance_Financiero = "283";
+
+        public const string Cambiar_Estado_Balance_Financiero = "284";
     }
 }

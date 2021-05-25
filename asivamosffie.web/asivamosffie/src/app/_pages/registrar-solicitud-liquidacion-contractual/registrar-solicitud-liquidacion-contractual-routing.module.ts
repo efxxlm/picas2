@@ -1,3 +1,4 @@
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -6,6 +7,9 @@ import { ValidarRequerimientosLiquidacionesComponent } from './components/valida
 import { ValidarBalanceComponent } from './components/validar-balance/validar-balance.component';
 import { RecursosComprometidosPagadosComponent } from './components/recursos-comprometidos-pagados/recursos-comprometidos-pagados.component';
 import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
+import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
+import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
+import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 
 const routes: Routes = [
   {
@@ -25,12 +29,12 @@ const routes: Routes = [
     component: ValidarRequerimientosLiquidacionesComponent
   },
   {
-    path: 'validarRequisitos/:id/validarBalance/:id',
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
-  },
+  },  
   {
-    path: 'validarRequisitos/:id/validarBalance/recursos',
-    component: RecursosComprometidosPagadosComponent
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
+    component: ValidarBalanceComponent
   },
   {
     path: 'validarRequisitos/:id/validarInformeFinal/:proyectoId',
@@ -53,24 +57,108 @@ const routes: Routes = [
     component: ValidarInformeFinalComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/validarBalance',
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'validarRequisitos/:id/validarBalance',
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarValidarBalance',
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance/:proyectoId',
     component: ValidarBalanceComponent
   },
   {
-    path: 'verDetalleRequisitos/:id/verDetalleBalance',
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId',
     component: ValidarBalanceComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleValidarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },  
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },  
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },   
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },   
+  {
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },  
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/traslados',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
+    component: RegistrarTrasladoGbftrecComponent
   }
 ];
 

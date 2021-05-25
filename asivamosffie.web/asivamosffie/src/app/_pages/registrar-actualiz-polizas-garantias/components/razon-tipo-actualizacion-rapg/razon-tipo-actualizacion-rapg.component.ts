@@ -27,6 +27,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         polizasYSeguros: [null, Validators.required],
         seguros: this.fb.array( [] )
     });
+    listaGarantias: Dominio[] = [];
     razonActualizacionArray : Dominio[] = []
     polizasYSegurosArray: Dominio[] = [];
     tipoActualizacionArray: Dominio[] = [];
@@ -58,8 +59,8 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
         this.polizasYSegurosArray.forEach( ( poliza, index ) => {
             const garantia = this.contratoPoliza.polizaGarantia.find( garantia => garantia.tipoGarantiaCodigo === poliza.codigo );
 
-            if ( garantia === undefined ) {
-                this.polizasYSegurosArray.splice( index, 1 );
+            if ( garantia !== undefined ) {
+                this.listaGarantias.push( poliza )
             }
         } )
 
@@ -268,7 +269,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
             contratoPolizaActualizacionId: this.addressForm.get( 'contratoPolizaActualizacionId' ).value,
             contratoPolizaId: this.contratoPoliza.contratoPolizaId,
             razonActualizacionCodigo: this.addressForm.get( 'razonActualizacion' ).value,
-            fechaExpedicionActualizacionPoliza: new Date( this.addressForm.get( 'fechaExpedicion' ).value ).toISOString(),
+            fechaExpedicionActualizacionPoliza: this.addressForm.get( 'fechaExpedicion' ).value !== null ? new Date( this.addressForm.get( 'fechaExpedicion' ).value ).toISOString() : null,
             contratoPolizaActualizacionSeguro: contratoPolizaActualizacionSeguro()
         }
 

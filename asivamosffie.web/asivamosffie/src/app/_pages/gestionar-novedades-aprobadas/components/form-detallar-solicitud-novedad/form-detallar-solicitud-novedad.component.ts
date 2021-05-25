@@ -21,10 +21,11 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   
   @Input() novedad: NovedadContractual;
   @Output() guardar = new EventEmitter();
-  
+  tipoNovedadAdicion = '3';
   //idSolicitud: number;
   //municipio: string;
   //tipoIntervencion: string;
+  presupuestoAdicionalSolicitado = 0;
   addressForm = this.fb.group([]);
   fasesSelect: Dominio[] = [];
   listaUsos: any[] = [];
@@ -127,6 +128,18 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if ( this.novedad.novedadContractualDescripcion !== undefined ) {
+      if ( this.novedad.novedadContractualDescripcion.length > 0 ) {
+        const novedadAdicion = this.novedad.novedadContractualDescripcion.find( novedadAdicion => novedadAdicion.tipoNovedadCodigo === this.tipoNovedadAdicion )
+
+        if ( novedadAdicion !== undefined ) {
+          if ( novedadAdicion.presupuestoAdicionalSolicitado !== undefined ) {
+            this.presupuestoAdicionalSolicitado = novedadAdicion.presupuestoAdicionalSolicitado;
+          }
+        }
+      }
+    }
+
     this.addressForm = this.createFormulario();
     //this.declararInputFile();
     this.route.params.subscribe((params: Params) => {
@@ -182,8 +195,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
               this.contractualNoveltyService.GetFuentesByAportante(apo.cofinanciacionAportanteId)
                 .subscribe(respuesta => {
+                  console.log(respuesta);
                   grupoAportante.get('listaFuentes').setValue(respuesta);
-
 
                   grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.novedadContractualAportanteId);
                   grupoAportante.get('proyectoAportanteId').setValue(apo.cofinanciacionAportanteId);
@@ -371,16 +384,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   };
 
   validarSaldoDisponible(saldoIngresado: number, nombreAportante: string, aportante) {
-
-    console.log('apo',aportante);
-    let saldoDisponible = 0;
-
-    this.novedad.novedadContractualDescripcion.forEach( descripcion => {
-      // Adicion
-      if ( descripcion.tipoNovedadCodigo === "3" ){
-        saldoDisponible = descripcion.presupuestoAdicionalSolicitado; 
-      }
-    });
+    let saldoDisponible = this.presupuestoAdicionalSolicitado;
 
      if (saldoIngresado > saldoDisponible) {
        this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);
@@ -616,8 +620,15 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;
+    let totalValorAportanteProyecto = 0;
 
     this.novedad.novedadContractualAportante = [];
+
+    this.aportantes.controls.forEach( controlAportante => {
+      if ( controlAportante.get( 'valorAportanteProyecto' ).value !== null ) {
+        totalValorAportanteProyecto += controlAportante.get( 'valorAportanteProyecto' ).value
+      }
+    } )
 
     // aportantes
     this.aportantes.controls.forEach(controlAportante => {
@@ -694,6 +705,12 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       this.novedad.novedadContractualAportante.push(aportante);
     });
 
+    if ( totalValorAportanteProyecto !== this.presupuestoAdicionalSolicitado ) {
+      this.openDialog('', '<b>No coincide el valor de los aportes con el presupuesto adicional solicitado.</b>')
+
+      return
+    }
+
     if (valoresCorrectos) {
 
       this.guardar.emit(true);
@@ -706,19 +723,18 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
   getAportanteById(id: number, i: number) {
     let cofinanciacionAportante = this.novedad.novedadContractualAportante[i].cofinanciacionAportante;
-
     this.commonService.listaAportanteByTipoAportanteId(id).subscribe(
       respuesta => {
-        let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
         this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
 
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
         if (this.tipoAportante.FFIE.includes(id.toString())) {
-          this.listaVigencias[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+          this.listaVigencias[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId));
         } else {
           if (this.tipoAportante.ET.includes(id.toString())) {
-            this.listaAportante[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString.includes(x.nombre))  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+            this.listaAportante[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString.includes(x.nombre)));
 
             this.commonService.listaDepartamentos().subscribe(res => {
               this.listadoDepto[i] = res.sort((a, b) => {
@@ -738,9 +754,9 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                 });
             });
           } else {
-            this.listaAportante[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString == x.nombre)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+            this.listaAportante[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString == x.nombre));
             this.listaNombreAportantes[i] = [];
-            respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString == x.nombre)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId)).forEach(element => {
+            respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString == x.nombre)).forEach(element => {
               if (!this.listaNombreAportantes[i].includes(element.nombre)) {
                 this.listaNombreAportantes[i].push(element.nombre);                
               }
@@ -765,10 +781,19 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
   getAportante(event: any, i: number) {
     this.commonService.listaAportanteByTipoAportanteId(event).subscribe(
       respuesta => {
-        let respuestaok = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
-        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
+        
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
+        this.listadoDepto[i] = [];
+        this.listaNombreAportantes[i] = [];
+
+        this.aportantes.controls[i].get('cofinanciacionAportanteId').setValue(null);
+        this.aportantes.controls[i].get('depaetamento').setValue(null);
+        this.aportantes.controls[i].get('municipio').setValue(null);
+        this.aportantes.controls[i].get('nombreAportante').setValue(null);
+
         if (this.tipoAportante.FFIE.includes(event.toString())) {
           this.listaVigencias[i] = respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
         } else {

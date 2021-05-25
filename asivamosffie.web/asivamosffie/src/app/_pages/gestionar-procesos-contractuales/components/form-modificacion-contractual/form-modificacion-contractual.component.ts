@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TiposAportante } from 'src/app/core/_services/common/common.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
+import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
+import { DataSolicitud } from 'src/app/_interfaces/procesosContractuales.interface';
+import { Contratacion } from 'src/app/_interfaces/project-contracting';
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 
 @Component({
@@ -17,11 +21,16 @@ export class FormModificacionContractualComponent implements OnInit {
   observaciones    : string;
   reinicioBoolean  : boolean;
   suspensionBoolean: boolean;
+  adicionBoolean : boolean = false;
   sesionComiteId: number = 0;
   estadoCodigo: string;
   dataNovedad: NovedadContractual;
   tipoModificacion : string;
   valorTotalDdp: number = 0;
+  contratacion: DataSolicitud;
+  tipoAportante = TiposAportante; 
+  tipoNovedad = TipoNovedadCodigo;
+
   listaTipoSolicitud = {
     obra: '1',
     interventoria: '2'
@@ -37,31 +46,6 @@ export class FormModificacionContractualComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  data: any[] = [
-    {
-      numeroSolicitud         : 'PI_0039',
-      tipoModificacion        : 'Adición, Prorroga',
-      valorDespuesModificacion: '90.000.000',
-      plazoDespuesModificacion: '20 meses / 5 días',
-      detalle                 : 'Se realiza adición de recursos para obras complementarias',
-      aportantes              : [
-        {
-          tipoAportante         : 'FFIE',
-          nombreAportante       : 'FFIE',
-          valorAportanteProyecto: '150.000.000',
-          fuente                : 'Contingencias',
-          valorSolicitado       : '150.000.000'
-        },
-        {
-          tipoAportante         : 'ET',
-          nombreAportante       : 'Gobernación Del Valle del Cauca',
-          valorAportanteProyecto: '150.000.000',
-          fuente                : 'Recursos propios',
-          valorSolicitado       : '150.000.000'
-        }
-      ]
-    }
-  ]
 
   constructor ( private fb: FormBuilder,
                 private routes: Router,
@@ -91,6 +75,8 @@ export class FormModificacionContractualComponent implements OnInit {
             }else{
               this.tipoModificacion = this.tipoModificacion + "," + element.nombreTipoNovedad;
             }
+            if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
+              this.adicionBoolean = true;
         });
         let rutaDocumento;
         if ( novedadContractual.urlSoporteGestionar !== undefined ) {
@@ -116,6 +102,12 @@ export class FormModificacionContractualComponent implements OnInit {
           for ( let contratacionProyecto of novedadContractual.contrato.contratacion.contratacionProyecto ) {
             this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
           };
+        }
+        if(this.dataNovedad.contrato?.contratacionId != null){
+          this.procesosContractualesSvc.getContratacion(this.dataNovedad.contrato?.contratacionId)
+          .subscribe(respuesta => {
+            this.contratacion = respuesta;
+          });
         }
         this.estadoCodigo = this.dataNovedad.estadoCodigo;
       });

@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExpansionPanelComponent implements OnInit {
 
+  estadoAcordeonObra: string;
+  estadoAcordeonInterventoria: string;
+
   constructor() { }
 
   ngOnInit(): void {

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using asivamosffie.model.APIModels;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
@@ -35,11 +31,11 @@ namespace asivamosffie.api.Controllers
             AppSettingsService appSettingsService = new AppSettingsService
             {
                 DirectoryBase = appSettings.Value.DirectoryBase,
-                DirectoryRutaCargaActaTerminacionContrato = appSettings.Value.DirectoryRutaCargaActaTerminacionContrato, 
+                DirectoryRutaCargaActaTerminacionContrato = appSettings.Value.DirectoryRutaCargaActaTerminacionContrato,
             };
             return appSettingsService;
         }
-         
+
         [Route("GetObservacionSeguimientoSemanal")]
         [HttpGet]
         public async Task<dynamic> GetObservacionBy([FromQuery] int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
@@ -53,7 +49,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
         public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
@@ -111,7 +107,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-      
+
         [HttpPost]
         [Route("UploadContractTerminationCertificate")]
         public async Task<IActionResult> UploadContractTerminationCertificate([FromForm] ContratacionProyecto pContratacionProyecto)
@@ -121,7 +117,7 @@ namespace asivamosffie.api.Controllers
             {
                 AppSettingsService appSettingsService = ToAppSettingsService(_settings);
                 pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _registerWeeklyProgressService.UploadContractTerminationCertificate(pContratacionProyecto, appSettingsService); 
+                respuesta = await _registerWeeklyProgressService.UploadContractTerminationCertificate(pContratacionProyecto, appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -130,7 +126,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("CreateEditEnsayoLaboratorioMuestra")]
         public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
@@ -164,7 +160,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pContratacionProyectoId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
         }
-   
+
         [HttpPost]
         [Route("ChangueStatusMuestrasSeguimientoSemanal")]
         public async Task<IActionResult> ChangueStatusMuestrasSeguimientoSemanal([FromQuery] int pSeguimientoSemanalID, string pEstadoMod)

@@ -53,6 +53,11 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
         if (response.length === 0) {
           return
         }
+        response.forEach(element => {
+          element.fechaCargue = element.fechaCargue
+            ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+            : '';
+        });
         this.dataSource = new MatTableDataSource(response)
         this.dataSource.paginator = this.paginator
         this.dataSource.sort = this.sort
@@ -84,8 +89,12 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value
-    this.dataSource.filter = filterValue.trim().toLowerCase()
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   cargarNuevoReportedePago() {

@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public OrdenGiroDetalleDescuentoTecnica()
         {
+            BalanceFinancieroTrasladoValor = new HashSet<BalanceFinancieroTrasladoValor>();
             OrdenGiroDetalleDescuentoTecnicaAportante = new HashSet<OrdenGiroDetalleDescuentoTecnicaAportante>();
         }
 
@@ -24,6 +25,7 @@ namespace asivamosffie.model.Models
         public bool? EsPreconstruccion { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
+        public virtual ICollection<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
         public virtual ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
     }
 }
