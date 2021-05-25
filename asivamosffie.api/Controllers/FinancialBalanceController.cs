@@ -89,6 +89,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        // TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId(int pContratoId);
+        [HttpGet]
+        [Route("GetTablaUsoFuenteAportanteXContratoId")]
+        public TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId)
+        {
+            try
+            {
+                return _finalBalanceService.GetTablaUsoFuenteAportanteXContratoId(pContratoId);
+            }
+            catch (Exception e)
+            {
+                return new TablaUsoFuenteAportante();
+            }
+        }
+
         [HttpGet]
         [Route("GridBalance")]
         public async Task<IActionResult> GridBalance()

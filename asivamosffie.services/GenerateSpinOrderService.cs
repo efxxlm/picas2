@@ -293,7 +293,7 @@ namespace asivamosffie.services
             return List;
         }
 
-        private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
+        public TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
         {
             List<VFuentesUsoXcontratoId> List =
                                                _context.VFuentesUsoXcontratoId

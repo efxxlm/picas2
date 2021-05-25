@@ -24,10 +24,15 @@ namespace asivamosffie.services
 
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
 
+        private readonly IGenerateSpinOrderService _generateSpinOrderService;
+
         public FinancialBalanceService(devAsiVamosFFIEContext context,
                                        ICommonService commonService,
-                                       IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService)
+                                       IGenerateSpinOrderService generateSpinOrderService,
+                                       IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService
+            )
         {
+            _generateSpinOrderService = generateSpinOrderService;
             _context = context;
             _commonService = commonService;
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
@@ -526,6 +531,7 @@ namespace asivamosffie.services
 
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
 
+
                     ListContratos.Add(new
                     {
                         tablaOrdenGiroValorTotal = GetTablaOrdenGiroValorTotal(contrato.SolicitudPago),
@@ -540,6 +546,13 @@ namespace asivamosffie.services
             {
                 return new List<dynamic>();
             }
+        }
+
+        public TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId(int pContratoId)
+        {
+            SolicitudPago solicitudPago1 = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            return _generateSpinOrderService.GetTablaUsoFuenteAportante(solicitudPago1);
         }
 
         private object GetTablaOrdenGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
@@ -566,20 +579,30 @@ namespace asivamosffie.services
                      .AsNoTracking()
                      .FirstOrDefault().Contrato.Contratacion.Contratista.Nombre;
 
+                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+
+                Decimal DescuentosANS = 0;
+                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS) > 0)
+                    DescuentosANS = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento));
+
+                Decimal DescuentosReteGarantia = 0;
+                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
+                    DescuentosANS = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento));
+
+                Decimal ValorDescuentosTecnica = 0;
+                if (vDescuentosXordenGiro != null)
+                    ValorDescuentosTecnica = (decimal)vDescuentosXordenGiro.ValorDescuento;
+
                 TablaOrdenesGiro.Add(
                     new
                     {
                         NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
                         Contratista = NombreContratista,
-                        Facturado = FormattedAmount(SolicitudPago.OrdenGiro.ValorNetoGiro + descuentosXordenGiro.Sum(r => r.ValorDescuento)),
-                        AnsAplicado = FormattedAmount(descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento)),
-                        ReteGarantia = FormattedAmount(descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento)),
-                        OtrosDescuentos = FormattedAmount(vDescuentosXordenGiro.ValorDescuento),
-                        ApagarAntesImpuestos = FormattedAmount(
-                            SolicitudPago.OrdenGiro.ValorNetoGiro -
-                            vDescuentosXordenGiro.ValorDescuento - 
-                            descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia 
-                                                    && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento)),
+                        Facturado = FormattedAmount(ValorFacturado),
+                        AnsAplicado = FormattedAmount(DescuentosANS),
+                        ReteGarantia = FormattedAmount(DescuentosReteGarantia),
+                        OtrosDescuentos = FormattedAmount(ValorDescuentosTecnica),
+                        ApagarAntesImpuestos = FormattedAmount(ValorFacturado - DescuentosANS - DescuentosReteGarantia - ValorDescuentosTecnica),
                         SolicitudId = SolicitudPago.SolicitudPagoId,
                         OrdenGiro = SolicitudPago.OrdenGiroId
                     });

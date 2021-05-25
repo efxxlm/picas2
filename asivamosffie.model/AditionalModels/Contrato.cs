@@ -75,6 +75,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public int? SuspensionAprobadaId { get; set; }
+
+        [NotMapped]
+        public TablaUsoFuenteAportante TablaUsoFuenteAportante { get; set; }
     }
 
     
