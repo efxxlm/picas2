@@ -302,8 +302,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -2839,6 +2837,11 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.DisponibilidadPresupuestalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DisponibilidadPresupuestalObservacion_DisponibilidadPresupuestal");
+
+                entity.HasOne(d => d.NovedadContractualRegistroPresupuestal)
+                    .WithMany(p => p.DisponibilidadPresupuestalObservacion)
+                    .HasForeignKey(d => d.NovedadContractualRegistroPresupuestalId)
+                    .HasConstraintName("FK_DisponibilidadNovedadContractualRegistroPresupuestal");
             });
 
             modelBuilder.Entity<DisponibilidadPresupuestalProyecto>(entity =>

@@ -11,7 +11,10 @@ namespace asivamosffie.model.Models
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public string EstadoSolicitudCodigo { get; set; }
+        public bool? EsNovedad { get; set; }
+        public int? NovedadContractualRegistroPresupuestalId { get; set; }
 
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
+        public virtual NovedadContractualRegistroPresupuestal NovedadContractualRegistroPresupuestal { get; set; }
     }
 }

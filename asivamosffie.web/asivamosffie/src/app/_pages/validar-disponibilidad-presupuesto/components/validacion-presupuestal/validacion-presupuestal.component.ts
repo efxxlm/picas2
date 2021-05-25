@@ -104,7 +104,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
   openDialogDevolver(tipo, numero, tipoSolicitud) {
     this.dialog.open(DevolverPorValidacionComponent, {
-      width: '70em', data: { solicitudID: this.route.snapshot.paramMap.get('id'), tipo: tipo, numeroSolicitud: numero, tipoSolicitud: tipoSolicitud }
+      width: '70em', data: { solicitudID: this.route.snapshot.paramMap.get('id'), tipo: tipo, numeroSolicitud: numero, tipoSolicitud: tipoSolicitud , esNovedad: this.esNovedad, novedadId: this.novedadId}
     });
   }
 

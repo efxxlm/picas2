@@ -1549,8 +1549,20 @@ namespace asivamosffie.services
             {
                 if (esNovedad == true)
                 {
-                    //NovedadContractualRegistroPresupuestal -- CAMBIARLE EL ESTADO
-                    //NovedadContractualObservaciones -- agregar un campo esNovedad
+                    NovedadContractualRegistroPresupuestal novedad = _context.NovedadContractualRegistroPresupuestal.Find(pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId);
+                    if (novedad != null)
+                    {
+                        int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Devuelta_por_validacion_presupuestal;
+                        novedad.FechaModificacion = DateTime.Now;
+                        novedad.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                        novedad.EstadoSolicitudCodigo = estado.ToString();
+
+                        pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                        pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                        pDisponibilidadPresObservacion.EsNovedad = esNovedad;
+
+                        _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
+                    }
                 }
                 else
                 {
