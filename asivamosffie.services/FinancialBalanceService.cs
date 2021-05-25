@@ -95,7 +95,7 @@ namespace asivamosffie.services
 
         //                Tipo
         //                Descuento = FormattedAmount(OrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.FirstOrDefault().ValorDescuento),
-                      
+
         //            });
         //        }
         //    }
@@ -227,7 +227,6 @@ namespace asivamosffie.services
                      .Replace("[NUMERO_TRASLADO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().NumeroTraslado
                      .Replace("[NUMERO_ORDEN_GIRO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().OrdenGiro.NumeroSolicitud)
                      .Replace("[VALOR_ORDEN_GIRO]", String.Format("{0:n0}", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().ValorTraslado) ?? "0"));
-
 
             return template;
         }
@@ -798,6 +797,15 @@ namespace asivamosffie.services
         public string FormattedAmount(decimal? pValue)
         {
             return string.Concat("$", String.Format("{0:n0}", pValue));
+        }
+
+
+        public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
+        { 
+            return new List<dynamic>
+            {
+              await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
+            }; 
         }
         #endregion
 

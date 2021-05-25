@@ -251,6 +251,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
         public virtual DbSet<VEjecucionFinancieraXcontrato> VEjecucionFinancieraXcontrato { get; set; }
+        public virtual DbSet<VEjecucionPresupuestalXproyecto> VEjecucionPresupuestalXproyecto { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
@@ -301,6 +302,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8644,6 +8646,30 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")
                     .HasColumnType("decimal(18, 0)");
+            });
+
+            modelBuilder.Entity<VEjecucionPresupuestalXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_EjecucionPresupuestalXProyecto");
+
+                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
