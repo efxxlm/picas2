@@ -112,7 +112,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
           this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
-          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
+          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
             return true;
           }
           else {
@@ -120,7 +120,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
           }
         }
         else {//para tradicional
-          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
+          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado && this.detailavailabilityBudget.estadoRegistro == true) {
             return true;
           }
           else {

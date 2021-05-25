@@ -294,7 +294,11 @@ namespace asivamosffie.services
                         }
                         else
                         {
-
+                            if (ListGestionFuenteFinanciacion
+                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId &&
+                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
+                                .Count() == aportantes.Count())
+                                blnEstado = true;
                         }
                     }
 
@@ -304,7 +308,6 @@ namespace asivamosffie.services
                     {
 
                         FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy"),
-                        EstadoRegistro = blnEstado,
                         TipoSolicitud = strTipoSolicitud,
                         TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? listaDominioTipoEspecial.Where(r => r.Codigo == DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo)?.FirstOrDefault()?.Nombre :
                         //si no viene el campo puede ser contratación
@@ -318,7 +321,8 @@ namespace asivamosffie.services
                         Contratacion = contratacion,
                         NovedadContractualRegistroPresupuestalId = DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId,
                         EsNovedad = DisponibilidadPresupuestal.EsNovedad,
-                        NovedadContractualId = DisponibilidadPresupuestal.NovedadContractualId
+                        NovedadContractualId = DisponibilidadPresupuestal.NovedadContractualId,
+                        EstadoRegistro = blnEstado
                     };
                     ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
                 }
