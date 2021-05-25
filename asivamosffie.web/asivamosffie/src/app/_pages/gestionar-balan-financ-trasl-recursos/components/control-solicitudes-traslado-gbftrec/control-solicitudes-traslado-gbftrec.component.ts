@@ -87,9 +87,9 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
                             fechaAprobacionFiduciaria: moment( ordenGiro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ),
                             fechaPagoFiduciaria: moment( ordenGiro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ),
                             numeroOrdendeGiro: ordenGiro.numeroSolicitudOrdenGiro,
-                            modalidadContrato: ordenGiro.contrato.modalidadCodigo,
-                            numeroContrato: ordenGiro.contrato.numeroContrato,
-                            solicitudPagoId: ordenGiro.solicitudPago[ 0 ].solicitudPagoId
+                            modalidadContrato: ordenGiro.modalidad,
+                            numeroContrato: ordenGiro.numeroContrato,
+                            solicitudPagoId: ordenGiro.solicitudPagoId
                         }
                     )
                 } )
