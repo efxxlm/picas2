@@ -56,4 +56,8 @@ export class FinancialBalanceService {
         return this.http.post<Respuesta>(`${ this.apiUrl }/ChangeStatudBalanceFinanciero`, pBalanceFinanciero );
     }
 
+    GetTablaUsoFuenteAportanteXContratoId(contratoId: any) {
+      return this.http.get<any>( `${ this.apiUrl }/GetTablaUsoFuenteAportanteXContratoId?pContratoId=${ contratoId }` );
+    }
+
 }

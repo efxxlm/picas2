@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class RecursosCompromAccordGbftrecComponent implements OnInit {
 
   @Input() contratacionProyecto: any[] = [];
+  @Input() contratoId: any[] = [];
   dataTable: any[] = [];
   aportante: any[] = [];
   valorAportante: any[] = [];

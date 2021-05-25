@@ -12,7 +12,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -39,7 +39,7 @@
     <mat-expansion-panel class="expansion-style" *ngIf="contratoInterventoria !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-                Contrato de interventoria &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
+                Contrato de interventoría &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-accordion>

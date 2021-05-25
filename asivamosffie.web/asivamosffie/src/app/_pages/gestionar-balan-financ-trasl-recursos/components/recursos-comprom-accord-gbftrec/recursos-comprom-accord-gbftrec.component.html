@@ -25,4 +25,4 @@
     </table>
     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
 </div>
-<app-fuentes-usos-gbftrec></app-fuentes-usos-gbftrec>
+<app-fuentes-usos-gbftrec *ngIf="contratoId" [contratoId]="contratoId"></app-fuentes-usos-gbftrec>
