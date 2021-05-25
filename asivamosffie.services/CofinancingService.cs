@@ -462,7 +462,10 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        nombre = _context.Dominio.Find(cofinanciacionAportante.NombreAportanteId).Nombre;
+                        if (cofinanciacionAportante.NombreAportanteId != null)
+                        {
+                            nombre = _context.Dominio.Find(cofinanciacionAportante.NombreAportanteId).Nombre;
+                        }
                     }
                     CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
                     {

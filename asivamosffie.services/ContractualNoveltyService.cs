@@ -162,6 +162,8 @@ namespace asivamosffie.services
                                         .Include(x => x.Contratacion)
                                             .ThenInclude(x => x.Contratista)
                                         .Include(r => r.ContratoPoliza)
+                                            .Include(r => r.NovedadContractual)
+                                                .ThenInclude(x => x.NovedadContractualDescripcion)
                                         .ToList();
 
             /*List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
