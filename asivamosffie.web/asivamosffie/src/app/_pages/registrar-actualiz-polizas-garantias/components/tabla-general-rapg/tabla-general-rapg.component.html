@@ -59,7 +59,10 @@
           color="accent"
           class="btn-table"
           [routerLink]="['verDetalleEditarPoliza', element.contratoPolizaId]"
-          *ngIf="estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion"
+          *ngIf="
+            estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion ||
+            getEstadoRegistro(element.estadoActualizacion) == 'Con póliza observada y devuelta'
+          "
         >
           Ver detalle/Editar
         </button>
