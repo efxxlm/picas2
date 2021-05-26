@@ -879,6 +879,8 @@ namespace asivamosffie.services
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
 
 
+                    contrato.ValorPagadoContratista = contrato.SolicitudPago.Sum(r => r.ValorFacturado);
+
                     ListContratos.Add(new
                     {
                         tablaOrdenGiroValorTotal = GetTablaOrdenGiroValorTotal(contrato.SolicitudPago),
@@ -1063,11 +1065,15 @@ namespace asivamosffie.services
                 if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
                     ValorDescuentosTecnica = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(c => c.ValorDescuento);
 
-
+                decimal ValorDescuentosTecnica2 = 0;
                 if (vDescuentosXordenGiro != null)
+                {
                     ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.ValorDescuento;
+                    ValorDescuentosTecnica2 = (decimal)vDescuentosXordenGiro.ValorDescuento;
+                }
 
-                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+
+                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica2 + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
 
 
                 TablaOrdenesGiro.Add(
@@ -1102,6 +1108,6 @@ namespace asivamosffie.services
         }
         #endregion
 
-   
+
     }
 }

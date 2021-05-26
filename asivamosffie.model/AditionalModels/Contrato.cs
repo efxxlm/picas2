@@ -78,6 +78,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public TablaUsoFuenteAportante TablaUsoFuenteAportante { get; set; }
+
+        [NotMapped]
+        public decimal? ValorPagadoContratista { get; set; }
     }
 
     
