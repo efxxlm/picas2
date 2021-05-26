@@ -456,9 +456,20 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
         {
+            if (ConstanCodigoEstadoRevisionPoliza.Devuelta == pItem.EstadoSegundaRevision)
+            {
+                _context.Set<ContratoPolizaActualizacion>()
+                        .Where(c => c.ContratoPolizaActualizacionId == pItem.ContratoPolizaActualizacionId)
+                        .Update(c => new ContratoPolizaActualizacion
+                        {
+                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta
+                        });
+            }
+
+
             if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision)
                 return false;
-
+        
             if (
                     !pItem.SegundaFechaRevision.HasValue
                  || string.IsNullOrEmpty(pItem.EstadoSegundaRevision)
