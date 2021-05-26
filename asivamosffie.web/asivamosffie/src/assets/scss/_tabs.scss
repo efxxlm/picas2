@@ -6,6 +6,9 @@
     padding: 0.5em 2em;
     box-shadow: none;
     border: solid 1px #fff;
+    @media only screen and (max-width: 24em) {
+      width: 100%;
+    }
     @media only screen and (min-width: 64em) {
       width: 25%;
     }
