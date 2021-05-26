@@ -17,14 +17,14 @@
 <ng-template #noEsVerDetalle>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row mtop justCenter">
-            <div class="col-md-6">
+            <div>
                 <label class="label-left" for="tieneObservaciones" class="label-left" [class.color-secondaryColor]="
           (addressForm.get('tieneObservaciones').invalid &&
             addressForm.get('tieneObservaciones').touched) ||
           (addressForm.get('tieneObservaciones').invalid && estaEditando)
         ">¿Tiene observaciones específicas de la actualización?</label>
             </div>
-            <div class="col-md-2">
+            <div>
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
                     formControlName="tieneObservaciones">
                     <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>

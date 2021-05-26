@@ -17,10 +17,10 @@ export class TablaListaContratosComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
-      'numContrato',
-      'tipoContrato',
-      'contratista',
-      'gestion'
+      'numeroContrato',
+      'tipoSolicitudCodigo',
+      'nombre',
+      'contratoPolizaId'
     ];
 
     constructor( private commonSvc: CommonService ) {
