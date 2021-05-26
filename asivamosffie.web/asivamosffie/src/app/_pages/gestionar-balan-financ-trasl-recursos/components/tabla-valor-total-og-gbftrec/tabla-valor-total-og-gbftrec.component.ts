@@ -28,7 +28,7 @@ export class TablaValorTotalOgGbftrecComponent implements OnInit {
     'reteGarantiaAPagar',
     'otrosDescuentos',
     'aPagarAntesImpuestos',
-    'gestion'
+    // 'gestion'
   ];
 
 
