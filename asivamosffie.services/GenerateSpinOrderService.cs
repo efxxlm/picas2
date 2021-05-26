@@ -192,7 +192,7 @@ namespace asivamosffie.services
 
                         if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
                             OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Where(r => r.Eliminado != true).ToList();
-                    } 
+                    }
                 }
             }
             try
@@ -434,6 +434,36 @@ namespace asivamosffie.services
                 Enum++;
             }
             return ListTablaDrp;
+        }
+      
+        private void ValidateValorNeto(int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro1 =
+                _context.OrdenGiro
+                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                .Include(o => o.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacion)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            if (ordenGiro1.ValorNetoGiro == null)
+            {
+                foreach (var OrdenGiroDetalle in ordenGiro1.OrdenGiroDetalle)
+                {
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+
+                        if (OrdenGiroDetalleTerceroCausacion.ValorNetoGiro != null)
+                        {
+                            _context.Set<OrdenGiro>()
+                                    .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                    .Update(o => new OrdenGiro
+                                    {
+                                        ValorNetoGiro = OrdenGiroDetalleTerceroCausacion.ValorNetoGiro
+                                    });
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -713,11 +743,12 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                   ValidateValorNeto(pOrdenGiro.OrdenGiroId);
+
                     _context.Set<OrdenGiro>()
                             .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(o => new OrdenGiro
-                            {
-                                ValorNetoGiro = pOrdenGiro.ValorNetoGiro,
+                            { 
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
@@ -1375,6 +1406,6 @@ namespace asivamosffie.services
         #endregion
 
 
-      
+
     }
 }
