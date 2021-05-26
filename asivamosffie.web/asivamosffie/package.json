@@ -13,7 +13,7 @@
     "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre",
     "pro": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=pro",
     "stag": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=stag",
-    "produccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --prod"
+    "prod": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --prod"
   },
   "private": true,
   "dependencies": {
