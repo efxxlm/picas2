@@ -190,12 +190,7 @@
                                 color="warn"
                                 class="btn-guardar"
                                 type="submit"
-                                [disabled]="
-                                    !seguro.dirty ||
-                                    seguro.get('fechaSeguro')?.invalid ||
-                                    seguro.get('fechaAmparo')?.invalid ||
-                                    seguro.get('valorAmparo')?.invalid
-                                "
+                                [disabled]="!seguro.dirty"
                             >
                                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
                         </button>
