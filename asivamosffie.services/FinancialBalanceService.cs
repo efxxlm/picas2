@@ -36,7 +36,250 @@ namespace asivamosffie.services
         }
 
         #endregion
+        #region C R U D
 
+        #region create
+        public async Task<Respuesta> ValidateCompleteBalanceFinanciero(int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
+        {
+            await _context.Set<BalanceFinancieroTraslado>()
+                      .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+                      .UpdateAsync
+                      (b => new BalanceFinancieroTraslado
+                      {
+                          RegistroCompleto = pEstaCompleto
+                      });
+
+            //Validar registro Completo BalanceFinanciero
+            BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero
+                .Include(b => b.BalanceFinancieroTraslado)
+                .Where(b => b.BalanceFinancieroTraslado
+                  .Any(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId))
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            string strEstadoBalanceCodigo = balanceFinanciero.EstadoBalanceCodigo;
+
+            bool BlRegistroCompleto = balanceFinanciero.BalanceFinancieroTraslado.All(r => r.RegistroCompleto == true);
+            if (BlRegistroCompleto)
+                strEstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+
+
+            await _context.Set<BalanceFinanciero>()
+                          .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
+                          .UpdateAsync(b => new BalanceFinanciero
+                          {
+                              EstadoBalanceCodigo = strEstadoBalanceCodigo,
+                              RegistroCompleto = pEstaCompleto
+                          });
+
+            return new Respuesta();
+        }
+
+        public async Task<Respuesta> CreateEditBalanceFinanciero(BalanceFinanciero pBalanceFinanciero)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            try
+            {
+                if (pBalanceFinanciero.RequiereTransladoRecursos == false)
+                {
+                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+                    pBalanceFinanciero.RegistroCompleto = true;
+                }
+                else
+                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_necesidad_de_traslado;
+
+
+                if (pBalanceFinanciero.BalanceFinancieroId == 0)
+                {
+                    pBalanceFinanciero.FechaCreacion = DateTime.Now;
+                    _context.BalanceFinanciero.Add(pBalanceFinanciero);
+                }
+                else
+                {
+                    await _context.Set<BalanceFinanciero>().Where(r => r.BalanceFinancieroId == pBalanceFinanciero.BalanceFinancieroId)
+                                                                   .UpdateAsync(r => new BalanceFinanciero()
+                                                                   {
+                                                                       FechaModificacion = DateTime.Now,
+                                                                       UsuarioModificacion = pBalanceFinanciero.UsuarioCreacion,
+                                                                       RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
+                                                                       JustificacionTrasladoAportanteFuente = pBalanceFinanciero.JustificacionTrasladoAportanteFuente,
+                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte,
+                                                                       RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
+                                                                       EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
+                                                                   });
+
+                    CreateEditBalanceFinancieroTraslado(pBalanceFinanciero.BalanceFinancieroTraslado, pBalanceFinanciero.UsuarioCreacion);
+                }
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinanciero.UsuarioCreacion, !pBalanceFinanciero.FechaCreacion.HasValue ? "CREAR BALANCE FINANCIERO" : "ACTUALIZAR BALANCE FINANCIERO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, pBalanceFinanciero.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        private void CreateEditBalanceFinancieroTraslado(ICollection<BalanceFinancieroTraslado> ListBalanceFinancieroTraslado, string pAuthor)
+        {
+            foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
+            {
+                if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
+                {
+                    BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
+                    BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
+                    BalanceFinancieroTraslado.Eliminado = false;
+                    BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
+                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado);
+                    BalanceFinancieroTraslado.NumeroTraslado = _commonService.EnumeradorTrasladoBalanceFinanciero();
+                    _context.BalanceFinancieroTraslado.Add(BalanceFinancieroTraslado);
+                }
+                else
+                {
+                    _context.Set<BalanceFinancieroTraslado>()
+                          .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                          .Update(r => new BalanceFinancieroTraslado
+                          {
+                              UsuarioModificacion = pAuthor,
+                              FechaModificacion = DateTime.Now,
+                              RegistroCompleto = BalanceFinancieroTraslado.RegistroCompleto,
+                              ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)
+                          });
+                }
+
+                CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
+
+                _context.Set<OrdenGiro>()
+                             .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
+                             .Update(o => new OrdenGiro
+                             {
+                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
+                                 //  TieneTraslado = true
+                             });
+            }
+        }
+
+        private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTrasladoValor> ListBalanceFinancieroTrasladoValor, string pAuthor)
+        {
+            foreach (var BalanceFinancieroTrasladoValor in ListBalanceFinancieroTrasladoValor)
+            {
+                if (BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId == 0)
+                {
+                    BalanceFinancieroTrasladoValor.UsuarioCreacion = pAuthor;
+                    BalanceFinancieroTrasladoValor.FechaCreacion = DateTime.Now;
+                    BalanceFinancieroTrasladoValor.Eliminado = false;
+                    BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
+
+                    _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
+                }
+                else
+                {
+                    _context.Set<BalanceFinancieroTrasladoValor>()
+                            .Where(r => r.BalanceFinancieroTrasladoValorId == BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId)
+                            .Update(r => new BalanceFinancieroTrasladoValor
+                            {
+                                EsPreconstruccion = BalanceFinancieroTrasladoValor.EsPreconstruccion,
+                                UsuarioModificacion = pAuthor,
+                                FechaModificacion = DateTime.Now,
+                                ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado,
+                                RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null
+                            });
+                }
+            }
+        }
+        #endregion
+
+        private async Task<bool> RegistroCompletoBalanceFinanciero(BalanceFinanciero balanceFinanciero)
+        {
+            BalanceFinanciero balanceFinancieroOld = await _context.BalanceFinanciero.Where(r => r.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId).FirstOrDefaultAsync();
+            bool state = false;
+            if (balanceFinanciero != null)
+            {
+                if (balanceFinanciero.RequiereTransladoRecursos == false)
+                    return true;
+                else
+                    return balanceFinanciero.RegistroCompleto;
+            }
+            return state;
+        }
+
+        public async Task<Respuesta> ApproveBalance(int pProyectoId, string pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<BalanceFinanciero>()
+                        .Where(b => b.ProyectoId == pProyectoId)
+                        .Update(b => new BalanceFinanciero
+                        {
+                            FechaAprobacion = DateTime.Now,
+                            EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado,
+                            UsuarioModificacion = pUsuario,
+                            FechaModificacion = DateTime.Now,
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "APROBAR BALANCE FINANCIERO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }
+        }
+
+        public async Task<dynamic> GetVerDetalleOrdenGiro(int pSolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago
+                .Where(r => r.SolicitudPagoId == pSolicitudPagoId)
+                .Include(r => r.Contrato)
+                .ThenInclude(r => r.Contratacion).FirstOrDefault();
+
+            List<dynamic> OrdenGiro = new List<dynamic>();
+
+            return OrdenGiro;
+        }
+
+        private string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
+        {
+            BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
+                .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
+                .Include(r => r.OrdenGiro)
+                .Include(r => r.BalanceFinanciero)
+                .ThenInclude(r => r.Proyecto)
+                .FirstOrDefault();
+
+            return string.Empty;
+        }
+        #endregion 
         #region Get
 
         public async Task<OrdenGiro> GetOrdenGiroById(int pOrdenGiroId)
@@ -231,7 +474,7 @@ namespace asivamosffie.services
             string FechaTraslado = ((DateTime)balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().FechaCreacion).ToString("dd-MM-yyyy");
             string NumeroTraslado = balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)?.FirstOrDefault()?.NumeroTraslado ?? "";
             string NumeroOrdenGiro = balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault()?.OrdenGiro?.NumeroSolicitud ?? "";
-            string ValorOrdenGiro = String.Format("{0:n0}", (balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)?.FirstOrDefault()?.ValorTraslado) ?? 0 );
+            string ValorOrdenGiro = String.Format("{0:n0}", (balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)?.FirstOrDefault()?.ValorTraslado) ?? 0);
             template = template
                      .Replace("[LLAVE_MEN]", LlaveMen)
                      .Replace("[NUMERO_CONTRATO]", NumContrato)
@@ -309,6 +552,7 @@ namespace asivamosffie.services
                    );
             }
         }
+
         private void UpdateOdgTraslado(int OrdenGiroId, bool TieneTraslado)
         {
             //Actualizar ODG Con traslado
@@ -806,7 +1050,6 @@ namespace asivamosffie.services
                      .AsNoTracking()
                      .FirstOrDefault().Contrato.Contratacion.Contratista.Nombre;
 
-                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
 
                 Decimal DescuentosANS = 0;
                 if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS) > 0)
@@ -814,11 +1057,18 @@ namespace asivamosffie.services
 
                 Decimal DescuentosReteGarantia = 0;
                 if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
-                    DescuentosANS = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento));
+                    DescuentosReteGarantia = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento));
 
                 Decimal ValorDescuentosTecnica = 0;
+                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
+                    ValorDescuentosTecnica = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(c => c.ValorDescuento);
+
+
                 if (vDescuentosXordenGiro != null)
-                    ValorDescuentosTecnica = (decimal)vDescuentosXordenGiro.ValorDescuento;
+                    ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.ValorDescuento;
+
+                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+
 
                 TablaOrdenesGiro.Add(
                     new
@@ -852,249 +1102,6 @@ namespace asivamosffie.services
         }
         #endregion
 
-        #region C R U D
-
-        #region create
-        public async Task<Respuesta> ValidateCompleteBalanceFinanciero(int pBalanceFinancieroTrasladoId, bool pEstaCompleto)
-        {
-            await _context.Set<BalanceFinancieroTraslado>()
-                      .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
-                      .UpdateAsync
-                      (b => new BalanceFinancieroTraslado
-                      {
-                          RegistroCompleto = pEstaCompleto
-                      });
-
-            //Validar registro Completo BalanceFinanciero
-            BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero
-                .Include(b => b.BalanceFinancieroTraslado)
-                .Where(b => b.BalanceFinancieroTraslado
-                  .Any(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId))
-                .AsNoTracking()
-                .FirstOrDefault();
-
-            string strEstadoBalanceCodigo = balanceFinanciero.EstadoBalanceCodigo;
-
-            bool BlRegistroCompleto = balanceFinanciero.BalanceFinancieroTraslado.All(r => r.RegistroCompleto == true);
-            if (BlRegistroCompleto)
-                strEstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
-
-
-            await _context.Set<BalanceFinanciero>()
-                          .Where(b => b.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId)
-                          .UpdateAsync(b => new BalanceFinanciero
-                          {
-                              EstadoBalanceCodigo = strEstadoBalanceCodigo,
-                              RegistroCompleto = pEstaCompleto
-                          });
-
-            return new Respuesta();
-        }
-
-        public async Task<Respuesta> CreateEditBalanceFinanciero(BalanceFinanciero pBalanceFinanciero)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = string.Empty;
-            try
-            {
-                if (pBalanceFinanciero.RequiereTransladoRecursos == false)
-                {
-                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
-                    pBalanceFinanciero.RegistroCompleto = true;
-                }
-                else
-                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_necesidad_de_traslado;
-
-
-                if (pBalanceFinanciero.BalanceFinancieroId == 0)
-                {
-                    pBalanceFinanciero.FechaCreacion = DateTime.Now;
-                    _context.BalanceFinanciero.Add(pBalanceFinanciero);
-                }
-                else
-                {
-                    await _context.Set<BalanceFinanciero>().Where(r => r.BalanceFinancieroId == pBalanceFinanciero.BalanceFinancieroId)
-                                                                   .UpdateAsync(r => new BalanceFinanciero()
-                                                                   {
-                                                                       FechaModificacion = DateTime.Now,
-                                                                       UsuarioModificacion = pBalanceFinanciero.UsuarioCreacion,
-                                                                       RequiereTransladoRecursos = pBalanceFinanciero.RequiereTransladoRecursos,
-                                                                       JustificacionTrasladoAportanteFuente = pBalanceFinanciero.JustificacionTrasladoAportanteFuente,
-                                                                       UrlSoporte = pBalanceFinanciero.UrlSoporte,
-                                                                       RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
-                                                                       EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
-                                                                   });
-
-                    CreateEditBalanceFinancieroTraslado(pBalanceFinanciero.BalanceFinancieroTraslado, pBalanceFinanciero.UsuarioCreacion);
-                }
-                return
-                new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, pBalanceFinanciero.UsuarioCreacion, !pBalanceFinanciero.FechaCreacion.HasValue ? "CREAR BALANCE FINANCIERO" : "ACTUALIZAR BALANCE FINANCIERO")
-                };
-            }
-            catch (Exception ex)
-            {
-                return
-                  new Respuesta
-                  {
-                      IsSuccessful = false,
-                      IsException = true,
-                      IsValidation = false,
-                      Code = GeneralCodes.Error,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, pBalanceFinanciero.UsuarioCreacion, ex.InnerException.ToString())
-                  };
-            }
-        }
-
-        private void CreateEditBalanceFinancieroTraslado(ICollection<BalanceFinancieroTraslado> ListBalanceFinancieroTraslado, string pAuthor)
-        {
-            foreach (var BalanceFinancieroTraslado in ListBalanceFinancieroTraslado)
-            {
-                if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
-                {
-                    BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
-                    BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
-                    BalanceFinancieroTraslado.Eliminado = false;
-                    BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
-                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado);
-                    BalanceFinancieroTraslado.NumeroTraslado = _commonService.EnumeradorTrasladoBalanceFinanciero();
-                    _context.BalanceFinancieroTraslado.Add(BalanceFinancieroTraslado);
-                }
-                else
-                {
-                    _context.Set<BalanceFinancieroTraslado>()
-                          .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
-                          .Update(r => new BalanceFinancieroTraslado
-                          {
-                              UsuarioModificacion = pAuthor,
-                              FechaModificacion = DateTime.Now,
-                              RegistroCompleto = BalanceFinancieroTraslado.RegistroCompleto,
-                              ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado)
-                          });
-                }
-
-                CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
-
-                _context.Set<OrdenGiro>()
-                             .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
-                             .Update(o => new OrdenGiro
-                             {
-                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
-                                 //  TieneTraslado = true
-                             });
-            }
-        }
-
-        private void CreateEditBalanceFinancieroTrasladoValor(ICollection<BalanceFinancieroTrasladoValor> ListBalanceFinancieroTrasladoValor, string pAuthor)
-        {
-            foreach (var BalanceFinancieroTrasladoValor in ListBalanceFinancieroTrasladoValor)
-            {
-                if (BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId == 0)
-                {
-                    BalanceFinancieroTrasladoValor.UsuarioCreacion = pAuthor;
-                    BalanceFinancieroTrasladoValor.FechaCreacion = DateTime.Now;
-                    BalanceFinancieroTrasladoValor.Eliminado = false;
-                    BalanceFinancieroTrasladoValor.RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null;
-
-                    _context.BalanceFinancieroTrasladoValor.Add(BalanceFinancieroTrasladoValor);
-                }
-                else
-                {
-                    _context.Set<BalanceFinancieroTrasladoValor>()
-                            .Where(r => r.BalanceFinancieroTrasladoValorId == BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId)
-                            .Update(r => new BalanceFinancieroTrasladoValor
-                            {
-                                EsPreconstruccion = BalanceFinancieroTrasladoValor.EsPreconstruccion,
-                                UsuarioModificacion = pAuthor,
-                                FechaModificacion = DateTime.Now,
-                                ValorTraslado = BalanceFinancieroTrasladoValor.ValorTraslado,
-                                RegistroCompleto = BalanceFinancieroTrasladoValor.ValorTraslado != null
-                            });
-                }
-            }
-        }
-        #endregion
-
-        private async Task<bool> RegistroCompletoBalanceFinanciero(BalanceFinanciero balanceFinanciero)
-        {
-            BalanceFinanciero balanceFinancieroOld = await _context.BalanceFinanciero.Where(r => r.BalanceFinancieroId == balanceFinanciero.BalanceFinancieroId).FirstOrDefaultAsync();
-            bool state = false;
-            if (balanceFinanciero != null)
-            {
-                if (balanceFinanciero.RequiereTransladoRecursos == false)
-                    return true;
-                else
-                    return balanceFinanciero.RegistroCompleto;
-            }
-            return state;
-        }
-
-        public async Task<Respuesta> ApproveBalance(int pProyectoId, string pUsuario)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Balance_Financiero, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                _context.Set<BalanceFinanciero>()
-                        .Where(b => b.ProyectoId == pProyectoId)
-                        .Update(b => new BalanceFinanciero
-                        {
-                            FechaAprobacion = DateTime.Now,
-                            EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado,
-                            UsuarioModificacion = pUsuario,
-                            FechaModificacion = DateTime.Now,
-                        });
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "APROBAR BALANCE FINANCIERO")
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
-                };
-            }
-        }
-
-        public async Task<dynamic> GetVerDetalleOrdenGiro(int pSolicitudPagoId)
-        {
-            SolicitudPago solicitudPago = _context.SolicitudPago
-                .Where(r => r.SolicitudPagoId == pSolicitudPagoId)
-                .Include(r => r.Contrato)
-                .ThenInclude(r => r.Contratacion).FirstOrDefault();
-
-            List<dynamic> OrdenGiro = new List<dynamic>();
-
-            return OrdenGiro;
-        }
-
-        private string ReplaceTemplate(int pBalanceFinancieroTrasladoId)
-        {
-            BalanceFinancieroTraslado balanceFinancieroTraslado = _context.BalanceFinancieroTraslado
-                .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTrasladoId)
-                .Include(r => r.OrdenGiro)
-                .Include(r => r.BalanceFinanciero)
-                .ThenInclude(r => r.Proyecto)
-                .FirstOrDefault();
-
-            return string.Empty;
-        }
-        #endregion 
+   
     }
 }
