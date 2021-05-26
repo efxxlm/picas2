@@ -6,9 +6,13 @@
   
     &--btn {
         padding: .5em 2em;
-        width: 25%;
+        min-width: 25%;
         box-shadow: none;
         border: solid 1px #fff;
+
+        @media only screen and (max-width: 1023px) {
+          width: 100%;
+        }
   
         &.active {
             background-color: #0A244F;
@@ -18,9 +22,13 @@
     }
     &--btn2 {
       padding: .5em 2em;
-      width: 32%;
+      min-width: 32%;
       box-shadow: none;
       border: solid 1px #fff;
+
+      @media only screen and (max-width: 1023px) {
+        width: 100%;
+      }
 
       &.active {
           background-color: #0A244F;
