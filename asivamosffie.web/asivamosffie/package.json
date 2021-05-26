@@ -11,7 +11,9 @@
     "compilar": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200",
     "pruebas": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pru",
     "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre",
-    "pro": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=pro"
+    "pro": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=pro",
+    "stag": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=stag",
+    "produccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --prod"
   },
   "private": true,
   "dependencies": {
