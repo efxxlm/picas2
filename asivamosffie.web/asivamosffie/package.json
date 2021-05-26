@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "compilar": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200",
     "pruebas": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pru",
-    "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre"
+    "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre",
+    "pro": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=pro"
   },
   "private": true,
   "dependencies": {
