@@ -47,9 +47,9 @@ export class DisponibilidadPresupuestalService {
     return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
   }
   
-  GenerateDDP(id, esNovedad, pRegistroPresupuestalId)
+  GenerateDDP(id, esNovedad, pRegistroPresupuestalId, esValidar: boolean)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}&esValidar=${esValidar}`, { responseType: "blob" } );
   }
   CreateDDP(id, esNovedad, RegistroPresupuestalId)
   {
