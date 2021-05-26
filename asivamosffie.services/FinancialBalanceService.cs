@@ -159,7 +159,7 @@ namespace asivamosffie.services
                 switch (pBalanceFinancieroTraslado.EstadoCodigo)
                 {
                     case ConstanCodigoEstadoBalanceFinancieroTraslado.Traslado_Aprobado:
-                        GetRestaurarFuentesPorAportante(pBalanceFinancieroTraslado);
+                        GetRestaurarFuentesPorAportante(pBalanceFinancieroTraslado, false);
                         break;
 
                     case ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado:
@@ -238,10 +238,10 @@ namespace asivamosffie.services
                 .Where(r => r.BalanceFinancieroTrasladoValorId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                 .FirstOrDefault();
 
-            _context.GestionFuenteFinanciacion.Remove(gestionFuenteFinanciacion);
+            GetRestaurarFuentesPorAportante(pBalanceFinancieroTraslado, true);
         }
 
-        private void GetRestaurarFuentesPorAportante(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
+        private void GetRestaurarFuentesPorAportante(BalanceFinancieroTraslado pBalanceFinancieroTraslado, bool pEliminar)
         {
             pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor =
                 _context.BalanceFinancieroTrasladoValor
@@ -256,6 +256,9 @@ namespace asivamosffie.services
                                                        .ThenInclude(r => r.Contratacion)
                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                        .ToList();
+
+            //Actualizar ODG
+            UpdateOdgTraslado((int)pBalanceFinancieroTraslado.OrdenGiroId, !pEliminar);
 
             foreach (var BalanceFinancieroTrasladoValor in pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
             {
@@ -276,6 +279,7 @@ namespace asivamosffie.services
                 }
 
                 GetTrasladarRecursosxAportantexFuente(
+                    pEliminar,
                    0,
                    FuenteFinanciacionId,
                    BalanceFinancieroTrasladoValor.BalanceFinancieroTrasladoValorId,
@@ -285,8 +289,19 @@ namespace asivamosffie.services
                    );
             }
         }
+        private void UpdateOdgTraslado(int OrdenGiroId, bool TieneTraslado)
+        {
+            //Actualizar ODG Con traslado
+            _context.Set<OrdenGiro>()
+                     .Where(o => o.OrdenGiroId == OrdenGiroId)
+                     .Update(o => new OrdenGiro
+                     {
+                         TieneTraslado = TieneTraslado
+                     });
+        }
 
         private bool GetTrasladarRecursosxAportantexFuente(
+            bool Actualizar,
             int pAportanteId,
             int pFuenteFinanciacionId,
             int pBalanceFinancieroTrasladoValorId,
@@ -302,8 +317,8 @@ namespace asivamosffie.services
                     .AsNoTracking()
                     .OrderByDescending(r => r.GestionFuenteFinanciacionId)
                     .FirstOrDefault();
-
-                GestionFuenteFinanciacion gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion
+                GestionFuenteFinanciacion gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion();
+                gestionFuenteFinanciacionNew = new GestionFuenteFinanciacion
                 {
                     FechaCreacion = DateTime.Now,
                     UsuarioCreacion = pAuthor,
@@ -320,6 +335,12 @@ namespace asivamosffie.services
                     NuevoSaldoGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado + pValorTraslado,
                     BalanceFinancieroTrasladoValorId = pBalanceFinancieroTrasladoValorId
                 };
+
+                if (!Actualizar)
+                { 
+                    gestionFuenteFinanciacionNew.NuevoSaldoGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado - pValorTraslado;
+                }
+
 
                 _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacionNew);
                 _context.SaveChanges();
@@ -803,7 +824,7 @@ namespace asivamosffie.services
         {
             return string.Concat("$", String.Format("{0:n0}", pValue));
         }
-         
+
         public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
         {
             return new List<dynamic>
@@ -859,23 +880,14 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                // BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pBalanceFinanciero.ProyectoId).FirstOrDefault();
-
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
                 {
                     pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
                     pBalanceFinanciero.RegistroCompleto = true;
                 }
                 else
-                {
-                    //pBalanceFinanciero.RegistroCompleto = await RegistroCompletoBalanceFinanciero(pBalanceFinanciero);
-                    //if (pBalanceFinanciero.RegistroCompleto == false)
-                    //    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.En_proceso_de_validacion;
-                    //else
-                    //    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
-
                     pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_necesidad_de_traslado;
-                }
+
 
                 if (pBalanceFinanciero.BalanceFinancieroId == 0)
                 {
@@ -955,8 +967,8 @@ namespace asivamosffie.services
                              .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
                              .Update(o => new OrdenGiro
                              {
-                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0,
-                                 TieneTraslado = true
+                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
+                                 //  TieneTraslado = true
                              });
             }
         }
