@@ -301,7 +301,7 @@ namespace asivamosffie.services
         }
 
         private bool GetTrasladarRecursosxAportantexFuente(
-            bool Actualizar,
+            bool Eliminar,
             int pAportanteId,
             int pFuenteFinanciacionId,
             int pBalanceFinancieroTrasladoValorId,
@@ -336,12 +336,9 @@ namespace asivamosffie.services
                     BalanceFinancieroTrasladoValorId = pBalanceFinancieroTrasladoValorId
                 };
 
-                if (!Actualizar)
-                { 
+                if (Eliminar) 
                     gestionFuenteFinanciacionNew.NuevoSaldoGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado - pValorTraslado;
-                }
-
-
+                 
                 _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacionNew);
                 _context.SaveChanges();
                 return true;
