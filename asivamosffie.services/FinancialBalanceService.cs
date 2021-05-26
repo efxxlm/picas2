@@ -197,7 +197,13 @@ namespace asivamosffie.services
 
         private async Task<bool> GetNotificarFiduciariaxTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
         {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarBalanceFinanciero));
+            pBalanceFinancieroTraslado = _context.BalanceFinancieroTraslado
+                .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            Template template = _context.Template.Find((int)(enumeratorTemplate.EnviarBalanceFinanciero));
+
             string strContenido = ReplaceVariables(template.Contenido, pBalanceFinancieroTraslado);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
@@ -220,13 +226,19 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.Contrato)
                            .Include(b => b.Proyecto).FirstOrDefault();
 
+            string LlaveMen = balanceFinanciero.Proyecto.LlaveMen;
+            string NumContrato = balanceFinanciero.BalanceFinancieroTraslado.FirstOrDefault().OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato ?? "";
+            string FechaTraslado = ((DateTime)balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().FechaCreacion).ToString("dd-MM-yyyy");
+            string NumeroTraslado = balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)?.FirstOrDefault()?.NumeroTraslado ?? "";
+            string NumeroOrdenGiro = balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault()?.OrdenGiro?.NumeroSolicitud ?? "";
+            string ValorOrdenGiro = String.Format("{0:n0}", (balanceFinanciero?.BalanceFinancieroTraslado?.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)?.FirstOrDefault()?.ValorTraslado) ?? 0 );
             template = template
-                     .Replace("[LLAVE_MEN]", balanceFinanciero.Proyecto.LlaveMen)
-                     .Replace("[NUMERO_CONTRATO]", balanceFinanciero.BalanceFinancieroTraslado.FirstOrDefault().OrdenGiro.SolicitudPago.FirstOrDefault().Contrato.NumeroContrato)
-                     .Replace("[FECHA_TRASLADO]", ((DateTime)balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().FechaCreacion).ToString("dd-MMM-yy"))
-                     .Replace("[NUMERO_TRASLADO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().NumeroTraslado
-                     .Replace("[NUMERO_ORDEN_GIRO]", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().OrdenGiro.NumeroSolicitud)
-                     .Replace("[VALOR_ORDEN_GIRO]", String.Format("{0:n0}", balanceFinanciero.BalanceFinancieroTraslado.Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroId).FirstOrDefault().ValorTraslado) ?? "0"));
+                     .Replace("[LLAVE_MEN]", LlaveMen)
+                     .Replace("[NUMERO_CONTRATO]", NumContrato)
+                     .Replace("[FECHA_TRASLADO]", FechaTraslado)
+                     .Replace("[NUMERO_TRASLADO]", NumeroTraslado)
+                     .Replace("[NUMERO_ORDEN_GIRO]", NumeroOrdenGiro)
+                     .Replace("[VALOR_TRASLADO]", ValorOrdenGiro);
 
             return template;
         }
@@ -247,6 +259,7 @@ namespace asivamosffie.services
                 _context.BalanceFinancieroTrasladoValor
                                                        .Where(r => r.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                                                        .Include(r => r.OrdenGiroDetalleTerceroCausacionAportante)
+                                                       .Include(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
                                                        .Include(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
                                                        .Include(r => r.OrdenGiroDetalleDescuentoTecnica)
                                                        .Include(r => r.BalanceFinancieroTraslado)
@@ -258,7 +271,14 @@ namespace asivamosffie.services
                                                        .ToList();
 
             //Actualizar ODG
-            UpdateOdgTraslado((int)pBalanceFinancieroTraslado.OrdenGiroId, !pEliminar);
+            BalanceFinancieroTraslado balanceFinancieroTrasladoOLd =
+                _context.BalanceFinancieroTraslado
+                .Where(b => b.BalanceFinancieroTrasladoId == pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+
+            UpdateOdgTraslado((int)balanceFinancieroTrasladoOLd.OrdenGiroId, !pEliminar);
 
             foreach (var BalanceFinancieroTrasladoValor in pBalanceFinancieroTraslado.BalanceFinancieroTrasladoValor)
             {
@@ -336,9 +356,9 @@ namespace asivamosffie.services
                     BalanceFinancieroTrasladoValorId = pBalanceFinancieroTrasladoValorId
                 };
 
-                if (Eliminar) 
-                    gestionFuenteFinanciacionNew.NuevoSaldoGenerado = gestionFuenteFinanciacion.NuevoSaldoGenerado - pValorTraslado;
-                 
+                if (Eliminar)
+                    gestionFuenteFinanciacionNew.NuevoSaldoGenerado = gestionFuenteFinanciacionNew.NuevoSaldoGenerado - pValorTraslado;
+
                 _context.GestionFuenteFinanciacion.Add(gestionFuenteFinanciacionNew);
                 _context.SaveChanges();
                 return true;
