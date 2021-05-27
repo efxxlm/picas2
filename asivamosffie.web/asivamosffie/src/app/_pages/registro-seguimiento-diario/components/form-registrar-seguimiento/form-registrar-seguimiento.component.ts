@@ -222,8 +222,9 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
     if ( environment.production === true ){
       return ( 
-              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) && 
-              ( d <= today ) 
+              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) 
+              // && 
+              // ( d <= today ) 
       );
     }else{
       return ( 
