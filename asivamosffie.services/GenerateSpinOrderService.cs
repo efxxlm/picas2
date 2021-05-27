@@ -304,7 +304,7 @@ namespace asivamosffie.services
             foreach (var item in List)
             {
                 if (!ListVFuentesUsoXcontratoId
-                    .Any(r => r.TipoUso == item.TipoUso))
+                    .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacionId == item.FuenteFinanciacionId))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
