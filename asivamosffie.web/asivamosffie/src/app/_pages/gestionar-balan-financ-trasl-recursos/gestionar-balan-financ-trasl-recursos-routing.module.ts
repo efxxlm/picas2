@@ -66,7 +66,7 @@ const routes: Routes = [
     component: RegistrarTrasladoGbftrecComponent
   },
   {
-    path: 'verDetalleTraslado/:id/:numeroOrdenGiro',
+    path: 'verDetalleTraslado/:id/:numeroOrdenGiro/:solicitudPagoId',
     component: RegistrarTrasladoGbftrecComponent
   }
 ];
