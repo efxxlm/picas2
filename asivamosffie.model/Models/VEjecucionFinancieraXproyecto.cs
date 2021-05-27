@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VEjecucionFinancieraXproyecto
     {
+        public string TipoSolicitudCodigo { get; set; }
         public int ProyectoId { get; set; }
         public string Nombre { get; set; }
         public decimal? TotalComprometido { get; set; }

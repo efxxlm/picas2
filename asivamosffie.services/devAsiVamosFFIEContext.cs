@@ -248,6 +248,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante> VDescuentosFinancieraOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
+        public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
@@ -291,6 +292,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VSetHistProyectoAportante> VSetHistProyectoAportante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
+        public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
@@ -305,6 +307,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8616,6 +8619,13 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
+            modelBuilder.Entity<VDescuentosXordenGiroAportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosXOrdenGiroAportante");
+            });
+
             modelBuilder.Entity<VDominio>(entity =>
             {
                 entity.HasNoKey();
@@ -8689,17 +8699,22 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("numeric(38, 6)");
 
                 entity.Property(e => e.PorcentajeEjecucionFinanciera).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorNetoOdg).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.TotalComprometido).HasColumnType("decimal(18, 0)");
 
-                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorNetoOdg).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 6)");
             });
 
             modelBuilder.Entity<VEjecucionPresupuestalXproyecto>(entity =>
@@ -8708,22 +8723,20 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_EjecucionPresupuestalXProyecto");
 
-                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 6)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.TotalComprometido).HasColumnType("decimal(18, 0)");
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
@@ -10049,6 +10062,20 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VTotalComprometidoXcontratacionProyectoTipoSolicitud>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_TotalComprometidoXContratacionProyectoTipoSolicitud");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
+            });
+
             modelBuilder.Entity<VUsuarioPerfil>(entity =>
             {
                 entity.HasNoKey();
@@ -10249,6 +10276,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FaseId)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
