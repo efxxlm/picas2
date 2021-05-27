@@ -86,7 +86,7 @@ export class FormLiquidacionComponent implements OnInit {
       this.routes.navigate([ '/procesosContractuales' ]);
       return;
     };
-    this.getContratacionProyectoByContratacionProyectoId( this.activatedRoute.snapshot.params.id );
+    this.getContratacionByContratacionId( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
     this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
@@ -95,10 +95,10 @@ export class FormLiquidacionComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  async getContratacionProyectoByContratacionProyectoId(contratacionProyectoId: number) {
+  async getContratacionByContratacionId(contratacionId: number) {
     this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
 
-    this.registerContractualLiquidationRequestService.getContratacionProyectoByContratacionProyectoId(contratacionProyectoId).subscribe(response => {
+    this.registerContractualLiquidationRequestService.getContratacionByContratacionId(contratacionId).subscribe(response => {
       if(response != null){
         this.data = response[0];
         if(this.data.contratacionProyecto?.contratacionId != null){

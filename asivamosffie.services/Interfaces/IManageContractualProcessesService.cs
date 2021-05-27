@@ -26,6 +26,6 @@ namespace asivamosffie.services.Interfaces
         Task<NovedadContractual> GetNovedadById(int id);
 
         Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual);
-        Task<Respuesta> RegistrarTramiteLiquidacion(ContratacionProyecto pContratacion);
+        Task<Respuesta> RegistrarTramiteLiquidacion(Contratacion pContratacion);
     }
 }

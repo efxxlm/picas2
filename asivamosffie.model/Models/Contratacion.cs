@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             ContratacionProyecto = new HashSet<ContratacionProyecto>();
             Contrato = new HashSet<Contrato>();
             DisponibilidadPresupuestal = new HashSet<DisponibilidadPresupuestal>();
+            LiquidacionContratacionObservacion = new HashSet<LiquidacionContratacionObservacion>();
         }
 
         public int ContratacionId { get; set; }
@@ -43,11 +44,26 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoLiquidacion { get; set; }
         public DateTime? FechaFirmaEnvioContratista { get; set; }
         public DateTime? FechaFirmaEnvioFiduciaria { get; set; }
+        public string EstadoValidacionLiquidacionCodigo { get; set; }
+        public DateTime? FechaValidacionLiquidacion { get; set; }
+        public string EstadoAprobacionLiquidacionCodigo { get; set; }
+        public DateTime? FechaAprobacionLiquidacion { get; set; }
+        public string EstadoTramiteLiquidacion { get; set; }
+        public bool? RegistroCompletoVerificacionLiquidacion { get; set; }
+        public bool? RegistroCompletoAprobacionLiquidacion { get; set; }
+        public bool? RegistroCompletoTramiteLiquidacion { get; set; }
+        public DateTime? FechaTramiteLiquidacionControl { get; set; }
+        public string NumeroSolicitudLiquidacion { get; set; }
+        public DateTime? FechaTramiteGestionar { get; set; }
+        public string ObservacionGestionar { get; set; }
+        public string UrlSoporteGestionar { get; set; }
+        public bool? RegistroCompletoGestionar { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyecto> ContratacionProyecto { get; set; }
         public virtual ICollection<Contrato> Contrato { get; set; }
         public virtual ICollection<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
+        public virtual ICollection<LiquidacionContratacionObservacion> LiquidacionContratacionObservacion { get; set; }
     }
 }

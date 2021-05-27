@@ -20,10 +20,10 @@ export class TablaBalanceFinancieroComponent implements OnInit {
     'sede',
     'numeroTraslados',
     'estadoValidacion',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
-  @Input() contratacionProyectoId: number;
+  @Input() contratacionId: number;
   @Input() esVerDetalle: boolean;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
@@ -37,11 +37,11 @@ export class TablaBalanceFinancieroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getBalanceByContratacionProyectoId(this.contratacionProyectoId);
+    this.getBalanceBycontratacionId(this.contratacionId);
   }
 
-  getBalanceByContratacionProyectoId(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getBalanceByContratacionProyectoId(contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
+  getBalanceBycontratacionId(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getBalanceByContratacionId(contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -53,7 +53,7 @@ export class TablaBalanceFinancieroComponent implements OnInit {
             numeroTraslados: element.balance.numeroTraslado,
             estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
             registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
-            contratacionProyectoId: contratacionProyectoId,
+            contratacionId: contratacionId,
             proyectoId: element.balance.proyectoId
           });
         })

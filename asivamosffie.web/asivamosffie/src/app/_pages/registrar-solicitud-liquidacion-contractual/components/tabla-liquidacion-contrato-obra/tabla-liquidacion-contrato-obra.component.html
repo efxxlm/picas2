@@ -65,7 +65,7 @@
     </ng-container>
 
     <!-- id Column -->
-    <ng-container matColumnDef="contratacionProyectoId">
+    <ng-container matColumnDef="contratacionId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Gestión
       </th>
@@ -75,7 +75,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['validarRequisitos', element.contratacionProyectoId]"
+          [routerLink]="['validarRequisitos', element.contratacionId]"
         >
           Validar requisitos para liquidación
         </a>
@@ -84,7 +84,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['verDetalleEditarRequisitos', element.contratacionProyectoId]"
+          [routerLink]="['verDetalleEditarRequisitos', element.contratacionId]"
         >
           Ver detalle/Editar
         </a>
@@ -95,7 +95,7 @@
           color="accent"
           class="btn-table"
           type="button"
-          (click)="SendToSupervision(element.contratacionProyectoId)"
+          (click)="SendToSupervision(element.contratacionId)"
         >
           Enviar al supervisor
         </button>
@@ -105,7 +105,7 @@
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['verDetalleRequisitos', element.contratacionProyectoId]"
+          [routerLink]="['verDetalleRequisitos', element.contratacionId]"
         >
           Ver detalle
         </a>

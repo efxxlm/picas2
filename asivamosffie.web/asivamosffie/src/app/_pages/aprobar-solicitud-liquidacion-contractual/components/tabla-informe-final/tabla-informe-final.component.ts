@@ -21,13 +21,13 @@ export class TablaInformeFinalComponent implements OnInit {
     'institucionEducativa',
     'sede',
     'estadoValidacion',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   datosTabla = [];
 
-  @Input() contratacionProyectoId: number;
+  @Input() contratacionId: number;
   @Input() esVerDetalle: boolean;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
@@ -41,11 +41,11 @@ export class TablaInformeFinalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gridInformeFinal(this.contratacionProyectoId);
+    this.gridInformeFinal(this.contratacionId);
   }
 
-  gridInformeFinal(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionProyectoId, this.listaMenu.aprobarSolicitudLiquidacionContratacion).subscribe(report => {
+  gridInformeFinal(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionId, this.listaMenu.aprobarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -57,7 +57,7 @@ export class TablaInformeFinalComponent implements OnInit {
             sede: element.sede,
             estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
             registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
-            contratacionProyectoId: contratacionProyectoId,
+            contratacionId: contratacionId,
             proyectoId: element.proyectoId
           });
         })

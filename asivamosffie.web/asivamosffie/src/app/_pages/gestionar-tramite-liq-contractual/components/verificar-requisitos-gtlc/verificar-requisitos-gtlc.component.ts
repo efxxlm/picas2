@@ -12,7 +12,7 @@ export class VerificarRequisitosGtlcComponent implements OnInit {
   semaforoActualizacionPoliza = 'Incompleto';
   semaforoBalanceFinanciero = 'Incompleto'
   semaforoInformeFinal = 'Incompleto'
-  contratacionProyectoId: number;
+  contratacionId: number;
   data: any;
   esRegistroNuevo: boolean;
   esVerDetalle: boolean;
@@ -22,7 +22,7 @@ export class VerificarRequisitosGtlcComponent implements OnInit {
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
   ) { 
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'verificarRequisitos' ) {
@@ -44,11 +44,11 @@ export class VerificarRequisitosGtlcComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getContratacionProyectoByContratacionProyectoId(this.contratacionProyectoId);
+    this.getContratacionProyectoBycontratacionId(this.contratacionId);
   }
 
-  getContratacionProyectoByContratacionProyectoId(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getContratacionProyectoByContratacionProyectoId(contratacionProyectoId).subscribe(response => {
+  getContratacionProyectoBycontratacionId(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getContratacionByContratacionId(contratacionId).subscribe(response => {
       if(response != null){
         this.data = response[0];
       }

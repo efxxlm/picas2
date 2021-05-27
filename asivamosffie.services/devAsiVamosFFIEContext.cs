@@ -306,7 +306,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1224,11 +1223,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Contratacion>(entity =>
             {
+                entity.Property(e => e.EstadoAprobacionLiquidacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EstadoTramiteLiquidacion)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoValidacionLiquidacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaAprobacionLiquidacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -1246,11 +1259,21 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaTramiteGestionar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaTramiteLiquidacionControl).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("date");
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitudLiquidacion)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RegistroCompletoLiquidacion).HasDefaultValueSql("((0))");
@@ -1314,10 +1337,6 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
 
-                entity.Property(e => e.EstadoAprobacionLiquidacionCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -1326,39 +1345,15 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoSolicitudCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EstadoTramiteLiquidacion)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EstadoValidacionLiquidacionCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FechaAprobacionLiquidacion).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaAprobacionRequisitos).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteGestionar).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaVigencia).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroLicencia)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroSolicitudLiquidacion)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -3585,11 +3580,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ContratacionProyecto)
+                entity.HasOne(d => d.Contratacion)
                     .WithMany(p => p.LiquidacionContratacionObservacion)
-                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .HasForeignKey(d => d.ContratacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LiquidacionContratacionObservacion_ContratacionProyecto");
+                    .HasConstraintName("FK_LiquidacionContratacionObservacion_Contratacion");
 
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.LiquidacionContratacionObservacion)
@@ -8445,9 +8440,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaPoliza).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
+                entity.Property(e => e.FechaTramiteLiquidacionControl).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("datetime");
+                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("date");
 
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")

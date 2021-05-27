@@ -72,7 +72,7 @@ export class ProcesosContractualesService {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteNovedadContractual`, novedadContractual );
   }
 
-  registrarTramiteLiquidacion( pContratacion: ContratacionProyecto ) {
+  registrarTramiteLiquidacion( pContratacion: DataSolicitud ) {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteLiquidacion`, pContratacion );
   }
 

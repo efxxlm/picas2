@@ -11,7 +11,7 @@ import { RegisterContractualLiquidationRequestService } from 'src/app/core/_serv
 })
 export class FormObservacionBalanceComponent implements OnInit {
 
-  @Input() contratacionProyectoId: any;
+  @Input() contratacionId: any;
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() balanceFinancieroId: number;
@@ -47,9 +47,9 @@ export class FormObservacionBalanceComponent implements OnInit {
   }
 
   buildForm() {
-    this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(
+    this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionId(
       this.menuId,
-      this.contratacionProyectoId,
+      this.contratacionId,
       this.balanceFinancieroId,
       this.tipoObservacionCodigo
     ).subscribe(response => {
@@ -93,7 +93,7 @@ export class FormObservacionBalanceComponent implements OnInit {
 
     const pLiquidacionContratacionObservacion = {
         liquidacionContratacionObservacionId: this.observaciones.get( 'liquidacionContratacionObservacionId' ).value,
-        contratacionProyectoId: this.contratacionProyectoId,
+        contratacionId: this.contratacionId,
         tipoObservacionCodigo: this.tipoObservacionCodigo,
         tieneObservacion: this.observaciones.get( 'tieneObservacion' ).value !== null ? this.observaciones.get( 'tieneObservacion' ).value : this.observaciones.get( 'tieneObservacion' ).value,
         observacion: this.observaciones.get( 'observacion' ).value !== null ? this.observaciones.get( 'observacion' ).value : this.observaciones.get( 'observacion' ).value,

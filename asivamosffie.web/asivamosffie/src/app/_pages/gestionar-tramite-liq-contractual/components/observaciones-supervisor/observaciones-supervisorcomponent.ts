@@ -10,7 +10,7 @@ import { HistoricoLiquidacionContratacionObservacion } from 'src/app/_interfaces
 })
 export class ObservacionesSupervisorComponent {
 
-  @Input() contratacionProyectoId: any;
+  @Input() contratacionId: any;
   @Input() tipoObservacionCodigo: string;
   @Input() menuId: any;
   @Input() padreId: number;
@@ -31,9 +31,9 @@ export class ObservacionesSupervisorComponent {
 
   ngOnInit(): void {
     if(this.esVerDetalle){
-      this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(
+      this.registerContractualLiquidationRequestService.getObservacionLiquidacionContratacionByMenuIdAndContratacionId(
         this.listaMenu.gestionarSolicitudLiquidacionContratacion,
-        this.contratacionProyectoId,
+        this.contratacionId,
         this.padreId,
         this.tipoObservacionCodigo
       ).subscribe(response => {
@@ -42,7 +42,7 @@ export class ObservacionesSupervisorComponent {
         }
       });
     }
-    this.getHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId();
+    this.getHistoricoObservacionLiquidacionContratacionByMenuIdAndcontratacionId();
     if(this.tipoObservacionCodigo == this.listaTipoObservacionLiquidacionContratacion.informeFinal){
         this.txt_pregunta = "¿Desde la supervisión tiene observaciones frente al informe final que deban ser tenidas en cuenta en la liquidación?:";
         this.txt_pregunta_detalle = "¿Desde control y seguimiento tiene observaciones frente a el informe final que deban ser tenidas en cuenta en la liquidación?:";
@@ -55,10 +55,10 @@ export class ObservacionesSupervisorComponent {
     }
   }
 
-  getHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId() {
-    this.registerContractualLiquidationRequestService.getHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(
+  getHistoricoObservacionLiquidacionContratacionByMenuIdAndcontratacionId() {
+    this.registerContractualLiquidationRequestService.getHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId(
       this.menuId,
-      this.contratacionProyectoId,
+      this.contratacionId,
       this.padreId,
       this.tipoObservacionCodigo
     ).subscribe(response => {

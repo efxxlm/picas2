@@ -24,7 +24,7 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
     'valorSolicitud',
     'proyectosAsociados',
     'estadoValidacionLiquidacionString',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
   
   ELEMENT_DATA: any[] = [];
@@ -69,7 +69,7 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
             estadoValidacionLiquidacionString: element.estadoValidacionLiquidacionString,
             estadoValidacionLiquidacionCodigo: element.estadoValidacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
-            contratacionProyectoId: element.contratacionProyectoId
+            contratacionId: element.contratacionId
           });
           if (element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.enProcesoDeValidacion || element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.conValidacion ) {
             enProceso++;
@@ -140,13 +140,13 @@ export class TablaLiquidacionContratoObraComponent implements OnInit, AfterViewI
     });
   }
 
-  SendToSupervision( pContratacionProyectoId: number ) {
-    const pContratacionProyecto = {
-        contratacionProyectoId: pContratacionProyectoId,
+  SendToSupervision( pContratacionId: number ) {
+    const pContratacion = {
+        contratacionId: pContratacionId,
         estadoValidacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAlSupervisor
     };
 
-    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.registrarSolicitudLiquidacionContratacion )
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacion( pContratacion, this.listaMenu.registrarSolicitudLiquidacionContratacion )
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );

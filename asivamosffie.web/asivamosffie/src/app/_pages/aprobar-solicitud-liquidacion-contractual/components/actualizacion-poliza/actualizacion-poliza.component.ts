@@ -19,7 +19,7 @@ export class ActualizacionPolizaComponent implements OnInit {
 
   @Input() contratoPolizaId : number;
   @Input() contratoPolizaActualizacionId : number;
-  @Input() contratacionProyectoId : number;
+  @Input() contratacionId : number;
   @Input() esVerDetalle: boolean;
   @Input() data: any;
   @Output() semaforoActualizacionPoliza = new EventEmitter<string>();
@@ -77,7 +77,7 @@ export class ActualizacionPolizaComponent implements OnInit {
     this.commonSvc.listaEstadoRevision()
     .subscribe( listaEstadoRevision => this.estadoArray = listaEstadoRevision );
 
-    this.registerContractualLiquidationRequestService.getContratoPoliza( this.contratoPolizaId , this.listaMenu.aprobarSolicitudLiquidacionContratacion, this.contratacionProyectoId)
+    this.registerContractualLiquidationRequestService.getContratoPoliza( this.contratoPolizaId , this.listaMenu.aprobarSolicitudLiquidacionContratacion, this.contratacionId)
         .subscribe(
             response => {
                 this.contratoPoliza = response;

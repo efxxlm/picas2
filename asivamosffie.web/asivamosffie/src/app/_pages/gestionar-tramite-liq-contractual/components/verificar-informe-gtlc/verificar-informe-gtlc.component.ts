@@ -12,7 +12,7 @@ import { InformeFinal } from 'src/app/_interfaces/informe-final';
 export class VerificarInformeGtlcComponent implements OnInit {
 
   proyectoId: number;
-  contratacionProyectoId: number;
+  contratacionId: number;
   datosTabla = [];
   data: any;
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
@@ -29,7 +29,7 @@ export class VerificarInformeGtlcComponent implements OnInit {
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'verificarInformeFinal' ) {
@@ -50,12 +50,12 @@ export class VerificarInformeGtlcComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getInformeFinalByProyectoId(this.proyectoId, this.contratacionProyectoId);
+    this.getInformeFinalByProyectoId(this.proyectoId, this.contratacionId);
   }
 
 
-  getInformeFinalByProyectoId(proyectoId: number, contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getInformeFinalByProyectoId(proyectoId, contratacionProyectoId, this.listaMenu.gestionarSolicitudLiquidacionContratacion).subscribe(report => {
+  getInformeFinalByProyectoId(proyectoId: number, contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getInformeFinalByProyectoId(proyectoId, contratacionId, this.listaMenu.gestionarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -78,7 +78,7 @@ export class VerificarInformeGtlcComponent implements OnInit {
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if(urlSegment.path.includes("Requisitos")){
-        this.routes.navigate(['/gestionarTramiteLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        this.routes.navigate(['/gestionarTramiteLiquidacionContractual/', urlSegment.path, this.contratacionId ]);
         return;
       }
     });

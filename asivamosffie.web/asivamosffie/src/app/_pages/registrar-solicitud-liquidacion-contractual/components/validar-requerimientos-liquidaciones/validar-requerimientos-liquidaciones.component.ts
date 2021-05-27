@@ -12,7 +12,7 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
   semaforoActualizacionPoliza = 'Incompleto';
   semaforoBalanceFinanciero = 'Incompleto'
   semaforoInformeFinal = 'Incompleto'
-  contratacionProyectoId: number;
+  contratacionId: number;
   data: any;
   esRegistroNuevo: boolean;
   esVerDetalle: boolean;
@@ -22,7 +22,7 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
   ) { 
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'validarRequisitos' ) {
@@ -43,11 +43,11 @@ export class ValidarRequerimientosLiquidacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContratacionProyectoByContratacionProyectoId(this.contratacionProyectoId);
+    this.getContratacionProyectoByContratacionId(this.contratacionId);
   }
 
-  getContratacionProyectoByContratacionProyectoId(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getContratacionProyectoByContratacionProyectoId(contratacionProyectoId).subscribe(response => {
+  getContratacionProyectoByContratacionId(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getContratacionByContratacionId(contratacionId).subscribe(response => {
       if(response != null){
         this.data = response[0];
       }

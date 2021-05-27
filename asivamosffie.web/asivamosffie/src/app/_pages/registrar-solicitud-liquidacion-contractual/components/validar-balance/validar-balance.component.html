@@ -78,6 +78,6 @@
     </a>
   </div>
 
-  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [esVerDetalle]="esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
+  <app-form-observacion-balance *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [esVerDetalle]="esVerDetalle" [contratacionId] = "contratacionId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
 
 </section>

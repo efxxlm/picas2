@@ -80,6 +80,6 @@
         </button>
     </div>
     
-    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
-    <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
+    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
+    <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
 </section>

@@ -53,13 +53,13 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("GetContratacionProyectoByContratacionProyectoId")]
+        [Route("GetContratacionByContratacionId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetContratacionProyectoByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        public async Task<ActionResult<List<dynamic>>> GetContratacionByContratacionId([FromQuery] int pContratacionId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GetContratacionProyectoByContratacionProyectoId(pContratacionProyectoId);
+                return await _registerContractualLiquidationRequest.GetContratacionByContratacionId(pContratacionId);
             }
             catch (Exception ex)
             {
@@ -69,11 +69,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GridInformeFinal")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GridInformeFinal([FromQuery] int pContratacionProyectoId, int pMenuId)
+        public async Task<ActionResult<List<dynamic>>> GridInformeFinal([FromQuery] int pContratacionId, int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GridInformeFinal(pContratacionProyectoId, pMenuId);
+                return await _registerContractualLiquidationRequest.GridInformeFinal(pContratacionId, pMenuId);
             }
             catch (Exception ex)
             {
@@ -83,11 +83,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInformeFinalByProyectoId")]
         [HttpGet]
-        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery] int pProyectoId, int pContratacionProyectoId, int pMenuId)
+        public async Task<ActionResult<List<dynamic>>> GetInformeFinalByProyectoId([FromQuery] int pProyectoId, int pContratacionId, int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GetInformeFinalByProyectoId(pProyectoId, pContratacionProyectoId, pMenuId);
+                return await _registerContractualLiquidationRequest.GetInformeFinalByProyectoId(pProyectoId, pContratacionId, pMenuId);
             }
             catch (Exception ex)
             {
@@ -109,11 +109,11 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId")]
+        [Route("GetObservacionLiquidacionContratacionByMenuIdAndContratacionId")]
         [HttpGet]
-        public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId([FromQuery] int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        public async Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionId([FromQuery] int pMenuId, int pContratacionId, int pPadreId, string pTipoObservacionCodigo)
         {
-            return await _registerContractualLiquidationRequest.GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(pMenuId, pContratacionProyectoId, pPadreId, pTipoObservacionCodigo);
+            return await _registerContractualLiquidationRequest.GetObservacionLiquidacionContratacionByMenuIdAndContratacionId(pMenuId, pContratacionId, pPadreId, pTipoObservacionCodigo);
         }
 
         [HttpPost]
@@ -134,14 +134,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("ChangeStatusLiquidacionContratacionProyecto")]
-        public async Task<IActionResult> ChangeStatusLiquidacionContratacionProyecto([FromBody] ContratacionProyecto pContratacionProyecto, [FromQuery] int menuId)
+        [Route("ChangeStatusLiquidacionContratacion")]
+        public async Task<IActionResult> ChangeStatusLiquidacionContratacionProyecto([FromBody] Contratacion pContratacion, [FromQuery] int menuId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerContractualLiquidationRequest.ChangeStatusLiquidacionContratacionProyecto(pContratacionProyecto, menuId);
+                pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerContractualLiquidationRequest.ChangeStatusLiquidacionContratacion(pContratacion, menuId);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -151,29 +151,29 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId")]
+        [Route("GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId")]
         [HttpGet]
-        public async Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId([FromQuery] int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo)
+        public async Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId([FromQuery] int pMenuId, int pContratacionId, int pPadreId, string pTipoObservacionCodigo)
         {
-            return await _registerContractualLiquidationRequest.GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(pMenuId, pContratacionProyectoId, pPadreId, pTipoObservacionCodigo);
+            return await _registerContractualLiquidationRequest.GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId(pMenuId, pContratacionId, pPadreId, pTipoObservacionCodigo);
         }
 
         [Route("GetContratoPoliza")]
         [HttpGet]
-        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId, int pMenuId, int pContratacionProyectoId)
+        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId, int pMenuId, int pContratacionId)
         {
-            var respuesta = await _registerContractualLiquidationRequest.GetContratoPoliza(pContratoPolizaId, pMenuId, pContratacionProyectoId);
+            var respuesta = await _registerContractualLiquidationRequest.GetContratoPoliza(pContratoPolizaId, pMenuId, pContratacionId);
             return respuesta;
         }
 
 
         [HttpGet]
-        [Route("GetBalanceByContratacionProyectoId")]
-        public async Task<dynamic> GetBalanceByContratacionProyectoId([FromQuery] int pContratacionProyectoId, int pMenuId)
+        [Route("GetBalanceByContratacionId")]
+        public async Task<dynamic> GetBalanceByContratacionId([FromQuery] int pContratacionId, int pMenuId)
         {
             try
             {
-                return await _registerContractualLiquidationRequest.GetBalanceByContratacionProyectoId(pContratacionProyectoId, pMenuId);
+                return await _registerContractualLiquidationRequest.GetBalanceByContratacionId(pContratacionId, pMenuId);
             }
 
             catch (Exception ex)

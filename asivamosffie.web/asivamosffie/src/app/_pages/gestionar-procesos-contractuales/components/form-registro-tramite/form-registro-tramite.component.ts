@@ -24,7 +24,6 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   @Input() novedadContractual: NovedadContractual;
   @Input() esNovedad: boolean;
   @Input() esLiquidacion: boolean;
-  @Input() contratacionProyecto: ContratacionProyecto;
 
   seRealizoPeticion = false;
   camposFaltantes = false;
@@ -123,10 +122,10 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
           err => this.openDialog('', err.message)
         );
       }else if(this.esLiquidacion == true){
-        this.contratacionProyecto.fechaTramiteGestionar = this.dataFormulario.get('fechaEnvioTramite').value;
-        this.contratacionProyecto.urlSoporteGestionar = this.dataFormulario.get('rutaDocumento').value;
-        this.contratacionProyecto.observacionGestionar = this.dataFormulario.get('observaciones').value;
-        this.procesosContractualesSvc.registrarTramiteLiquidacion(this.contratacionProyecto)
+        this.contratacion.fechaTramiteGestionar = this.dataFormulario.get('fechaEnvioTramite').value;
+        this.contratacion.urlSoporteGestionar = this.dataFormulario.get('rutaDocumento').value;
+        this.contratacion.observacionGestionar = this.dataFormulario.get('observaciones').value;
+        this.procesosContractualesSvc.registrarTramiteLiquidacion(this.contratacion)
         .subscribe((response: Respuesta) => {
             this.seRealizoPeticion = true;
             this.openDialog('', response.message);

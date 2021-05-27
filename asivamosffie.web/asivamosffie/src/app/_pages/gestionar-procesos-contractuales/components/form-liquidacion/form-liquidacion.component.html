@@ -336,9 +336,9 @@
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p>Fecha del trámite <b class="color-titulo">{{ data.contratacionProyecto.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
-        <app-form-registro-tramite [dataFormulario]="form" [contratacionProyecto]="data.contratacionProyecto"
-        [minDate]="data.contratacionProyecto.contratacion.fechaTramite" [esLiquidacion]= true></app-form-registro-tramite>
+        <p>Fecha del trámite <b class="color-titulo">{{ data.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="data.contratacion"
+        [minDate]="data.contratacion.fechaTramite" [esLiquidacion]= true></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

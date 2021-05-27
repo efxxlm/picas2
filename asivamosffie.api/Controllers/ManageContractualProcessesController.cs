@@ -151,7 +151,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("RegistrarTramiteLiquidacion")]
         [HttpPost]
-        public async Task<IActionResult> RegistrarTramiteLiquidacion([FromBody] ContratacionProyecto pContratacion)
+        public async Task<IActionResult> RegistrarTramiteLiquidacion([FromBody] Contratacion pContratacion)
         {
             Respuesta respuesta = new Respuesta();
             try

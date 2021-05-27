@@ -122,6 +122,6 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <app-form-observacion-informe-final *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId && data" [esVerDetalle]="esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-informe-final>
+  <app-form-observacion-informe-final *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId && data" [esVerDetalle]="esVerDetalle" [contratacionId] = "contratacionId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-informe-final>
 
 </section>

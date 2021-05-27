@@ -97,14 +97,14 @@ namespace asivamosffie.services
                 else
                 {
                     //si entra por acá asumimos que es de liquidación
-                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
-                        .Where(r => r.ContratacionProyectoId == pSesionComiteSolicitud.SolicitudId)
+                    Contratacion contratacion = _context.Contratacion
+                        .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
                         .FirstOrDefault();
-                    if (contratacionProyecto != null)
+                    if (contratacion != null)
                     {
-                        contratacionProyecto.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                        contratacionProyecto.FechaModificacion = DateTime.Now;
-                        contratacionProyecto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                        contratacion.FechaModificacion = DateTime.Now;
+                        contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                     }
                 }
 
@@ -1125,23 +1125,23 @@ namespace asivamosffie.services
         #endregion
 
         #region liquidaciones
-        public async Task<Respuesta> RegistrarTramiteLiquidacion(ContratacionProyecto pContratacion)
+        public async Task<Respuesta> RegistrarTramiteLiquidacion(Contratacion pContratacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                _context.Set<ContratacionProyecto>()
-                        .Where(n => n.ContratacionProyectoId == pContratacion.ContratacionProyectoId)
+                _context.Set<Contratacion>()
+                        .Where(n => n.ContratacionId == pContratacion.ContratacionId)
                         .Update(n =>
-                        new ContratacionProyecto
+                        new Contratacion
                         {
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pContratacion.UsuarioCreacion,
                             UrlSoporteGestionar = pContratacion.UrlSoporteGestionar,
                             FechaTramiteGestionar = pContratacion.FechaTramiteGestionar,
                             ObservacionGestionar = pContratacion.ObservacionGestionar,
-                            RegistroCompletoGestionar = ValidarRegistroCompletoContratacionProyecto(pContratacion)
+                            RegistroCompletoGestionar = ValidarRegistroCompletoContratacion(pContratacion)
                         });
 
 
@@ -1170,7 +1170,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoContratacionProyecto(ContratacionProyecto pContratacion)
+        private bool ValidarRegistroCompletoContratacion(Contratacion pContratacion)
         {
             if (string.IsNullOrEmpty(pContratacion.UrlSoporteGestionar)
                 || !pContratacion.FechaTramiteGestionar.HasValue
