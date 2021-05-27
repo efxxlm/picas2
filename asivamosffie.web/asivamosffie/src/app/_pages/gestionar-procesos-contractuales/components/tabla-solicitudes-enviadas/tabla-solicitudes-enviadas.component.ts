@@ -25,6 +25,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
     enviadaFiduciaria: '4',
     enviadaFiduciariaNovedad: '24',
     firmadoNovedad: '25',
+    enviadaFiduciariaLiquidacion: '6',
   }
 
   constructor ( private routes: Router ) {
@@ -35,7 +36,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       let dataTable = [];
 
       response.forEach( lista => {
-        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad || lista.estadoCodigo === this.estadoCodigos.firmadoNovedad) {
+        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad || lista.estadoCodigo === this.estadoCodigos.firmadoNovedad || (lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaLiquidacion && lista.tipoSolicitud === "Liquidación Contractual")) {
           dataTable.push( lista );
         };
       } );
@@ -67,7 +68,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       case 'Novedad Contractual':
         this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } )
       break;
-      case 'Liquidación':
+      case 'Liquidación Contractual':
         this.routes.navigate( [ '/procesosContractuales/liquidacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } )
       break;
       default:

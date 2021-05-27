@@ -310,7 +310,7 @@
 
       </mat-expansion-panel>
 
-      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === '9'">
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === '6'">
         <mat-expansion-panel-header class="expansion-style--header w-50">
           <mat-panel-title class="expansion-style--title">
             Información del trámite
@@ -320,10 +320,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Fecha del trámite</b>: 16/06/2020</p>
-              <p><b>Fecha de envío de documentación física para el trámite</b>: 16/06/2020</p>
-              <p><b>Observaciones</b>: Se enviara por medio de mensajeria 472 para que el documento pueda ser radicado este mismo día</p>
-              <p><b>Minuta adjunta</b>: Minuta.doc</p>
+              <p><b>Fecha del trámite</b>:{{ data.contratacionProyecto.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ data.contratacionProyecto.fechaTramiteGestionar | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Observaciones</b>:{{ data.contratacionProyecto.observacionGestionar }}</p>
+              <p><b>URL con soporte</b>: {{ data.contratacionProyecto.urlSoporteGestionar }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -332,12 +332,13 @@
     </mat-accordion>
   </div>
 
-  <div class="mt-2em" align="left" *ngIf="estadoCodigo === '2'">
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo !== '6'">
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p>Fecha del trámite <b class="color-titulo">16/06/2020</b></p>
-        <app-form-registro-tramite [dataFormulario]="form"></app-form-registro-tramite>
+        <p>Fecha del trámite <b class="color-titulo">{{ data.contratacionProyecto.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacionProyecto]="data.contratacionProyecto"
+        [minDate]="data.contratacionProyecto.contratacion.fechaTramite" [esLiquidacion]= true></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
+import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 
 @Injectable({
   providedIn: 'root'
@@ -70,5 +71,10 @@ export class ProcesosContractualesService {
   registrarTramiteNovedadContractual( novedadContractual: NovedadContractual ) {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteNovedadContractual`, novedadContractual );
   }
+
+  registrarTramiteLiquidacion( pContratacion: ContratacionProyecto ) {
+    return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteLiquidacion`, pContratacion );
+  }
+
 
 };

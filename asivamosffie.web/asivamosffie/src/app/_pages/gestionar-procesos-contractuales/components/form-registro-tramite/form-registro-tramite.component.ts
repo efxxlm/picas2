@@ -7,6 +7,7 @@ import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.int
 import { Router } from '@angular/router';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -22,6 +23,8 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   @Input() contratacion: DataSolicitud;
   @Input() novedadContractual: NovedadContractual;
   @Input() esNovedad: boolean;
+  @Input() esLiquidacion: boolean;
+  @Input() contratacionProyecto: ContratacionProyecto;
 
   seRealizoPeticion = false;
   camposFaltantes = false;
@@ -113,6 +116,17 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
           observacionGestionar: this.dataFormulario.get('observaciones').value
         };
         this.procesosContractualesSvc.registrarTramiteNovedadContractual(novedad)
+        .subscribe((response: Respuesta) => {
+            this.seRealizoPeticion = true;
+            this.openDialog('', response.message);
+          },
+          err => this.openDialog('', err.message)
+        );
+      }else if(this.esLiquidacion == true){
+        this.contratacionProyecto.fechaTramiteGestionar = this.dataFormulario.get('fechaEnvioTramite').value;
+        this.contratacionProyecto.urlSoporteGestionar = this.dataFormulario.get('rutaDocumento').value;
+        this.contratacionProyecto.observacionGestionar = this.dataFormulario.get('observaciones').value;
+        this.procesosContractualesSvc.registrarTramiteLiquidacion(this.contratacionProyecto)
         .subscribe((response: Respuesta) => {
             this.seRealizoPeticion = true;
             this.openDialog('', response.message);

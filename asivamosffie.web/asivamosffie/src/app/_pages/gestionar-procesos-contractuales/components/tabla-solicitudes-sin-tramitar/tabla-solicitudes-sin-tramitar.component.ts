@@ -60,7 +60,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
           dataTable.push( solicitud );
         }
-        if (solicitud.tipoSolicitud === 'Liquidación Contractual'){
+        if (solicitud.tipoSolicitud === 'Liquidación Contractual' && (solicitud.estadoCodigo !== '6')){
           this.enviarFiduciaria = '6';
           solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
 

@@ -47,6 +47,11 @@ export interface DataSolicitud {
   contrato?: any[];
   disponibilidadPresupuestal?: DisponibilidadPresupuestal[];
   pFile?: any;
+
+  urlSoporteGestionar ?: string,
+  fechaTramiteGestionar ?: Date,
+  observacionGestionar ?: string,
+  registroCompletoGestionar ?: boolean
 }
 
 interface DisponibilidadPresupuestal {

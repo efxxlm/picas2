@@ -44,53 +44,69 @@ namespace asivamosffie.services
 
             try
             {
-                SesionComiteSolicitud sesionComiteSolicitudOld =
+                if (pSesionComiteSolicitud.SesionComiteSolicitudId > 0)
+                {
+                    SesionComiteSolicitud sesionComiteSolicitudOld =
                     await _context.SesionComiteSolicitud
                     .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
                     .Include(r => r.ComiteTecnico)
                     .FirstOrDefaultAsync();
-                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
-                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                    sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                    sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+                    sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
-                //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
-                switch (sesionComiteSolicitudOld.TipoSolicitudCodigo)
-                {
-                    case ConstanCodigoTipoSolicitud.Contratacion:
-                        {
-                            Contratacion contratacion = _context.Contratacion
-                                .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                                .Include(r => r.Contrato)
-                                .Include(r => r.DisponibilidadPresupuestal)
-                                .FirstOrDefault();
+                    //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
+                    switch (sesionComiteSolicitudOld.TipoSolicitudCodigo)
+                    {
+                        case ConstanCodigoTipoSolicitud.Contratacion:
+                            {
+                                Contratacion contratacion = _context.Contratacion
+                                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                                    .Include(r => r.Contrato)
+                                    .Include(r => r.DisponibilidadPresupuestal)
+                                    .FirstOrDefault();
 
-                            contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                            contratacion.FechaModificacion = DateTime.Now;
-                            contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                            sesionComiteSolicitudOld.Contratacion = contratacion;
-                            break;
-                        }
-                    case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-                        {
-                            NovedadContractual novedadContractual = _context.NovedadContractual
-                                                    .Where(r => r.NovedadContractualId == pSesionComiteSolicitud.SolicitudId)
-                                                    .Include(r => r.Contrato)
-                                                        .ThenInclude(r => r.Contratacion)
-                                                    .FirstOrDefault();
-                            if (novedadContractual != null)
-                                novedadContractual.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                            novedadContractual.FechaModificacion = DateTime.Now;
-                            novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                            sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
-                            break;
-                        }
+                                contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                                contratacion.FechaModificacion = DateTime.Now;
+                                contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                                sesionComiteSolicitudOld.Contratacion = contratacion;
+                                break;
+                            }
+                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                            {
+                                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                        .Where(r => r.NovedadContractualId == pSesionComiteSolicitud.SolicitudId)
+                                                        .Include(r => r.Contrato)
+                                                            .ThenInclude(r => r.Contratacion)
+                                                        .FirstOrDefault();
+                                if (novedadContractual != null)
+                                    novedadContractual.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                                novedadContractual.FechaModificacion = DateTime.Now;
+                                novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                                sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
+                                break;
+                            }
+                    }
+
+                    if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
+                        await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                    if (ConstanCodigoEstadoNovedadContractual.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
+                        await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
-
-                if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
-                    await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-
-                if (ConstanCodigoEstadoNovedadContractual.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
-                    await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                else
+                {
+                    //si entra por acá asumimos que es de liquidación
+                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                        .Where(r => r.ContratacionProyectoId == pSesionComiteSolicitud.SolicitudId)
+                        .FirstOrDefault();
+                    if (contratacionProyecto != null)
+                    {
+                        contratacionProyecto.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                        contratacionProyecto.FechaModificacion = DateTime.Now;
+                        contratacionProyecto.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                    }
+                }
 
                 _context.SaveChanges();
 
@@ -1106,10 +1122,65 @@ namespace asivamosffie.services
             return true;
         }
 
-
         #endregion
 
+        #region liquidaciones
+        public async Task<Respuesta> RegistrarTramiteLiquidacion(ContratacionProyecto pContratacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contratacion, (int)EnumeratorTipoDominio.Acciones);
 
+            try
+            {
+                _context.Set<ContratacionProyecto>()
+                        .Where(n => n.ContratacionProyectoId == pContratacion.ContratacionProyectoId)
+                        .Update(n =>
+                        new ContratacionProyecto
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pContratacion.UsuarioCreacion,
+                            UrlSoporteGestionar = pContratacion.UrlSoporteGestionar,
+                            FechaTramiteGestionar = pContratacion.FechaTramiteGestionar,
+                            ObservacionGestionar = pContratacion.ObservacionGestionar,
+                            RegistroCompletoGestionar = ValidarRegistroCompletoContratacionProyecto(pContratacion)
+                        });
+
+
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantGestionarProcesosContractuales.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.OperacionExitosa, idAccion, pContratacion.UsuarioCreacion, "REGISTRAR SOLICITUD")
+                  };
+
+            }
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantGestionarProcesosContractuales.Error, idAccion, pContratacion.UsuarioCreacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
+        private bool ValidarRegistroCompletoContratacionProyecto(ContratacionProyecto pContratacion)
+        {
+            if (string.IsNullOrEmpty(pContratacion.UrlSoporteGestionar)
+                || !pContratacion.FechaTramiteGestionar.HasValue
+                || string.IsNullOrEmpty(pContratacion.ObservacionGestionar)
+                ) return false;
+
+            return true;
+        }
+
+        #endregion
     }
 
 }

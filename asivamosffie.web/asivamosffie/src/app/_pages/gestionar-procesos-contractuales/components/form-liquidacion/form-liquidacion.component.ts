@@ -105,6 +105,19 @@ export class FormLiquidacionComponent implements OnInit {
           this.procesosContractualesSvc.getContratacion(this.data.contratacionProyecto?.contratacionId)
           .subscribe(respuesta => {
             this.contratacion = respuesta;
+            let rutaDocumento;
+            if ( this.data.contratacionProyecto?.urlSoporteGestionar !== undefined ) {
+              rutaDocumento = this.data.contratacionProyecto?.urlSoporteGestionar.split( /[^\w\s]/gi );
+              rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+            } else {
+              rutaDocumento = null;
+            };
+            this.form.reset({
+              fechaEnvioTramite: this.data.contratacionProyecto?.fechaTramiteGestionar,
+              observaciones:this.data.contratacionProyecto?.observacionGestionar,
+              minutaName: rutaDocumento,
+              rutaDocumento: this.data.contratacionProyecto?.urlSoporteGestionar !== null ? this.data.contratacionProyecto?.urlSoporteGestionar : null
+            });
           });
         }
       }
@@ -114,12 +127,13 @@ export class FormLiquidacionComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       fechaEnvioTramite: [ null, Validators.required ],
-      observaciones: [ null ],
-      minuta: [ null ],
-      minutaFile: [ null ]
-    });
+      observaciones    : [ null ],
+      minuta           : [ null ],
+      minutaName       : [ null ],
+      minutaFile       : [ null ],
+      rutaDocumento    : [ null ]
+    })
   };
-
   maxLength (e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
