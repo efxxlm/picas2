@@ -36,13 +36,17 @@ namespace asivamosffie.model.Models
         public DateTime? FechaAprobacion { get; set; }
         public bool? RegistroCompleto1 { get; set; }
         public DateTime? FechaTramiteLiquidacion { get; set; }
-        public DateTime? FechaFirmaEnvioContratista { get; set; }
         public DateTime? FechaFirmaContratista { get; set; }
-        public DateTime? FechaFirmaEnvioFiduciaria { get; set; }
         public DateTime? FechaFirmaFiduciaria { get; set; }
         public string ObservacionesLiquidacion { get; set; }
         public string UrlDocumentoLiquidacion { get; set; }
         public bool? RegistroCompletoLiquidacion { get; set; }
+        public DateTime? FechaFirmaEnvioContratista { get; set; }
+        public DateTime? FechaFirmaEnvioFiduciaria { get; set; }
+        public DateTime? FechaTramiteGestionar { get; set; }
+        public string ObservacionGestionar { get; set; }
+        public string UrlSoporteGestionar { get; set; }
+        public bool? RegistroCompletoGestionar { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }

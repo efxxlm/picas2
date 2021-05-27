@@ -409,6 +409,8 @@ namespace asivamosffie.services
 
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
+            if (SolicitudPago.ContratoSon == null)
+                return new List<TablaDRP>();
             String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 

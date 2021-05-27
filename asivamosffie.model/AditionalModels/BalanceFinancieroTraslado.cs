@@ -15,5 +15,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<TablaDRP> TablaDRP { get; set; }
+
+        [NotMapped]
+        public int SolicitudPagoId { get; set; }
     }
 }

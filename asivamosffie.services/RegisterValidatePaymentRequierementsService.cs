@@ -1758,6 +1758,8 @@ namespace asivamosffie.services
 
         public SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago)
         {
+            if (solicitudPago == null)
+                return new SolicitudPago();
             switch (solicitudPago.TipoSolicitudCodigo)
             {
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
