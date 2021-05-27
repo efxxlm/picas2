@@ -917,17 +917,17 @@ namespace asivamosffie.services
                         .Include(d => d.SolicitudPago)
                     .AsNoTracking().FirstOrDefault();
 
-            List<VFuentesUsoXcontratoId> List =
+            List<VFuentesUsoXcontratoId> ListaCompleta =
                                                _context.VFuentesUsoXcontratoId
                                                .Where(c => c.ContratoId == solicitudPago.ContratoId)
                                                .ToList();
 
             List<VFuentesUsoXcontratoId> ListVFuentesUsoXcontratoId = new List<VFuentesUsoXcontratoId>();
 
-            foreach (var item in List)
+            foreach (var item in ListaCompleta)
             {
                 if (!ListVFuentesUsoXcontratoId
-               .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacionId == item.FuenteFinanciacionId))
+               .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
@@ -952,12 +952,12 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-                // if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo))
+               if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
                 {
                     ListUsos.Add(usos);
 
                     List<VFuentesUsoXcontratoId> List2 =
-                                                        List
+                                                        ListaCompleta
                                                         .Where(r => r.NombreUso == usos.NombreUso
                                                         && r.FuenteFinanciacion == usos.FuenteFinanciacion
                                                         )

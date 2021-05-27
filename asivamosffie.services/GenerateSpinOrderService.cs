@@ -304,7 +304,7 @@ namespace asivamosffie.services
             foreach (var item in List)
             {
                 if (!ListVFuentesUsoXcontratoId
-                    .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacionId == item.FuenteFinanciacionId))
+                    .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
@@ -331,7 +331,7 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-                // if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo))
+           if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
                 {
                     ListUsos.Add(usos);
 
