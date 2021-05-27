@@ -793,7 +793,7 @@ namespace asivamosffie.services
                         .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
                         .Include(r => r.SolicitudPago).ThenInclude(c => c.Contrato).ThenInclude(r => r.Contratacion)
                         .FirstOrDefault();
-                    BalanceFinancieroTraslado.SolicitudPagoId = OrdenGiro.SolicitudPagoId;
+                    BalanceFinancieroTraslado.SolicitudPagoId = OrdenGiro.SolicitudPago.FirstOrDefault().SolicitudPagoId;
                     BalanceFinancieroTraslado.NumeroContrato = OrdenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato;
                     BalanceFinancieroTraslado.NumeroOrdenGiro = OrdenGiro.NumeroSolicitud;
                     BalanceFinancieroTraslado.TablaDRP = GetDrpContrato(OrdenGiro.SolicitudPago.FirstOrDefault());
