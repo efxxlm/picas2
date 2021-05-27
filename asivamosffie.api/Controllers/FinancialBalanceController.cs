@@ -105,15 +105,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-        // TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId(int pContratoId);
+         
         [HttpGet]
         [Route("GetTablaUsoFuenteAportanteXContratoId")]
-        public TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId)
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId)
         {
             try
             {
-                return _finalBalanceService.GetTablaUsoFuenteAportanteXContratoId(pContratoId);
+                return await _finalBalanceService.GetTablaUsoFuenteAportanteXContratoId(pContratoId);
             }
             catch (Exception e)
             {

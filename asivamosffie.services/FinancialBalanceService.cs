@@ -897,13 +897,15 @@ namespace asivamosffie.services
             }
         }
 
-        public TablaUsoFuenteAportante GetTablaUsoFuenteAportanteXContratoId(int pContratoId)
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
                 .Include(r => r.Contrato)
                 .FirstOrDefault();
 
-            solicitudPago.OrdenGiro = _context.OrdenGiro
+            if (solicitudPago == null)
+                return new TablaUsoFuenteAportante();
+            solicitudPago.OrdenGiro =await _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
@@ -915,7 +917,7 @@ namespace asivamosffie.services
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
                         .Include(d => d.SolicitudPago)
-                    .AsNoTracking().FirstOrDefault();
+                    .AsNoTracking().FirstOrDefaultAsync();
 
             List<VFuentesUsoXcontratoId> ListaCompleta =
                                                _context.VFuentesUsoXcontratoId
