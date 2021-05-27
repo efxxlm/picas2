@@ -47,14 +47,14 @@
                         color="accent"
                         class="btn-table"
                         *ngIf="estadoTraslado.conRegistro === element.estadoCodigo"
-                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro ]">
+                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Ver detalle/Editar
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
                         *ngIf="estadoTraslado.notificadoFiduciaria === element.estadoCodigo"
-                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro ]">
+                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Modificar traslado
                 </button>
                 <button mat-raised-button

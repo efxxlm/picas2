@@ -62,7 +62,7 @@ const routes: Routes = [
     component: RegistrarTrasladoGbftrecComponent
   },
   {
-    path: 'verDetalleEditarTraslado/:id/:numeroOrdenGiro',
+    path: 'verDetalleEditarTraslado/:id/:numeroOrdenGiro/:solicitudPagoId',
     component: RegistrarTrasladoGbftrecComponent
   },
   {
