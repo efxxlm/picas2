@@ -523,7 +523,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                     //         ]
                     //     )
                     // );
-                    location.reload();
+                    // location.reload();
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
