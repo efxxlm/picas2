@@ -675,13 +675,14 @@ export class FormTerceroCausacionComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
 
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id, this.solicitudPago.ordenGiro.numeroSolicitud
-                            ]
-                        )
-                    );
+                    // this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                    //     () => this.routes.navigate(
+                    //         [
+                    //             '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id, this.solicitudPago.ordenGiro.numeroSolicitud
+                    //         ]
+                    //     )
+                    // );
+                    location.reload();
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
