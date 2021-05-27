@@ -378,7 +378,7 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;
 
-
+                ListDisponibilidadPresupuestal.Remove(RegistroPresupuestal.DisponibilidadPresupuestal);
                 ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
             }
 
@@ -1072,9 +1072,10 @@ namespace asivamosffie.services
                                     .FirstOrDefault();
 
                     decimal saldo =
+                                     proyectoAportante != null ? 
                                      contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ?
                                      proyectoAportante.ValorInterventoria ?? 0 :
-                                     proyectoAportante.ValorObra ?? 0;
+                                     proyectoAportante.ValorObra ?? 0 : 0;
 
 
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
@@ -1127,11 +1128,11 @@ namespace asivamosffie.services
                         .Replace("[INSTITUCION]", institucion)
                         .Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
                         .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-                        .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra))
+                        .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", proyectoAportante != null ? contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra : 0))
                         .Replace("[FUENTE]", fuenteNombre)
-                        .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra))
-                        .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", SaldoActualFuente).ToString())
-                        .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (ValorSaldoFuente)).ToString());
+                        .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", proyectoAportante != null ? contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra : 0))
+                        .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(SaldoActualFuente)).ToString())
+                        .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(ValorSaldoFuente)).ToString());
                     tablafuentes += tr;
                 }
 

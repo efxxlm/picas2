@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ProcesosContractualesService } from 'src/app/core/_services/procesosContractuales/procesos-contractuales.service';
+import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
+import { DataSolicitud } from 'src/app/_interfaces/procesosContractuales.interface';
 
 @Component({
   selector: 'app-form-liquidacion',
@@ -8,11 +12,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-liquidacion.component.scss']
 })
 export class FormLiquidacionComponent implements OnInit {
-
+  contratacion: DataSolicitud;
   form         : FormGroup;
   observaciones: string;
   sesionComiteId: number = 0;
   estadoCodigo: string;
+  data: any;
+  listaTipoDocumento: Dominio[] = [];
   editorStyle = {
     height: '45px'
   };
@@ -70,17 +76,39 @@ export class FormLiquidacionComponent implements OnInit {
   ];
 
   constructor ( private fb: FormBuilder,
-                private routes: Router ) {
-    this.crearFormulario();
+                private routes: Router,
+                private activatedRoute: ActivatedRoute,
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService,
+                private commonSvc: CommonService
+                ) {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
       this.routes.navigate([ '/procesosContractuales' ]);
       return;
     };
+    this.getContratacionProyectoByContratacionProyectoId( this.activatedRoute.snapshot.params.id );
+    this.crearFormulario();
     this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
   }
 
   ngOnInit(): void {
+  }
+
+  async getContratacionProyectoByContratacionProyectoId(contratacionProyectoId: number) {
+    this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
+
+    this.registerContractualLiquidationRequestService.getContratacionProyectoByContratacionProyectoId(contratacionProyectoId).subscribe(response => {
+      if(response != null){
+        this.data = response[0];
+        if(this.data.contratacionProyecto?.contratacionId != null){
+          this.procesosContractualesSvc.getContratacion(this.data.contratacionProyecto?.contratacionId)
+          .subscribe(respuesta => {
+            this.contratacion = respuesta;
+          });
+        }
+      }
+    });
   }
 
   crearFormulario () {
@@ -101,5 +129,15 @@ export class FormLiquidacionComponent implements OnInit {
   guardar () {
     console.log( this.form );
   };
+
+  getTipoDocumento( codigo: string ) {
+    if ( this.listaTipoDocumento.length > 0 ) {
+        const tipo = this.listaTipoDocumento.find( tipo => tipo.codigo === codigo );
+
+        if ( tipo !== undefined ) {
+            return tipo.nombre;
+        }
+    }
+  }
 
 }

@@ -1,26 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.api.Controllers;
-using AuthorizationTest.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-using Newtonsoft.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+using asivamosffie.services.Interfaces;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
 namespace asivamosffie.services
 {
@@ -87,16 +79,16 @@ namespace asivamosffie.services
                                                     .FirstOrDefault();
                             if (novedadContractual != null)
                                 novedadContractual.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                                novedadContractual.FechaModificacion = DateTime.Now;
-                                novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-                                sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
+                            novedadContractual.FechaModificacion = DateTime.Now;
+                            novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
+                            sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
                             break;
                         }
                 }
 
                 if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
                     await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                
+
                 if (ConstanCodigoEstadoNovedadContractual.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
                     await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
@@ -1064,7 +1056,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 _context.Set<NovedadContractual>()
                         .Where(n => n.NovedadContractualId == pNovedadContractual.NovedadContractualId)
                         .Update(n =>
@@ -1110,8 +1102,8 @@ namespace asivamosffie.services
                 || !pNovedadContractual.FechaTramiteGestionar.HasValue
                 || string.IsNullOrEmpty(pNovedadContractual.ObservacionGestionar)
                 ) return false;
-             
-            return true; 
+
+            return true;
         }
 
 

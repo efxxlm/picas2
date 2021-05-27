@@ -1,4 +1,4 @@
-<div class="container text-center mt-2em">
+<div class="container text-center mt-2em" *ngIf="data != null">
   <div class="text-right">
     <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,7 +7,7 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud SL_001
+      Gestionar solicitud {{ data?.contratacionProyecto?.numeroSolicitudLiquidacion }}
     </h1>
   </div>
 
@@ -19,10 +19,9 @@
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: DDP_PI_0045</p>
+        <p><b>Número DDP</b>: {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}</p>
         <p>
-          <b>Objeto</b>:  Ejecutar la preconstrucción, construcción y post construcción de la Institución Educativa Manuela Beltran Sede principal en el municipio
-                          de Buga del departamente del Valle del Cauca.
+          <b>Objeto</b>: {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.objeto }}
         </p>
         <p><b>Número de comité fiduciario</b>: CF_001</p>
         <p><b>Fecha de comité fiduciario</b>: 13/06/2020</p>
@@ -61,11 +60,11 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
-              <p><b>Tipo de identificación</b>: NIT</p>
-              <p><b>Número de identificación</b>: 900.333.000-3</p>
-              <p><b>Nombre del representante legal</b>: Felipe Andrés Ruiz Fandiño</p>
-              <p><b>Número de la invitación</b>: 00300</p>
+              <p><b>Nombre del contratista</b>: {{ data.contratista.nombre }}</p>
+              <p><b>Tipo de identificación</b>: {{ getTipoDocumento( data.contratista.tipoIdentificacion  ) }} </p>
+              <p><b>Número de identificación</b>: {{ data.contratista.numeroIdentificacion }}</p>
+              <p><b>Nombre del representante legal</b>: {{ data.contratista.representanteLegal }}</p>
+              <p><b>Número de la invitación</b>: {{ data.contratista.numeroInvitacion }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -120,15 +119,15 @@
         <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              DDP_PI_018
+              {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="text-center">
-            <p><b>Valor del DDP</b> $80.000.000</p>
+            <p><b>Valor del DDP</b> {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud }}</p>
           </div>
 
-          <app-form-aportantes [data]="dataForm"></app-form-aportantes>
+          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="data.contratacionProyecto.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
 
         </mat-expansion-panel>
 

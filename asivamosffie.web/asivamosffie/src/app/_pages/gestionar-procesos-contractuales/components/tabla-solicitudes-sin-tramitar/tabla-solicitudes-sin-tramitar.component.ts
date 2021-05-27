@@ -60,6 +60,12 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
           dataTable.push( solicitud );
         }
+        if (solicitud.tipoSolicitud === 'Liquidación Contractual'){
+          this.enviarFiduciaria = '6';
+          solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
+
+          dataTable.push( solicitud );
+        }
       }
 
       if ( conTrue === dataTable.length ) {
@@ -114,7 +120,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: true, reinicio: false, sesionComiteSolicitudId, estadoCodigo } } );
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: false, reinicio: true, sesionComiteSolicitudId, estadoCodigo } } )
       break;
-      case 'Liquidación':
+      case 'Liquidación Contractual':
         this.routes.navigate( [ '/procesosContractuales/liquidacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
       break;
       default:

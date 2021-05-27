@@ -79,10 +79,15 @@ namespace asivamosffie.services
             List<dynamic> result = new List<dynamic>();
 
             VContratacionProyectoSolicitudLiquidacion values_lista = await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefaultAsync();
-            Contratacion contratacion = _context.Contratacion
-                    .Where(r => r.ContratacionId == values_lista.ContratacionId)
-                    .Include(r => r.Contratista)
-                    .FirstOrDefault();
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+                .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.Contratista)
+                .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+                .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
             string tipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(values_lista.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Componentes);
 
             result.Add(new
@@ -94,7 +99,8 @@ namespace asivamosffie.services
                 values_lista.ContratoPolizaId,
                 values_lista.ContratoPolizaActualizacionId,
                 tipoIntervencion,
-                contratacion.Contratista
+                contratacionProyecto.Contratacion.Contratista,
+                contratacionProyecto
             });
 
             return result;
@@ -448,7 +454,7 @@ namespace asivamosffie.services
                         int consecutivo = _context.ContratacionProyecto
                                         .Where(r => !String.IsNullOrEmpty(r.NumeroSolicitudLiquidacion))
                                         .Count();
-                        contratacionProyecto.NumeroSolicitudLiquidacion = "SL " + (consecutivo + 1).ToString("000");
+                        contratacionProyecto.NumeroSolicitudLiquidacion = "SL-" + (consecutivo + 1).ToString("000");
                         _context.SaveChanges();
                     }
                 }
