@@ -61,7 +61,7 @@
                         color="accent"
                         class="btn-table"
                         *ngIf="estadoTraslado.anulado === element.estadoCodigo || estadoTraslado.trasladoAprobado === element.estadoCodigo"
-                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleTraslado', this.proyectoId, element.numeroOrdenGiro ]">
+                        [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Ver detalle
                 </button>
                 <button mat-raised-button

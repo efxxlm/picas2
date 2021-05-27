@@ -46,7 +46,13 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     this.listaModalidad = await this.commonSvc.modalidadesContrato().toPromise();
     this.listaMedioPago = await this.commonSvc.listaMediosPago().toPromise();
     this.listaBancos = await this.commonSvc.listaBancos().toPromise();
-    this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId(this.solicitudPagoId).toPromise();
+    if (this.solicitudPagoId) {
+      this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId(this.solicitudPagoId).toPromise();
+    } else {
+      this.solicitudPago = await this.ordenPagoSvc
+        .getSolicitudPagoBySolicitudPagoId(this.ordenGiro.get('solicitudPagoId').value)
+        .toPromise();
+    }
 
     // console.log(this.solicitudPago);
     this.getDataTerceroGiro();
