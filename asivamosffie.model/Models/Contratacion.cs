@@ -43,10 +43,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoLiquidacion { get; set; }
         public DateTime? FechaFirmaEnvioContratista { get; set; }
         public DateTime? FechaFirmaEnvioFiduciaria { get; set; }
-        public DateTime? FechaTramiteGestionar { get; set; }
-        public string ObservacionGestionar { get; set; }
-        public string UrlSoporteGestionar { get; set; }
-        public bool? RegistroCompletoGestionar { get; set; }
 
         public virtual Contratista Contratista { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }

@@ -926,8 +926,7 @@ namespace asivamosffie.services
 
             foreach (var item in List)
             {
-                if (!ListVFuentesUsoXcontratoId
-               .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacionId == item.FuenteFinanciacionId))
+                if (!ListVFuentesUsoXcontratoId.Any(r => r.TipoUso == item.TipoUso))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
@@ -952,7 +951,7 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-                // if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo))
+                if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacionId == usos.FuenteFinanciacionId))
                 {
                     ListUsos.Add(usos);
 
@@ -962,152 +961,157 @@ namespace asivamosffie.services
                                                         && r.FuenteFinanciacion == usos.FuenteFinanciacion
                                                         )
                                                         .ToList();
-
-                    usos.Fuentes = List2
-                            .ConvertAll(x => new Fuentes
-                            {
-                                TipoUsoCodigo = usos.TipoUsoCodigo,
-                                FuenteFinanciacionId = x.FuenteFinanciacionId,
-                                NombreFuente = x.FuenteFinanciacion,
-                                NombreUso = usos.NombreUso
-                            });
-
-
-                    foreach (var Fuentes in usos.Fuentes)
+                    foreach (var item in List)
                     {
+                        usos.Fuentes = List2
+                         .ConvertAll(x => new Fuentes
+                         {
+                             TipoUsoCodigo = usos.TipoUsoCodigo,
+                             FuenteFinanciacionId = x.FuenteFinanciacionId,
+                             NombreFuente = x.FuenteFinanciacion,
+                             NombreUso = usos.NombreUso
+                         });
 
-                        List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
-                            ListVAportanteFuenteUso
-                            .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
 
-                        foreach (var item in ListVAportanteFuenteUso2)
+
+
+                        foreach (var Fuentes in usos.Fuentes)
                         {
-                            if (Fuentes.Aportante == null || !Fuentes.Aportante.Any(r => r.AportanteId == item.CofinanciacionAportanteId))
+
+                            List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
+                                ListVAportanteFuenteUso
+                                .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
+
+                            foreach (var item in ListVAportanteFuenteUso2)
                             {
-
-                                if (Fuentes.Aportante == null)
-                                    Fuentes.Aportante = new List<Aportante>();
-
-
-                                List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
-                                    ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
-
-                                Fuentes.Aportante.Add(new Aportante
+                                if (Fuentes.Aportante == null || !Fuentes.Aportante.Any(r => r.AportanteId == item.CofinanciacionAportanteId))
                                 {
-                                    FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
-                                    AportanteId = item.CofinanciacionAportanteId
 
-                                });
-                                foreach (var Aportante in Fuentes.Aportante)
-                                {
-                                    decimal ValorUso = ListVAportanteFuenteUso3
-                                        .Where(r => r.Nombre == usos.NombreUso
-                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault();
+                                    if (Fuentes.Aportante == null)
+                                        Fuentes.Aportante = new List<Aportante>();
 
 
-                                    decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+                                    List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
+                                        ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
 
-                                    Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-
-                                    if (Aportante.ValorUso == null)
-                                        Aportante.ValorUso = new List<ValorUso>();
-
-                                    Aportante.ValorUso.Add(new ValorUso
+                                    Fuentes.Aportante.Add(new Aportante
                                     {
-                                        AportanteId = Aportante.AportanteId,
-                                        Valor = String.Format("{0:n0}", ValorUso),
-                                        ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
+                                        FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                        AportanteId = item.CofinanciacionAportanteId
+
                                     });
+                                    foreach (var Aportante in Fuentes.Aportante)
+                                    {
+                                        decimal ValorUso = ListVAportanteFuenteUso3
+                                            .Where(r => r.Nombre == usos.NombreUso
+                                            && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                            ).Select(s => s.ValorUso).FirstOrDefault();
+
+
+                                        decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+
+                                        Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
+                                        if (Aportante.ValorUso == null)
+                                            Aportante.ValorUso = new List<ValorUso>();
+
+                                        Aportante.ValorUso.Add(new ValorUso
+                                        {
+                                            AportanteId = Aportante.AportanteId,
+                                            Valor = String.Format("{0:n0}", ValorUso),
+                                            ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
+                                        });
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
             return tabla;
         }
 
-        private object GetTablaOrdenGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
+    private object GetTablaOrdenGiroValorTotal(ICollection<SolicitudPago> pListSolicitudPago)
+    {
+        List<dynamic> TablaOrdenesGiro = new List<dynamic>();
+
+        if (pListSolicitudPago.Count() > 0)
+            pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro?.RegistroCompletoTramitar == true).ToList();
+
+        List<VDescuentosXordenGiro> ListvDescuentosXordenGiro = _context.VDescuentosXordenGiro.ToList();
+        List<VDescuentoTecnicaXordenGiro> ListVDescuentoTecnicaXordenGiro = _context.VDescuentoTecnicaXordenGiro.ToList();
+
+        foreach (var SolicitudPago in pListSolicitudPago)
         {
-            List<dynamic> TablaOrdenesGiro = new List<dynamic>();
+            List<VDescuentosXordenGiro> descuentosXordenGiro = ListvDescuentosXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
+            VDescuentoTecnicaXordenGiro vDescuentosXordenGiro = ListVDescuentoTecnicaXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).FirstOrDefault();
 
-            if (pListSolicitudPago.Count() > 0)
-                pListSolicitudPago = pListSolicitudPago.Where(s => s.OrdenGiro?.RegistroCompletoTramitar == true).ToList();
 
-            List<VDescuentosXordenGiro> ListvDescuentosXordenGiro = _context.VDescuentosXordenGiro.ToList();
-            List<VDescuentoTecnicaXordenGiro> ListVDescuentoTecnicaXordenGiro = _context.VDescuentoTecnicaXordenGiro.ToList();
+            string NombreContratista = _context.SolicitudPago
+                 .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
+                 .Include(r => r.Contrato)
+                    .ThenInclude(r => r.Contratacion)
+                        .ThenInclude(r => r.Contratista)
+                 .AsNoTracking()
+                 .FirstOrDefault().Contrato.Contratacion.Contratista.Nombre;
 
-            foreach (var SolicitudPago in pListSolicitudPago)
+
+            Decimal DescuentosANS = 0;
+            if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS) > 0)
+                DescuentosANS = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento));
+
+            Decimal DescuentosReteGarantia = 0;
+            if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
+                DescuentosReteGarantia = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento));
+
+            Decimal ValorDescuentosTecnica = 0;
+            if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
+                ValorDescuentosTecnica = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(c => c.ValorDescuento);
+
+            decimal ValorDescuentosTecnica2 = 0;
+            if (vDescuentosXordenGiro != null)
             {
-                List<VDescuentosXordenGiro> descuentosXordenGiro = ListvDescuentosXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
-                VDescuentoTecnicaXordenGiro vDescuentosXordenGiro = ListVDescuentoTecnicaXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).FirstOrDefault();
-
-
-                string NombreContratista = _context.SolicitudPago
-                     .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
-                     .Include(r => r.Contrato)
-                        .ThenInclude(r => r.Contratacion)
-                            .ThenInclude(r => r.Contratista)
-                     .AsNoTracking()
-                     .FirstOrDefault().Contrato.Contratacion.Contratista.Nombre;
-
-
-                Decimal DescuentosANS = 0;
-                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS) > 0)
-                    DescuentosANS = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS).Sum(s => s.ValorDescuento));
-
-                Decimal DescuentosReteGarantia = 0;
-                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
-                    DescuentosReteGarantia = (descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(s => s.ValorDescuento));
-
-                Decimal ValorDescuentosTecnica = 0;
-                if (descuentosXordenGiro.Count(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia) > 0)
-                    ValorDescuentosTecnica = descuentosXordenGiro.Where(r => r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && r.TipoDescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia).Sum(c => c.ValorDescuento);
-
-                decimal ValorDescuentosTecnica2 = 0;
-                if (vDescuentosXordenGiro != null)
-                {
-                    ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.ValorDescuento;
-                    ValorDescuentosTecnica2 = (decimal)vDescuentosXordenGiro.ValorDescuento;
-                }
-
-
-                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica2 + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
-
-
-                TablaOrdenesGiro.Add(
-                    new
-                    {
-                        NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
-                        Contratista = NombreContratista,
-                        Facturado = FormattedAmount(ValorFacturado),
-                        AnsAplicado = FormattedAmount(DescuentosANS),
-                        ReteGarantia = FormattedAmount(DescuentosReteGarantia),
-                        OtrosDescuentos = FormattedAmount(ValorDescuentosTecnica),
-                        ApagarAntesImpuestos = FormattedAmount(ValorFacturado - DescuentosANS - DescuentosReteGarantia - ValorDescuentosTecnica),
-                        SolicitudId = SolicitudPago.SolicitudPagoId,
-                        OrdenGiro = SolicitudPago.OrdenGiroId
-                    });
+                ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.ValorDescuento;
+                ValorDescuentosTecnica2 = (decimal)vDescuentosXordenGiro.ValorDescuento;
             }
-            return TablaOrdenesGiro;
-        }
 
-        public string FormattedAmount(decimal? pValue)
-        {
-            return string.Concat("$", String.Format("{0:n0}", pValue));
-        }
 
-        public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
-        {
-            return new List<dynamic>
+            decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica2 + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+
+
+            TablaOrdenesGiro.Add(
+                new
+                {
+                    NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
+                    Contratista = NombreContratista,
+                    Facturado = FormattedAmount(ValorFacturado),
+                    AnsAplicado = FormattedAmount(DescuentosANS),
+                    ReteGarantia = FormattedAmount(DescuentosReteGarantia),
+                    OtrosDescuentos = FormattedAmount(ValorDescuentosTecnica),
+                    ApagarAntesImpuestos = FormattedAmount(ValorFacturado - DescuentosANS - DescuentosReteGarantia - ValorDescuentosTecnica),
+                    SolicitudId = SolicitudPago.SolicitudPagoId,
+                    OrdenGiro = SolicitudPago.OrdenGiroId
+                });
+        }
+        return TablaOrdenesGiro;
+    }
+
+    public string FormattedAmount(decimal? pValue)
+    {
+        return string.Concat("$", String.Format("{0:n0}", pValue));
+    }
+
+    public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
+    {
+        return new List<dynamic>
             {
               await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync(),
               await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
             };
-        }
-        #endregion
-
-
     }
+    #endregion
+
+
+}
 }
