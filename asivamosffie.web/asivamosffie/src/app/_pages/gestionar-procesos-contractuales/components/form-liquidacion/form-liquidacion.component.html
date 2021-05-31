@@ -7,7 +7,7 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud {{ data?.contratacionProyecto?.numeroSolicitudLiquidacion }}
+      Gestionar solicitud {{ data?.contratacion?.numeroSolicitudLiquidacion }}
     </h1>
   </div>
 
@@ -19,9 +19,9 @@
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}</p>
+        <p><b>Número DDP</b>: {{ data?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}</p>
         <p>
-          <b>Objeto</b>: {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.objeto }}
+          <b>Objeto</b>: {{ data?.contratacion?.disponibilidadPresupuestal[0]?.objeto }}
         </p>
         <p><b>Número de comité fiduciario</b>: CF_001</p>
         <p><b>Fecha de comité fiduciario</b>: 13/06/2020</p>
@@ -119,15 +119,15 @@
         <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}
+              {{ data?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="text-center">
-            <p><b>Valor del DDP</b> {{ data?.contratacionProyecto?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud }}</p>
+            <p><b>Valor del DDP</b> {{ data?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud }}</p>
           </div>
 
-          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="data.contratacionProyecto.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
+          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="data.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
 
         </mat-expansion-panel>
 
@@ -320,10 +320,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Fecha del trámite</b>:{{ data.contratacionProyecto.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
-              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ data.contratacionProyecto.fechaTramiteGestionar | date: 'dd/MM/yyyy' }}</p>
-              <p><b>Observaciones</b>:{{ data.contratacionProyecto.observacionGestionar }}</p>
-              <p><b>URL con soporte</b>: {{ data.contratacionProyecto.urlSoporteGestionar }}</p>
+              <p><b>Fecha del trámite</b>:{{ data.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ data.contratacion.fechaTramiteGestionar | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Observaciones</b>:{{ data.contratacion.observacionGestionar }}</p>
+              <p><b>URL con soporte</b>: {{ data.contratacion.urlSoporteGestionar }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -332,7 +332,7 @@
     </mat-accordion>
   </div>
 
-  <div class="mt-2em" align="left" *ngIf="estadoCodigo !== '6'">
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo === '21'">
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">

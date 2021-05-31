@@ -22,5 +22,7 @@
         public const string LiquidacionEnProcesoDeFirma = "18";
         public const string En_firma_fiduciaria = "19";//
         public const string Liquidado = "20";
+        public const string Sin_tramitar_ante_fiduciaria = "21";
+
     }
 }

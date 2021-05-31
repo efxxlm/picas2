@@ -87,7 +87,9 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.DisponibilidadPresupuestal)
                 .Include(r => r.Contrato)
                 .FirstOrDefault();
-            string tipoIntervencion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(values_lista.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Componentes);
+            string tipoIntervencion = string.Empty;
+            if (!String.IsNullOrEmpty(values_lista.TipoSolicitudCodigo))
+                tipoIntervencion  = await _commonService.GetNombreDominioByCodigoAndTipoDominio(values_lista.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Componentes);
 
             result.Add(new
             {
@@ -99,7 +101,7 @@ namespace asivamosffie.services
                 values_lista.ContratoPolizaActualizacionId,
                 tipoIntervencion,
                 contratacion.Contratista,
-                contratacion.ContratacionProyecto
+                contratacion
             });
 
             return result;
@@ -467,9 +469,23 @@ namespace asivamosffie.services
                     }
                 }
 
-                int intCantidadTipoObservacionCodigo = 3;//ConstantCodigoTipoObservacionLiquidacionContratacion
-                
-                    int intCantidadObservacionesLiquidacionContratacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pLiquidacionContratacionObservacion.ContratacionId
+                int intCantidadTipoObservacionCodigo = 1;//comienza con 1 , el de póliza
+                //
+                List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ContratacionId == pLiquidacionContratacionObservacion.ContratacionId && r.Eliminado != true).ToList();
+                //total observaciones balance
+                foreach (var item in contratacionProyectos)
+                {
+                    BalanceFinanciero bf = _context.BalanceFinanciero.Where(r => r.ProyectoId == item.ProyectoId).FirstOrDefault();
+                    if (bf != null)
+                        intCantidadTipoObservacionCodigo++;
+                    
+                    InformeFinal infF = _context.InformeFinal.Where(r => r.ProyectoId == item.ProyectoId && r.Eliminado != true).FirstOrDefault();
+                    if (infF != null)
+                        intCantidadTipoObservacionCodigo++;
+                }
+                //total observacion informe final
+
+                int intCantidadObservacionesLiquidacionContratacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pLiquidacionContratacionObservacion.ContratacionId
                                                               && r.MenuId == pLiquidacionContratacionObservacion.MenuId
                                                               && r.Eliminado != true
                                                               && r.RegistroCompleto == true
@@ -566,14 +582,14 @@ namespace asivamosffie.services
             {
                 Contratacion contratacionOld = _context.Contratacion.Find(pContratacion.ContratacionId);
                 DateTime? Fecha = null;
-
+                string state = string.Empty;
                 DateTime? fechaValidacion = contratacionOld.FechaValidacionLiquidacion != null ? (DateTime)contratacionOld.FechaValidacionLiquidacion : Fecha;
                 DateTime? fechaAprobacion = contratacionOld.FechaAprobacionLiquidacion != null ? (DateTime)contratacionOld.FechaAprobacionLiquidacion : Fecha;
-                DateTime? fechaTramite = contratacionOld.FechaTramiteLiquidacion != null ? (DateTime)contratacionOld.FechaTramiteLiquidacion : Fecha;
+                DateTime? fechaTramite = contratacionOld.FechaTramiteLiquidacionControl != null ? (DateTime)contratacionOld.FechaTramiteLiquidacionControl : Fecha;
 
                 if (contratacionOld != null)
                 {
-
+                    state = contratacionOld.EstadoSolicitudCodigo;
                     //5.1.6
                     if (menuId == (int)enumeratorMenu.Registrar_validar_solicitud_liquidacion_contractual && pContratacion.EstadoValidacionLiquidacionCodigo == ConstantCodigoEstadoValidacionLiquidacion.Enviado_al_supervisor)
                     {
@@ -592,6 +608,7 @@ namespace asivamosffie.services
                     if (menuId == (int)enumeratorMenu.Gestionar_tramite_liquidacion_contractual && pContratacion.EstadoTramiteLiquidacion == ConstantCodigoEstadoVerificacionLiquidacion.Enviado_a_liquidacion)
                     {
                         fechaTramite = DateTime.Now;
+                        state = ConstanCodigoEstadoSolicitudContratacion.Sin_tramitar_ante_fiduciaria;
                         await SendEmailToFinalLiquidation(pContratacion.ContratacionId);
                     }
 
@@ -606,7 +623,8 @@ namespace asivamosffie.services
                                                                                                               EstadoTramiteLiquidacion = !String.IsNullOrEmpty(pContratacion.EstadoTramiteLiquidacion) ? pContratacion.EstadoTramiteLiquidacion : contratacionOld.EstadoTramiteLiquidacion,
                                                                                                               FechaValidacionLiquidacion = fechaValidacion,
                                                                                                               FechaAprobacionLiquidacion = fechaAprobacion,
-                                                                                                              FechaTramiteLiquidacion = fechaTramite
+                                                                                                              FechaTramiteLiquidacionControl = fechaTramite,
+                                                                                                              EstadoSolicitudCodigo = state
                                                                                                           });
 
 
@@ -705,17 +723,39 @@ namespace asivamosffie.services
         public async Task<bool> RegistroLiquidacionPendiente()
         {
             DateTime MaxDate = await _commonService.CalculardiasLaborales(5, DateTime.Now);
-            List<VContratacionProyectoSolicitudLiquidacion> contratacionProyectos =
+            List<VContratacionProyectoSolicitudLiquidacion> contrataciones =
                 _context.VContratacionProyectoSolicitudLiquidacion
-                .Where(r => r.FechaPoliza > MaxDate && r.FechaBalance > MaxDate && r.FechaInformeFinal > MaxDate
-                   && !r.FechaTramiteLiquidacionControl.HasValue).ToList();
+                .Where(r => !r.FechaTramiteLiquidacionControl.HasValue).ToList();
+            List<VContratacionProyectoSolicitudLiquidacion> contratacionProyectos = new List<VContratacionProyectoSolicitudLiquidacion>();
+            foreach (var item in contrataciones)
+            {
+                bool existeBalance = false;
+                bool existeInforme = false;
 
+                List<ContratacionProyecto> cp = _context.ContratacionProyecto.Where(r => r.ContratacionId == item.ContratacionId).ToList();
+                foreach (var contratacionProyecto in cp)
+                {
+                    BalanceFinanciero balanceFinancieroxProyecto = _context.BalanceFinanciero.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
+                    InformeFinal informeFinalxProyecto = _context.InformeFinal.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
+                    if (balanceFinancieroxProyecto != null && informeFinalxProyecto!= null)
+                    {
+                        if (balanceFinancieroxProyecto.FechaAprobacion > MaxDate)
+                            existeBalance = true;
+                        if (informeFinalxProyecto.FechaEnvioEtc > MaxDate)
+                            existeInforme = true;
+                    }
+                }
+                if (item.FechaPoliza > MaxDate && existeBalance && existeInforme)
+                {
+                    contratacionProyectos.Add(item);
+                }
+            }
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_6_registro_solicitud_liquidacion_contrato));
 
             bool SedndIsSuccessfull = true;
             foreach (var item in contratacionProyectos)
             {
-                string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, item.ContratacionProyectoId);
+                string strContenido = await ReplaceVariablesContratacionProyectoLiquidacion(template.Contenido, item.ContratacionId);
                 List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                         {
@@ -767,7 +807,7 @@ namespace asivamosffie.services
             List<Contratacion> contratacions =
                 _context.Contratacion
                 .Where(r => r.FechaAprobacionLiquidacion > MaxDate
-                   && !r.FechaTramiteLiquidacion.HasValue
+                   && !r.FechaTramiteLiquidacionControl.HasValue
                    && r.Eliminado == false).ToList();
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Alerta_5_1_8_gestionar_solicitud_liquidacion_contrato));

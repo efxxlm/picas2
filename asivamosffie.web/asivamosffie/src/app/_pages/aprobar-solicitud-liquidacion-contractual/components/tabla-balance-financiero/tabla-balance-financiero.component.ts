@@ -26,7 +26,9 @@ export class TablaBalanceFinancieroComponent implements OnInit {
   @Input() esVerDetalle: boolean;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
-
+  total: number = 0;
+  totalCompleto: number = 0;
+  totalIncompleto: number = 0;
   datosTabla = [];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
@@ -58,8 +60,22 @@ export class TablaBalanceFinancieroComponent implements OnInit {
         })
       }
       this.dataSource.data = this.datosTabla;
-      if(this.datosTabla.length > 0){
-        this.semaforoBalanceFinanciero.emit(this.datosTabla[0].registroCompleto);
+      this.total = this.datosTabla.length;
+      this.datosTabla.forEach(element => {
+        if(element.registroCompleto === 'Completo')
+          this.totalCompleto++;
+        if(element.registroCompleto === 'Incompleto')
+          this.totalIncompleto++;
+      });
+      if(this.total <= 0){
+        this.semaforoBalanceFinanciero.emit(null);
+      }
+      else if(this.totalCompleto >= this.total){
+        this.semaforoBalanceFinanciero.emit('Completo');
+      }else if(this.totalIncompleto >= this.total){
+        this.semaforoBalanceFinanciero.emit(null);
+      }else{
+        this.semaforoBalanceFinanciero.emit('Incompleto');
       }
     });
   }

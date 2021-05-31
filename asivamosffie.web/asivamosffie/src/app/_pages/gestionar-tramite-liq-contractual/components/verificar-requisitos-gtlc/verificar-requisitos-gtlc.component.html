@@ -50,7 +50,8 @@
             <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
                 <mat-panel-title
                 class="expansion-style--title"
-                [class.sin-diligenciar]="semaforoBalanceFinanciero == 'Incompleto'"
+                [class.sin-diligenciar]="semaforoBalanceFinanciero == null"
+                [class.en-proceso]="semaforoBalanceFinanciero == 'Incompleto'"
                 [class.completo]="semaforoBalanceFinanciero == 'Completo'"
               >
                 Balance financiero
@@ -68,7 +69,8 @@
             <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
                 <mat-panel-title
                 class="expansion-style--title"
-                [class.sin-diligenciar]="semaforoInformeFinal == 'Incompleto'"
+                [class.sin-diligenciar]="semaforoInformeFinal == null"
+                [class.en-proceso]="semaforoInformeFinal == 'Incompleto'"
                 [class.completo]="semaforoInformeFinal == 'Completo'"
               >
                 Informe final

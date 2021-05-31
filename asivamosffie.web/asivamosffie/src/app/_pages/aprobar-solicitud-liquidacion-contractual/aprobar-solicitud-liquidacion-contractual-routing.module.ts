@@ -58,6 +58,10 @@ const routes: Routes = [
     component: RecursosComprometidosPagadosComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId/recursos',
+    component: RecursosComprometidosPagadosComponent
+  },
+  {
     path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/recursos',
     component: RecursosComprometidosPagadosComponent
   },
@@ -74,7 +78,11 @@ const routes: Routes = [
     component: VerEjecucionFinancieraComponent
   },
   {
-    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verEjecucionFinanciera',
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verEjecucionFinanciera',
+    component: VerEjecucionFinancieraComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId/verEjecucionFinanciera',
     component: VerEjecucionFinancieraComponent
   },
   {
@@ -87,6 +95,10 @@ const routes: Routes = [
   },
   {
     path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/verTrasladosRecursos',
+    component: VerTrasladosRecursosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId/verTrasladosRecursos',
     component: VerTrasladosRecursosComponent
   },
   {

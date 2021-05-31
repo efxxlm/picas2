@@ -2,7 +2,7 @@
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="numOrdenGiro">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de orden de giro </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.ordenGiro.numeroSolicitud }}</b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b *ngIf="element.ordenGiro != null">{{ element.ordenGiro.numeroSolicitud }}</b> </td>
         </ng-container>
         <ng-container matColumnDef="contratista">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Contratista </th>

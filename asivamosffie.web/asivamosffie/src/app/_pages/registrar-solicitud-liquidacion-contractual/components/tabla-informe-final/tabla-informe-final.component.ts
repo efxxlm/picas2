@@ -28,7 +28,9 @@ export class TablaInformeFinalComponent implements OnInit {
   @Input() esVerDetalle: boolean;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
-
+  total: number = 0;
+  totalCompleto: number = 0;
+  totalIncompleto: number = 0;
   datosTabla = [];
 
   @ViewChild(MatSort) sort: MatSort;
@@ -60,8 +62,22 @@ export class TablaInformeFinalComponent implements OnInit {
         })
       }
       this.dataSource.data = this.datosTabla;
-      if(this.datosTabla.length > 0){
-        this.semaforoInformeFinal.emit(this.datosTabla[0].registroCompleto);
+      this.total = this.datosTabla.length;
+      this.datosTabla.forEach(element => {
+        if(element.registroCompleto === 'Completo')
+          this.totalCompleto++;
+        if(element.registroCompleto === 'Incompleto')
+          this.totalIncompleto++;
+      });
+      if(this.total <= 0){
+        this.semaforoInformeFinal.emit(null);
+      }
+      else if(this.totalCompleto >= this.total){
+        this.semaforoInformeFinal.emit('Completo');
+      }else if(this.totalIncompleto >= this.total){
+        this.semaforoInformeFinal.emit(null);
+      }else{
+        this.semaforoInformeFinal.emit('Incompleto');
       }
     });
   }

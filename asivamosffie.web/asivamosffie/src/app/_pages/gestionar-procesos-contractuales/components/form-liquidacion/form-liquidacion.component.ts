@@ -101,22 +101,22 @@ export class FormLiquidacionComponent implements OnInit {
     this.registerContractualLiquidationRequestService.getContratacionByContratacionId(contratacionId).subscribe(response => {
       if(response != null){
         this.data = response[0];
-        if(this.data.contratacionProyecto?.contratacionId != null){
-          this.procesosContractualesSvc.getContratacion(this.data.contratacionProyecto?.contratacionId)
+        if(this.data.contratacion?.contratacionId != null){
+          this.procesosContractualesSvc.getContratacion(this.data.contratacion?.contratacionId)
           .subscribe(respuesta => {
             this.contratacion = respuesta;
             let rutaDocumento;
-            if ( this.data.contratacionProyecto?.urlSoporteGestionar !== undefined ) {
-              rutaDocumento = this.data.contratacionProyecto?.urlSoporteGestionar.split( /[^\w\s]/gi );
+            if ( this.data.contratacion?.urlSoporteGestionar !== undefined ) {
+              rutaDocumento = this.data.contratacion?.urlSoporteGestionar.split( /[^\w\s]/gi );
               rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
             } else {
               rutaDocumento = null;
             };
             this.form.reset({
-              fechaEnvioTramite: this.data.contratacionProyecto?.fechaTramiteGestionar,
-              observaciones:this.data.contratacionProyecto?.observacionGestionar,
+              fechaEnvioTramite: this.data.contratacion?.fechaTramiteGestionar,
+              observaciones:this.data.contratacion?.observacionGestionar,
               minutaName: rutaDocumento,
-              rutaDocumento: this.data.contratacionProyecto?.urlSoporteGestionar !== null ? this.data.contratacionProyecto?.urlSoporteGestionar : null
+              rutaDocumento: this.data.contratacion?.urlSoporteGestionar !== null ? this.data.contratacion?.urlSoporteGestionar : null
             });
           });
         }
