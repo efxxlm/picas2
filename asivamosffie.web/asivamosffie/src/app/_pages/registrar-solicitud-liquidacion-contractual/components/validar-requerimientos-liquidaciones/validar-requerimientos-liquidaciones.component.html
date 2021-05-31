@@ -7,10 +7,10 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-          Ver detalle validación de requisitos para liquidación {{ data.numeroContrato }}
+          Ver detalle verificación de requisitos para liquidación {{ data.numeroContrato }}
       </ng-container>
       <ng-template #noEsVerDetalle>
-          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar validación de' }} requisitos para liquidación {{ data.numeroContrato }}
+          {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar validación de' }} requisitos para liquidación {{ data.numeroContrato }}
       </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">

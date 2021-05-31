@@ -7,10 +7,10 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-          Ver detalle aprobación balance {{ data.llaveMen }}
+          Ver detalle validación balance {{ data.llaveMen }}
       </ng-container>
       <ng-template #noEsVerDetalle>
-          {{ esRegistroNuevo === true ? 'Aprobar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
+          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
       </ng-template>  
     </h1>
     <p class="colorMainColor mt-05em">
