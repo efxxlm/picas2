@@ -474,7 +474,7 @@
                           <div class="pr-1">
                             <label class="label-left"
                             [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.codigoSIFI.invalid && cuentaBancaria.controls.codigoSIFI.dirty || cuentaBancaria.controls.codigoSIFI.invalid && edicion}"
-                            >Código SIFI</label>
+                            >Código de noegocio SIFI para radicación</label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">

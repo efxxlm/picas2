@@ -16,7 +16,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field>
-            <input matInput type="text" maxlength="10" formControlName="numeroContrato" required />
+            <input matInput type="text" maxlength="20" formControlName="numeroContrato" required />
           </mat-form-field>
           <span
             class="contador"
@@ -24,7 +24,7 @@
             matTooltip="Campo alfanumérico"
             matTooltipClass="info-tooltip"
           >
-            {{ 10 - dataFormulario.get('numeroContrato').value.length }}
+            {{ 20 - dataFormulario.get('numeroContrato').value.length }}
           </span>
           <span class="icon-incompleto">
             <img

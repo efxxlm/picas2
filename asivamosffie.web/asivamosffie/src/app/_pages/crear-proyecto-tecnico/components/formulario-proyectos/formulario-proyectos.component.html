@@ -174,7 +174,7 @@
                   matInput
                   [disabled]="!bitPuedoEditar"
                   [(ngModel)]="proyecto.llaveMen"
-                  maxlength="8"
+                  maxlength="30"
                   required
                   type="text"
                   (keypress)="validateKeypressLlave($event)"
@@ -186,7 +186,7 @@
                 matTooltip="Campo alfanumérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 8 - (proyecto.llaveMen ? proyecto.llaveMen.length : 0) }}
+                {{ 30 - (proyecto.llaveMen ? proyecto.llaveMen.length : 0) }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -787,7 +787,7 @@
             [class.mat-form-field-invalid]="!proyecto.predioPrincipal.direccion && estaEditando"
           >
             <input matInput 
-            [disabled]="!bitPuedoEditar" [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text" />
+            [disabled]="!bitPuedoEditar" [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="200" required type="text" />
           </mat-form-field>
           <span
             class="contador"
@@ -795,7 +795,7 @@
             matTooltip="Campo alfanumérico"
             matTooltipClass="info-tooltip"
           >
-            {{ 20 - (proyecto.predioPrincipal.direccion ? proyecto.predioPrincipal.direccion.length : 0) }}
+            {{ 200 - (proyecto.predioPrincipal.direccion ? proyecto.predioPrincipal.direccion.length : 0) }}
           </span>
           <span class="icon-incompleto">
             <img

@@ -8,7 +8,7 @@
 
         <mat-card class="shipping-card border">
             <mat-card-content align="left">
-                <p><b>Código SIFI:</b> <i>357233</i></p>
+                <p><b>Código de noegocio SIFI para radicación:</b> <i>357233</i></p>
                 <p *ngIf="esExpensas === true"><b>Tipo de intervención:</b> <i>Mejoramiento</i></p>
                 <p *ngIf="esExpensas === false"><b>Tipo de contrato:</b> <i> {{ getTipoSolicitudContrato( solicitudPago.tipoSolicitudCodigo ) }} </i></p>
                 <p><b>Valor de la factura:</b> <i> {{ valorTotalFactura | currency:'':'symbol-narrow':'.0-0' }} </i></p>
