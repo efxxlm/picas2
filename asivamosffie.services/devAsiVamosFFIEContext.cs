@@ -5638,7 +5638,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumRadicadoDocumentosEntregaEtc)
                     .HasColumnName("NumRadicadoDocumentosEntregaETC")
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)

@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public DateTime? FechaSolicitud { get; set; }
         public string NumeroSolicitud { get; set; }
-        public int SolicitudId { get; set; }
+        public int? SolicitudId { get; set; }
         public bool? EstadoRegistro { get; set; }
         public string EstadoDelRegistro { get; set; }
         public bool? EstaTramitado { get; set; }
