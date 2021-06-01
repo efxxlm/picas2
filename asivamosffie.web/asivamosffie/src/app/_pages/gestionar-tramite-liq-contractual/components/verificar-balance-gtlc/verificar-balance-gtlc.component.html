@@ -75,7 +75,7 @@
             (click)="this.verEjecucionFinanciera()">
             Ejecución financiera por componente
         </button>
-        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
+        <button *ngIf="esVerDetalle !== true" mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
             Traslados de recursos
         </button>
     </div>

@@ -3379,7 +3379,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
 
-                entity.Property(e => e.NumRadicadoSac).HasColumnType("numeric(10, 0)");
+                entity.Property(e => e.NumRadicadoSac)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoAnexo)
                     .HasMaxLength(2)

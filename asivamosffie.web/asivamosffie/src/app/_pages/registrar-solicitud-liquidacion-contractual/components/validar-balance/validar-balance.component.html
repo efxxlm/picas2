@@ -73,7 +73,7 @@
     <a [routerLink]="['ejecucionFinanciera']" mat-raised-button color="accent" class="tabs--btn">
         Ver ejecución financiera por componente
     </a>
-    <a [routerLink]="['traslados']" mat-raised-button color="accent" class="tabs--btn">
+    <a *ngIf="esVerDetalle !== true" [routerLink]="['traslados']" mat-raised-button color="accent" class="tabs--btn">
         Ver traslados de recursos
     </a>
   </div>

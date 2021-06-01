@@ -16,6 +16,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   @Input() tiposNovedadModificacionContractual;
   @Input() novedadDescripcion: NovedadContractualDescripcion;
   @Input() estaEditando: boolean;
+  @Input () fechaSolicitudNovedad: any;
 
   @Output() guardar = new EventEmitter();
 
