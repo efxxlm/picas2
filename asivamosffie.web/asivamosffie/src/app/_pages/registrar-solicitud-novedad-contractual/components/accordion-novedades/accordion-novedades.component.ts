@@ -10,9 +10,9 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
 export class AccordionNovedadesComponent implements OnInit {
   @Input () tiposNovedadModificacionContractual;
   @Input () novedadeContractual: any;//NovedadContractual[];
-  @Input () fechaSolicitudNovedad: any;
   @Output() guardar = new EventEmitter();
   @Input() estaEditando: boolean;
+  @Input() fechaSolicitudNovedad: Date;
 
   
   constructor() { }

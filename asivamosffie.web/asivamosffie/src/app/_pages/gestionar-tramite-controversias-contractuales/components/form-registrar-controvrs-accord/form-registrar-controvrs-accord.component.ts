@@ -24,7 +24,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit, OnDestroy 
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
     cualOtroMotivo: [null ,Validators.required],
-    fechaComitePretecnico: [null, Validators.required],
+    fechaComitePretecnico: [null],
     conclusionComitePretecnico: [null, Validators.required],
     procedeSolicitud: [null, Validators.required],
     motivosRechazo: [null, Validators.required],

@@ -22,7 +22,7 @@ export class FormRemisionComponent implements OnInit {
     proyectoEntregaEtcid: [null, Validators.required],
     informeFinalId: [null, Validators.required],
     fechaEntregaDocumentosEtc: [null, Validators.required],
-    numRadicadoDocumentosEntregaEtc: [null, Validators.compose([Validators.required, Validators.maxLength(10)])]
+    numRadicadoDocumentosEntregaEtc: [null, Validators.compose([Validators.required, Validators.maxLength(20)])]
   });
 
   estaEditando = false;
