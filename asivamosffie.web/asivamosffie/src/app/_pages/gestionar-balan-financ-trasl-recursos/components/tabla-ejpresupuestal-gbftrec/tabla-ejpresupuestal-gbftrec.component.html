@@ -13,7 +13,7 @@
         <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="facturadoAntesImpuestos">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Facturado antes de impuestos  </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Facturado </th>
         <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.facturadoAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
         <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.facturadoAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
       </ng-container>

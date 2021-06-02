@@ -1560,11 +1560,11 @@
             <div class="col d-flex">
               <label
                 class="label-left sub-label"
-                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesObra && estaEditando }"
+                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesObra && proyecto.plazoMesesObra !== 0 && estaEditando }"
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesObra && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesObra && proyecto.plazoMesesObra !== 0 && estaEditando">
                 <input
                   matInput
                   [disabled]="!bitPuedoEditar"
@@ -1584,7 +1584,7 @@
               </mat-form-field>
               <span class="icon-incompleto">
                 <img
-                  *ngIf="!proyecto.plazoMesesObra && estaEditando"
+                  *ngIf="!proyecto.plazoMesesObra && proyecto.plazoMesesObra !== 0 && estaEditando"
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
@@ -1595,11 +1595,11 @@
               </span>
               <label
                 class="label-left sub-label"
-                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoDiasObra && estaEditando }"
+                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoDiasObra && proyecto.plazoDiasObra !== 0 && estaEditando }"
               >
                 Días
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasObra && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasObra && proyecto.plazoDiasObra !== 0 && estaEditando">
                 <input
                   matInput
                   [disabled]="!bitPuedoEditar"
@@ -1620,7 +1620,7 @@
               </mat-form-field>
               <span class="icon-incompleto">
                 <img
-                  *ngIf="!proyecto.plazoDiasObra && estaEditando"
+                  *ngIf="!proyecto.plazoDiasObra && proyecto.plazoDiasObra !== 0 && estaEditando"
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
@@ -1642,11 +1642,11 @@
             <div class="col d-flex">
               <label
                 class="label-left sub-label"
-                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesInterventoria && estaEditando }"
+                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoMesesInterventoria && proyecto.plazoMesesInterventoria !== 0 && estaEditando }"
               >
                 Meses
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesInterventoria && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoMesesInterventoria && proyecto.plazoMesesInterventoria !== 0 && estaEditando">
                 <input
                   matInput
                   [disabled]="!bitPuedoEditar"
@@ -1666,7 +1666,7 @@
               </mat-form-field>
               <span class="icon-incompleto">
                 <img
-                  *ngIf="!proyecto.plazoMesesInterventoria && estaEditando"
+                  *ngIf="!proyecto.plazoMesesInterventoria && proyecto.plazoMesesInterventoria !== 0 && estaEditando"
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
@@ -1677,11 +1677,11 @@
               </span>
               <label
                 class="label-left sub-label"
-                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoDiasInterventoria && estaEditando }"
+                [ngClass]="{ 'color-secondaryColor': !proyecto.plazoDiasInterventoria && proyecto.plazoDiasInterventoria !== 0 && estaEditando }"
               >
                 Días
               </label>
-              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasInterventoria && estaEditando">
+              <mat-form-field class="w-8em" [class.mat-form-field-invalid]="!proyecto.plazoDiasInterventoria && proyecto.plazoDiasInterventoria !== 0 && estaEditando">
                 <input
                   matInput
                   [disabled]="!bitPuedoEditar"
@@ -1702,7 +1702,7 @@
               </mat-form-field>
               <span class="icon-incompleto">
                 <img
-                  *ngIf="!proyecto.plazoDiasInterventoria && estaEditando"
+                  *ngIf="!proyecto.plazoDiasInterventoria && proyecto.plazoDiasInterventoria !== 0 && estaEditando"
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
