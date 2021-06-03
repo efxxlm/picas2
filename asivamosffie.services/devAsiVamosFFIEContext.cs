@@ -9066,6 +9066,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaPagoFiduciaria).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaRegistroCompletoAprobar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaRegistroCompletoTramitar).HasColumnType("datetime");
 
                 entity.Property(e => e.IntEstadoCodigo).HasColumnName("intEstadoCodigo");
@@ -9075,7 +9077,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitudOrdenGiro)
