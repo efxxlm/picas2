@@ -1571,7 +1571,7 @@ namespace asivamosffie.services
             {
                 contrato.VContratoPagosRealizados =
                     _context.VContratoPagosRealizados
-                       .Where(v => v.ContratoId == pContratoId)
+                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                        .ToList();
 
                 contrato.TablaDRP = GetDrpContrato(contrato);
