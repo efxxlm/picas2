@@ -1347,12 +1347,14 @@ namespace asivamosffie.services
 
                     if (result > 0)
                     {
-                        DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto();
-                        entity.ProyectoId = proyectoId;
-                        entity.DisponibilidadPresupuestalId = newDisponibilidadPresupuestalId;
-                        entity.FechaCreacion = DateTime.Now;
-                        entity.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
-                        entity.Eliminado = false;
+                        DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto
+                        {
+                            ProyectoId = proyectoId,
+                            DisponibilidadPresupuestalId = newDisponibilidadPresupuestalId,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion,
+                            Eliminado = false
+                        };
 
                         _context.DisponibilidadPresupuestalProyecto.Add(entity);
                     }
@@ -1463,14 +1465,19 @@ namespace asivamosffie.services
                         fechaContrato = contrato.FechaTramite != null ? Convert.ToDateTime(contrato.FechaTramite).ToString("dd/MM/yyy") : "";
                     }
                     string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == disponibilidadPresupuestal.TipoSolicitudCodigo).FirstOrDefault().Nombre;
-                    string template = TemplateRecoveryPassword.Contenido.Replace("[NumeroContrato]",
-                        ncontrato).Replace("_LinkF_", pDominioFront).
-                        Replace("[FechaContrato]", fechaContrato).
-                        Replace("[NumeroSolicitud]", disponibilidadPresupuestal.NumeroSolicitud).
-                        Replace("[TipoDeSolicitud]", tiposolicut);
+                    string template = TemplateRecoveryPassword.Contenido
+                        .Replace("[NumeroContrato]",ncontrato)
+                        .Replace("_LinkF_", pDominioFront)
+                        .Replace("[FechaContrato]", fechaContrato)
+                        .Replace("[NumeroSolicitud]", disponibilidadPresupuestal.NumeroSolicitud)
+                        .Replace("[TipoDeSolicitud]", tiposolicut);
 
 
-                    var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).ToList();
+                    var usuariosadmin = _context.UsuarioPerfil
+                        .Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera)
+                        .Include(y => y.Usuario)
+                        .ToList();
+
                     foreach (var usuarioadmin in usuariosadmin)
                     {
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Solicitud de disponibilidad presupuetal creada", template, pSender, pPassword, pMailServer, pMailPort);
@@ -1638,8 +1645,6 @@ namespace asivamosffie.services
                 NovedadContractualId = (int)reader["NovedadContractualId"],
                 EsNovedad = (bool)reader["EsNovedad"],
                 NovedadContractualRegistroPresupuestalId = (int)reader["NovedadContractualRegistroPresupuestalId"],
-
-
             };
         }
 
@@ -1656,8 +1661,6 @@ namespace asivamosffie.services
                 FuenteAportanteId = (int)reader["FuenteAportanteId"],
                 FuenteRecursosCodigo = reader["FuenteRecursosCodigo"].ToString(),
                 NombreFuente = reader["NombreFuente"].ToString(),
-
-
             };
         }
 
