@@ -81,6 +81,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public decimal? ValorPagadoContratista { get; set; }
+
+        [NotMapped]
+        public DateTime? FechaAprobacionPoliza { get; set; }
     }
 
     

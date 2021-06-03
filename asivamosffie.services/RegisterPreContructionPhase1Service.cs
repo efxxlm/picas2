@@ -142,6 +142,8 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 }
+                contrato.FechaAprobacionPoliza = _context.ContratoPoliza.Where(c => c.ContratoId == contrato.ContratoId).Select(c => c.FechaAprobacion).FirstOrDefault();
+               
                 return contrato;
             }
             catch (Exception ex)
