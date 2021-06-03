@@ -2643,6 +2643,7 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraSocialOld.CantidadEmpleosIndirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos;
                         SeguimientoSemanalGestionObraSocialOld.CantidadTotalEmpleos = SeguimientoSemanalGestionObraSocial.CantidadTotalEmpleos;
                         SeguimientoSemanalGestionObraSocialOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSocial.UrlSoporteGestion;
+                        SeguimientoSemanalGestionObraSocialOld.ObservacionRealizaronReuniones = SeguimientoSemanalGestionObraSocial.ObservacionRealizaronReuniones;
                     }
                 }
 
