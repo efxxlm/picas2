@@ -113,6 +113,8 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
                                                     String( this.gestionSocial.cantidadTotalEmpleos ) : '',
                             seRealizaronReuniones:  this.gestionSocial.seRealizaronReuniones !== undefined ?
                                                     this.gestionSocial.seRealizaronReuniones : null,
+                            ObservacionRealizaronReuniones:  this.gestionSocial.ObservacionRealizaronReuniones !== undefined ?
+                                                    this.gestionSocial.ObservacionRealizaronReuniones : null,
                             temaComunidad:  this.gestionSocial.temaComunidad !== undefined ?
                                             this.gestionSocial.temaComunidad : null,
                             conclusion: this.gestionSocial.conclusion !== undefined ?
@@ -190,6 +192,7 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
             cantidadEmpleosIndirectos: [ '' ],
             cantidadTotalEmpleos: [ '' ],
             seRealizaronReuniones: [ null ],
+            ObservacionRealizaronReuniones: [ null ],
             temaComunidad: [ null ],
             conclusion: [ null ],
             urlSoporteGestion: [ '' ]
@@ -233,6 +236,8 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
                                                 this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value : '',
                         seRealizaronReuniones:  this.formGestionSocial.get( 'seRealizaronReuniones' ).value !== null ?
                                                 this.formGestionSocial.get( 'seRealizaronReuniones' ).value : null,
+                        ObservacionRealizaronReuniones:  this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value !== null ?
+                                                this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value : null,
                         temaComunidad:  this.formGestionSocial.get( 'temaComunidad' ).value !== null ?
                                         this.formGestionSocial.get( 'temaComunidad' ).value : null,
                         conclusion: this.formGestionSocial.get( 'conclusion' ).value !== null ?
@@ -258,6 +263,8 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
                                                 this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value : '',
                         seRealizaronReuniones:  this.formGestionSocial.get( 'seRealizaronReuniones' ).value !== null ?
                                                 this.formGestionSocial.get( 'seRealizaronReuniones' ).value : null,
+                        ObservacionRealizaronReuniones:  this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value !== null ?
+                                                this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value : null,
                         temaComunidad:  this.formGestionSocial.get( 'temaComunidad' ).value !== null ?
                                         this.formGestionSocial.get( 'temaComunidad' ).value : null,
                         conclusion: this.formGestionSocial.get( 'conclusion' ).value !== null ?
@@ -312,6 +319,8 @@ export class GestionSocialComponent implements OnInit, OnDestroy {
                                         this.formGestionSocial.get( 'cantidadTotalEmpleos' ).value : '',
                 seRealizaronReuniones:  this.formGestionSocial.get( 'seRealizaronReuniones' ).value !== null ?
                                         this.formGestionSocial.get( 'seRealizaronReuniones' ).value : null,
+                ObservacionRealizaronReuniones:  this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value !== null ?
+                                        this.formGestionSocial.get( 'ObservacionRealizaronReuniones' ).value : null,
                 temaComunidad:  this.formGestionSocial.get( 'temaComunidad' ).value !== null ?
                                 this.formGestionSocial.get( 'temaComunidad' ).value : null,
                 conclusion: this.formGestionSocial.get( 'conclusion' ).value !== null ?

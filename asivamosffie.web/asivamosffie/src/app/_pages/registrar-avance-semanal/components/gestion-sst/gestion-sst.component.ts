@@ -122,14 +122,20 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                                                     this.gestionObraSst.seRealizoCapacitacion : null,
                             temaCapacitacion:   this.gestionObraSst.temaCapacitacion !== undefined ?
                                                 this.gestionObraSst.temaCapacitacion : null,
+                            ObservacionRevisionElementosProteccion: this.gestionObraSst.ObservacionRevisionElementosProteccion !== undefined ?
+                                                                    this.gestionObraSst.ObservacionRevisionElementosProteccion : null,
                             seRealizoRevisionElementosProteccion:   this.gestionObraSst.seRealizoRevisionElementosProteccion !== undefined ?
                                                                     this.gestionObraSst.seRealizoRevisionElementosProteccion : null,
                             cumpleRevisionElementosProyeccion:  this.gestionObraSst.cumpleRevisionElementosProyeccion !== undefined ?
                                                                 this.gestionObraSst.cumpleRevisionElementosProyeccion : null,
+                            ObservacionRevisionSenalizacion:    this.gestionObraSst.ObservacionRevisionSenalizacion !== undefined ?
+                                                                this.gestionObraSst.ObservacionRevisionSenalizacion : null,
                             seRealizoRevisionSenalizacion:  this.gestionObraSst.seRealizoRevisionSenalizacion !== undefined ?
                                                             this.gestionObraSst.seRealizoRevisionSenalizacion : null,
                             cumpleRevisionSenalizacion: this.gestionObraSst.cumpleRevisionSenalizacion !== undefined ?
                                                         this.gestionObraSst.cumpleRevisionSenalizacion : null,
+                            ObservacionCapacitacion:    this.gestionObraSst.ObservacionCapacitacion !== undefined ?
+                                                        this.gestionObraSst.ObservacionCapacitacion : null,
                             urlSoporteGestion:  this.gestionObraSst.urlSoporteGestion !== undefined ?
                                                 this.gestionObraSst.urlSoporteGestion : ''
                         }
@@ -146,10 +152,13 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
             cantidadAccidentes: [ '' ],
             seguridadSaludCausaAccidente: [ null ],
             seRealizoCapacitacion: [ null ],
+            ObservacionCapacitacion: [ null ],
             temaCapacitacion: [ null ],
             seRealizoRevisionElementosProteccion: [ null ],
+            ObservacionRevisionElementosProteccion: [ null ],
             cumpleRevisionElementosProyeccion: [ null ],
             seRealizoRevisionSenalizacion: [ null ],
+            ObservacionRevisionSenalizacion: [ null ],
             cumpleRevisionSenalizacion: [ null ],
             urlSoporteGestion: [ '' ]
         });
@@ -203,6 +212,27 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
         }
     }
 
+    quilltextoLimpio(texto: string) {
+        let saltosDeLinea = 0;
+        saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+        saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    
+        if (texto) {
+          const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+          return textolimpio.length + saltosDeLinea;
+        }
+      }
+    
+      private contarSaltosDeLinea(cadena: string, subcadena: string) {
+        let contadorConcurrencias = 0;
+        let posicion = 0;
+        while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+          ++contadorConcurrencias;
+          posicion += subcadena.length;
+        }
+        return contadorConcurrencias;
+      }
+
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open(ModalDialogComponent, {
           width: '28em',
@@ -239,6 +269,12 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                         seguridadSaludCausaAccidente: causas,
                         seRealizoCapacitacion:  this.formSst.get( 'seRealizoCapacitacion' ).value !== null ?
                                                 this.formSst.get( 'seRealizoCapacitacion' ).value : null,
+                        ObservacionCapacitacion:  this.formSst.get( 'ObservacionCapacitacion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionCapacitacion' ).value : null,
+                        ObservacionRevisionSenalizacion:  this.formSst.get( 'ObservacionRevisionSenalizacion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionRevisionSenalizacion' ).value : null,
+                        ObservacionRevisionElementosProteccion:  this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value : null,
                         temaCapacitacion:   this.formSst.get( 'temaCapacitacion' ).value !== null ?
                                             this.formSst.get( 'temaCapacitacion' ).value : null,
                         seRealizoRevisionElementosProteccion:   this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value !== null ?
@@ -267,6 +303,12 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                         seguridadSaludCausaAccidente: causas,
                         seRealizoCapacitacion:  this.formSst.get( 'seRealizoCapacitacion' ).value !== null ?
                                                 this.formSst.get( 'seRealizoCapacitacion' ).value : null,
+                        ObservacionCapacitacion:  this.formSst.get( 'ObservacionCapacitacion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionCapacitacion' ).value : null,
+                        ObservacionRevisionSenalizacion:  this.formSst.get( 'ObservacionRevisionSenalizacion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionRevisionSenalizacion' ).value : null,
+                        ObservacionRevisionElementosProteccion:  this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value !== null ?
+                                                this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value : null,
                         temaCapacitacion:   this.formSst.get( 'temaCapacitacion' ).value !== null ?
                                             this.formSst.get( 'temaCapacitacion' ).value : null,
                         seRealizoRevisionElementosProteccion:   this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value !== null ?
@@ -336,6 +378,12 @@ export class GestionSSTComponent implements OnInit, OnDestroy {
                 seguridadSaludCausaAccidente: causas,
                 seRealizoCapacitacion:  this.formSst.get( 'seRealizoCapacitacion' ).value !== null ?
                                         this.formSst.get( 'seRealizoCapacitacion' ).value : null,
+                ObservacionCapacitacion:  this.formSst.get( 'ObservacionCapacitacion' ).value !== null ?
+                                        this.formSst.get( 'ObservacionCapacitacion' ).value : null,
+                ObservacionRevisionSenalizacion:  this.formSst.get( 'ObservacionRevisionSenalizacion' ).value !== null ?
+                                        this.formSst.get( 'ObservacionRevisionSenalizacion' ).value : null,
+                ObservacionRevisionElementosProteccion:  this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value !== null ?
+                                        this.formSst.get( 'ObservacionRevisionElementosProteccion' ).value : null,
                 temaCapacitacion:   this.formSst.get( 'temaCapacitacion' ).value !== null ?
                                     this.formSst.get( 'temaCapacitacion' ).value : null,
                 seRealizoRevisionElementosProteccion:   this.formSst.get( 'seRealizoRevisionElementosProteccion' ).value !== null ?

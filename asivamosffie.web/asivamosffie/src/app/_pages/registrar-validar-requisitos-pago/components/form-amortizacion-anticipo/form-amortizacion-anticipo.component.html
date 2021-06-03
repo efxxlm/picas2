@@ -24,6 +24,22 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
+                                <label  class="label-left">
+                                    Saldo a amortizar
+                                </label>
+                            </div>
+                            <div class="col d-flex" style="margin-right: 5.4em;">
+                                <mat-form-field class="full-width" >
+                                    <input matInput type="number" disabled>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
                                 <label for="porcentajeAmortizacion" class="label-left" [ngClass]="{
                                     'color-secondaryColor':(addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) ||
                                     (addressForm.get('porcentajeAmortizacion').invalid && estaEditando)}">Porcentaje de amortización</label>

@@ -308,7 +308,8 @@
                       matInput
                       [matDatepicker]="fechaAprobacion"
                       formControlName="fechaAprobacion"
-                      [min]="minDate"
+                      [min]="fechaAprobacionPoliza"
+                      [max]="minDate"
                       placeholder="DD/MM/AAAA"
                       required
                       readonly

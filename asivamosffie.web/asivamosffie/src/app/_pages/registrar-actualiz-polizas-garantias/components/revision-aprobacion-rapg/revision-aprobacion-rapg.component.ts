@@ -31,7 +31,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
         estadoRevision: [ null, Validators.required ],
         fechaAprob: [ null, Validators.required],
         responsableAprob: [ null, Validators.required ],
-        observacionesGenerales: [ null ]
+        observacionesGenerales: [ null, Validators.required ]
     });
     editorStyle = {
         height: '50px'

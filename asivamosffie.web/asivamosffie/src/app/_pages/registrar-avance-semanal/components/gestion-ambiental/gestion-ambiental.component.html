@@ -55,6 +55,7 @@
                                 <input  matInput
                                         type="text"
                                         maxlength="1"
+                                        [max]="tipoActividades.length"
                                         formControlName="cantidadActividad"
                                         (ngModelChange)="valuePending( $event )"
                                         required>

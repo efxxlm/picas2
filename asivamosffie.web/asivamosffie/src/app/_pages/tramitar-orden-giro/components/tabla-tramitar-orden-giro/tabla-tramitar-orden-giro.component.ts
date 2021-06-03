@@ -48,7 +48,7 @@ export class TablaTramitarOrdenGiroComponent implements OnInit {
                     if ( registroTramitado !== undefined ) {
                         this.tieneOrdenTramitada = true;
                     }
-                    response.forEach( registro => registro.fechaAprobacionFinanciera = moment( registro.fechaAprobacionFinanciera ).format( 'DD/MM/YYYY' ) );
+                    response.forEach( registro => registro.fechaRegistroCompletoAprobar = moment( registro.fechaRegistroCompletoAprobar ).format( 'DD/MM/YYYY' ) );
 
                     this.tablaTramitar = new MatTableDataSource( response );
                     this.tablaTramitar.paginator = this.paginator;
