@@ -2596,8 +2596,10 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CumpleRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionSenalizacion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSeguridadSalud.UrlSoporteGestion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CantidadAccidentes = SeguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes;
-
-
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionCapacitacion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionCapacitacion; 
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionRevisionElementosProteccion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionRevisionElementosProteccion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionRevisionSenalizacion;
+                         
                         List<SeguridadSaludCausaAccidente> seguridadSaludCausaAccidentesDelete = _context.SeguridadSaludCausaAccidente.Where(r => r.SeguimientoSemanalGestionObraSeguridadSaludId == r.SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId).ToList();
 
                         if (seguridadSaludCausaAccidentesDelete.Count() > 0)
