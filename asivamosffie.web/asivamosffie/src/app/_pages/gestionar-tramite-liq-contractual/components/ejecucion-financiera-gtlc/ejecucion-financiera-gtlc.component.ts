@@ -12,19 +12,22 @@ export class EjecucionFinancieraGtlcComponent implements OnInit {
   proyectoId: number;
   dataTable: any[] = [];
   data : any;
+  dataTableEjpresupuestal: any[] = [];
+  dataTableEjfinanciera: any[] = [];
 
   constructor(
     private financialBalanceService: FinancialBalanceService,
     private route: ActivatedRoute,
-  ) { 
+  ) {
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
-    }); 
+    });
   }
 
   ngOnInit(): void {
     this.getBalanceByProyectoId(this.proyectoId);
     this.getContratoByProyectoId();
+    this.getEjecucionFinancieraXProyectoId(this.proyectoId);
   }
 
   getBalanceByProyectoId(proyectoId: number) {
@@ -43,7 +46,34 @@ export class EjecucionFinancieraGtlcComponent implements OnInit {
           vContratoPagosRealizados: element.contrato.vContratoPagosRealizados,
           tipoSolicitudCodigo: element.tipoSolicitudCodigo
         });
-      });  
+      });
+    });
+  }
+
+
+  getEjecucionFinancieraXProyectoId(proyectoId: number) {
+    this.financialBalanceService.getEjecucionFinancieraXProyectoId(proyectoId).subscribe(data => {
+      data[0].forEach(element => {
+        this.dataTableEjpresupuestal.push({
+          facturadoAntesImpuestos: element.facturadoAntesImpuestos,
+          nombre: element.nombre,
+          porcentajeEjecucionPresupuestal: element.porcentajeEjecucionPresupuestal,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          tipoSolicitudCodigo: element.tipoSolicitudCodigo,
+          totalComprometido: element.totalComprometido
+        });
+      });
+      data[1].forEach(element => {
+        this.dataTableEjfinanciera.push({
+          nombre: element.nombre,
+          ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
+          porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          totalComprometido: element.totalComprometido
+        });
+      });
     });
   }
 

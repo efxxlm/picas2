@@ -1,4 +1,4 @@
-<section class="container" *ngIf="data != null">
+<section class="container"  *ngIf="data != null">
   <div class="text-center">
     <div class="text-right">
       <a routerLink="./.." mat-button color="primary" class="btn-regresar">
@@ -57,48 +57,7 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="table-responsive mb-1em mt-1em">
-        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-          <thead>
-            <tr class="mat-header-row cdk-header-row ng-star-inserted">
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Componente
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Total comprometido
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Facturado
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Saldo
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Porcentaje de ejecución presupuestal
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let element of listaejecucionPresupuestal">
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <b> {{ element.componente }} </b>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.totalComprometido }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.facturadoAntesdeImpuestos }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.saldo }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.porcentajeEjecucionPresupuestal }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <app-tabla-ejpresupuestal-gbftrec [data]="dataTableEjpresupuestal"></app-tabla-ejpresupuestal-gbftrec>
     </mat-card-content>
   </mat-card>
 
@@ -109,49 +68,7 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="table-responsive mb-1em mt-1em">
-        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-          <thead>
-            <tr class="mat-header-row cdk-header-row ng-star-inserted">
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Componente
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Total comprometido
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Facturado antes de impuestos
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Saldo
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Porcentaje de ejecución presupuestal
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let element of listaejecucionPresupuestal">
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                <b> {{ element.componente }} </b>
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.totalComprometido }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.facturadoAntesdeImpuestos }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.saldo }}
-              </td>
-              <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.porcentajeEjecucionPresupuestal }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <app-tabla-ejfinanciera-gbftrec [data]="dataTableEjfinanciera"></app-tabla-ejfinanciera-gbftrec>
     </mat-card-content>
   </mat-card>
 </section>
-

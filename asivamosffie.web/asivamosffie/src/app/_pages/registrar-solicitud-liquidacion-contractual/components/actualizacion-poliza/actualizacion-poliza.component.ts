@@ -4,7 +4,7 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { RegisterContractualLiquidationRequestService } from 'src/app/core/_services/registerContractualLiquidationRequest/register-contractual-liquidation-request.service';
 import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId,TipoObservacionLiquidacionContrato,TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 import humanize from 'humanize-plus';
-import { EstadosRevision, TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
+import { EstadosRevision, PerfilCodigo, TipoActualizacion, TipoActualizacionCodigo } from 'src/app/_interfaces/estados-actualizacion-polizas.interface';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -28,6 +28,7 @@ export class ActualizacionPolizaComponent implements OnInit {
   polizasYSegurosArray: Dominio[] = [];
   responsable: any;
   listaPolizas = [];
+  ultimaRevisionAprobada: any;
 
   //razón y tipo de actualización
   contratoPolizaActualizacion: any;
@@ -41,6 +42,8 @@ export class ActualizacionPolizaComponent implements OnInit {
   listaTipoDocumento: Dominio[] = [];
   listaTipoActualizacion: TipoActualizacion = TipoActualizacionCodigo;
   estadoArray: Dominio[] = [];
+  listaUsuarios: any[] = [];
+  listaPerfilCodigo = PerfilCodigo;
 
   segurosRazon = [];
   seguros = [];
@@ -76,12 +79,13 @@ export class ActualizacionPolizaComponent implements OnInit {
 
    ngOnInit(): void {
   }
-  
+
   async getContratoPoliza() {
     this.polizasYSegurosArray = await this.commonSvc.listaGarantiasPolizas().toPromise();
     this.razonActualizacionArray = await this.commonSvc.listaRazonActualizacion().toPromise();
     this.tipoActualizacionArray = await this.commonSvc.listaTipoActualizacion().toPromise();
     this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
+    this.listaUsuarios = await this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria ).toPromise();
     this.commonSvc.listaEstadoRevision()
     .subscribe( listaEstadoRevision => this.estadoArray = listaEstadoRevision );
 
@@ -91,13 +95,29 @@ export class ActualizacionPolizaComponent implements OnInit {
                 this.contratoPoliza = response;
                 this.listaPolizas = this.contratoPoliza.polizaGarantia;
                 this.responsable = this.contratoPoliza.userResponsableAprobacion;
+
+
+                if ( this.contratoPoliza.polizaObservacion.length > 0 ) {
+                  const polizaAprobada: any[] = this.contratoPoliza.polizaObservacion.filter( polizaAprobada => polizaAprobada.estadoRevisionCodigo === this.estadosRevision.aprobacion );
+
+                  if ( polizaAprobada.length > 0 ) {
+                      this.ultimaRevisionAprobada = polizaAprobada[ polizaAprobada.length - 1 ];
+                  }
+                }
+
+                if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
+                    if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
+                        this.contratoPolizaActualizacion = this.contratoPoliza.contratoPolizaActualizacion[ 0 ];
+                    }
+                }
+
                 if ( this.contratoPoliza.contratoPolizaActualizacion !== undefined ) {
                   if ( this.contratoPoliza.contratoPolizaActualizacion.length > 0 ) {
                       this.contratoPolizaActualizacion = this.contratoPoliza.contratoPolizaActualizacion[0];
                       this.contratoPolizaActualizacionId = this.contratoPolizaActualizacion.contratoPolizaActualizacionId;
                       this.razonActualizacion = this.contratoPolizaActualizacion.razonActualizacionCodigo !== undefined ? this.razonActualizacionArray.find( razon => razon.codigo === this.contratoPolizaActualizacion.razonActualizacionCodigo ).codigo : null;
                       this.fechaExpedicion = this.contratoPolizaActualizacion.fechaExpedicionActualizacionPoliza !== undefined ? new Date( this.contratoPolizaActualizacion.fechaExpedicionActualizacionPoliza ) : null;
-                      
+
                       this.tieneObservaciones =  this.contratoPolizaActualizacion.tieneObservacionEspecifica !== undefined ? this.contratoPolizaActualizacion.tieneObservacionEspecifica : null;
                       this.observacionesEspecificas = this.contratoPolizaActualizacion.observacionEspecifica !== undefined ? this.contratoPolizaActualizacion.observacionEspecifica : null;
 
@@ -106,11 +126,14 @@ export class ActualizacionPolizaComponent implements OnInit {
                           if ( this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro.length > 0 ) {
                               this.contratoPolizaActualizacionSeguro = this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro;
                               const segurosSeleccionados = [];
-      
+                              const polizaGarantia: any[] = this.contratoPoliza.polizaGarantia.length > 0 ? this.contratoPoliza.polizaGarantia : [];
+
                               for ( const seguro of this.contratoPolizaActualizacionSeguro ) {
                                   const poliza = this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo );
+                                  const seguroPoliza = polizaGarantia.find( seguroPoliza => seguroPoliza.tipoGarantiaCodigo === seguro.tipoSeguroCodigo );
+
                                   const actualizacionSeleccionada = [];
-      
+
                                   if ( seguro.tieneFechaSeguro === true ) {
                                       actualizacionSeleccionada.push( this.listaTipoActualizacion.seguros );
                                   }
@@ -120,7 +143,7 @@ export class ActualizacionPolizaComponent implements OnInit {
                                   if ( seguro.tieneValorAmparo === true ) {
                                       actualizacionSeleccionada.push( this.listaTipoActualizacion.valor );
                                   }
-      
+
                                   segurosSeleccionados.push( seguro.tipoSeguroCodigo );
                                   //seguros acordeón vgencias y valor
                                   const seguroVigencias = {
@@ -131,18 +154,19 @@ export class ActualizacionPolizaComponent implements OnInit {
                                     tieneFechaAmparo: seguro.tieneFechaVigenciaAmparo,
                                     fechaAmparo: seguro.fechaVigenciaAmparo !== undefined ? new Date( seguro.fechaVigenciaAmparo ) : null,
                                     tieneValorAmparo: seguro.tieneValorAmparo,
-                                    valorAmparo: seguro.valorAmparo !== undefined ? seguro.valorAmparo : null 
+                                    valorAmparo: seguro.valorAmparo !== undefined ? seguro.valorAmparo : null,
+                                    seguroPoliza,
                                   }
                                   this.seguros.push(
                                     seguroVigencias
                                   );
+                                  console.log(this.seguros);
                                   if ( poliza !== undefined ) {
                                     const element = {
                                       contratoPolizaActualizacionSeguroId: seguro.contratoPolizaActualizacionSeguroId,
                                       nombre: poliza.nombre,
                                       codigo: poliza.codigo,
                                       tipoActualizacion: actualizacionSeleccionada
-                                    
                                     };
                                     this.segurosRazon.push(
                                         element
@@ -173,12 +197,12 @@ export class ActualizacionPolizaComponent implements OnInit {
                           this.dataSource = new MatTableDataSource( this.contratoPolizaActualizacionRevisionAprobacionObservacion );
 
                           this.contadorRevision = this.contratoPolizaActualizacionRevisionAprobacionObservacion.length;
-  
+
                           const revision = this.contratoPolizaActualizacionRevisionAprobacionObservacion.filter( revision => revision.estadoSegundaRevision === this.estadosRevision.aprobacion );
-  
+
                           if ( revision.length > 0 ) {
                               const ultimaRevision = revision[ revision.length - 1 ];
-  
+
                               if ( this.contratoPolizaActualizacionRevisionAprobacionObservacion[ this.contratoPolizaActualizacionRevisionAprobacionObservacion.length - 1 ] === ultimaRevision ) {
                                   this.contadorRevision--;
                                   const dataRevision = {
@@ -193,7 +217,7 @@ export class ActualizacionPolizaComponent implements OnInit {
                           }
                       }
                     }
-                    
+
                     this.semaforoActualizacionPoliza.emit(this.contratoPoliza.registroCompleto ? 'Completo' : 'Incompleto');
 
                   }
@@ -212,11 +236,14 @@ export class ActualizacionPolizaComponent implements OnInit {
     }
   }
 
-  getResponsable() {
-      if ( this.responsable !== undefined ) {
-          return `${ this.firstLetterUpperCase( this.responsable.primerNombre ) } ${ this.firstLetterUpperCase( this.responsable.primerApellido ) }`
-      }
-  }
+
+  getResponsable( usuarioId: number ) {
+    const responsable = this.listaUsuarios.find( usuario => usuario.usuarioId === usuarioId );
+
+    if ( responsable !== undefined ) {
+        return `${ this.firstLetterUpperCase( responsable.primerNombre ) } ${ this.firstLetterUpperCase( responsable.primerApellido ) }`;
+    }
+}
 
   firstLetterUpperCase( texto:string ) {
     if ( texto !== undefined ) {

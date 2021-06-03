@@ -25,4 +25,4 @@
   </table>
   <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
 </div>
-<app-tabla-fuentes-y-recursos></app-tabla-fuentes-y-recursos>
+<app-tabla-fuentes-y-recursos *ngIf="contratoId" [contratoId]="contratoId"></app-tabla-fuentes-y-recursos>

@@ -12,7 +12,7 @@ import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.se
 })
 export class TablaTotalOrdenesDeGiroComponent implements OnInit {
 
-  @Input() solicitudPago: any[] = [];
+  @Input() tablaOrdenGiroValorTotal: any[] = [];
   dataSource = new MatTableDataSource();
   dataTable: any[] = [];
 
@@ -27,7 +27,7 @@ export class TablaTotalOrdenesDeGiroComponent implements OnInit {
     'reteGarantiaAPagar',
     'otrosDescuentos',
     'aPagarAntesImpuestos',
-    'gestion'
+    //'gestion'
   ];
 
   constructor(
@@ -36,8 +36,8 @@ export class TablaTotalOrdenesDeGiroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if(this.solicitudPago.length > 0){
-      this.dataSource.data = this.solicitudPago;
+    if(this.tablaOrdenGiroValorTotal.length > 0){
+      this.dataSource.data = this.tablaOrdenGiroValorTotal;
     }
   }
 

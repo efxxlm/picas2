@@ -70,7 +70,7 @@
               Recursos comprometidos
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-detalle-recursos-comprometidos *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-detalle-recursos-comprometidos>
+          <app-detalle-recursos-comprometidos *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-detalle-recursos-comprometidos>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
@@ -78,7 +78,7 @@
               Contratistas
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-detalle-contratistas *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-detalle-contratistas>
+          <app-detalle-contratistas *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista" [valorPagadoContratista]="contratoObra.valorPagadoContratista"></app-detalle-contratistas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
@@ -86,7 +86,7 @@
               Valor total ordenes de giro
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-tabla-total-ordenes-de-giro *ngIf="contratoObra" [solicitudPago]="contratoObra.solicitudPago"></app-tabla-total-ordenes-de-giro>
+          <app-tabla-total-ordenes-de-giro *ngIf="tablaOrdenGiroValorTotalObra" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalObra"></app-tabla-total-ordenes-de-giro>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-expansion-panel>
@@ -103,7 +103,7 @@
               Recursos comprometidos
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-detalle-recursos-comprometidos *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto"></app-detalle-recursos-comprometidos>
+          <app-detalle-recursos-comprometidos *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId"></app-detalle-recursos-comprometidos>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
@@ -111,7 +111,7 @@
               Contratistas
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-detalle-contratistas *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista"></app-detalle-contratistas>
+          <app-detalle-contratistas *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista" [valorPagadoContratista]="contratoInterventoria.valorPagadoContratista"></app-detalle-contratistas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
@@ -119,7 +119,7 @@
               Valor total ordenes de giro
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-tabla-total-ordenes-de-giro *ngIf="contratoInterventoria" [solicitudPago]="contratoInterventoria.solicitudPago"></app-tabla-total-ordenes-de-giro>
+          <app-tabla-total-ordenes-de-giro *ngIf="tablaOrdenGiroValorTotalInterventoria" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalInterventoria"></app-tabla-total-ordenes-de-giro>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-expansion-panel>

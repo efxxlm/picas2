@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class DetalleRecursosComprometidosComponent implements OnInit {
 
   @Input() contratacionProyecto: any[] = [];
+  @Input() contratoId: number;
   dataTable: any[] = [];
   aportante: any[] = [];
   valorAportante: any[] = [];
@@ -59,8 +60,8 @@ export class DetalleRecursosComprometidosComponent implements OnInit {
     });
     this.dataTable.push({
       aportante: this.aportante,
-      valorAportante: this.valorAportante, 
-      valorTotalAportantes: this.valorTotalAportantes, 
+      valorAportante: this.valorAportante,
+      valorTotalAportantes: this.valorTotalAportantes,
     });
     this.dataSource = new MatTableDataSource(this.dataTable);
   }

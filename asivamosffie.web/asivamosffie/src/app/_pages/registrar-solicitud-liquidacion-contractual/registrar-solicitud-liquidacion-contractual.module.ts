@@ -46,6 +46,8 @@ import { TablaDatosDdpComponent } from './components/tabla-datos-ddp/tabla-datos
 import { FormTerceroGiroGogComponent } from './components/form-tercero-giro-gog/form-tercero-giro-gog.component';
 import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
 import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
+import { TablaEjfinancieraGbftrecComponent } from './components/tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
+import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresupuestal-gbftrec/tabla-ejpresupuestal-gbftrec.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +91,9 @@ import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuentere
     FormTerceroGiroGogComponent,
     TablaPorcntjParticGogComponent,
     TablaInfoFuenterecGogComponent,
+    TablaEjfinancieraGbftrecComponent,
+    TablaEjpresupuestalGbftrecComponent
+
   ],
   imports: [
     CommonModule,

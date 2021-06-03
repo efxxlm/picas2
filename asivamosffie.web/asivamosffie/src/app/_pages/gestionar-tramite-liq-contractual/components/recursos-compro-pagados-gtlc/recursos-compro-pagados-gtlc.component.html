@@ -32,7 +32,7 @@
                             Recursos comprometidos
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-acordion-recursos-compro-pagados-gtlc>
+                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-acordion-recursos-compro-pagados-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -40,7 +40,7 @@
                             Contratistas
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-lista-contratistas-gtlc *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-lista-contratistas-gtlc>
+                    <app-lista-contratistas-gtlc *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista" [valorPagadoContratista]="contratoObra.valorPagadoContratista"></app-lista-contratistas-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -48,7 +48,7 @@
                             Valor total ordenes de giro
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-tabla-valtotal-og-gtlc *ngIf="contratoObra" [solicitudPago]="contratoObra.solicitudPago"></app-tabla-valtotal-og-gtlc>
+                    <app-tabla-valtotal-og-gtlc *ngIf="tablaOrdenGiroValorTotalObra" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalObra"></app-tabla-valtotal-og-gtlc>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -65,7 +65,7 @@
                             Recursos comprometidos
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto"></app-acordion-recursos-compro-pagados-gtlc>
+                    <app-acordion-recursos-compro-pagados-gtlc *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId"></app-acordion-recursos-compro-pagados-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -73,7 +73,7 @@
                             Contratistas
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-lista-contratistas-gtlc *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista"></app-lista-contratistas-gtlc>
+                    <app-lista-contratistas-gtlc *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista" [valorPagadoContratista]="contratoInterventoria.valorPagadoContratista"></app-lista-contratistas-gtlc>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
@@ -81,7 +81,7 @@
                             Valor total ordenes de giro
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-tabla-valtotal-og-gtlc *ngIf="contratoInterventoria" [solicitudPago]="contratoInterventoria.solicitudPago"></app-tabla-valtotal-og-gtlc>
+                    <app-tabla-valtotal-og-gtlc  *ngIf="tablaOrdenGiroValorTotalInterventoria" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalInterventoria"></app-tabla-valtotal-og-gtlc>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>

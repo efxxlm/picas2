@@ -12,6 +12,8 @@ export class RecursosComprometidosPagadosComponent implements OnInit {
   proyectoId: number;
   contratoObra: any;
   contratoInterventoria: any;
+  tablaOrdenGiroValorTotalObra: any;
+  tablaOrdenGiroValorTotalInterventoria: any;
   data : any;
 
   constructor(
@@ -33,11 +35,13 @@ export class RecursosComprometidosPagadosComponent implements OnInit {
       data.forEach(element => {
         if(element.tipoSolicitudCodigo === '1'){
           this.contratoObra = element.contrato;
+          this.tablaOrdenGiroValorTotalObra = element.tablaOrdenGiroValorTotal;
         }
         if(element.tipoSolicitudCodigo === '2'){
           this.contratoInterventoria = element.contrato;
+          this.tablaOrdenGiroValorTotalInterventoria = element.tablaOrdenGiroValorTotal;
         }
-      });  
+      });
     });
   }
 
