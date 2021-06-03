@@ -331,7 +331,7 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-           if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
+                if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
                 {
                     ListUsos.Add(usos);
 
@@ -437,7 +437,7 @@ namespace asivamosffie.services
             }
             return ListTablaDrp;
         }
-      
+
         private void ValidateValorNeto(int pOrdenGiroId)
         {
             OrdenGiro ordenGiro1 =
@@ -745,12 +745,12 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                   ValidateValorNeto(pOrdenGiro.OrdenGiroId);
+                    ValidateValorNeto(pOrdenGiro.OrdenGiroId);
 
                     _context.Set<OrdenGiro>()
                             .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(o => new OrdenGiro
-                            { 
+                            {
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
@@ -1194,11 +1194,17 @@ namespace asivamosffie.services
             {
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+
+                DateTime? CompleteRecordDate = new DateTime();
+                if (blRegistroCompleto)
+                    CompleteRecordDate = DateTime.Now;
+
                 _context.Set<OrdenGiro>()
                         .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Update(o => new OrdenGiro
                         {
                             RegistroCompleto = blRegistroCompleto,
+                            FechaRegistroCompleto = CompleteRecordDate,
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pAuthor
                         });
