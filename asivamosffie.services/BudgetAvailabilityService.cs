@@ -260,42 +260,50 @@ namespace asivamosffie.services
 
                     //si es administrativo, esta completo, si es tradicional, se verifica contra fuentes gestionadas
                     //2020-11-08 ahora los administrativos y especiales tambien estionan fuentes
-                    if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
+                    if (DisponibilidadPresupuestal.EstadoSolicitudCodigo != ((int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal).ToString())
                     {
-                        List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
-                        if (ListGestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
-                            blnEstado = true;
-
-                    }
-                    else if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
-                    {
-                        if (ListGestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
-                            blnEstado = true;
-                    }
-                    else
-                    {
-                        List<int> proyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoId > 0).Select(x => (int)x.ProyectoId).ToList();
-                        List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
-                        var aportantes = ListProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
-                        //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
-
-                        if (DisponibilidadPresupuestal.EsNovedad != true)
+                        if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
                         {
-                            if (ListGestionFuenteFinanciacion
-                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
-                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                                .Count() == aportantes.Count())
+                            List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
+                            if (ListGestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
+                                blnEstado = true;
+
+                        }
+                        else if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                        {
+                            if (ListGestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
                                 blnEstado = true;
                         }
                         else
                         {
-                            if (ListGestionFuenteFinanciacion
-                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId &&
-                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                                .Count() == aportantes.Count())
-                                blnEstado = true;
+                            List<int> proyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoId > 0).Select(x => (int)x.ProyectoId).ToList();
+                            List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
+                            var aportantes = ListProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
+                            //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
+
+                            if (DisponibilidadPresupuestal.EsNovedad != true)
+                            {
+                                if (ListGestionFuenteFinanciacion
+                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                           ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
+                                    .Count() == aportantes.Count())
+                                    blnEstado = true;
+                            }
+                            else
+                            {
+                                if (ListGestionFuenteFinanciacion
+                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId &&
+                                           ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
+                                    .Count() == aportantes.Count())
+                                    blnEstado = true;
+                            }
                         }
                     }
+                    else
+                    {
+                        blnEstado = true;
+                    }
+
 
 
                     var contratacion = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId).ToList();
@@ -2035,7 +2043,7 @@ namespace asivamosffie.services
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                     DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
                     DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
-
+                    pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = null;
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                     _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
