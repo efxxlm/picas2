@@ -57,14 +57,14 @@
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
-      
+
       <section *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' && element.estadoCodigo !== '17' && element.estadoCodigo !== '27'">
         <span class="info-text d-block m-0 completo" ></span>
         Completo
       </section>
 
       <section *ngIf="element.estadoCodigo === '11' || element.estadoCodigo === '17' || element.estadoCodigo === '27'|| element.estadoCodigo === '10'">
-        <span class="info-text d-block m-0" 
+        <span class="info-text d-block m-0"
           [class.sin-diligenciar]="element.registroCompletoTramiteNovedades !== true"
           [class.completo]="element.registroCompletoTramiteNovedades === true"></span>
         {{element.registroCompletoTramiteNovedades === true ? 'Completo' : 'Incompleto'}}
@@ -88,46 +88,43 @@
           *ngIf="element.estadoCodigo === '11' || element.estadoCodigo === '17' || element.estadoCodigo === '27' || (element.estadoCodigo === '10' && element.registroCompletoTramiteNovedades != null)">
           Ver detalle/Editar
         </a>
-        <!--Se quito las condiciones de element.vaComite === true-->
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         (click)="EnviarAComite(element.novedadContractualId)"
-        *ngIf="(element.estadoCodigo === '17'&& 
+        *ngIf="(element.estadoCodigo === '17'&&
                element.registroCompletoTramiteNovedades === true &&
-               !(element.novedadContractual.deseaContinuar === false && 
-               element.novedadContractual.razonesNoContinuaProceso)) || 
-               (element.estadoCodigo === '27' && 
-               element.registroCompletoTramiteNovedades === true)" >
+               !(element.novedadContractual.deseaContinuar === false &&
+               element.novedadContractual.razonesNoContinuaProceso) && element.vaComite === true) ||
+               (element.estadoCodigo === '27' &&
+               element.registroCompletoTramiteNovedades === true && element.vaComite === true)" >
           Enviar a comité técnico
         </button>
-        <!--Ninguna va a tramite/ todas a comite-->
-        <!--<button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="AprobacionTecnicaJuridica(element.novedadContractualId)"
-          *ngIf="(element.estadoCodigo === '17' && 
-                 element.novedadContractual.deseaContinuar === true && 
+          *ngIf="(element.estadoCodigo === '17' &&
+                 element.novedadContractual.deseaContinuar === true &&
                  element.registroCompletoTramiteNovedades === true &&
-                 element.vaComite === false) || (element.estadoCodigo === '27'  && 
+                 element.vaComite === false) || (element.estadoCodigo === '27'  &&
                  element.registroCompletoTramiteNovedades === true &&
                  element.vaComite === false)" >
           Enviar trámite
-        
-        </button>-->
+        </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         [routerLink]="[ 'verDetalle', element.novedadContractualId ]"
         *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' && element.estadoCodigo !== '17'  && element.estadoCodigo !== '27' ">
         Ver detalle
       </a>
-      
+
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         *ngIf="element?.novedadContractual?.registroCompletoDevolucionTramite === true "
         (click)="devolverSolicitud(element.novedadContractualId)">
         Devolver solicitud
       </button>
-      
+
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
       (click)="cancelarNovedad(element.novedadContractualId)"
       *ngIf="
-              (element.estadoCodigo === '17') && 
-              element.novedadContractual.deseaContinuar === false && 
+              (element.estadoCodigo === '17') &&
+              element.novedadContractual.deseaContinuar === false &&
               element.novedadContractual.razonesNoContinuaProceso">
         Cancelar novedad
       </button>
