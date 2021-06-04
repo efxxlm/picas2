@@ -81,7 +81,8 @@ namespace asivamosffie.services
 
                 (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
                                              s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro
-                                             //&& s.FechaRegistroCompletoAprobar.HasValue)
+                                             //&& s.FechaRegistroCompletoAprobar.HasValue
+                                              )
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
 
