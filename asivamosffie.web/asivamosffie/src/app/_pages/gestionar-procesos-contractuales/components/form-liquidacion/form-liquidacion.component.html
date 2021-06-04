@@ -1,4 +1,4 @@
-<div class="container text-center mt-2em" *ngIf="data != null">
+<div class="container text-center mt-2em" *ngIf="contratacion != null">
   <div class="text-right">
     <a routerLink="/procesosContractuales" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,24 +7,30 @@
 
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Gestionar solicitud {{ data?.contratacion?.numeroSolicitudLiquidacion }}
+      Gestionar solicitud {{ contratacion?.numeroSolicitudLiquidacion }}
     </h1>
   </div>
 
   <div class="text-center flex">
-    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>15/06/2020</b></p>
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ contratacion?.fechaTramiteLiquidacionControl | date: 'dd/MM/yyyy' }}</b></p>
     <p class="color-titulo"><b>Liquidación</b></p>
   </div>
 
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: {{ data?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}</p>
+        <p><b>Número DDP</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}</p>
         <p>
-          <b>Objeto</b>: {{ data?.contratacion?.disponibilidadPresupuestal[0]?.objeto }}
+          <b>Objeto</b>: <span [innerHTML]="contratacion?.disponibilidadPresupuestal[0]?.objeto"></span>
         </p>
-        <p><b>Número de comité fiduciario</b>: CF_001</p>
-        <p><b>Fecha de comité fiduciario</b>: 13/06/2020</p>
+        <div  *ngIf="contratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != 'undefined' && contratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != null">
+          <p><b>Número de comité fiduciario</b>:{{ contratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+          <p><b>Fecha de comité fiduciario</b>: {{ contratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        <div *ngIf="contratacion['sesionComiteSolicitud'][0].comiteTecnico != 'undefined' && contratacion['sesionComiteSolicitud'][0].comiteTecnico != null">
+          <p><b>Número de comité técnico</b>:{{ contratacion['sesionComiteSolicitud'][0].comiteTecnico.numeroComite }}</p>
+          <p><b>Fecha de comité técnico</b>: {{ contratacion['sesionComiteSolicitud'][0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
+        </div>
       </mat-card-content>
   </mat-card>
   </div>
@@ -41,9 +47,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: Obra</p>
-              <p><b>Valor del contrato</b>: $326.000.000</p>
-              <p><b>Plazo</b>: 8 meses / 12 días</p>
+              <p><b>Tipo de contrato</b>:  {{ contratacion?.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}</p>
+              <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses /
+                {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -60,11 +67,11 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre del contratista</b>: {{ data.contratista.nombre }}</p>
-              <p><b>Tipo de identificación</b>: {{ getTipoDocumento( data.contratista.tipoIdentificacion  ) }} </p>
-              <p><b>Número de identificación</b>: {{ data.contratista.numeroIdentificacion }}</p>
-              <p><b>Nombre del representante legal</b>: {{ data.contratista.representanteLegal }}</p>
-              <p><b>Número de la invitación</b>: {{ data.contratista.numeroInvitacion }}</p>
+              <p><b>Nombre del contratista</b>: {{ contratacion?.contratista?.nombre }}</p>
+              <p><b>Tipo de identificación</b>: {{ contratacion?.contratista.tipoIdentificacionCodigo }} </p>
+              <p><b>Número de identificación</b>: {{ contratacion?.contratista?.numeroIdentificacion }}</p>
+              <p><b>Nombre del representante legal</b>: {{ contratacion?.contratista?.representanteLegal }}</p>
+              <p><b>Número de la invitación</b>: {{ contratacion?.contratista?.numeroInvitacion }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -78,35 +85,94 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor="let data of contratacion?.contratacionProyecto">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              LL6789030 I.E Técnica Industrial España- Única sede
+              {{ data.proyecto.llaveMen }} - {{ data.proyecto.institucionEducativa.nombre }} -
+              {{ data.proyecto['sede'].nombre }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="text-center flex">
-            <p class="mr-right-8em"><b>Valle del Cauca/Jamundi</b></p>
-            <p><b>Reconstrucción</b></p>
+            <p class="mr-right-8em">
+              <b>{{ data.proyecto.institucionEducativa['departamento'].descripcion }}/{{ data.proyecto.institucionEducativa['municipio'].descripcion }}</b>
+            </p>
+            <p><b>{{ data.proyecto.tipoIntervencionCodigo }}</b></p>
           </div>
 
-          <div align="left">
+          <div align="left" style="margin-top: 1em;">
             <mat-card class="border">
-              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
-              <mat-card-content>
-                <p> 
-                  <b>
-                    ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
-                  </b>: Si
-                </p>
-                <p><b>¿El proyecto es una reasignación?</b>: No</p>
-                <p><b>¿El proyecto requiere licencias?</b>: No</p>
+              <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales
+              </mat-card-title>
+              <mat-card-content class="mt-1em">
+                <section *ngIf="data['tieneMonitoreoWeb'] !== undefined">
+                  <p *ngIf="data['tieneMonitoreoWeb'] === false">
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                      través de cámaras con acceso web?
+                    </b>: No
+                  </p>
+
+                  <p *ngIf="data['tieneMonitoreoWeb'] === true">
+                    <b>
+                      ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                      través de cámaras con acceso web?
+                    </b>: Sí
+                  </p>
+                </section>
+                <section *ngIf="data['esReasignacion'] !== undefined">
+                  <p *ngIf="data['esReasignacion'] === true">
+                    <b>¿El proyecto es una reasignación?</b>: Sí
+                  </p>
+                  <p *ngIf="data['esReasignacion'] === false">
+                    <b>¿El proyecto es una reasignación?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['esAvanceobra'] !== undefined">
+                  <p *ngIf="data['esAvanceobra'] === true">
+                    <b>¿El proyecto tiene avance de obra?</b>: Sí
+                  </p>
+                  <p *ngIf="data['esAvanceobra'] === false">
+                    <b>¿El proyecto tiene avance de obra?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['porcentajeAvanceObra'] !== undefined">
+                  <p *ngIf="data['porcentajeAvanceObra'] !== 0">
+                    <b>¿Cuál es el porcentaje de avance de obra?</b>:
+                    {{ data.porcentajeAvanceObra }}%
+                  </p>
+                </section>
+                <section *ngIf="data['requiereLicencia'] !== undefined">
+                  <p *ngIf="data['requiereLicencia'] === true">
+                    <b>¿El proyecto requiere licencias?</b>: Sí
+                  </p>
+                  <p *ngIf="data['requiereLicencia'] === false">
+                    <b>¿El proyecto requiere licencias?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['licenciaVigente'] !== undefined">
+                  <p *ngIf="data['licenciaVigente'] === true">
+                    <b>¿El proyecto tiene licencia vigente?</b>: Sí
+                  </p>
+                  <p *ngIf="data['licenciaVigente'] === false">
+                    <b>¿El proyecto tiene licencia vigente?</b>: No
+                  </p>
+                </section>
+                <section *ngIf="data['numeroLicencia'] !== undefined">
+                  <p *ngIf="data['numeroLicencia'].length > 0">
+                    <b>Número de licencia</b>: {{ data['numeroLicencia'] }}
+                  </p>
+                </section>
+                <section *ngIf="data['fechaVigencia'] !== undefined">
+                  <p *ngIf="data['fechaVigencia'].length > 0">
+                    <b>Fecha de vigencia</b>: {{ data['fechaVigencia'] | date: 'dd/MM/yyyy' }}
+                  </p>
+                </section>
               </mat-card-content>
             </mat-card>
           </div>
-
         </mat-expansion-panel>
-
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
@@ -116,26 +182,25 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              {{ data?.contratacion?.disponibilidadPresupuestal[0]?.numeroDdp }}
+              {{ contratacion?.numeroSolicitud }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div class="text-center">
-            <p><b>Valor del DDP</b> {{ data?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud }}</p>
+          <div class="text-center" style="margin-bottom: 2em;">
+            <p><b>Valor del DDP</b> {{ valorTotalDdp | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </div>
 
-          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="data.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
+          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion?.contratacionProyecto" [tipoSolicitud]="contratacion?.tipoSolicitudCodigo"></app-form-aportantes>
 
         </mat-expansion-panel>
 
         <div class="text-center w-15">
-          <button mat-raised-button
-                  color="accent" 
-                  class="btn-table">
-                  Descargar DDP
+          <button mat-raised-button color="accent" class="btn-table"
+            (click)="getDdp( contratacion?.disponibilidadPresupuestal[0]?.disponibilidadPresupuestalId, contratacion?.disponibilidadPresupuestal[0]?.numeroDdp )">
+            Descargar DDP
           </button>
         </div>
 
@@ -148,63 +213,41 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor="let dataNovedad of dataNovedadList">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              Modificación CO_00016 - Contrato A34675850
+              Modificación {{ dataNovedad?.numeroSolicitud }} - Contrato {{ dataNovedad?.contrato?.numeroContrato }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="text-center">
-            <p>Tipo de modificación: <b>Adición, Prorroga</b></p>
+            <p>Tipo de modificación: <b>{{ dataNovedad?.tipoModificacion }}</b></p>
           </div>
 
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-title class="text-area-quill--label">Adición</mat-card-title>
-              <mat-card-content>
-                <p><b>Presupuesto adicional solicitado</b>: $246.000.000</p>
-              </mat-card-content>
-            </mat-card>
+          <div *ngFor="let element of dataNovedad.novedadContractualDescripcion; let f = index">
+            <div align="left">
+                <mat-card class="border">
+                  <mat-card-title class="text-area-quill--label">
+                    {{ element.nombreTipoNovedad }}
+                  </mat-card-title>
+                  <mat-card-content>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>:
+                      <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalMeses + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{element.plazoAdicionalDias + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</span></p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha de inicio de la suspensión</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha final de la suspensión</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha de inicio del reinicio</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha final del reinicio</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
+                    <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.modificacion_de_Condiciones_Contractuales">
+                      <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0].clausulaAmodificar"></span>
+                      <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0].ajusteSolicitadoAclausula"></span>
+                    </p>
+                    <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>
+                  </mat-card-content>
+                </mat-card>
+            </div>
           </div>
-
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-title class="text-area-quill--label">Prorroga</mat-card-title>
-              <mat-card-content>
-                <p><b>Plazo adicional solicitado en meses</b>: 12</p>
-                <p><b>Plazo adicional solicitado en días:</b>: 14</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-
-        </mat-expansion-panel>
-
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              Modificación CO_00015 - Contrato A34675850
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div class="text-center">
-            <p>Tipo de modificación: <b>Modificación de condiciones contractuales</b></p>
-          </div>
-
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-content>
-                <p><b>Cláusula a modificar</b>: Se modifica la cláusula segunda contratista</p>
-                <p><b>Ajuste solicitado a la cláusula</b>: Cambio de contratista</p>
-                <p><b>Nombre del nuevo contratista</b>: Constructora Colpatria</p>
-                <p><b>Tipo de identificación</b>: NIT</p>
-                <p><b>Número de identificación</b>: 900.333.000-3</p>
-                <p><b>Nombre del representante legal</b>: Felipe Andrés Ruiz Fandiño</p>
-                <p><b>Número de la invitación</b>: 00300</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-
         </mat-expansion-panel>
 
       </mat-expansion-panel>
@@ -216,57 +259,66 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let data of contratacion?.contratacionProyecto">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              Recursos comprometidos
+              {{ data?.proyecto?.llaveMen }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div class="text-center">
-            <p><b>DDP_0029</b></p>
-          </div>
-          <app-tabla-recursos-compartidos></app-tabla-recursos-compartidos>
-          <app-form-recursos-compartidos></app-form-recursos-compartidos>
+          <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header w-45">
+              <mat-panel-title class="expansion-style--title">
+                Recursos comprometidos
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-        </mat-expansion-panel>
+            <div class="text-center">
+              <p><b>DDP_0029</b></p>
+            </div>
+            <app-tabla-recursos-compartidos></app-tabla-recursos-compartidos>
+            <app-form-recursos-compartidos></app-form-recursos-compartidos>
 
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              Recursos pagados
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+          </mat-expansion-panel>
 
-          <app-form-recursos-pagados></app-form-recursos-pagados>
+          <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header w-45">
+              <mat-panel-title class="expansion-style--title">
+                Recursos pagados
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-        </mat-expansion-panel>
+            <app-form-recursos-pagados></app-form-recursos-pagados>
 
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              Ejecución financiera por componentes
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+          </mat-expansion-panel>
 
-          <app-form-ejecucion-financiera></app-form-ejecucion-financiera>
+          <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header w-45">
+              <mat-panel-title class="expansion-style--title">
+                Ejecución financiera por componentes
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            {{ data.ejecucionPresupuestal | json}}
+            <!--<app-form-ejecucion-financiera [ejecucionPresupuestal] ="data.ejecucionPresupuestal"></app-form-ejecucion-financiera>-->
 
-        </mat-expansion-panel>
+          </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style">
-          <mat-expansion-panel-header class="expansion-style--header w-45">
-            <mat-panel-title class="expansion-style--title">
-              Traslados de recursos
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+          <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header w-45">
+              <mat-panel-title class="expansion-style--title">
+                Traslados de recursos
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-          <div align="left">
-            <mat-card class="border">
-              <mat-card-content>
-                <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA"></app-tabla-otros-descuentos>
-              </mat-card-content>
-            </mat-card>
-          </div>
+            <div align="left">
+              <mat-card class="border">
+                <mat-card-content>
+                  <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA"></app-tabla-otros-descuentos>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+          </mat-expansion-panel>
 
         </mat-expansion-panel>
 
@@ -278,9 +330,25 @@
             Informe final
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor="let data of informeFinal">
+          <mat-expansion-panel-header class="expansion-style--header w-45">
+            <mat-panel-title class="expansion-style--title">
+              {{ data?.llaveMen }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-        <app-tabla-otros-descuentos [displayedColumns]="displayedColumns1" [ELEMENT_DATA]="ELEMENT_DATA1"></app-tabla-otros-descuentos>
-
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text"> Recibo a satisfacción</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>URL Acta de recibo a satisfaccion - Obra:</strong>{{ data.informeFinal.urlActa }}</p>
+              <p><strong>Fecha de suscripción:</strong>{{ data.informeFinal.fechaSuscripcion | date:'dd/MM/yyyy' }}</p>
+            </mat-card-content>
+          </mat-card>
+          <app-tabla-informe-anexos *ngIf="data != null && data != 'undefined'" [informeFinalId] = "data.informeFinal.informeFinalId"></app-tabla-informe-anexos>
+        </mat-expansion-panel>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
@@ -293,17 +361,20 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre de la aseguradora</b>: Seguros Bolivar</p>
-              <p><b>Número de la póliza</b>: 0000-3355</p>
-              <p><b>Número de certificado</b>: CER111111</p>
-              <p><b>Fecha de expedición de la póliza</b>: 24/06/2020</p>
-              <p><b>Vigencia de la póliza</b>: 25/06/2020</p>
-              <p><b>Vigencia del amparo</b>: 30/06/2020</p>
-              <p><b>Valor del amparo</b>: $150.000.000</p>
-              <p><b>Fecha de expedición de la actualización de la póliza</b>: 27/08/2020</p>
-              <p><b>Vigencia actualizada</b>: 28/08/2020</p>
-              <p><b>Vigencia actualizada del amparo</b>: 30/08/2020</p>
-              <p><b>Valor actualizado del amparo</b>: $200.000.000</p>
+              <p><b>Nombre de la aseguradora</b>: {{ contratoPoliza.nombreAseguradora }} </p>
+              <p><b>Número de la póliza</b>: {{ contratoPoliza.numeroPoliza }}</p>
+              <p><b>Número de certificado</b>: {{ contratoPoliza.numeroCertificado }}</p>
+              <p><b>Fecha de expedición de la póliza</b>:{{ contratoPoliza.fechaExpedicion | date: 'dd/MM/yyyy' }}              </p>
+              <div *ngFor="let seguro of seguros">
+                <p><b>Seguro {{ seguro?.nombre }}</b></p>
+                <p><b>Vigencia de la póliza</b>: {{ seguro?.seguroPoliza?.vigencia | date: 'dd/MM/yyyy' }}</p>
+                <p><b>Vigencia del amparo</b>: {{ seguro?.seguroPoliza?.vigenciaAmparo | date: 'dd/MM/yyyy' }}</p>
+                <p><b>Valor del amparo</b>: {{ seguro?.seguroPoliza?.valorAmparo | currency:'':'symbol-narrow':'.0-0' }}</p>
+                <p><b>Fecha de expedición de la actualización de la póliza</b>: {{ seguro?.fechaExpedicionActualizacionPoliza | date: 'dd/MM/yyyy' }}</p>
+                <p><b>Vigencia actualizada</b>:  {{ seguro.fechaSeguro | date: 'dd/MM/yyyy' }}</p>
+                <p><b>Vigencia actualizada del amparo</b>: {{ seguro.fechaAmparo | date: 'dd/MM/yyyy' }}</p>
+                <p><b>Valor actualizado del amparo</b>: {{ seguro.valorAmparo| currency:'':'symbol-narrow':'.0-0' }}</p>
+              </div>
             </mat-card-content>
         </mat-card>
         </div>
@@ -320,10 +391,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Fecha del trámite</b>:{{ data.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</p>
-              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ data.contratacion.fechaTramiteGestionar | date: 'dd/MM/yyyy' }}</p>
-              <p><b>Observaciones</b>:{{ data.contratacion.observacionGestionar }}</p>
-              <p><b>URL con soporte</b>: {{ data.contratacion.urlSoporteGestionar }}</p>
+              <p><b>Fecha del trámite</b>:{{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Fecha de envío de documentación física para el trámite</b>: {{ contratacion?.fechaTramiteGestionar | date: 'dd/MM/yyyy' }}</p>
+              <p><b>Observaciones</b>:{{ contratacion?.observacionGestionar }}</p>
+              <p><b>URL con soporte</b>: {{ contratacion?.urlSoporteGestionar }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -336,9 +407,9 @@
     <mat-card class="border">
       <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
       <mat-card-content class="mt-2em">
-        <p>Fecha del trámite <b class="color-titulo">{{ data.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
-        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="data.contratacion"
-        [minDate]="data.contratacion.fechaTramite" [esLiquidacion]= true></app-form-registro-tramite>
+        <p>Fecha del trámite <b class="color-titulo">{{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }}</b></p>
+        <app-form-registro-tramite [dataFormulario]="form" [contratacion]="contratacion"
+        [minDate]="contratacion?.fechaTramite" [esLiquidacion]= true></app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

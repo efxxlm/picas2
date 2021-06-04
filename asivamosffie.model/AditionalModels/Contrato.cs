@@ -84,6 +84,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime? FechaAprobacionPoliza { get; set; }
+
+        [NotMapped]
+        public bool tieneActa { get; set; }
     }
 
     

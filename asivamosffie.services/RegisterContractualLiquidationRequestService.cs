@@ -16,13 +16,15 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        public readonly IContractualNoveltyService _ContractualNoveltyService;
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
 
-        public RegisterContractualLiquidationRequestService(devAsiVamosFFIEContext context, ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
+        public RegisterContractualLiquidationRequestService(devAsiVamosFFIEContext context, ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService, IContractualNoveltyService contractualNoveltyService)
         {
             _context = context;
             _commonService = commonService;
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
+            _ContractualNoveltyService = contractualNoveltyService;
         }
         #region grid principal
         public async Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra(int pMenuId)
@@ -82,6 +84,7 @@ namespace asivamosffie.services
             Contratacion contratacion = _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Proyecto)
                 .Include(r => r.Contratista)
                 .ThenInclude(r => r.Contratacion)
                 .ThenInclude(r => r.DisponibilidadPresupuestal)
@@ -106,6 +109,47 @@ namespace asivamosffie.services
 
             return result;
         }
+
+        public async Task<List<NovedadContractual>> GetAllNoveltyByContratacion(int pContratacionId)
+        {
+            Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
+                                                                    .Include(r => r.Contrato)
+                                                                    .Include(r => r.ContratacionProyecto)
+                                                                    .FirstOrDefaultAsync();
+            List<NovedadContractual> novedades = new List<NovedadContractual>();
+
+            if (contratacion != null)
+            {
+                foreach (var novedadesxContrato in contratacion?.Contrato)
+                {
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId).ToList();
+
+                    novedadContractuals.ForEach(async p =>
+                    {
+                        novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                    });
+
+
+                }
+                foreach (var novedadesxProyectos in contratacion?.ContratacionProyecto)
+                {
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId).ToList();
+                    novedadContractuals.ForEach(async p =>
+                    {
+                        novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                    });
+                }
+            }
+            novedades.RemoveAll(r => r.Eliminado == true);
+
+            return novedades;
+        }
+
+        public async Task<VContratacionProyectoSolicitudLiquidacion> GetPolizaByContratacionId(int pContratacionId)
+        {
+            return await _context.VContratacionProyectoSolicitudLiquidacion.Where(r => r.ContratacionId == pContratacionId).FirstOrDefaultAsync();
+        }
+
         #endregion
 
         #region informe final

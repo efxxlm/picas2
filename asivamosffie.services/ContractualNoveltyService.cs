@@ -220,7 +220,7 @@ namespace asivamosffie.services
             foreach (var contrato in contratos)
             {
                 int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
-
+                bool tieneActa = false;
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
@@ -242,8 +242,21 @@ namespace asivamosffie.services
                         contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                     }
                     else
+                    {
                         contrato.tieneSuspensionAprobada = false;
+                    }
 
+                    //nueva validación
+                    if (!String.IsNullOrEmpty(contrato.EstadoActaFase2))
+                    {
+                        if ((contrato.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada && contrato?.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                            (contrato.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada && contrato?.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria))
+                        {
+                            tieneActa = true;
+                        }
+                    }
+
+                    contrato.tieneActa = tieneActa;
 
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);

@@ -23,7 +23,8 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId(int pMenuId, int pContratacionId, int pPadreId, string pTipoObservacionCodigo);
         Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, int pMenuId, int pContratacionId);
         Task<dynamic> GetBalanceByContratacionId(int pContratacionId, int pMenuId);
-
+        Task<List<NovedadContractual>> GetAllNoveltyByContratacion(int pContratacionId);
+        Task<VContratacionProyectoSolicitudLiquidacion> GetPolizaByContratacionId(int pContratacionId);
         //alertas
         Task<bool> RegistroLiquidacionPendiente();
         Task<bool> RegistroLiquidacionPendienteAprobacion();

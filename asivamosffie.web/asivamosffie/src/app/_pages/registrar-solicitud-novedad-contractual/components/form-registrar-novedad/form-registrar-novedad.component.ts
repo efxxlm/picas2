@@ -137,20 +137,33 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   cargarRegistro() {
     this.tipoNovedadArray = [];
     this.tipoNovedadSuspension = [];
+    const tieneActa = this.contrato != null ? this.contrato?.tieneActa : false;
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       response.forEach(n => {
-        if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
-          let novedadContractualDescripcion: NovedadContractualDescripcion = {
-            tipoNovedadCodigo: n.codigo,
-            nombreTipoNovedad: n.nombre
-          };
-          this.tipoNovedadArray.push(novedadContractualDescripcion);
+        if(tieneActa === true){
+          if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
+            let novedadContractualDescripcion: NovedadContractualDescripcion = {
+              tipoNovedadCodigo: n.codigo,
+              nombreTipoNovedad: n.nombre
+            };
+            this.tipoNovedadArray.push(novedadContractualDescripcion);
+          }else{
+            let novedadContractualDescripcion: NovedadContractualDescripcion = {
+              tipoNovedadCodigo: n.codigo,
+              nombreTipoNovedad: n.nombre
+            };
+            this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+          }
         }else{
-          let novedadContractualDescripcion: NovedadContractualDescripcion = {
-            tipoNovedadCodigo: n.codigo,
-            nombreTipoNovedad: n.nombre
-          };
-          this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+          if(n.codigo !== this.tipoNovedadCodigo.reinicio &&
+             n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension &&
+             n.codigo !== this.tipoNovedadCodigo.suspension){
+              let novedadContractualDescripcion: NovedadContractualDescripcion = {
+                tipoNovedadCodigo: n.codigo,
+                nombreTipoNovedad: n.nombre
+              };
+              this.tipoNovedadArray.push(novedadContractualDescripcion);
+          }
         }
       });
 
@@ -167,7 +180,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
         esCreacion = true;
         this.novedad = this.contrato.novedadContractual[0];
       }
-      console.log(this.novedad);
       if (
         this.novedad.novedadContractualDescripcion !== undefined &&
         this.novedad.novedadContractualDescripcion.length > 0

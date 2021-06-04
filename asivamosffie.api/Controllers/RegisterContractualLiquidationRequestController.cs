@@ -182,5 +182,34 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAllNoveltyByContratacion")]
+        public async Task<List<NovedadContractual>> GetAllNoveltyByContratacion([FromQuery] int pContratacionId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetAllNoveltyByContratacion(pContratacionId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPolizaByContratacionId")]
+        public async Task<VContratacionProyectoSolicitudLiquidacion> GetPolizaByContratacionId([FromQuery] int pContratacionId)
+        {
+            try
+            {
+                return await _registerContractualLiquidationRequest.GetPolizaByContratacionId(pContratacionId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

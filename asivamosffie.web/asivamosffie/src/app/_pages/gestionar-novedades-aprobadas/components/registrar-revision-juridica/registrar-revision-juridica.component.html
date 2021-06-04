@@ -23,6 +23,12 @@
     <mat-card-content>
       <p>
         <strong>
+          Número del contrato:
+        </strong>
+        {{ novedad?.contrato?.numeroContrato }}
+      </p>
+      <p>
+        <strong>
           Fecha de solicitud:
         </strong>
         {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}

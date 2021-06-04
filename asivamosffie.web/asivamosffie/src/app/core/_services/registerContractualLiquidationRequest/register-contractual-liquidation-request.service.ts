@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class RegisterContractualLiquidationRequestService {
-  
+
   constructor( private http: HttpClient ) { }
 
   contractual_liquidation = 'RegisterContractualLiquidationRequest';
@@ -20,7 +20,7 @@ export class RegisterContractualLiquidationRequestService {
   getListContractualLiquidationInterventoria(pMenuId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridRegisterContractualLiquidationInterventoria?pMenuId=${ pMenuId }`);
   }
-  
+
   getContratoPoliza(pContratoPolizaId: number, pMenuId: number, pContratacionId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratoPoliza?pContratoPolizaId=${ pContratoPolizaId }&pMenuId=${ pMenuId }&pContratacionId=${ pContratacionId }`);
   }
@@ -28,7 +28,7 @@ export class RegisterContractualLiquidationRequestService {
   getContratacionByContratacionId(pContratacionId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetContratacionByContratacionId?pContratacionId=${ pContratacionId }`);
   }
-  
+
   gridInformeFinal( pContratacionId: number, pMenuId: number ){
     return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GridInformeFinal?pContratacionId=${ pContratacionId }&pMenuId=${ pMenuId }`);
   }
@@ -61,10 +61,18 @@ export class RegisterContractualLiquidationRequestService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/${this.contractual_liquidation}/ChangeStatusLiquidacionContratacion?menuId=${ menuId }`, pContratacionId);
   }
 
+  getAllNoveltyByContratacion( pContratacionId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetAllNoveltyByContratacion?pContratacionId=${ pContratacionId }`);
+  }
+
+  getPolizaByContratacionId( pContratacionId: number ){
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.contractual_liquidation}/GetPolizaByContratacionId?pContratacionId=${ pContratacionId }`);
+  }
+
 
   listaTipoObservacionLiquidacionContratacion() {
     /*
-      Get lista de tipos de observaciones para los CU => 5.1.6, 5.1.7,5.1.8 
+      Get lista de tipos de observaciones para los CU => 5.1.6, 5.1.7,5.1.8
     */
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=184`)
       .pipe(
