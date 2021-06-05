@@ -49,9 +49,14 @@ export class FormProposicionesVariosComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl( '/', {skipLocationChange: true} )
+      .then( () => this.router.navigate( ['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId] ) );
+      return;
     });
   }
 
@@ -126,11 +131,12 @@ export class FormProposicionesVariosComponent implements OnInit {
 
       this.technicalCommitteSessionService.createEditSesionComiteTema(temas)
         .subscribe(respuesta => {
+          console.log(respuesta);
           this.openDialog('', `<b>${respuesta.message}</b>`)
-          if (respuesta.code == "200") {
+          /*if (respuesta.code == "200") {
             //this.validarCompletos(respuesta.data);
             this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
-          }
+          }*/
 
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
         })
