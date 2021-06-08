@@ -309,7 +309,6 @@
                       [matDatepicker]="fechaAprobacion"
                       formControlName="fechaAprobacion"
                       [min]="fechaAprobacionPoliza"
-                      [max]="minDate"
                       placeholder="DD/MM/AAAA"
                       required
                       readonly
@@ -321,6 +320,7 @@
                           i
                         )
                       "
+                      (click)="fechaAprobacion.open()"
                     />
                     <mat-datepicker #fechaAprobacion></mat-datepicker>
                   </mat-form-field>

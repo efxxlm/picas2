@@ -55,7 +55,6 @@ export class FormPerfilComponent implements OnInit {
     private dialog: MatDialog,
     private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService
   ) {
-    this.minDate = this.fechaPoliza;
     this.crearFormulario();
     this.commonSvc.listaPerfil().subscribe(perfiles => {
       this.perfilesCv = perfiles;
@@ -63,6 +62,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.minDate = new Date(this.fechaPoliza);
     setTimeout(() => {
       this.perfilesProyecto();
     }, 1000);
