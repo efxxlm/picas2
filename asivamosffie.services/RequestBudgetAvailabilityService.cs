@@ -189,8 +189,8 @@ namespace asivamosffie.services
                                     //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
 
                                     ContratacionProyecto contratacionProyecto = ListDP.Contratacion.ContratacionProyecto.Where(r => r.ProyectoId == proyectospp.ProyectoId).FirstOrDefault();
+                                    //decimal saldo = contratacionProyecto?.ContratacionProyectoAportante?.Where(r => r.CofinanciacionAportanteId == font.AportanteId).FirstOrDefault().ValorAporte ?? 0;
 
-                                    decimal saldo = contratacionProyecto?.ContratacionProyectoAportante?.Where(r => r.CofinanciacionAportanteId == font.AportanteId).FirstOrDefault().ValorAporte ?? 0;
                                     //Convert.ToDecimal(
                                     //_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId)
                                     //.Sum(x => x.ValorFuente));
@@ -218,8 +218,8 @@ namespace asivamosffie.services
                                                                                 x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
                                     string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : string.Empty;
 
-                                    Decimal SaldoActualFuente = Math.Abs(saldo - valorsolicitadoxotros);
-                                    Decimal NuevoSaldoFuente = Math.Abs(saldo - valorsolicitadoxotros - valorsolicitado);
+                                    //Decimal SaldoActualFuente = Math.Abs(saldo - valorsolicitadoxotros);
+                                    //Decimal NuevoSaldoFuente = Math.Abs(saldo - valorsolicitadoxotros - valorsolicitado);
 
 
                                     fuentes.Add(new GrillaFuentesFinanciacion
@@ -227,9 +227,11 @@ namespace asivamosffie.services
                                         Fuente = namefuente,
                                         Estado_de_las_fuentes = string.Empty,
                                         FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                        Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                        //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                        Saldo_actual_de_la_fuente = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                                         Valor_solicitado_de_la_fuente = valorsolicitado,
-                                        Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                        //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                        Nuevo_saldo_de_la_fuente = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                                         Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
                                         Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                                     });
