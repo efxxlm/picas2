@@ -81,7 +81,7 @@ namespace asivamosffie.services
 
                 (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
                                              s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro
-                                             //&& s.FechaRegistroCompletoAprobar.HasValue
+                                              //&& s.FechaRegistroCompletoAprobar.HasValue
                                               )
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
@@ -312,8 +312,6 @@ namespace asivamosffie.services
                 }
 
             }
-
-
             TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
             {
                 Usos = ListVFuentesUsoXcontratoId
@@ -353,10 +351,8 @@ namespace asivamosffie.services
                                 NombreUso = usos.NombreUso
                             });
 
-
                     foreach (var Fuentes in usos.Fuentes)
                     {
-
                         List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
                             ListVAportanteFuenteUso
                             .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
@@ -382,12 +378,14 @@ namespace asivamosffie.services
                                 foreach (var Aportante in Fuentes.Aportante)
                                 {
                                     decimal ValorUso = ListVAportanteFuenteUso3
-                                        .Where(r => r.Nombre == usos.NombreUso
-                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault();
+                                        .Where(
+                                               r => r.Nombre == usos.NombreUso
+                                            && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                              )
+                                        .Select(s => s.ValorUso)
+                                        .FirstOrDefault();
 
-
-                                    decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
 
