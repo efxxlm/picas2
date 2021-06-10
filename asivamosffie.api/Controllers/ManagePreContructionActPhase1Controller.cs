@@ -101,7 +101,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa(pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
+                respuesta = await _managePreContruction.LoadActa(pContrato, pContrato.PFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
                     ToAppSettingsService(_settings)
                     );
                 return respuesta;

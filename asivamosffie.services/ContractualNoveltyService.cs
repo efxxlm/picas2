@@ -238,12 +238,12 @@ namespace asivamosffie.services
 
                     if (novedadTemp != null)
                     {
-                        contrato.tieneSuspensionAprobada = true;
+                        contrato.TieneSuspensionAprobada = true;
                         contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                     }
                     else
                     {
-                        contrato.tieneSuspensionAprobada = false;
+                        contrato.TieneSuspensionAprobada = false;
                     }
 
                     //nueva validación
@@ -256,7 +256,7 @@ namespace asivamosffie.services
                         }
                     }
 
-                    contrato.tieneActa = tieneActa;
+                    contrato.TieneActa = tieneActa;
 
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);
@@ -415,11 +415,11 @@ namespace asivamosffie.services
 
                 if (novedadTemp != null)
                 {
-                    novedadContractual.Contrato.tieneSuspensionAprobada = true;
+                    novedadContractual.Contrato.TieneSuspensionAprobada = true;
                     novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                 }
                 else
-                    novedadContractual.Contrato.tieneSuspensionAprobada = false;
+                    novedadContractual.Contrato.TieneSuspensionAprobada = false;
 
                 novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)
