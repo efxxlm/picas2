@@ -130,7 +130,7 @@ namespace asivamosffie.services
                 {
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
-                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false;
+                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto ?? false;
                     p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
                     p.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario &&
                                                              r.Codigo == seguimientoDiario.EstadoCodigo)
@@ -528,7 +528,7 @@ namespace asivamosffie.services
 
                     seguimientoDiario.TieneObservacionSupervisor = pSeguimientoDiario.TieneObservacionSupervisor;
 
-                    if (seguimientoDiario.TieneObservacionSupervisor.HasValue ? seguimientoDiario.TieneObservacionSupervisor.Value : false)
+                    if (seguimientoDiario.TieneObservacionSupervisor ?? false)
                     {
 
                         await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
@@ -730,7 +730,7 @@ namespace asivamosffie.services
                 if (listaFechasTotal.Count() > 0)
                 {
                     bool fechaSeleccionada = false;
-                    string ultimaFecha = string.Empty;
+                    string ultimaFecha = DateTime.Now.ToString("d/M/yyyy");
                     listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
                     {
                         if (contratacion.SeguimientoDiario

@@ -1584,9 +1584,9 @@ namespace asivamosffie.services
             return contrato;
 
         }
-        public dynamic GetDrpContrato(int pContratacionId)
-        {
 
+        public dynamic GetDrpContrato(int pContratacionId)
+        { 
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
@@ -1620,22 +1620,22 @@ namespace asivamosffie.services
                     foreach (var TipoUso in ListTipoUso)
                     {
                         VDrpXproyectoXusos Uso = List
-                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                && r.ProyectoId == ProyectoId.ProyectoId
-                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                            .FirstOrDefault();
+                                                    .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                        && r.ProyectoId == ProyectoId.ProyectoId
+                                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                    .FirstOrDefault();
 
                         decimal ValorUso = List
-                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                && r.ProyectoId == ProyectoId.ProyectoId
-                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                            .Sum(v => v.ValorUso);
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                    && r.ProyectoId == ProyectoId.ProyectoId
+                                                    && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(v => v.ValorUso);
 
                         decimal Saldo = List
-                         .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                         && r.ProyectoId == ProyectoId.ProyectoId
-                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                        .Sum(v => v.Saldo) ?? 0;
+                                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                 && r.ProyectoId == ProyectoId.ProyectoId
+                                                 && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                            .Sum(v => v.Saldo) ?? 0;
 
                         ListDyUsos.Add(new
                         {
@@ -1662,8 +1662,7 @@ namespace asivamosffie.services
             }
             return ListTablaDrp;
         }
-
-
+         
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
