@@ -1,4 +1,5 @@
 using asivamosffie.api.Helpers;
+using asivamosffie.model.APIModels;
 using asivamosffie.services;
 using asivamosffie.services.Filters;
 using asivamosffie.services.Interfaces;
@@ -111,6 +112,9 @@ namespace asivamosffie.api
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //power bi
+            services.Configure<AzureAd>(Configuration.GetSection("AzureAd"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,6 +124,7 @@ namespace asivamosffie.api
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
             //Agregar Interfaces y clases
+            services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IFinalBalanceService, FinancialBalanceService>();
             services.AddTransient<IRegisterContractSettlementService, RegisterContractSettlementService>();
             services.AddTransient<IUpdatePoliciesGuaranteesService, UpdatePoliciesGuaranteesService>();
