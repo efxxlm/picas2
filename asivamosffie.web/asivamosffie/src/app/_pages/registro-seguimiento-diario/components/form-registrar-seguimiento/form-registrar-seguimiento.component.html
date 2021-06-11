@@ -257,7 +257,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required formControlName="retrasoPersonal">
+                  <mat-select required formControlName="retrasoPersonal" (selectionChange)="onChange()">
                     <mat-option [value]="true">Sí</mat-option>
                     <mat-option [value]="false">No</mat-option>
                   </mat-select>
@@ -303,6 +303,7 @@
                     matInput
                     #horasRetrasoPersonal
                     type="number"
+                    (change)="onChange()"
                     formControlName="horasRetrasoPersonal"
                     maxlength="1"
                     min="1"
@@ -524,7 +525,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required formControlName="retrasoMaterial">
+                  <mat-select required formControlName="retrasoMaterial" (selectionChange)="onChange()">
                     <mat-option [value]="true">Sí</mat-option>
                     <mat-option [value]="false">No</mat-option>
                   </mat-select>
@@ -570,6 +571,7 @@
                     matInput
                     #horasRetrasoMaterial
                     type="number"
+                    (change)="onChange()"
                     formControlName="horasRetrasoMaterial"
                     maxlength="1"
                     min="1"
@@ -788,7 +790,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required formControlName="retrasoEquipo">
+                  <mat-select required formControlName="retrasoEquipo" (selectionChange)="onChange()">
                     <mat-option [value]="true">Sí</mat-option>
                     <mat-option [value]="false">No</mat-option>
                   </mat-select>
@@ -834,6 +836,7 @@
                     matInput
                     #horasRetrasoEquipo
                     type="number"
+                    (change)="onChange()"
                     formControlName="horasRetrasoEquipo"
                     maxlength="1"
                     min="1"
@@ -1042,7 +1045,7 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required formControlName="retrasoProductividad">
+                  <mat-select required formControlName="retrasoProductividad" (selectionChange)="onChange()">
                     <mat-option [value]="true">Sí</mat-option>
                     <mat-option [value]="false">No</mat-option>
                   </mat-select>

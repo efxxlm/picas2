@@ -358,7 +358,10 @@ namespace asivamosffie.services
                                          .Select(s => s.Programacion)
                                          .ToList());
             });
-            seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
+            if (ListProgramacion.Count() > 0)
+            {
+                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
+            }
 
             seguimientoSemanal.AvanceAcumulado = ListProgramacion
                 .GroupBy(r => r.Actividad)
@@ -366,7 +369,7 @@ namespace asivamosffie.services
                 {
                     Actividad = r.Key,
                     AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.SeguimientoSemanalAvanceFisicoProgramacion.FirstOrDefault().AvanceFisicoCapitulo)) + "%",
-                    AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
+                    AvanceFisicoCapitulo = seguimientoSemanal.CantidadTotalDiasActividades > 0 ? Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%" : "0 %",
                 });
 
             //Eliminar Las tablas eliminadas Logicamente
