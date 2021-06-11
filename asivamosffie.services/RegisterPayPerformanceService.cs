@@ -1411,7 +1411,8 @@ namespace asivamosffie.services
                     BankCharges = uploadedOrder.BankCharges,
                     DiscountedCharge = uploadedOrder.DiscountedCharge,
                     PerformancesToAdd = item.RendimientoIncorporar,
-                    // Visitas = item.Visitas
+                    Visitas = item.Visitas,
+                    IncorporatedPerformances = item.Incorporados
                 };
                 managedPerformances.Add(managedPerformanceOrder);
             }
@@ -1434,7 +1435,8 @@ namespace asivamosffie.services
             var rendimientosIncorporados = 
                 from performance in _context.RendimientosIncorporados
                 join register in _context.CarguePagosRendimientos 
-                on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId                                           
+                on performance.CarguePagosRendimientosId equals register.CargaPagosRendimientosId
+                where register.PendienteAprobacion == true
                 group performance by new { performance.CarguePagosRendimientosId, register.FechaCargue, register.FechaActa, register.RutaActa } into g                                          
                 select new { RegisterId = g.Key.CarguePagosRendimientosId, 
                     RegistrosIncorporados = g.Sum(x => x.Aprobado.HasValue && x.Aprobado.Value == true ? 1: 0),

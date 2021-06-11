@@ -392,8 +392,7 @@ namespace asivamosffie.services
         {
             foreach (var payment in listaCarguePagosRendimientos)
             {
-                if (typeFile == "Pagos")
-                {
+               
                     string cellValue = payment["Número de orden de giro"];
                     var solicitud = await _context.SolicitudPago.Where(
                     x => x.NumeroSolicitud == cellValue)
@@ -431,7 +430,6 @@ namespace asivamosffie.services
 
                     //    carguePagosRendimientos.
                     //    _context.OrdenGiroPago.Add(paymentOrder);
-                }
             }
             return true;
         }
