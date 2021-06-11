@@ -15,6 +15,8 @@ export class VerEjecucionFinancieraComponent implements OnInit {
   vContratoPagosRealizados: any;
   total: any;
   listaejecucionPresupuestal: any[] = [];
+  dataTableEjpresupuestal: any[] = [];
+  dataTableEjfinanciera: any[] = [];
 
   constructor(
     private financialBalanceService: FinancialBalanceService,
@@ -22,12 +24,13 @@ export class VerEjecucionFinancieraComponent implements OnInit {
   ) {
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
-    }); 
+    });
   }
 
   ngOnInit(): void {
     this.getBalanceByProyectoId(this.proyectoId);
     this.getContratoByProyectoId();
+    this.getEjecucionFinancieraXProyectoId(this.proyectoId);
   }
 
   getBalanceByProyectoId(proyectoId: number) {
@@ -53,7 +56,33 @@ export class VerEjecucionFinancieraComponent implements OnInit {
           saldo: element.contrato.vContratoPagosRealizados.saldoPorPagar != null ? element.contrato.vContratoPagosRealizados.saldoPorPagar: 0,
           porcentajeEjecucionPresupuestal: element.contrato.vContratoPagosRealizados.porcentajeFacturado != null ? element.contrato.vContratoPagosRealizados.porcentajeFacturado : 0,
         });
-      });  
+      });
+    });
+  }
+
+  getEjecucionFinancieraXProyectoId(proyectoId: number) {
+    this.financialBalanceService.getEjecucionFinancieraXProyectoId(proyectoId).subscribe(data => {
+      data[0].forEach(element => {
+        this.dataTableEjpresupuestal.push({
+          facturadoAntesImpuestos: element.facturadoAntesImpuestos,
+          nombre: element.nombre,
+          porcentajeEjecucionPresupuestal: element.porcentajeEjecucionPresupuestal,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          tipoSolicitudCodigo: element.tipoSolicitudCodigo,
+          totalComprometido: element.totalComprometido
+        });
+      });
+      data[1].forEach(element => {
+        this.dataTableEjfinanciera.push({
+          nombre: element.nombre,
+          ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
+          porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          totalComprometido: element.totalComprometido
+        });
+      });
     });
   }
 

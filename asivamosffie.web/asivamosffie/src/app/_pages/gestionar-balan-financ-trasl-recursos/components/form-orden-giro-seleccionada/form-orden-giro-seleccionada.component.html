@@ -1,141 +1,206 @@
 <div class="animatedDown" *ngIf="solicitudPago">
-    <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text textoGris">
-                {{ ordenGiro.get( 'numeroOrdendeGiro' ).value }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content align="left">
-            <p><strong>Fecha de aprobación fiduciaria: </strong><em> {{ solicitudPago.ordenGiro.fechaRegistroCompletoTramitar | date: 'dd/MM/yyyy' }} </em></p>
-            <p><strong>Modalidad del contrato: </strong><em> {{ getModalidadContrato( solicitudPago.contratoSon.modalidadCodigo ) }} </em></p>
-            <p><strong>Número del contrato: </strong><em> {{ solicitudPago.contratoSon.numeroContrato }} </em></p>
-            <p><strong>Valor facturado: </strong><em> {{ solicitudPago.valorFacturado | currency: '':'symbol-narrow':'.0-0' }} </em></p>
-            <p><strong>Valor pagado: </strong><em> {{ solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleTerceroCausacion[ 0 ].valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }} </em></p>
-        </mat-card-content>
-    </mat-card>
-    <p class="info-container" style="margin-top: 2em;" *ngIf="esVerDetalle === false">
-        <span class="info-text sin-diligenciar">Sin diligenciar</span>
-        <span class="info-text en-proceso">En proceso</span>
-        <span class="info-text completo">Completo</span>
-    </p>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title ">
-                    Información general
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title ">
-                            Datos de la solicitud
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text textoGris">
+        {{ ordenGiro.get('numeroOrdendeGiro').value }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content align="left">
+      <p>
+        <strong>Fecha de aprobación fiduciaria: </strong
+        ><em> {{ solicitudPago.ordenGiro.fechaRegistroCompletoTramitar | date: 'dd/MM/yyyy' }} </em>
+      </p>
+      <p>
+        <strong>Modalidad del contrato: </strong
+        ><em> {{ getModalidadContrato(solicitudPago.contratoSon.modalidadCodigo) }} </em>
+      </p>
+      <p>
+        <strong>Número del contrato: </strong><em> {{ solicitudPago.contratoSon.numeroContrato }} </em>
+      </p>
+      <p>
+        <strong>Valor facturado: </strong
+        ><em> {{ solicitudPago.valorFacturado | currency: '':'symbol-narrow':'.0-0' }} </em>
+      </p>
+      <p>
+        <strong>Valor pagado: </strong
+        ><em>
+          {{
+            solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].valorNetoGiro
+              | currency: '':'symbol-narrow':'.0-0'
+          }}
+        </em>
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <p class="info-container" style="margin-top: 2em" *ngIf="esVerDetalle === false">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Información general </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Datos de la solicitud </mat-panel-title>
+          </mat-expansion-panel-header>
 
-                    <app-datos-solicitud-gbftrec [solicitudPago]="solicitudPago"></app-datos-solicitud-gbftrec>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title ">
-                            Datos DDP y DRP
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <app-datos-ddp-drp-gbftrec [solicitudPago]="solicitudPago"></app-datos-ddp-drp-gbftrec>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title ">
-                            Soportes de factura
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <mat-card class="shipping-card var-main-gris">
-                        <mat-card-content align="left">
-                            <p><strong>URL con soporte:
-                                </strong><em> {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }} </em>
-                            </p>
-                        </mat-card-content>
-                    </mat-card>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title ">
-                            Tercero de giro
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <div class="d-flex justify-content-center mt-1em">
-                        <p>Nombre del contratista: <b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i> </b></p>
-                        <p style="margin-left: 2em;">Número de identificación: <b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </i> </b></p>
-                    </div>
-            
-                    <mat-card class="shipping-card var-main-gris">
-                        <mat-card-content align="left">
-                            <p><strong>¿Cuál es el medio de pago para los giros del contrato?:</strong> {{ getMedioPago( this.addressForm.get( 'medioPagoGiroContrato' ).value ) }} </p>
-                            <ng-container *ngIf="this.addressForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica; else esChequeGerencia">
-                                <p><strong>Titular de la cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value }} </p>
-                                <p><strong>Número de identificación del titular:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value }} </p>
-                                <p><strong>Número de cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value }} </p>
-                                <p><strong>Banco:</strong> {{ getBanco( addressForm.get( 'transferenciaElectronica' ).get( 'bancoCodigo' ).value ) }} </p>
-                                <p><strong>Tipo de cuenta:</strong> {{ addressForm.get( 'transferenciaElectronica' ).get( 'esCuentaAhorros' ).value === true ? 'Ahorros' : 'Corriente' }} </p>
-                            </ng-container>
-                            <ng-template #esChequeGerencia>
-                                <p><strong>Nombre del beneficiario:</strong> {{ addressForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value }} </p>
-                                <p><strong>Número de identificación del beneficiario:</strong> {{ addressForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value }} </p>
-                            </ng-template>
-                        </mat-card-content>
-                    </mat-card>
-
-                </mat-expansion-panel>
-            </mat-accordion>
+          <app-datos-solicitud-gbftrec [solicitudPago]="solicitudPago"></app-datos-solicitud-gbftrec>
         </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Datos DDP y DRP </mat-panel-title>
+          </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
-                    Detalle del giro
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Porcentajes de participación
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <app-tabla-porc-participacion-gbftrec *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porc-participacion-gbftrec>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Información fuente de recursos
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <app-tabla-infofrecursos-gbftrec *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-infofrecursos-gbftrec>
-                </mat-expansion-panel>
-            </mat-accordion>
-
-            <app-form-descuentos-direccion-tecnica  [solicitudPago]="solicitudPago"
-                                                    [esVerDetalle]="esVerDetalle"
-                                                    [esRegistroNuevo]="esRegistroNuevo"
-                                                    (estadoSemaforo)="semaforoDescuentos = $event; checkEstadoSemaforo()">
-            </app-form-descuentos-direccion-tecnica>
-
-            <app-form-tercero-causacion [solicitudPago]="solicitudPago"
-                                        [esVerDetalle]="esVerDetalle"
-                                        [esRegistroNuevo]="esRegistroNuevo"
-                                        (trasladoId)="balanceFinancieroTrasladoId = $event"
-                                        (estadoSemaforo)="semaforoTerceroCausacion = $event; checkEstadoSemaforo()">
-            </app-form-tercero-causacion>
+          <app-datos-ddp-drp-gbftrec [solicitudPago]="solicitudPago"></app-datos-ddp-drp-gbftrec>
         </mat-expansion-panel>
-    </mat-accordion>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Soportes de factura </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-content align="left">
+              <p>
+                <strong>URL con soporte: </strong
+                ><em> {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }} </em>
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Tercero de giro </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="d-flex justify-content-center mt-1em">
+            <p>
+              Nombre del contratista:
+              <b>
+                <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i>
+              </b>
+            </p>
+            <p style="margin-left: 2em">
+              Número de identificación:
+              <b>
+                <i> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </i>
+              </b>
+            </p>
+          </div>
+
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-content align="left">
+              <p>
+                <strong>¿Cuál es el medio de pago para los giros del contrato?:</strong>
+                {{ getMedioPago(this.addressForm.get('medioPagoGiroContrato').value) }}
+              </p>
+              <ng-container
+                *ngIf="
+                  this.addressForm.get('medioPagoGiroContrato').value ===
+                    listaMediosPagoCodigo.transferenciaElectronica;
+                  else esChequeGerencia
+                "
+              >
+                <p>
+                  <strong>Titular de la cuenta:</strong>
+                  {{ addressForm.get('transferenciaElectronica').get('titularCuenta').value }}
+                </p>
+                <p>
+                  <strong>Número de identificación del titular:</strong>
+                  {{ addressForm.get('transferenciaElectronica').get('titularNumeroIdentificacion').value }}
+                </p>
+                <p>
+                  <strong>Número de cuenta:</strong>
+                  {{ addressForm.get('transferenciaElectronica').get('numeroCuenta').value }}
+                </p>
+                <p>
+                  <strong>Banco:</strong>
+                  {{ getBanco(addressForm.get('transferenciaElectronica').get('bancoCodigo').value) }}
+                </p>
+                <p>
+                  <strong>Tipo de cuenta:</strong>
+                  {{
+                    addressForm.get('transferenciaElectronica').get('esCuentaAhorros').value === true
+                      ? 'Ahorros'
+                      : 'Corriente'
+                  }}
+                </p>
+              </ng-container>
+              <ng-template #esChequeGerencia>
+                <p>
+                  <strong>Nombre del beneficiario:</strong>
+                  {{ addressForm.get('chequeGerencia').get('nombreBeneficiario').value }}
+                </p>
+                <p>
+                  <strong>Número de identificación del beneficiario:</strong>
+                  {{ addressForm.get('chequeGerencia').get('numeroIdentificacionBeneficiario').value }}
+                </p>
+              </ng-template>
+            </mat-card-content>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
+          Detalle del giro
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Porcentajes de participación </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-tabla-porc-participacion-gbftrec
+            *ngIf="
+              solicitudPago.tablaPorcentajeParticipacion !== undefined &&
+              solicitudPago.tablaPorcentajeParticipacion.length > 0
+            "
+            [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"
+          ></app-tabla-porc-participacion-gbftrec>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Información fuente de recursos </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-tabla-infofrecursos-gbftrec
+            *ngIf="
+              solicitudPago.tablaInformacionFuenteRecursos !== undefined &&
+              solicitudPago.tablaInformacionFuenteRecursos.length > 0
+            "
+            [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"
+          ></app-tabla-infofrecursos-gbftrec>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <app-form-descuentos-direccion-tecnica
+        [solicitudPago]="solicitudPago"
+        [esVerDetalle]="esVerDetalle"
+        [esRegistroNuevo]="esRegistroNuevo"
+        (estadoSemaforo)="semaforoDescuentos = $event; checkEstadoSemaforo()"
+      >
+      </app-form-descuentos-direccion-tecnica>
+
+      <app-form-tercero-causacion
+        [solicitudPago]="solicitudPago"
+        [esVerDetalle]="esVerDetalle"
+        [esRegistroNuevo]="esRegistroNuevo"
+        (trasladoId)="balanceFinancieroTrasladoId = $event"
+        (estadoSemaforo)="semaforoTerceroCausacion = $event; checkEstadoSemaforo()"
+      >
+      </app-form-tercero-causacion>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

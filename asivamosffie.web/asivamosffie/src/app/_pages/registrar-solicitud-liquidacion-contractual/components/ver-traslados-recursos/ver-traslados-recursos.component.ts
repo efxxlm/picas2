@@ -41,15 +41,13 @@ export class VerTrasladosRecursosComponent implements OnInit {
 
     async ngOnInit() {
         this.listaEstadoTraslado = await this.commonSvc.listaEstadoTraslado().toPromise()
-        const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId( 557 /* this.proyectoId */ ).toPromise()
+        const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId(this.proyectoId).toPromise()
         let balanceFinancieroTraslado = []
 
         if( getDataByProyectoId.length > 0 ){
             this.proyecto = getDataByProyectoId[0]
-            this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero( 557 /* this.proyectoId */ ).toPromise()
+            this.balanceFinanciero = await this.balanceSvc.getBalanceFinanciero(this.proyectoId).toPromise()
             balanceFinancieroTraslado = this.balanceFinanciero.balanceFinancieroTraslado
-            console.log( this.proyecto )
-            console.log( this.balanceFinanciero )
         }
 
         balanceFinancieroTraslado.forEach( registro => registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) )

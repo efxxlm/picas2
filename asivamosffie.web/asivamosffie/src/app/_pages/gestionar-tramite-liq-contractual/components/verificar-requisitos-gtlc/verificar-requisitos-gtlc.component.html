@@ -43,14 +43,15 @@
                   Actualización de póliza
                 </mat-panel-title>
               </mat-expansion-panel-header>
-            <app-actualizacion-poliza-gtlc *ngIf="contratacionProyectoId && data" [esVerDetalle]="esVerDetalle" [contratacionProyectoId]="contratacionProyectoId" [contratoPolizaActualizacionId]="data.contratoPolizaActualizacionId" [contratoPolizaId]="data.contratoPolizaId" [data]="data" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza-gtlc>
+            <app-actualizacion-poliza-gtlc *ngIf="contratacionId && data" [esVerDetalle]="esVerDetalle" [contratacionId]="contratacionId" [contratoPolizaActualizacionId]="data.contratoPolizaActualizacionId" [contratoPolizaId]="data.contratoPolizaId" [data]="data" (semaforoActualizacionPoliza)="valueSemaforoActualizacionPoliza($event)"></app-actualizacion-poliza-gtlc>
 
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
                 <mat-panel-title
                 class="expansion-style--title"
-                [class.sin-diligenciar]="semaforoBalanceFinanciero == 'Incompleto'"
+                [class.sin-diligenciar]="semaforoBalanceFinanciero == null"
+                [class.en-proceso]="semaforoBalanceFinanciero == 'Incompleto'"
                 [class.completo]="semaforoBalanceFinanciero == 'Completo'"
               >
                 Balance financiero
@@ -61,14 +62,15 @@
                   Balance financiero
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-balance-financiero-gtlc *ngIf="contratacionProyectoId"  [esVerDetalle]="esVerDetalle" [verDetalleBtn]=false [contratacionProyectoId]="contratacionProyectoId" (semaforoBalanceFinanciero)="valueSemaforoBalanceFinanciero($event)"></app-tabla-balance-financiero-gtlc>
+            <app-tabla-balance-financiero-gtlc *ngIf="contratacionId"  [esVerDetalle]="esVerDetalle" [verDetalleBtn]=false [contratacionId]="contratacionId" (semaforoBalanceFinanciero)="valueSemaforoBalanceFinanciero($event)"></app-tabla-balance-financiero-gtlc>
 
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header" *ngIf="!esVerDetalle">
                 <mat-panel-title
                 class="expansion-style--title"
-                [class.sin-diligenciar]="semaforoInformeFinal == 'Incompleto'"
+                [class.sin-diligenciar]="semaforoInformeFinal == null"
+                [class.en-proceso]="semaforoInformeFinal == 'Incompleto'"
                 [class.completo]="semaforoInformeFinal == 'Completo'"
               >
                 Informe final
@@ -79,7 +81,7 @@
                   Informe final
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-informe-final-gtlc *ngIf="contratacionProyectoId" [esVerDetalle]="esVerDetalle" [verDetalleBtn]=false [contratacionProyectoId]="contratacionProyectoId" (semaforoInformeFinal)="valueSemaforoInformeFinal($event)"></app-tabla-informe-final-gtlc>
+            <app-tabla-informe-final-gtlc *ngIf="contratacionId" [esVerDetalle]="esVerDetalle" [verDetalleBtn]=false [contratacionId]="contratacionId" (semaforoInformeFinal)="valueSemaforoInformeFinal($event)"></app-tabla-informe-final-gtlc>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

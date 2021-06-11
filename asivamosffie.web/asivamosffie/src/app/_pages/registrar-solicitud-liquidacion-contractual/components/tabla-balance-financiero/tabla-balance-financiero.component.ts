@@ -20,13 +20,16 @@ export class TablaBalanceFinancieroComponent implements OnInit {
     'sede',
     'numeroTraslados',
     'estadoValidacion',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
-  @Input() contratacionProyectoId: number;
+  @Input() contratacionId: number;
   @Input() esVerDetalle: boolean;
   @Output() semaforoBalanceFinanciero = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  total: number = 0;
+  totalCompleto: number = 0;
+  totalIncompleto: number = 0;
 
   datosTabla = [];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -37,11 +40,11 @@ export class TablaBalanceFinancieroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getBalanceByContratacionProyectoId(this.contratacionProyectoId);
+    this.getBalanceBycontratacionId(this.contratacionId);
   }
 
-  getBalanceByContratacionProyectoId(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getBalanceByContratacionProyectoId(contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
+  getBalanceBycontratacionId(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getBalanceByContratacionId(contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -53,14 +56,28 @@ export class TablaBalanceFinancieroComponent implements OnInit {
             numeroTraslados: element.balance.numeroTraslado,
             estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
             registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
-            contratacionProyectoId: contratacionProyectoId,
+            contratacionId: contratacionId,
             proyectoId: element.balance.proyectoId
           });
         })
       }
       this.dataSource.data = this.datosTabla;
-      if(this.datosTabla.length > 0){
-        this.semaforoBalanceFinanciero.emit(this.datosTabla[0].registroCompleto);
+      this.total = this.datosTabla.length;
+      this.datosTabla.forEach(element => {
+        if(element.registroCompleto === 'Completo')
+          this.totalCompleto++;
+        if(element.registroCompleto === 'Incompleto')
+          this.totalIncompleto++;
+      });
+      if(this.total <= 0){
+        this.semaforoBalanceFinanciero.emit(null);
+      }
+      else if(this.totalCompleto >= this.total){
+        this.semaforoBalanceFinanciero.emit('Completo');
+      }else if(this.totalIncompleto >= this.total){
+        this.semaforoBalanceFinanciero.emit(null);
+      }else{
+        this.semaforoBalanceFinanciero.emit('Incompleto');
       }
     });
   }

@@ -25,7 +25,7 @@
             <p><strong>Sede educativa: </strong><em> {{ proyecto.sedeEducativa }} </em></p>
             <p><strong>Departamento: </strong><em> {{ proyecto.departamento }} </em></p>
             <p><strong>Municipio: </strong><em> {{ proyecto.municipio }} </em></p>
-            <p><strong>Número DDP: </strong><em>DDP_0001 *</em></p>
+            <!-- <p><strong>Número DDP: </strong><em>DDP_0001 *</em></p>
             <p><strong>Valor DDP: </strong><em>$100.000.000 *</em></p>
             <h2 class="card-subTitle">DRP</h2>
             <div class="table-responsive">
@@ -49,13 +49,14 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-            </div>
+            </div> -->
         </mat-card-content>
     </mat-card>
 
     <app-control-solicitudes-traslado-gbftrec   [proyectoId]="proyectoId"
                                                 [esRegistroNuevo]="esRegistroNuevo"
                                                 [proyecto]="proyecto"
-                                                [esVerDetalle]="esVerDetalle">
+                                                [esVerDetalle]="esVerDetalle"
+                                                [solicitudPagoId]="solicitudPagoId">
     </app-control-solicitudes-traslado-gbftrec>
 </section>

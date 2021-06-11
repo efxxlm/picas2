@@ -10,7 +10,7 @@ import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObs
 })
 export class AprobarBalanceComponent implements OnInit {
 
-  contratacionProyectoId: number;
+  contratacionId: number;
   balanceFinancieroId: number;//definir
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
@@ -26,7 +26,7 @@ export class AprobarBalanceComponent implements OnInit {
 
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
       this.proyectoId = params.proyectoId;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -54,7 +54,7 @@ export class AprobarBalanceComponent implements OnInit {
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if(urlSegment.path.includes("Requisitos")){
-        this.routes.navigate(['/aprobarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        this.routes.navigate(['/aprobarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionId ]);
         return;
       }
     });

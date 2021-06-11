@@ -8,16 +8,18 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
   styleUrls: ['./recursos-comprometidos-pagados.component.scss']
 })
 export class RecursosComprometidosPagadosComponent implements OnInit {
-  
+
   proyectoId: number;
   contratoObra: any;
   contratoInterventoria: any;
+  tablaOrdenGiroValorTotalObra: any;
+  tablaOrdenGiroValorTotalInterventoria: any;
   data : any;
 
   constructor(
     private financialBalanceService: FinancialBalanceService,
     private route: ActivatedRoute,
-  ) { 
+  ) {
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
     });
@@ -27,18 +29,20 @@ export class RecursosComprometidosPagadosComponent implements OnInit {
     this.getContratoByProyectoId();
     this.getBalanceByProyectoId(this.proyectoId);
   }
-  
+
 
   getContratoByProyectoId() {
     this.financialBalanceService.getContratoByProyectoId(this.proyectoId).subscribe(data => {
       data.forEach(element => {
         if(element.tipoSolicitudCodigo === '1'){
           this.contratoObra = element.contrato;
+          this.tablaOrdenGiroValorTotalObra = element.tablaOrdenGiroValorTotal;
         }
         if(element.tipoSolicitudCodigo === '2'){
           this.contratoInterventoria = element.contrato;
+          this.tablaOrdenGiroValorTotalInterventoria = element.tablaOrdenGiroValorTotal;
         }
-      });  
+      });
     });
   }
 

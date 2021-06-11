@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-fuentes-usos-gbftrec',
@@ -8,108 +9,55 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./fuentes-usos-gbftrec.component.scss']
 })
 export class FuentesUsosGbftrecComponent implements OnInit {
+
+  @Input() contratoId: any[] = [];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'aportante',
-    'valorAportante',
-    'fuenteAportante',
-    'uso',
-    'valorUso'
-  ];
-  tablaEjemplo: any[] = [
-    {
-      aportante: 'Alcaldía de Susacón',
-      valorAportante: '$45.000.000',
-      fuenteAportante: [
-        {
-          fuente: 'Recursos propios',
-          uso: [
-            { nombre: 'Diseño' }
-          ],
-          valorUso: [
-            { valor: '$12.000.000' }
-          ],
-        },
-        {
-          fuente: 'Contingencias',
-          uso: [
-            { nombre: 'Diseño' },
-            { nombre: 'Obra principal' }
-          ],
-          valorUso: [
-            { valor: '$12.000.000' },
-            { valor: '$21.000.000' }
-          ],
-        }
-      ],
-    },
-    {
-      aportante: 'Gobernación de Boyacá',
-      valorAportante: '$40.000.000',
-      fuenteAportante: [
-        {
-          fuente: 'Recursos propios',
-          uso: [
-            { nombre: 'Obra principal' }
-          ],
-          valorUso: [
-            { valor: '$40.000.000' },
-          ],
-        }
-      ],
-    },
-    {
-      aportante: 'FFIE',
-      valorAportante: '$20.000.000',
-      fuenteAportante: [
-        {
-          fuente: 'Contingencias',
-          uso: [
-            { nombre: 'Obra principal' }
-          ],
-          valorUso: [
-            { valor: '$20.000.000' },
-          ],
-        }
-      ],
-    }
-    /*
-    {
-      aportante: 'Gobernación de Boyacá',
-      valorAportante: '$40.000.000',
-      fuenteAportante: [
-        { fuente: 'Recursos propios' },
-      ],
-      uso: [
-        { nombre: 'Obra principal' },
-      ],
-      valorUso: [
-        { valor: '$40.000.000' },
-      ],
-    },
-    {
-      aportante: 'FFIE',
-      valorAportante: '$20.000.000',
-      fuenteAportante: [
-        { fuente: 'Contingencias' },
-      ],
-      uso: [
-        { nombre: 'Obra principal' },
-      ],
-      valorUso: [
-        { valor: '$20.000.000' },
-      ],
-    },
-    */
-  ];
-  constructor() { }
+  displayedColumns: string[] = ['uso', 'fuente', 'aportante', 'valorUso', 'saldoActualUso'];
+  dataTable: any[] = [];
+  data = [];
+  
+  constructor(
+    private financialBalanceService: FinancialBalanceService
+  ) { }
 
   ngOnInit(): void {
-    this.loadDataSource();
+    this.getTablaUsoFuenteAportanteXContratoId();
+  }
+  
+  getTablaUsoFuenteAportanteXContratoId() {
+    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
+      this.data = data.usos;
+      if (this.data) {
+        this.data.forEach( registro => {
+          const aportantes = []
+          const valorUso = [];
+          const saldoActualUso = [];
+  
+          registro.fuentes.forEach( fuente => {
+              aportantes.push( fuente.aportante[ 0 ] )
+              valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
+              saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
+          } )
+  
+          const registroObj = {
+              nombreUso: registro.nombreUso,
+              fuentes: registro.fuentes,
+              aportante: aportantes,
+              valorUso,
+              saldoActualUso
+          }
+  
+          this.dataTable.push( registroObj );
+        })
+      }
+      
+      this.loadDataSource();
+      
+    })
   }
   loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.tablaEjemplo);
+    this.dataSource = new MatTableDataSource( this.dataTable );
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
     //this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

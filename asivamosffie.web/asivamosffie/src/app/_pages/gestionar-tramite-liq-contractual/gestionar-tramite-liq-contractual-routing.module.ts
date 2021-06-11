@@ -128,6 +128,10 @@ const routes: Routes = [
     component: RecursosComproPagadosGtlcComponent
   },
   {
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosGtlcComponent
+  },
+  {
     path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
     component: RecursosComproPagadosGtlcComponent
   },
@@ -145,6 +149,10 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId/ejecucionFinanciera',
     component: EjecucionFinancieraGtlcComponent
   },
   {
@@ -169,6 +177,10 @@ const routes: Routes = [
   },
   {
     path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId/trasladoRecursos',
     component: TrasladoRecursosGtlcComponent
   },
   {

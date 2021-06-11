@@ -14,8 +14,8 @@ namespace asivamosffie.model.Models
         public int ProyectoId { get; set; }
         public bool? RequiereTransladoRecursos { get; set; }
         public string EstadoBalanceCodigo { get; set; }
-        public string JustificacionTrasladoAportanteFuente { get; set; }
         public string UrlSoporte { get; set; }
+        public string JustificacionTrasladoAportanteFuente { get; set; }
         public bool? EstaAnulado { get; set; }
         public DateTime? FechaAnulado { get; set; }
         public DateTime? FechaAprobacion { get; set; }

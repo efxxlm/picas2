@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
     public partial class Contrato
     {
         [NotMapped]
-        public IFormFile pFile { get; set; }
+        public IFormFile PFile { get; set; }
 
         [NotMapped]
         public DateTime? FechaEnvioFirmaFormat { get; set; }
@@ -66,15 +66,30 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic VContratoPagosRealizados { get; set; }
-
+         
         [NotMapped]
-        public List<TablaDRP> TablaDRP { get; set; }
-
-        [NotMapped]
-        public bool tieneSuspensionAprobada{ get; set; }
+        public bool TieneSuspensionAprobada{ get; set; }
 
         [NotMapped]
         public int? SuspensionAprobadaId { get; set; }
+
+        [NotMapped]
+        public TablaUsoFuenteAportante TablaUsoFuenteAportante { get; set; }
+
+        [NotMapped]
+        public decimal? ValorPagadoContratista { get; set; }
+
+        [NotMapped]
+        public DateTime? FechaAprobacionPoliza { get; set; }
+
+        [NotMapped]
+        public bool TieneActa { get; set; }
+
+        //[NotMapped]
+        //public List<TablaDRP> TablaDRP { get; set; }
+
+        [NotMapped]
+        public dynamic TablaDRP { get; set; }
     }
 
     

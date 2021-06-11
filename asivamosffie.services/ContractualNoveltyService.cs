@@ -162,6 +162,8 @@ namespace asivamosffie.services
                                         .Include(x => x.Contratacion)
                                             .ThenInclude(x => x.Contratista)
                                         .Include(r => r.ContratoPoliza)
+                                            .Include(r => r.NovedadContractual)
+                                                .ThenInclude(x => x.NovedadContractualDescripcion)
                                         .ToList();
 
             /*List<NovedadContractual> listaNovedadesActivas = _context.NovedadContractual
@@ -218,7 +220,7 @@ namespace asivamosffie.services
             foreach (var contrato in contratos)
             {
                 int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
-
+                bool tieneActa = false;
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
@@ -236,12 +238,25 @@ namespace asivamosffie.services
 
                     if (novedadTemp != null)
                     {
-                        contrato.tieneSuspensionAprobada = true;
+                        contrato.TieneSuspensionAprobada = true;
                         contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                     }
                     else
-                        contrato.tieneSuspensionAprobada = false;
+                    {
+                        contrato.TieneSuspensionAprobada = false;
+                    }
 
+                    //nueva validación
+                    if (!String.IsNullOrEmpty(contrato.EstadoActaFase2))
+                    {
+                        if ((contrato.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada && contrato?.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) ||
+                            (contrato.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioInterventoria.Con_acta_suscrita_y_cargada && contrato?.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria))
+                        {
+                            tieneActa = true;
+                        }
+                    }
+
+                    contrato.TieneActa = tieneActa;
 
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);
@@ -400,11 +415,11 @@ namespace asivamosffie.services
 
                 if (novedadTemp != null)
                 {
-                    novedadContractual.Contrato.tieneSuspensionAprobada = true;
+                    novedadContractual.Contrato.TieneSuspensionAprobada = true;
                     novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
                 }
                 else
-                    novedadContractual.Contrato.tieneSuspensionAprobada = false;
+                    novedadContractual.Contrato.TieneSuspensionAprobada = false;
 
                 novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)

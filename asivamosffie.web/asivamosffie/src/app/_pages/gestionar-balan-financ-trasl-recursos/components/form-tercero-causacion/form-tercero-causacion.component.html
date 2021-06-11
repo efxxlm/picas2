@@ -1,181 +1,317 @@
 <section *ngIf="terceroCausacion.length > 0">
-    <form [formGroup]="formTerceroCausacion">
-        <mat-accordion formArrayName="terceroCausacion" *ngFor="let solicitudPagoFase of terceroCausacion.controls; index as i">
-            <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? solicitudPagoFase.get( 'semaforo' ).value : ''">
-                        Tercero de causación - {{ solicitudPagoFase.get( 'esPreconstruccion' ).value === true ? 'Fase 1' : 'Fase 2' }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-        
-                <mat-card class="shipping-card var-main-gris">
-                    <mat-card-content align="left">
-                        <p><b>Número de identificación del contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </p>
-                        <p><b>Nombre de contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </p>
-                        <p><b>Número de factura:</b> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }} </p>
-                    </mat-card-content>
-                </mat-card>
-                <p class="info-sub-title textoGrisVar">
-                    <span>Valor neto de giro: <em> {{ solicitudPagoFase.get( 'valorNetoGiro' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
-                    <span>Nuevo valor registrado: <em> {{ solicitudPagoFase.get( 'nuevoValorRegistrado' ).value | currency: '':'symbol-narrow':'.0-0' }} </em></span>
-                </p>
-    
-                <mat-accordion formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
-                    <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? criterio.get( 'semaforo' ).value : ''">
-                                {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-            
-                            <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
-                                <mat-card-header class="header-card header-card--margin">
-                                    <mat-card-title class="header-card--text">
-                                        {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }}
-                                    </mat-card-title>
-                                </mat-card-header>
-                                <mat-card-content style="text-align: left;" [formGroup]="concepto">
-                                    <p><strong>Valor facturado por concepto: </strong> <i> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </i> </p>
-            
-                                    <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
-                                        <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ l + 1 }} </mat-card-title>
+  <form [formGroup]="formTerceroCausacion">
+    <mat-accordion
+      formArrayName="terceroCausacion"
+      *ngFor="let solicitudPagoFase of terceroCausacion.controls; index as i"
+    >
+      <mat-expansion-panel class="expansion-style sub-expansion" [formGroup]="solicitudPagoFase">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [ngClass]="esVerDetalle === false ? solicitudPagoFase.get('semaforo').value : ''"
+          >
+            Tercero de causación - {{ solicitudPagoFase.get('esPreconstruccion').value === true ? 'Fase 1' : 'Fase 2' }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
 
-                                        <p><b>Tipo de aportante: </b> <i> {{ aportante.get( 'tipoAportante' ).value.nombre }} </i> </p>
-                                        <p><b>Nombre del aportante: </b> <i> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </i> </p>
-                                        <p><b>Fuente de los recursos: </b> <i> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </i> </p>
-                                        <p><b>Valor facturado por el concepto para el aportante: </b> <i> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
-                                        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                                            <p><b>Nuevo valor por el concepto para el aportante: </b> <i> {{ aportante.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </i> </p>
-                                        </ng-container>
-                                        <ng-template #noEsVerDetalle>
-                                            <div class="row" [formGroup]="aportante">
-                                                <div class="col-md-8">
-                                                    <div class="row">
-                                                        <div class="pr-1">
-                                                            <label  class="label-left"
-                                                                    for="valorDescuento"
-                                                                    [ngClass]="{ 'color-secondaryColor': (getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).invalid && getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).touched) || (getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).invalid && esRegistroNuevo === false) }">
-                                                                    Nuevo valor por el concepto para el aportante
-                                                            </label>
-                                                        </div>
-                                                        <div class="col d-flex">
-                                                            <mat-form-field class="full-width w-75">
-                                                                <input  matInput
-                                                                        #valorDescuento
-                                                                        min="0"
-                                                                        currencyMask
-                                                                        maxlength="20"
-                                                                        required
-                                                                        formControlName="nuevoValorDescuento"
-                                                                        (keypress)="validateNumberKeypress($event)"
-                                                                        (ngModelChange)="checkValueAportante( $event, i, j, k, l, 'aportante' )"
-                                                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                                                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                                                            </mat-form-field>
-                                                            <span   class="contador"
-                                                                    [matTooltipPosition]="'above'"
-                                                                    matTooltip="Valor en ($) Pesos colombianos"
-                                                                    matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}
-                                                            </span>
-                                                        </div>
-                                                        <span class="icon-incompleto">
-                                                            <img    class="icon-incompleto--img"
-                                                                    src="assets/img/icon/incompleto.svg"
-                                                                    alt="este campo es requerido"
-                                                                    [matTooltipPosition]="'above'"
-                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                                                    matTooltipClass="info-tooltip"
-                                                                    *ngIf="(getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).invalid && getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).touched) || (getAportantes( i, j, k ).controls[ l ].get( 'nuevoValorDescuento' ).invalid && esRegistroNuevo === false)">
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </ng-template>
-                                        
-                                    </div>
-            
-                                    <div>
-                                        <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
-            
-                                        <div [formGroup]="getConceptos( i, j ).controls[ k ].get( 'descuento' )">
-                                            <p *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> Si </i> </p>
-                                            <p *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === false"><b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> No </i> </p>
-            
-                                            <div *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true">
-                                                <p><b>¿Cuántos descuentos se aplican sobre el concepto de pago? : </b> <i> {{ getDescuentosFinanciera( i, j, k ).length }} </i> </p>
-            
-                                                <div *ngIf="getConceptos( i, j ).controls[ k ].get( 'descuento' ).get('aplicaDescuentos').value === true">
-                                                    <div class="animatedDown" formArrayName="descuentos" *ngIf="getDescuentosFinanciera( i, j, k ).length > 0">
-                                                        <div *ngFor="let discount of getDescuentosFinanciera( i, j, k ).controls; index as l">
-                                                            <mat-card-title class="header-card--text sub-text">
-                                                                Descuento {{ l + 1 }}
-                                                            </mat-card-title>
-                                                            <div [formGroup]="discount">
-                                                                <p><b>Tipo de descuento: </b> <i> {{ firstLetterUpperCase( getDescuento( discount.get( 'tipoDescuento' ).value ) ) }} </i> </p>
-                                                                <div *ngFor="let aportanteDescuento of getAportanteDescuentos( i, j, k, l ).controls; index as m">
-                                                                    <p><b>Nombre del aportante: </b> {{ aportanteDescuento.get( 'nombreAportante' ).value.nombreAportante }} </p>
-                                                                    <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportanteDescuento.get( 'fuente' ).value.nombre ) }} </p>
-                                                                    <p><b>Valor del descuento: </b> {{ aportanteDescuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-                                                                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                                                                        <p><b>Nuevo valor por el concepto para el aportante: </b> {{ aportanteDescuento.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-                                                                    </ng-container>
-                                                                    <ng-template #noEsVerDetalle>
-                                                                        <div class="row" [formGroup]="aportanteDescuento">
-                                                                            <div class="col-md-8">
-                                                                                <div class="row">
-                                                                                    <div class="pr-1">
-                                                                                        <label  class="label-left"
-                                                                                                for="valorDescuento"
-                                                                                                [ngClass]="{ 'color-secondaryColor': (getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).invalid && getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).touched) || (getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).invalid && esRegistroNuevo === false) }">
-                                                                                                Nuevo valor por el concepto para el aportante
-                                                                                        </label>
-                                                                                    </div>
-                                                                                    <div class="col d-flex">
-                                                                                        <mat-form-field class="full-width w-75">
-                                                                                            <input  matInput
-                                                                                                    #nuevoValorDescuento
-                                                                                                    min="0"
-                                                                                                    currencyMask
-                                                                                                    maxlength="20"
-                                                                                                    required
-                                                                                                    formControlName="nuevoValorDescuento"
-                                                                                                    (keypress)="validateNumberKeypress($event)"
-                                                                                                    (ngModelChange)="checkValueAportante( $event, i, j, k, l, m, 'descuentoFinanciera' )"
-                                                                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                                                                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                                                                                        </mat-form-field>
-                                                                                        <span   class="contador"
-                                                                                                [matTooltipPosition]="'above'"
-                                                                                                matTooltip="Valor en ($) Pesos colombianos"
-                                                                                                matTooltipClass="info-tooltip">{{20 - nuevoValorDescuento.value.length}}
-                                                                                        </span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <span class="icon-incompleto">
-                                                                                <img    class="icon-incompleto--img"
-                                                                                        src="assets/img/icon/incompleto.svg"
-                                                                                        alt="este campo es requerido"
-                                                                                        [matTooltipPosition]="'above'"
-                                                                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                                                                        matTooltipClass="info-tooltip"
-                                                                                        *ngIf="(getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).invalid && getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).touched) || (getAportanteDescuentos( i, j, k, l ).controls[ m ].get( 'nuevoValorDescuento' ).invalid && esRegistroNuevo === false)">
-                                                                            </span>
-                                                                        </div>
-                                                                    </ng-template>
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+        <mat-card class="shipping-card var-main-gris">
+          <mat-card-content align="left">
+            <p>
+              <b>Número de identificación del contratista:</b>
+              {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }}
+            </p>
+            <p><b>Nombre de contratista:</b> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }}</p>
+            <p>
+              <b>Número de factura:</b>
+              {{
+                solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0]
+                  .numero
+              }}
+            </p>
+          </mat-card-content>
+        </mat-card>
+        <p class="info-sub-title textoGrisVar">
+          <span
+            >Valor neto de giro:
+            <em> {{ solicitudPagoFase.get('valorNetoGiro').value | currency: '':'symbol-narrow':'.0-0' }} </em></span
+          >
+          <span
+            >Nuevo valor registrado:
+            <em>
+              {{ solicitudPagoFase.get('nuevoValorRegistrado').value | currency: '':'symbol-narrow':'.0-0' }}
+            </em></span
+          >
+        </p>
+
+        <mat-accordion formArrayName="criterios" *ngFor="let criterio of getCriterios(i).controls; index as j">
+          <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="esVerDetalle === false ? criterio.get('semaforo').value : ''"
+              >
+                {{ firstLetterUpperCase(criterio.get('nombre').value) }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card
+              formArrayName="conceptos"
+              class="shipping-card"
+              *ngFor="let concepto of getConceptos(i, j).controls; index as k"
+            >
+              <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                  {{ firstLetterUpperCase(concepto.get('nombre').value) }}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content style="text-align: left" [formGroup]="concepto">
+                <p>
+                  <strong>Valor facturado por concepto: </strong>
+                  <i> {{ concepto.get('valorFacturadoConcepto').value | currency: '':'symbol-narrow':'.0-0' }} </i>
+                </p>
+
+                <div formArrayName="aportantes" *ngFor="let aportante of getAportantes(i, j, k).controls; index as l">
+                  <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important">
+                    Aportante {{ l + 1 }}
+                  </mat-card-title>
+
+                  <p>
+                    <b>Tipo de aportante: </b> <i> {{ aportante.get('tipoAportante').value.nombre }} </i>
+                  </p>
+                  <p>
+                    <b>Nombre del aportante: </b> <i> {{ aportante.get('nombreAportante').value.nombreAportante }} </i>
+                  </p>
+                  <p>
+                    <b>Fuente de los recursos: </b>
+                    <i> {{ firstLetterUpperCase(aportante.get('fuenteRecursos').value.nombre) }} </i>
+                  </p>
+                  <p>
+                    <b>Valor facturado por el concepto para el aportante: </b>
+                    <i> {{ aportante.get('valorDescuento').value | currency: '':'symbol-narrow':'.0-0' }} </i>
+                  </p>
+                  <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                    <p>
+                      <b>Nuevo valor por el concepto para el aportante: </b>
+                      <i> {{ aportante.get('nuevoValorDescuento').value | currency: '':'symbol-narrow':'.0-0' }} </i>
+                    </p>
+                  </ng-container>
+                  <ng-template #noEsVerDetalle>
+                    <div class="row" [formGroup]="aportante">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label
+                              class="label-left"
+                              for="valorDescuento"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').invalid &&
+                                    getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').touched) ||
+                                  (getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').invalid &&
+                                    esRegistroNuevo === false)
+                              }"
+                            >
+                              Nuevo valor por el concepto para el aportante
+                            </label>
+                          </div>
+                          <div class="col d-flex">
+                            <mat-form-field class="full-width w-75">
+                              <input
+                                matInput
+                                #valorDescuento
+                                min="0"
+                                currencyMask
+                                maxlength="20"
+                                required
+                                formControlName="nuevoValorDescuento"
+                                (keypress)="validateNumberKeypress($event)"
+                                (ngModelChange)="checkValueAportante($event, i, j, k, l, 'aportante')"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                              />
+                            </mat-form-field>
+                            <span
+                              class="contador"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Valor en ($) Pesos colombianos"
+                              matTooltipClass="info-tooltip"
+                              >{{ 20 - valorDescuento.value.length }}
+                            </span>
+                          </div>
+                          <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="
+                                (getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').invalid &&
+                                  getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').touched) ||
+                                (getAportantes(i, j, k).controls[l].get('nuevoValorDescuento').invalid &&
+                                  esRegistroNuevo === false)
+                              "
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <div>
+                  <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+
+                  <div [formGroup]="getConceptos(i, j).controls[k].get('descuento')">
+                    <p *ngIf="getConceptos(i, j).controls[k].get('descuento').get('aplicaDescuentos').value === true">
+                      <b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> Si </i>
+                    </p>
+                    <p *ngIf="getConceptos(i, j).controls[k].get('descuento').get('aplicaDescuentos').value === false">
+                      <b>¿Se requieren aplicar descuentos sobre el concepto de pago?: </b> <i> No </i>
+                    </p>
+
+                    <div *ngIf="getConceptos(i, j).controls[k].get('descuento').get('aplicaDescuentos').value === true">
+                      <p>
+                        <b>¿Cuántos descuentos se aplican sobre el concepto de pago? : </b>
+                        <i> {{ getDescuentosFinanciera(i, j, k).length }} </i>
+                      </p>
+
+                      <div
+                        *ngIf="getConceptos(i, j).controls[k].get('descuento').get('aplicaDescuentos').value === true"
+                      >
+                        <div
+                          class="animatedDown"
+                          formArrayName="descuentos"
+                          *ngIf="getDescuentosFinanciera(i, j, k).length > 0"
+                        >
+                          <div *ngFor="let discount of getDescuentosFinanciera(i, j, k).controls; index as l">
+                            <mat-card-title class="header-card--text sub-text"> Descuento {{ l + 1 }} </mat-card-title>
+                            <div [formGroup]="discount">
+                              <p>
+                                <b>Tipo de descuento: </b>
+                                <i> {{ firstLetterUpperCase(getDescuento(discount.get('tipoDescuento').value)) }} </i>
+                              </p>
+                              <div
+                                *ngFor="
+                                  let aportanteDescuento of getAportanteDescuentos(i, j, k, l).controls;
+                                  index as m
+                                "
+                              >
+                                <p>
+                                  <b>Nombre del aportante: </b>
+                                  {{ aportanteDescuento.get('nombreAportante').value.nombreAportante }}
+                                </p>
+                                <p>
+                                  <b>Fuente de los recursos: </b>
+                                  {{ firstLetterUpperCase(aportanteDescuento.get('fuente').value.nombre) }}
+                                </p>
+                                <p>
+                                  <b>Valor del descuento: </b>
+                                  {{
+                                    aportanteDescuento.get('valorDescuento').value | currency: '':'symbol-narrow':'.0-0'
+                                  }}
+                                </p>
+                                <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                                  <p>
+                                    <b>Nuevo valor por el concepto para el aportante: </b>
+                                    {{
+                                      aportanteDescuento.get('nuevoValorDescuento').value
+                                        | currency: '':'symbol-narrow':'.0-0'
+                                    }}
+                                  </p>
+                                </ng-container>
+                                <ng-template #noEsVerDetalle>
+                                  <div class="row" [formGroup]="aportanteDescuento">
+                                    <div class="col-md-8">
+                                      <div class="row">
+                                        <div class="pr-1">
+                                          <label
+                                            class="label-left"
+                                            for="valorDescuento"
+                                            [ngClass]="{
+                                              'color-secondaryColor':
+                                                (getAportanteDescuentos(i, j, k, l).controls[m].get(
+                                                  'nuevoValorDescuento'
+                                                ).invalid &&
+                                                  getAportanteDescuentos(i, j, k, l).controls[m].get(
+                                                    'nuevoValorDescuento'
+                                                  ).touched) ||
+                                                (getAportanteDescuentos(i, j, k, l).controls[m].get(
+                                                  'nuevoValorDescuento'
+                                                ).invalid &&
+                                                  esRegistroNuevo === false)
+                                            }"
+                                          >
+                                            Nuevo valor por el concepto para el aportante
+                                          </label>
                                         </div>
+                                        <div class="col d-flex">
+                                          <mat-form-field class="full-width w-75">
+                                            <input
+                                              matInput
+                                              #nuevoValorDescuento
+                                              min="0"
+                                              currencyMask
+                                              maxlength="20"
+                                              required
+                                              formControlName="nuevoValorDescuento"
+                                              (keypress)="validateNumberKeypress($event)"
+                                              (ngModelChange)="
+                                                checkValueAportante($event, i, j, k, l, m, 'descuentoFinanciera')
+                                              "
+                                              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                              [options]="{
+                                                prefix: '$ ',
+                                                thousands: '.',
+                                                precision: '0',
+                                                align: 'center'
+                                              }"
+                                            />
+                                          </mat-form-field>
+                                          <span
+                                            class="contador"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Valor en ($) Pesos colombianos"
+                                            matTooltipClass="info-tooltip"
+                                            >{{ 20 - nuevoValorDescuento.value.length }}
+                                          </span>
+                                        </div>
+                                      </div>
                                     </div>
-            
-                                    <!--
+                                    <span class="icon-incompleto">
+                                      <img
+                                        class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="
+                                          (getAportanteDescuentos(i, j, k, l).controls[m].get('nuevoValorDescuento')
+                                            .invalid &&
+                                            getAportanteDescuentos(i, j, k, l).controls[m].get('nuevoValorDescuento')
+                                              .touched) ||
+                                          (getAportanteDescuentos(i, j, k, l).controls[m].get('nuevoValorDescuento')
+                                            .invalid &&
+                                            esRegistroNuevo === false)
+                                        "
+                                      />
+                                    </span>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--
                                     <div>
                                         <h2 class="card-subTitle">Descuentos Dirección técnica</h2>
             
@@ -246,24 +382,26 @@
                                         </div>
                                     </div>
                                     -->
-                                </mat-card-content>
-                            </mat-card>
+              </mat-card-content>
+            </mat-card>
 
-                            <div class="text-center mb-2em" *ngIf="esVerDetalle === false">
-                                <button mat-button
-                                        color="warn"
-                                        class="btn-guardar"
-                                        type="submit"
-                                        [disabled]="terceroCausacion.controls[ i ].dirty === false"
-                                        (click)="guardar( i )">
-                                        <img src="assets/img/icon/guardar.svg">
-                                </button>
-                            </div>
-                    </mat-expansion-panel> 
-                </mat-accordion>
-            </mat-expansion-panel>
+            <div class="text-center mb-2em" *ngIf="esVerDetalle === false">
+              <button
+                mat-button
+                color="warn"
+                class="btn-guardar"
+                type="submit"
+                [disabled]="terceroCausacion.controls[i].dirty === false"
+                (click)="guardar(i)"
+              >
+                <img src="assets/img/icon/guardar.svg" />
+              </button>
+            </div>
+          </mat-expansion-panel>
         </mat-accordion>
-    </form>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
 </section>
 
 <!--

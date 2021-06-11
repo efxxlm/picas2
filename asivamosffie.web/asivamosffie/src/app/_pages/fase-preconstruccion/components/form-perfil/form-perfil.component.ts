@@ -18,6 +18,7 @@ export class FormPerfilComponent implements OnInit {
   @Input() perfilProyecto: any[] = [];
   @Input() contratoId: number;
   @Input() proyectoId: number;
+  @Input() fechaAprobacionPoliza: Date;
   @Output() enviarPerfilesContrato = new EventEmitter();
   @Output() perfilesCompletados = new EventEmitter();
   @Output() perfilEliminado = new EventEmitter();

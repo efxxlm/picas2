@@ -44,6 +44,11 @@ export interface ContratacionProyecto{
     proyectoGrilla?: ProyectoGrilla,
     contratacion?: Contratacion,
 
+    urlSoporteGestionar ?: string,
+    fechaTramiteGestionar ?: Date,
+    observacionGestionar ?: string,
+    registroCompletoGestionar ?: boolean,
+
 }
 
 export interface ContratistaGrilla{

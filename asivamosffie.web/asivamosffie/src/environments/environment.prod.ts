@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://pruebasasivamosffiebackend.ivolucion.com/api'
+  apiUrl: 'https://asivamosback.ffie.com.co/api'
 };

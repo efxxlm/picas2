@@ -20,15 +20,17 @@ export class TablaInformeFinalComponent implements OnInit {
     'institucionEducativa',
     'sede',
     'estadoValidacion',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-  @Input() contratacionProyectoId: number;
+  @Input() contratacionId: number;
   @Input() esVerDetalle: boolean;
   @Output() semaforoInformeFinal = new EventEmitter<string>();
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
-
+  total: number = 0;
+  totalCompleto: number = 0;
+  totalIncompleto: number = 0;
   datosTabla = [];
 
   @ViewChild(MatSort) sort: MatSort;
@@ -38,11 +40,11 @@ export class TablaInformeFinalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gridInformeFinal(this.contratacionProyectoId);
+    this.gridInformeFinal(this.contratacionId);
   }
 
-  gridInformeFinal(contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
+  gridInformeFinal(contratacionId: number) {
+    this.registerContractualLiquidationRequestService.gridInformeFinal(contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         report.forEach(element => {
           this.datosTabla.push({
@@ -54,14 +56,28 @@ export class TablaInformeFinalComponent implements OnInit {
             sede: element.sede,
             estadoValidacion: element.registroCompleto ? 'Con validación' : 'Sin validación',
             registroCompleto: element.registroCompleto ? 'Completo' : 'Incompleto',
-            contratacionProyectoId: contratacionProyectoId,
+            contratacionId: contratacionId,
             proyectoId: element.proyectoId
           });
         })
       }
       this.dataSource.data = this.datosTabla;
-      if(this.datosTabla.length > 0){
-        this.semaforoInformeFinal.emit(this.datosTabla[0].registroCompleto);
+      this.total = this.datosTabla.length;
+      this.datosTabla.forEach(element => {
+        if(element.registroCompleto === 'Completo')
+          this.totalCompleto++;
+        if(element.registroCompleto === 'Incompleto')
+          this.totalIncompleto++;
+      });
+      if(this.total <= 0){
+        this.semaforoInformeFinal.emit(null);
+      }
+      else if(this.totalCompleto >= this.total){
+        this.semaforoInformeFinal.emit('Completo');
+      }else if(this.totalIncompleto >= this.total){
+        this.semaforoInformeFinal.emit(null);
+      }else{
+        this.semaforoInformeFinal.emit('Incompleto');
       }
     });
   }

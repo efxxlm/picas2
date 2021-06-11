@@ -72,7 +72,9 @@ export interface NovedadContractual{
         observacionesTramite ?: string,
         urlDocumentoSuscrita ?: string,
         registroCompletoTramite ?: boolean,
-        
+        tipoModificacion ?: string,
+        adicionBoolean ?: boolean,
+
 }
 
 export interface NovedadContractualDescripcion{
@@ -100,7 +102,7 @@ export interface NovedadContractualDescripcion{
         numeroRadicado?: string,
 
         nombreTipoNovedad?: string,
-        
+
         novedadContractualDescripcionMotivo?: NovedadContractualDescripcionMotivo[],
         novedadContractualClausula?: NovedadContractualClausula[],
 
@@ -168,7 +170,7 @@ export interface ComponenteFuenteNovedad {
         fuenteRecursosCodigo?: string,
         fuenteFinanciacionId?: number,
         eliminado?: boolean,
-        
+
         componenteUsoNovedad?: ComponenteUsoNovedad[],
         fuenteFinanciacion?: any,
 }
@@ -183,5 +185,5 @@ export interface ComponenteUsoNovedad {
         registroCompleto?:boolean
 
         nombreUso?: string,
-        
+
 }

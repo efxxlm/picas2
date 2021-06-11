@@ -148,5 +148,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [Route("RegistrarTramiteLiquidacion")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarTramiteLiquidacion([FromBody] Contratacion pContratacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.RegistrarTramiteLiquidacion(pContratacion);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

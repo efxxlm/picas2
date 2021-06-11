@@ -80,7 +80,9 @@ namespace asivamosffie.services
                                                                    .ToListAsync(),
 
                 (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro)
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro
+                                              //&& s.FechaRegistroCompletoAprobar.HasValue
+                                              )
                                                                    .OrderByDescending(r => r.FechaModificacion)
                                                                    .ToListAsync(),
 
@@ -193,7 +195,6 @@ namespace asivamosffie.services
                         if (OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
                             OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento = OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Where(r => r.Eliminado != true).ToList();
                     }
-
                 }
             }
             try
@@ -293,7 +294,7 @@ namespace asivamosffie.services
             return List;
         }
 
-        private TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
+        public TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago)
         {
             List<VFuentesUsoXcontratoId> List =
                                                _context.VFuentesUsoXcontratoId
@@ -305,14 +306,12 @@ namespace asivamosffie.services
             foreach (var item in List)
             {
                 if (!ListVFuentesUsoXcontratoId
-                    .Any(r => r.TipoUso == item.TipoUso))
+                    .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }
 
             }
-
-
             TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
             {
                 Usos = ListVFuentesUsoXcontratoId
@@ -332,7 +331,7 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-                // if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo))
+                if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
                 {
                     ListUsos.Add(usos);
 
@@ -352,10 +351,8 @@ namespace asivamosffie.services
                                 NombreUso = usos.NombreUso
                             });
 
-
                     foreach (var Fuentes in usos.Fuentes)
                     {
-
                         List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
                             ListVAportanteFuenteUso
                             .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
@@ -381,12 +378,14 @@ namespace asivamosffie.services
                                 foreach (var Aportante in Fuentes.Aportante)
                                 {
                                     decimal ValorUso = ListVAportanteFuenteUso3
-                                        .Where(r => r.Nombre == usos.NombreUso
-                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault();
+                                        .Where(
+                                               r => r.Nombre == usos.NombreUso
+                                            && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                              )
+                                        .Select(s => s.ValorUso)
+                                        .FirstOrDefault();
 
-
-                                    decimal Descuento = solicitudPago?.OrdenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.OrdenGiroDetalleTerceroCausacionAportante?.Where(r => r.AportanteId == Aportante.AportanteId && r.FuenteRecursoCodigo == usos.TipoUsoCodigo).Select(r => r.ValorDescuento).FirstOrDefault() ?? 0;
+                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
 
@@ -410,6 +409,8 @@ namespace asivamosffie.services
 
         private List<TablaDRP> GetDrpContrato(SolicitudPago SolicitudPago)
         {
+            if (SolicitudPago.ContratoSon == null)
+                return new List<TablaDRP>();
             String strTipoSolicitud = SolicitudPago.ContratoSon.Contratacion.TipoSolicitudCodigo;
             List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
 
@@ -435,6 +436,36 @@ namespace asivamosffie.services
                 Enum++;
             }
             return ListTablaDrp;
+        }
+
+        private void ValidateValorNeto(int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro1 =
+                _context.OrdenGiro
+                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                .Include(o => o.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacion)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            if (ordenGiro1.ValorNetoGiro == null)
+            {
+                foreach (var OrdenGiroDetalle in ordenGiro1.OrdenGiroDetalle)
+                {
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+
+                        if (OrdenGiroDetalleTerceroCausacion.ValorNetoGiro != null)
+                        {
+                            _context.Set<OrdenGiro>()
+                                    .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                    .Update(o => new OrdenGiro
+                                    {
+                                        ValorNetoGiro = OrdenGiroDetalleTerceroCausacion.ValorNetoGiro
+                                    });
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -698,7 +729,7 @@ namespace asivamosffie.services
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
-                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(); 
+                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
 
@@ -714,11 +745,12 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    ValidateValorNeto(pOrdenGiro.OrdenGiroId);
+
                     _context.Set<OrdenGiro>()
                             .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                             .Update(o => new OrdenGiro
                             {
-                                ValorNetoGiro = pOrdenGiro.ValorNetoGiro,
                                 EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString(),
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pOrdenGiro.UsuarioCreacion
@@ -1162,11 +1194,17 @@ namespace asivamosffie.services
             {
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+
+                DateTime? CompleteRecordDate = new DateTime();
+                if (blRegistroCompleto)
+                    CompleteRecordDate = DateTime.Now;
+
                 _context.Set<OrdenGiro>()
                         .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Update(o => new OrdenGiro
                         {
                             RegistroCompleto = blRegistroCompleto,
+                            FechaRegistroCompleto = CompleteRecordDate,
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pAuthor
                         });
@@ -1374,5 +1412,8 @@ namespace asivamosffie.services
         }
 
         #endregion
+
+
+
     }
 }

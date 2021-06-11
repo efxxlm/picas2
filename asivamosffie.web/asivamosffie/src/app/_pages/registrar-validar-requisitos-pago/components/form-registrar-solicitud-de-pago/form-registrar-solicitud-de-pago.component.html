@@ -1,325 +1,455 @@
 <section *ngIf="contrato !== undefined && faseContrato.construccion !== undefined">
-    <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="faseContrato">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.faseContrato }} </b> </td>
-            </ng-container>
-            <ng-container matColumnDef="valorFacturado">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado !== undefined ? ( element.valorFacturado | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
-            </ng-container>
-            <ng-container matColumnDef="porcentajeFacturado">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado !== undefined ? element.porcentajeFacturado.toFixed( 2 ) : 0 }}% </td>
-            </ng-container>
-            <ng-container matColumnDef="saldoPorPagar">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar !== undefined ? ( element.saldoPorPagar | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
-            </ng-container>
-            <ng-container matColumnDef="porcentajePorPagar">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar !== undefined ? element.porcentajePorPagar.toFixed( 2 ) : 0 }}% </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
-        <mat-card class="shipping-card" style="margin-top: 3em;">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    Registro
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="fechaSolicitud"               
-                                [ngClass]="{
-                                    'color-secondaryColor':
-                                      (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
-                                      (addressForm.get('fechaSolicitud').invalid && estaEditando)
-                                  }">Fecha de solicitud</label>
-                            </div>
-                            <div class="col d-flex align-items-center">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="fechaSolicitud" [min]="minDate" [matDatepicker]="pickerFechaRevision"
-                                        readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
-                                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
-                                </mat-form-field>
-                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
-                                    class="btn-calendario">
-                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                                </button>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
-                                    (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
-                                    (addressForm.get('fechaSolicitud').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label for="numeroRadicado" class="label-left" 
-                                [ngClass]="{
-                                    'color-secondaryColor':
-                                      (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
-                                      (addressForm.get('numeroRadicado').invalid && estaEditando)
-                                  }">Número de radicado SAC</label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field class="full-width">
-                                    <input matInput #numeroRadicado type="text" maxlength="10"
-                                        formControlName="numeroRadicado" required>
-                                </mat-form-field>
-                                <span class="contador">{{10 - numeroRadicado.value.length}}</span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
-                                    (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
-                                    (addressForm.get('numeroRadicado').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="faseContrato"
-                                [ngClass]="{
-                                    'color-secondaryColor':
-                                      (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
-                                      (addressForm.get('faseContrato').invalid && estaEditando)
-                                  }">Fase del contrato</label>
-                            </div>
-                            <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select multiple formControlName="faseContrato" required (ngModelChange)="getValueFase( $event )">
-                                        <mat-option *ngFor="let fase of fasesArray" [value]="fase.codigo">
-                                            {{ fase.nombre }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
-                                    (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
-                                    (addressForm.get('faseContrato').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Observación {{ esAutorizar === true ? 'de la coordinación' : 'del apoyo a la supervisión' }}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al registro de la solicitud?:</b> Si</p>
-                <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al registro de la solicitud?:</b> No</p>
-                <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
-            </mat-card-content>
-        </mat-card>
-
-        <div class="text-center mb-2em">
-            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
-            </button>
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="faseContrato">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fase del contrato</th>
+        <td mat-cell *matCellDef="let element" align="center">
+          <b> {{ element.faseContrato }} </b>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="valorFacturado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor facturado</th>
+        <td mat-cell *matCellDef="let element" align="center">
+          {{
+            element.valorFacturado !== undefined
+              ? (element.valorFacturado | currency: '':'symbol-narrow':'.0-0')
+              : (0 | currency: '':'symbol-narrow':'.0-0')
+          }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="porcentajeFacturado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentaje facturado</th>
+        <td mat-cell *matCellDef="let element" align="center">
+          {{ element.porcentajeFacturado !== undefined ? element.porcentajeFacturado.toFixed(2) : 0 }}%
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="saldoPorPagar">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo por pagar</th>
+        <td mat-cell *matCellDef="let element" align="center">
+          {{
+            element.saldoPorPagar !== undefined
+              ? (element.saldoPorPagar | currency: '':'symbol-narrow':'.0-0')
+              : (0 | currency: '':'symbol-narrow':'.0-0')
+          }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="porcentajePorPagar">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentaje por pagar</th>
+        <td mat-cell *matCellDef="let element" align="center">
+          {{ element.porcentajePorPagar !== undefined ? element.porcentajePorPagar.toFixed(2) : 0 }}%
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
+    <mat-card class="shipping-card" style="margin-top: 3em">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Registro </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="fechaSolicitud"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                      (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                  }"
+                >
+                  Fecha de solicitud
+                </label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    formControlName="fechaSolicitud"
+                    [min]="minDate"
+                    [matDatepicker]="pickerFechaRevision"
+                    readonly
+                    (click)="pickerFechaRevision.open()"
+                    required
+                    placeholder="DD/MM/AAAA"
+                  />
+                  <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                </mat-form-field>
+                <button
+                  mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerFechaRevision.open()"
+                  class="btn-calendario"
+                >
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                </button>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                    (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
         </div>
-    </form>
-    <div *ngIf="tienePreconstruccion === true">
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.formRegistroCompleto, true )">
-                        Fase 1 - Preconstrucción
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  for="numeroRadicado"
+                  class="label-left"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                      (addressForm.get('numeroRadicado').invalid && estaEditando)
+                  }"
+                  >Número de radicado SAC</label
+                >
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    #numeroRadicado
+                    type="text"
+                    maxlength="20"
+                    formControlName="numeroRadicado"
+                    required
+                  />
+                </mat-form-field>
+                <span class="contador">{{ 20 - numeroRadicado.value.length }}</span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                    (addressForm.get('numeroRadicado').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="faseContrato"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
+                      (addressForm.get('faseContrato').invalid && estaEditando)
+                  }"
+                  >Fase del contrato</label
+                >
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select multiple formControlName="faseContrato" required (ngModelChange)="getValueFase($event)">
+                    <mat-option *ngFor="let fase of fasesArray" [value]="fase.codigo">
+                      {{ fase.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
+                    (addressForm.get('faseContrato').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriterios === true ? 'en-proceso' : enabledAcordeonSubFase( 'criterioDePago', true )">
-                                Criterios de pago incluidos en la factura
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                    [contratacionProyectoId]="contratacionProyectoId"
-                                                    [listaMenusId]="listaMenusId"
-                                                    [contrato]="contrato"
-                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                    [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                    [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
-                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event">
-                        </app-form-criterios-pago>
-                    </mat-expansion-panel>
+    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em" *ngIf="observacion !== undefined">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+          Observación {{ esAutorizar === true ? 'de la coordinación' : 'del apoyo a la supervisión' }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <p>
+          <b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b>
+        </p>
+        <p *ngIf="observacion.tieneObservacion === true">
+          <b
+            >¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al
+            registro de la solicitud?:</b
+          >
+          Si
+        </p>
+        <p *ngIf="observacion.tieneObservacion === false">
+          <b
+            >¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al
+            registro de la solicitud?:</b
+          >
+          No
+        </p>
+        <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
+      </mat-card-content>
+    </mat-card>
 
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriteriosProyecto === true ? 'en-proceso' : enabledAcordeonSubFase( 'detalleFactura', true )">
-                                Detalle factura para proyectos asociados
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                                    [listaMenusId]="listaMenusId"
-                                                                    [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                                    [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
-                                                                    *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"
-                                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriteriosProyecto = $event">
-                        </app-detalle-factura-proyectos-asociados>
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionDatosFactura === true ? 'en-proceso' : enabledAcordeonSubFase( 'datosFactura', true )">
-                                Datos de la factura
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                        <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
-                                                                [listaMenusId]="listaMenusId"
-                                                                [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                                [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                                *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"
-                                                                (semaforoObservacion)="estadoSemaforosObservaciones.observacionDatosFactura = $event">
-                        </app-datos-factura-construccion-rvrp>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </mat-expansion-panel>
-        </mat-accordion>
+    <div class="text-center mb-2em">
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+      </button>
     </div>
-    <div *ngIf="tieneConstruccion === true">
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.formRegistroCompleto, false )">
-                        Fase 2 - Construcción
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservacionesConstruccion.observacionCriterios === true ? 'en-proceso' : enabledAcordeonSubFase( 'criterioDePago', false )">
-                                Criterios de pago incluidos en la factura
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
+  </form>
+  <div *ngIf="tienePreconstruccion === true">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [ngClass]="enabledAcordeonFase(estadoRegistroCompleto.formRegistroCompleto, true)"
+          >
+            Fase 1 - Preconstrucción
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservaciones.observacionCriterios === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('criterioDePago', true)
+                "
+              >
+                Criterios de pago incluidos en la factura
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-criterios-pago
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [contratacionProyectoId]="contratacionProyectoId"
+              [listaMenusId]="listaMenusId"
+              [contrato]="contrato"
+              [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+              (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event"
+            >
+            </app-form-criterios-pago>
+          </mat-expansion-panel>
 
-                        <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                    [esPreconstruccion]="false"
-                                                    [contratacionProyectoId]="contratacionProyectoId"
-                                                    [contrato]="contrato"
-                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                    [listaMenusId]="listaMenusId"
-                                                    [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                    [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
-                                                    (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriterios = $event">
-                        </app-form-criterios-pago>
-                    </mat-expansion-panel>
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservaciones.observacionCriteriosProyecto === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('detalleFactura', true)
+                "
+              >
+                Detalle factura para proyectos asociados
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-detalle-factura-proyectos-asociados
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [listaMenusId]="listaMenusId"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+              *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"
+              (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriteriosProyecto = $event"
+            >
+            </app-detalle-factura-proyectos-asociados>
+          </mat-expansion-panel>
 
-                    <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservacionesConstruccion.observacionAmortizacion === true ? 'en-proceso' : enabledAcordeonSubFase( 'amortizacion', false )">
-                                Amortización del anticipo
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservaciones.observacionDatosFactura === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('datosFactura', true)
+                "
+              >
+                Datos de la factura
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"
-                                                        [contrato]="contrato"
-                                                        [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                        [listaMenusId]="listaMenusId"
-                                                        [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
-                                                        [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                        *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === true"
-                                                        (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionAmortizacion = $event">
-                        </app-form-amortizacion-anticipo>
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto === true ? 'en-proceso' : enabledAcordeonSubFase( 'detalleFactura', false )">
-                                Detalle factura para proyectos asociados
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                        <app-detalle-factura-proyectos-asociados    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                                    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                                    [listaMenusId]="listaMenusId"
-                                                                    [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                                    [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
-                                                                    [esPreconstruccion]="false"
-                                                                    *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true"
-                                                                    (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto = $event">
-                        </app-detalle-factura-proyectos-asociados>
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservacionesConstruccion.observacionDatosFactura === true ? 'en-proceso' : enabledAcordeonSubFase( 'datosFactura', false )">
-                                Datos de la factura
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                        <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-                                                                [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
-                                                                [listaMenusId]="listaMenusId"
-                                                                [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-                                                                [esPreconstruccion]="false"
-                                                                *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === true"
-                                                                (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionDatosFactura = $event">
-                        </app-datos-factura-construccion-rvrp>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </mat-expansion-panel>
+            <app-datos-factura-construccion-rvrp
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+              [listaMenusId]="listaMenusId"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"
+              (semaforoObservacion)="estadoSemaforosObservaciones.observacionDatosFactura = $event"
+            >
+            </app-datos-factura-construccion-rvrp>
+          </mat-expansion-panel>
         </mat-accordion>
-    </div>
-    <!--
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div *ngIf="tieneConstruccion === true">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [ngClass]="enabledAcordeonFase(estadoRegistroCompleto.formRegistroCompleto, false)"
+          >
+            Fase 2 - Construcción
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservacionesConstruccion.observacionCriterios === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('criterioDePago', false)
+                "
+              >
+                Criterios de pago incluidos en la factura
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-criterios-pago
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [esPreconstruccion]="false"
+              [contratacionProyectoId]="contratacionProyectoId"
+              [contrato]="contrato"
+              [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [listaMenusId]="listaMenusId"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+              (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriterios = $event"
+            >
+            </app-form-criterios-pago>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservacionesConstruccion.observacionAmortizacion === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('amortizacion', false)
+                "
+              >
+                Amortización del anticipo
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-amortizacion-anticipo
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [contrato]="contrato"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [listaMenusId]="listaMenusId"
+              [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto === true"
+              (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionAmortizacion = $event"
+            >
+            </app-form-amortizacion-anticipo>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('detalleFactura', false)
+                "
+              >
+                Detalle factura para proyectos asociados
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-detalle-factura-proyectos-asociados
+              [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [listaMenusId]="listaMenusId"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+              [esPreconstruccion]="false"
+              *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true"
+              (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto = $event"
+            >
+            </app-detalle-factura-proyectos-asociados>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title
+                class="expansion-style--title"
+                [ngClass]="
+                  estadoSemaforosObservacionesConstruccion.observacionDatosFactura === true
+                    ? 'en-proceso'
+                    : enabledAcordeonSubFase('datosFactura', false)
+                "
+              >
+                Datos de la factura
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-datos-factura-construccion-rvrp
+              [solicitudPago]="contrato.solicitudPagoOnly"
+              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+              [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+              [listaMenusId]="listaMenusId"
+              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+              [esPreconstruccion]="false"
+              *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.detalleFacturaRegistroCompleto === true"
+              (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionDatosFactura = $event"
+            >
+            </app-datos-factura-construccion-rvrp>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <!--
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">

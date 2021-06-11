@@ -7,7 +7,7 @@
     <h1 class="title-menu--h1">Ejecución financiera por componente {{ data.llaveMen }}</h1>
     <p class="info-sub-title">
         <span>Número de contrato de obra: <b>{{ data.numeroContratoObra }} </b></span>
-        <span>Número de contrato de interventoria: <b>{{ data.numeroContratoInterventoria }}</b></span>
+        <span>Número de contrato de interventoría: <b>{{ data.numeroContratoInterventoria }}</b></span>
     </p>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
@@ -25,7 +25,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-tabla-ejpresupuestal-gtlc *ngIf="dataTable.length > 0" [data]="dataTable"></app-tabla-ejpresupuestal-gtlc>
+            <app-tabla-ejpresupuestal-gtlc [data]="dataTableEjpresupuestal"></app-tabla-ejpresupuestal-gtlc>
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
@@ -35,7 +35,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-tabla-ejfinanciera-gtlc></app-tabla-ejfinanciera-gtlc>
+            <app-tabla-ejfinanciera-gtlc [data]="dataTableEjfinanciera"></app-tabla-ejfinanciera-gtlc>
         </mat-card-content>
     </mat-card>
 </section>

@@ -23,8 +23,8 @@ export class ValidarInformeComponent implements OnInit {
   existeObservacionApoyo = false;
   existeObservacionSupervision = false;
   existeObservacionCumplimiento = false;
-  mostrarDetalleAnexos = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoria
-  mostrarDetalleObservacionesRecibo = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoria
+  mostrarDetalleAnexos = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoría
+  mostrarDetalleObservacionesRecibo = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoría
   constructor(
     private router: Router,
     private route: ActivatedRoute,

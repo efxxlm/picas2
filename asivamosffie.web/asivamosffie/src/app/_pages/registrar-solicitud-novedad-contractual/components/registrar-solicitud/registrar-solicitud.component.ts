@@ -3,9 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
-import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
@@ -59,7 +57,7 @@ export class RegistrarSolicitudComponent implements OnInit {
             if (novedad.novedadContractualId !== 0) {
               this.novedad = novedad;
               this.numeroContrato.setValue(novedad.contrato.numeroContrato);
-              this.numeroContratoSeleccionado = novedad.contrato; 
+              this.numeroContratoSeleccionado = novedad.contrato;
               this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
               this.proyecto = novedad['proyectosSeleccionado'];
               this.contrato = novedad.contrato;
@@ -104,7 +102,11 @@ export class RegistrarSolicitudComponent implements OnInit {
   }
 
   public seleccionAutocomplete(numeroContrato) {
+    console.log("entra: ", numeroContrato)
     this.numeroContratoSeleccionado = numeroContrato;
+    this.contrato = null;
+    this.proyecto = null;
+    this.novedadAplicada.setValue(null);
     //console.log(numeroContrato);
   }
 

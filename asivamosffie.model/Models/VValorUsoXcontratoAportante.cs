@@ -6,6 +6,7 @@ namespace asivamosffie.model.Models
     public partial class VValorUsoXcontratoAportante
     {
         public string TipoUsoCodigo { get; set; }
+        public string Nombre { get; set; }
         public string ConceptoPagoCodigo { get; set; }
         public decimal ValorUso { get; set; }
         public int ContratoId { get; set; }

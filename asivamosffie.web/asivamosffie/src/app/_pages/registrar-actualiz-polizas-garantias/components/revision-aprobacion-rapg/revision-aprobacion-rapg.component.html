@@ -183,6 +183,7 @@
             <quill-editor class="quill-editor-style"
                           [styles]="editorStyle"
                           [modules]="config"
+                          required
                           #observaciones
                           (onContentChanged)="maxLength($event, 2000)"
                           formControlName="observacionesGenerales">

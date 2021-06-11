@@ -8,10 +8,11 @@ import { Component, Input, OnInit } from '@angular/core';
 export class DetalleContratistasComponent implements OnInit {
 
   @Input() contratista: any;
+  @Input() valorPagadoContratista: any;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-  
+
 }

@@ -18,19 +18,11 @@ namespace asivamosffie.model.Models
         public string NumeroSolicitudLiquidacion { get; set; }
         public DateTime? FechaValidacionLiquidacion { get; set; }
         public DateTime? FechaAprobacionLiquidacion { get; set; }
-        public DateTime? FechaTramiteLiquidacion { get; set; }
+        public DateTime? FechaTramiteLiquidacionControl { get; set; }
         public string TipoSolicitudCodigo { get; set; }
-        public int ContratacionProyectoId { get; set; }
         public int ContratacionId { get; set; }
-        public int ProyectoId { get; set; }
-        public int InformeFinalId { get; set; }
-        public string LlaveMen { get; set; }
         public int? ContratoId { get; set; }
         public int? ContratoPolizaId { get; set; }
         public int? ContratoPolizaActualizacionId { get; set; }
-        public DateTime? FechaBalance { get; set; }
-        public string EstadoBalanceCodigo { get; set; }
-        public DateTime? FechaInformeFinal { get; set; }
-        public int BalanceFinancieroId { get; set; }
     }
 }

@@ -13,17 +13,18 @@ namespace asivamosffie.services.Interfaces
         //Consultas
         Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationObra(int pMenuId);
         Task<List<VContratacionProyectoSolicitudLiquidacion>> GridRegisterContractualLiquidationInterventoria(int pMenuId);
-        Task<List<dynamic>> GetContratacionProyectoByContratacionProyectoId(int pContratacionProyectoId);
-        Task<List<dynamic>> GridInformeFinal(int pContratacionProyectoId, int pMenuId);
-        Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId, int pContratacionProyectoId, int pMenuId);
+        Task<List<dynamic>> GetContratacionByContratacionId(int pContratacionId);
+        Task<List<dynamic>> GridInformeFinal(int pContratacionId, int pMenuId);
+        Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId, int pContratacionId, int pMenuId);
         Task<List<InformeFinalInterventoria>> GetInformeFinalAnexoByInformeFinalId(int pInformeFinalId);
-        Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo);
+        Task<dynamic> GetObservacionLiquidacionContratacionByMenuIdAndContratacionId(int pMenuId, int pContratacionId, int pPadreId, string pTipoObservacionCodigo);
         Task<Respuesta> CreateUpdateLiquidacionContratacionObservacion(LiquidacionContratacionObservacion pLiquidacionContratacionObservacion);
-        Task<Respuesta> ChangeStatusLiquidacionContratacionProyecto(ContratacionProyecto pContratacionProyecto, int menuId);
-        Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionProyectoId(int pMenuId, int pContratacionProyectoId, int pPadreId, string pTipoObservacionCodigo);
-        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, int pMenuId, int pContratacionProyectoId);
-        Task<dynamic> GetBalanceByContratacionProyectoId(int pContratacionProyectoId, int pMenuId);
-
+        Task<Respuesta> ChangeStatusLiquidacionContratacion(Contratacion pContratacion, int menuId);
+        Task<dynamic> GetHistoricoObservacionLiquidacionContratacionByMenuIdAndContratacionId(int pMenuId, int pContratacionId, int pPadreId, string pTipoObservacionCodigo);
+        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, int pMenuId, int pContratacionId);
+        Task<dynamic> GetBalanceByContratacionId(int pContratacionId, int pMenuId);
+        Task<List<NovedadContractual>> GetAllNoveltyByContratacion(int pContratacionId);
+        Task<VContratacionProyectoSolicitudLiquidacion> GetPolizaByContratacionId(int pContratacionId);
         //alertas
         Task<bool> RegistroLiquidacionPendiente();
         Task<bool> RegistroLiquidacionPendienteAprobacion();

@@ -132,8 +132,10 @@
                 <input
                   matInput
                   [matDatepicker]="pickerSesionInstancia"
+                  [max]="addressForm.get('fechaSolicitudNovedad').value"
                   formControlName="fechaSesionInstancia"
                   readonly
+                  [max]="addressForm.get('fechaSolicitudNovedad').value"
                   (click)="pickerSesionInstancia.open()"
                   placeholder="DD/MM/AAAA"
                   [disabled]="addressForm.get('instanciaPresentoSolicitud').value == 3"
@@ -232,7 +234,9 @@
   <app-accordion-novedades
     [tiposNovedadModificacionContractual]="tiposNovedadModificacionContractual"
     [novedadeContractual]="novedadContractual"
+    [fechaSolicitudNovedad]="addressForm.get('fechaSolicitudNovedad').value"
     [estaEditando]="estaEditando"
+    [fechaSolicitudNovedad]="addressForm.get('fechaSolicitudNovedad').value"
     (guardar)="onSubmit()"
   >
   </app-accordion-novedades>

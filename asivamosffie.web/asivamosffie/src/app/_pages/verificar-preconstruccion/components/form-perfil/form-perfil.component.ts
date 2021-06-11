@@ -15,6 +15,7 @@ export class FormPerfilComponent implements OnInit {
   formContratista: FormGroup;
   minDate: Date;
   @Input() contratoId: number;
+  @Input() fechaPoliza: Date;
   @Input() proyectoId: number;
   @Input() tieneEstadoFase1EyD: boolean;
   @Input() tieneEstadoFase1Diagnostico: boolean;
@@ -54,7 +55,6 @@ export class FormPerfilComponent implements OnInit {
     private dialog: MatDialog,
     private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService
   ) {
-    this.minDate = new Date();
     this.crearFormulario();
     this.commonSvc.listaPerfil().subscribe(perfiles => {
       this.perfilesCv = perfiles;
@@ -62,6 +62,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.minDate = new Date(this.fechaPoliza);
     setTimeout(() => {
       this.perfilesProyecto();
     }, 1000);

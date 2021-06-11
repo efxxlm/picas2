@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -8,36 +8,50 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./tabla-ejfinanciera-gtlc.component.scss']
 })
 export class TablaEjfinancieraGtlcComponent implements OnInit {
+
+  @Input() data: any[] = [];
+
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
-    'componente',
+    'nombre',
     'totalComprometido',
-    'ordenadoGirarAntesdeImpuestos',
+    'ordenadoGirarAntesImpuestos',
     'saldo',
     'porcentajeEjecucionFinanciera'
   ];
-  dataTable: any[] = [
-    {
-      componente: 'Obra',
-      totalComprometido: '$65.000.000',
-      ordenadoGirarAntesdeImpuestos: '$52.050.000',
-      saldo: '$12.950.000',
-      porcentajeEjecucionFinanciera:'80%'
-    },
-    {
-      componente: 'Interventoría',
-      totalComprometido: '$40.000.000',
-      ordenadoGirarAntesdeImpuestos: '$32.050.000',
-      saldo: '$7.950.000',
-      porcentajeEjecucionFinanciera:'80%'
-    }
-  ];
-  constructor() { }
+  dataTable: any[] = [];
+  total: any;
+
+  constructor() {}
 
   ngOnInit(): void {
+    this.loadTableData();
+  }
+
+  loadTableData() {
+    if (this.data.length > 0) {
+      this.dataTable = this.data;
+      this.total = {
+        totalComprometido: 0,
+        ordenadoGirarAntesImpuestos: 0,
+        saldo: 0,
+        porcentajeEjecucionFinanciera: 0
+      };
+      this.dataTable.forEach(element => {
+        this.total.totalComprometido += element.totalComprometido;
+        this.total.ordenadoGirarAntesImpuestos =
+          this.total.ordenadoGirarAntesImpuestos + element.ordenadoGirarAntesImpuestos;
+        this.total.saldo = this.total.saldo + element.saldo;
+        this.total.porcentajeEjecucionFinanciera =
+          this.total.porcentajeEjecucionFinanciera + element.porcentajeEjecucionFinanciera;
+      });
+      if (this.total.porcentajeEjecucionFinanciera > 0)
+        this.total.porcentajeEjecucionFinanciera = this.total.porcentajeEjecucionFinanciera / 2;
+    }
     this.loadDataSource();
   }
+
   loadDataSource() {
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;

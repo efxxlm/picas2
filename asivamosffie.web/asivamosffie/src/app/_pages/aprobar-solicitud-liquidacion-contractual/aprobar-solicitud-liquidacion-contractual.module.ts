@@ -41,6 +41,8 @@ import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecu
 import { FormTerceroCausacionComponent } from './components/form-tercero-causacion/form-tercero-causacion.component';
 import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
 import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro-seleccionada/form-orden-giro-seleccionada.component';
+import { TablaEjfinancieraGbftrecComponent } from './components/tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
+import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresupuestal-gbftrec/tabla-ejpresupuestal-gbftrec.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +80,9 @@ import { FormOrdenGiroSeleccionadaComponent } from './components/form-orden-giro
     TablaPorcParticipacionGbftrecComponent,
     FormTerceroCausacionComponent,
     FormDescuentosDireccionTecnicaComponent,
-    FormOrdenGiroSeleccionadaComponent
+    FormOrdenGiroSeleccionadaComponent,
+    TablaEjfinancieraGbftrecComponent,
+    TablaEjpresupuestalGbftrecComponent
   ],
   imports: [
     CommonModule,

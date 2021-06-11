@@ -47,9 +47,9 @@ export class DisponibilidadPresupuestalService {
     return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
   }
   
-  GenerateDDP(id, esNovedad, pRegistroPresupuestalId)
+  GenerateDDP(id, esNovedad, pRegistroPresupuestalId, esValidar: boolean)
   {        
-    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}&esValidar=${esValidar}`, { responseType: "blob" } );
   }
   CreateDDP(id, esNovedad, RegistroPresupuestalId)
   {
@@ -73,9 +73,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}&esNovedad=${esNovedad}&RegistroPresupuestalId=${RegistroPresupuestalId}`,null);
   }
-  SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any)
+  SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any, esNovedad: boolean)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetRechazarValidacionDDP`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetRechazarValidacionDDP?esNovedad=${esNovedad}`,DisponibilidadPresupuestalObservacion);
   }
   SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion:any, esNovedad, RegistroPresupuestalId)
   {

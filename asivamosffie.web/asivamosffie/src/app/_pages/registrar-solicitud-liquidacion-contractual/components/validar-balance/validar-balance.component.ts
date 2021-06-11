@@ -10,7 +10,7 @@ import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObs
 })
 export class ValidarBalanceComponent implements OnInit {
 
-  contratacionProyectoId: number;
+  contratacionId: number;
   proyectoId: number;
   data : any;
   balanceFinancieroId: number;//definir
@@ -25,7 +25,7 @@ export class ValidarBalanceComponent implements OnInit {
     private financialBalanceService: FinancialBalanceService
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
       this.proyectoId = params.proyectoId;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -54,7 +54,7 @@ export class ValidarBalanceComponent implements OnInit {
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if(urlSegment.path.includes("Requisitos")){
-        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionId ]);
         return;
       }
     });

@@ -1535,9 +1535,9 @@ namespace asivamosffie.services
             });
             return grind;
         }
+
         public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
         {
-
             Contrato contrato = await _context.Contrato
                     .Where(c => c.ContratoId == pContratoId)
                     .Include(c => c.ContratoConstruccion)
@@ -1571,10 +1571,10 @@ namespace asivamosffie.services
             {
                 contrato.VContratoPagosRealizados =
                     _context.VContratoPagosRealizados
-                       .Where(v => v.ContratoId == pContratoId)
+                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                        .ToList();
 
-                contrato.TablaDRP = GetDrpContrato(contrato);
+                contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
             }
             catch (Exception e)
             {
@@ -1583,6 +1583,120 @@ namespace asivamosffie.services
 
             return contrato;
 
+        }
+
+        public dynamic GetDrpContrato(int pContratacionId)
+        { 
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
+
+            var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
+                                       .Select(d => d.OrderBy(p => p.NumeroDrp).FirstOrDefault())
+                                       .ToList();
+
+            List<dynamic> ListTablaDrp = new List<dynamic>();
+
+            int Enum = 1;
+            foreach (var Drp in ListDrp)
+            {
+                var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
+                                                .GroupBy(id => id.ProyectoId)
+                                                .Select(d => d.OrderBy(p => p.ProyectoId).FirstOrDefault())
+                                                .ToList();
+
+                List<dynamic> ListDyProyectos = new List<dynamic>();
+                foreach (var ProyectoId in ListProyectosId)
+                {
+                    Proyecto proyecto = _context.Proyecto
+                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
+                                        .Include(ie => ie.InstitucionEducativa)
+                                        .FirstOrDefault();
+
+                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp && r.ProyectoId == ProyectoId.ProyectoId)
+                                                  .GroupBy(id => id.TipoUsoCodigo)
+                                                  .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
+                                                  .ToList();
+
+                    List<dynamic> ListDyUsos = new List<dynamic>();
+                    foreach (var TipoUso in ListTipoUso)
+                    {
+                        VDrpXproyectoXusos Uso = List
+                                                    .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                        && r.ProyectoId == ProyectoId.ProyectoId
+                                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                    .FirstOrDefault();
+
+                        decimal ValorUso = List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                    && r.ProyectoId == ProyectoId.ProyectoId
+                                                    && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(v => v.ValorUso);
+
+                        decimal Saldo = List
+                                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                 && r.ProyectoId == ProyectoId.ProyectoId
+                                                 && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                            .Sum(v => v.Saldo) ?? 0;
+
+                        ListDyUsos.Add(new
+                        {
+                            Uso.Nombre,
+                            ValorUso = String.Format("{0:n0}", ValorUso),
+                            Saldo = String.Format("{0:n0}", Saldo)
+                        });
+                    }
+
+                    ListDyProyectos.Add(new
+                    {
+                        proyecto.InstitucionEducativa.Nombre,
+                        ListDyUsos
+                    });
+                }
+
+                ListTablaDrp.Add(new
+                {
+                    Enum,
+                    Drp.NumeroDrp,
+                    ListDyProyectos
+                });
+                Enum++;
+            }
+            return ListTablaDrp;
+        }
+         
+        public List<TablaDRP> GetDrpContrato(Contrato contrato)
+        {
+            String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
+            List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
+
+            decimal ValorFacturado =
+                                    _context.SolicitudPago
+                                    .Where(r => r.ContratoId == contrato.ContratoId && r.TipoSolicitudCodigo == strTipoSolicitud)
+                                    .Sum(r => r.ValorFacturado) ?? 0;
+
+
+            List<VRpsPorContratacion> vRpsPorContratacion =
+                                                           _context.VRpsPorContratacion
+                                                           .Where(c => c.ContratacionId == contrato.ContratacionId)
+                                                           .OrderBy(C => C.ContratacionId)
+                                                           .ToList();
+
+            int Enum = 1;
+            foreach (var DPR in vRpsPorContratacion)
+            {
+                ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
+
+                ListTablaDrp.Add(new TablaDRP
+                {
+                    Enum = Enum,
+                    NumeroDRP = DPR.NumeroDrp,
+                    Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
+                    Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
+                });
+                Enum++;
+            }
+
+
+            return ListTablaDrp;
         }
 
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
@@ -1675,42 +1789,6 @@ namespace asivamosffie.services
             }
         }
 
-        public List<TablaDRP> GetDrpContrato(Contrato contrato)
-        {
-            String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
-            List<TablaDRP> ListTablaDrp = new List<TablaDRP>();
-
-            decimal ValorFacturado =
-                                    _context.SolicitudPago
-                                    .Where(r => r.ContratoId == contrato.ContratoId && r.TipoSolicitudCodigo == strTipoSolicitud)
-                                    .Sum(r => r.ValorFacturado) ?? 0;
-
-
-            List<VRpsPorContratacion> vRpsPorContratacion =
-                                                           _context.VRpsPorContratacion
-                                                           .Where(c => c.ContratacionId == contrato.ContratacionId)
-                                                           .OrderBy(C => C.ContratacionId)
-                                                           .ToList();
-
-            int Enum = 1;
-            foreach (var DPR in vRpsPorContratacion)
-            {
-                ValorFacturado = (DPR.ValorSolicitud - ValorFacturado) > 0 ? (DPR.ValorSolicitud - ValorFacturado) : DPR.ValorSolicitud;
-
-                ListTablaDrp.Add(new TablaDRP
-                {
-                    Enum = Enum,
-                    NumeroDRP = DPR.NumeroDrp,
-                    Valor = '$' + String.Format("{0:n0}", DPR.ValorSolicitud),
-                    Saldo = '$' + String.Format("{0:n0}", ValorFacturado)
-                });
-                Enum++;
-            }
-
-
-            return ListTablaDrp;
-        }
-
         private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
         {
             foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
@@ -1758,6 +1836,8 @@ namespace asivamosffie.services
 
         public SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago)
         {
+            if (solicitudPago == null)
+                return new SolicitudPago();
             switch (solicitudPago.TipoSolicitudCodigo)
             {
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:

@@ -1,21 +1,14 @@
-﻿using System;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-using System.IO;
 using Z.EntityFramework.Plus;
-using DinkToPdf;
-using DinkToPdf.Contracts;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Org.BouncyCastle.Bcpg.OpenPgp;
-using Microsoft.EntityFrameworkCore.Internal;
-using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -58,15 +51,15 @@ namespace asivamosffie.services
 
         public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId)
         {
-            
+
             ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefaultAsync();
-            
+
             if (proyectoEntregaEtc != null)
             {
                 List<RepresentanteEtcrecorrido> representantesEtcrecorrido = await _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid && (r.Eliminado == false || r.Eliminado == null)).ToListAsync();
                 proyectoEntregaEtc.RepresentanteEtcrecorrido = representantesEtcrecorrido;
             }
-            
+
             return proyectoEntregaEtc;
 
         }
@@ -74,7 +67,7 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
         {
             InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
-            String numeroContratoObra = string.Empty,numeroContratoInterventoria = string.Empty;
+            String numeroContratoObra = string.Empty, numeroContratoInterventoria = string.Empty;
             List<dynamic> ProyectoAjustado = new List<dynamic>();
 
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
@@ -156,7 +149,7 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pRecorrido.UsuarioCreacion,
                                                                        FechaRecorridoObra = pRecorrido.FechaRecorridoObra,
                                                                        NumRepresentantesRecorrido = pRecorrido.NumRepresentantesRecorrido,
-                                                                       FechaFirmaActaEngregaFisica =pRecorrido.FechaFirmaActaEngregaFisica,
+                                                                       FechaFirmaActaEngregaFisica = pRecorrido.FechaFirmaActaEngregaFisica,
                                                                        UrlActaEntregaFisica = pRecorrido.UrlActaEntregaFisica
                                                                    });
                 }
@@ -224,7 +217,7 @@ namespace asivamosffie.services
                                                                        Dependencia = pRepresentante.Dependencia,
                                                                        RegistroCompleto = (string.IsNullOrEmpty(pRepresentante.Nombre) || string.IsNullOrEmpty(pRepresentante.Cargo) || string.IsNullOrEmpty(pRepresentante.Dependencia)) ? false : true
 
-                });
+                                                                   });
                 }
                 _context.SaveChanges();
 
@@ -271,7 +264,7 @@ namespace asivamosffie.services
                 else
                 {
                     strCrearEditar = "ACTUALIZAR ENTREGA DE PROYECTO ETC - DOC";
-                    
+
                     if (pDocumentos.ProyectoEntregaEtcid == 0)
                     {
                         pDocumentos.ProyectoEntregaEtcid = proyectoEntregaEtc.ProyectoEntregaEtcid;
@@ -507,7 +500,7 @@ namespace asivamosffie.services
                     informeFinal.EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.Entregado_a_ETC;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
-                    
+
                     //Enviar Correo apoyo supervisor 5.1.1
                     //await EnviarCorreoApoyoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
@@ -536,7 +529,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> DeleteRepresentanteEtcRecorrido(int representanteEtcId,int numRepresentantesRecorrido, string pUsuarioModificacion)
+        public async Task<Respuesta> DeleteRepresentanteEtcRecorrido(int representanteEtcId, int numRepresentantesRecorrido, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Representante_Etc, (int)EnumeratorTipoDominio.Acciones);
             try

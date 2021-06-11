@@ -21,7 +21,7 @@ namespace asivamosffie.api.Controllers
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
         }
-        //   Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor);
+
         [HttpPost]
         [Route("DeleteOrdenGiroDetalleTerceroCausacionDescuento")]
         public async Task<IActionResult> DeleteOrdenGiroDetalleTerceroCausacionDescuento([FromBody] List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId)
@@ -134,8 +134,6 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
-        }
-
-
+        } 
     }
 }

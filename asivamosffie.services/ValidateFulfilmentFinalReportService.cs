@@ -1,21 +1,14 @@
-﻿using System;
+﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-using System.IO;
 using Z.EntityFramework.Plus;
-using DinkToPdf;
-using DinkToPdf.Contracts;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Org.BouncyCastle.Bcpg.OpenPgp;
-using Microsoft.EntityFrameworkCore.Internal;
-using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -33,19 +26,19 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades || r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades || !String.IsNullOrEmpty(r.EstadoCumplimiento) )
-                            .Include(r=> r.Proyecto)
+                            .Where(r => r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades || r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades || !String.IsNullOrEmpty(r.EstadoCumplimiento))
+                            .Include(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
 
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
-                if (String.IsNullOrEmpty(item.EstadoCumplimiento)|| item.EstadoCumplimiento == "0")
+                if (String.IsNullOrEmpty(item.EstadoCumplimiento) || item.EstadoCumplimiento == "0")
                 {
                     item.EstadoCumplimientoString = "Sin validación";
                 }
@@ -441,7 +434,8 @@ namespace asivamosffie.services
 
             if (informeFinal != null)
             {
-                if(informeFinal.TieneObservacionesCumplimiento == null || informeFinal.TieneObservacionesInterventoria == null){
+                if (informeFinal.TieneObservacionesCumplimiento == null || informeFinal.TieneObservacionesInterventoria == null)
+                {
                     return false;
                 }
             }
@@ -488,7 +482,7 @@ namespace asivamosffie.services
                       .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
                       .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString)
                       .Replace("[FECHA_ENVIO_NOVEDADES]", informeFinal.FechaEnvioGrupoNovedades != null ? ((DateTime)informeFinal.FechaEnvioGrupoNovedades).ToString("yyyy-MM-dd") : "");
-                       ;
+            ;
 
 
             return template;

@@ -8,48 +8,44 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./tabla-ejpresupuestal-gtlc.component.scss']
 })
 export class TablaEjpresupuestalGtlcComponent implements OnInit {
-  @Input() data : any[] = [];
+  @Input() data: any[] = [];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
-    'componente',
+    'nombre',
     'totalComprometido',
-    'facturadoAntesdeImpuestos',
+    'facturadoAntesImpuestos',
     'saldo',
     'porcentajeEjecucionPresupuestal'
   ];
   dataTable: any[] = [];
   total: any;
-  
-  constructor() { }
+
+  constructor() {}
 
   ngOnInit(): void {
-    if(this.data.length > 0){
-      console.log(this.data);
-      this.data.forEach(element => {
-        if(element.vContratoPagosRealizados.length > 0){
-          this.dataTable.push({
-            componente: element.tipoSolicitudCodigo === '1' ? 'Obra' : element.tipoSolicitudCodigo === '2' ? 'Interventoria' : '',
-            totalComprometido: element.vContratoPagosRealizados[0].valorSolicitud != null ? element.vContratoPagosRealizados[0].valorSolicitud: 0,
-            facturadoAntesdeImpuestos: 0,
-            saldo: element.vContratoPagosRealizados[0].saldoPorPagar != null ? element.vContratoPagosRealizados[0].saldoPorPagar: 0,
-            porcentajeEjecucionPresupuestal: element.vContratoPagosRealizados[0].porcentajeFacturado != null ? element.vContratoPagosRealizados[0].porcentajeFacturado : 0,
-          });
-        }
-      });
+    this.loadTableData();
+  }
+
+  loadTableData() {
+    if (this.data.length > 0) {
+      this.dataTable = this.data;
       this.total = {
         totalComprometido: 0,
-        facturadoAntesdeImpuestos: 0,
+        facturadoAntesImpuestos: 0,
         saldo: 0,
-        porcentajeEjecucionPresupuestal: 0       
-      }
+        porcentajeEjecucionPresupuestal: 0
+      };
       this.dataTable.forEach(element => {
         this.total.totalComprometido += element.totalComprometido;
-        this.total.facturadoAntesdeImpuestos = this.total.facturadoAntesdeImpuestos + element.facturadoAntesdeImpuestos;
+        this.total.facturadoAntesImpuestos = this.total.facturadoAntesImpuestos + element.facturadoAntesImpuestos;
         this.total.saldo = this.total.saldo + element.saldo;
-        this.total.porcentajeEjecucionPresupuestal = this.total.porcentajeEjecucionPresupuestal + element.porcentajeEjecucionPresupuestal;
+        this.total.porcentajeEjecucionPresupuestal =
+          this.total.porcentajeEjecucionPresupuestal + element.porcentajeEjecucionPresupuestal;
       });
+      if (this.total.porcentajeEjecucionPresupuestal > 0)
+        this.total.porcentajeEjecucionPresupuestal = this.total.porcentajeEjecucionPresupuestal / 2;
     }
     this.loadDataSource();
   }

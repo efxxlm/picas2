@@ -70,7 +70,7 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
 
   getAllReports() {
     this.balanceSvc.gridBalance().subscribe(report => {
-      console.log( report )
+      // console.log( report )
       this.dataSource.data = report as RegistrarInterface[];
     });
   }

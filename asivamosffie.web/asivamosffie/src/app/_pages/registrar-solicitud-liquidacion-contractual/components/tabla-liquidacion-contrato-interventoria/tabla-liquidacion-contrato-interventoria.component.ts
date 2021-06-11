@@ -25,7 +25,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
     'valorSolicitud',
     'proyectosAsociados',
     'estadoValidacionLiquidacionString',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -69,7 +69,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             estadoValidacionLiquidacionString: element.estadoValidacionLiquidacionString,
             estadoValidacionLiquidacionCodigo: element.estadoValidacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion == null || element.numeroSolicitudLiquidacion == "" ? " ---- " : element.numeroSolicitudLiquidacion,
-            contratacionProyectoId: element.contratacionProyectoId
+            contratacionId: element.contratacionId
           });
           if (element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.enProcesoDeValidacion || element.estadoValidacionLiquidacionCodigo === this.estadoCodigos.conValidacion ) {
             enProceso++;
@@ -140,13 +140,13 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
     });
   }
 
-  SendToSupervision( pContratacionProyectoId: number ) {
-    const pContratacionProyecto = {
-        contratacionProyectoId: pContratacionProyectoId,
+  SendToSupervision( pcontratacionId: number ) {
+    const pContratacion = {
+        contratacionId: pcontratacionId,
         estadoValidacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoAlSupervisor
     };
 
-    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.registrarSolicitudLiquidacionContratacion )
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacion( pContratacion, this.listaMenu.registrarSolicitudLiquidacionContratacion )
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );

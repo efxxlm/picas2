@@ -22,6 +22,20 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [HttpGet]
+        [Route("GetEjecucionFinancieraXProyectoId")]
+        public async Task<IActionResult> GetEjecucionFinancieraXProyectoId([FromQuery] int pProyectoId)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.GetEjecucionFinancieraXProyectoId(pProyectoId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        } 
+
         [HttpPost]
         [Route("ChangeStatudBalanceFinanciero")]
         public async Task<IActionResult> ChangeStatudBalanceFinanciero([FromBody] BalanceFinanciero pBalanceFinanciero)
@@ -75,6 +89,8 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+     
         [HttpGet]
         [Route("GetOrdenGiroByNumeroOrdenGiro")]
         public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)
@@ -86,6 +102,21 @@ namespace asivamosffie.api.Controllers
             catch (Exception e)
             {
                 return BadRequest(e);
+            }
+        }
+
+         
+        [HttpGet]
+        [Route("GetTablaUsoFuenteAportanteXContratoId")]
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId)
+        {
+            try
+            {
+                return await _finalBalanceService.GetTablaUsoFuenteAportanteXContratoId(pContratoId);
+            }
+            catch (Exception e)
+            {
+                return new TablaUsoFuenteAportante();
             }
         }
 

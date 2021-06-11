@@ -63,7 +63,7 @@
     </ng-container>
 
     <!-- id Column -->
-    <ng-container matColumnDef="contratacionProyectoId">
+    <ng-container matColumnDef="contratacionId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Gestión
       </th>
@@ -75,7 +75,7 @@
           class="btn-table"
           [routerLink]="['aprobarInformeFinal', element.proyectoId]"
         >
-          Aprobar
+          Validar
         </a> 
         <a *ngIf="!esVerDetalle && element.registroCompleto === 'Completo'"
           mat-button

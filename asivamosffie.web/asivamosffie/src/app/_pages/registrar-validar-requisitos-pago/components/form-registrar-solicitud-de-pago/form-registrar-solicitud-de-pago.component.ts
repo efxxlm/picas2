@@ -182,7 +182,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                             this.addressForm.markAllAsTouched();
                             this.addressForm.setValue(
                                 {
-                                    fechaSolicitud: this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined ? new Date( this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud ) : null,
+                                    fechaSolicitud: this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined ? new Date( this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud ) : new Date(),
                                     numeroRadicado: this.solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ? this.solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac : null,
                                     faseContrato: faseSeleccionada !== undefined ? faseSeleccionada : null
                                 }

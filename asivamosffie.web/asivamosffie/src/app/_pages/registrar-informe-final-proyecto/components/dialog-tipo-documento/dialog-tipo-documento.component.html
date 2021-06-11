@@ -137,10 +137,10 @@
               <mat-form-field class="full-width">
                 <input
                   matInput
-                  type="number"
+                  type="text"
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
-                  maxlength="10"
+                  maxlength="20"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -153,7 +153,7 @@
                 matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 10 - numRadicadoSac.value.length }}
+                {{ 20 - numRadicadoSac.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img

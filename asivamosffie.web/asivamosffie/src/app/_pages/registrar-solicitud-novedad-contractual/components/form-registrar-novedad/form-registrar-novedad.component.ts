@@ -137,20 +137,33 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   cargarRegistro() {
     this.tipoNovedadArray = [];
     this.tipoNovedadSuspension = [];
+    const tieneActa = this.contrato != null ? this.contrato?.tieneActa : false;
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       response.forEach(n => {
-        if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
-          let novedadContractualDescripcion: NovedadContractualDescripcion = {
-            tipoNovedadCodigo: n.codigo,
-            nombreTipoNovedad: n.nombre
-          };
-          this.tipoNovedadArray.push(novedadContractualDescripcion);
+        if(tieneActa === true){
+          if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
+            let novedadContractualDescripcion: NovedadContractualDescripcion = {
+              tipoNovedadCodigo: n.codigo,
+              nombreTipoNovedad: n.nombre
+            };
+            this.tipoNovedadArray.push(novedadContractualDescripcion);
+          }else{
+            let novedadContractualDescripcion: NovedadContractualDescripcion = {
+              tipoNovedadCodigo: n.codigo,
+              nombreTipoNovedad: n.nombre
+            };
+            this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+          }
         }else{
-          let novedadContractualDescripcion: NovedadContractualDescripcion = {
-            tipoNovedadCodigo: n.codigo,
-            nombreTipoNovedad: n.nombre
-          };
-          this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+          if(n.codigo !== this.tipoNovedadCodigo.reinicio &&
+             n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension &&
+             n.codigo !== this.tipoNovedadCodigo.suspension){
+              let novedadContractualDescripcion: NovedadContractualDescripcion = {
+                tipoNovedadCodigo: n.codigo,
+                nombreTipoNovedad: n.nombre
+              };
+              this.tipoNovedadArray.push(novedadContractualDescripcion);
+          }
         }
       });
 
@@ -160,34 +173,35 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       this.addressForm.get('fechaSesionInstancia').setValue(this.novedad.fechaSesionInstancia);
 
       this.novedadContractual = this.novedad;
-
       let listaDescripcion: NovedadContractualDescripcion[] = [];
+      let esCreacion = false;
 
-      console.log(this.contrato);
       if((this.novedad.novedadContractualId == null || this.novedad.novedadContractualId.toString() == 'undefined') && this.contrato.novedadContractual.length > 0){
-          this.novedad = this.contrato.novedadContractual[0];
+        esCreacion = true;
+        this.novedad = this.contrato.novedadContractual[0];
       }
-      console.log(this.novedad);
-      console.log(this.novedad.novedadContractualDescripcion, this.tipoNovedadArray, listaDescripcion);
-      if (this.novedad.novedadContractualDescripcion) {
+      if (
+        this.novedad.novedadContractualDescripcion !== undefined &&
+        this.novedad.novedadContractualDescripcion.length > 0
+      ) {
         let existeSuspension = false;
         this.novedad.novedadContractualDescripcion.forEach(n => {
           if(n.tipoNovedadCodigo == this.tipoNovedadCodigo.suspension){
             existeSuspension = true;
           }
-          //this.tipoNovedadArray.push(n);
-          //listaDescripcion.push(n);
+          //let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
+          if(!esCreacion){
+            this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
+            this.tipoNovedadArray.push( n );
+            listaDescripcion.push( n );
+          }
         });
-        console.log(this.tipoNovedadSuspension);
         if(existeSuspension){
           this.tipoNovedadSuspension.forEach(element => {
             this.tipoNovedadArray.push(element);
           });
         }
-        console.log(this.tipoNovedadArray);
-        console.log(listaDescripcion);
       }
-
       this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
       if (this.estaEditando) this.addressForm.markAllAsTouched();
     });

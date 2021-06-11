@@ -31,7 +31,7 @@ export class DevueltaPorValidacionComponent implements OnInit {
   download()
   {
     console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, false, 0).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, false, 0,true).subscribe((listas:any) => {
       console.log(listas);
       const documento = `${ this.detailavailabilityBudget.numeroDDP  }.pdf`;
         const text = documento,

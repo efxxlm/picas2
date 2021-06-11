@@ -74,7 +74,6 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
       this.id
     ).subscribe(response => {
       if(response != null){
-        console.log( response )
         this.balanceFinanciero = response;
 
         if ( this.balanceFinanciero.balanceFinancieroTraslado !== undefined ) {
@@ -88,6 +87,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
             }
           }
         }
+        
 
         this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);

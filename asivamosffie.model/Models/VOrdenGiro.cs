@@ -6,6 +6,7 @@ namespace asivamosffie.model.Models
     public partial class VOrdenGiro
     {
         public DateTime? FechaPagoFiduciaria { get; set; }
+        public DateTime? FechaRegistroCompletoAprobar { get; set; }
         public DateTime? FechaAprobacionFinanciera { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string NumeroSolicitudPago { get; set; }

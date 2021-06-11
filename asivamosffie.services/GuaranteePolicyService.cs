@@ -1434,8 +1434,7 @@ namespace asivamosffie.services
                                                                                                                             .ToListAsync();
             return lstPolizaGarantia.Count() > 0;
         }
-
-
+         
         public async Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId)
         {
             ContratoPoliza contratoPoliza = await _context.ContratoPoliza.Where(r => r.ContratoPolizaId == ContratoPolizaId).FirstOrDefaultAsync();
@@ -1635,8 +1634,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
+         
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
             List<GrillaContratoGarantiaPoliza> ListContratoGrilla = new List<GrillaContratoGarantiaPoliza>();

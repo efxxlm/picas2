@@ -306,18 +306,17 @@ namespace asivamosffie.services
 
 
                 //Save Files  
-                if (pContrato.pFile != null && pContrato.pFile.Length > 0)
+                if (pContrato.PFile != null && pContrato.PFile.Length > 0)
                 {
                     string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
-                    if (await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
+                    if (await _documentService.SaveFileContratacion(pContrato.PFile, pFilePath, pContrato.PFile.FileName))
                     {
-                        contratoOld.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
+                        contratoOld.RutaDocumento = Path.Combine(pFilePath, pContrato.PFile.FileName);
                         contratoOld.FechaTramite = DateTime.Now;
 
 
                     }
-                }
-
+                } 
             }
             //Contrato Nuevo
             else
@@ -329,11 +328,11 @@ namespace asivamosffie.services
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
 
-                if (pContrato.pFile != null && pContrato.pFile.Length > 0)
+                if (pContrato.PFile != null && pContrato.PFile.Length > 0)
                 {
                     string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
-                    if (await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
-                        pContrato.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
+                    if (await _documentService.SaveFileContratacion(pContrato.PFile, pFilePath, pContrato.PFile.FileName))
+                        pContrato.RutaDocumento = Path.Combine(pFilePath, pContrato.PFile.FileName);
                 }
             }
 

@@ -19,14 +19,14 @@ namespace asivamosffie.services.Interfaces
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacionCreateDDP, bool esNovedad, int RegistroPresupuestalId, string purl, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> returnDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion);
-        Task<Byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad, int pRegistroPresupuestalId);
+        Task<Byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad, int pRegistroPresupuestalId, bool esValidar);
         Task<List<GrillaDisponibilidadPresupuestal>> GetGridBudgetAvailability(int? DisponibilidadPresupuestalId);
         Task<DisponibilidadPresupuestal> GetBudgetAvailabilityById(int id);
 
         Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP);
         Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad, int RegistroPresupuestalId
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
-        Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+        Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> SetValidarValidacionDDP(int pId, string pUsuarioModificacion, bool esNovedad, int RegistroPresupuestalId
             , string pDominioFront,string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);

@@ -84,11 +84,11 @@ namespace asivamosffie.services
 
             if (contratoPoliza.ContratoPolizaActualizacion.Count() > 0)
                 contratoPoliza.ContratoPolizaActualizacion = contratoPoliza.ContratoPolizaActualizacion.Where(r => r.Eliminado != true).ToList();
-                foreach (var ContratoPolizaActualizacion in contratoPoliza.ContratoPolizaActualizacion)
-                {
-                    if (ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() > 0)
-                        ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro = ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Where(c => c.Eliminado != true).ToList();
-                }
+            foreach (var ContratoPolizaActualizacion in contratoPoliza.ContratoPolizaActualizacion)
+            {
+                if (ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() > 0)
+                    ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro = ContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Where(c => c.Eliminado != true).ToList();
+            }
         }
 
         #endregion
@@ -444,11 +444,12 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(ContratoPolizaActualizacionListaChequeo item)
         {
-            if (
-                  item.CumpleDatosAseguradoBeneficiario != true
-               || item.CumpleDatosTomadorAfianzado != true
-               || item.TieneReciboPagoDatosRequeridos != true
-               || item.TieneCondicionesGeneralesPoliza != true
+            if ( 
+                   item.CumpleDatosAseguradoBeneficiario != true
+               ||  item.CumpleDatosTomadorAfianzado != true
+               ||  item.TieneReciboPagoDatosRequeridos != true
+               || !item.TieneCondicionesGeneralesPoliza.HasValue 
+               || !item.CumpleDatosBeneficiarioGarantiaBancaria.HasValue
             ) return false;
 
             return true;
@@ -456,6 +457,17 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionRevisionAprobacionObservacion(ContratoPolizaActualizacionRevisionAprobacionObservacion pItem)
         {
+            if (ConstanCodigoEstadoRevisionPoliza.Devuelta == pItem.EstadoSegundaRevision)
+            {
+                _context.Set<ContratoPolizaActualizacion>()
+                        .Where(c => c.ContratoPolizaActualizacionId == pItem.ContratoPolizaActualizacionId)
+                        .Update(c => new ContratoPolizaActualizacion
+                        {
+                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta
+                        });
+            }
+
+
             if (ConstanCodigoEstadoRevisionPoliza.Aprobacion != pItem.EstadoSegundaRevision)
                 return false;
 

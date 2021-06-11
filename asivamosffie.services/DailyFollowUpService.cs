@@ -699,33 +699,33 @@ namespace asivamosffie.services
             while (fechaFin >= fechaInicial)
             {
                 listaFechasTotal.Add(fechaInicial);
-                fechaInicial = fechaInicial.AddDays(1);
+                fechaInicial = fechaInicial.AddDays(2);
 
             }
 
-            if ( _environment.IsProduction())
-            {
-                if (listaFechasTotal.Count() > 0)
-                {
-                    bool fechaSeleccionada = false;
-                    string ultimaFecha = string.Empty;
-                    listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
-                    {
-                        if (contratacion.SeguimientoDiario
-                                                  .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
-                                                  .Count() == 0
-                               && fechaSeleccionada == false
-                             )
-                        {
-                            ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
-                            fechaSeleccionada = true;
-                        }
-                    });
+            //if ( _environment.IsProduction())
+            //{
+            //    if (listaFechasTotal.Count() > 0)
+            //    {
+            //        bool fechaSeleccionada = false;
+            //        string ultimaFecha = string.Empty;
+            //        listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
+            //        {
+            //            if (contratacion.SeguimientoDiario
+            //                                      .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
+            //                                      .Count() == 0
+            //                   && fechaSeleccionada == false
+            //                 )
+            //            {
+            //                ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
+            //                fechaSeleccionada = true;
+            //            }
+            //        });
 
-                    listaFechas.Add(ultimaFecha);
-                }
-            }
-            else
+            //        listaFechas.Add(ultimaFecha);
+            //    }
+            //}
+            //else
             {
                 if (listaFechasTotal.Count() > 0)
                 {

@@ -303,16 +303,16 @@
           <div class="row">
             <div class="col-md-8">
               <div class="row">
-                <div class="pr-1 mt-1em">
+                <div class="pr-1">
                   <label
-                    class="lable-left"
+                    class="label-left"
                     for="fechaAprobacion"
                     [class.color-secondaryColor]="
                       (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
                       (perfil.get('fechaAprobacion').invalid && estaEditando)
                     "
                   >
-                    <b>Fecha de aprobación de la totalidad de las hojas de vida</b>
+                    Fecha de aprobación de la totalidad de las hojas de vida
                   </label>
                 </div>
                 <div class="col d-flex">
@@ -333,6 +333,7 @@
                           i
                         )
                       "
+                      (click)="fechaAprobacion.open()"
                     />
                     <mat-datepicker #fechaAprobacion></mat-datepicker>
                   </mat-form-field>

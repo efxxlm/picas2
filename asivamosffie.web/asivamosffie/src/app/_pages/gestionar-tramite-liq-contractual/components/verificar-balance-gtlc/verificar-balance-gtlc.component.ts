@@ -12,7 +12,7 @@ import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObs
 })
 export class VerificarBalanceGtlcComponent implements OnInit {
   estaEditando = false;
-  contratacionProyectoId: number;
+  contratacionId: number;
   balanceFinancieroId: number;//definir
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
@@ -27,7 +27,7 @@ export class VerificarBalanceGtlcComponent implements OnInit {
     private financialBalanceService: FinancialBalanceService
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
       this.proyectoId = params.proyectoId;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -54,7 +54,7 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if(urlSegment.path.includes("Requisitos")){
-        this.router.navigate(['/gestionarTramiteLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        this.router.navigate(['/gestionarTramiteLiquidacionContractual/', urlSegment.path, this.contratacionId ]);
         return;
       }
     });

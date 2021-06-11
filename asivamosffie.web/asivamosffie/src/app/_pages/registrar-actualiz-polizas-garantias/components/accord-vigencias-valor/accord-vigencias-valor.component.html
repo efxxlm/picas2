@@ -15,19 +15,19 @@
                             {{ seguro.get( 'nombre' ).value }}
                         </mat-card-title>
                     </mat-card-header>
-                    <mat-card-content>
+                    <mat-card-content class="py-3em">
                         <div class="mt-2em" *ngIf="seguro.get( 'tieneSeguro' ).value === true">
-                            <p><b>Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
+                            <p><b class="font-weight-600">Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
                             <p><b>Vigencia actualizada de la póliza: </b><em> {{ seguro.get( 'fechaSeguro' ).value | date: 'dd/MM/yyyy' }} </em></p>
                         </div>
 
                         <div class="mt-2em" *ngIf="seguro.get( 'tieneFechaAmparo' ).value === true">
-                            <p><b>Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
+                            <p><b class="font-weight-600">Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
                             <p><b>Vigencia actualizada del amparo: </b><em> {{ seguro.get( 'fechaAmparo' ).value | date: 'dd/MM/yyyy' }} </em></p>
                         </div>
 
                         <div class="mt-2em" *ngIf="seguro.get( 'tieneValorAmparo' ).value === true">
-                            <p><b>Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+                            <p><b class="font-weight-600">Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
                             <p><b>Valor del amparo: </b><em> {{ seguro.get( 'valorAmparo' ).value | currency:'':'symbol-narrow':'.0-0' }} </em></p>
                         </div>
                     </mat-card-content>
@@ -54,9 +54,9 @@
                                 {{ seguro.get( 'nombre' ).value }}
                             </mat-card-title>
                         </mat-card-header>
-                        <mat-card-content style="text-align: left;" [formGroup]="seguro">
+                        <mat-card-content style="text-align: left;" class="py-3em" [formGroup]="seguro">
                             <div class="mt-2em" *ngIf="seguro.get( 'tieneSeguro' ).value === true">
-                                <p><b>Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
+                                <p><b class="font-weight-600">Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="row">
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="mt-2em" *ngIf="seguro.get( 'tieneFechaAmparo' ).value === true">
-                                <p><b>Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
+                                <p><b class="font-weight-600">Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="row">
@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="mt-2em" *ngIf="seguro.get( 'tieneValorAmparo' ).value === true">
-                                <p><b>Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
+                                <p><b class="font-weight-600">Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="row">
@@ -190,12 +190,7 @@
                                 color="warn"
                                 class="btn-guardar"
                                 type="submit"
-                                [disabled]="
-                                    !seguro.dirty ||
-                                    seguro.get('fechaSeguro')?.invalid ||
-                                    seguro.get('fechaAmparo')?.invalid ||
-                                    seguro.get('valorAmparo')?.invalid
-                                "
+                                [disabled]="!seguro.dirty"
                             >
                                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
                         </button>

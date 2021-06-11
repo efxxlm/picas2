@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ListaContratistasGtlcComponent implements OnInit {
 
   @Input() contratista: any;
+  @Input() valorPagadoContratista: any;
 
   constructor() { }
 

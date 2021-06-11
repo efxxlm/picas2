@@ -12,6 +12,7 @@ export class AccordionNovedadesComponent implements OnInit {
   @Input () novedadeContractual: any;//NovedadContractual[];
   @Output() guardar = new EventEmitter();
   @Input() estaEditando: boolean;
+  @Input() fechaSolicitudNovedad: Date;
 
   
   constructor() { }

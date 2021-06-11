@@ -31,7 +31,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   constructor ( private routes: Router,
                 private procesosContractualesSvc: ProcesosContractualesService,
-                private dialog: MatDialog ) 
+                private dialog: MatDialog )
   {
   }
 
@@ -44,11 +44,11 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
       let dataTable = [];
       let conTrue = 0;
       let conFalse = 0;
-      
+
       for ( let solicitud of resp ) {
 
         if ( solicitud.estadoCodigo === this.estadoCodigos.aprobadoCf ) {
-
+          this.enviarFiduciaria = '4';
           solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
 
           dataTable.push( solicitud );
@@ -56,6 +56,12 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
         if (solicitud.tipoSolicitud === 'Novedad Contractual' && (solicitud.estadoCodigo === '12' || solicitud.estadoCodigo === '19')){
           this.enviarFiduciaria = '24';
+          solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
+
+          dataTable.push( solicitud );
+        }
+        if (solicitud.tipoSolicitud === 'Liquidación Contractual' && (solicitud.estadoCodigo === '21')){
+          this.enviarFiduciaria = '6';
           solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
 
           dataTable.push( solicitud );
@@ -100,7 +106,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   }
 
   gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
-    
+
     console.log( sesionComiteSolicitudId, estadoCodigo, tipoSolicitud );
 
     switch ( tipoSolicitud ) {
@@ -114,7 +120,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: true, reinicio: false, sesionComiteSolicitudId, estadoCodigo } } );
         //this.routes.navigate( [ '/procesosContractuales/modificacionContractual', solicitudId ], { state: { suspension: false, reinicio: true, sesionComiteSolicitudId, estadoCodigo } } )
       break;
-      case 'Liquidación':
+      case 'Liquidación Contractual':
         this.routes.navigate( [ '/procesosContractuales/liquidacion', solicitudId ], { state: { sesionComiteSolicitudId, estadoCodigo } } );
       break;
       default:
@@ -125,7 +131,13 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   };
 
   sendCambioTramite ( elemento: any ) {
-
+    if(elemento.tipoSolicitud === 'Liquidación Contractual'){
+      this.enviarFiduciaria = '6';
+    }else if(elemento.tipoSolicitud === 'Novedad Contractual'){
+      this.enviarFiduciaria = '24';
+    }else{
+      this.enviarFiduciaria = '4';
+    }
     this.procesosContractualesSvc.sendCambioTramite( this.enviarFiduciaria, elemento.sesionComiteSolicitudId, elemento.solicitudId )
       .subscribe(
         response => {

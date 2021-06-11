@@ -1,55 +1,55 @@
 <mat-card class="shipping-card var-main-gris" *ngIf="contratoPoliza && contratoPolizaId != null && data">
   <mat-card-content>
     <p>
-      <strong> 
+      <strong>
         Tipo de contrato:
       </strong>
       {{ data.tipoIntervencion }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Nombre del contratista:
       </strong>
       {{ data.contratista.nombre }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Tipo de identificación:
       </strong>
-      {{ getTipoDocumento( data.contratista.tipoIdentificacionCodigo ) }} 
+      {{ getTipoDocumento( data.contratista.tipoIdentificacionCodigo ) }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Número de identificación:
       </strong>
       {{ data.contratista.numeroIdentificacion }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Número de la póliza:
       </strong>
       {{ contratoPoliza.numeroPoliza }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Nombre de la aseguradora:
       </strong>
       {{ contratoPoliza.nombreAseguradora }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Número de certificado:
       </strong>
       {{ contratoPoliza.numeroCertificado }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Fecha de expedición de la póliza:
       </strong>
       {{ contratoPoliza.fechaExpedicion | date: 'dd/MM/yyyy' }}
     </p>
     <p>
-      <strong> 
+      <strong>
         Fecha de aprobación:
       </strong>
       {{ contratoPoliza.fechaAprobacion | date: 'dd/MM/yyyy' }}
@@ -68,10 +68,10 @@
     <tbody>
       <tr *ngFor="let poliza of listaPolizas">
         <td class="mat-cell cdk-cell ng-star-inserted">
-          {{ getPoliza( poliza.tipoGarantiaCodigo ) }} 
+          {{ getPoliza( poliza.tipoGarantiaCodigo ) }}
         </td>
         <td class="mat-cell cdk-cell ng-star-inserted">
-          {{ getResponsable( ) }}
+          {{ getResponsable( ultimaRevisionAprobada.responsableAprobacionId ) }}
         </td>
       </tr>
     </tbody>
@@ -89,23 +89,23 @@
     <mat-card class="shipping-card var-main-gris">
       <mat-card-content>
         <p>
-          <strong> 
+          <strong>
             Razón de la actualización:
           </strong>
           {{ getRazonActualizacion(razonActualizacion) }}
         </p>
         <p>
-          <strong> 
+          <strong>
             Fecha de expedición de la actualización de la póliza:
           </strong>
           {{ fechaExpedicion | date: 'dd/MM/yyyy' }}
         </p>
         <p>
-          <strong> 
+          <strong>
             Seguros que necesitan actualización:
           </strong>
             <em *ngFor="let seguro of polizasyseguros; index as i">
-                {{ getSeguros( seguro ) }} 
+                {{ getSeguros( seguro ) }}
                 <span *ngIf="polizasyseguros.length !== i + 1">,</span>
                 <span *ngIf="polizasyseguros.length === i + 1">.</span>
             </em>
@@ -116,7 +116,7 @@
           </mat-card-title>
           <p><strong>Tipo de actualización: </strong>
               <em *ngFor="let tipo of seguro.tipoActualizacion; index as  i">
-                  {{ getTipoActualizacion( tipo ) }} 
+                  {{ getTipoActualizacion( tipo ) }}
                   <span *ngIf="seguro.tipoActualizacion.length !== i + 1">,</span>
                   <span *ngIf="seguro.tipoActualizacion.length === i + 1">.</span>
               </em>
@@ -139,7 +139,7 @@
             Seguro {{ i + 1 }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-    
+
         <mat-card class="shipping-card var-main-gris">
           <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
@@ -149,13 +149,13 @@
           <mat-card-content>
             <div class="mb-2em" *ngIf="seguro.tieneSeguro === true">
               <p>
-                <strong> 
+                <strong>
                   Vigencia de la póliza:
                 </strong>
-                {{ contratoPoliza.vigencia | date: 'dd/MM/yyyy' }}
+                {{ seguro?.seguroPoliza?.vigencia | date: 'dd/MM/yyyy' }}
               </p>
               <p>
-                <strong> 
+                <strong>
                   Vigencia actualizada de la póliza:
                 </strong>
                 {{ seguro.fechaSeguro | date: 'dd/MM/yyyy' }}
@@ -163,13 +163,13 @@
             </div>
             <div class="mb-2em" *ngIf="seguro.tieneFechaAmparo === true">
               <p>
-                <strong> 
+                <strong>
                   Vigencia del amparo:
                 </strong>
-                {{ contratoPoliza.vigenciaAmparo | date: 'dd/MM/yyyy' }}
+                {{ seguro?.seguroPoliza?.vigenciaAmparo | date: 'dd/MM/yyyy' }}
               </p>
               <p>
-                <strong> 
+                <strong>
                   Vigencia actualizada del amparo:
                 </strong>
                 {{ seguro.fechaAmparo | date: 'dd/MM/yyyy' }}
@@ -177,13 +177,13 @@
             </div>
             <div class="mb-2em" *ngIf="seguro.tieneValorAmparo === true">
               <p>
-                <strong> 
+                <strong>
                   Valor del amparo:
                 </strong>
-                {{ contratoPoliza.valorAmparo | currency:'':'symbol-narrow':'.0-0' }}
+                {{ seguro?.seguroPoliza?.valorAmparo | currency:'':'symbol-narrow':'.0-0' }}
               </p>
               <p>
-                <strong> 
+                <strong>
                   Valor actualizado del amparo:
                 </strong>
                 {{ seguro.valorAmparo| currency:'':'symbol-narrow':'.0-0' }}
@@ -209,7 +209,7 @@
       <span *ngIf="tieneObservaciones === true"><em>Si</em></span>
       <span *ngIf="tieneObservaciones === false"><em>No</em></span>
     </p>
-    <mat-card class="shipping-card var-main-gris">
+    <mat-card class="shipping-card var-main-gris" *ngIf="tieneObservaciones === true">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
           Observaciones especificas de la actualización
@@ -306,7 +306,7 @@
             <strong>
               Responsable de aprobación:
             </strong>
-            {{ getResponsable( dataRevision.responsableAprob) }}
+            {{ getResponsable( ultimaRevisionAprobada.responsableAprobacionId ) }}
           </p>
         </div>
       </mat-card-content>
@@ -344,4 +344,4 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [esVerDetalle] = "esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="refreshUrl()"></app-form-observacion-actualizacion-poliza>
+<app-form-observacion-actualizacion-poliza *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [esVerDetalle] = "esVerDetalle" [contratacionId] = "contratacionId" [contratoPolizaActualizacionId] = "contratoPolizaActualizacionId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.actualizacionPoliza" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="refreshUrl()"></app-form-observacion-actualizacion-poliza>

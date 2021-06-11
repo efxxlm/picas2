@@ -25,7 +25,7 @@ export class TablaLiquidacionObraGtlcComponent implements OnInit {
     'valorSolicitud',
     'proyectosAsociados',
     'estadoTramiteLiquidacionString',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
   @Output() estadoSemaforo = new EventEmitter<string>();
 
@@ -69,7 +69,7 @@ export class TablaLiquidacionObraGtlcComponent implements OnInit {
             estadoTramiteLiquidacionString: element.estadoTramiteLiquidacionString,
             estadoTramiteLiquidacionCodigo: element.estadoTramiteLiquidacion,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion,
-            contratacionProyectoId: element.contratacionProyectoId
+            contratacionId: element.contratacionId
           });
           if (element.estadoTramiteLiquidacion === this.estadoCodigos.enProcesoDeVerificacion || element.estadoTramiteLiquidacion === this.estadoCodigos.conVerificacion ) {
             enProceso++;
@@ -136,13 +136,13 @@ export class TablaLiquidacionObraGtlcComponent implements OnInit {
     });
   }
 
-  SendToFinalLiquidation( pContratacionProyectoId: number ) {
+  SendToFinalLiquidation( pcontratacionId: number ) {
     const pContratacionProyecto = {
-        contratacionProyectoId: pContratacionProyectoId,
+        contratacionId: pcontratacionId,
         estadoTramiteLiquidacion: this.listaEstadoLiquidacionSolicitud.enviadoAliquidacion
     };
 
-    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.gestionarSolicitudLiquidacionContratacion )
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacion( pContratacionProyecto, this.listaMenu.gestionarSolicitudLiquidacionContratacion )
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );

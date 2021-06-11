@@ -17,6 +17,10 @@
     </mat-card-header>
     <mat-card-content>
       <p>
+        <strong> Número de contrato : </strong>
+        {{ novedad?.contrato?.numeroContrato }}
+      </p>
+      <p>
         <strong> Nombre del contratista: </strong>
         {{ novedad.contrato.contratacion.contratista.nombre }}
       </p>
@@ -34,7 +38,7 @@
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ? 
+        <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
           novedad.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}</span>
       </p>
       <p>
@@ -172,7 +176,7 @@
                 <strong *ngIf="descripcion.tipoNovedadCodigo == '1'">Fecha final de la suspensión: </strong>
                 <strong *ngIf="descripcion.tipoNovedadCodigo == '2'">Fecha final de la prórroga a las suspensión: </strong>
                 <strong *ngIf="descripcion.tipoNovedadCodigo == '6'">Fecha final del reinicio: </strong>
-                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} 
+                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'">

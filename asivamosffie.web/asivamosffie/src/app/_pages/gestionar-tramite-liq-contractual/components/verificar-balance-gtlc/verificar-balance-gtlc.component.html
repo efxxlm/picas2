@@ -19,7 +19,7 @@
           <b> {{ data.numeroContratoObra }} </b>
         </span>
         <span class="mx-1em">
-          Número de contrato de interventoria:
+          Número de contrato de interventoría:
           <b> {{ data.numeroContratoInterventoria }} </b>
         </span>
       </p>
@@ -75,11 +75,11 @@
             (click)="this.verEjecucionFinanciera()">
             Ejecución financiera por componente
         </button>
-        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
+        <button *ngIf="esVerDetalle !== true" mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
             Traslados de recursos
         </button>
     </div>
     
-    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
-    <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId" [contratacionProyectoId] = "contratacionProyectoId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
+    <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
+    <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
 </section>

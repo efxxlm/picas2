@@ -9,7 +9,8 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
 export class EjecucionFinancieraGbftrecComponent implements OnInit {
 
   @Input() id: number;
-  dataTable: any[] = [];
+  dataTableEjpresupuestal: any[] = [];
+  dataTableEjfinanciera: any[] = [];
 
   vContratoPagosRealizados: any;
   constructor(
@@ -17,15 +18,30 @@ export class EjecucionFinancieraGbftrecComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getContratoByProyectoId();
+    this.getEjecucionFinancieraXProyectoId();
   }
   
-  getContratoByProyectoId() {
-    this.financialBalanceService.getContratoByProyectoId(this.id).subscribe(data => {
-      data.forEach(element => {
-        this.dataTable.push({
-          vContratoPagosRealizados: element.contrato.vContratoPagosRealizados,
-          tipoSolicitudCodigo: element.tipoSolicitudCodigo
+  getEjecucionFinancieraXProyectoId() {
+    this.financialBalanceService.getEjecucionFinancieraXProyectoId(this.id).subscribe(data => {
+      data[0].forEach(element => {
+        this.dataTableEjpresupuestal.push({
+          facturadoAntesImpuestos: element.facturadoAntesImpuestos,
+          nombre: element.nombre,
+          porcentajeEjecucionPresupuestal: element.porcentajeEjecucionPresupuestal,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          tipoSolicitudCodigo: element.tipoSolicitudCodigo,
+          totalComprometido: element.totalComprometido
+        });
+      });  
+      data[1].forEach(element => {
+        this.dataTableEjfinanciera.push({
+          nombre: element.nombre,
+          ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
+          porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
+          proyectoId: element.proyectoId,
+          saldo: element.saldo,
+          totalComprometido: element.totalComprometido
         });
       });  
     });

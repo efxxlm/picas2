@@ -12,17 +12,17 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto"></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title ">
-                        Contratistas
+                        Contratistas 
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-contratistas-gbftrec *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista"></app-contratistas-gbftrec>
+                <app-contratistas-gbftrec *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista" [valorPagadoContratista]="contratoObra.valorPagadoContratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion *ngIf="contratoObra.tablaOrdenGiroValorTotal.length > 0">
@@ -39,7 +39,7 @@
     <mat-expansion-panel class="expansion-style" *ngIf="contratoInterventoria !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-                Contrato de interventoria &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
+                Contrato de interventoría &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-accordion>
@@ -49,7 +49,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto"></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -59,7 +59,7 @@
                         Contratistas
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-contratistas-gbftrec *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista"></app-contratistas-gbftrec>
+                <app-contratistas-gbftrec *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista" [valorPagadoContratista]="contratoInterventoria.valorPagadoContratista"></app-contratistas-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>

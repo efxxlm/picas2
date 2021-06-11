@@ -1798,7 +1798,8 @@ namespace asivamosffie.services
         {
             bool esCompleto = true;
 
-            if (pContratoConstruccion.EsInformeDiagnostico == null ||
+            if (
+                    pContratoConstruccion.EsInformeDiagnostico == null ||
                     (pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pContratoConstruccion.RutaInforme)) ||
                     pContratoConstruccion.CostoDirecto == null ||
                     pContratoConstruccion.Administracion == null ||
@@ -1824,7 +1825,7 @@ namespace asivamosffie.services
             Contrato contrato = _context.Contrato.Find(pContratoId);            
 
 
-            proyecto.FechaInicioEtapaObra = pFechaInicioObra.HasValue ? pFechaInicioObra.Value : DateTime.MinValue;
+            proyecto.FechaInicioEtapaObra = pFechaInicioObra ?? DateTime.MinValue;
 
             
 
@@ -1834,8 +1835,8 @@ namespace asivamosffie.services
 
             if (contrato != null)
             {
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths( -(contrato.PlazoFase1PreMeses.HasValue ? contrato.PlazoFase1PreMeses.Value : 0) );
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays( -(contrato.PlazoFase1PreDias.HasValue ? contrato.PlazoFase1PreDias.Value : 0) );
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths( -(contrato.PlazoFase1PreMeses ?? 0) );
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays( -(contrato.PlazoFase1PreDias ?? 0) );
             }
 
             proyecto.PlazoEnSemanas = (proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7;
@@ -1913,9 +1914,7 @@ namespace asivamosffie.services
 
         public Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
         {
-
-            Proyecto proyecto = new Proyecto();
-
+        
             // obtengo la informacion del proyecto
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
                                                                         .Find(pContratoConstruccionId);

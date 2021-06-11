@@ -1,44 +1,7 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    aportante: 'Alcaldía de Susacón',
-    valorAportante: '$45.000.000',
-    fuente: 'Recursos propios',
-    uso: 'Diseño',
-    valorUso: '$12.000.000'
-  },
-  {
-    aportante: 'Gobernación de Boyacá',
-    valorAportante: '$45.000.000',
-    fuente: 'Contingencias',
-    uso: 'Diseño',
-    valorUso: '$12.000.000'
-  },
-  {
-    aportante: 'Gobernación de Boyacá',
-    valorAportante: '$45.000.000',
-    fuente: 'Contingencias',
-    uso: 'Obra principal',
-    valorUso: '$21.000.000'
-  },
-  {
-    aportante: 'Gobernación de Boyacá',
-    valorAportante: '$40.000.000',
-    fuente: 'Recursos propios',
-    uso: 'Obra principal',
-    valorUso: '$40.000.000'
-  },
-  {
-    aportante: 'FFIE',
-    valorAportante: '$20.000.000',
-    fuente: 'Contingencias',
-    uso: 'Obra principal',
-    valorUso: '$20.000.000'
-  }
-];
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
   selector: 'app-tabla-fuentes-y-recursos',
@@ -47,20 +10,55 @@ const ELEMENT_DATA = [
 })
 export class TablaFuentesYRecursosComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
-  displayedColumns: string[] = [
-    'aportante',
-    'valorAportante',
-    'fuente',
-    'uso',
-    'valorUso'
-  ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  @Input() contratoId: any[] = [];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  displayedColumns: string[] = ['uso', 'fuente', 'aportante', 'valorUso', 'saldoActualUso'];
+  dataTable: any[] = [];
+  data = [];
 
-  @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    private financialBalanceService: FinancialBalanceService
+  ) { }
 
   ngOnInit(): void {
+    this.getTablaUsoFuenteAportanteXContratoId();
+  }
+
+  getTablaUsoFuenteAportanteXContratoId() {
+    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
+      this.data = data.usos;
+      if (this.data) {
+        this.data.forEach( registro => {
+          const aportantes = []
+          const valorUso = [];
+          const saldoActualUso = [];
+
+          registro.fuentes.forEach( fuente => {
+              aportantes.push( fuente.aportante[ 0 ] )
+              valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
+              saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
+          } )
+
+          const registroObj = {
+              nombreUso: registro.nombreUso,
+              fuentes: registro.fuentes,
+              aportante: aportantes,
+              valorUso,
+              saldoActualUso
+          }
+
+          this.dataTable.push( registroObj );
+        })
+      }
+
+      this.loadDataSource();
+
+    })
+  }
+  loadDataSource() {
+    this.dataSource = new MatTableDataSource( this.dataTable );
+    this.dataSource.sort = this.sort;
   }
 
 }

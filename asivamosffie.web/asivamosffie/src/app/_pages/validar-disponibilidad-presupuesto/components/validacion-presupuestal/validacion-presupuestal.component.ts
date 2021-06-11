@@ -89,7 +89,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
   download() {
     console.log(this.detailavailabilityBudget);
     
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((listas: any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId, true).subscribe((listas: any) => {
       console.log(listas);
       const documento = `${this.detailavailabilityBudget.numeroDDP}.pdf`;
       const text = documento,
@@ -104,7 +104,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
   openDialogDevolver(tipo, numero, tipoSolicitud) {
     this.dialog.open(DevolverPorValidacionComponent, {
-      width: '70em', data: { solicitudID: this.route.snapshot.paramMap.get('id'), tipo: tipo, numeroSolicitud: numero, tipoSolicitud: tipoSolicitud }
+      width: '70em', data: { solicitudID: this.route.snapshot.paramMap.get('id'), tipo: tipo, numeroSolicitud: numero, tipoSolicitud: tipoSolicitud , esNovedad: this.esNovedad, novedadId: this.novedadId}
     });
   }
 
@@ -112,7 +112,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
           this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
-          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud) {
+          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
             return true;
           }
           else {
@@ -120,7 +120,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
           }
         }
         else {//para tradicional
-          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
+          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado && this.detailavailabilityBudget.estadoRegistro == true) {
             return true;
           }
           else {

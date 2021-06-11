@@ -13,7 +13,7 @@ import { InformeFinal } from 'src/app/_interfaces/informe-final';
 export class ValidarInformeFinalComponent implements OnInit {
 
   proyectoId: number;
-  contratacionProyectoId: number;
+  contratacionId: number;
   data: any;
   listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
@@ -28,7 +28,7 @@ export class ValidarInformeFinalComponent implements OnInit {
   ) { 
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.proyectoId;
-      this.contratacionProyectoId = params.id;
+      this.contratacionId = params.id;
     });
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if ( urlSegment.path === 'validarInformeFinal' ) {
@@ -49,21 +49,21 @@ export class ValidarInformeFinalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getInformeFinalByProyectoId(this.proyectoId, this.contratacionProyectoId);
+    this.getInformeFinalByProyectoId(this.proyectoId, this.contratacionId);
   }
 
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
       if(urlSegment.path.includes("Requisitos")){
-        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionProyectoId ]);
+        this.routes.navigate(['/registrarSolicitudLiquidacionContractual/', urlSegment.path, this.contratacionId ]);
         return;
       }
     });
   }
 
 
-  getInformeFinalByProyectoId(proyectoId: number, contratacionProyectoId: number) {
-    this.registerContractualLiquidationRequestService.getInformeFinalByProyectoId(proyectoId, contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
+  getInformeFinalByProyectoId(proyectoId: number, contratacionId: number) {
+    this.registerContractualLiquidationRequestService.getInformeFinalByProyectoId(proyectoId, contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion).subscribe(report => {
       if(report != null){
         this.data = report[0];
         this.registroCompleto = this.data.registroCompleto ? 'Completo' : 'Incompleto';

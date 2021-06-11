@@ -47,6 +47,11 @@ export interface DataSolicitud {
   contrato?: any[];
   disponibilidadPresupuestal?: DisponibilidadPresupuestal[];
   pFile?: any;
+
+  urlSoporteGestionar ?: string,
+  fechaTramiteGestionar ?: Date,
+  observacionGestionar ?: string,
+  registroCompletoGestionar ?: boolean
 }
 
 interface DisponibilidadPresupuestal {
@@ -76,7 +81,7 @@ interface DisponibilidadPresupuestal {
   disponibilidadPresupuestalObservacion: any[];
   disponibilidadPresupuestalProyecto: any[];
   //notmapped
-  stringAportante?:string; 
+  stringAportante?:string;
 }
 
 interface ContratacionProyecto2 {
@@ -99,6 +104,7 @@ interface ContratacionProyecto2 {
   proyecto: Proyecto;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
+  ejecucionPresupuestal?: any;
 }
 
 interface Proyecto {

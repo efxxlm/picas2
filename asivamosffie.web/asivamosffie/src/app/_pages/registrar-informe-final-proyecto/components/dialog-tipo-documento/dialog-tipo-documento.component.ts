@@ -24,7 +24,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     tipoAnexo: [null, Validators.required],
     urlSoporte: [null, Validators.required],
     numRadicadoSac: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(10)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(20)])
     ],
     fechaRadicado: [null, Validators.required],
   });

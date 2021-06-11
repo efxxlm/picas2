@@ -30,6 +30,8 @@ export class DevolverPorValidacionComponent implements OnInit {
   tipo: any;
   tipoSolicitud: any;
   numeroSolicitud: any;
+  esNovedad: boolean = false;
+  novedadId: any;
 
   constructor(public dialog: MatDialog,  private router: Router,
     @Inject(MAT_DIALOG_DATA) public data,private disponibilidadServices: DisponibilidadPresupuestalService,
@@ -40,10 +42,13 @@ export class DevolverPorValidacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.data);
     this.solicitudID=this.data.solicitudID;
     this.tipo=this.data.tipo;
     this.tipoSolicitud=this.data.tipoSolicitud;
     this.numeroSolicitud=this.data.numeroSolicitud;
+    this.esNovedad = this.data.esNovedad;
+    this.novedadId = this.data.novedadId;
 
     this.activatedRoute.params.subscribe(param => {
       console.log(param);
@@ -96,18 +101,19 @@ export class DevolverPorValidacionComponent implements OnInit {
   }
 
   devolverSolicitud() {
-    //console.log(this.observaciones.value);
-    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.solicitudID,Observacion:this.observaciones.value};
+    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.solicitudID,Observacion:this.observaciones.value,NovedadContractualRegistroPresupuestalId:null};
+    if(this.esNovedad){
+      DisponibilidadPresupuestalObservacion.NovedadContractualRegistroPresupuestalId = this.novedadId;
+    }
     if(this.tipo==0)
     {
-       this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion, false, 0).subscribe(listas => {
+       this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion, this.esNovedad, 0).subscribe(listas => {
          this.openDialog('', '<b>La solicitud ha sido devuelta al responsable técnico.</b>');
-
       });
     }
     else
     {
-      this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+      this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion, this.esNovedad).subscribe(listas => {
       this.openDialog('', '<b>La solicitud ha sido rechazada.</b>');
 
       });

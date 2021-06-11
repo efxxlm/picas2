@@ -27,7 +27,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
     'valorSolicitud',
     'proyectosAsociados',
     'estadoAprobacionLiquidacionString',
-    'contratacionProyectoId'
+    'contratacionId'
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -68,7 +68,7 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
             estadoAprobacionLiquidacionString: element.estadoAprobacionLiquidacionString,
             estadoAprobacionLiquidacionCodigo: element.estadoAprobacionLiquidacionCodigo,
             numeroSolicitudLiquidacion: element.numeroSolicitudLiquidacion,
-            contratacionProyectoId: element.contratacionProyectoId
+            contratacionId: element.contratacionId
           });
           if (element.estadoAprobacionLiquidacionCodigo === this.estadoCodigos.enProcesoDeAprobacion || element.estadoAprobacionLiquidacionCodigo === this.estadoCodigos.conAprobacion ) {
             enProceso++;
@@ -139,13 +139,13 @@ export class TablaLiquidacionContratoInterventoriaComponent implements OnInit, A
     });
   }
 
-  SendToNovedades( pContratacionProyectoId: number ) {
-    const pContratacionProyecto = {
-        contratacionProyectoId: pContratacionProyectoId,
+  SendToNovedades( pContratacionId: number ) {
+    const pContratacion = {
+        contratacionId: pContratacionId,
         estadoAprobacionLiquidacionCodigo: this.listaEstadoLiquidacionSolicitud.enviadoControlSeguimiento
     };
 
-    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacionProyecto( pContratacionProyecto, this.listaMenu.aprobarSolicitudLiquidacionContratacion )
+    this.registerContractualLiquidationRequestService.changeStatusLiquidacionContratacion( pContratacion, this.listaMenu.aprobarSolicitudLiquidacionContratacion )
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );

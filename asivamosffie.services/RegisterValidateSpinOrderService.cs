@@ -35,8 +35,40 @@ namespace asivamosffie.services
 
         #endregion
 
+
+        private void ValidateValorNeto(int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro1 =
+                _context.OrdenGiro
+                .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                .Include(o => o.OrdenGiroDetalle).ThenInclude(o => o.OrdenGiroDetalleTerceroCausacion)
+                .AsNoTracking()
+                .FirstOrDefault();
+
+            if (ordenGiro1.ValorNetoGiro == null)
+            {
+                foreach (var OrdenGiroDetalle in ordenGiro1.OrdenGiroDetalle)
+                {
+                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                    {
+
+                        if (OrdenGiroDetalleTerceroCausacion.ValorNetoGiro != null)
+                        {
+                            _context.Set<OrdenGiro>()
+                                    .Where(o => o.OrdenGiroId == pOrdenGiroId)
+                                    .Update(o => new OrdenGiro
+                                    {
+                                        ValorNetoGiro = OrdenGiroDetalleTerceroCausacion.ValorNetoGiro
+                                    });
+                        }
+                    }
+                }
+            }
+        }
+         
         public async Task<Respuesta> ChangueStatusOrdenGiro(OrdenGiro pOrdenGiro)
         {
+            ValidateValorNeto(pOrdenGiro.OrdenGiroId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             int intEstadoCodigo = Int32.Parse(pOrdenGiro.EstadoCodigo);
@@ -105,8 +137,8 @@ namespace asivamosffie.services
             _context.Set<OrdenGiro>()
                  .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                  .Update(o => new OrdenGiro
-                 { 
-                     FechaRegistroCompletoTramitar = DateTime.Now 
+                 {
+                     FechaRegistroCompletoTramitar = DateTime.Now
                  });
         }
 
@@ -227,7 +259,7 @@ namespace asivamosffie.services
         {
             try
             {
-                int intCantidadDependenciasOrdenGiro = 3;
+                int intCantidadDependenciasOrdenGiro = 2;
 
                 //if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
                 //    intCantidadDependenciasOrdenGiro = 3;
@@ -373,7 +405,7 @@ namespace asivamosffie.services
                     .Where(r => r.FechaRegistroCompletoTramitar.HasValue
                        && r.SolicitudPago.Count() > 0
                     )
-                    .Select(r => r.OrdenGiroId) 
+                    .Select(r => r.OrdenGiroId)
                     .ToListAsync();
             }
             else
@@ -404,7 +436,7 @@ namespace asivamosffie.services
         {
             OrdenGiro ordenGiro = _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == pOrdenGiroId)
-                        .Include(r=> r.SolicitudPago).ThenInclude(r=> r.Contrato)
+                        .Include(r => r.SolicitudPago).ThenInclude(r => r.Contrato)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
@@ -455,11 +487,11 @@ namespace asivamosffie.services
             {
                 pContenido = pContenido
                        .Replace("[FECHA_ORDEN_GIRO]", ordenGiro.FechaCreacion != null ? ((DateTime)ordenGiro?.FechaCreacion).ToString("dd/MM/yyy") : " ")
-                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud) 
+                       .Replace("[NUMERO_ORDEN_GIRO]", ordenGiro.NumeroSolicitud)
                        .Replace("[MODALIDAD_CONTRATO]", ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo != null ? ListModalidadContrato.Where(r => r.Codigo == ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.ModalidadCodigo).FirstOrDefault().Nombre : " ")
                        .Replace("[NUMERO_CONTRATO]", (ordenGiro?.SolicitudPago?.FirstOrDefault()?.Contrato?.NumeroContrato) ?? " ")
                        .Replace("[VALOR_ORDEN_GIRO]", +ValorOrdenGiro != null ? "$ " + String.Format("{0:n0}", ValorOrdenGiro) : "$ 0")
-                       .Replace("[VALOR_DESCUENTO]", +Descuentos != null ? "$ " + String.Format("{0:n0}", Descuentos) : "$ 0") 
+                       .Replace("[VALOR_DESCUENTO]", +Descuentos != null ? "$ " + String.Format("{0:n0}", Descuentos) : "$ 0")
                        .Replace("[URL]", UrlSoporte);
             }
             catch (Exception e)

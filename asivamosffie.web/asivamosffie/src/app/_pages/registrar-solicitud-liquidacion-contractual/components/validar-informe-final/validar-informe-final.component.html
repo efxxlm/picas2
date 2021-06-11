@@ -7,10 +7,10 @@
     </div>
     <h1 class="title-menu--h1">
       <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-          Ver detalle validación Informe final {{ data.informeFinal.proyecto.llaveMen }}
+          Ver detalle verificación Informe final {{ data.informeFinal.proyecto.llaveMen }}
       </ng-container>
       <ng-template #noEsVerDetalle>
-          {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} Informe final {{ data.informeFinal.proyecto.llaveMen }}
+          {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar' }} Informe final {{ data.informeFinal.proyecto.llaveMen }}
       </ng-template>  
     </h1>
     <p class="colorMainColor mt-1em">
@@ -122,6 +122,6 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <app-form-observacion-informe-final *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionProyectoId && data" [esVerDetalle]="esVerDetalle" [contratacionProyectoId] = "contratacionProyectoId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-informe-final>
+  <app-form-observacion-informe-final *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId && data" [esVerDetalle]="esVerDetalle" [contratacionId] = "contratacionId" [informeFinalId] = "data.informeFinal.informeFinalId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.informeFinal" [menuId]="listaMenu.registrarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-informe-final>
 
 </section>

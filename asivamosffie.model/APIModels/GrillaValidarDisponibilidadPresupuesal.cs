@@ -69,6 +69,7 @@ namespace asivamosffie.model.APIModels
         public string NumeroRadicado { get; set; }
         public string FechaContrato { get; set; }
         public bool EsNovedad { get; set; }
+        public bool EstadoRegistro { get; set; }
         public int NovedadContractualRegistroPresupuestalId { get; set; }
         public List<DisponibilidadPresupuestalObservacion> ObservacioensCancelacion { get; set; }
         //novedad

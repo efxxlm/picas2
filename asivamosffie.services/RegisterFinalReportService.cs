@@ -1,13 +1,13 @@
+using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
 using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
@@ -44,8 +44,8 @@ namespace asivamosffie.services
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.InformeFinal)
-                                                              //.ThenInclude(r => r.InformeFinalInterventoria)
-                                                              //      .ThenInclude(r => r.InformeFinalInterventoriaObservaciones)
+                                                         //.ThenInclude(r => r.InformeFinalInterventoria)
+                                                         //      .ThenInclude(r => r.InformeFinalInterventoriaObservaciones)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
 
@@ -64,7 +64,7 @@ namespace asivamosffie.services
                                                         .ToListAsync();
 
             //Flujo observaciones recibo de satisfacción
-            if (proyecto.InformeFinal.Count >0)
+            if (proyecto.InformeFinal.Count > 0)
             {
                 if (proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor || proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
                 {
@@ -200,7 +200,8 @@ namespace asivamosffie.services
                             informeFinal.RegistroCompleto = false;
                         }
                         return false;
-                    }else if ((bool)informeFinal.TieneObservacionesSupervisor && existe_no_cumple <= 0)
+                    }
+                    else if ((bool)informeFinal.TieneObservacionesSupervisor && existe_no_cumple <= 0)
                     {
                         //Vuelve a empezar el flujo
                         informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo;
@@ -234,8 +235,9 @@ namespace asivamosffie.services
             try
             {
                 InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pInformeFinal.ProyectoId).FirstOrDefault();
-                
-                if (informeFinal != null) {
+
+                if (informeFinal != null)
+                {
 
                     pInformeFinal.InformeFinalId = informeFinal.InformeFinalId;
 
@@ -439,7 +441,8 @@ namespace asivamosffie.services
 
                 foreach (InformeFinalInterventoria informeFinalInterventoria in informeFinal.InformeFinalInterventoria)
                 {
-                    if (informeFinalInterventoria.CalificacionCodigo != "0" && informeFinalInterventoria.CalificacionCodigo != null) {
+                    if (informeFinalInterventoria.CalificacionCodigo != "0" && informeFinalInterventoria.CalificacionCodigo != null)
+                    {
                         informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
                         await this.CreateEditInformeFinalInterventoria(informeFinalInterventoria);
                     }
@@ -785,7 +788,7 @@ namespace asivamosffie.services
             foreach (var informe in informeFinal)
             {
 
-                if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon2DiasHabiles)  
+                if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon2DiasHabiles)
                 {
                     string strContenido = await ReplaceVariables(template.Contenido, informe.InformeFinalId, RangoFechaCon2DiasHabiles);
 
@@ -835,7 +838,7 @@ namespace asivamosffie.services
                       .Replace("[INSTITUCION_EDUCATIVA]", informeFinal.Proyecto.InstitucionEducativa.Nombre)
                       .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
                       .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString)
-                      .Replace("[FECHA_LIMITE]", date != null ? ((DateTime)date).ToString("dd-MMM-yy"): "")
+                      .Replace("[FECHA_LIMITE]", date != null ? ((DateTime)date).ToString("dd-MMM-yy") : "")
                       ;
 
             return template;

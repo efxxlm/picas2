@@ -547,14 +547,13 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                         this.valuePendingTipoActividad( actividadSeleccionada[0] );
                     }
 
-                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValidators( Validators.min( this.actividades.length ) );
+                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValidators( Validators.min( this.tipoActividades.length ) );
                     const nuevasActividades = Number( value ) - this.actividades.length;
                     if ( Number( value ) < this.actividades.length && Number( value ) > 0 ) {
-                        this.openDialog(
-                          '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                        );
-                        this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( String( this.actividades.length ) );
-                        return;
+                        // this.openDialog(
+                        //   '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                        // );
+                        this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( String( this.tipoActividades.length ) );
                     }
                     for ( let i = 0; i < nuevasActividades; i++ ) {
                         this.actividades.push(
