@@ -1,0 +1,8 @@
+{
+	"/api/*":{
+		"target":"https://asivamosffiepre.ffie.com.co:443"
+		"secure":false,
+		"logLevel":"debug"
+	}
+}
+		
