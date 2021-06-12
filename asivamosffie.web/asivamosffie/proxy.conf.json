@@ -1,6 +1,6 @@
 {
 	"/api/*":{
-		"target":"https://preasivamosback.ffie.com.co:443",
+		"target":"https://preasivamosback.ffie.com.co",
 		"secure":true,
 		"logLevel":"debug"
 	}
