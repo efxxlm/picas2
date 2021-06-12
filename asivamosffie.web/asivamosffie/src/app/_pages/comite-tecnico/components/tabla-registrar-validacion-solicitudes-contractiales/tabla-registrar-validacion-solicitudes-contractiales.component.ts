@@ -29,6 +29,7 @@ import { VotacionSolicitudActualizaCronogramaComponent } from '../votacion-solic
 })
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
   @Input() ObjetoComiteTecnico: ComiteTecnico;
+  @Input() esVerDetalle: boolean;
   @Output() validar: EventEmitter<any> = new EventEmitter();
 
   listaMiembros: Usuario[];
@@ -199,7 +200,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico, esVerDetalle: this.esVerDetalle },
         maxHeight: '90em'
       });
 

@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 })
 export class FormProposicionesVariosComponent implements OnInit {
 
-  @Input() objetoComiteTecnico: ComiteTecnico
+  @Input() objetoComiteTecnico: ComiteTecnico;
+  @Input() esVerDetalle: boolean;
   @Output() semaforo: EventEmitter<string> = new EventEmitter();
   listaMiembros: Dominio[] = [];
 

@@ -21,6 +21,7 @@ import { TagContentType } from '@angular/compiler';
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
 
   @Input() objetoComiteTecnico: ComiteTecnico;
+  @Input() esVerDetalle: boolean;
   @Input() esProposicionesVarios: boolean;
   @Output() validar: EventEmitter<any> = new EventEmitter();
 
@@ -76,7 +77,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       tema: elemento.tema,
 
       sesionTemaVoto: [],
-      
+
     }
 
     console.log(this.objetoComiteTecnico.sesionParticipante.length)
@@ -96,20 +97,20 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
           esAprobado: null,
           observacion: null,
           nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
-  
-        }  
+
+        }
       }
 
-      
 
-      
+
+
 
       sesionComiteTema.sesionTemaVoto.push(temaVoto)
     })
 
 
     const dialog = this.dialog.open(VotacionTemaComponent, {
-      width: '70em', data: { sesionComiteTema: sesionComiteTema }
+      width: '70em', data: { sesionComiteTema: sesionComiteTema, esVerDetalle: this.esVerDetalle  }
     });
 
     dialog.afterClosed().subscribe(c => {
