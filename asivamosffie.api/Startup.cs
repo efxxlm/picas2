@@ -184,6 +184,7 @@ namespace asivamosffie.api
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IRegisterPayPerformanceService, RegisterPayPerformanceService>();
+            services.AddTransient<IRegisterPaymentService, RegisterPaymentService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IContractualNoveltyService, ContractualNoveltyService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();

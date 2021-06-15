@@ -55,7 +55,7 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
         let pFile = this.addressForm.get('documentoFile').value
 
         this.faseDosPagosRendimientosSvc
-          .uploadFileToValidate(pFile, this.typeFile, true)
+          .validateUploadPaymentRegisterFile(pFile, true)
           .subscribe((response: any) => {
             this.openDialog('', 'La información ha sido guardada exitosamente')
           })
@@ -80,7 +80,7 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
     extFile = extFile[extFile.length - 1]
     if (extFile === 'xlsx') {
       this.faseDosPagosRendimientosSvc
-        .uploadFileToValidate(pFile, this.typeFile, false)
+        .validateUploadPaymentRegisterFile(pFile, false)
         .subscribe((response: any) => {
           if (response.data.cantidadDeRegistrosInvalidos > 0) {
             this.openDialog(

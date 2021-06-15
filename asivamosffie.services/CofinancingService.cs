@@ -521,7 +521,10 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    ret.NombreAportanteString = _context.Dominio.Find(ret.NombreAportanteId).Nombre;
+                    if (ret.NombreAportanteId!= null)
+                    {
+                        ret.NombreAportanteString = _context.Dominio.Find(ret.NombreAportanteId).Nombre;
+                    }
                 }                
                 ret.TipoAportanteString = ret.TipoAportante.Nombre;
                 ret.Departamento = null;
@@ -530,7 +533,7 @@ namespace asivamosffie.services
                 ret.ProyectoAportante = null;
                 ret.NombreAportante = null;
                 ret.TipoAportante.CofinanciacionAportanteTipoAportante = null;
-                ret.FuenteFinanciacion = _context.FuenteFinanciacion.Where(x=>x.AportanteId==ret.CofinanciacionAportanteId).ToList();
+                ret.FuenteFinanciacion = _context.FuenteFinanciacion.Where(x=>x.AportanteId==ret.CofinanciacionAportanteId && x.Eliminado != true).ToList();
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }

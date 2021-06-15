@@ -27,6 +27,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<BalanceFinancieroTraslado> BalanceFinancieroTraslado { get; set; }
         public virtual DbSet<BalanceFinancieroTrasladoValor> BalanceFinancieroTrasladoValor { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
+        public virtual DbSet<CarguePago> CarguePago { get; set; }
         public virtual DbSet<CarguePagosRendimientos> CarguePagosRendimientos { get; set; }
         public virtual DbSet<Cofinanciacion> Cofinanciacion { get; set; }
         public virtual DbSet<CofinanciacionAportante> CofinanciacionAportante { get; set; }
@@ -663,6 +664,35 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ConstruccionCargueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CargueObservacion_ConstruccionCargue");
+            });
+
+            modelBuilder.Entity<CarguePago>(entity =>
+            {
+                entity.Property(e => e.Errores).IsUnicode(false);
+
+                entity.Property(e => e.FechaCargue).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.JsonContent)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreArchivo)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Observaciones).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CarguePagosRendimientos>(entity =>

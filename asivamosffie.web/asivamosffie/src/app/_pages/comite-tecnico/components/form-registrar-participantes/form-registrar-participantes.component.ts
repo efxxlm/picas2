@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ComiteTecnico, SesionParticipante, SesionInvitado, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +20,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   objetoComiteTecnico: ComiteTecnico = {};
   estaTodo: boolean = false;
-
+  miembros: string;
   addressForm: FormGroup;
 
   estaEditando = false;
@@ -40,7 +40,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   estadoSolicitudes = this.estadoFormulario.sinDiligenciar;
   estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
   estadoProposiciones = this.estadoFormulario.sinDiligenciar;
-
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
   hasUnitNumber = false;
 
@@ -53,8 +54,24 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router,
-
+    private route: ActivatedRoute
   ) {
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'registrarParticipantes' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarParticipantes' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleParticipantes' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
     this.buildForm();
   }
 
@@ -103,6 +120,15 @@ export class FormRegistrarParticipantesComponent implements OnInit {
             listaSeleccionados.push(participante);
           });
 
+          listaSeleccionados.forEach(element => {
+            console.log(element);
+            let miembro = element?.primerNombre + " "+ element?.segundoNombre + " "  + element?.primerApellido + " " +  element?.segundoApellido;
+            if(this.miembros == null){
+              this.miembros = miembro;
+            }else{
+              this.miembros = this.miembros + " , " + miembro;
+            }
+          });
           this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
 
 
@@ -229,7 +255,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         this.estadoOtrosTemas = this.estadoFormulario.completo;
 
       return true;
-    } 
+    }
 
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;

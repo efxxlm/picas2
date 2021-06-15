@@ -10,42 +10,56 @@
 
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="tabla">
-    
+
         <ng-container matColumnDef="fechaComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
             <td mat-cell *matCellDef="let element"> <b>{{element.fechaComite}}</b> </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="numeroComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de comité </th>
             <td mat-cell *matCellDef="let element"> {{element.numeroComite}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="estadoComite">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del comité </th>
             <td mat-cell *matCellDef="let element"> {{element.estadoComite}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-    
-                <a [routerLink]="['registrarSesionDeComiteTecnico', element.id]" 
-                    mat-raised-button color="accent" 
+
+                <a *ngIf="element.estadoComiteCodigo == this.estadosComite.convocada || element.estadoComiteCodigo === this.estadosComite.aplazada"
+                    [routerLink]="['registrarSesionDeComiteTecnico', element.id]"
+                    mat-raised-button color="accent"
                     class="btn-table"
                     >
                     Registrar sesión
                 </a>
-    
-                <!-- <button mat-raised-button 
-                    color="accent" 
+                <a *ngIf="element.estadoComiteCodigo == this.estadosComite.conActaDeSesionEnviada || element.estadoComiteCodigo == this.estadosComite.conActaDeSesionAprobada"
+                    [routerLink]="['verDetalleComiteTecnico', element.id]"
+                  mat-raised-button color="accent"
+                  class="btn-table"
+                >
+                  Ver detalle
+                </a>
+                <a *ngIf="element.estadoComiteCodigo == this.estadosComite.desarrolladaSinActa"
+                  [routerLink]="['verDetalleEditarComiteTecnico', element.id]"
+                  mat-raised-button color="accent"
+                  class="btn-table"
+                >
+                 Ver detalle/Editar
+                </a>
+                <!-- <button mat-raised-button
+                    color="accent"
                     class="btn-table">
                     Ver detalle
                 </button> -->
-    
+
             </td>
         </ng-container>
-    
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

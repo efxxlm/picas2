@@ -137,6 +137,15 @@ export class GestionarRendimientosComponent implements OnInit {
     })
   }
 
+  downloadConsistencies(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.downloadManagedPerformances(uploadedOrderId, true)
+    .subscribe((content)=>{
+      FileDownloader.exportExcel("Consistencias.xlsx", content)
+      
+    })
+  }
+
+
   downloadInconsistencies(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.downloadPerformancesInconsistencies(uploadedOrderId)
     .subscribe((content)=>{

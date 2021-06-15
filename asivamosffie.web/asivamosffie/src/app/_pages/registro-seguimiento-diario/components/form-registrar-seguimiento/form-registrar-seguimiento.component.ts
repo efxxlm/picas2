@@ -144,7 +144,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         this.commonServcie.listaProductividad(),
         this.commonServcie.listaCausaBajaDisponibilidadMaterial(),
         this.commonServcie.listaCausaBajaDisponibilidadEquipo(),
-        this.commonServcie.listaCausaBajaDisponibilidadProductividad(), 
+        this.commonServcie.listaCausaBajaDisponibilidadProductividad(),
         this.dailyFollowUpService.getDatesAvailableByContratacioProyectoId( this.proyecto.contratacionProyectoId )
 
       ).subscribe( respuesta => {
@@ -163,7 +163,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
 
 
-      
+
     });
   }
 
@@ -176,8 +176,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         this.seguimiento = seguimiento;
         this.addressForm.setValue(
           {
-            fechaSeguimiento:  new Date(seguimiento.fechaSeguimiento),    
-            
+            fechaSeguimiento:  new Date(seguimiento.fechaSeguimiento),
+
             disponibilidadPersonal:               seguimiento.disponibilidadPersonal !== undefined ? seguimiento.disponibilidadPersonal : null,
             cantidadPersonalOperativoProgramado:  seguimiento.cantidadPersonalProgramado !== undefined ? seguimiento.cantidadPersonalProgramado : null,
             cantidadPersonalOperativoTrabajando:  seguimiento.cantidadPersonalTrabajando !== undefined ? seguimiento.cantidadPersonalTrabajando : null,
@@ -209,7 +209,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
           this.diasPermitidos = [];
           this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
         }
-        
+
+        this.addressForm.get('horasRetrasoProductividad').disable();
         this.addressForm.get('fechaSeguimiento').updateValueAndValidity();
       });
   }
@@ -221,17 +222,17 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     const today = new Date();
 
     if ( environment.production === true ){
-      return ( 
-              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) 
-              // && 
-              // ( d <= today ) 
+      return (
+              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d))
+              // &&
+              // ( d <= today )
       );
     }else{
-      return ( 
+      return (
               this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d))
         );
     }
-    
+
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -270,26 +271,26 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       seGeneroRetrasoPersonal:              values.retrasoPersonal,
       numeroHorasRetrasoPersonal:           values.horasRetrasoPersonal,
       disponibilidadPersonalObservaciones:  values.disponibilidadPersonalObservaciones,
-      
+
       disponibilidadMaterialCodigo:         values.disponibilidadMaterial,
       causaIndisponibilidadMaterialCodigo:  values.causaMaterial,
       seGeneroRetrasoMaterial:              values.retrasoMaterial,
       numeroHorasRetrasoMaterial:           values.horasRetrasoMaterial,
       disponibilidadMaterialObservaciones:  values.disponibilidadMaterialObservaciones,
-      
+
       disponibilidadEquipoCodigo:           values.disponibilidadEquipo,
       causaIndisponibilidadEquipoCodigo:    values.causaEquipo,
       seGeneroRetrasoEquipo:                values.retrasoEquipo,
       numeroHorasRetrasoEquipo:             values.horasRetrasoEquipo,
       disponibilidadEquipoObservaciones:    values.disponibilidadEquipoObservaciones,
-      
+
       productividadCodigo:                  values.Productividad,
       causaIndisponibilidadProductividadCodigo:  values.causaProductividad,
       seGeneroRetrasoProductividad:         values.retrasoProductividad,
       numeroHorasRetrasoProductividad:      values.horasRetrasoProductividad,
       productividadObservaciones:           values.ProductividadObservaciones,
 
-    } 
+    }
 
     // console.log(seguimiento);
 
@@ -302,6 +303,27 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         }
       });
 
+  }
+
+  //
+  onChange(){
+    if(this.addressForm.get('retrasoProductividad').value === true){
+      let horasRetrasoEquipo = this.addressForm.get('retrasoEquipo').value === true ? this.addressForm.get('horasRetrasoEquipo').value : null;
+      let horasRetrasoMaterial = this.addressForm.get('retrasoMaterial').value === true ? this.addressForm.get('horasRetrasoMaterial').value : null;
+      let horasRetrasoPersonal = this.addressForm.get('retrasoPersonal').value === true ? this.addressForm.get('horasRetrasoPersonal').value : null;
+      let horaMax = Math.max(horasRetrasoEquipo,horasRetrasoMaterial,horasRetrasoPersonal);
+
+      if(horaMax <= 0){
+        this.addressForm.get('horasRetrasoProductividad').setValue(null);
+        this.addressForm.get('horasRetrasoProductividad').enable();
+      }else{
+        this.addressForm.get('horasRetrasoProductividad').setValue(horaMax);
+        this.addressForm.get('horasRetrasoProductividad').disable();
+      }
+    }else{
+      this.addressForm.get('horasRetrasoProductividad').enable();
+      this.addressForm.get('horasRetrasoProductividad').setValue(null);
+    }
   }
 }
 

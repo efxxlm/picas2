@@ -113,7 +113,8 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
     public dialogRef: MatDialogRef<VotacionSolicitudMultipleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       sesionComiteSolicitud: SesionComiteSolicitud,
-      objetoComiteTecnico: ComiteTecnico
+      objetoComiteTecnico: ComiteTecnico,
+      esVerDetalle: boolean
     },
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     private projectContractingService: ProjectContractingService,

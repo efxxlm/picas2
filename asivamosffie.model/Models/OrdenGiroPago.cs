@@ -10,6 +10,6 @@ namespace asivamosffie.model.Models
         public int RegistroPagoId { get; set; }
 
         public virtual OrdenGiro OrdenGiro { get; set; }
-        public virtual CarguePagosRendimientos RegistroPago { get; set; }
+        public virtual CarguePago RegistroPago { get; set; }
     }
 }
