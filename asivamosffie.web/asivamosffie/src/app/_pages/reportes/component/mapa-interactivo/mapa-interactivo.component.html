@@ -1,41 +1,38 @@
 <section class="container mt-1em">
-    <div class="text-center mb-1-5em">
-        <h1 class="title-menu--h1">
-            Mapa interactivo y estadísticas generales
-        </h1>
-    </div>
-    <div class="text-center mt-1em">
-        <form [formGroup]="addressForm">
-            <div class="row">
-                <div class="col-md-9 mx-auto">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="quieroVer"
-                            [class.color-secondaryColor]="
-                      addressForm.get('quieroVer').invalid && addressForm.get('quieroVer').touched
-                    ">Quiero ver</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="quieroVer" required (ngModelChange)="selectedOption($event)">
-                                    <mat-option *ngFor="let quieroVer of listasMapas" [value]="quieroVer.code">
-                                        {{ quieroVer.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+  <div class="text-center mb-1-5em">
+    <h1 class="title-menu--h1">Mapa interactivo y estadísticas generales</h1>
+  </div>
+  <div class="mt-1em">
+    <form [formGroup]="addressForm">
+      <div class="row">
+        <div class="col-md-9 mx-auto">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="quieroVer"
+                [class.color-secondaryColor]="
+                  addressForm.get('quieroVer').invalid && addressForm.get('quieroVer').touched
+                "
+              >
+                Quiero ver
+              </label>
             </div>
-            <div class="animatedDown mt-1em" *ngIf="this.idTabla=='1'">
-                <app-mapa-entidad-inst-educativa></app-mapa-entidad-inst-educativa>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="quieroVer" required (ngModelChange)="selectedOption($event)">
+                  <mat-option *ngFor="let quieroVer of indicadorReporte" [value]="quieroVer.indicadorReporteId">
+                    {{ quieroVer.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
-            <div class="animatedDown mt-1em" *ngIf="this.idTabla=='2'">
-                <app-mapa-estadisticas-contratistas></app-mapa-estadisticas-contratistas>
-            </div>
-            <div class="animatedDown mt-1em" *ngIf="this.idTabla=='3'">
-                <app-mapa-estadisticas-supervisores></app-mapa-estadisticas-supervisores>
-            </div>
-        </form>
-    </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="embedInfo" class="animatedDown mt-1em">
+    <app-embedded-power-bi [embedInfo]="embedInfo"></app-embedded-power-bi>
+  </div>
 </section>

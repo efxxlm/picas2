@@ -35,6 +35,7 @@ import { PreparacionComponent } from './component/proyecto/preparacion/preparaci
 import { SeguimientoTecnicoComponent } from './component/proyecto/seguimiento-tecnico/seguimiento-tecnico.component';
 import { SeguimientoFinancieroComponent } from './component/proyecto/seguimiento-financiero/seguimiento-financiero.component';
 import { EntregaComponent } from './component/proyecto/entrega/entrega.component';
+import { EmbeddedPowerBiComponent } from './component/embedded-power-bi/embedded-power-bi.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { EntregaComponent } from './component/proyecto/entrega/entrega.component
     PreparacionComponent,
     SeguimientoTecnicoComponent,
     SeguimientoFinancieroComponent,
-    EntregaComponent
+    EntregaComponent,
+    EmbeddedPowerBiComponent
   ],
   imports: [
     CommonModule,
