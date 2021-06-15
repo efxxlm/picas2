@@ -87,7 +87,7 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
+/*
   deleteUpload(uploadPaymentId: number){
     this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)
      .subscribe(( isDeleted)=>{
@@ -96,7 +96,7 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     },onError => {
       
     });
-  }
+  }*/
 
   downloadInconsistencies(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.downloadPerformancesInconsistencies(uploadedOrderId)

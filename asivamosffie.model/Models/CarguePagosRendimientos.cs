@@ -7,7 +7,6 @@ namespace asivamosffie.model.Models
     {
         public CarguePagosRendimientos()
         {
-            OrdenGiroPago = new HashSet<OrdenGiroPago>();
             RendimientosIncorporados = new HashSet<RendimientosIncorporados>();
         }
 
@@ -37,7 +36,7 @@ namespace asivamosffie.model.Models
         public string RutaActa { get; set; }
         public int? NumeroActa { get; set; }
 
-        public virtual ICollection<OrdenGiroPago> OrdenGiroPago { get; set; }
+
         public virtual ICollection<RendimientosIncorporados> RendimientosIncorporados { get; set; }
     }
 }

@@ -48,7 +48,7 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
 
   getData() {
     this.faseDosPagosRendimientosSvc
-      .getPaymentsPerformances(this.tipoCargue)
+      .getPayments()
       .subscribe((response: any[]) => {
         if (response.length === 0) {
           return
@@ -119,7 +119,7 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
     const onConfirmDelete = dialogRef.afterClosed().pipe(filter(result => result));
     
     onConfirmDelete.subscribe( X =>{
-        this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)
+        this.faseDosPagosRendimientosSvc.deletePayment(uploadPaymentId)
           .subscribe(( isDeleted)=>{
           this.getData()
           },onError => {
@@ -135,15 +135,10 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
 
   viewDetails(uploadPaymentId: number){
     const fileRequest = {resourceId: uploadPaymentId, fileName: "Payment"}
-    this.faseDosPagosRendimientosSvc.downloadPaymentsPerformanceStatus(fileRequest , "Pagos")
+    this.faseDosPagosRendimientosSvc.downloadPayments(uploadPaymentId)
     .subscribe((content: any)=>{
       console.log(content);
        FileDownloader.exportExcel("RegistrarPagos.xlsx", content)
-      // const data = content.data.archivoJson;
-      // const fileName = content.data.nombreArchivo
-      // const exportType = 'xls'
- 
-      // exportFromJSON({ data, fileName, exportType, withBOM: true })
     },onError => {
       
     });
@@ -154,7 +149,7 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
     location.href ="./assets/files/TemplateRegistrarPagos.xlsx";
   }
 
-  abrirObservaciones(cargaPagosRendimientosId: number, element: any) {
+  abrirObservaciones(carguePagoId: number, element: any) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.height = 'auto'
     dialogConfig.width = '865px';
@@ -170,9 +165,9 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
          const data = {
           observaciones: result.data,
           typeFile: this.tipoCargue,
-          cargaPagosRendimientosId: cargaPagosRendimientosId
+          carguePagoId: carguePagoId
         }
-        return this.faseDosPagosRendimientosSvc.setObservationPaymentsPerformances(data)
+        return this.faseDosPagosRendimientosSvc.setObservationPayments(data)
       })
     ).subscribe((response: Respuesta) => {
         if(response.isSuccessful){

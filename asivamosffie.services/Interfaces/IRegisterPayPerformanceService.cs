@@ -12,10 +12,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<dynamic>> getPaymentsPerformances(string typeFile, string status);
 
-        Task<Respuesta> SetObservationPayments(string observaciones, int uploadedOrderId);
-
-        Task<Respuesta> DeletePayment(int uploadedOrderId, string author);
-
         Task<Respuesta> DownloadPaymentPerformanceAsync(FileRequest fileRequest, string fileType);
 
         Task<Respuesta> ManagePerformanceAsync(int uploadOrderId);

@@ -82,7 +82,7 @@
       <td mat-cell *matCellDef="let element" align="center">
         <button mat-raised-button color="accent" 
           class="btn-table"
-          (click)="viewDetails(element.cargaPagosRendimientosId)"
+          (click)="viewDetails(element.carguePagoId)"
           >
           Ver detalle
         </button>
@@ -90,16 +90,16 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [class.sin-diligenciar]="element.estadoCargue == 'Fallido'"
+          [class.sin-diligenciar]="!element.cargueValido"
           *ngIf="element.registrosInvalidos > 0"
-          (click)="abrirObservaciones(element.cargaPagosRendimientosId, element)"
+          (click)="abrirObservaciones(element.carguePagoId, element)"
         >
           Observaciones
         </button>
         <button mat-raised-button color="accent" 
-          *ngIf="element.estadoCargue == 'Valido'"
+          *ngIf="false"
           class="btn-table"
-          (click)="deleteUploadConfirm(element.cargaPagosRendimientosId)"
+          (click)="deleteUploadConfirm(element.carguePagoId)"
           >
           Eliminar
         </button>
