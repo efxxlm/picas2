@@ -62,38 +62,7 @@ namespace asivamosffie.api.Controllers
                 throw ex.InnerException;
             }
         }
-
-        [Route("setObservationPaymentsPerformances")]
-        [HttpPost]
-        public async Task<IActionResult> setObservationPaymentsPerformances(CargueObservacionesPaymentPerformance data)
-        {
-            try
-            {
-                var response = await _paymentAndPerformancesService.SetObservationPayments(data.observaciones, data.cargaPagosRendimientosId);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-
-        [Route("deletePaymentPerformance")]
-        [HttpGet]
-        public async Task<IActionResult> DeletePaymentOrder(int uploadedOrderId)
-        {
-            try
-            {
-                string username = User.Identity.Name;
-                var result = await _paymentAndPerformancesService.DeletePayment(uploadedOrderId, username);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+               
 
         [Route("managePerformance")]
         [HttpGet]

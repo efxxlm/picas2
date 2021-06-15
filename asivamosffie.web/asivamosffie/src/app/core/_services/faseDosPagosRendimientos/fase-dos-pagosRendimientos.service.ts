@@ -1,16 +1,65 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
-import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
+import { CarguePago, CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
 import { Respuesta } from '../common/common.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class FaseDosPagosRendimientosService {
+  private urlApi0: string = `${environment.apiUrl}`
   private urlApi: string = `${environment.apiUrl}/RegisterPayPerformance`
-
+  private urlPayment = 'RegisterPayment'; 
+  private urlPerformance = 'RegisterPerformance'
   constructor(private http: HttpClient) {}
+
+
+  validateUploadPaymentRegisterFile(
+    documento: File,
+    saveSuccessProcess: boolean
+  ) {
+    const formData = new FormData()
+    formData.append('file', documento, documento.name)
+    return this.http.post(
+      `${this.urlApi0}/${this.urlPayment}/file?saveSuccessProcess=${saveSuccessProcess}`,
+      formData
+    )
+  }
+
+  getPayments(status: string = "") {
+    return this.http.get<CarguePago[]>(
+      `${this.urlApi0}/${this.urlPayment}/payments?status=${status}`
+    )
+  }
+
+  setObservationPayments(data: any) {
+    return this.http.post(
+      `${this.urlApi0}/${this.urlPayment}/observations`,
+      data
+    )
+  }
+
+  deletePayment(uploadedOrderId: number){
+    return this.http.put<any>(`${this.urlApi0}/${this.urlPayment}/${uploadedOrderId}`, {})
+  }
+
+  downloadPayments(uploadedOrderId: number){ 
+    return this.http.get(`${this.urlApi0}/${this.urlPayment}/file/${uploadedOrderId}`,  { responseType: "blob" })
+  }
+
+
+/*** Performances Methods */
+
+  getPaymentsPerformances(typeFile: string, status: string = "") {
+    return this.http.get<CarguePagosRendimientos[]>(
+      `${this.urlApi}/getPaymentsPerformances?typeFile=${typeFile}&&status=${status}`
+    )
+  }
+ 
+  downloadPaymentsPerformanceStatus(fileRequest: any, fileType: string){
+    return this.http.post(`${this.urlApi}/downloadPaymentPerformance?fileType=${fileType}`, fileRequest , { responseType: "blob" })
+  }
 
   uploadFileToValidate(
     documento: File,
@@ -23,28 +72,6 @@ export class FaseDosPagosRendimientosService {
       `${this.urlApi}/uploadFileToValidate?typeFile=${typeFile}&saveSuccessProcess=${saveSuccessProcess}`,
       formData
     )
-  }
-
-  getPaymentsPerformances(typeFile: string, status: string = "") {
-    return this.http.get<CarguePagosRendimientos[]>(
-      `${this.urlApi}/getPaymentsPerformances?typeFile=${typeFile}&&status=${status}`
-    )
-  }
-
-  setObservationPaymentsPerformances(data: any) {
-    console.log(data)
-    return this.http.post(
-      `${this.urlApi}/setObservationPaymentsPerformances`,
-      data
-    )
-  }
-
-  deletePaymentsPerformanceStatus(uploadedOrderId: number){
-    return this.http.get<any>(`${this.urlApi}/deletePaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
-  }
-
-  downloadPaymentsPerformanceStatus(fileRequest: any, fileType: string){
-    return this.http.post(`${this.urlApi}/downloadPaymentPerformance?fileType=${fileType}`, fileRequest , { responseType: "blob" })
   }
 
   managePerformance(uploadedOrderId :number){

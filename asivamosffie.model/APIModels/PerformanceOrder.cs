@@ -166,6 +166,11 @@ namespace asivamosffie.model.APIModels
         public decimal DiscountedCharge { get; set; }
         [JsonProperty(PropertyName = "Rendimiento a incorporar")]
         public decimal PerformancesToAdd { get; set; }
+        [JsonProperty(PropertyName = "Visitas")]
+        public decimal Visitas { get; set; }
+        [JsonProperty(PropertyName = "Rendimientos incorporados")]
+        public decimal IncorporatedPerformances { get; set; }
+
     }
 
 
