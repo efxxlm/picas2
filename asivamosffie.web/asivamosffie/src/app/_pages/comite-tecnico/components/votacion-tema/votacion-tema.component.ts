@@ -87,6 +87,7 @@ export class VotacionTemaComponent implements OnInit{
               public dialogRef: MatDialogRef<VotacionTemaComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {
                                                       sesionComiteTema: SesionComiteTema,
+                                                      esVerDetalle: boolean
                                                       //objetoComiteTecnico: ComiteTecnico
                                                     },
               private technicalCommitteSessionService: TechnicalCommitteSessionService,

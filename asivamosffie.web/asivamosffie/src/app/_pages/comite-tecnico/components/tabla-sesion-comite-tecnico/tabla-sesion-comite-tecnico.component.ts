@@ -38,8 +38,9 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
         response.forEach(element => {
           element.fechaComite = element.fechaComite.split('T')[0].split('-').reverse().join('/');
         });
-        let lista: ComiteGrilla[] = response.filter(c => c.estadoComiteCodigo == this.estadosComite.convocada ||
-          c.estadoComiteCodigo === this.estadosComite.aplazada);
+        //let lista: ComiteGrilla[] = response.filter(c => c.estadoComiteCodigo == this.estadosComite.convocada || c.estadoComiteCodigo === this.estadosComite.aplazada);
+        let lista: ComiteGrilla[] = response.filter(c => c.estadoComiteCodigo !== this.estadosComite.fallida && c.estadoComiteCodigo !== this.estadosComite.sinConvocatoria);
+        console.log(lista);
         this.dataSource = new MatTableDataSource(lista);
         this.initPaginator();
       });

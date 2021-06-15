@@ -5,9 +5,16 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Registrar participantes de la sesión {{ objetoComiteTecnico.numeroComite }}</h1>
+    <h1 class="title-menu--h1">
+      <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+          Ver detalle participantes de la sesión {{ objetoComiteTecnico.numeroComite }}
+      </ng-container>
+      <ng-template #noEsVerDetalle>
+          {{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} participantes de la sesión {{ objetoComiteTecnico.numeroComite }}
+      </ng-template>
+    </h1>
   </div>
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="esVerDetalle !== true">
     <div class="row px-miembros mt-2em mb-2em">
       <div class="pr-1">
         <label
@@ -211,18 +218,36 @@
       </button>
     </div>
   </form>
-
-  <div
-    class="text-center"
-    *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
-  >
-    <p class="info-container">
-      <span class="info-text sin-diligenciar">Sin diligenciar</span>
-      <span class="info-text en-proceso">En proceso</span>
-      <span class="info-text completo">Completo</span>
+  <div *ngIf="esVerDetalle === true">
+    <p>
+      <strong>Miembros participantes:</strong><span>{{ miembros }} </span>
     </p>
+    <mat-card class="shipping-card var-main-gris" >
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Invitados </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <div *ngFor="let invitado of invitados.controls; let i = index">
+            <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Invitado {{ i + 1 }} </mat-card-title>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Nombre Invitado:</strong>{{ invitado.get('nombre').value }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Cargo:</strong>{{ invitado.get('cargo').value }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Entidad:</strong>{{ invitado.get('entidad').value }}</p>
+              </div>
+            </div>
+          </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-
   <mat-accordion *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0">
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -230,9 +255,9 @@
         <!-- <mat-panel-title class="expansion-style--title completo" > -->
         <mat-panel-title
           class="expansion-style--title"
-          [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar"
-          [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso"
-          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo"
+          [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar && esVerDetalle !== true"
+          [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso && esVerDetalle !== true"
+          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo && esVerDetalle !== true"
         >
           Validación de solicitudes contractuales
         </mat-panel-title>
@@ -247,6 +272,7 @@
       <app-tabla-registrar-validacion-solicitudes-contractiales
         #registrarSolicitudes
         [ObjetoComiteTecnico]="objetoComiteTecnico"
+        [esVerDetalle] = "esVerDetalle"
         (validar)="ngOnInit()"
       >
       </app-tabla-registrar-validacion-solicitudes-contractiales>
@@ -255,9 +281,9 @@
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title
           class="expansion-style--title"
-          [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar"
-          [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso"
-          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo"
+          [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar && esVerDetalle !== true"
+          [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso && esVerDetalle !== true"
+          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo && esVerDetalle !== true"
         >
           Otros temas
         </mat-panel-title>
@@ -268,6 +294,7 @@
       <app-tabla-registrar-otros-temas
         #otrosTemas
         [objetoComiteTecnico]="objetoComiteTecnico"
+        [esVerDetalle] = "esVerDetalle"
         [esProposicionesVarios]="false"
         (validar)="ngOnInit()"
       >
@@ -277,9 +304,9 @@
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title
           class="expansion-style--title"
-          [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar"
-          [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso"
-          [class.completo]="estadoProposiciones == this.estadoFormulario.completo"
+          [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar && esVerDetalle !== true"
+          [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso && esVerDetalle !== true"
+          [class.completo]="estadoProposiciones == this.estadoFormulario.completo && esVerDetalle !== true"
         >
           Proposiciones y varios
         </mat-panel-title>
@@ -291,13 +318,14 @@
         #proposiciones
         [objetoComiteTecnico]="objetoComiteTecnico"
         [esProposicionesVarios]="true"
+        [esVerDetalle] = "esVerDetalle"
         (validar)="ngOnInit()"
       >
       </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
   </mat-accordion>
 
-  <div class="text-center">
+  <div *ngIf="esVerDetalle !== true" class="text-center">
     <button
       mat-button
       color="warn"

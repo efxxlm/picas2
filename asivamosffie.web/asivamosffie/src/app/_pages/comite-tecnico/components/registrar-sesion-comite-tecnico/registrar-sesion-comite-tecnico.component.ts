@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
@@ -17,16 +17,33 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
   estadosComite = EstadosComite
   estadoAcordeon : string = "";
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
   constructor(
                 public dialog: MatDialog,
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
                 private activatedRoute: ActivatedRoute,
-                private router: Router
-
-             ) 
-  { 
-
+                private router: Router,
+                private route: ActivatedRoute
+             )
+  {
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'registrarSesionDeComiteTecnico' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarComiteTecnico' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleComiteTecnico' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
   }
 
   openDialogAplazarSesion() {
@@ -75,7 +92,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
             let btnOtros = document.getElementById( 'btnOtros' )
             let btnTablaValidaciones = document.getElementById( 'btnTablaValidaciones' )
             let btnProposiciones = document.getElementById( 'btnProposiciones' )
-            
+
 
             btnOtros.click();
             btnTablaValidaciones.click();
@@ -85,7 +102,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
         })
     })
-    
+
 
   }
 

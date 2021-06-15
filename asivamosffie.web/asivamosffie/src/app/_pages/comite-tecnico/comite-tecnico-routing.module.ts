@@ -37,7 +37,23 @@ const routes: Routes = [
   {
     path: 'verificarCumplimiento/:id',
     component: TablaVerificarCumplimientoComponent
-  }
+  },
+  {
+    path: 'verDetalleComiteTecnico/:id',
+    component: RegistrarSesionComiteTecnicoComponent
+  },
+  {
+    path: 'verDetalleEditarComiteTecnico/:id',
+    component: RegistrarSesionComiteTecnicoComponent
+  },
+  {
+    path: 'verDetalleEditarComiteTecnico/:id/verDetalleEditarParticipantes',
+    component: FormRegistrarParticipantesComponent
+  },
+  {
+    path: 'verDetalleComiteTecnico/:id/verDetalleParticipantes',
+    component: FormRegistrarParticipantesComponent
+  },
 ];
 
 @NgModule({
