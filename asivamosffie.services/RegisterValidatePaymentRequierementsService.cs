@@ -1567,26 +1567,26 @@ namespace asivamosffie.services
             //    _context.VValorFacturadoContrato
             //    .Where(v => v.ContratoId == pContratoId)
             //    .ToList();
-            try
-            {
-                contrato.VContratoPagosRealizados =
-                    _context.VContratoPagosRealizados
-                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
-                       .ToList();
 
-                contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
-            }
-            catch (Exception e)
-            {
+            List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
 
-            }
+            vContratoPagosRealizados = _context.VContratoPagosRealizados
+                      .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
+                      .ToList();
+
+            contrato.VContratoPagosRealizados = vContratoPagosRealizados;
+
+
+
+            contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
+
 
             return contrato;
 
         }
 
         public dynamic GetDrpContrato(int pContratacionId)
-        { 
+        {
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
@@ -1662,7 +1662,7 @@ namespace asivamosffie.services
             }
             return ListTablaDrp;
         }
-         
+
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
             String strTipoSolicitud = contrato.Contratacion.TipoSolicitudCodigo;
