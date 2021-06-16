@@ -99,11 +99,13 @@
               </ng-container>
               <ng-container matColumnDef="ProyectoLLaveMen">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre proyecto</th>
-                <!-- <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDRP }} </td> -->
                 <td mat-cell *matCellDef="let element">
                   <div
                     class="sub-item-table justify-content-center align-items-center"
                     *ngFor="let el of element.listDyProyectos; let i = index"
+                    [class.h-3]="el.listDyUsos.length === 1"
+                    [class.h-6]="el.listDyUsos.length === 2"
+                    [class.h-9]="el.listDyUsos.length === 3"
                   >
                     {{ el.nombre }}
                   </div>
