@@ -1140,7 +1140,7 @@ namespace asivamosffie.services
                 nextVal = uploadOrder.NumeroActa.Value;
             }
 
-            var report = await GenerarActaRendimientos(uploadOrder.FechaCargue.Month);
+            var report = await GenerarActaRendimientos(uploadOrderId);
             decimal actual = report.Sum(x => x.Actual).HasValue ? report.Sum(x => x.Actual).Value: 0;
             decimal anterior = report.Sum(x => x.Anterior).HasValue ? report.Sum(x => x.Anterior).Value : 0;
             var image = ImageToBase64();
@@ -1208,13 +1208,13 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<List<DataResult>> GenerarActaRendimientos(int mesActual)
+        public async Task<List<DataResult>> GenerarActaRendimientos(int carguePagosRendimientosId)
         {
             string idSequence = string.Empty;
             List<DataResult> resultSource = new List<DataResult>();
             using (var command = _context.Database.GetDbConnection().CreateCommand())
             {
-                command.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@mesActual", mesActual));
+                command.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@CarguePagosRendimientosId", carguePagosRendimientosId));
 
                 command.CommandText = "GenerarActaRendimientos";
                 command.CommandType = System.Data.CommandType.StoredProcedure;
