@@ -9,7 +9,6 @@ import {
   Input
 } from '@angular/core';
 import * as pbi from 'powerbi-client';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-embedded-power-bi',

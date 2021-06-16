@@ -184,3 +184,20 @@ table td{
 .supportBlack{
     color: #474747;
 }
+
+.sub-item-table {
+  display: block;
+  &:not(:first-child) {
+      border-top: solid 1px  #474747;
+  }
+
+  &--element {
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.borber-table:not(:last-child) {
+  border-bottom: solid 1px;
+}

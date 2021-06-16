@@ -25,6 +25,8 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     displayedColumns: string[] = [
       'drp',
       'numDrp',
+      'ProyectoLLaveMen',
+      'NombreUso',
       'valor',
       'saldo'
     ];
@@ -120,6 +122,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
 
                             this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
                             if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
+                                console.log( this.contrato.tablaDRP );
                                 if ( this.contrato.solicitudPago.length > 1 ) {
                                     this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
                                 } else {
@@ -145,7 +148,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                                 this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                 this.dataSourceRegistrarSolicitud = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
                             }
-                            console.log( this.contrato );
+                            // console.log( this.contrato );
                           }
                         );
                 }
