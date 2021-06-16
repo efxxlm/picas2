@@ -218,7 +218,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     } else if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
       const dialog = this.dialog.open(VotacionSolicitudActualizaCronogramaComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico, esVerDetalle: this.esVerDetalle },
         maxHeight: '90em'
       });
 
@@ -236,7 +236,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     } else {
       const dialog = this.dialog.open(VotacionSolicitudComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico,  esVerDetalle: this.esVerDetalle }
       });
 
       dialog.afterClosed().subscribe(c => {

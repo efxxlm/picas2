@@ -113,7 +113,8 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
     public dialogRef: MatDialogRef<VotacionSolicitudActualizaCronogramaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       sesionComiteSolicitud: SesionComiteSolicitud,
-      objetoComiteTecnico: ComiteTecnico
+      objetoComiteTecnico: ComiteTecnico,
+      esVerDetalle: boolean
     },
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     private projectContractingService: ProjectContractingService,
@@ -200,7 +201,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
       sesionSolicitudVoto: [],
       sesionSolicitudObservacionProyecto: [],
       sesionSolicitudObservacionActualizacionCronograma: [],
-      
+
     }
 
     this.aprobaciones.controls.forEach(control => {
@@ -228,7 +229,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
           observacion: control.get('observacion').value,
 
         }
-        
+
         sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma.push( observacionActualizarCronograma );
       })
 

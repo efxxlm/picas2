@@ -85,26 +85,27 @@ export class VotacionSolicitudComponent implements OnInit{
   constructor(
               private fb: FormBuilder,
               public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteSolicitud: SesionComiteSolicitud, 
-                                                      objetoComiteTecnico: ComiteTecnico 
+              @Inject(MAT_DIALOG_DATA) public data: {
+                                                      sesionComiteSolicitud: SesionComiteSolicitud,
+                                                      objetoComiteTecnico: ComiteTecnico,
+                                                      esVerDetalle: boolean
                                                     },
               private technicalCommitteSessionService: TechnicalCommitteSessionService,
               public dialog: MatDialog,
               private router: Router,
 
-             ) 
+             )
   {
 
   }
 
   ngOnInit(): void {
 
-    
+
 
     this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach( v => {
       let grupoVotacion = this.crearParticipante();
-      
+
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
       grupoVotacion.get('observaciones').setValue( v.observacion );
@@ -152,7 +153,7 @@ export class VotacionSolicitudComponent implements OnInit{
 
       sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
     })
-    
+
     sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
     sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
       if ( sv.esAprobado != true )
@@ -167,12 +168,12 @@ export class VotacionSolicitudComponent implements OnInit{
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.objetoComiteTecnico);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
-        
-        
+
+
       }
 
     })
-    
+
   }
- 
+
 }

@@ -241,7 +241,6 @@ export class FormProposicionesVariosComponent implements OnInit {
 
       this.tema.push(grupoTema)
     })
-
     this.validarCompletos(this.objetoComiteTecnico);
 
   }

@@ -10,7 +10,7 @@
     <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
   </p>
   <mat-dialog-content>
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="data.esVerDetalle !== true">
       <div class="table-responsive">
         <table class="mat-table cdk-table mat-sort mat-table-style">
           <thead>
@@ -105,5 +105,33 @@
         <img src="assets/img/icon/guardar.svg" alt="guardar" />
       </button>
     </form>
+    <div class="table-responsive" *ngIf="data.esVerDetalle === true">
+      <table class="mat-table cdk-table mat-sort mat-table-style">
+        <thead>
+          <tr class="mat-header-row cdk-header-row ng-star-inserted">
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">Miembro participante</th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">¿Aprobó?</th>
+            <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              No aprobó
+            </th> -->
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let temas of listaVotacion.controls; let i = index">
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ addressForm.controls[i].get('nombreParticipante').value }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+                <span *ngIf="addressForm.controls[i].get('aprobacion').value === true">Sí</span>
+                <span *ngIf="addressForm.controls[i].get('aprobacion').value !== true">No</span>
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              <p [innerHTML]="addressForm.controls[i].get('observaciones').value">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </mat-dialog-content>
 </div>

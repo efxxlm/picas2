@@ -95,7 +95,7 @@
         >
           Registrar participantes
         </a>
-        <a *ngIf="esVerDetalle !== true && esRegistroNuevo === true"
+        <a *ngIf="esVerDetalle !== true && esRegistroNuevo !== true"
           routerLink="verDetalleEditarParticipantes"
           [disabled]="!cargoRegistro"
           mat-raised-button color="accent"

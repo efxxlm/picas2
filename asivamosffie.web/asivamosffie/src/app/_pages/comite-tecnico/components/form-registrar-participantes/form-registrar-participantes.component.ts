@@ -119,9 +119,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
             listaSeleccionados.push(participante);
           });
-
+          this.miembros = null;
           listaSeleccionados.forEach(element => {
-            console.log(element);
             let miembro = element?.primerNombre + " "+ element?.segundoNombre + " "  + element?.primerApellido + " " +  element?.segundoApellido;
             if(this.miembros == null){
               this.miembros = miembro;
