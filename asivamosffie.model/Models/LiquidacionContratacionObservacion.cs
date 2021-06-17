@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class LiquidacionContratacionObservacion
     {
         public int LiquidacionContratacionObservacionId { get; set; }
-        public int ContratacionId { get; set; }
         public string TipoObservacionCodigo { get; set; }
         public int? IdPadre { get; set; }
         public bool? TieneObservacion { get; set; }
@@ -19,6 +18,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int? MenuId { get; set; }
+        public int ContratacionId { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Menu Menu { get; set; }

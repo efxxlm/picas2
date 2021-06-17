@@ -36,7 +36,6 @@ namespace asivamosffie.model.Models
         public string RutaActa { get; set; }
         public int? NumeroActa { get; set; }
 
-
         public virtual ICollection<RendimientosIncorporados> RendimientosIncorporados { get; set; }
     }
 }

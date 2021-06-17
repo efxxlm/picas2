@@ -24,6 +24,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public string Errores { get; set; }
         public bool Eliminado { get; set; }
+
         public virtual ICollection<OrdenGiroPago> OrdenGiroPago { get; set; }
     }
 }
