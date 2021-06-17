@@ -23,7 +23,7 @@ export class MapaInteractivoComponent implements OnInit {
 
   getIndicadorReporte() {
     this.report.getIndicadorReporte().subscribe(response => {
-      this.indicadorReporte = response;
+      this.indicadorReporte = response.filter(indicador => indicador.indicador);
     });
   }
 

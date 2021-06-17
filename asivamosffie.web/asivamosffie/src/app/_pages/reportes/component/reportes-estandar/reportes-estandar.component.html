@@ -1,134 +1,163 @@
 <section class="container mt-1em">
-    <div class="text-center mb-1-5em">
-        <h1 class="title-menu--h1">
-            Reportes estándar
-        </h1>
-    </div>
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-        <mat-card class="shipping-card">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    Filtro de búsqueda
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content align="left">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="etapa"
-                                    [class.color-secondaryColor]="addressForm.get('etapa').invalid && addressForm.get('etapa').touched">
-                                    Etapa
-                                </label>
-                            </div>
-                            <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="etapa">
-                                        <mat-option *ngFor="let etapa of etapaArray" [value]="etapa.value">
-                                            {{ etapa.name }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="procesoAcuerdo"
-                                    [class.color-secondaryColor]="addressForm.get('procesoAcuerdo').invalid && addressForm.get('procesoAcuerdo').touched">
-                                    Proceso de acuerdo
-                                </label>
-                            </div>
-                            <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="procesoAcuerdo">
-                                        <mat-option *ngFor="let procesoAcuerdo of procesoAcuerdoArray" [value]="procesoAcuerdo">
-                                            {{ procesoAcuerdo.name }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="animatedDown"  *ngIf="addressForm.get('procesoAcuerdo').value && addressForm.get('procesoAcuerdo').value.value != 'Contratación'">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="reporte"
-                                        [class.color-secondaryColor]="addressForm.get('reporte').invalid && addressForm.get('reporte').touched">
-                                        Reporte
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field class="select-width">
-                                        <mat-select formControlName="reporte">
-                                            <mat-option *ngFor="let reporte of reporteArray" [value]="reporte.value">
-                                                {{ reporte.name }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="animatedDown"  *ngIf="addressForm.get('procesoAcuerdo').value && addressForm.get('procesoAcuerdo').value.value == 'Contratación'">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="departamento"
-                                        [class.color-secondaryColor]="addressForm.get('departamento').invalid && addressForm.get('departamento').touched">
-                                        Departamento
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field class="select-width capitalize">
-                                        <mat-select formControlName="departamento" (selectionChange)="getMunicipio($event)" required>
-                                            <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId" class="capitalize">
-                                                {{ contr.descripcion }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="municipio"
-                                        [class.color-secondaryColor]="addressForm.get('municipio').invalid && addressForm.get('municipio').touched">
-                                        Municipio
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field class="select-width capitalize">
-                                        <mat-select formControlName="municipio" required>
-                                            <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId" class="capitalize">
-                                                {{ contr.descripcion }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <div style="margin-top: 1.5em;" class="text-center">
-            <button mat-raised-button color="accent" 
-            [disabled]="(addressForm.get('etapa').value == null && addressForm.get('procesoAcuerdo').value == null && addressForm.get('reporte').value == null)
-            ||(addressForm.get('etapa').value == null && addressForm.get('procesoAcuerdo').value == null && addressForm.get('departamento').value == null && addressForm.get('municipio').value == null)"
-             type="submit">Descargar reporte</button>
+  <div class="text-center mb-1-5em">
+    <h1 class="title-menu--h1">Reportes estándar</h1>
+  </div>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Filtro de búsqueda </mat-card-title>
+      </mat-card-header>
+      <mat-card-content align="left">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="etapa"
+                  [class.color-secondaryColor]="addressForm.get('etapa').invalid && addressForm.get('etapa').touched"
+                >
+                  Etapa
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="etapa">
+                    <mat-option *ngFor="let etapa of etapaArray" [value]="etapa.code">
+                      {{ etapa.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
         </div>
-    </form>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="procesoAcuerdo"
+                  [class.color-secondaryColor]="
+                    addressForm.get('procesoAcuerdo').invalid && addressForm.get('procesoAcuerdo').touched
+                  "
+                >
+                  Proceso de acuerdo
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="procesoAcuerdo">
+                    <mat-option *ngFor="let procesoAcuerdo of procesoAcuerdoArray" [value]="procesoAcuerdo.code">
+                      {{ procesoAcuerdo.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="animatedDown" *ngIf="addressForm.get('etapa').value && addressForm.get('procesoAcuerdo').value">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="reporte"
+                    [class.color-secondaryColor]="
+                      addressForm.get('reporte').invalid && addressForm.get('reporte').touched
+                    "
+                  >
+                    Reporte
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="reporte" required (ngModelChange)="selectedOption($event)">
+                      <mat-option *ngFor="let reporte of reporteArray" [value]="reporte.indicadorReporteId">
+                        {{ reporte.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="animatedDown"
+          *ngIf="
+            addressForm.get('procesoAcuerdo').value && addressForm.get('procesoAcuerdo').value.value == 'Contratación'
+          "
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="departamento"
+                    [class.color-secondaryColor]="
+                      addressForm.get('departamento').invalid && addressForm.get('departamento').touched
+                    "
+                  >
+                    Departamento
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select formControlName="departamento" (selectionChange)="getMunicipio($event)" required>
+                      <mat-option
+                        *ngFor="let contr of departamentoArray"
+                        [value]="contr.localizacionId"
+                        class="capitalize"
+                      >
+                        {{ contr.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="municipio"
+                    [class.color-secondaryColor]="
+                      addressForm.get('municipio').invalid && addressForm.get('municipio').touched
+                    "
+                  >
+                    Municipio
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select formControlName="municipio" required>
+                      <mat-option
+                        *ngFor="let contr of municipioArray"
+                        [value]="contr.localizacionId"
+                        class="capitalize"
+                      >
+                        {{ contr.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+  <div *ngIf="embedInfo" class="animatedDown mt-1em">
+    <app-embedded-power-bi [embedInfo]="embedInfo"></app-embedded-power-bi>
+  </div>
 </section>

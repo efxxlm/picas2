@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { ReportService } from 'src/app/core/_services/reportService/report.service';
 
 @Component({
   selector: 'app-reportes-estandar',
@@ -9,7 +10,6 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
   styleUrls: ['./reportes-estandar.component.scss']
 })
 export class ReportesEstandarComponent implements OnInit {
-
   addressForm: FormGroup = this.fb.group({
     etapa: [null],
     procesoAcuerdo: [null],
@@ -17,124 +17,203 @@ export class ReportesEstandarComponent implements OnInit {
     departamento: [null],
     municipio: [null]
   });
+
+  indicadorReporte: any[];
+  reporteArray: any[];
+  embedInfo: Object;
+
   etapaArray = [
     {
       name: 'Inicio',
-      value: 'Inicio',
-      code:'1'
+      code: '1'
     },
     {
       name: 'Seguimiento',
-      value: 'Seguimiento',
-      code:'2'
+      code: '2'
     },
     {
       name: 'Liquidación',
-      value: 'Liquidación',
-      code:'3'
+      code: '3'
     },
     {
       name: 'Comités',
-      value: 'Comités',
-      code:'4'
+      code: '4'
     }
   ];
   procesoAcuerdoArray = [
     {
+      name: 'Registro de acuerdos de cofinanciación',
+      code: '1'
+    },
+    {
+      name: 'Registro de Proyectos',
+      code: '2'
+    },
+    {
+      name: 'Preparación',
+      code: '3'
+    },
+    {
       name: 'Facturación',
-      value: 'Facturación',
-      code:'1'
+      code: '4'
     },
     {
       name: 'Seguimiento técnico',
-      value: 'Seguimiento técnico',
-      code:'2'
+      code: '5'
     },
     {
       name: 'Seguimiento financiero',
-      value: 'Seguimiento financiero',
-      code:'3'
+      code: '6'
     },
     {
       name: 'Presupuestales',
-      value: 'Presupuestales',
-      code:'4'
+      code: '7'
     },
     {
       name: 'Novedades',
-      value: 'Novedades',
-      code:'5'
+      code: '8'
     },
     {
       name: 'Controversias',
-      value: 'Controversias',
-      code:'6'
+      code: '9'
     },
     {
       name: 'Procesos de defensa judicial',
-      value: 'Procesos de defensa judicial',
-      code:'7'
+      code: '10'
     },
     {
-      name: 'Contratación',
-      value: 'Contratación',
-      code:'8'
+      name: 'Entrega y liquidación',
+      code: '11'
+    },
+    {
+      name: 'Comité técnico',
+      code: '12'
+    },
+    {
+      name: 'Comité fiduciario',
+      code: '13'
     }
   ];
-  reporteArray = [
+  procesoAcuerdoInicio = [
     {
-      name: 'Estado de ordenes de giro',
-      value: 'Estado de ordenes de giro',
-      code:'1'
+      name: 'Registro de acuerdos de cofinanciación',
+      code: '1'
     },
     {
-      name: 'Estado de rendimientos',
-      value: 'Estado de rendimientos',
-      code:'2'
+      name: 'Registro de Proyectos',
+      code: '2'
     },
     {
-      name: 'Estado de fuentes de financiación',
-      value: 'Estado de fuentes de financiación',
-      code:'3'
+      name: 'Preparación',
+      code: '3'
+    }
+  ];
+  procesoAcuerdoSeguimiento = [
+    {
+      name: 'Facturación',
+      code: '4'
     },
     {
-      name: 'Estado de disponibilidades',
-      value: 'Estado de disponibilidades',
-      code:'4'
+      name: 'Seguimiento técnico',
+      code: '5'
+    },
+    {
+      name: 'Seguimiento financiero',
+      code: '6'
+    },
+    {
+      name: 'Presupuestales',
+      code: '7'
     },
     {
       name: 'Novedades',
-      value: 'Novedades',
-      code:'5'
+      code: '8'
     },
     {
       name: 'Controversias',
-      value: 'Controversias',
-      code:'6'
+      code: '9'
     },
     {
       name: 'Procesos de defensa judicial',
-      value: 'Procesos de defensa judicial',
-      code:'7'
+      code: '10'
+    }
+  ];
+  procesoAcuerdoLiquidacion = [
+    {
+      name: 'Entrega y liquidación',
+      code: '11'
+    }
+  ];
+  procesoAcuerdoComites = [
+    {
+      name: 'Comité técnico',
+      code: '12'
     },
+    {
+      name: 'Comité fiduciario',
+      code: '13'
+    }
   ];
-  departamentoArray = [
-  ];
-  municipioArray = [
-  ];
-  constructor(private fb: FormBuilder,public commonService:CommonService) { }
+  departamentoArray = [];
+  municipioArray = [];
+  constructor(private fb: FormBuilder, public commonService: CommonService, private report: ReportService) {}
 
   ngOnInit(): void {
-    this.commonService.listaDepartamentos().subscribe(response=>{
-      this.departamentoArray=response;
+    this.commonService.listaDepartamentos().subscribe(response => {
+      this.departamentoArray = response;
+    });
+
+    this.getIndicadorReporte();
+    this.filtrarIndicadores();
+  }
+
+  getIndicadorReporte() {
+    this.report.getIndicadorReporte().subscribe(response => {
+      this.indicadorReporte = response;
     });
   }
+
+  filtrarIndicadores() {
+    this.addressForm.get('etapa').valueChanges.subscribe(value => {
+      switch (value) {
+        case '1':
+          this.procesoAcuerdoArray = this.procesoAcuerdoInicio;
+          break;
+        case '2':
+          this.procesoAcuerdoArray = this.procesoAcuerdoSeguimiento;
+          break;
+        case '3':
+          this.procesoAcuerdoArray = this.procesoAcuerdoLiquidacion;
+          break;
+        case '4':
+          this.procesoAcuerdoArray = this.procesoAcuerdoComites;
+          break;
+        default:
+          this.procesoAcuerdoArray = this.procesoAcuerdoArray;
+          break;
+      }
+    });
+    this.addressForm.valueChanges.subscribe(value => {
+      this.reporteArray = this.indicadorReporte.filter(
+        indicador => indicador.etapa === value.etapa && indicador.proceso === value.procesoAcuerdo
+      );
+    });
+  }
+
   getMunicipio(event: MatSelectChange) {
     this.commonService.listaMunicipiosByIdDepartamento(event.value).subscribe(respuesta => {
       this.municipioArray = respuesta;
     });
   }
-  onSubmit(){
+  onSubmit() {}
 
+  getReportEmbedInfoByIndicadorReporteId(id: number) {
+    this.report.getReportEmbedInfoByIndicadorReporteId(id).subscribe(response => {
+      this.embedInfo = response;
+    });
+  }
+
+  selectedOption(id: number) {
+    this.getReportEmbedInfoByIndicadorReporteId(id);
   }
 }
