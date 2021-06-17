@@ -1570,9 +1570,22 @@ namespace asivamosffie.services
 
             List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
 
-            vContratoPagosRealizados = _context.VContratoPagosRealizados
+            try
+            {
+                if (_context.VContratoPagosRealizados
+                  .Any(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago))
+                {
+                    vContratoPagosRealizados = _context.VContratoPagosRealizados
                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                       .ToList();
+                }
+
+            }
+            catch (Exception)
+            {
+                 
+            }
+        
 
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
 
@@ -1584,7 +1597,7 @@ namespace asivamosffie.services
             return contrato;
 
         }
-
+        int Enum = 1;
         public dynamic GetDrpContrato(int pContratacionId)
         {
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
@@ -1595,7 +1608,7 @@ namespace asivamosffie.services
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
-            int Enum = 1;
+          
             foreach (var Drp in ListDrp)
             {
                 var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
