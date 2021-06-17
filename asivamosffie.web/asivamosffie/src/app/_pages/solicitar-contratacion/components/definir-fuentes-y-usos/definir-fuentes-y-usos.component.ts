@@ -530,7 +530,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       };
     };
 
-    if (valoresCorrectos) {
+    // if (valoresCorrectos) {
 
       this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
         .subscribe(
@@ -546,9 +546,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           err => this.openDialog('', `<b>${err.message}</b>`)
         );
 
-    } else {
-      this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
-    }
+    // } else {
+    //   this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
+    // }
 
   }
 }
