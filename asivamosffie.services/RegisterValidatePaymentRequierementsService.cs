@@ -27,6 +27,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+        private int Enum = 1;
         #endregion
 
         #region Tablas Relacionadas Para Pagos
@@ -1583,9 +1584,9 @@ namespace asivamosffie.services
             }
             catch (Exception)
             {
-                 
+
             }
-        
+
 
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
 
@@ -1597,7 +1598,7 @@ namespace asivamosffie.services
             return contrato;
 
         }
-        int Enum = 1;
+      
         public dynamic GetDrpContrato(int pContratacionId)
         {
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
@@ -1608,7 +1609,7 @@ namespace asivamosffie.services
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
-          
+
             foreach (var Drp in ListDrp)
             {
                 var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
