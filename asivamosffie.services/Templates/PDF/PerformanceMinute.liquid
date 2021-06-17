@@ -1,4 +1,4 @@
-﻿<html>
+﻿<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
@@ -74,9 +74,10 @@
       	{margin-bottom:0cm;}
       -->
     </style>
+    <title>Acta Rendimientos</title>
   </head>
 
-  <body lang="ES-CO" style="word-wrap: break-word">
+  <body lang="ES-CO" style="word-wrap: break-word; margin: 60px;">
 
   <div style="text-align: center;">
   <img src="{{ minute.image }}" alt="FFIE">
@@ -129,7 +130,7 @@
       </p>
 
       <p class="Standard" style="margin-bottom: 0cm; line-height: normal">
-        <span style="color: red">&nbsp;</span>
+        <span>&nbsp;</span>
       </p>
 
       <p
@@ -148,14 +149,15 @@
 
       <p class="Standard" style="margin-bottom: 0cm; line-height: normal">
         &nbsp;
-      </p>      
+      </p>
+      <div>
       <table
         class="MsoTableGrid"
         border="1"
         cellspacing="0"
         cellpadding="0"
-        width="614"
-        style="width: 460.45pt; border-collapse: collapse; border: none"
+        width="614" 
+        style="width: 460.45pt; border-collapse: collapse; border: none; margin: 0 auto;"
       >
         <tr>
           <td
@@ -278,7 +280,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="font-size: 10pt; color: red" >{{item.aportante}}</span></i>
+              <i><span style="font-size: 10pt;" >{{item.aportante}}</span></i>
             </p>
           </td>
           <td
@@ -303,7 +305,7 @@
               "
             >
               <i
-                ><span style="font-size: 10pt; color: red"
+                ><span style="font-size: 10pt;"
                   >${{item.anterior}}</span
                 ></i
               >
@@ -331,7 +333,7 @@
               "
             >
               <i
-                ><span style="font-size: 10pt; color: red"
+                ><span style="font-size: 10pt;"
                   >${{item.actual}}</span
                 ></i
               >
@@ -359,7 +361,7 @@
               "
             >
               <i
-                ><span style="font-size: 10pt; color: red"
+                ><span style="font-size: 10pt;"
                   >${{item.total}}</span
                 ></i
               >
@@ -413,7 +415,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">${{minute.anterior}}</span></i>
+              <i><span>${{minute.anterior}}</span></i>
             </p>
           </td>
           <td
@@ -438,7 +440,7 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">${{minute.actual}}</span></i>
+              <i><span>${{minute.actual}}</span></i>
             </p>
           </td>
           <td
@@ -463,11 +465,11 @@
                 line-height: normal;
               "
             >
-              <i><span style="color: red">${{minute.total}}</span></i>
+              <i><span>${{minute.total}}</span></i>
             </p>
           </td>
         </tr>
-      </table>
+      </table></div>
 
       <p class="Standard" style="margin-bottom: 0cm; line-height: normal">
         &nbsp;
@@ -516,7 +518,6 @@
       <div
         style="
           border: none;
-          border-top: solid windowtext 1pt;
           padding: 1pt 0cm 0cm 0cm;
         "
       >
@@ -531,7 +532,8 @@
             padding: 0cm;
           "
         >
-          Director (a) Financiera y Administrativa
+          <span style="border-top: solid windowtext 1pt;
+          padding: 1pt 0cm 0cm 0cm;">Director (a) Financiera y Administrativa</span>
         </p>
 
         <p
