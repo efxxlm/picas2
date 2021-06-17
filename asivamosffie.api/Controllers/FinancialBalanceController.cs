@@ -21,6 +21,21 @@ namespace asivamosffie.api.Controllers
             _finalBalanceService = finalBalanceService;
             _settings = settings;
         }
+        //        Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId);
+        [HttpGet]
+        [Route("SeeDetailOdg")]
+        public async Task<IActionResult> SeeDetailOdg([FromQuery]int pOrdenGiroId)
+        {
+            try
+            {
+                return Ok(await _finalBalanceService.SeeDetailOdg(pOrdenGiroId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
 
         [HttpGet]
         [Route("GetEjecucionFinancieraXProyectoId")]
@@ -88,9 +103,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-     
+         
         [HttpGet]
         [Route("GetOrdenGiroByNumeroOrdenGiro")]
         public async Task<IActionResult> GetOrdenGiroByNumeroOrdenGiro([FromQuery] string pTipoSolicitudCodigo, string pNumeroOrdenGiro, string pLLaveMen)

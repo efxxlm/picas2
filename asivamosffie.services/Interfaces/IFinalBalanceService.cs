@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Http;
 namespace asivamosffie.services.Interfaces
 {
     public interface IFinalBalanceService
-    {
+    { 
+        Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId);
         Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId);
         Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId);
         Task<Respuesta> ChangeStatudBalanceFinanciero(BalanceFinanciero pBalanceFinanciero);

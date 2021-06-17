@@ -295,6 +295,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VSetHistProyectoAportante> VSetHistProyectoAportante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
+        public virtual DbSet<VTablaOdgFacturado> VTablaOdgFacturado { get; set; }
         public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
@@ -10121,6 +10122,31 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VTablaOdgFacturado>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_TablaOdgFacturado");
+
+                entity.Property(e => e.ConceptoPago)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPago)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VTotalComprometidoXcontratacionProyectoTipoSolicitud>(entity =>

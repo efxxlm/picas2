@@ -16,5 +16,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public int SolicitudPagoId { get; set; }
 
+        [NotMapped]
+        public dynamic TablaFacturado { get; set; }
+
     }
 }

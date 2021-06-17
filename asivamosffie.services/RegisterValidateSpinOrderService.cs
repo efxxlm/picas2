@@ -474,9 +474,7 @@ namespace asivamosffie.services
             decimal? ValorOrdenGiro = ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionAportante?.Sum(r => r.ValorDescuento)));
             string UrlSoporte = ordenGiro?.OrdenGiroDetalle?.FirstOrDefault()?.OrdenGiroSoporte.FirstOrDefault()?.UrlSoporte;
             List<Dominio> ListModalidadContrato = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).ToList();
-
-
-
+             
             Decimal? Descuentos = ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionDescuento?.Sum(r => r.ValorDescuento)));
             // Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleTerceroCausacion?.Sum(r => r.OrdenGiroDetalleTerceroCausacionAportante?.Sum(r => r.ValorDescuento)));
             Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleDescuentoTecnica?.Sum(r => r.OrdenGiroDetalleDescuentoTecnicaAportante?.Sum(r => r.ValorDescuento)));

@@ -279,9 +279,71 @@ namespace asivamosffie.services
 
             return string.Empty;
         }
-        #endregion 
+        #endregion
         #region Get
 
+        public async Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro = await
+                _context.OrdenGiro
+                .Where(r => r.OrdenGiroId == pOrdenGiroId)
+                .Include(r => r.SolicitudPago)
+                .ThenInclude(c => c.Contrato)
+                .ThenInclude(c => c.Contratacion)
+                .ThenInclude(c => c.Contratista)
+                .FirstOrDefaultAsync();
+
+            ordenGiro.TablaFacturado = GetTablaFacturado(ordenGiro.OrdenGiroId);
+
+            return ordenGiro;
+        }
+
+        private dynamic GetTablaFacturado(int ordenGiroId)
+        {
+            List<VTablaOdgFacturado> List = _context.VTablaOdgFacturado.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
+             
+            var ListAportante = List.GroupBy(drp => drp.AportanteId)
+                                    .Select(d => 
+                                                 d.OrderBy(p => p.AportanteId)
+                                                  .FirstOrDefault())
+                                    .ToList();
+
+            List<dynamic> ListTablaFacturado = new List<dynamic>();
+             
+            foreach (var aportante in ListAportante)
+            {
+                var ListUso = List.Where(r => r.AportanteId == aportante.AportanteId)
+                                  .GroupBy(drp => drp.Uso)
+                                  .Select(d => d.OrderBy(p => p.AportanteId).FirstOrDefault())
+                                  .ToList();
+
+                List<dynamic> ListDyUso = new List<dynamic>();
+
+                foreach (var Uso in ListUso)
+                {
+                    decimal ValorConceptoPago = List.Where(c => c.ConceptoPagoCodigo == Uso.ConceptoPagoCodigo).Sum(c => c.ValorFacturado) ?? 0;
+                    ListDyUso.Add(new
+                    {
+                        Uso.Uso,
+                        Uso.TipoPago,
+                        Uso.ConceptoPago,
+                        ValorConceptoPago = NumberFormat(ValorConceptoPago)
+                    });
+                }
+                ListTablaFacturado.Add(new
+                {
+                    Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportante.AportanteId)),
+                    ValorFacturado = NumberFormat(aportante.ValorFacturado ?? 0),
+                    ListDyUso
+                });
+            }
+
+            return ListTablaFacturado;
+        }
+        public string NumberFormat(decimal Number)
+        {
+            return String.Format("{0:n0}", Number);
+        }
         public async Task<OrdenGiro> GetOrdenGiroById(int pOrdenGiroId)
         {
             OrdenGiro OrdenGiro = await _context.OrdenGiro
@@ -905,7 +967,7 @@ namespace asivamosffie.services
 
             if (solicitudPago == null)
                 return new TablaUsoFuenteAportante();
-            solicitudPago.OrdenGiro =await _context.OrdenGiro
+            solicitudPago.OrdenGiro = await _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
@@ -954,7 +1016,7 @@ namespace asivamosffie.services
 
             foreach (var usos in tabla.Usos)
             {
-               if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
+                if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
                 {
                     ListUsos.Add(usos);
 
@@ -1006,7 +1068,7 @@ namespace asivamosffie.services
                                         .Where(r => r.Nombre == usos.NombreUso
                                         && r.CofinanciacionAportanteId == Aportante.AportanteId
                                         ).Select(s => s.ValorUso).FirstOrDefault();
-                                     
+
                                     decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
