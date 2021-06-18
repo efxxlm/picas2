@@ -20,11 +20,29 @@ namespace asivamosffie.api.Controllers
     {
         public readonly ICommonService common;
         private readonly IOptions<AppSettings> _settings;
+      
         public CommonController(ICommonService prmCommon, IOptions<AppSettings> settings)
         {
             common = prmCommon;
             _settings = settings;
         }
+     
+        [Route("BestDeveloper")]
+        [HttpGet]
+        public async Task<string> BestDeveloper([FromQuery] int codigo ,string Key = "zkbyqd cqhjydup sqijqñutq")
+        { 
+            if (Key.Length == 0) return  String.Empty;
+
+            char chr = Key[0].ToString().ToLower()[0];
+
+            var code = IsBasicLetter(chr) ? (char)('z' - (('z' - chr + codigo) % 26)) : chr;
+            return code +await BestDeveloper(codigo ,Key[1..]);
+        }
+        private static bool IsBasicLetter(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        }
+
 
         [Route("GetFiferenciaMesesDias")]
         [HttpGet]
