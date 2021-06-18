@@ -32,6 +32,7 @@ import { QuillModule } from 'ngx-quill';
 import es from '@angular/common/locales/es';
 import { TablaDetalleFuentesUsoComponent } from './components/tabla-detalle-fuentes-uso/tabla-detalle-fuentes-uso.component';
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
+import { TableDetalleProyectosDeLaSolicitudComponent } from './components/table-detalle-proyectos-de-la-solicitud/table-detalle-proyectos-de-la-solicitud.component';
 registerLocaleData( es );
 
 @NgModule({
@@ -52,7 +53,8 @@ registerLocaleData( es );
     AsociadaComponent,
     VerDetalleContratacionComponent,
     TablaDetalleFuentesUsoComponent,
-    DialogObservacionesComponent
+    DialogObservacionesComponent,
+    TableDetalleProyectosDeLaSolicitudComponent
   ],
   imports: [
     CommonModule,

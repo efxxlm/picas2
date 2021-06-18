@@ -19,9 +19,8 @@
           Proyectos de la solicitud
         </mat-panel-title>
       </mat-expansion-panel-header>
-
-      <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA"
-        [data]="dataTable"></app-tabla-otros-descuentos>
+      <app-table-detalle-proyectos-de-la-solicitud *ngIf="dataTable" [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA"
+        [data]="dataTable"></app-table-detalle-proyectos-de-la-solicitud>
 
     </mat-expansion-panel>
 

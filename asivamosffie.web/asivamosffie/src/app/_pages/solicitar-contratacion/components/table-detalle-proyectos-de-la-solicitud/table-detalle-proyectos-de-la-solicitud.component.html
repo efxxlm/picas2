@@ -1,0 +1,48 @@
+<div class="table-responsive">
+  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+    <thead>
+      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Tipo de intervención
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Llave MEN
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Región
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Departamento/ Municipio
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Institución Educativa
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted back-color">
+          Sede
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let element of data">
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.tipoIntervencionCodigo }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.llaveMen }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.usuarioModificacion }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.localizacionIdMunicipio }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.institucionEducativa }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.sede }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
