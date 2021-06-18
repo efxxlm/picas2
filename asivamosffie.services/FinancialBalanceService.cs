@@ -294,22 +294,54 @@ namespace asivamosffie.services
                 .FirstOrDefaultAsync();
 
             ordenGiro.TablaFacturado = GetTablaFacturado(ordenGiro.OrdenGiroId);
-
+            ordenGiro.TablaDescuento = GetTablaDescuento(ordenGiro.OrdenGiroId);
             return ordenGiro;
+        }
+
+        private dynamic GetTablaDescuento(int ordenGiroId)
+        {
+            List<VTablaOdgDescuento> List = _context.VTablaOdgDescuento.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
+
+            var ListAportante = List.GroupBy(drp => drp.AportanteId)
+                                    .Select(d =>
+                                                 d.OrderBy(p => p.AportanteId)
+                                                  .FirstOrDefault())
+                                    .ToList();
+
+            List<dynamic> ListTablaDescuento = new List<dynamic>();
+            foreach (var Aportante in ListAportante)
+            {
+                var ListConcepto = List.GroupBy(drp => drp.ConceptoPago)
+                           .Select(d =>
+                                        d.OrderBy(p => p.ConceptoPago)
+                                         .FirstOrDefault())
+                           .ToList();
+
+                List<dynamic> ListConceptoPago = new List<dynamic>();
+                foreach (var Concepto in ListConcepto)
+                {
+                    //ListConceptoPago.Add(new
+                    //{
+                    //     AnsAplicado = Concepto.
+                    //});
+                }
+            }
+
+            return ListTablaDescuento;
         }
 
         private dynamic GetTablaFacturado(int ordenGiroId)
         {
             List<VTablaOdgFacturado> List = _context.VTablaOdgFacturado.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
-             
+
             var ListAportante = List.GroupBy(drp => drp.AportanteId)
-                                    .Select(d => 
+                                    .Select(d =>
                                                  d.OrderBy(p => p.AportanteId)
                                                   .FirstOrDefault())
                                     .ToList();
 
             List<dynamic> ListTablaFacturado = new List<dynamic>();
-             
+
             foreach (var aportante in ListAportante)
             {
                 var ListUso = List.Where(r => r.AportanteId == aportante.AportanteId)
@@ -327,23 +359,20 @@ namespace asivamosffie.services
                         Uso.Uso,
                         Uso.TipoPago,
                         Uso.ConceptoPago,
-                        ValorConceptoPago = NumberFormat(ValorConceptoPago)
+                        ValorConceptoPago = ValorConceptoPago
                     });
                 }
                 ListTablaFacturado.Add(new
                 {
                     Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportante.AportanteId)),
-                    ValorFacturado = NumberFormat(aportante.ValorFacturado ?? 0),
+                    ValorFacturado = aportante.ValorFacturado ?? 0,
                     ListDyUso
                 });
             }
 
             return ListTablaFacturado;
         }
-        public string NumberFormat(decimal Number)
-        {
-            return String.Format("{0:n0}", Number);
-        }
+
         public async Task<OrdenGiro> GetOrdenGiroById(int pOrdenGiroId)
         {
             OrdenGiro OrdenGiro = await _context.OrdenGiro

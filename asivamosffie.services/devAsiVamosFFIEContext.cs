@@ -295,6 +295,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VSetHistProyectoAportante> VSetHistProyectoAportante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
+        public virtual DbSet<VTablaOdgDescuento> VTablaOdgDescuento { get; set; }
         public virtual DbSet<VTablaOdgFacturado> VTablaOdgFacturado { get; set; }
         public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
@@ -311,8 +312,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
+         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -10122,6 +10122,27 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VTablaOdgDescuento>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_TablaOdgDescuento");
+
+                entity.Property(e => e.ConceptoPago)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Descuento)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DescuentoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VTablaOdgFacturado>(entity =>
