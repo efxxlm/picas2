@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
+import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -16,6 +17,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,
+    private fuenteFinanciacionService: FuenteFinanciacionService
     ) { }
     detailavailabilityBudget:any=null;
     esModificacion=false;
@@ -30,6 +32,18 @@ export class ConValidacionPresupuestalComponent implements OnInit {
         .subscribe(listas => {
           console.log(listas);
           this.detailavailabilityBudget=listas[0];
+          if(this.detailavailabilityBudget != null){
+            if(this.detailavailabilityBudget?.tipoSolicitudCodigo === this.pTipoDDP.DDP_especial){
+              this.detailavailabilityBudget?.aportantes.forEach(element => {
+                this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalid(this.detailavailabilityBudget?.id).subscribe(lista => {
+                  console.log(lista);
+                  if(lista.length > 0){
+                    element.fuentesFinanciacion = lista;
+                  }
+              });
+              });
+            }
+          }
       });
     }
   }
@@ -61,7 +75,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result === true)
       {
-       
+
       }
     });
   }

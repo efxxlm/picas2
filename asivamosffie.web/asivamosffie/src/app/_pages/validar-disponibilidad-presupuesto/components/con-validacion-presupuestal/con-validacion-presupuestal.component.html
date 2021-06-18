@@ -139,7 +139,8 @@
             {{ detailavailabilityBudget?.urlConSoporte }}
           </p>
           <mat-card-title class="header-card--text sub-text"> Fuente </mat-card-title>
-          <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo != pTipoDDP.DDP_especial">
+          <!--*ngIf="detailavailabilityBudget?.tipoSolicitudCodigo != pTipoDDP.DDP_especial"-->
+          <div>
             <div *ngFor="let fuente of aportante.fuentesFinanciacion; index as ii">
               <p>
                 <strong>Fuente {{ ii + 1 }}:</strong>
