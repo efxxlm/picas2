@@ -25,14 +25,14 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly string _connectionString;
-         
+
         public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration)
         {
             _context = context;
             _commonService = commonService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
-        
+
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
@@ -188,7 +188,9 @@ namespace asivamosffie.services
                                     //el saldo de la fuente realmente es lo que tengo en control de recursos
                                     //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
 
-                                    ContratacionProyecto contratacionProyecto = ListDP.Contratacion.ContratacionProyecto.Where(r => r.ProyectoId == proyectospp.ProyectoId).FirstOrDefault();
+                                    ContratacionProyecto contratacionProyecto = new ContratacionProyecto();
+
+                                    contratacionProyecto = ListDP?.Contratacion?.ContratacionProyecto?.Where(r => r.ProyectoId == proyectospp.ProyectoId).FirstOrDefault();
                                     //decimal saldo = contratacionProyecto?.ContratacionProyectoAportante?.Where(r => r.CofinanciacionAportanteId == font.AportanteId).FirstOrDefault().ValorAporte ?? 0;
 
                                     //Convert.ToDecimal(
@@ -603,7 +605,7 @@ namespace asivamosffie.services
                 return new CofinanciacionAportante();
             }
         }
-         
+
         public async Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato)
         {
             //Si el aportante es tercero include dominio
@@ -763,11 +765,11 @@ namespace asivamosffie.services
         }
         //Avance compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento)
-        { 
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
-           
+
             try
-            { 
+            {
                 string strCrearEditar;
                 if (string.IsNullOrEmpty(compromisoSeguimiento.CompromisoSeguimientoId.ToString()) || compromisoSeguimiento.CompromisoSeguimientoId == 0)
                 {
@@ -797,7 +799,7 @@ namespace asivamosffie.services
 
                 }
 
-                return  new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
@@ -811,7 +813,7 @@ namespace asivamosffie.services
 
             catch (Exception ex)
             {
-                return  new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
@@ -1468,7 +1470,7 @@ namespace asivamosffie.services
                     }
                     string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == disponibilidadPresupuestal.TipoSolicitudCodigo).FirstOrDefault().Nombre;
                     string template = TemplateRecoveryPassword.Contenido
-                        .Replace("[NumeroContrato]",ncontrato)
+                        .Replace("[NumeroContrato]", ncontrato)
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[FechaContrato]", fechaContrato)
                         .Replace("[NumeroSolicitud]", disponibilidadPresupuestal.NumeroSolicitud)
@@ -1732,7 +1734,7 @@ namespace asivamosffie.services
                 throw;
             }
         }
-         
+
         public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
             var Id = await _context.Proyecto
@@ -2526,11 +2528,11 @@ namespace asivamosffie.services
                                    ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
                             .Count();
 
-                        if (ListGestionFuenteFinanciacion
-                            .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId &&
-                                   ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                            .Count() == aportantesEstado.Count())
-                            blnEstado = true;
+                    if (ListGestionFuenteFinanciacion
+                        .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId &&
+                               ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
+                        .Count() == aportantesEstado.Count())
+                        blnEstado = true;
                 }
                 DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                 {
@@ -2582,7 +2584,7 @@ namespace asivamosffie.services
 
             return ListDetailValidarDisponibilidadPresupuesal;
         }
-         
+
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
@@ -3064,7 +3066,7 @@ namespace asivamosffie.services
 
             return ListDetailValidarDisponibilidadPresupuesal;
         }
-         
+
         private string getNombreAportante(CofinanciacionAportante confinanciacion)
         {
             string nombreAportante;
