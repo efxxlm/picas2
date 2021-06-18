@@ -73,7 +73,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
             }
           }
           }
-        });  
+        });
       // }else{
       //   this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id)
       //   .subscribe(listas => {
@@ -83,12 +83,12 @@ export class ValidacionPresupuestalComponent implements OnInit {
       //     }
       //   });
       // }
-      
+
     }
   }
   download() {
     console.log(this.detailavailabilityBudget);
-    
+
     this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId, true).subscribe((listas: any) => {
       console.log(listas);
       const documento = `${this.detailavailabilityBudget.numeroDDP}.pdf`;
@@ -112,7 +112,8 @@ export class ValidacionPresupuestalComponent implements OnInit {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
           this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
-          if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
+          //if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
+          if (this.detailavailabilityBudget?.valorGestionado == this.detailavailabilityBudget?.valorSolicitud && this.detailavailabilityBudget?.estadoRegistro == true) {
             return true;
           }
           else {
@@ -126,7 +127,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
           else {
             return false;
           }
-  
+
         }
     }
     else {
