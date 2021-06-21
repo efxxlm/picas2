@@ -302,29 +302,41 @@ namespace asivamosffie.services
         {
             List<VTablaOdgDescuento> List = _context.VTablaOdgDescuento.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
 
-            var ListAportante = List.GroupBy(drp => drp.AportanteId)
-                                    .Select(d =>
-                                                 d.OrderBy(p => p.AportanteId)
-                                                  .FirstOrDefault())
-                                    .ToList();
+            var ListConceptoPago = List.GroupBy(drp => drp.ConceptoPago)
+                                       .Select(d =>
+                                                   d.OrderBy(p => p.ConceptoPago)
+                                                    .FirstOrDefault())
+                                       .ToList();
 
             List<dynamic> ListTablaDescuento = new List<dynamic>();
-            foreach (var Aportante in ListAportante)
-            {
-                var ListConcepto = List.GroupBy(drp => drp.ConceptoPago)
-                           .Select(d =>
-                                        d.OrderBy(p => p.ConceptoPago)
-                                         .FirstOrDefault())
-                           .ToList();
 
-                List<dynamic> ListConceptoPago = new List<dynamic>();
-                foreach (var Concepto in ListConcepto)
+            foreach (var ConceptoPago in ListConceptoPago)
+            {
+                var ListAportante = List.Where(r => r.ConceptoPago == ConceptoPago.ConceptoPago)
+                                        .GroupBy(drp => drp.AportanteId)
+                                        .Select(d =>
+                                                    d.OrderBy(p => p.AportanteId)
+                                                     .FirstOrDefault())
+                                        .ToList();
+
+                List<dynamic> ListDyAportante = new List<dynamic>();
+
+                foreach (var Aportante in ListAportante)
                 {
-                    //ListConceptoPago.Add(new
-                    //{
-                    //     AnsAplicado = Concepto.
-                    //});
+                    ListDyAportante.Add(new
+                    {
+                        Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId)),
+                        AnsAplicado = List.Where(c => c.DescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
+                        ReteGarantia = List.Where(c => c.DescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
+                        OtrosDescuentos = List.Where(c => c.DescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && c.DescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
+                        ValorTotalDescuento = List.Where(c => c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento)
+                    });
                 }
+
+                ListTablaDescuento.Add(new
+                {
+                    ConceptoPago.ConceptoPago,ListDyAportante
+                });
             }
 
             return ListTablaDescuento;
@@ -363,8 +375,8 @@ namespace asivamosffie.services
                     foreach (var ConceptoPago in ListConceptoPago)
                     {
                         var ListAportante = List.Where(r => r.Uso == Uso.Uso && r.TipoPago == TipoPago.TipoPago && r.ConceptoPagoCodigo == ConceptoPago.ConceptoPagoCodigo)
-                                 .GroupBy(drp => drp.ConceptoPagoCodigo)
-                                 .Select(d => d.OrderBy(p => p.ConceptoPagoCodigo).FirstOrDefault())
+                                 .GroupBy(drp => drp.AportanteId)
+                                 .Select(d => d.OrderBy(p => p.AportanteId).FirstOrDefault())
                                  .ToList();
 
                         List<dynamic> ListDyAportante = new List<dynamic>();
