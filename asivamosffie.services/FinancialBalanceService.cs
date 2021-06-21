@@ -334,42 +334,67 @@ namespace asivamosffie.services
         {
             List<VTablaOdgFacturado> List = _context.VTablaOdgFacturado.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
 
-            var ListAportante = List.GroupBy(drp => drp.AportanteId)
+            var ListUso = List.GroupBy(drp => drp.Uso)
                                     .Select(d =>
-                                                 d.OrderBy(p => p.AportanteId)
+                                                 d.OrderBy(p => p.Uso)
                                                   .FirstOrDefault())
                                     .ToList();
 
             List<dynamic> ListTablaFacturado = new List<dynamic>();
 
-            foreach (var aportante in ListAportante)
+            foreach (var Uso in ListUso)
             {
-                var ListUso = List.Where(r => r.AportanteId == aportante.AportanteId)
-                                  .GroupBy(drp => drp.Uso)
-                                  .Select(d => d.OrderBy(p => p.AportanteId).FirstOrDefault())
+                var ListTipoPago = List.Where(r => r.Uso == Uso.Uso)
+                                  .GroupBy(drp => drp.TipoPago)
+                                  .Select(d => d.OrderBy(p => p.TipoPago).FirstOrDefault())
                                   .ToList();
 
-                List<dynamic> ListDyUso = new List<dynamic>();
+                List<dynamic> ListDyTipoPago = new List<dynamic>();
 
-                foreach (var Uso in ListUso)
+                foreach (var TipoPago in ListTipoPago)
                 {
-                    decimal ValorConceptoPago = List.Where(c => c.ConceptoPagoCodigo == Uso.ConceptoPagoCodigo).Sum(c => c.ValorFacturado) ?? 0;
-                    ListDyUso.Add(new
+                    var ListConceptoPago = List.Where(r => r.Uso == Uso.Uso && r.TipoPago == TipoPago.TipoPago)
+                                 .GroupBy(drp => drp.ConceptoPagoCodigo)
+                                 .Select(d => d.OrderBy(p => p.ConceptoPagoCodigo).FirstOrDefault())
+                                 .ToList();
+
+                    List<dynamic> ListDyConceptoPago = new List<dynamic>();
+
+                    foreach (var ConceptoPago in ListConceptoPago)
                     {
-                        Uso.Uso,
-                        Uso.TipoPago,
-                        Uso.ConceptoPago,
-                        ValorConceptoPago = ValorConceptoPago
+                        var ListAportante = List.Where(r => r.Uso == Uso.Uso && r.TipoPago == TipoPago.TipoPago && r.ConceptoPagoCodigo == ConceptoPago.ConceptoPagoCodigo)
+                                 .GroupBy(drp => drp.ConceptoPagoCodigo)
+                                 .Select(d => d.OrderBy(p => p.ConceptoPagoCodigo).FirstOrDefault())
+                                 .ToList();
+
+                        List<dynamic> ListDyAportante = new List<dynamic>();
+
+                        foreach (var Aportante in ListAportante)
+                        {
+                            ListDyAportante.Add(new
+                            {
+                                ValorFacturado = Aportante.ValorFacturado,
+                                Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId))
+                            });
+                        }
+                        ListDyConceptoPago.Add(new
+                        {
+                            ConceptoPago.ConceptoPago,
+                            ListDyAportante
+                        });
+                    }
+                    ListDyTipoPago.Add(new
+                    {
+                        TipoPago.TipoPago,
+                        ListDyConceptoPago
                     });
                 }
                 ListTablaFacturado.Add(new
                 {
-                    Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportante.AportanteId)),
-                    ValorFacturado = aportante.ValorFacturado ?? 0,
-                    ListDyUso
+                    Uso.Uso,
+                    ListDyTipoPago 
                 });
-            }
-
+            } 
             return ListTablaFacturado;
         }
 
