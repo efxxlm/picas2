@@ -380,6 +380,7 @@ namespace asivamosffie.services
                         ListDyConceptoPago.Add(new
                         {
                             ConceptoPago.ConceptoPago,
+                            ValorConceptoPago = ListAportante.Sum(v => v.ValorFacturado),
                             ListDyAportante
                         });
                     }
@@ -392,9 +393,9 @@ namespace asivamosffie.services
                 ListTablaFacturado.Add(new
                 {
                     Uso.Uso,
-                    ListDyTipoPago 
+                    ListDyTipoPago
                 });
-            } 
+            }
             return ListTablaFacturado;
         }
 
