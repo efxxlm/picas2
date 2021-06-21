@@ -297,6 +297,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
         public virtual DbSet<VTablaOdgDescuento> VTablaOdgDescuento { get; set; }
         public virtual DbSet<VTablaOdgFacturado> VTablaOdgFacturado { get; set; }
+        public virtual DbSet<VTablaOdgOtroDescuento> VTablaOdgOtroDescuento { get; set; }
         public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
@@ -312,6 +313,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -10168,6 +10171,25 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
+            });
+
+            modelBuilder.Entity<VTablaOdgOtroDescuento>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_TablaOdgOtroDescuento");
+
+                entity.Property(e => e.ConceptoPago)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Descuento)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DescuentoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VTotalComprometidoXcontratacionProyectoTipoSolicitud>(entity =>

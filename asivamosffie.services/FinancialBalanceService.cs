@@ -295,7 +295,68 @@ namespace asivamosffie.services
 
             ordenGiro.TablaFacturado = GetTablaFacturado(ordenGiro.OrdenGiroId);
             ordenGiro.TablaDescuento = GetTablaDescuento(ordenGiro.OrdenGiroId);
+            ordenGiro.TablaOtroDescuento = GetTablaOtroDescuento(ordenGiro.OrdenGiroId);
             return ordenGiro;
+        }
+
+        private dynamic GetTablaOtroDescuento(int ordenGiroId)
+        {
+            List<VTablaOdgOtroDescuento> List = _context.VTablaOdgOtroDescuento.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
+
+            var ListConceptoPago = List.GroupBy(drp => drp.ConceptoPago)
+                                       .Select(d =>
+                                                   d.OrderBy(p => p.ConceptoPago)
+                                                    .FirstOrDefault())
+                                       .ToList();
+
+            List<dynamic> ListTablaDescuento = new List<dynamic>();
+
+            foreach (var ConceptoPago in ListConceptoPago)
+            {
+                var ListAportante = List.Where(c => c.ConceptoPago == ConceptoPago.ConceptoPago)
+                                        .GroupBy(drp => drp.AportanteId)
+                                        .Select(d =>
+                                                  d.OrderBy(p => p.AportanteId)
+                                                   .FirstOrDefault())
+                                        .ToList();
+
+                List<dynamic> ListDyAportante = new List<dynamic>();
+
+                foreach (var Aportante in ListAportante)
+                {
+                    var ListDescuento = List.Where(c => c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId)
+                                             .GroupBy(drp => drp.Descuento)
+                                             .Select(d =>
+                                                     d.OrderBy(p => p.Descuento)
+                                                      .FirstOrDefault())
+                                             .ToList();
+
+                    List<dynamic> ListDyDescuento = new List<dynamic>();
+
+                    foreach (var Descuento in ListDescuento)
+                    {
+                        ListDyDescuento.Add(new
+                        {
+                            Descuento.Descuento,
+                            Descuento.ValorDescuento
+                        });
+                    }
+
+                    ListDyAportante.Add(new
+                    {
+                        Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId)),
+                        ListDyDescuento 
+                    });
+                }
+
+                ListTablaDescuento.Add(new 
+                {
+                    ConceptoPago.ConceptoPago,
+                    ListDyAportante 
+                });
+            }
+
+            return ListTablaDescuento;
         }
 
         private dynamic GetTablaDescuento(int ordenGiroId)
@@ -335,7 +396,8 @@ namespace asivamosffie.services
 
                 ListTablaDescuento.Add(new
                 {
-                    ConceptoPago.ConceptoPago,ListDyAportante
+                    ConceptoPago.ConceptoPago,
+                    ListDyAportante
                 });
             }
 
