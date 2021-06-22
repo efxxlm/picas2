@@ -699,7 +699,7 @@ namespace asivamosffie.services
             while (fechaFin >= fechaInicial)
             {
                 listaFechasTotal.Add(fechaInicial);
-                fechaInicial = fechaInicial.AddDays(2);
+                fechaInicial = fechaInicial.AddDays(1);
 
             }
 
