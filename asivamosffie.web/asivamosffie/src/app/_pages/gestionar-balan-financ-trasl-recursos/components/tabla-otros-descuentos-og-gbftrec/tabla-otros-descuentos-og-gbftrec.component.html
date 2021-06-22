@@ -1,26 +1,50 @@
 <div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mr-table">
-    
-      <ng-container matColumnDef="concepto">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.concepto }}</b> </td>
-        <td *matFooterCellDef [attr.colspan]="2" align="center" class="auxiliarTd"> <b>Valor total</b> </td>
-      </ng-container>
-    
-      <ng-container matColumnDef="descuento">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descuento </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.descuento }} </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">$60.000</td>
-      </ng-container>
+  <table mat-table [dataSource]="dataSource" matSort class="mr-table">
+    <ng-container matColumnDef="concepto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</th>
+      <td mat-cell *matCellDef="let element" align="center">
+        <b>{{ element.conceptoPago }}</b>
+      </td>
+      <td *matFooterCellDef [attr.colspan]="2" align="center" class="auxiliarTd"><b>Valor total</b></td>
+    </ng-container>
 
-      <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.titulo }} </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> ${{element[columna.name]}} </td>
-        <td *matFooterCellDef></td>
+    <ng-container matColumnDef="descuento">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Descuento</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div *ngFor="let el of element.listDyAportante" class="linea-faltante">
+          <div
+            class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+            *ngFor="let el2 of el.listDyDescuento"
+          >
+            {{ el2.descuento }}
+          </div>
+        </div>
+      </td>
+      <td *matFooterCellDef style="display: none;"></td>
+    </ng-container>
+
+    <div *ngFor="let columna of tablaOtroDescuento">
+      <ng-container *ngFor="let columna1 of columna.listDyAportante; index as i" [matColumnDef]="columna1.aportante">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ columna1.aportante }}</th>
+        <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+          <div
+              class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+              *ngFor="let el of columna1.listDyDescuento"
+              [class.h-3]="columna1.listDyDescuento.length === 1"
+              [class.h-6]="columna1.listDyDescuento.length === 2"
+              [class.h-9]="columna1.listDyDescuento.length === 3"
+            >
+              {{ el.valorDescuento | currency: '':'symbol-narrow':'.0-0' }}
+            </div>
+        </td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid">
+            {{ valorTotal[i] | currency:'':'symbol-narrow':'.0-0' }}
+        </td>
       </ng-container>
-    
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-    </table>
-  </div>
+    </div>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+  </table>
+</div>

@@ -1,6 +1,6 @@
 <section class="container text-center" *ngIf="solicitudPago != null">
     <div class="text-right">
-        <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos" mat-button color="primary" class="btn-regresar">
+        <a routerLink="../.." mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -31,7 +31,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <app-tabla-facturado-og-gbftrec></app-tabla-facturado-og-gbftrec>
+            <app-tabla-facturado-og-gbftrec *ngIf="tablaFacturado" [tablaFacturado]="tablaFacturado"></app-tabla-facturado-og-gbftrec>
         </mat-card-content>
     </mat-card>  
     <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
@@ -41,7 +41,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <app-tabla-descuentos-og-gbftrec></app-tabla-descuentos-og-gbftrec>
+            <app-tabla-descuentos-og-gbftrec *ngIf="tablaDescuento" [tablaDescuento]="tablaDescuento"></app-tabla-descuentos-og-gbftrec>
         </mat-card-content>
     </mat-card>  
     <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
@@ -51,7 +51,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <app-tabla-otros-descuentos-og-gbftrec></app-tabla-otros-descuentos-og-gbftrec>
+            <app-tabla-otros-descuentos-og-gbftrec *ngIf="tablaOtroDescuento" [tablaOtroDescuento]="tablaOtroDescuento"></app-tabla-otros-descuentos-og-gbftrec>
         </mat-card-content>
     </mat-card>  
 </section>

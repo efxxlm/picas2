@@ -1,50 +1,83 @@
 <div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="aportante">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Aportante </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.aportante }}</b> </td>
-        </ng-container>
-        <ng-container matColumnDef="valorFacturado">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado }} </td>
-        </ng-container>
-        <ng-container matColumnDef="uso">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
-            <td mat-cell *matCellDef="let element" class="padding-0em" align="center">
-                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em"
-                    *ngFor="let el of element.uso ; let i = index">
-                    {{el.nombreUso}}
-                </div>
-            </td>   
-        </ng-container>
-        <ng-container matColumnDef="tipoPago">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de pago </th>
-            <td mat-cell *matCellDef="let element" class="padding-0em" align="center">
-                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em"
-                    *ngFor="let el of element.tipoPago ; let i = index">
-                    {{el.tipoPagoName}}
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="conceptoPago">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto de pago </th>
-            <td mat-cell *matCellDef="let element" class="padding-0em" align="center">
-                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em"
-                    *ngFor="let el of element.conceptoPago ; let i = index">
-                    {{el.conceptoPagoName}}
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="valorConceptoPago">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor concepto de pago </th>
-            <td mat-cell *matCellDef="let element" class="padding-0em" align="center">
-                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em"
-                    *ngFor="let el of element.valorConceptoPago ; let i = index">
-                    {{el.valorConcpetoPagoName}}
-                </div>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="aportante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div *ngFor="let el of element.listDyTipoPago">
+          <div *ngFor="let el2 of el.listDyConceptoPago">
+            <div
+              class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+              *ngFor="let el3 of el2.listDyAportante"
+            >
+              <b>
+                {{ el3.aportante }}
+              </b>
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="valorFacturado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor facturado</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div *ngFor="let el of element.listDyTipoPago">
+          <div *ngFor="let el2 of el.listDyConceptoPago">
+            <div
+              class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+              *ngFor="let el3 of el2.listDyAportante"
+            >
+              <b>
+                {{ el3.valorFacturado | currency: '':'symbol-narrow':'.0-0' }}
+              </b>
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="uso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Uso</th>
+      <td mat-cell *matCellDef="let element" align="center">
+        {{ element.uso }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="tipoPago">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div
+          class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+          *ngFor="let el of element.listDyTipoPago"
+        >
+          {{ el.tipoPago }}
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="conceptoPago">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto de pago</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div *ngFor="let el of element.listDyTipoPago">
+          <div
+            class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+            *ngFor="let el2 of el.listDyConceptoPago"
+          >
+            {{ el2.conceptoPago }}
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="valorConceptoPago">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor concepto de pago</th>
+      <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
+        <div *ngFor="let el of element.listDyTipoPago">
+          <div
+            class="sub-item-table flex-table justify-content-center align-items-center h-3em"
+            *ngFor="let el2 of el.listDyConceptoPago"
+          >
+            {{ el2.valorConceptoPago | currency: '':'symbol-narrow':'.0-0' }}
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </div>

@@ -64,4 +64,8 @@ export class FinancialBalanceService {
       return this.http.get<any>( `${ this.apiUrl }/GetEjecucionFinancieraXProyectoId?pProyectoId=${ pProyectoId }` );
     }
 
+    getSeeDetailOdg( pOrdenGiroId: number ) {
+        return this.http.get<any>( `${ this.apiUrl }/SeeDetailOdg?pOrdenGiroId=${ pOrdenGiroId }` );
+    }
+
 }

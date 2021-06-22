@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -10,31 +10,31 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaOtrosDescuentosOgGbftrecComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'concepto',
-    'descuento',
-    'valorAportante'
-  ];
-  //displayedColumnsFooter: string[] = [ 'total' ];
-  ELEMENT_DATA: any[] = [
-    { titulo: 'Alcaldía de Susacón', name: 'valorAportante' }
-  ];
-  dataTable: any[] = [
-    {
-      concepto: 'Demolición',
-      descuento: '4x1.000',
-      valorAportante: '60.000'
-    },
-  ];
-  constructor() { }
-
+  @Input() tablaOtroDescuento: any;
+  displayedColumns: string[] = ['concepto', 'descuento', 'FFIE', 'Alcaldía ARROYOHONDO'];
+  dataTable: any[];
+  valorTotal: any[] = [];
+  constructor() {}
 
   ngOnInit(): void {
+    this.calcValorTotal();
     this.loadDataSource();
   }
   loadDataSource() {
+    this.dataTable = this.tablaOtroDescuento;
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
   }
 
+  calcValorTotal() {
+    for (let variable of this.tablaOtroDescuento) {
+      for (let variable2 of variable.listDyAportante) {
+        var contadorValorTotal = 0;
+        for (let variable3 of variable2.listDyDescuento) {
+          contadorValorTotal += variable3.valorDescuento;
+        }
+        this.valorTotal.push(contadorValorTotal);
+      }
+    }
+  }
 }

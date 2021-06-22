@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaFacturadoOgGbftrecComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @Input() tablaFacturado: any;
   displayedColumns: string[] = [
     'aportante',
     'valorFacturado',
@@ -18,24 +19,16 @@ export class TablaFacturadoOgGbftrecComponent implements OnInit {
     'conceptoPago',
     'valorConceptoPago'
   ];
-  dataTable: any[] = [
-    {
-      aportante: 'Alcaldía de Susacón',
-      valorFacturado: '$15.000.000',
-      uso: [{ nombreUso: 'Obra principal' },{ nombreUso: 'Diseño'}],
-      tipoPago : [{tipoPagoName:'Costo variable'},{tipoPagoName:'Tipo de pago 3'}],
-      conceptoPago: [{conceptoPagoName:'Demolición'},{conceptoPagoName:'Cimentación'}],
-      valorConceptoPago: [{valorConcpetoPagoName:'$8.000.000'},{valorConcpetoPagoName:'$7.000.000'}]
-    },
-  ];
-  constructor() { }
+  dataTable: any[];
+
+  constructor() {}
 
   ngOnInit(): void {
     this.loadDataSource();
   }
   loadDataSource() {
+    this.dataTable = this.tablaFacturado;
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
   }
-
 }

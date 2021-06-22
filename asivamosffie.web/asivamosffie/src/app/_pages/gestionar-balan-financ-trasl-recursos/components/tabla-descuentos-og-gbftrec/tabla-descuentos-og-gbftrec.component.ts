@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaDescuentosOgGbftrecComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @Input() tablaDescuento: any;
   displayedColumns: string[] = [
     'aportante',
     'conceptoPago',
@@ -18,22 +19,14 @@ export class TablaDescuentosOgGbftrecComponent implements OnInit {
     'otrosDescuentos',
     'valorTotalDescuentos'
   ];
-  dataTable: any[] = [
-    {
-      aportante: 'Alcaldía de Susacón',
-      conceptoPago: 'Demolición',
-      ansAplicado:'$113.000',
-      retegarantiaPagar: '$500.000',
-      otrosDescuentos: '60.000',
-      valorTotalDescuentos: '$673.000'
-    },
-  ];
-  constructor() { }
+  dataTable: any[];
+  constructor() {}
 
   ngOnInit(): void {
     this.loadDataSource();
   }
   loadDataSource() {
+    this.dataTable = this.tablaDescuento;
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
   }

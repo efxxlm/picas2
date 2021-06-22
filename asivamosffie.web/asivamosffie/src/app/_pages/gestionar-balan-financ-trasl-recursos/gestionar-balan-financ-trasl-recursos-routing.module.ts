@@ -42,9 +42,17 @@ const routes: Routes = [
     component: ValidarBalanceGbftrecComponent
   },
   {
-    path: 'detalleOrdengiro/:id',
+    path: 'validarBalance/:id/detalleOrdengiro/:id',
     component: DetalleOgGbftrecComponent
-  }
+  },
+  {
+    path: 'verDetalleBalance/:id/detalleOrdengiro/:id',
+    component: DetalleOgGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarBalance/:id/detalleOrdengiro/:id',
+    component: DetalleOgGbftrecComponent
+  },
   /*
   ,
   {
@@ -52,7 +60,6 @@ const routes: Routes = [
     component:VerdetalleeditarBalanceGbftrecComponent
   }
   */
-  ,
   {
     path: 'verDetalleBalance/:id',
     component: DetalleBalanceGbftrecComponent
