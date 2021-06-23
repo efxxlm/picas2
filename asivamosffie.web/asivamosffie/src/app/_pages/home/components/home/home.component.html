@@ -1,21 +1,82 @@
 <div class="text-center">
-    <h1 class="title-menu--h1">
-        Bienvenido(a)
-    </h1>
+  <h1 class="title-menu--h1">Bienvenido(a)</h1>
 </div>
 <div class="container">
-    <p class="p">
-        Al sistema de información del FFIE para la gestión de Proyectos de Infraestructura Educativa, a continuación, encontrará el listado de funcionalidades disponibles para su gestión.
-    </p>
+  <p class="p">
+    Al sistema de información del FFIE para la gestión de Proyectos de Infraestructura Educativa, a continuación,
+    encontrará el listado de funcionalidades disponibles para su gestión.
+  </p>
 
-    <!-- {{actualUser | json}} -->
-    <!-- <button (click)="probarconsumo()">para ver el otro asunto</button> -->
-    <!-- {{data|json}} -->
+  <section class="container menu">
+    <a
+      class="menu--button mr-1-5em"
+      [class.menu--button__active]="mostrarMenuFaseInicio === true"
+      (click)="mostrarMenuFaseInicio = true; mostrarMmenuFseSeguimiento = false; mostrarMenuFaseCierre = false"
+    >
+      <img src="assets/img/icon/Recurso-1.svg" alt="Fase de inicio" />
+      <span class="menu--span"> Fase de inicio </span>
+    </a>
+    <a
+      class="menu--button mr-1-5em"
+      [class.menu--button__active]="mostrarMmenuFseSeguimiento === true"
+      (click)="mostrarMmenuFseSeguimiento = true; mostrarMenuFaseInicio = false; mostrarMenuFaseCierre = false"
+    >
+      <img src="assets/img/icon/Recurso-2.svg" alt="Fase de seguimiento" />
+      <span class="menu--span"> Fase de seguimiento </span>
+    </a>
+    <a
+      class="menu--button mr-1-5em"
+      [class.menu--button__active]="mostrarMenuFaseCierre === true"
+      (click)="mostrarMenuFaseCierre = true; mostrarMenuFaseInicio = false; mostrarMmenuFseSeguimiento = false"
+    >
+      <img src="assets/img/icon/Recurso-3.svg" alt="Fase de cierre" />
+      <span class="menu--span"> Fase de cierre </span>
+    </a>
+    <a class="menu--button mr-1-5em" routerLink="/reportes">
+      <img src="assets/img/icon/Recurso-4.svg" alt="Reportes" />
+      <span class="menu--span"> Reportes </span>
+    </a>
+  </section>
 
-    <section class="menu" >
-        <a *ngFor="let men of menu"
-        [routerLink]="men.link"
-        mat-button class="menu--link"
-        >{{men.title}}</a>
-    </section>
+  <mat-card *ngIf="mostrarMenuFaseInicio" class="shipping-card animatedDown">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Fase de inicio </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-1-6em">
+      <div class="navegacion">
+        <a *ngFor="let menu of menuFaseInicio" class="navegacion--button" [routerLink]="menu.link">
+          <img [src]="'assets/img/icon/menu' + menu.link + '.svg'" alt="Resumen" [alt]="menu.title" />
+          {{ menu.title }}
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="mostrarMmenuFseSeguimiento" class="shipping-card animatedDown">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Fase de seguimiento </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-1-6em">
+      <div class="navegacion">
+        <a *ngFor="let menu of menuFaseSeguimiento" class="navegacion--button" [routerLink]="menu.link">
+          <img [src]="'assets/img/icon/menu' + menu.link + '.svg'" alt="Resumen" [alt]="menu.title" />
+          {{ menu.title }}
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="mostrarMenuFaseCierre" class="shipping-card animatedDown">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Fase de cierre </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-1-6em">
+      <div class="navegacion">
+        <a *ngFor="let menu of menuFaseCierre" class="navegacion--button" [routerLink]="menu.link">
+          <img [src]="'assets/img/icon/menu' + menu.link + '.svg'" alt="Resumen" [alt]="menu.title" />
+          {{ menu.title }}
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
