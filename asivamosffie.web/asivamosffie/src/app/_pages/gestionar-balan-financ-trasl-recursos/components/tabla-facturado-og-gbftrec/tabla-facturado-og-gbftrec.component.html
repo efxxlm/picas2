@@ -3,7 +3,7 @@
     <ng-container matColumnDef="aportante">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
       <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
-        <div *ngFor="let el of element.listDyTipoPago">
+        <div class="linea-faltante" *ngFor="let el of element.listDyTipoPago">
           <div *ngFor="let el2 of el.listDyConceptoPago">
             <div
               class="sub-item-table flex-table justify-content-center align-items-center h-3em"
@@ -20,7 +20,7 @@
     <ng-container matColumnDef="valorFacturado">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor facturado</th>
       <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
-        <div *ngFor="let el of element.listDyTipoPago">
+        <div class="linea-faltante" *ngFor="let el of element.listDyTipoPago">
           <div *ngFor="let el2 of el.listDyConceptoPago">
             <div
               class="sub-item-table flex-table justify-content-center align-items-center h-3em"
@@ -46,6 +46,9 @@
         <div
           class="sub-item-table flex-table justify-content-center align-items-center h-3em"
           *ngFor="let el of element.listDyTipoPago"
+          [class.h-3]="el.listDyConceptoPago[0].listDyAportante.length === 1"
+          [class.h-6]="el.listDyConceptoPago[0].listDyAportante.length === 2"
+          [class.h-9]="el.listDyConceptoPago[0].listDyAportante.length === 3"
         >
           {{ el.tipoPago }}
         </div>
@@ -54,10 +57,13 @@
     <ng-container matColumnDef="conceptoPago">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto de pago</th>
       <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
-        <div *ngFor="let el of element.listDyTipoPago">
+        <div class="linea-faltante"*ngFor="let el of element.listDyTipoPago">
           <div
             class="sub-item-table flex-table justify-content-center align-items-center h-3em"
             *ngFor="let el2 of el.listDyConceptoPago"
+            [class.h-3]="el2.listDyAportante.length === 1"
+            [class.h-6]="el2.listDyAportante.length === 2"
+            [class.h-9]="el2.listDyAportante.length === 3"
           >
             {{ el2.conceptoPago }}
           </div>
@@ -67,10 +73,13 @@
     <ng-container matColumnDef="valorConceptoPago">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor concepto de pago</th>
       <td mat-cell *matCellDef="let element" align="center" style="padding: 0 !important">
-        <div *ngFor="let el of element.listDyTipoPago">
+        <div class="linea-faltante" *ngFor="let el of element.listDyTipoPago">
           <div
             class="sub-item-table flex-table justify-content-center align-items-center h-3em"
             *ngFor="let el2 of el.listDyConceptoPago"
+            [class.h-3]="el2.listDyAportante.length === 1"
+            [class.h-6]="el2.listDyAportante.length === 2"
+            [class.h-9]="el2.listDyAportante.length === 3"
           >
             {{ el2.valorConceptoPago | currency: '':'symbol-narrow':'.0-0' }}
           </div>

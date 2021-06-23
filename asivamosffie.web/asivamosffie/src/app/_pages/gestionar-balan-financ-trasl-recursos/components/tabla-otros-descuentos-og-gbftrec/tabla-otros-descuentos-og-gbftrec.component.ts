@@ -11,7 +11,7 @@ export class TablaOtrosDescuentosOgGbftrecComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() tablaOtroDescuento: any;
-  displayedColumns: string[] = ['concepto', 'descuento', 'FFIE', 'Alcaldía ARROYOHONDO'];
+  displayedColumns: string[] = ['aportante', 'conceptoPago', 'descuento', 'valorDescuento', 'valorTotal'];
   dataTable: any[];
   valorTotal: any[] = [];
   constructor() {}
@@ -28,13 +28,15 @@ export class TablaOtrosDescuentosOgGbftrecComponent implements OnInit {
 
   calcValorTotal() {
     for (let variable of this.tablaOtroDescuento) {
+      var aportante = [];
       for (let variable2 of variable.listDyAportante) {
         var contadorValorTotal = 0;
         for (let variable3 of variable2.listDyDescuento) {
           contadorValorTotal += variable3.valorDescuento;
         }
-        this.valorTotal.push(contadorValorTotal);
+        aportante.push(contadorValorTotal);
       }
+      this.valorTotal.push({aportante: aportante})
     }
   }
 }
