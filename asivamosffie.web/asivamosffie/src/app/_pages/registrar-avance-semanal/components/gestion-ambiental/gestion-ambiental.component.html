@@ -58,7 +58,11 @@
                                         [max]="tipoActividades.length"
                                         formControlName="cantidadActividad"
                                         (ngModelChange)="valuePending( $event )"
-                                        required>
+                                        required
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Ingrese la cantidad de actividades a reportar"
+                                        matTooltipClass="info-tooltip"
+                                        >
                             </mat-form-field>
                           </section>
                           <span class="contador">{{1 - formGestionAmbiental.get( 'cantidadActividad' ).value.length}}</span>
