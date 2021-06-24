@@ -261,6 +261,7 @@
                 formControlName="valorConsignacion"
                 keypress="if(this.value.length >= this.maxlength) return false"
                 [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
+                (ngModelChange)="validar()"
               />
             </mat-form-field>
             <span

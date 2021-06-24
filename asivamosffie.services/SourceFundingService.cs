@@ -37,7 +37,7 @@ namespace asivamosffie.services
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {
             var retorno = await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
-                        .Include(r => r.ControlRecurso)
+                        //.Include(r => r.ControlRecurso)
                         .Include(r => r.CuentaBancaria)
                         .Include(r => r.VigenciaAporte)
                         .Include(r => r.Aportante)
@@ -47,6 +47,12 @@ namespace asivamosffie.services
                         .Include(r => r.Aportante)
                         .ThenInclude(apo => apo.CofinanciacionDocumento)
                         .FirstOrDefaultAsync();
+            if (retorno != null)
+            {
+                List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == retorno.FuenteFinanciacionId).ToList();
+                retorno.ControlRecurso = cr;
+            }
+            
             if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
             {
                 retorno.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -479,13 +485,18 @@ namespace asivamosffie.services
         {
             var res = await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
-                        .Include(r => r.ControlRecurso)
+                        //.Include(r => r.ControlRecurso)
                         .Include(r => r.CofinanciacionDocumento)
                         .Include(r => r.Aportante)
                         .ThenInclude(r => r.RegistroPresupuestal)
                         .IncludeFilter(r => r.CuentaBancaria.Where(r => !(bool)r.Eliminado))
                         .IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado))
                         .ToListAsync();
+            foreach (var item in res)
+            {
+                List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == item.FuenteFinanciacionId).ToList();
+                item.ControlRecurso = cr;
+            }
             return res;
         }
 
