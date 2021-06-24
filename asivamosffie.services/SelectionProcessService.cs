@@ -172,6 +172,15 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 }
 
+                if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0 && procesoSeleccion.EsDistribucionGrupos != true)
+                {
+                    ProcesoSeleccionGrupo grupo = new ProcesoSeleccionGrupo();
+                    grupo.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
+                    grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    grupo.FechaCreacion = DateTime.Now;
+                    procesoSeleccion.ProcesoSeleccionGrupo.Add(grupo);
+                }
+
                 foreach (ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo)
                 {
                     grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
@@ -1637,6 +1646,11 @@ namespace asivamosffie.services
                        esCompleto = false;
 
                });
+
+                if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0)
+                {
+                    esCompleto = false;
+                }
 
                 procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
                 {
