@@ -97,7 +97,7 @@
     }
 
     &:first-child,
-    &:nth-child(4) {
+    &:nth-child(3n + 4) {
       border-left: solid 1px #174193;
     }
 
