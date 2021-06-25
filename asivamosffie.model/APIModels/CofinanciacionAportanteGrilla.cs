@@ -26,5 +26,6 @@ namespace asivamosffie.model.APIModels
         public bool? RegistroCompleto { get; set; }
         public decimal ValorGestionado { get; set; }
         public bool? TieneFuentes { get; set; }
+        public decimal? NumeroAcuerdo { get; set; }
     }
 }
