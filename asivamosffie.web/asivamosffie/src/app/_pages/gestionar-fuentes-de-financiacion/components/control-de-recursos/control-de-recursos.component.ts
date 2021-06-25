@@ -95,10 +95,10 @@ export class ControlDeRecursosComponent implements OnInit {
             this.commonService.listaMunicipiosByIdDepartamento( this.fuente.aportante.departamentoId.toString() ).subscribe( mun => {
               if (mun){
                 let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
-                this.municipio = valorMunicipio?valorMunicipio.descripcion:"";
+                this.municipio = valorMunicipio?valorMunicipio.descripcion.toUpperCase():"";
               }
             })
-            this.departamento = valorDepartamento?valorDepartamento.descripcion:"";
+            this.departamento = valorDepartamento?valorDepartamento.descripcion.toUpperCase():"";
           }
 
 

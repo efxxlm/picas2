@@ -39,7 +39,7 @@ namespace asivamosffie.services
             try
             {
                 
-                var ControlGrid = _context.ControlRecurso
+                List<ControlRecurso> ControlGrid = await _context.ControlRecurso
                 .Where( cr => cr.FuenteFinanciacionId == id && !(bool)cr.Eliminado)
                     .Include(RC => RC.FuenteFinanciacion)
                     .ThenInclude(FF => FF.Aportante)
@@ -47,9 +47,9 @@ namespace asivamosffie.services
                     .Include(RC => RC.CuentaBancaria)
                     .Include(RC => RC.RegistroPresupuestal)
                     //.Include(RC => RC.VigenciaAporte)                   
-                    .ToList();
+                    .ToListAsync();
 
-                return ControlGrid;
+                return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.FechaCreacion).ToList();
 
             }
             catch (Exception )
