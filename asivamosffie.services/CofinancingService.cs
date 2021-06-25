@@ -423,7 +423,9 @@ namespace asivamosffie.services
                 List<CofinanciacionAportante> ListCofinanciacionAportante =
                 await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado &&
                     r.TipoAportanteId == pTipoAportanteID
-                    && !(bool)r.Cofinanciacion.Eliminado).Include(x => x.Cofinanciacion)
+                    && !(bool)r.Cofinanciacion.Eliminado)
+                .Include(x => x.Cofinanciacion)
+                .Include(x=> x.CofinanciacionDocumento)
                 .ToListAsync();
 
 
