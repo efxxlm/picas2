@@ -43,8 +43,17 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
+      ];
+    displayedColumnsRegistrarSolicitud: string[] = [
+        'faseContrato',
+        'valorFacturado',
+        'porcentajeFacturado',
+        'saldoPorPagar',
+        'porcentajePorPagar'
     ];
     dataTable: any[] = [
       {

@@ -139,6 +139,10 @@
     background-color: transparent;
 }
 
+.mat-select-panel {
+    min-width: calc(100% + 6em) !important;
+}
+
 .mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option {
     height: 2.5em !important;
 }
