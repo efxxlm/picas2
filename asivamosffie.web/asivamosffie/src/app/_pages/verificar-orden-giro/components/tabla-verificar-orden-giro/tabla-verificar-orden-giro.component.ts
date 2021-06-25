@@ -68,7 +68,7 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
 
     openDialogEnviarAprobacion( registro: any ) {
         this.dialog.open( DialogEnviarAprobacionComponent, {
-          width: '28em',
+          width: '80em',
           data: registro
         });
     }
