@@ -66,7 +66,7 @@ export class DiagnosticoComponent implements OnInit {
       administracion: [null, Validators.required],
       imprevistos: [null, Validators.required],
       utilidad: [null, Validators.required],
-      valorTotalFaseConstruccion: [null, Validators.required],
+      valorTotalFaseConstruccion: [null],
       requiereModificacionContractual: [null, Validators.required],
       numeroSolicitudModificacion: [null, Validators.required]
     });

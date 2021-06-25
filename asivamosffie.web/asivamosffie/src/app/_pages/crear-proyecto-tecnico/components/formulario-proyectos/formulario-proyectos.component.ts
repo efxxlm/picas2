@@ -1213,4 +1213,10 @@ export class FormularioProyectosComponent implements OnInit {
     this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', 3, indice);
     //this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1);
   }
+  onChangeDocumentoAcreditacion(event) {
+    if (event == 2 || event == 3) this.proyecto.predioPrincipal.cedulaCatastral = '';
+  }
+  onChangeDocumentoAcreditacion2(event, i) {
+    if (event == 2 || event == 3) this.proyecto.proyectoPredio[i].predio.cedulaCatastral = '';
+  }
 }

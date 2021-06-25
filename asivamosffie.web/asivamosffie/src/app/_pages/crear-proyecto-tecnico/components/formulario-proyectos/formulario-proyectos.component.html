@@ -826,7 +826,7 @@
             [class.mat-form-field-invalid]="!proyecto.predioPrincipal.documentoAcreditacionCodigo && estaEditando"
           >
             <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo"
-            [disabled]="!bitPuedoEditar">
+            [disabled]="!bitPuedoEditar" (ngModelChange)="onChangeDocumentoAcreditacion($event)">
               <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                 {{ listado.nombre }}
               </mat-option>
@@ -982,7 +982,7 @@
                     [class.mat-form-field-invalid]="!predios.predio.documentoAcreditacionCodigo && estaEditando"
                   >
                     <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo"
-                    [disabled]="!bitPuedoEditar">
+                    [disabled]="!bitPuedoEditar" (ngModelChange)="onChangeDocumentoAcreditacion2($event, i)">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>

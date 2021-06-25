@@ -25,6 +25,7 @@
       <span class="menu--span"> Fase de seguimiento </span>
     </a>
     <a
+      *ngIf="menuFaseCierre.length"
       class="menu--button mr-1-5em"
       [class.menu--button__active]="mostrarMenuFaseCierre === true"
       (click)="mostrarMenuFaseCierre = true; mostrarMenuFaseInicio = false; mostrarMmenuFseSeguimiento = false"
@@ -66,7 +67,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="mostrarMenuFaseCierre" class="shipping-card animatedDown">
+  <mat-card *ngIf="mostrarMenuFaseCierre && menuFaseCierre.length" class="shipping-card animatedDown">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text"> Fase de cierre </mat-card-title>
     </mat-card-header>
