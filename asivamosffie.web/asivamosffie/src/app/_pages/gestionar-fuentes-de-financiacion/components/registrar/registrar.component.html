@@ -335,7 +335,7 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
-                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50"
+                        <input matInput #numeroRP type="text" formControlName="numeroRP" maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />

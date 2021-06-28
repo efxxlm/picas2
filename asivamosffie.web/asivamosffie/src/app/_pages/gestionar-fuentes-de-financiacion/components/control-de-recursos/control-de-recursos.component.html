@@ -127,15 +127,13 @@
               "
             >
               RP
-              {{ rpArray[0].numeroRp }}
-              {{ rpArray[0].numeroRp.toLocaleString('fullwide', { useGrouping:false }) }}
             </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="rp" required>
                 <mat-option *ngFor="let rp of rpArray" [value]="rp">
-                  {{ rp.numeroRp.toLocaleString('fullwide', { useGrouping:false }) }}
+                  {{ rp.numeroRp }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

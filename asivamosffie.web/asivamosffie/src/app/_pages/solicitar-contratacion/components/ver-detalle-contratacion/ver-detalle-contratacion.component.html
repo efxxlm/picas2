@@ -179,7 +179,7 @@
           <mat-expansion-panel class="expansion-style sub-expansion-black">
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
-                Aportante {{ j+1 }}
+                {{ contratacionProyecto.proyecto.proyectoAportante[j].aportante.nombreAportanteString }}
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-tabla-detalle-fuentes-uso  [contratacionProyecto]="contratacionProyecto"
