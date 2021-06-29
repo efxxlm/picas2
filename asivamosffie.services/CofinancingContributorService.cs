@@ -193,6 +193,7 @@ namespace asivamosffie.services
 
                 updateObj.AportanteId = registroPresupuestal.AportanteId;
                 updateObj.NumeroRp = registroPresupuestal.NumeroRp;
+                updateObj.ValorRp = registroPresupuestal.ValorRp;
                 updateObj.FechaRp = registroPresupuestal.FechaRp;
   
                 return new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };

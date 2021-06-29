@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { CofinanciacionAportante } from '../Cofinanciacion/cofinanciacion.service';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
-import { forkJoin, from } from 'rxjs';
-import { mergeMap, tap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -165,6 +163,7 @@ export interface RegistroPresupuestal{
   registroPresupuestalId: number,
   aportanteId: number,
   numeroRp: string,
+  valorRp: number,
   fechaRp: Date,
   cofinanciacionDocumentoId:number,
   fechaCreacion?: Date,

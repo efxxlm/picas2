@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import { CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-control-de-recursos',
@@ -55,12 +56,20 @@ export class ControlDeRecursosComponent implements OnInit {
       nombreCuenta: [null, Validators.required],
       numeroCuenta: [null, Validators.required],
       rp: [null],
+      valorRp: [null],      
       vigencia: [null],
+      vigenciaValor: [null],
       fechaConsignacion: [null, Validators.required],
       valorConsignacion: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(50)])
       ],
     });
+
+    this.addressForm.get('valorConsignacion').valueChanges
+    .pipe(debounceTime(400))
+    .subscribe(value=>{
+      this.validar()
+    })
 
     this.activatedRoute.params.subscribe( param => {
       this.idFuente = param['idFuente'];
@@ -118,7 +127,10 @@ export class ControlDeRecursosComponent implements OnInit {
         this.rpArray = this.fuente.aportante.registroPresupuestal;
         //la lista de vigencias son los documentos registrados en acuerdos de cofinanciacion
         this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
-          this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),fuenteFinanciacionId:null,valorAporte:null,vigenciaAporteId:element.cofinanciacionDocumentoId});
+          this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),
+            fuenteFinanciacionId:null,
+            valorAporte: element.valorDocumento,
+            vigenciaAporteId:element.cofinanciacionDocumentoId});
         });
         //this.listaVigencias = this.fuente.vigenciaAporte;
 
@@ -141,8 +153,14 @@ export class ControlDeRecursosComponent implements OnInit {
 
       this.addressForm.get('nombreCuenta').setValue(cuentaSeleccionada);
       this.addressForm.get('rp').setValue(rpSeleccionado);
+      if(rpSeleccionado){
+        this.addressForm.get('valorRp').setValue(rpSeleccionado.valorRp);
+      }
       this.addressForm.get('controlRecursoId').setValue(cr.controlRecursoId);
       this.addressForm.get('vigencia').setValue(vigenciaSeleccionada);
+      if(vigenciaSeleccionada){
+        this.addressForm.get('vigenciaValor').setValue(vigenciaSeleccionada.valorAporte)
+      }
       this.addressForm.get('fechaConsignacion').setValue(cr.fechaConsignacion);
       this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion);
       this.changeNombreCuenta();
@@ -152,6 +170,27 @@ export class ControlDeRecursosComponent implements OnInit {
   changeNombreCuenta(){
     let cuentaSeleccionada = this.addressForm.get('nombreCuenta').value;
     this.addressForm.get('numeroCuenta').setValue(cuentaSeleccionada.numeroCuentaBanco);
+  }
+
+  changeRp(){
+    const rpSelected = this.addressForm.get('rp').value;
+    this.addressForm.get('valorRp').setValue(rpSelected.valorRp);
+  }
+
+  changeVigencia(){
+    const vigenciaSelected = this.addressForm.get('vigencia').value;
+    this.addressForm.get('vigenciaValor').setValue(vigenciaSelected.valorAporte);
+  }
+
+  get vigenciaField(){
+    return this.addressForm.get('vigencia');
+  }
+
+  get rpField(){
+    return this.addressForm.get('rp');
+  }
+  get vigenciaValorField(){
+    return this.addressForm.get('vigenciaValor');
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -223,13 +262,48 @@ export class ControlDeRecursosComponent implements OnInit {
         total = total - fuenteModificando.valorConsignacion;
       }
     }
+    if(total > this.valorFuente && !this.isETOrThirdParty()){
+      this.validateVigency(total, fuenteModificando)
+      return;
+    }
     if(total > this.valorFuente){
       this.openDialogError( '', `El <b> valor de la consignación </b> no debe superar el <b> valor del aporte a la fuente de recursos. </b>, verifique por favor.` );
       if(this.idControl == 0){
-        this.addressForm.get("valorConsignacion").setValue(null);
+        this.addressForm.get("valorConsignacion").setValue(null, {emitEvent:false});
       }else{
-        this.addressForm.get("valorConsignacion").setValue(fuenteModificando?.valorConsignacion);
+        this.addressForm.get("valorConsignacion").setValue(fuenteModificando?.valorConsignacion, {emitEvent:false});
       }
+    }else if(this.isETOrThirdParty()){
+      this.validateRPValue(total, fuenteModificando);
+    }
+  }
+
+  isETOrThirdParty = function() {
+    return !this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString());
+  }
+
+  validateVigency(total: number, editingResource: ControlRecurso){
+    const valorVigencia = !this.vigenciaValorField.value ? 0 : Number(this.vigenciaValorField.value);
+    if (this.idControl == 0
+      && total > valorVigencia) {
+      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> valor del aporte
+      de la vigencia asociado a la fuente. </b>, verifique por favor.`);
+      this.addressForm.get("valorConsignacion").setValue(null, {emitEvent:false});
+    } else if (total > valorVigencia) {
+      this.openDialogError('', `El <b> valor de la consignación </b> supera el monto establecido en la vigencia ${this.vigenciaField.value} </b>, verifique por favor.`);
+      this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
+    }
+  }
+
+  validateRPValue(total: number, editingResource: ControlRecurso) {
+    const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value);
+    if (this.idControl == 0
+      && total > valorRp) {
+      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> valor RP asociado a la fuente. </b>, verifique por favor.`);
+      this.addressForm.get("valorConsignacion").setValue(null, {emitEvent:false});
+    } else if (total > valorRp) {
+      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> monto establecido en el RP ${this.addressForm.get("rp").value} </b>, verifique por favor.`);
+      this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
     }
   }
 

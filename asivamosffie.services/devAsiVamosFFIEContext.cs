@@ -5857,6 +5857,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ValorRp).HasColumnType("numeric(18, 2)");
+
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.RegistroPresupuestal)
                     .HasForeignKey(d => d.AportanteId)

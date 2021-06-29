@@ -364,6 +364,49 @@
                   <div class="row">
                     <div class="pr-1">
                       <label class="label-left" [ngClass]="{
+                                'color-secondaryColor':
+                                  (registroPresupuestal.get('valorRP').invalid && registroPresupuestal.get('valorRP').touched) ||
+                                  (registroPresupuestal.get('valorRP').invalid && edicion)
+                              }">
+                        Valor RP
+                      </label>
+                    </div>                  
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width maincolor">
+                        <input matInput #valorRP formControlName="valorRP" maxlength="20"
+                          (keypress)="validateNumberKeypress($event)" currencyMask
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;" [options]="{
+                            prefix: '$ ',
+                            thousands: '.',
+                            precision: '0',
+                            align: 'center',
+                            allowNegative: false
+                          }"
+                          required
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />                    
+                      </mat-form-field>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                        matTooltipClass="info-tooltip">
+                        {{ 20 - valorRP.value.length }}
+                      </span>
+                      <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido" [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip" *ngIf="
+                            (registroPresupuestal.get('valorRP').invalid && registroPresupuestal.get('valorRP').touched) ||
+                            (registroPresupuestal.get('valorRP').invalid && edicion)
+                          " />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" [ngClass]="{
                           'color-secondaryColor':
                             (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
                             (registroPresupuestal.get('fecha').invalid && edicion)
