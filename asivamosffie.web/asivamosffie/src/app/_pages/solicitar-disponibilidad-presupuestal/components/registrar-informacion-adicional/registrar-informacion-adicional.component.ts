@@ -22,8 +22,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   idNovedad: number;
 
   addressForm = this.fb.group({
-    plazoMeses: [null, Validators.required],
-    plazoDias: [null, Validators.required],
+    // plazoMeses: [null, Validators.required],
+    // plazoDias: [null, Validators.required],
     objeto: [null, Validators.required],
   });
 
@@ -80,8 +80,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       .subscribe(response => {
         this.objetoDisponibilidad = response;
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
-        this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
-        this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
+        // this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
+        // this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
         this.observaciones = response.disponibilidadPresupuestalObservacion;
         this.projectContractingService.getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
           .subscribe(
@@ -137,31 +137,31 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
               let plazoDiasInterventoria = 0;
 
             // obra
-            if (this.tipoSolicitudCodigo === '1') {
+            // if (this.tipoSolicitudCodigo === '1') {
 
-              contratacion.contratacionProyecto.forEach(cp => {
-                if (plazoDiasObra < cp.proyecto.plazoDiasObra)
-                  plazoDiasObra = cp.proyecto.plazoDiasObra;
+            //   contratacion.contratacionProyecto.forEach(cp => {
+            //     if (plazoDiasObra < cp.proyecto.plazoDiasObra)
+            //       plazoDiasObra = cp.proyecto.plazoDiasObra;
 
-                if (plazoMesesObra < cp.proyecto.plazoMesesObra)
-                  plazoMesesObra = cp.proyecto.plazoMesesObra;
-              });
+            //     if (plazoMesesObra < cp.proyecto.plazoMesesObra)
+            //       plazoMesesObra = cp.proyecto.plazoMesesObra;
+            //   });
 
-              this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
-              this.addressForm.get("plazoDias").setValue(plazoDiasObra);
-            } else {
+            //   this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
+            //   this.addressForm.get("plazoDias").setValue(plazoDiasObra);
+            // } else {
               
-              contratacion.contratacionProyecto.forEach(cp => {
-                if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
-                  plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
+            //   contratacion.contratacionProyecto.forEach(cp => {
+            //     if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
+            //       plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
 
-                if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
-                  plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
-              });
+            //     if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
+            //       plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
+            //   });
 
-              this.addressForm.get("plazoMeses").setValue(plazoMesesInterventoria);
-              this.addressForm.get("plazoDias").setValue(plazoDiasInterventoria);
-            }
+            //   this.addressForm.get("plazoMeses").setValue(plazoMesesInterventoria);
+            //   this.addressForm.get("plazoDias").setValue(plazoDiasInterventoria);
+            // }
 
             if (this.objetoDisponibilidad.tipoSolicitudCodigo == '2')//modificacionContractual
             {
@@ -211,8 +211,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
                         plazoMesesObra = cp.proyecto.plazoMesesObra;
                     });
 
-                    this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
-                    this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
+                    // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
+                    // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
                   } else {
                     
                     contratacion.contratacionProyecto.forEach(cp => {
@@ -223,8 +223,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
                         plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
                     });
 
-                    this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesInterventoria);
-                    this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasInterventoria);
+                    // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesInterventoria);
+                    // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasInterventoria);
                   }
 
                   this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
@@ -251,24 +251,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // evalua tecla a tecla
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
+ 
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
-  validatenomore30() {
-    if (this.addressForm.value.plazoDias > 29) {
-      this.openDialog("", "<b>El valor ingresado en dias no puede ser superior a 29</b>");
-      this.addressForm.get("plazoDias").setValue("");
-    }
-  }
+  
 
   // textoLimpio(texto: string) {
   //   let saltosDeLinea = 0;
@@ -310,57 +300,57 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     if (this.addressForm.valid) {
-      let plazoObra: number = 0;
-      let plazoInterventoria: number = 0;
-      let plazo: number = 0;
+      // let plazoObra: number = 0;
+      // let plazoInterventoria: number = 0;
+      // let plazo: number = 0;
 
-      plazo = this.addressForm.get('plazoMeses').value * 30;
-      plazo = plazo + this.addressForm.get('plazoDias').value;
+      // plazo = this.addressForm.get('plazoMeses').value * 30;
+      // plazo = plazo + this.addressForm.get('plazoDias').value;
 
-      console.log(this.tipoSolicitudCodigo, plazo)
-      // obra
-      if (this.tipoSolicitudCodigo == '1') {
-        this.contratacion.contratacionProyecto.forEach(cp => {
-          console.log(cp.proyecto.plazoMesesObra, cp.proyecto.plazoDiasObra);
-          let plazoTemp = 0;
-          plazoTemp = cp.proyecto.plazoMesesObra * 30;
-          plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasObra);
+      // console.log(this.tipoSolicitudCodigo, plazo)
+      // // obra
+      // if (this.tipoSolicitudCodigo == '1') {
+      //   this.contratacion.contratacionProyecto.forEach(cp => {
+      //     console.log(cp.proyecto.plazoMesesObra, cp.proyecto.plazoDiasObra);
+      //     let plazoTemp = 0;
+      //     plazoTemp = cp.proyecto.plazoMesesObra * 30;
+      //     plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasObra);
 
-          if (plazoTemp > plazoObra)
-            plazoObra = plazoTemp;
+      //     if (plazoTemp > plazoObra)
+      //       plazoObra = plazoTemp;
 
-        });
+      //   });
 
-        if (plazo < plazoObra) {
-          console.log(plazoObra, plazo);
-          this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
-          return false;
-        }
+      //   if (plazo < plazoObra) {
+      //     console.log(plazoObra, plazo);
+      //     this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
+      //     return false;
+      //   }
 
-      }
-      if (this.tipoSolicitudCodigo == '2') {
-        this.contratacion.contratacionProyecto.forEach(cp => {
-          console.log(cp.proyecto.plazoMesesInterventoria, cp.proyecto.plazoDiasInterventoria);
-          let plazoTemp = 0;
-          plazoTemp = cp.proyecto.plazoMesesInterventoria * 30;
-          plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasInterventoria);
+      // }
+      // if (this.tipoSolicitudCodigo == '2') {
+      //   this.contratacion.contratacionProyecto.forEach(cp => {
+      //     console.log(cp.proyecto.plazoMesesInterventoria, cp.proyecto.plazoDiasInterventoria);
+      //     let plazoTemp = 0;
+      //     plazoTemp = cp.proyecto.plazoMesesInterventoria * 30;
+      //     plazoTemp = Number(plazoTemp) + Number(cp.proyecto.plazoDiasInterventoria);
 
-          if (plazoTemp > plazoInterventoria)
-            plazoInterventoria = plazoTemp;
+      //     if (plazoTemp > plazoInterventoria)
+      //       plazoInterventoria = plazoTemp;
 
-        });
+      //   });
 
-        if (plazo < plazoInterventoria) {
-          console.log(plazoInterventoria, plazo);
-          this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
-          return false;
-        }
+      //   if (plazo < plazoInterventoria) {
+      //     console.log(plazoInterventoria, plazo);
+      //     this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
+      //     return false;
+      //   }
 
-      }
+      // }
 
       this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
-      this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
-      this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
+      // this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
+      // this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
       
       console.log(this.objetoDisponibilidad);
 
@@ -377,8 +367,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         eliminado: this.objetoDisponibilidad.eliminado,
         fechaDdp: this.objetoDisponibilidad.fechaDdp,
         numeroDrp: this.objetoDisponibilidad.numeroDrp,
-        plazoMeses: this.objetoDisponibilidad.plazoMeses,
-        plazoDias: this.objetoDisponibilidad.plazoDias,
+        plazoMeses: this.contratacion.plazoContratacion.plazoMeses,
+        plazoDias: this.contratacion.plazoContratacion.plazoDias
         
         }
 

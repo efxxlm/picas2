@@ -445,9 +445,12 @@ namespace asivamosffie.services
 
                     string nombreEntidad = "";
                     string contratoNumero = !contrato.Any() ? "" : contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
+                    var plazoContratacion = new PlazoContratacion();
                     if (contrato.Any())
                     {
-                        var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
+                        var contratacion = _context.Contratacion.Where(c => c.ContratacionId == contrato.FirstOrDefault().ContratacionId)
+                            .Include(x => x.PlazoContratacion).SingleOrDefault();
+                        plazoContratacion = contratacion.PlazoContratacion;
                         var contratista = _context.Contratista.Find(contratacion.ContratistaId);
                         nombreEntidad = contratista == null ? "" : contratista.Nombre;
                     }
@@ -482,7 +485,7 @@ namespace asivamosffie.services
                         FechaSolicitud = detailDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString() + " dias",
+                        Plazo = plazoContratacion.PlazoMeses.ToString() + " meses / " + plazoContratacion.PlazoDias.ToString() + " dias",
                         CuentaCarta = detailDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación

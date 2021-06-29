@@ -488,8 +488,8 @@ namespace asivamosffie.services
                     {
                         DateTime? fechaTemp = novedadContractual?.Contrato?.FechaActaInicioFase1.Value != null ? novedadContractual?.Contrato?.FechaActaInicioFase1.Value : DateTime.Now;
 
-                        fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias.Value);
-                        fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses.Value);
+                        fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoDias);
+                        fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoMeses);
 
                         novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
                     }

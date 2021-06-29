@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-contracting';
+import { ContratacionProyecto, Contratacion, PlazoContratacion } from 'src/app/_interfaces/project-contracting';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -12,12 +12,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
-  contratacion: Contratacion = {};
+  contratacion: Contratacion = {} as Contratacion;
   estadoSemaforos = {
     sinDiligenciar: 'sin-diligenciar',
     enProceso: 'en-proceso',
-    completo: 'completo'
+    completo: 'completo',
   };
+  public plazoProyecto: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,7 +38,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       this.projectContractingService.getContratacionByContratacionId(params.id)
         .subscribe(response => {
           this.contratacion = response;
-
+          this.setPlazoProyecto();
           setTimeout(() => {
 
             const btnTablaProyectos = document.getElementById('btnTablaProyectos');
@@ -58,6 +59,23 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         });
 
     });
+  }
+
+  setPlazoProyecto(){
+    if(!this.contratacion.plazoContratacion){
+      this.contratacion.plazoContratacion = { plazoMeses : 0, plazoDias :0 }
+    }
+
+    if(this.contratacion.tipoSolicitudCodigo = "1"){
+      const plazoDiasObras = this.contratacion.contratacionProyecto
+          .map(crtPrj => (+crtPrj.proyecto.plazoMesesObra * 30 + Number(crtPrj.proyecto.plazoDiasObra)));
+      this.plazoProyecto = Math.max(...plazoDiasObras);
+    }
+    else if (this.contratacion.tipoSolicitudCodigo == '2') {
+      const plazoDiasInterventoria = this.contratacion.contratacionProyecto
+          .map(crtPrj => (+crtPrj.proyecto.plazoMesesInterventoria * 30 + Number(crtPrj.proyecto.plazoDiasInterventoria)));
+      this.plazoProyecto = Math.max(...plazoDiasInterventoria);
+    }
   }
 
   semaforoAcordeon(acordeon: string) {
@@ -220,6 +238,15 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           return this.estadoSemaforos.enProceso;
         }
       }
+    } else if ( acordeon === 'plazoEjecucion' ){
+        if(this.contratacion.plazoContratacion && this.contratacion.plazoContratacion.plazoDias > 0 && this.contratacion.plazoContratacion.plazoMeses > 0){
+          return this.estadoSemaforos.completo;
+        } else if (this.contratacion.plazoContratacion && (this.contratacion.plazoContratacion.plazoDias > 0 
+          || this.contratacion.plazoContratacion.plazoMeses > 0)){
+          return this.estadoSemaforos.enProceso;
+        } else {
+          return this.estadoSemaforos.sinDiligenciar;
+        }
     }
 
   }
@@ -229,6 +256,26 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
+  }
+
+  onChangeTerm(termLimit: PlazoContratacion)
+  {
+    this.contratacion.plazoContratacion.plazoDias = termLimit.plazoDias;
+    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses
+  }
+
+  onSubmitTerm(termLimit: PlazoContratacion){
+    this.contratacion.plazoContratacion.plazoDias = termLimit.plazoDias;
+    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses
+    this.projectContractingService.createEditTermLimit(this.contratacion.contratacionId, this.contratacion.plazoContratacion)
+    .subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      this.contratacion = null;
+      console.log(respuesta);
+      this.getContratacion();
+
+    });
+
   }
 
   onSubmit() {

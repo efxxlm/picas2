@@ -14,9 +14,14 @@ export interface Contratacion {
     observaciones?: string,
     rutaMinuta?: string,
     contratacionProyecto?: ContratacionProyecto[],
+    plazoContratacion?: PlazoContratacion,
     /*not mapped*/
-    fechaComiteTecnicoNotMapped?: any
+    fechaComiteTecnicoNotMapped?: any,   
+}
 
+export interface PlazoContratacion{
+  plazoMeses: number;
+  plazoDias: number;
 }
 
 export interface ContratacionProyecto{

@@ -58,8 +58,10 @@ namespace asivamosffie.model.Models
         public string ObservacionGestionar { get; set; }
         public string UrlSoporteGestionar { get; set; }
         public bool? RegistroCompletoGestionar { get; set; }
+        public int? PlazoContratacionId { get; set; }
 
         public virtual Contratista Contratista { get; set; }
+        public virtual PlazoContratacion PlazoContratacion { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyecto> ContratacionProyecto { get; set; }
         public virtual ICollection<Contrato> Contrato { get; set; }

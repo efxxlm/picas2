@@ -216,8 +216,8 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
-                RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
+                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
+                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
 
@@ -380,8 +380,8 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
-                RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
+                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
+                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;

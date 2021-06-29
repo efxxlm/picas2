@@ -141,6 +141,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<PlanesProgramasListaChequeoRespuesta> PlanesProgramasListaChequeoRespuesta { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
+        public virtual DbSet<PlazoContratacion> PlazoContratacion { get; set; }
         public virtual DbSet<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual DbSet<PolizaGarantiaActualizacion> PolizaGarantiaActualizacion { get; set; }
         public virtual DbSet<PolizaListaChequeo> PolizaListaChequeo { get; set; }
@@ -1344,6 +1345,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.Contratacion)
                     .HasForeignKey(d => d.ContratistaId)
                     .HasConstraintName("FK_Contratacion_Contratista");
+
+                entity.HasOne(d => d.PlazoContratacion)
+                   .WithMany(p => p.Contratacion)
+                   .HasForeignKey(d => d.PlazoContratacionId)
+                   .HasConstraintName("FK__Contratac__Plazo__1590259A");
             });
 
             modelBuilder.Entity<ContratacionObservacion>(entity =>
@@ -4924,6 +4930,22 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.InversePieDePagina)
                     .HasForeignKey(d => d.PieDePaginaId)
                     .HasConstraintName("fk_PiePagina_Plantilla");
+            });
+
+            modelBuilder.Entity<PlazoContratacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<PolizaGarantia>(entity =>

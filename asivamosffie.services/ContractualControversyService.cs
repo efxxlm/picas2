@@ -1835,9 +1835,9 @@ namespace asivamosffie.services
                         if (contratacion != null)
                         {
 
-                            PlazoFormatTmp = contratacion.DisponibilidadPresupuestal.Count() > 0 ? Convert.ToInt32(contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses).ToString("00") + " meses / " + Convert.ToInt32(contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias).ToString("00") + " dias " : "";
+                            PlazoFormatTmp = contratacion.DisponibilidadPresupuestal.Count() > 0 ? Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses).ToString("00") + " meses / " + Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias).ToString("00") + " dias " : "";
                             FechaInicioContratoTmp = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
-                            FechaFinContratoTmp = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).AddMonths(contratacion.DisponibilidadPresupuestal.Count() > 0 ? (int)contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses : 0).AddDays(contratacion.DisponibilidadPresupuestal.Count() > 0 ? (double)contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias : 0).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
+                            FechaFinContratoTmp = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).AddMonths(contratacion.DisponibilidadPresupuestal.Count() > 0 ? (int)contratacion.PlazoContratacion.PlazoMeses : 0).AddDays(contratacion.DisponibilidadPresupuestal.Count() > 0 ? (double)contratacion.PlazoContratacion.PlazoDias : 0).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                         }
 

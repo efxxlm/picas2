@@ -39,7 +39,6 @@ export class VerDetalleContratacionComponent implements OnInit {
   constructor ( private activatedRoute: ActivatedRoute,
                 private projectContractingSvc: ProjectContractingService,
                 private commonService: CommonService ) {
-    console.log( this.activatedRoute.snapshot.params.id );
     this.getProjectContracting( this.activatedRoute.snapshot.params.id );
   }
 
