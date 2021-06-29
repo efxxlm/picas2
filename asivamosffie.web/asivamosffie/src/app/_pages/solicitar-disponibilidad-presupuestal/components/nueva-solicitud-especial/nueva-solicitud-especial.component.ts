@@ -86,14 +86,14 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 private commonService: CommonService,
                 private budgetAvailabilityService: BudgetAvailabilityService,
                 public dialog: MatDialog,
-                private router: Router, 
-                private activatedRoute: ActivatedRoute ) 
+                private router: Router,
+                private activatedRoute: ActivatedRoute )
   {
     this.getValueChanges();
     forkJoin([
       this.commonService.listaTipoDDPEspecial(),
-      this.commonService.listaDepartamentos(),  
-      this.commonService.listaTipoAportante()    
+      this.commonService.listaDepartamentos(),
+      this.commonService.listaTipoAportante()
     ])
       .subscribe(respuesta => {
         this.tipoSolicitudArray = respuesta[0];
@@ -102,7 +102,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         this.budgetAvailabilityService.getContratosList().subscribe(
           result=>{this.listaContrato=result;}
         );
-        
+
         this.filteredContrato = this.myFilter.valueChanges.pipe(
           startWith(''),
           map(value => this._filter(value))
@@ -113,9 +113,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       });
   };
 
-  
 
-  ngOnInit(): void {    
+
+  ngOnInit(): void {
   };
 
   getValueChanges () {
@@ -133,7 +133,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 debounceTime( 2000 )
               )
               .subscribe( response => {
-              
+
                 if ( response.length >= 3 ) {
                   this.budgetAvailabilityService.getNumeroContrato( response )
                     .subscribe(
@@ -160,24 +160,24 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         */
       this.addressForm.get( 'tipoAportante' ).valueChanges
         .subscribe( value => {
-          this.nombreAportantes = [];      
-          console.log(this.contrato);    
+          this.nombreAportantes = [];
+          console.log(this.contrato);
           this.contrato.listAportantes.forEach( contratacion => {
             let tipoapo=this.tipoAportantes.filter(x=>x.codigo==value);
             if(tipoapo[0]?.nombre==contratacion.tipoAportante)
             {
-              this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId, 
+              this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId,
                 nombre: contratacion.nombre,
                 aportanteId: contratacion.cofinanciacionAportanteId } );
-            }            
+            }
           });
           if(this.disponibilidadaeditar)
           {
             console.log("############33");
             console.log(this.nombreAportantes);
-            let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==this.disponibilidadaeditar.aportanteId);                                   
+            let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==this.disponibilidadaeditar.aportanteId);
             console.log(nombreAportante[0]);
-            this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);     
+            this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
           }
         } );
   };
@@ -195,7 +195,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto?disponibilidad.objeto:"" );
           this.addressForm.get( 'numeroRadicado' ).setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'cartaAutorizacionET' ).setValue( disponibilidad.cuentaCartaAutorizacion );
-  
+
           if (disponibilidad.disponibilidadPresupuestalProyecto.length > 0){
             console.log(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ].localizacionId);
             let depto=this.listaDepartamento.filter(x=>x.localizacionId==disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto[ 'departamentoObj' ].localizacionId);
@@ -207,13 +207,13 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                   this.addressForm.get( 'municipio' ).setValue( muni[0]);
                 })
             };
-            
+
             this.addressForm.get( 'departemento' ).setValue( depto[0] );
-            
+
             this.addressForm.get( 'disponibilidadPresupuestalProyectoId' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId);
             this.addressForm.get( 'llaveMEN' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen);
             //
-            
+
             let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);
             this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
             this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
@@ -228,29 +228,29 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.addressForm.get( 'numeroContrato' ).setValue( disponibilidad.numeroContrato );
           this.myFilter.setValue( disponibilidad.numeroContrato );
           this.addressForm.get( 'observacionLimiteEspecial' ).setValue( disponibilidad.limitacionEspecial ? disponibilidad.limitacionEspecial : null );
-         
+
           let tipoaportante=this.tipoAportantes.filter(x=>x.dominioId==disponibilidad.aportante?.tipoAportanteId);
           this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
           this.addressForm.get( 'url' ).setValue( disponibilidad.urlSoporte ? disponibilidad.urlSoporte : null );
           this.budgetAvailabilityService.getContratoByNumeroContrato( disponibilidad.numeroContrato )
             .subscribe(
               ( response: any[] ) => {
-                this.contrato = response;          
+                this.contrato = response;
                 this.contrato.listAportantes.forEach( contratacion => {
-                  this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId, nombre: contratacion.nombre, aportanteId: contratacion.cofinanciacionAportanteId } );                  
+                  this.nombreAportantes.push( { value:contratacion.cofinanciacionAportanteId, nombre: contratacion.nombre, aportanteId: contratacion.cofinanciacionAportanteId } );
                 } );
                 this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0]?.codigo);
                 console.log("############33");
                 console.log(this.nombreAportantes);
-                let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                                   
+                let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);
                 console.log(nombreAportante[0]);
-                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);      
+                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
                 this.estaEditando = true;
                 this.addressForm.markAllAsTouched();
-                this.myFilter.markAllAsTouched();      
+                this.myFilter.markAllAsTouched();
               },
               //err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
-            );          
+            );
         };
       } );
   };
@@ -272,7 +272,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     let llameMen: string = this.addressForm.get('llaveMEN').value;
 
     if (llameMen) {
-      if ( llameMen.length >= 3 ) {
+      if ( llameMen.length >= 1 ) {
         this.budgetAvailabilityService.searchLlaveMEN(llameMen)
         .subscribe(
           listaProyectos => {
@@ -295,20 +295,20 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                       this.addressForm.get('llaveMEN').setValue("");
                       return;
                     };
-                    
+
                     if ( aportante[0].departamento !== undefined && aportante[0].municipio !== undefined ) {
                       this.nombreAportantes.push(
-                        { 
-                          value: aportante[0].tipoAportanteId, 
+                        {
+                          value: aportante[0].tipoAportanteId,
                           nombre: `Alcaldía de ${ aportante[0].municipio.descripcion }`,
                           aportanteId: aportante[0].cofinanciacionAportanteId
                         }
                       );
                     };
                     if ( aportante[0].departamento !== undefined && aportante[0].municipio === undefined ) {
-                      this.nombreAportantes.push( 
-                        { 
-                          value: aportante[0].tipoAportanteId, 
+                      this.nombreAportantes.push(
+                        {
+                          value: aportante[0].tipoAportanteId,
                           nombre: `Gobernación de ${ aportante[0].departamento.descripcion }`,
                           aportanteId: aportante[0].cofinanciacionAportanteId
                         }
@@ -326,7 +326,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                   err => this.openDialog( '', `<b>${err.message}</b>` )
                 );
             };
-          }, 
+          },
           err => this.openDialog('', `<b>${err.message}</b>`)
         )
       }
@@ -398,7 +398,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
               tipoSolicitudEspecialCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
-              aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,              
+              aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,
               valorAportante: this.addressForm.get('valor').value,
               cuentaCartaAutorizacion: this.addressForm.get('cartaAutorizacionET').value,
               urlSoporte: this.addressForm.get('url').value,
@@ -407,7 +407,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             };
             console.log( disponibilidad );
             this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidad )
-              .subscribe( 
+              .subscribe(
                 respuesta => {
                   this.openDialog( '', respuesta.message )
                   if ( respuesta.code == "200" )
@@ -416,7 +416,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 err => this.openDialog( '', err.message )
               );
           }
-            
+
 
             break;
           case "2":
@@ -444,32 +444,32 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 err => this.openDialog( '', `<b>${err.message}</b>` )
               )
 
-           break;  
+           break;
         }
 
       };
     //}
   }
-  
+
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();    
+    const filterValue = value.toLowerCase();
     if(value!="")
-    {      
+    {
       let filtroportipo:string[]=[];
-      this.listaContrato.forEach(element => {        
+      this.listaContrato.forEach(element => {
         if(!filtroportipo.includes(element.numeroContrato))
         {
           filtroportipo.push(element.numeroContrato);
         }
       });
-      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
+      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);
       return ret;
     }
     else
     {
       return [];
     }
-    
+
   }
   seleccionAutocomplete(nombre: string) {
     let lista: any[] = [];
