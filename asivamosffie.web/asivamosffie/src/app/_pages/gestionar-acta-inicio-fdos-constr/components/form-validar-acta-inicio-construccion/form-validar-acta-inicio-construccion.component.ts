@@ -131,8 +131,8 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
-      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
-      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
       this.contrato = data.contrato;
       this.contratoConstruccionId = data.contrato.contratoConstruccion[0].contratoConstruccionId;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
@@ -140,7 +140,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     this.contratoId = id;
   }
   loadDataObservaciones(id) {
-    
+
     if (localStorage.getItem("editable") == "true") {
       this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data0:any)=>{
         this.addressForm.get('observaciones').setValue(data0.observaciones);
@@ -254,7 +254,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     this.addressForm.markAllAsTouched();
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    
+
     const objetoContrato = {
       conObervacionesActaFase2: this.addressForm.value.tieneObservaciones,
       contratoId: this.contratoId,

@@ -94,14 +94,14 @@ namespace asivamosffie.services
 
                 if (PolizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Aprobacion
                     && PolizaObservacion.FechaAprobacion.HasValue)
-                        {
-                            _context.Set<ContratoPoliza>()
-                                    .Where(c => c.ContratoPolizaId == PolizaObservacion.ContratoPolizaId)
-                                    .Update(c => new ContratoPoliza
-                                    {
-                                        FechaAprobacion = PolizaObservacion.FechaAprobacion
-                                    }); 
-                        }
+                {
+                    _context.Set<ContratoPoliza>()
+                            .Where(c => c.ContratoPolizaId == PolizaObservacion.ContratoPolizaId)
+                            .Update(c => new ContratoPoliza
+                            {
+                                FechaAprobacion = PolizaObservacion.FechaAprobacion
+                            });
+                }
             }
         }
 
@@ -195,6 +195,7 @@ namespace asivamosffie.services
                     }
                     else
                     {
+                        ContratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(ContratoPoliza);
                         ContratoPoliza.FechaCreacion = DateTime.Now;
                         ContratoPoliza.Eliminado = false;
                         _context.ContratoPoliza.Add(ContratoPoliza);
@@ -339,12 +340,15 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoPolizaGarantia(PolizaGarantia polizaGarantia)
         {
-            if (
-                string.IsNullOrEmpty(polizaGarantia.TipoGarantiaCodigo)
-                || polizaGarantia.ValorAmparo == null
-                || !polizaGarantia.VigenciaAmparo.HasValue
-                || !polizaGarantia.Vigencia.HasValue
-                ) return false;
+            if (polizaGarantia.EsIncluidaPoliza)
+            {
+                if (
+                     string.IsNullOrEmpty(polizaGarantia.TipoGarantiaCodigo)
+                     || polizaGarantia.ValorAmparo == null
+                     || !polizaGarantia.VigenciaAmparo.HasValue
+                     || !polizaGarantia.Vigencia.HasValue
+                     ) return false;
+            } 
             return true;
         }
 
@@ -1434,7 +1438,7 @@ namespace asivamosffie.services
                                                                                                                             .ToListAsync();
             return lstPolizaGarantia.Count() > 0;
         }
-         
+
         public async Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId)
         {
             ContratoPoliza contratoPoliza = await _context.ContratoPoliza.Where(r => r.ContratoPolizaId == ContratoPolizaId).FirstOrDefaultAsync();
@@ -1634,7 +1638,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
             List<GrillaContratoGarantiaPoliza> ListContratoGrilla = new List<GrillaContratoGarantiaPoliza>();

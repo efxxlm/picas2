@@ -40,7 +40,7 @@ namespace asivamosffie.services
             {
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
                 {
-                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString()) 
+                    if (string.IsNullOrEmpty(cofinanciacionAportante.TipoAportanteId.ToString())
                         //|| string.IsNullOrEmpty(cofinanciacionAportante.MunicipioId.ToString()) los aportantes 3eros no tienen municipio
                         )
 
@@ -84,9 +84,9 @@ namespace asivamosffie.services
             {
                 //valido que no tenga ninguna relación para poder eliminarlo
                 Cofinanciacion cofinanciacion = _context.Cofinanciacion.Find(pCofinancicacionId);
-                var aportantes = _context.CofinanciacionAportante.Where(x => x.CofinanciacionId == pCofinancicacionId && x.FuenteFinanciacion.Count()>0).ToList();
-                
-                if(aportantes.Count()>0)
+                var aportantes = _context.CofinanciacionAportante.Where(x => x.CofinanciacionId == pCofinancicacionId && x.FuenteFinanciacion.Count() > 0).ToList();
+
+                if (aportantes.Count() > 0)
                 {
                     //tiene relaciones entonces no lo puedo eliminar
                     return
@@ -150,7 +150,7 @@ namespace asivamosffie.services
 
             if (cofinanciacion != null)
             {
-                List<CofinanciacionAportante> cofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).OrderBy(x=>x.CofinanciacionAportanteId).ToListAsync();
+                List<CofinanciacionAportante> cofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).OrderBy(x => x.CofinanciacionAportanteId).ToListAsync();
 
                 cofinanciacion.CofinanciacionAportante = cofinanciacionAportante;
             }
@@ -253,7 +253,7 @@ namespace asivamosffie.services
                                 {
                                     cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
                                     cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
-                                    CreateCofinancingDocuments(cofinancicacionDocumento,true);
+                                    CreateCofinancingDocuments(cofinancicacionDocumento, true);
                                 }
                                 else
                                 {
@@ -263,7 +263,8 @@ namespace asivamosffie.services
                                 }
 
                             }
-                        }else
+                        }
+                        else
                         {
                             foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                             {
@@ -272,14 +273,14 @@ namespace asivamosffie.services
                                 {
                                     cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
                                     cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
-                                    CreateCofinancingDocuments(cofinancicacionDocumento,true);
+                                    CreateCofinancingDocuments(cofinancicacionDocumento, true);
 
                                 }
                                 else
                                 {
                                     cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
                                     cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
-                                    CreateCofinancingDocuments(cofinancicacionDocumento,false);
+                                    CreateCofinancingDocuments(cofinancicacionDocumento, false);
                                 }
 
                             }
@@ -354,7 +355,7 @@ namespace asivamosffie.services
 
         }
 
-        public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento,bool editar)
+        public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento, bool editar)
         {
             try
             {
@@ -365,7 +366,7 @@ namespace asivamosffie.services
                     cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion.ToUpper();
                     cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
                 }
-                
+
 
 
                 cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
@@ -398,14 +399,14 @@ namespace asivamosffie.services
             foreach (var item in Listcofinanciacion)
             {
                 item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
-                item.ValorTotal = _context.CofinanciacionDocumento.Where(x=> !(bool)x.Eliminado && item.CofinanciacionAportante.Select(x=>x.CofinanciacionAportanteId).ToList().Contains((int)x.CofinanciacionAportanteId)).Sum(x=>x.ValorDocumento);
+                item.ValorTotal = _context.CofinanciacionDocumento.Where(x => !(bool)x.Eliminado && item.CofinanciacionAportante.Select(x => x.CofinanciacionAportanteId).ToList().Contains((int)x.CofinanciacionAportanteId)).Sum(x => x.ValorDocumento);
             }
             return Listcofinanciacion.OrderByDescending(r => r.CofinanciacionId).ToList();
         }
 
         public async Task<List<CofinanciacionDocumento>> GetDocument(int ContributorId)
         {
-            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).Include(x=>x.TipoDocumento).ToListAsync();
+            return await _context.CofinanciacionDocumento.Where(r => r.CofinanciacionAportanteId == ContributorId && !(bool)r.Eliminado).Include(x => x.TipoDocumento).ToListAsync();
         }
 
         public async Task<List<CofinanciacionAportante>> GetListAportante()
@@ -423,7 +424,9 @@ namespace asivamosffie.services
                 List<CofinanciacionAportante> ListCofinanciacionAportante =
                 await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado &&
                     r.TipoAportanteId == pTipoAportanteID
-                    && !(bool)r.Cofinanciacion.Eliminado).Include(x => x.Cofinanciacion)
+                    && !(bool)r.Cofinanciacion.Eliminado)
+                .Include(x => x.Cofinanciacion)
+                .Include(x => x.CofinanciacionDocumento)
                 .ToListAsync();
 
 
@@ -456,9 +459,7 @@ namespace asivamosffie.services
                                 nombre = "Gobernación de " + cofinanciacionAportante.DepartamentoId == null ? "" :
                                 _context.Localizacion.Find(cofinanciacionAportante.DepartamentoId).Descripcion;
                             }
-
                         }
-
                     }
                     else
                     {
@@ -469,6 +470,7 @@ namespace asivamosffie.services
                     }
                     CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
                     {
+                        NumeroAcuerdo = cofinanciacionAportante.CofinanciacionDocumento.FirstOrDefault().NumeroAcuerdo,
                         CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
                         Nombre = nombre,
                         TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId),
@@ -499,33 +501,33 @@ namespace asivamosffie.services
         {
             //Lista tipo Aportante Cuando el tipo de aportante es otro o tercero
             //jflorez: modifico para setear el nombre del aportante
-            var retorno= await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID && !(bool)r.Cofinanciacion.Eliminado).Include(r => r.Cofinanciacion).Include(x => x.TipoAportante).ToListAsync();
-            foreach(var ret in retorno)
+            var retorno = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID && !(bool)r.Cofinanciacion.Eliminado).Include(r => r.Cofinanciacion).Include(x => x.TipoAportante).ToListAsync();
+            foreach (var ret in retorno)
             {
-                if(ret.TipoAportanteId==ConstanTipoAportante.Ffie)
+                if (ret.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
                     ret.NombreAportanteString = ConstanStringTipoAportante.Ffie;
                 }
                 else if (ret.TipoAportanteId == ConstanTipoAportante.ET)
                 {
                     //verifico si tiene municipio
-                    if(ret.MunicipioId!=null)
+                    if (ret.MunicipioId != null)
                     {
                         ret.NombreAportanteString = _context.Localizacion.Find(ret.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
-                        ret.NombreAportanteString = ret.DepartamentoId==null?"Error":_context.Localizacion.Find(ret.DepartamentoId).Descripcion;
+                        ret.NombreAportanteString = ret.DepartamentoId == null ? "Error" : _context.Localizacion.Find(ret.DepartamentoId).Descripcion;
                     }
-                    
+
                 }
                 else
                 {
-                    if (ret.NombreAportanteId!= null)
+                    if (ret.NombreAportanteId != null)
                     {
                         ret.NombreAportanteString = _context.Dominio.Find(ret.NombreAportanteId).Nombre;
                     }
-                }                
+                }
                 ret.TipoAportanteString = ret.TipoAportante.Nombre;
                 ret.Departamento = null;
                 ret.Municipio = null;
@@ -533,9 +535,9 @@ namespace asivamosffie.services
                 ret.ProyectoAportante = null;
                 ret.NombreAportante = null;
                 ret.TipoAportante.CofinanciacionAportanteTipoAportante = null;
-                ret.FuenteFinanciacion = _context.FuenteFinanciacion.Where(x=>x.AportanteId==ret.CofinanciacionAportanteId && x.Eliminado != true).ToList();
+                ret.FuenteFinanciacion = _context.FuenteFinanciacion.Where(x => x.AportanteId == ret.CofinanciacionAportanteId && x.Eliminado != true).ToList();
             }
-            return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
+            return retorno.OrderByDescending(x => x.FechaCreacion).ToList();
         }
 
         public async Task<Respuesta> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId, string pUsuarioModifico)
@@ -545,7 +547,7 @@ namespace asivamosffie.services
             {
                 //valido que no tenga ninguna relación para poder eliminarlo
                 CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(pCofinancicacionId);
-                
+
 
                 cofinanciacion.Eliminado = true;
                 cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
@@ -579,7 +581,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> EliminarVigenciaAportanteId(int pCofinancicacionId, string pUsuarioModifico)
-        {            
+        {
             int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
             try
             {
@@ -639,7 +641,7 @@ namespace asivamosffie.services
             try
             {
                 //valido que no tenga ninguna relación para poder eliminarlo
-                CofinanciacionDocumento cofinanciacion = _context.CofinanciacionDocumento.Find(pDocumentID);                
+                CofinanciacionDocumento cofinanciacion = _context.CofinanciacionDocumento.Find(pDocumentID);
 
                 cofinanciacion.Eliminado = true;
                 cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();

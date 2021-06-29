@@ -1,253 +1,306 @@
 <section class="container text-center" *ngIf="contrato !== undefined">
-    <div class="text-right">
-        <a routerLink="/autorizarSolicitudPago" mat-button color="primary" class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
-    </div>
-    <h1 class="title-menu--h1">
-        Autorizar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
-    </h1>
-    <ng-container
-        *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria || contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra; else esOtrosCostos">
-        <p style="margin-top: 0.5em;">
-            <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de
-                solicitud: <b>Contratos de obra</b></span>
-            <span
-                *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo
-                de solicitud: <b>Contratos de interventoría</b></span>
-        </p>
+  <div class="text-right">
+    <a routerLink="/autorizarSolicitudPago" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <h1 class="title-menu--h1">Autorizar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}</h1>
+  <ng-container
+    *ngIf="
+      contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria ||
+        contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra;
+      else esOtrosCostos
+    "
+  >
+    <p style="margin-top: 0.5em">
+      <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra"
+        >Tipo de solicitud: <b>Contratos de obra</b></span
+      >
+      <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria"
+        >Tipo de solicitud: <b>Contratos de interventoría</b></span
+      >
+    </p>
 
-        <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    <span
-                        *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Contratos
-                        de obra</span>
-                    <span
-                        *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Contratos
-                        de interventoría</span>
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p>
-                <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
-            </mat-card-content>
-        </mat-card>
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+          <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra"
+            >Contratos de obra</span
+          >
+          <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria"
+            >Contratos de interventoría</span
+          >
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato(contrato.modalidadCodigo) }}</p>
+        <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }}</p>
+      </mat-card-content>
+    </mat-card>
 
-        <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    {{ contrato.numeroContrato }}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <div class="chartGen">
-                    <div class="chart1">
-                        <p><strong>Nombre de entidad contratista:</strong> {{ contrato.contratacion.contratista.nombre }} </p>
-                        <p><strong>Fecha de inicio del contrato:</strong> {{ contrato.contratoPoliza[0]?.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
-                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> {{ contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias }} </p>
-                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
-                    </div>
-                    <div class="chart2">
-                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ ( contrato.plazoFase2ConstruccionMeses !== undefined ? contrato.plazoFase2ConstruccionMeses : 0 ) + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + ( contrato.plazoFase2ConstruccionDias !== undefined ? contrato.plazoFase2ConstruccionDias : 0 ) }} </p>
-                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
-                        <p><strong>Fecha fin del contrato:</strong> {{ contrato.fechaTerminacionFase2 | date: 'dd/MM/yyyy' }} </p>
-                        <p *ngIf="contrato.plazoFase1PreDias !== undefined && contrato.plazoFase2ConstruccionMeses !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
-                    </div>
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+          {{ contrato.numeroContrato }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <div class="chartGen">
+          <div class="chart1">
+            <p><strong>Nombre de entidad contratista:</strong> {{ contrato.contratacion.contratista.nombre }}</p>
+            <p>
+              <strong>Fecha de inicio del contrato:</strong>
+              {{ contrato.contratoPoliza[0]?.fechaAprobacion | date: 'dd/MM/yyyy' }}
+            </p>
+            <p *ngIf="contrato.plazoFase1PreDias !== undefined">
+              <strong>Plazo fase 1 - Preconstruccion: Meses:</strong> {{ contrato.plazoFase1PreMeses }}
+              <strong>Días:</strong> {{ contrato.plazoFase1PreDias }}
+            </p>
+            <p *ngIf="contrato.plazoFase1PreDias === undefined">
+              <strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }}
+              <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }}
+            </p>
+          </div>
+          <div class="chart2">
+            <p *ngIf="contrato.plazoFase1PreDias !== undefined">
+              <strong>Plazo: Meses:</strong>
+              {{
+                (contrato.plazoFase2ConstruccionMeses !== undefined ? contrato.plazoFase2ConstruccionMeses : 0) +
+                  contrato.plazoFase1PreMeses
+              }}
+              <strong>Días:</strong>
+              {{
+                contrato.plazoFase1PreDias +
+                  (contrato.plazoFase2ConstruccionDias !== undefined ? contrato.plazoFase2ConstruccionDias : 0)
+              }}
+            </p>
+            <p *ngIf="contrato.plazoFase1PreDias === undefined">
+              <strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong>
+              {{ contrato.plazoFase2ConstruccionDias }}
+            </p>
+            <p><strong>Fecha fin del contrato:</strong> {{ contrato.fechaTerminacionFase2 | date: 'dd/MM/yyyy' }}</p>
+            <p *ngIf="contrato.plazoFase1PreDias !== undefined && contrato.plazoFase2ConstruccionMeses !== undefined">
+              <strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }}
+              <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }}
+            </p>
+          </div>
+        </div>
+        <h2 class="card-subTitle">DRP</h2>
+        <div class="table-responsive">
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="drp">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>DRP</th>
+              <td mat-cell *matCellDef="let element" align="center">{{ element.enum }}</td>
+            </ng-container>
+            <ng-container matColumnDef="numDrp">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Número DRP</th>
+              <td mat-cell *matCellDef="let element" align="center">{{ element.numeroDrp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="ProyectoLLaveMen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre proyecto</th>
+              <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                <div
+                  class="sub-item-table justify-content-center align-items-center text-center"
+                  *ngFor="let el of element.listDyProyectos; let i = index"
+                  [class.h-3]="el.listDyUsos.length === 1"
+                  [class.h-6]="el.listDyUsos.length === 2"
+                  [class.h-9]="el.listDyUsos.length === 3"
+                >
+                  {{ el.nombre }}
                 </div>
-                <h2 class="card-subTitle">DRP</h2>
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-                      <ng-container matColumnDef="drp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>DRP</th>
-                        <td mat-cell *matCellDef="let element" align="center">{{ element.enum }}</td>
-                      </ng-container>
-                      <ng-container matColumnDef="numDrp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Número DRP</th>
-                        <td mat-cell *matCellDef="let element" align="center">{{ element.numeroDrp }}</td>
-                      </ng-container>
-                      <ng-container matColumnDef="ProyectoLLaveMen">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre proyecto</th>
-                        <td mat-cell *matCellDef="let element" style="padding: 0 !important">
-                          <div
-                            class="sub-item-table justify-content-center align-items-center"
-                            *ngFor="let el of element.listDyProyectos; let i = index"
-                            [class.h-3]="el.listDyUsos.length === 1"
-                            [class.h-6]="el.listDyUsos.length === 2"
-                            [class.h-9]="el.listDyUsos.length === 3"
-                          >
-                            {{ el.nombre }}
-                          </div>
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="NombreUso">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre uso</th>
-                        <td mat-cell *matCellDef="let element" style="padding: 0 !important">
-                          <div
-                            class="sub-item-table justify-content-center align-items-center"
-                            *ngFor="let el of element.listDyProyectos; let i = index"
-                          >
-                            <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">
-                                {{ el2.nombre }}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="valor">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
-                        <td mat-cell *matCellDef="let element" style="padding: 0 !important">
-                          <div
-                            class="sub-item-table justify-content-center align-items-center"
-                            *ngFor="let el of element.listDyProyectos; let i = index"
-                          >
-                            <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">${{ el2.valorUso }}</div>
-                            </div>
-                          </div>
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="saldo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</th>
-                        <td mat-cell *matCellDef="let element" style="padding: 0 !important">
-                          <div
-                            class="sub-item-table justify-content-center align-items-center"
-                            *ngFor="let el of element.listDyProyectos; let i = index"
-                          >
-                            <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">${{ el2.saldo }}</div>
-                            </div>
-                          </div>
-                        </td>
-                      </ng-container>
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-                    </table>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="NombreUso">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre uso</th>
+              <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                <div
+                  class="sub-item-table justify-content-center align-items-center"
+                  *ngFor="let el of element.listDyProyectos; let i = index"
+                >
+                  <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
+                    <div class="sub-item-table--element">
+                      {{ el2.nombre }}
+                    </div>
                   </div>
-                <div class="tabs--actions" style="margin-top: 1em;">
-                    <button mat-raised-button color="accent" class="tabs--btn auxBtn"
-                        (click)="openProyectosAsociados()">
-                        Ver proyectos asociados
-                    </button>
                 </div>
-            </mat-card-content>
-        </mat-card>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="valor">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+              <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                <div
+                  class="sub-item-table justify-content-center align-items-center"
+                  *ngFor="let el of element.listDyProyectos; let i = index"
+                >
+                  <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
+                    <div class="sub-item-table--element">${{ el2.valorUso }}</div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="saldo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</th>
+              <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                <div
+                  class="sub-item-table justify-content-center align-items-center"
+                  *ngFor="let el of element.listDyProyectos; let i = index"
+                >
+                  <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
+                    <div class="sub-item-table--element">${{ el2.saldo }}</div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <div class="tabs--actions" style="margin-top: 1em">
+          <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="openProyectosAsociados()">
+            Ver proyectos asociados
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
-                        Cargar forma de pago
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <app-obs-cargar-formpago-autoriz    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                    [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
-                                                    [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"
-                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                    [tieneFormaPago]="tieneFormaPago"
-                                                    [esVerDetalle]="true">
-                </app-obs-cargar-formpago-autoriz>
-            </mat-expansion-panel>
-            <mat-expansion-panel class="expansion-style">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
-                        Registrar solicitud de pago
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <app-obs-registrar-sol-pago-autoriz [contrato]="contrato"
-                                                    [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
-                                                    [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
-                                                    [esVerDetalle]="true">
-                </app-obs-registrar-sol-pago-autoriz>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </ng-container>
-    <ng-template #esOtrosCostos>
-        <section class="mt-1em">
-            <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de
-                solicitud: <b>Otros costos/servicios</b></span>
-        </section>
-
-        <mat-card class="shipping-card">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    Otros costos y servicios
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
-                <p><strong>Número de radicado SAC:</strong> {{ otrosCostosForm.get( 'numeroRadicadoSAC' ).value }} </p>
-                <p><strong>Número de factura:</strong> {{ otrosCostosForm.get( 'numeroFactura' ).value }} </p>
-                <p><strong>Valor facturado:</strong> ${{ otrosCostosForm.get( 'valorFacturado' ).value | currency:'
-                    ':'symbol-narrow':'.0-0' }} </p>
-                <p *ngIf="otrosCostosForm.get( 'tipoPago' ).value !== null"><strong>Tipo de pago:</strong> {{
-                    otrosCostosForm.get( 'tipoPago' ).value.nombre }} </p>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="otrosCostosObsForm.get( 'fechaCreacion' ).value !== null">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Observación de la coordinación
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><b> {{ otrosCostosObsForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                <p *ngIf="otrosCostosObsForm.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones a la solicitud de pago?:</b> Si</p>
-                <p *ngIf="otrosCostosObsForm.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones a la solicitud de pago?:</b> No</p>
-                <section [innerHTML]="otrosCostosObsForm.get( 'observaciones' ).value" *ngIf="otrosCostosObsForm.get( 'tieneObservaciones' ).value === true"></section>
-            </mat-card-content>
-        </mat-card>
-    </ng-template>
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Validar lista de chequeo
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title"> Cargar forma de pago </mat-panel-title>
+        </mat-expansion-panel-header>
 
-            <app-obs-valid-listachequeo [contrato]="contrato"
-                                        [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
-                                        [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
-                                        [esVerDetalle]="true">
-            </app-obs-valid-listachequeo>
-        </mat-expansion-panel>
+        <app-obs-cargar-formpago-autoriz
+          [solicitudPago]="contrato.solicitudPagoOnly"
+          [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
+          [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"
+          [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+          [tieneFormaPago]="tieneFormaPago"
+          [esVerDetalle]="true"
+        >
+        </app-obs-cargar-formpago-autoriz>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title"> Registrar solicitud de pago </mat-panel-title>
+        </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Soporte de la solicitud
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-card class="shipping-card var-main-gris">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text textoGris">
-                        Soporte de la solicitud de pago
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><strong>URL con soporte:</strong> {{
-                        contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
-                </mat-card-content>
-            </mat-card>
-
-            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="addressForm.get( 'fechaCreacion' ).value !== null">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text textoGris">
-                        Observación de la coordinación
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                    <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene observaciones a el soporte de la solicitud?:</b> Si</p>
-                    <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene observaciones a el soporte de la solicitud?:</b> No</p>
-                    <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
-                </mat-card-content>
-            </mat-card>
-        </mat-expansion-panel>
+        <app-obs-registrar-sol-pago-autoriz
+          [contrato]="contrato"
+          [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
+          [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
+          [esVerDetalle]="true"
+        >
+        </app-obs-registrar-sol-pago-autoriz>
+      </mat-expansion-panel>
     </mat-accordion>
+  </ng-container>
+  <ng-template #esOtrosCostos>
+    <section class="mt-1em">
+      <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos"
+        >Tipo de solicitud: <b>Otros costos/servicios</b></span
+      >
+    </section>
+
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Otros costos y servicios </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }}</p>
+        <p><strong>Número de radicado SAC:</strong> {{ otrosCostosForm.get('numeroRadicadoSAC').value }}</p>
+        <p><strong>Número de factura:</strong> {{ otrosCostosForm.get('numeroFactura').value }}</p>
+        <p>
+          <strong>Valor facturado:</strong> ${{
+            otrosCostosForm.get('valorFacturado').value | currency: '
+                    ':'symbol-narrow':'.0-0'
+          }}
+        </p>
+        <p *ngIf="otrosCostosForm.get('tipoPago').value !== null">
+          <strong>Tipo de pago:</strong> {{ otrosCostosForm.get('tipoPago').value.nombre }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card
+      class="shipping-card var-main-gris"
+      style="margin-top: 3em"
+      *ngIf="otrosCostosObsForm.get('fechaCreacion').value !== null"
+    >
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris"> Observación de la coordinación </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left">
+        <p>
+          <b> {{ otrosCostosObsForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }} </b>
+        </p>
+        <p *ngIf="otrosCostosObsForm.get('tieneObservaciones').value === true">
+          <b>¿Tiene observaciones a la solicitud de pago?:</b> Si
+        </p>
+        <p *ngIf="otrosCostosObsForm.get('tieneObservaciones').value === false">
+          <b>¿Tiene observaciones a la solicitud de pago?:</b> No
+        </p>
+        <section
+          [innerHTML]="otrosCostosObsForm.get('observaciones').value"
+          *ngIf="otrosCostosObsForm.get('tieneObservaciones').value === true"
+        ></section>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Validar lista de chequeo </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-obs-valid-listachequeo
+        [contrato]="contrato"
+        [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
+        [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
+        [esVerDetalle]="true"
+      >
+      </app-obs-valid-listachequeo>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Soporte de la solicitud </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text textoGris"> Soporte de la solicitud de pago </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left">
+          <p>
+            <strong>URL con soporte:</strong>
+            {{ contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].urlSoporte }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card
+        class="shipping-card var-main-gris"
+        style="margin-top: 3em"
+        *ngIf="addressForm.get('fechaCreacion').value !== null"
+      >
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text textoGris"> Observación de la coordinación </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left">
+          <p>
+            <b> {{ addressForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }} </b>
+          </p>
+          <p *ngIf="addressForm.get('tieneObservaciones').value === true">
+            <b>¿Desde la coordinación tiene observaciones a el soporte de la solicitud?:</b> Si
+          </p>
+          <p *ngIf="addressForm.get('tieneObservaciones').value === false">
+            <b>¿Desde la coordinación tiene observaciones a el soporte de la solicitud?:</b> No
+          </p>
+          <section
+            [innerHTML]="addressForm.get('observaciones').value"
+            *ngIf="addressForm.get('tieneObservaciones').value === true"
+          ></section>
+        </mat-card-content>
+      </mat-card>
+    </mat-expansion-panel>
+  </mat-accordion>
 </section>

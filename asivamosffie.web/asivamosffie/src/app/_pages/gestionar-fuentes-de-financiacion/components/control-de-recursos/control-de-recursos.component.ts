@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { TiposAportante, CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FuenteFinanciacion, FuenteFinanciacionService, CuentaBancaria, RegistroPresupuestal, ControlRecurso, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { forkJoin } from 'rxjs';
 import { CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -14,7 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./control-de-recursos.component.scss']
 })
 export class ControlDeRecursosComponent implements OnInit {
-  
+
   addressForm: FormGroup;
   hasUnitNumber = false;
   tipoAportante = TiposAportante;
@@ -33,7 +33,7 @@ export class ControlDeRecursosComponent implements OnInit {
   fuente: FuenteFinanciacion;
   fuenteFinaciacionId: number = 0;
   tipoAportanteId: string = '';
-
+  valorAporteEnCuenta: number = 0;
   NombresDeLaCuenta: CuentaBancaria[] = [] ;
 
   rpArray: RegistroPresupuestal[] = [];
@@ -44,8 +44,9 @@ export class ControlDeRecursosComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private fuenteFinanciacionServices: FuenteFinanciacionService,
               private commonService: CommonService,
-              private dialog: MatDialog
-             ) 
+              private dialog: MatDialog,
+              private routes: Router,
+             )
   {}
 
   ngOnInit(): void {
@@ -70,17 +71,23 @@ export class ControlDeRecursosComponent implements OnInit {
         this.commonService.listaNombreAportante(),
         this.commonService.listaFuenteTipoFinanciacion(),
         this.commonService.listaDepartamentos()
-        
+
       ]).subscribe( respuesta => {
-        
+
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
         this.listaFuentes = respuesta[2];
         this.listaDepartamentos = respuesta[3];
         this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
+        this.valorAporteEnCuenta = 0;
+        if(this.fuente != null){
+          this.fuente.controlRecurso.forEach(element => {
+            this.valorAporteEnCuenta += element.valorConsignacion;
+          });
+        }
         if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString()))
         {
-          let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() == 
+          let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() ==
           this.fuente.aportante.departamentoId.toString() )
           if (valorDepartamento){
             // console.log("tiene departamento ");
@@ -88,20 +95,20 @@ export class ControlDeRecursosComponent implements OnInit {
             this.commonService.listaMunicipiosByIdDepartamento( this.fuente.aportante.departamentoId.toString() ).subscribe( mun => {
               if (mun){
                 let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
-                this.municipio = valorMunicipio?valorMunicipio.descripcion:"";
+                this.municipio = valorMunicipio?valorMunicipio.descripcion.toUpperCase():"";
               }
             })
-            this.departamento = valorDepartamento?valorDepartamento.descripcion:"";
+            this.departamento = valorDepartamento?valorDepartamento.descripcion.toUpperCase():"";
           }
-          
-          
+
+
         }
         let valorNombre = this.listaNombres.find( nom => nom.dominioId == this.fuente.aportante.nombreAportanteId );
         let valorFuente = this.listaFuentes.find( fue => fue.codigo == this.fuente.fuenteRecursosCodigo );
         let valorMunicipio: string = '';
-        
 
-        
+
+
         //this.nombreAportante = valorNombre.nombre;
         this.nombreFuente = valorFuente.nombre;
         this.valorFuente = this.fuente.valorFuente;
@@ -109,7 +116,7 @@ export class ControlDeRecursosComponent implements OnInit {
         this.vigencia = this.fuente.aportante.cofinanciacion.vigenciaCofinanciacionId;
         this.NombresDeLaCuenta = this.fuente.cuentaBancaria;
         this.rpArray = this.fuente.aportante.registroPresupuestal;
-        //la lista de vigencias son los documentos registrados en acuerdos de cofinanciacion 
+        //la lista de vigencias son los documentos registrados en acuerdos de cofinanciacion
         this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
           this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),fuenteFinanciacionId:null,valorAporte:null,vigenciaAporteId:element.cofinanciacionDocumentoId});
         });
@@ -151,11 +158,29 @@ export class ControlDeRecursosComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
-      
-        location.reload();
-      
+
+        //location.reload();
+
+        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+          () =>   this.routes.navigate(
+                      [
+                          '/gestionarFuentes/controlRecursos', this.idFuente, 0
+                      ]
+                  )
+        );
+
+    });
+  }
+
+  openDialogError(modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+
     });
   }
 
@@ -180,12 +205,31 @@ export class ControlDeRecursosComponent implements OnInit {
       if (control.controlRecursoId > 0)
         this.fuenteFinanciacionServices.updateControlRecurso( control ).subscribe( respuesta => {
           this.openDialog( '', `<b>${respuesta.message}</b>` );
-        })  
+        })
       else
         this.fuenteFinanciacionServices.registrarControlRecurso( control ).subscribe( respuesta => {
           this.openDialog( '', `<b>${respuesta.message}</b>` );
         })
 
+    }
+  }
+
+  validar(){
+    let total = this.valorAporteEnCuenta + this.addressForm.get("valorConsignacion").value;
+    let fuenteModificando : ControlRecurso;
+    if(this.idControl > 0){
+      if(this.fuente != null){
+        fuenteModificando = this.fuente.controlRecurso.find( de => de.controlRecursoId.toString() == this.idControl.toString() )
+        total = total - fuenteModificando.valorConsignacion;
+      }
+    }
+    if(total > this.valorFuente){
+      this.openDialogError( '', `El <b> valor de la consignación </b> no debe superar el <b> valor del aporte a la fuente de recursos. </b>, verifique por favor.` );
+      if(this.idControl == 0){
+        this.addressForm.get("valorConsignacion").setValue(null);
+      }else{
+        this.addressForm.get("valorConsignacion").setValue(fuenteModificando?.valorConsignacion);
+      }
     }
   }
 

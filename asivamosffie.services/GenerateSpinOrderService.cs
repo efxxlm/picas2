@@ -469,7 +469,233 @@ namespace asivamosffie.services
         }
 
         #endregion
+        #region Validate 
 
+        public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
+        {
+            bool blRegistroCompleto = false;
+            try
+            {
+                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
+                blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+
+                DateTime? CompleteRecordDate = new DateTime();
+                if (blRegistroCompleto)
+                    CompleteRecordDate = DateTime.Now;
+
+                _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
+                        .Update(o => new OrdenGiro
+                        {
+                            RegistroCompleto = blRegistroCompleto,
+                            FechaRegistroCompleto = CompleteRecordDate,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pAuthor
+                        });
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return blRegistroCompleto;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
+        {
+            if (
+                    string.IsNullOrEmpty(terceroCausacionAportante.FuenteRecursoCodigo)
+                  || terceroCausacionAportante.AportanteId == 0
+                  || string.IsNullOrEmpty(terceroCausacionAportante.ConceptoPagoCodigo)
+                  || terceroCausacionAportante.ValorDescuento == 0
+                  || terceroCausacionAportante.FuenteFinanciacionId == 0)
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
+        {
+            if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+               || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
+               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
+               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
+                ) return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+        {
+            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
+                return true;
+
+            if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
+               || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+               || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
+                ) return false;
+
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
+                return false;
+
+            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
+                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
+                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
+                )
+                return false;
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
+                )
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroTercero.MedioPagoGiroCodigo))
+                return false;
+
+            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
+            {
+                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() == 0)
+                    return false;
+                if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
+                    return false;
+            }
+            else
+            {
+                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() == 0)
+                    return false;
+                if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            if (
+                   pOrdenGiro.OrdenGiroDetalle == null
+                || pOrdenGiro.OrdenGiroTercero == null
+                ) return false;
+
+            if (pOrdenGiro.OrdenGiroDetalle.Count() == 0
+                || pOrdenGiro.OrdenGiroTercero.Count() == 0
+                ) return false;
+
+            foreach (var item in pOrdenGiro.OrdenGiroDetalle)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalle(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiro.OrdenGiroTercero)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroTercero(item))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
+        {
+            if (
+                  pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
+               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
+                )
+                return false;
+
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
+        {
+            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
+                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
+                return false;
+
+            if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
+                return false;
+
+            foreach (var OrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+        {
+            if (
+                   pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
+                || pOrdenGiroDetalle?.OrdenGiroSoporte == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
+                || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
+                ) return false;
+
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
+            {
+                if (string.IsNullOrEmpty(item.Observacion))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
+            {
+                if (string.IsNullOrEmpty(item.UrlSoporte))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
+                    return false;
+            }
+
+            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
+            {
+                if (string.IsNullOrEmpty(item.EstrategiaPagoCodigo))
+                    return false;
+            }
+
+            return true;
+        }
+
+        #endregion
         #region C R U D
 
         #region Delete
@@ -1185,233 +1411,7 @@ namespace asivamosffie.services
         #endregion
         #endregion
 
-        #region Validate 
-
-        public async Task<bool> ValidarRegistroCompleto(int pSolicitudPago, string pAuthor)
-        {
-            bool blRegistroCompleto = false;
-            try
-            {
-                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
-                blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
-
-                DateTime? CompleteRecordDate = new DateTime();
-                if (blRegistroCompleto)
-                    CompleteRecordDate = DateTime.Now;
-
-                _context.Set<OrdenGiro>()
-                        .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
-                        .Update(o => new OrdenGiro
-                        {
-                            RegistroCompleto = blRegistroCompleto,
-                            FechaRegistroCompleto = CompleteRecordDate,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pAuthor
-                        });
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return blRegistroCompleto;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
-        {
-            if (
-                    string.IsNullOrEmpty(terceroCausacionAportante.FuenteRecursoCodigo)
-                  || terceroCausacionAportante.AportanteId == 0
-                  || string.IsNullOrEmpty(terceroCausacionAportante.ConceptoPagoCodigo)
-                  || terceroCausacionAportante.ValorDescuento == 0
-                  || terceroCausacionAportante.FuenteFinanciacionId == 0)
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
-        {
-            if (string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
-               || ordenGiroDetalleTerceroCausacionDescuento.ValorDescuento == 0
-               || ordenGiroDetalleTerceroCausacionDescuento.AportanteId == 0
-               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
-               || string.IsNullOrEmpty(ordenGiroDetalleTerceroCausacionDescuento.TipoDescuentoCodigo)
-                ) return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
-        {
-            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
-                return true;
-
-            if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
-               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
-               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
-               || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
-               || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
-                ) return false;
-
-            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
-                return false;
-
-            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta)
-                || string.IsNullOrEmpty(pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo)
-                || !pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros.HasValue
-                )
-                return false;
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NombreBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-               || string.IsNullOrEmpty(pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroTercero.MedioPagoGiroCodigo))
-                return false;
-
-            if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Transferencia_electronica)
-            {
-                if (pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.Count() == 0)
-                    return false;
-                if (!ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTercero.OrdenGiroTerceroTransferenciaElectronica.FirstOrDefault()))
-                    return false;
-            }
-            else
-            {
-                if (pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.Count() == 0)
-                    return false;
-                if (!ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia.FirstOrDefault()))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
-        {
-            if (
-                   pOrdenGiro.OrdenGiroDetalle == null
-                || pOrdenGiro.OrdenGiroTercero == null
-                ) return false;
-
-            if (pOrdenGiro.OrdenGiroDetalle.Count() == 0
-                || pOrdenGiro.OrdenGiroTercero.Count() == 0
-                ) return false;
-
-            foreach (var item in pOrdenGiro.OrdenGiroDetalle)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalle(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiro.OrdenGiroTercero)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroTercero(item))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
-        {
-            if (
-                  pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId == 0
-               || pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento == null
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo)
-               || string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo)
-                )
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
-        {
-            if (string.IsNullOrEmpty(pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo)
-                || pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId == 0)
-                return false;
-
-            if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
-                return false;
-
-            foreach (var OrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
-        {
-            if (
-                   pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
-                || pOrdenGiroDetalle?.OrdenGiroSoporte == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
-                ) return false;
-
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
-            {
-                if (string.IsNullOrEmpty(item.Observacion))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
-            {
-                if (string.IsNullOrEmpty(item.UrlSoporte))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
-            {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
-                    return false;
-            }
-
-            foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
-            {
-                if (string.IsNullOrEmpty(item.EstrategiaPagoCodigo))
-                    return false;
-            }
-
-            return true;
-        }
-
-        #endregion
+    
 
 
 

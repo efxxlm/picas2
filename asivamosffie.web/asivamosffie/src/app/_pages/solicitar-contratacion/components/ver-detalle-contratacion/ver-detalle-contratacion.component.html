@@ -35,7 +35,9 @@
         <mat-card class="border" style="margin-top: 3em;">
           <mat-card-content class="mt-1em">
             <p><b>Nombre del contratista</b>: {{ contratacion['contratista'].nombre }}</p>
-            <p><b>Número de identificación</b>: {{ contratacion['contratista'].numeroIdentificacion }}</p>
+            <p><b>Número de identificación</b>:
+              <span *ngIf="contratacion['contratista'].numeroIdentificacion === '0'"> {{ contratacion['contratista'].representanteLegalNumeroIdentificacion }} </span>
+              <span *ngIf="contratacion['contratista'].numeroIdentificacion !== '0'"> {{ contratacion['contratista'].numeroIdentificacion }}</span></p>
             <p><b>Nombre del representante legal</b>: {{ contratacion['contratista'].representanteLegal }}</p>
             <p><b>Número de la invitación</b>: {{ contratacion['contratista'].numeroInvitacion }}</p>
           </mat-card-content>
@@ -177,7 +179,7 @@
           <mat-expansion-panel class="expansion-style sub-expansion-black">
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
-                Aportante {{ j+1 }}
+                {{ contratacionProyecto.proyecto.proyectoAportante[j].aportante.nombreAportanteString }}
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-tabla-detalle-fuentes-uso  [contratacionProyecto]="contratacionProyecto"

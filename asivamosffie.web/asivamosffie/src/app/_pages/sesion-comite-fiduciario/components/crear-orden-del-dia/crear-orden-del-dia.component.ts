@@ -170,7 +170,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   editMode() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.detalle = 'Ver detalle/Editar orden del día';
+    this.detalle = 'Ver detalle orden del día';
 
     this.fiduciaryCommitteeSessionService.getRequestCommitteeSessionById(this.idSesion)
       .subscribe(comite => {

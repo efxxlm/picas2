@@ -53,6 +53,11 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
         if (response.length === 0) {
           return
         }
+        response.sort((a, b) => {
+          if (a.fechaUltimoReporte > b.fechaUltimoReporte) return 1;
+          if (a.fechaUltimoReporte < b.fechaUltimoReporte) return -1;
+          return 0;
+        });
         response.forEach(element => {
           element.fechaCargue = element.fechaCargue
             ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')

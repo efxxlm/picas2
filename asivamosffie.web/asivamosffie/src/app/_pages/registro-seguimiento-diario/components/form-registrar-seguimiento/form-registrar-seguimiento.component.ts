@@ -260,6 +260,14 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       return false;
     }
 
+    let horasRetrasoProductividad;
+
+    if(values.horasRetrasoProductividad === null || values.horasRetrasoProductividad === undefined){
+      horasRetrasoProductividad = this.addressForm.get('horasRetrasoProductividad').value;
+    }else{
+      horasRetrasoProductividad = values.horasRetrasoProductividad
+    }
+
     let seguimiento: SeguimientoDiario = {
       fechaSeguimiento:                     values.fechaSeguimiento,
       contratacionProyectoId:               this.proyecto.contratacionProyectoId,
@@ -287,12 +295,12 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       productividadCodigo:                  values.Productividad,
       causaIndisponibilidadProductividadCodigo:  values.causaProductividad,
       seGeneroRetrasoProductividad:         values.retrasoProductividad,
-      numeroHorasRetrasoProductividad:      values.horasRetrasoProductividad,
+      numeroHorasRetrasoProductividad:      horasRetrasoProductividad,
       productividadObservaciones:           values.ProductividadObservaciones,
 
     }
 
-    // console.log(seguimiento);
+     console.log(seguimiento);
 
     this.dailyFollowUpService.createEditDailyFollowUp( seguimiento )
       .subscribe( respuesta => {

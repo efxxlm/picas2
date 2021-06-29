@@ -40,3 +40,22 @@ modal dialog
     ng g c _pages/<module-name>/components/dialog-<component-name> --skipTests
 luego en el modulo de pone
     `entryComponents: [dialog-<component-name],`
+
+## Si tiene problemas a la hora de correr el proyecto localmente
+
+    npm run compilar
+
+## Desplegar en [asivamos.ffie.com.co](https://asivamos.ffie.com.co)
+
+cuenta cambiar en proxy.conf.json
+    "target":"https://asivamosback.ffie.com.co",
+
+luego utilice el comando
+    npm run prod
+## Desplegar en [preasivamos.ffie.com.co](https://preasivamos.ffie.com.co)
+
+cuenta cambiar en proxy.conf.json
+    "target":"https://preasivamosback.ffie.com.co",
+    
+luego utilice el comando
+    npm run stag

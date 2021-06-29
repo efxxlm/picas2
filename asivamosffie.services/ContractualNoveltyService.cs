@@ -88,7 +88,8 @@ namespace asivamosffie.services
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Sin_validar &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.En_proceso_de_validacion &&
                                                             r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_supervisor &&
-                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_novedad_rechazada_por_interventor &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoNovedadContractual.Con_observaciones_del_supervisor
                                                            )
                                                     .ToListAsync();
 

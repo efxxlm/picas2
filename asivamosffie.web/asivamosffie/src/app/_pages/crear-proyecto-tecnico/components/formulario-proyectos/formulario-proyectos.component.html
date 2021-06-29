@@ -826,7 +826,7 @@
             [class.mat-form-field-invalid]="!proyecto.predioPrincipal.documentoAcreditacionCodigo && estaEditando"
           >
             <mat-select required [(ngModel)]="proyecto.predioPrincipal.documentoAcreditacionCodigo"
-            [disabled]="!bitPuedoEditar">
+            [disabled]="!bitPuedoEditar" (ngModelChange)="onChangeDocumentoAcreditacion($event)">
               <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                 {{ listado.nombre }}
               </mat-option>
@@ -924,7 +924,7 @@
                   [(ngModel)]="proyecto.predioPrincipal.cedulaCatastral"
                   [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo != '1' || !bitPuedoEditar"
                   maxlength="20"
-                  required
+                  [required]="proyecto.predioPrincipal.documentoAcreditacionCodigo == '1' || bitPuedoEditar"
                   type="text"
                 />
               </mat-form-field>
@@ -982,7 +982,7 @@
                     [class.mat-form-field-invalid]="!predios.predio.documentoAcreditacionCodigo && estaEditando"
                   >
                     <mat-select required [(ngModel)]="predios.predio.documentoAcreditacionCodigo"
-                    [disabled]="!bitPuedoEditar">
+                    [disabled]="!bitPuedoEditar" (ngModelChange)="onChangeDocumentoAcreditacion2($event, i)">
                       <mat-option *ngFor="let listado of listadoDocumentoAcreditacion" [value]="listado.codigo">
                         {{ listado.nombre }}
                       </mat-option>
@@ -1064,15 +1064,14 @@
                 <div class="col d-flex">
                   <mat-form-field
                     class="full-width"
-                    [class.mat-form-field-invalid]="!predios.predio.cedulaCatastral && estaEditando"
+                    [class.mat-form-field-invalid]="!predios.predio.cedulaCatastral && estaEditando && predios.predio.documentoAcreditacionCodigo == '1'"
                   >
                     <input
                       matInput
                       [(ngModel)]="predios.predio.cedulaCatastral"
-                      [disabled]="predios.predio.documentoAcreditacionCodigo != '1'"
+                      [disabled]="predios.predio.documentoAcreditacionCodigo != '1' || !bitPuedoEditar"
                       maxlength="20"
-                      [disabled]="!bitPuedoEditar"
-                      required
+                      [required]="predios.predio.documentoAcreditacionCodigo == '1' || bitPuedoEditar"
                       type="text"
                     />
                   </mat-form-field>
@@ -1362,7 +1361,7 @@
                   <mat-select 
                   [disabled]="!bitPuedoEditar" required [(ngModel)]="aportantes.aportanteId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
-                      Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
+                      Vigencia:{{ listado.vigencia }} - Número de cuerdo: {{ listado.vigencia }} - Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

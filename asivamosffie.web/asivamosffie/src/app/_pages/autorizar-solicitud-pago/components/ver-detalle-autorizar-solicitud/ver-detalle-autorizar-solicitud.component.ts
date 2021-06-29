@@ -64,8 +64,17 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
+      ];
+    displayedColumnsRegistrarSolicitud: string[] = [
+        'faseContrato',
+        'valorFacturado',
+        'porcentajeFacturado',
+        'saldoPorPagar',
+        'porcentajePorPagar'
     ];
     estaEditando = false;
     constructor(
@@ -196,6 +205,7 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                                     }
 
+                                    console.log(this.contrato.tablaDRP)
                                     this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;

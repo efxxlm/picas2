@@ -66,21 +66,21 @@
               <input matInput type="text" formControlName="rutaInforme" required />
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (formDiagnostico.get('rutaInforme').invalid && formDiagnostico.get('rutaInforme').touched) ||
+                (formDiagnostico.get('rutaInforme').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (formDiagnostico.get('rutaInforme').invalid && formDiagnostico.get('rutaInforme').touched) ||
-              (formDiagnostico.get('rutaInforme').invalid && estaEditando)
-            "
-          />
-        </span>
         <span class="info-url">Indique la ruta del soporte de esta información</span>
       </section>
     </mat-card-content>
@@ -93,7 +93,7 @@
           <mat-card-title class="header-card--text"> Valor total de la fase 2 construcción </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="d-flex">
+          <div class="d-flex w-36em">
             <label
               class="label-left"
               [class.color-secondaryColor]="
@@ -104,7 +104,7 @@
               <b>a.</b> Costo directo
             </label>
             <div class="col d-flex">
-              <mat-form-field style="width: 35.5%">
+              <mat-form-field>
                 <input
                   matInput
                   maxlength="28"
@@ -135,7 +135,7 @@
             </div>
           </div>
 
-          <div class="d-flex">
+          <div class="d-flex w-36em">
             <label
               class="mr-label"
               class="label-left"
@@ -147,7 +147,7 @@
               <b>b.</b> A (administración)
             </label>
             <div class="col d-flex">
-              <mat-form-field style="width: 33.5%">
+              <mat-form-field>
                 <input
                   matInput
                   maxlength="28"
@@ -178,7 +178,7 @@
             </div>
           </div>
 
-          <div class="d-flex">
+          <div class="d-flex w-36em">
             <label
               class="mr-label"
               class="label-left"
@@ -190,7 +190,7 @@
               <b>c.</b> I (Imprevistos)
             </label>
             <div class="col d-flex">
-              <mat-form-field style="width: 35.1%">
+              <mat-form-field>
                 <input
                   matInput
                   maxlength="28"
@@ -221,7 +221,7 @@
             </div>
           </div>
 
-          <div class="d-flex">
+          <div class="d-flex w-36em">
             <label
               class="mr-label"
               class="label-left"
@@ -233,7 +233,7 @@
               <b>d.</b> U (Utilidad)
             </label>
             <div class="col d-flex">
-              <mat-form-field style="width: 36.3%">
+              <mat-form-field>
                 <input
                   matInput
                   maxlength="28"
@@ -264,7 +264,7 @@
             </div>
           </div>
 
-          <div class="d-flex">
+          <div class="d-flex w-36em">
             <label
               class="mr-label"
               class="label-left"
@@ -277,7 +277,7 @@
               <b>Valor total de la fase 2 - Construcción</b>
             </label>
             <div class="col d-flex">
-              <mat-form-field style="width: 29%">
+              <mat-form-field>
                 <input
                   matInput
                   formControlName="valorTotalFaseConstruccion"

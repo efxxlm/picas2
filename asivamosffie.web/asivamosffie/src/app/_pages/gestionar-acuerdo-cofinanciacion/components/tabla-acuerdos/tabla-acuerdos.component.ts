@@ -64,6 +64,9 @@ export class TablaAcuerdosComponent implements OnInit {
         this.listaCofinanciacion = [];
         this.cofinanciacionService.listaAcuerdosCofinanciacion().subscribe(cof => {
           this.listaCofinanciacion = cof;
+          this.listaCofinanciacion.forEach(element => {
+            element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/');
+          });
           this.dataSource.data = this.listaCofinanciacion;
         });
       } else {

@@ -522,7 +522,7 @@ namespace asivamosffie.services
                 {
                     IdContratista = contratista.ContratistaId,
                     Nombre = contratista.Nombre,
-                    NumeroIdentificacion = contratista.NumeroIdentificacion,
+                    NumeroIdentificacion = contratista.NumeroIdentificacion == "0" ? contratista.RepresentanteLegalNumeroIdentificacion : contratista.NumeroIdentificacion,
                     NumeroInvitacion = contratista.NumeroInvitacion,
                     RepresentanteLegal = contratista.RepresentanteLegal
                 };
