@@ -97,6 +97,7 @@ export class DevolverPorValidacionComponent implements OnInit {
 
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
         dialogRef.close();
+        this.dialog.closeAll();
     });
   }
 
