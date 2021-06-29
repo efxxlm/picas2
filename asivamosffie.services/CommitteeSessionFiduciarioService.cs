@@ -4467,7 +4467,7 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
-                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratacionNovedad != null ? contratacionNovedad.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + " Meses " + contratacionNovedad.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + " Días " : " ");
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratacionNovedad != null ? contratacionNovedad.PlazoContratacion.PlazoMeses + " Meses " + contratacionNovedad.PlazoContratacion.PlazoDias + " Días " : " ");
                                         break;
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_PROYECTO:
 

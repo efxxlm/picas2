@@ -116,44 +116,72 @@
     </mat-card>
     <mat-card class="shipping-card" *ngIf="addressForm.get('nombreCuenta').value != null">
       <mat-card-content>
-        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
-          <div class="pr-1">
-            <label
-              class="label-left"
-              for="rp"
-              [class.color-secondaryColor]="
-                (addressForm.get('rp').invalid && addressForm.get('rp').touched) ||
-                (addressForm.get('rp').invalid && estaEditando)
-              "
-            >
-              RP
-            </label>
+        <div *ngIf="isETOrThirdParty()">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="rp"
+                [class.color-secondaryColor]="
+                  (rpField.invalid && rpField.touched) ||
+                  (rpField.invalid && estaEditando)
+                "
+              >
+                RP
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="rp" required #rpCtr (selectionChange)="changeRp()">
+                  <mat-option *ngFor="let rp of rpArray" [value]="rp">
+                    {{ rp.numeroRp }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (rpField.invalid && rpField.touched) ||
+                  (rpField.invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
-          <div class="col">
-            <mat-form-field class="select-width">
-              <mat-select formControlName="rp" required>
-                <mat-option *ngFor="let rp of rpArray" [value]="rp">
-                  {{ rp.numeroRp }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="rp"
+                [class.color-secondaryColor]="
+                  (rpField.invalid && rpField.touched) ||
+                  (rpField.invalid && estaEditando)
+                "
+              >
+                Valor RP
+              </label>
+            </div>
+            <div class="col d-flex no-validation">
+              <mat-form-field class="full-width maincolor">
+                <input matInput #valorAporte currencyMask formControlName="valorRp" 
+                  readonly [options]="{
+                    prefix: '$ ',
+                    thousands: '.',
+                    precision: '0',
+                    align: 'center',
+                    allowNegative: false
+                  }" />
+              </mat-form-field>
+            </div>
           </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (addressForm.get('rp').invalid && addressForm.get('rp').touched) ||
-                (addressForm.get('rp').invalid && estaEditando)
-              "
-            />
-          </span>
         </div>
-        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+        <div class="row">
           <div class="pr-1">
             <label
               class="label-left"
@@ -168,7 +196,7 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="vigencia" required>
+              <mat-select formControlName="vigencia" required  (selectionChange)="changeVigencia()">
                 <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
                   {{ vigencia.tipoVigenciaCodigo }}
                 </mat-option>
@@ -184,11 +212,37 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched) ||
-                (addressForm.get('vigencia').invalid && estaEditando)
+                (vigenciaField.invalid && vigenciaField.touched) ||
+                (vigenciaField.invalid && estaEditando)
               "
             />
           </span>
+        </div>
+        <div class="row"  *ngIf="!isETOrThirdParty()">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="rp"
+              [class.color-secondaryColor]="
+                (vigenciaField.invalid && vigenciaField.touched) ||
+                (vigenciaField.invalid && estaEditando)
+              "
+            >
+              Valor Vigencia
+            </label>
+          </div>
+          <div class="col d-flex no-validation">
+            <mat-form-field class="full-width maincolor">
+              <input matInput #vigenciaValor currencyMask formControlName="vigenciaValor" 
+                readonly [options]="{
+                  prefix: '$ ',
+                  thousands: '.',
+                  precision: '0',
+                  align: 'center',
+                  allowNegative: false
+                }" />
+            </mat-form-field>
+          </div>
         </div>
         <div class="row">
           <div class="pr-1">
@@ -251,7 +305,7 @@
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input
+              <input autocomplete="off"
                 matInput
                 #valorConsignacion
                 currencyMask
@@ -260,8 +314,7 @@
                 class="maincolor"
                 formControlName="valorConsignacion"
                 keypress="if(this.value.length >= this.maxlength) return false"
-                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
-                (ngModelChange)="validar()"
+                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"               
               />
             </mat-form-field>
             <span

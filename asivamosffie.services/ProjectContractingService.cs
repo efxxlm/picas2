@@ -201,6 +201,7 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.ContratacionProyectoAportante)
                         .ThenInclude(r => r.ComponenteAportante)
                             .ThenInclude(r => r.ComponenteUso).Where(r => !(bool)r.Eliminado)
+                   .Include(c => c.PlazoContratacion)
                   .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -241,7 +242,9 @@ namespace asivamosffie.services
                 .Include(r => r.ContratacionProyecto)
                     .ThenInclude(r => r.ContratacionProyectoAportante)
                       .ThenInclude(r => r.ComponenteAportante)
-                           .ThenInclude(r => r.ComponenteUso).FirstOrDefaultAsync();
+                           .ThenInclude(r => r.ComponenteUso)
+                 .Include(p => p.PlazoContratacion)         
+                           .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -624,6 +627,61 @@ namespace asivamosffie.services
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
 
+
+        public async Task<Respuesta> CreateEditContratacionTermLimit(int contratacionId, TermLimit termLimit)
+        {
+            var response = new Respuesta();
+            int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (termLimit.PlazoDias > 30)
+                    return response = new Respuesta { IsSuccessful = false, Data = null, Code = ConstantMessagesSesionComiteTema.Error, Message = "El valor ingresado en dias no puede superior a 30" };
+
+                var contratacion = _context.Contratacion.Find(contratacionId);
+
+                if (contratacion.PlazoContratacion  != null)
+                {
+                    await _context.Set<PlazoContratacion>()
+                         .Where(order => order.PlazoContratacionId == contratacion.PlazoContratacion.PlazoContratacionId)
+                         .UpdateAsync(o => new PlazoContratacion()
+                         {
+                             UsuarioModificacion = termLimit.Usuario,
+                             FechaModificacion = DateTime.Now,
+                             PlazoDias = termLimit.PlazoDias,
+                             PlazoMeses = termLimit.PlazoMeses
+                         });
+                }
+                else
+                {
+                    contratacion.PlazoContratacion = new PlazoContratacion
+                    {
+                        UsuarioCreacion = termLimit.Usuario,
+                        FechaCreacion = DateTime.Now,
+                        PlazoDias = termLimit.PlazoDias,
+                        PlazoMeses = termLimit.PlazoMeses
+                    };
+
+                    _context.SaveChanges();
+                }
+
+                response.Data = contratacion.PlazoContratacion.PlazoContratacionId;
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesProyecto.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, termLimit.Usuario, ex.InnerException.ToString())
+                };
+            }
+        }
+
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
@@ -673,7 +731,6 @@ namespace asivamosffie.services
                     Pcontratacion.RegistroCompleto = false;
                     Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
                     Pcontratacion.RegistroCompleto = false;
-                    _context.Contratacion.Add(Pcontratacion);
                 }
                 else
                 {
@@ -686,7 +743,6 @@ namespace asivamosffie.services
                     contratacionVieja.ConsideracionDescripcion = Pcontratacion.ConsideracionDescripcion;
                     contratacionVieja.EstadoSolicitudCodigo = Pcontratacion.EstadoSolicitudCodigo;
                     contratacionVieja.ContratistaId = Pcontratacion.ContratistaId;
-
                 }
                 _context.SaveChanges();
 
@@ -1116,6 +1172,7 @@ namespace asivamosffie.services
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
              || !contratacion.EsObligacionEspecial.HasValue
              || contratacion.ContratistaId == null
+             || ( contratacion.PlazoContratacion == null || (contratacion.PlazoContratacion.PlazoDias == 0 && contratacion.PlazoContratacion.PlazoMeses == 0))
              )
                 return false;
 

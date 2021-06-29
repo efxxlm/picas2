@@ -111,5 +111,18 @@
                 >
             </app-table-fuentes-y-usos>
         </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style" *ngIf="contratacion.plazoContratacion">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAcordeon( 'plazoEjecucion' ) || 'sin-diligenciar'">
+                Plazo de ejecución
+              </mat-panel-title>        
+            </mat-expansion-panel-header>   
+            <mat-card class="border" style="margin-top: 3em;">
+                <mat-card-content class="mt-1em">
+                    <app-plazo-ejecucion  (guardar)="onSubmitTerm($event)"             
+                    [tipoSolicitud]="contratacion.tipoSolicitudCodigo" [plazoProyecto]="plazoProyecto" [plazoContratacion]="contratacion.plazoContratacion"></app-plazo-ejecucion>   
+                </mat-card-content>
+            </mat-card>          
+            </mat-expansion-panel>  
     </mat-accordion>
 </div>

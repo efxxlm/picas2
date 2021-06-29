@@ -1,0 +1,74 @@
+<form [formGroup]="termLimitForm" novalidate (ngSubmit)="onSubmitTermLimit()">
+<div class="row justify-content-center mt-2em mb-2em">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="pr-1">
+                <label for="plazoMeses" class="label-left" [class.color-secondaryColor]="
+                (monthsField.invalid && monthsField.touched) ||
+                (monthsField.invalid && estaEditando)
+              ">
+                    Plazo meses
+                </label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="full-width">
+                    <input matInput #plazoMeses type="number" min="1" max="999" maxlength="3"
+                        formControlName="plazoMeses" name="plazoMeses" (keypress)="validateNumberKeypress($event)"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                         />
+                </mat-form-field>
+
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                  (monthsField.invalid && monthsField.touched) ||
+                  (monthsField.invalid && estaEditando)
+                " />
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="pr-1">
+                <label for="plazoDias" class="label-left" [class.color-secondaryColor]="
+                (daysField.invalid && daysField.touched) ||
+                (daysField.invalid && estaEditando)
+              ">
+                    Plazo días
+                </label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="full-width">
+                    <input matInput #plazoDias type="number" formControlName="plazoDias" min="1"
+                        max="29"
+                        maxlength="2"
+                        name="plazoDias" (change)="validatenomore30()" (keypress)="validateNumberKeypress($event)"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeyup="if(this.value>29) this.value = 29;" [matTooltipPosition]="'above'"
+                        matTooltip="Campo numérico igual o menor a 29 días" matTooltipClass="info-tooltip" />
+                </mat-form-field>
+
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                  (daysField.invalid && daysField.touched) ||
+                  (daysField.invalid && estaEditando)
+                " />
+                </span>
+            </div>
+        </div>
+    </div>
+</div> 
+<div class="text-center animatedDown">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="termLimitForm.dirty === false">
+      <img src="assets/img/icon/guardar.svg" alt="guardar" />
+    </button>
+  </div>
+</form>

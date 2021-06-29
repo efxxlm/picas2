@@ -24,8 +24,8 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   sede: string;
   departamento: string;
   municipio: string;
-  plazoDias: number;
-  plazoMeses: number;
+  // plazoDias: number;
+  // plazoMeses: number;
   proyectos:any[]=[];
   opcionContratarCodigo="";
   ddpsolicitud: any;
@@ -48,8 +48,8 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(id).subscribe(data0=>{
       this.tipoSolicitudColdigo = data0.tipoSolicitudCodigo;
       this.objeto = data0.objeto;
-      this.plazoDias = data0.plazoDias;
-      this.plazoMeses = data0.plazoMeses;
+      // this.plazoDias = data0.plazoDias;
+      // this.plazoMeses = data0.plazoMeses;
       this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
       this.observaciones=data0.disponibilidadPresupuestalObservacion;
       this.opcionContratarCodigo=data0.opcionContratarCodigo;

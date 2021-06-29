@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -12,7 +13,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class ProjectContractingController : ControllerBase
     {
         private readonly IDocumentService _documentService;
@@ -161,6 +162,24 @@ namespace asivamosffie.api.Controllers
             {
                 pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectContractingService.CreateEditContratacion(pContratacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return Ok(respuesta);
+            }
+        }
+
+        [Route("{contratacionId}/plazo")]
+        [HttpPost]
+        public async Task<IActionResult> CreateEditContratacion(int contratacionId , TermLimit termLimit)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                termLimit.Usuario = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _projectContractingService.CreateEditContratacionTermLimit(contratacionId, termLimit);
                 return Ok(respuesta);
             }
             catch (Exception ex)

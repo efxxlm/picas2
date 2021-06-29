@@ -314,8 +314,8 @@ namespace asivamosffie.services
 
                     strFecSolicitudDisponibPresup = disponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy");
 
-                    PlazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
-                    PlazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
+                    PlazoDias = Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias);
+                    PlazoMeses = Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses);
                 }
                 //disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
                 //                [DisponibilidadPresupuestalProyecto] - [ProyectoId]
@@ -2097,8 +2097,8 @@ namespace asivamosffie.services
                 if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2)
                 {
                     int Dias = 0, Meses = 0;
-                    Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                    Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                    Dias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0;
+                    Meses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0;
 
                     string template = TemplateRecoveryPassword.Contenido
                                 .Replace("_LinkF_", appSettingsService.DominioFront)
@@ -2136,8 +2136,8 @@ namespace asivamosffie.services
                 if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2)
                 {
                     int Dias = 0, Meses = 0;
-                    Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                    Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                    Dias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0;
+                    Meses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0;
 
                     string template = TemplateRecoveryPassword.Contenido
                                 .Replace("_LinkF_", appSettingsService.DominioFront)

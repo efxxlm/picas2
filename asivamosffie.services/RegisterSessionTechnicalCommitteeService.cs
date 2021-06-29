@@ -3576,6 +3576,11 @@ namespace asivamosffie.services
             List<Dominio> ListaParametricas = _context.Dominio.ToList();
             List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
             List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
+
+            if(pContratacion.PlazoContratacion == null)
+            {
+                pContratacion.PlazoContratacion = new PlazoContratacion();
+            }
             //Se crea el detalle de los proyectos asociado a contratacion - contratacionProyecto 
             int enumProyecto = 1;
 
@@ -3967,6 +3972,14 @@ namespace asivamosffie.services
 
                     case ConstanCodigoVariablesPlaceHolders.CONSIDERACIONES_ESPECIALES:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion);
+                        break;
+
+                    case ConstanCodigoVariablesPlaceHolders.PLAZO_MESES:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoMeses.ToString());
+
+                        break;
+                    case ConstanCodigoVariablesPlaceHolders.PLAZO_DIAS:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoDias.ToString());
                         break;
 
 
@@ -5382,7 +5395,7 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
-                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratacionNovedad != null ? contratacionNovedad.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + " Meses " + contratacionNovedad.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + " Días " : " ");
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratacionNovedad != null ? contratacionNovedad.PlazoContratacion.PlazoMeses + " Meses " + contratacionNovedad.PlazoContratacion.PlazoDias + " Días " : " ");
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_PROYECTO:
@@ -7612,7 +7625,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
-                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratacion != null ? contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + " Meses " + contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + " Días " : " ");
+                            pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratacion != null ? contratacion.PlazoContratacion.PlazoMeses + " Meses " + contratacion.PlazoContratacion.PlazoDias + " Días " : " ");
                             break;
 
                         //

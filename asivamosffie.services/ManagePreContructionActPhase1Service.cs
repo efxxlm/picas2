@@ -398,8 +398,8 @@ namespace asivamosffie.services
             string MesesFase1Contrato = string.Empty;
             string DiasFase1Contrato = string.Empty;
 
-            MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / ");
-            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día " : " días  ");
+            MesesFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoMeses + (contrato.Contratacion.PlazoContratacion.PlazoMeses == 1 ? " mes /" : " meses / ");
+            DiasFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoDias + (contrato.Contratacion.PlazoContratacion.PlazoDias == 1 ? " día " : " días  ");
 
 
             plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
@@ -509,8 +509,8 @@ namespace asivamosffie.services
             string MesesFase1Contrato = string.Empty;
             string DiasFase1Contrato = string.Empty;
 
-            MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / ");
-            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día " : " días  ");
+            MesesFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoMeses + (contrato.Contratacion.PlazoContratacion.PlazoMeses == 1 ? " mes /" : " meses / ");
+            DiasFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoDias + (contrato.Contratacion.PlazoContratacion.PlazoDias == 1 ? " día " : " días  ");
 
 
             plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
@@ -686,8 +686,8 @@ namespace asivamosffie.services
             foreach (var contrato in contratos)
             {
                 int Dias = 0, Meses = 0;
-                Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                Dias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0;
+                Meses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0;
 
                 string template = TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", appSettingsService.DominioFront)
@@ -712,8 +712,8 @@ namespace asivamosffie.services
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarActaParaFirmar319);
 
             int Dias = 0, Meses = 0;
-            Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-            Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+            Dias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0;
+            Meses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0;
 
             string strContenido =
                 TemplateRecoveryPassword.Contenido

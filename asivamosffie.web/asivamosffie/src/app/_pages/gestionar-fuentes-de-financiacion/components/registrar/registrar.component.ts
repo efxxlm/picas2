@@ -248,6 +248,7 @@ export class RegistrarComponent implements OnInit {
 
         grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
         grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
+        grupoRegistroP.get('valorRP').setValue(rp.valorRp);
         grupoRegistroP.get('fecha').setValue(rp.fechaRp);
         let documentose = this.listaDocumentos.filter(x => x.cofinanciacionDocumentoId == rp.cofinanciacionDocumentoId);
         grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
@@ -366,6 +367,7 @@ export class RegistrarComponent implements OnInit {
     return this.fb.group({
       registroPresupuestalId: [null, Validators.required],
       numeroRP: [null, Validators.required],
+      valorRP: [null, Validators.required],
       fecha: [null, Validators.required],
       numerodocumentoRP: [null, Validators.required]
     });
@@ -888,6 +890,7 @@ export class RegistrarComponent implements OnInit {
           aportanteId: this.idAportante,
           fechaRp: controlRP.get('fecha').value,
           numeroRp: controlRP.get('numeroRP').value,
+          valorRp: controlRP.get('valorRP').value,
           registroPresupuestalId: controlRP.get('registroPresupuestalId').value,
           cofinanciacionDocumentoId: controlRP.get('numerodocumentoRP').value.cofinanciacionDocumentoId
         };

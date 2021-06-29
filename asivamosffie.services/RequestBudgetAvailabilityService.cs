@@ -554,7 +554,7 @@ namespace asivamosffie.services
                         FechaSolicitud = ListDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == ListDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        Plazo = ListDP.PlazoMeses.ToString() + " meses / " + ListDP.PlazoDias.ToString() + " dias",
+                        Plazo = ListDP.Contratacion.PlazoContratacion?.PlazoMeses.ToString() + " meses / " + ListDP.Contratacion.PlazoContratacion?.PlazoDias.ToString() + " dias",
                         CuentaCarta = ListDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación
@@ -1006,11 +1006,6 @@ namespace asivamosffie.services
 
             try
             {
-                if (pDisponibilidad.PlazoDias > 30)
-                    return respuesta = new Respuesta { IsSuccessful = false, Data = null, Code = ConstantMessagesSesionComiteTema.Error, Message = "El valor ingresado en dias no puede superior a 30" };
-
-
-
                 disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal.FindAsync(pDisponibilidad.DisponibilidadPresupuestalId);
                 if (disponibilidadPresupuestal != null)
                 {
@@ -1018,8 +1013,6 @@ namespace asivamosffie.services
                     pDisponibilidad.FechaModificacion = DateTime.Now;
 
                     disponibilidadPresupuestal.Objeto = pDisponibilidad.Objeto;
-                    disponibilidadPresupuestal.PlazoDias = pDisponibilidad.PlazoDias;
-                    disponibilidadPresupuestal.PlazoMeses = pDisponibilidad.PlazoMeses;
                     //disponibilidadPresupuestal.AportanteId = pdo.aportanteId;
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
 
@@ -3036,7 +3029,7 @@ namespace asivamosffie.services
                         FechaSolicitud = detailDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString() + " dias",
+                        Plazo = detailDP.Contratacion?.PlazoContratacion.PlazoMeses.ToString() + " meses / " + detailDP.Contratacion?.PlazoContratacion.PlazoDias.ToString() + " dias",
                         CuentaCarta = detailDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación

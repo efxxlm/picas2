@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Contratacion, ContratacionProyecto, ContratistaGrilla } from 'src/app/_interfaces/project-contracting';
+import { Contratacion, ContratacionProyecto, ContratistaGrilla, PlazoContratacion } from 'src/app/_interfaces/project-contracting';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
 import { map } from 'rxjs/operators';
@@ -45,6 +45,10 @@ export class ProjectContractingService {
 
   createEditContratacion( contratacion: Contratacion ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/createEditContratacion`, contratacion );
+  }
+
+  createEditTermLimit( contratacionId: number, termLimit: PlazoContratacion){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/${contratacionId}/plazo`, termLimit );
   }
 
   createEditContratacionProyectoAportanteByContratacionproyecto( contratacionProyecto: ContratacionProyecto  ){

@@ -1888,11 +1888,11 @@ namespace asivamosffie.services
                     {
                         contratoObjeto = disponibilidadPresupuestal.Objeto;
 
-                        if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoDias.ToString()))
-                            plazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
+                        if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoDias.ToString()))
+                            plazoDias = Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias);
 
-                        if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoMeses.ToString()))
-                            plazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
+                        if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoMeses.ToString()))
+                            plazoMeses = Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses);
 
                         PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias";
                     }

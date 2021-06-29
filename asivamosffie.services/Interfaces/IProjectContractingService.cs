@@ -35,6 +35,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion);
 
+        Task<Respuesta> CreateEditContratacionTermLimit(int contratacionId ,TermLimit plazoContratacion);
         Task<Respuesta> CreateEditContratacionProyecto(ContratacionProyecto contratacionProyecto , bool esTransaccion);
 
         Task<Respuesta> CreateEditContratacionProyectoAportante(ContratacionProyectoAportante pContratacionProyectoAportante, bool esTransaccion);
