@@ -561,7 +561,7 @@ namespace asivamosffie.services
                         FechaSolicitud = ListDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == ListDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        Plazo = ListDP.Contratacion.PlazoContratacion?.PlazoMeses.ToString() + " meses / " + ListDP.Contratacion.PlazoContratacion?.PlazoDias.ToString() + " dias",
+                        Plazo = ListDP.Contratacion != null ? ListDP.Contratacion.PlazoContratacion?.PlazoMeses.ToString() + " meses / " + ListDP.Contratacion.PlazoContratacion?.PlazoDias.ToString() + " dias" : "",
                         CuentaCarta = ListDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación
