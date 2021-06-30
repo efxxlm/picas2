@@ -164,7 +164,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
+        public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud, bool showRechazado)
         {
 
 
@@ -304,9 +304,10 @@ namespace asivamosffie.services
                         blnEstado = true;
                     }
 
-
-
                     var contratacion = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId).ToList();
+                    // LCT
+                    bool rechazadaFiduciaria = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId && x.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario && x.Eliminado != true).Count() > 0 ? true : false;
+
                     DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                     {
 
@@ -325,9 +326,22 @@ namespace asivamosffie.services
                         NovedadContractualRegistroPresupuestalId = DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId,
                         EsNovedad = DisponibilidadPresupuestal.EsNovedad,
                         NovedadContractualId = DisponibilidadPresupuestal.NovedadContractualId,
-                        EstadoRegistro = blnEstado
+                        EstadoRegistro = blnEstado,
+                        RechazadaFiduciaria = rechazadaFiduciaria
                     };
-                    ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+                    // si showRechazado, muestra sin excepción
+                    if (showRechazado)
+                    {
+                        ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+                    }
+                    else
+                    {
+                        //No muestra los que estan rechazados por fiduciaria en contratación
+                        if (!rechazadaFiduciaria)
+                        {
+                            ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -472,7 +486,7 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: objeto para entregar a front los datos ordenados de disponibilidades
         impacto: CU 3.3.3*/
-        public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal()
+        public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal(bool showRechazado)
         {
             List<EstadosDisponibilidad> estadosdisponibles = new List<EstadosDisponibilidad>();
             var estados = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal && x.Activo == true).ToList();
@@ -485,7 +499,7 @@ namespace asivamosffie.services
                                     {
                                         DominioId = estado.DominioId,
                                         NombreEstado = estado.Nombre,
-                                        DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(estado.Codigo)
+                                        DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(estado.Codigo, showRechazado)
                                     });
             }
             return estadosdisponibles;

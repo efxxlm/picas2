@@ -27,7 +27,11 @@ const routes: Routes = [
   {
     path: 'detalleConDisponibilidadCancelada/:id',
     component: DetalleConDisponibilidadCanceladaComponent
-  }
+  },
+  {
+    path: 'detalleRechazadaFiduciaria/:id/:esNovedad/:novedadId',
+    component: DetalleConValidacionPresupuestalComponent
+  },
 ];
 
 @NgModule({

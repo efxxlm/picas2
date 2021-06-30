@@ -35,10 +35,12 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
-      elements.push({id:element.disponibilidadPresupuestalId,
-        fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
-        tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
-        novedadId: element.novedadContractualRegistroPresupuestalId})
+      if(element.rechazadaFiduciaria !== true){
+        elements.push({id:element.disponibilidadPresupuestalId,
+          fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
+          tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
+          novedadId: element.novedadContractualRegistroPresupuestalId})
+      }
     });
     this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;

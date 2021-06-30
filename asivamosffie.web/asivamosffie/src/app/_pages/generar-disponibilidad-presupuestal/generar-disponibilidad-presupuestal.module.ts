@@ -21,21 +21,23 @@ import { TablaConDisponibilidadCanceladaComponent } from './components/tabla-con
 import { DetalleConDisponibilidadCanceladaComponent } from './components/detalle-con-disponibilidad-cancelada/detalle-con-disponibilidad-cancelada.component';
 import { TablaProyectosAsociadosCanceladaComponent } from './components/tabla-proyectos-asociados-cancelada/tabla-proyectos-asociados-cancelada.component';
 import { TablaGestionarValidacionAdministrativoComponent } from './components/tabla-gestionar-validacion-administrativo/tabla-gestionar-validacion-administrativo.component';
+import { TablaRechazadaFiduciariaComponent } from './components/tabla-rechazada-fiduciaria/tabla-rechazada-fiduciaria.component';
 
 @NgModule({
-  declarations: [MenuGenerarDisponibilidadComponent, 
-    TablaConValidacionPresupuestalComponent, 
-    GestionarDdpComponent, 
-    DevolverPorValidacionComponent, 
-    TablaConDisponibilidadPresupuestalComponent, 
-    DetalleConValidacionPresupuestalComponent, 
-    TablaDevueltaPorCoordinacionFinancieraComponent, 
-    DevueltaPorCoordinacionFinancieraComponent, 
-    TablaProyectosAsociadosComponent, CancelarDdpComponent, 
-    TablaConDisponibilidadCanceladaComponent, 
+  declarations: [MenuGenerarDisponibilidadComponent,
+    TablaConValidacionPresupuestalComponent,
+    GestionarDdpComponent,
+    DevolverPorValidacionComponent,
+    TablaConDisponibilidadPresupuestalComponent,
+    DetalleConValidacionPresupuestalComponent,
+    TablaDevueltaPorCoordinacionFinancieraComponent,
+    DevueltaPorCoordinacionFinancieraComponent,
+    TablaProyectosAsociadosComponent, CancelarDdpComponent,
+    TablaConDisponibilidadCanceladaComponent,
     DetalleConDisponibilidadCanceladaComponent,
      TablaProyectosAsociadosCanceladaComponent,
-    TablaGestionarValidacionAdministrativoComponent],
+    TablaGestionarValidacionAdministrativoComponent,
+    TablaRechazadaFiduciariaComponent],
   imports: [
     CommonModule,
     GenerarDisponibilidadPresupuestalRoutingModule,

@@ -38,6 +38,7 @@ namespace asivamosffie.services
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
             List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion = _context.GestionFuenteFinanciacion.ToList();
             List<ProyectoAportante> ListProyectoAportante = _context.ProyectoAportante.ToList();
+            List<SesionComiteSolicitud> sesionComiteSolicitud = new List<SesionComiteSolicitud>();
 
             if (esNovedad == true)
             {
@@ -402,6 +403,12 @@ namespace asivamosffie.services
                             Include(x => x.ComiteTecnico).ToList();
                         if (contratacion.Count() > 0)
                         {
+                            sesionComiteSolicitud = contratacion;
+                            if (contratacion.FirstOrDefault().ComiteTecnicoFiduciarioId > 0)
+                            {
+                                ComiteTecnico comiteTecnicoFiduciario = _context.ComiteTecnico.Find(contratacion.FirstOrDefault().ComiteTecnicoFiduciarioId);
+                                sesionComiteSolicitud.FirstOrDefault().ComiteTecnicoFiduciario = comiteTecnicoFiduciario;
+                            }
                             numerocomietetecnico = contratacion.FirstOrDefault().ComiteTecnico.NumeroComite;
                             fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
                         }
@@ -576,6 +583,7 @@ namespace asivamosffie.services
                         EsNovedad = false,
                         NovedadContractual = ListDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == ListDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                         EstadoRegistro = blnEstado,
+                        SesionComiteSolicitud = sesionComiteSolicitud
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);

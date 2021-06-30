@@ -13,11 +13,11 @@ export interface OrdenDelDia {
 }
 
 @Component({
-  selector: 'app-tabla-con-disponibilidad-presupuestal',
-  templateUrl: './tabla-con-disponibilidad-presupuestal.component.html',
-  styleUrls: ['./tabla-con-disponibilidad-presupuestal.component.scss']
+  selector: 'app-tabla-rechazada-fiduciaria',
+  templateUrl: './tabla-rechazada-fiduciaria.component.html',
+  styleUrls: ['./tabla-rechazada-fiduciaria.component.scss']
 })
-export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
+export class TablaRechazadaFiduciariaComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
   dataSource = new MatTableDataSource();
@@ -35,7 +35,7 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
-      if(element.rechazadaFiduciaria !== true){
+      if(element.rechazadaFiduciaria === true && element.estadoStr == 'Con disponibilidad presupuestal'){
         elements.push({id:element.disponibilidadPresupuestalId,
           fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
           tipo:element.tipoSolicitud, esNovedad: element.esNovedad,

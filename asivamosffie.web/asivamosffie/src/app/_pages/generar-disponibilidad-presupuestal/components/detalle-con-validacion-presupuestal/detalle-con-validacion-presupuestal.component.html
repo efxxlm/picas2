@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Gestionar DDP solicitud {{detailavailabilityBudget?.numeroSolicitud}}
+        <span *ngIf="esRechazadaFiduciaria === false">Gestionar</span><span *ngIf="esRechazadaFiduciaria === true">Detalle</span> DDP solicitud {{detailavailabilityBudget?.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
         <span>Fecha de la solicitud: <b>{{detailavailabilityBudget?.fechaComiteTecnico| date:'dd/MM/yyyy'}}</b></span>
@@ -48,6 +48,16 @@
                 <strong>Fecha comité técnico:</strong>
                 {{detailavailabilityBudget?.fechaComiteTecnico | date: 'dd/MM/yyyy' }}
             </p>
+            <div *ngIf="esRechazadaFiduciaria === true && detailavailabilityBudget?.sesionComiteSolicitud?.length > 0">
+              <p *ngIf="detailavailabilityBudget?.sesionComiteSolicitud[0].comiteTecnicoFiduciario != null">
+                <strong>Número comité Fiduciario:</strong>
+                {{ detailavailabilityBudget?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.numeroComite }}
+              </p>
+              <p *ngIf="detailavailabilityBudget?.sesionComiteSolicitud[0].comiteTecnicoFiduciario != null">
+                  <strong>Fecha comité Fiduciario:</strong>
+                  {{ detailavailabilityBudget?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.fechaCreacion | date: 'dd/MM/yyyy' }}
+              </p>
+            </div>
             <p *ngIf="esModificacion">
                 <strong>Tipo de modificación:</strong>
                 Adición y plazo
@@ -141,9 +151,9 @@
                     <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
                         <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
                             <section *ngIf="fuente.saldo_actual_de_la_fuente_al_guardar !== 0">
-                            <p> 
+                            <p>
                                 <strong></strong>
-                                {{fuente.nombre}} 
+                                {{fuente.nombre}}
                             </p>
                             <p>
                                 <strong>Saldo actual de la fuente:</strong>
@@ -167,6 +177,17 @@
                 </div>
             </div>
         </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card var-main-gris" *ngIf="esRechazadaFiduciaria === true && detailavailabilityBudget?.sesionComiteSolicitud?.length > 0">
+      <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="mat-card-title header-card--text">
+              Observaciones Fiduciaria
+          </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+              <div [innerHtml]="detailavailabilityBudget?.sesionComiteSolicitud[0].observacionesFiduciario"></div>
+      </mat-card-content>
     </mat-card>
 
     <mat-card class="shipping-card var-main-gris" *ngIf="detailavailabilityBudget?.observaciones">

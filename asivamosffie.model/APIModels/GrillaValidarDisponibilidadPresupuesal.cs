@@ -74,5 +74,7 @@ namespace asivamosffie.model.APIModels
         public List<DisponibilidadPresupuestalObservacion> ObservacioensCancelacion { get; set; }
         //novedad
         public NovedadContractual? NovedadContractual { get; set; }
+        public List<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
+
     }
 }

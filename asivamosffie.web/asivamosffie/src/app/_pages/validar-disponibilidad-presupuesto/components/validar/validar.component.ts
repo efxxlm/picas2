@@ -20,12 +20,12 @@ export class ValidarComponent implements OnInit {
   constructor(private disponibilidadServices: DisponibilidadPresupuestalService) {}
 
   validarCompletos( disponibilidad: any ){
-    disponibilidad['class'] = 2;// completo 
+    disponibilidad['class'] = 2;// completo
 
     //disponibilidad['class'] = 0; // sin diligenciar
 
     // if (disponibilidad.disponibilidadPresupuestal.length === 0)
-    //   disponibilidad['class'] = 2;// completo  
+    //   disponibilidad['class'] = 2;// completo
 
     disponibilidad.disponibilidadPresupuestal.forEach(d => {
       if (d.estadoRegistro !== true )
@@ -33,7 +33,7 @@ export class ValidarComponent implements OnInit {
         disponibilidad['class'] = 0; // sin diligenciar
     });
   }
-    
+
   pintarSemaforos(){
     this.listaDisponibilidades.forEach(disponibilidad => {
       switch (disponibilidad.nombreEstado){
@@ -41,7 +41,7 @@ export class ValidarComponent implements OnInit {
           this.validarCompletos( disponibilidad );
         break;
 
-        case 'Devuelta por validación presupuestal': 
+        case 'Devuelta por validación presupuestal':
           this.validarCompletos( disponibilidad );
         break;
 
@@ -69,17 +69,17 @@ export class ValidarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal().subscribe(respuesta => 
+    this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal(false).subscribe(respuesta =>
       {
         this.listaDisponibilidades=respuesta;
-        
+
         this.pintarSemaforos();
 
         this.listaDisponibilidades.forEach(element => {
           //determino si esta completo o incompleto
-          
+
           if(element.nombreEstado=='En validación presupuestal'||element.nombreEstado=='Devuelta por coordinación financiera')
-          {            
+          {
             console.log(element.disponibilidadPresupuestal.length);
             if(element.disponibilidadPresupuestal.length==0)
             {
@@ -104,10 +104,10 @@ export class ValidarComponent implements OnInit {
                 }
                 else{
                   element.completo='';
-                }                
+                }
               }
-            }            
-          }         
+            }
+          }
         });
       }
     );
