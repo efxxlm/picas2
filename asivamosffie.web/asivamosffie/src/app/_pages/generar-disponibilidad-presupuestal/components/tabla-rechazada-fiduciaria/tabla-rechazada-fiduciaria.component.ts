@@ -35,7 +35,7 @@ export class TablaRechazadaFiduciariaComponent implements OnInit {
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
-      if(element.rechazadaFiduciaria === true && element.estadoStr == 'Con disponibilidad presupuestal'){
+      if(element.rechazadaFiduciaria === true){
         elements.push({id:element.disponibilidadPresupuestalId,
           fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
           tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
