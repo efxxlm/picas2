@@ -184,7 +184,7 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
 
   private openMessageInformation(modalTitle: string, modalText: string){
     this.dialog.open(ModalDialogComponent, {
-      width: '40em',
+      width: '28em',
       data: { modalTitle, modalText }
     })
   }

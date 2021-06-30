@@ -231,7 +231,7 @@ export class ControlDeRecursosComponent implements OnInit {
       let rp = this.addressForm.get('rp').value;
       // console.log(this.addressForm.get('vigencia').value);
       // console.log(this.addressForm);
-      let control: ControlRecurso = {
+      let control: any = {
         controlRecursoId: this.addressForm.get('controlRecursoId').value,
         cuentaBancariaId: this.addressForm.get('nombreCuenta').value.cuentaBancariaId,
         fechaConsignacion: this.addressForm.get('fechaConsignacion').value,
