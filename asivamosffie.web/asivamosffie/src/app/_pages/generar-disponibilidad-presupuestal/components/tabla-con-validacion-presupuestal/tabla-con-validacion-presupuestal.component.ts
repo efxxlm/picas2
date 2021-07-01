@@ -38,24 +38,26 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
-      if(element.numeroDdp==null)
-      {
-        if(element.estadoRegistro)
+      if(element.rechazadaFiduciaria !== true){
+
+        if(element.numeroDdp==null)
         {
-          element.estadoRegistro=false; 
+          if(element.estadoRegistro)
+          {
+            element.estadoRegistro=false;
+          }
         }
-      }      
 
-      console.log( element.novedadContractualRegistroPresupuestalId );
+        elements.push({
+          id:element.disponibilidadPresupuestalId,
+          fecha:element.fechaSolicitud,
+          numero:element.numeroSolicitud,
+          estadoRegistro:element.estadoRegistro,
+          tipo:element.tipoSolicitud,
+          esNovedad: element.esNovedad,
+          novedadId: element.novedadContractualRegistroPresupuestalId})
 
-      elements.push({
-        id:element.disponibilidadPresupuestalId,
-        fecha:element.fechaSolicitud,
-        numero:element.numeroSolicitud,
-        estadoRegistro:element.estadoRegistro,
-        tipo:element.tipoSolicitud,  
-        esNovedad: element.esNovedad,
-        novedadId: element.novedadContractualRegistroPresupuestalId})
+      }
     });
     this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;

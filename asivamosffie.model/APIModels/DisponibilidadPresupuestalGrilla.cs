@@ -24,6 +24,7 @@ namespace asivamosffie.model.APIModels
         public NovedadContractual? NovedadContractual { get; set; }
         public int? NovedadContractualId { get; set; }
         public string NumeroOtroSi { get; set; }
+        public bool RechazadaFiduciaria { get; set; }
     }
 
     /*autor: jflorez

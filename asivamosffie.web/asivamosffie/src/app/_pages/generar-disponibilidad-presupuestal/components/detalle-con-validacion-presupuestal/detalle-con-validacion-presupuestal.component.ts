@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -18,10 +18,18 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
   pTipoDDP = TipoDDP;
   esNovedad;
   novedadId;
+  esRechazadaFiduciaria = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) {
+        this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+            if ( urlSegment.path === 'detalleRechazadaFiduciaria' ) {
+                this.esRechazadaFiduciaria = true;
+                return;
+            }
+        } );
+    }
 
   openDialog(modalTitle: string, modalText: string, relocate = false) {
     let ref = this.dialog.open(ModalDialogComponent, {
@@ -35,6 +43,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    console.log(this.esRechazadaFiduciaria);
     const id = this.route.snapshot.paramMap.get('id');
     this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');

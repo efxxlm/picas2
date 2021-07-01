@@ -1347,9 +1347,9 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_Contratacion_Contratista");
 
                 entity.HasOne(d => d.PlazoContratacion)
-                   .WithMany(p => p.Contratacion)
-                   .HasForeignKey(d => d.PlazoContratacionId)
-                   .HasConstraintName("FK__Contratac__Plazo__1590259A");
+                    .WithMany(p => p.Contratacion)
+                    .HasForeignKey(d => d.PlazoContratacionId)
+                    .HasConstraintName("FK__Contratac__Plazo__1590259A");
             });
 
             modelBuilder.Entity<ContratacionObservacion>(entity =>
@@ -5857,7 +5857,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorRp).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorRp)
+                    .HasColumnType("numeric(18, 2)")
+                    .HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.RegistroPresupuestal)

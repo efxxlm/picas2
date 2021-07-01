@@ -13,8 +13,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id); 
         Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal();
-        Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud);
-        Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal();
+        Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud, bool showRechazado);
+        Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal(bool showRechazado);
         Task<Respuesta> SetCancelDisponibilidadPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> CreateDDP(int pId, string pUsuarioModificacionCreateDDP, bool esNovedad, int RegistroPresupuestalId, string purl, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);

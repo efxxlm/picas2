@@ -7,15 +7,15 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
   providedIn: 'root'
 })
 export class DisponibilidadPresupuestalService {
-  
-  
+
+
 
   constructor( private http: HttpClient ) {}
 
- 
-  GetListGenerarDisponibilidadPresupuestal()
+
+  GetListGenerarDisponibilidadPresupuestal(showRechazado)
   {
-    return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarDisponibilidadPresupuestal`);
+    return this.http.get<any[]>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarDisponibilidadPresupuestal?showRechazado=${showRechazado}`);
   }
 
   GetListGenerarRegistroPresupuestal() {
@@ -34,21 +34,21 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyectNew?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}`);
   }
-  
+
 
   StartDownloadPDF(pdf)
   {
     console.log(pdf[0]);
-    var json = JSON.stringify(pdf[0]);    
+    var json = JSON.stringify(pdf[0]);
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
   GenerateDRP(id, esNovedad, pRegistroPresupuestalId)
-  {        
+  {
     return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}`, { responseType: "blob" } );
   }
-  
+
   GenerateDDP(id, esNovedad, pRegistroPresupuestalId, esValidar: boolean)
-  {        
+  {
     return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDDP?id=${id}&esNovedad=${esNovedad}&pRegistroPresupuestalId=${pRegistroPresupuestalId}&esValidar=${esValidar}`, { responseType: "blob" } );
   }
   CreateDDP(id, esNovedad, RegistroPresupuestalId)

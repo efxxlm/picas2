@@ -48,7 +48,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
         {
-            var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(pCodigoEstadoSolicitud);
+            var respuesta = await _budgetAvailabilityService.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(pCodigoEstadoSolicitud, false);
             return respuesta;
         }
 
@@ -57,9 +57,9 @@ namespace asivamosffie.api.Controllers
             impacto: CU 3.3.3*/
         [Route("GetListGenerarDisponibilidadPresupuestal")]
         [HttpGet]
-        public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal()
+        public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal([FromQuery] bool showRechazado)
         {
-            var respuesta = await _budgetAvailabilityService.GetListGenerarDisponibilidadPresupuestal();
+            var respuesta = await _budgetAvailabilityService.GetListGenerarDisponibilidadPresupuestal(showRechazado);
             return respuesta;
         }
 

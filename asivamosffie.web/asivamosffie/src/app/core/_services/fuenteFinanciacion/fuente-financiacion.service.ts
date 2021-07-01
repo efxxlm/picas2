@@ -81,7 +81,7 @@ export class FuenteFinanciacionService {
   }
 
   getSourceFundingBySourceFunding( id: number ){
-    return this.http.get<ControlRecurso[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
   }
 
   getResourceControlById( id: number){

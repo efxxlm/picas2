@@ -36,12 +36,26 @@
                   <mat-checkbox formControlName="aprobacion"></mat-checkbox>
                 </section> -->
                 <div class="d-flex">
-                  <mat-radio-group class="radioInput d-flex sino" formControlName="aprobacion">
+                  <mat-radio-group class="radioInput" formControlName="aprobacion">
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
                   <span class="required-form-group">*</span>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (temas.get('aprobacion').invalid && temas.get('aprobacion').touched) ||
+                      (temas.get('aprobacion').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </td>
               <!-- <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
