@@ -32,8 +32,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public int? ContratacionId { get; set; }
         public string NumeroDrp { get; set; }
-        public int? PlazoMeses { get; set; }
-        public int? PlazoDias { get; set; }
         public bool? CuentaCartaAutorizacion { get; set; }
         public int? AportanteId { get; set; }
         public decimal? ValorAportante { get; set; }
