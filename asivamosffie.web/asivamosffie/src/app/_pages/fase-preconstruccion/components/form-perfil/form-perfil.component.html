@@ -298,7 +298,25 @@
                   <label
                     class="label-left"
                     for="fechaAprobacion"
-                    [class.color-secondaryColor]="perfil.get('fechaAprobacion').value === null">
+                    [class.color-secondaryColor]="
+                      (perfil.get('fechaAprobacion').invalid &&
+                        perfil.get('fechaAprobacion').touched &&
+                        !disabledDate(
+                          perfil.get('cantidadHvAprobadas').value,
+                          perfil.get('cantidadHvRequeridas').value,
+                          perfil.get('cantidadHvRecibidas').value,
+                          i
+                        )) ||
+                      (perfil.get('fechaAprobacion').invalid &&
+                        estaEditando &&
+                        !disabledDate(
+                          perfil.get('cantidadHvAprobadas').value,
+                          perfil.get('cantidadHvRequeridas').value,
+                          perfil.get('cantidadHvRecibidas').value,
+                          i
+                        ))
+                    "
+                  >
                     Fecha de aprobación de la totalidad de las hojas de vida
                   </label>
                 </div>
@@ -341,7 +359,25 @@
                       [matTooltipPosition]="'above'"
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
-                      *ngIf="perfil.get('fechaAprobacion').value === null">
+                      *ngIf="
+                        (perfil.get('fechaAprobacion').invalid &&
+                          perfil.get('fechaAprobacion').touched &&
+                          !disabledDate(
+                            perfil.get('cantidadHvAprobadas').value,
+                            perfil.get('cantidadHvRequeridas').value,
+                            perfil.get('cantidadHvRecibidas').value,
+                            i
+                          )) ||
+                        (perfil.get('fechaAprobacion').invalid &&
+                          estaEditando &&
+                          !disabledDate(
+                            perfil.get('cantidadHvAprobadas').value,
+                            perfil.get('cantidadHvRequeridas').value,
+                            perfil.get('cantidadHvRecibidas').value,
+                            i
+                          ))
+                      "
+                    />
                   </span>
                 </div>
               </div>
@@ -366,7 +402,7 @@
                 <div class="col d-flex">
                   <quill-editor
                     class="quill-editor-style w-65 card position-relative"
-                    style="max-width: 60em;"
+                    style="max-width: 60em"
                     #observaciones
                     [styles]="editorStyle"
                     [modules]="config"
@@ -380,7 +416,7 @@
                   ></quill-editor>
                   <div class="d-flex" style="align-items: flex-end; margin-bottom: 0.6em">
                     <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                      {{ 1000 - textoLimpio( observaciones.quillEditor, 1000 ) }}
+                      {{ 1000 - textoLimpio(observaciones.quillEditor, 1000) }}
                     </span>
                     <span class="contador miles" *ngIf="perfil.get('observacion').value === null"> 1000 </span>
                     <span class="icon-incompleto">
@@ -422,13 +458,7 @@
                     </div>
                     <div class="col d-flex" [formGroup]="numero">
                       <mat-form-field>
-                        <input
-                          matInput
-                          type="text"
-                          maxlength="20"
-                          formControlName="numeroRadicado"
-                          required
-                        />
+                        <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required />
                       </mat-form-field>
                       <span
                         class="contador"
@@ -524,13 +554,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field style="width: 96%">
-                    <input
-                      matInput
-                      type="text"
-                      maxlength="400"
-                      formControlName="rutaSoporte"
-                      required
-                    />
+                    <input matInput type="text" maxlength="400" formControlName="rutaSoporte" required />
                   </mat-form-field>
                 </div>
                 <span class="icon-incompleto">
