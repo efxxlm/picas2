@@ -544,7 +544,7 @@ namespace asivamosffie.services
                     //Agregar Todos los predios que tenga  proyecto
                     foreach (var predio in pProyecto.ProyectoPredio)
                     { 
-                        if (pProyecto.InstitucionEducativaId > 0)
+                     //   if (pProyecto.InstitucionEducativaId > 0)
                         {
                             Predio predio1 = new Predio
                             {

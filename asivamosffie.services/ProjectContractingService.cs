@@ -726,9 +726,7 @@ namespace asivamosffie.services
                             await CreateEditComponenteAportante(ComponenteAportante, true);
                         }
                     }
-                }
-
-
+                } 
                 //Contratacion
                 if (Pcontratacion.ContratacionId == 0)
                 {
@@ -994,16 +992,16 @@ namespace asivamosffie.services
 
             if (
                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
-              && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
-              && pContratacionProyectoAntiguo.RequiereLicencia.HasValue   //Pregunta 4
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1
+              && pContratacionProyectoAntiguo.EsAvanceobra.HasValue         //Pregunta 2
+              && pContratacionProyectoAntiguo.RequiereLicencia.HasValue     //Pregunta 4
                )
                 return true;
 
 
             if (
-               pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
+               pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue     //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue   //Pregunta 1
                && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue    //Pregunta 5
             )
@@ -1011,19 +1009,17 @@ namespace asivamosffie.services
 
             if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue   //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
                 if (pContratacionProyectoAntiguo.RequiereLicencia == false)
-                    return true;
-
-
+                    return true; 
             }
 
 
             if (
-                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue //Pregunta 0?
                && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
@@ -1031,7 +1027,8 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
-                    if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
+                    if (pContratacionProyectoAntiguo.NumeroLicencia != null 
+                      && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
                         return true;
 
                 }
