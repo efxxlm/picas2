@@ -1362,7 +1362,7 @@
                   <mat-select 
                   [disabled]="!bitPuedoEditar" required [(ngModel)]="aportantes.aportanteId">
                     <mat-option *ngFor="let listado of listaVigencias[ii]" [value]="listado.cofinanciacionAportanteId">
-                      Vigencia:{{ listado.vigencia }} - Número de cuerdo: {{ listado.numeroAcuerdo }} - Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
+                      Vigencia:{{ listado.vigencia }} - Número de acuerdo: {{ listado.numeroAcuerdo }} - Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
