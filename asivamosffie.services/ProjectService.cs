@@ -40,6 +40,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
         public async Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto)
         {
             Proyecto pProyecto = _context.Proyecto.Find(idProyecto);
@@ -129,9 +130,9 @@ namespace asivamosffie.services
 
                 //VALIDAR PREDIO PRINCIPAL
                 if (
-               /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
-            || */( string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud) || proyecto.PredioPrincipal.UbicacionLatitud == "°" )
-                  || (string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud) || proyecto.PredioPrincipal.UbicacionLongitud == "°" )
+      /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
+   || */(string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud) || proyecto.PredioPrincipal.UbicacionLatitud == "°")
+                  || (string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud) || proyecto.PredioPrincipal.UbicacionLongitud == "°")
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.Direccion)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.NumeroDocumento)
@@ -196,7 +197,6 @@ namespace asivamosffie.services
         {
             try
             {
-
                 if (
                        proyecto.FechaSesionJunta == null
                     || string.IsNullOrEmpty(proyecto.NumeroActaJunta.ToString())
@@ -407,9 +407,6 @@ namespace asivamosffie.services
 
             try
             {
-                //Predio PRINCIPAL 
-
-
                 return
                 new Respuesta
                 {
@@ -463,31 +460,7 @@ namespace asivamosffie.services
 
                     CrearEditar = "CREAR PROYECTO";
                     int? predioid = null;
-                    Predio pPredioPrincipal = new Predio();
-                    if (pProyecto.InstitucionEducativaId > 0)
-                    {
-                        //Predio Principal
-                        Predio predioPrincipal = new Predio
-                        {
-                            //Predio Auditoria
-                            FechaCreacion = DateTime.Now,
-                            Activo = true,
-                            UsuarioCreacion = pProyecto.UsuarioCreacion,
-                            //Predio Registros
-                            InstitucionEducativaSedeId = pProyecto.InstitucionEducativaId,
-                            TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString(),
-                            UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud,
-                            UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud,
-                            Direccion = pProyecto.PredioPrincipal.Direccion,
-                            DocumentoAcreditacionCodigo = pProyecto.PredioPrincipal.DocumentoAcreditacionCodigo,
-                            NumeroDocumento = pProyecto.PredioPrincipal.NumeroDocumento,
-                            CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral,
-                        };
-                        _context.Predio.Add(predioPrincipal);
-                        _context.SaveChanges();
-                        predioid = predioPrincipal.PredioId;
-                        pPredioPrincipal = predioPrincipal;
-                    }
+
                     Proyecto ProyectoCreado = new Proyecto();
                     //Proyecto 
 
@@ -530,6 +503,32 @@ namespace asivamosffie.services
                     {
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     }*/
+                    Predio pPredioPrincipal = new Predio();
+                    //  if (pProyecto.InstitucionEducativaId > 0)
+                    {
+                        //Predio Principal
+                        Predio predioPrincipal = new Predio
+                        {
+                            //Predio Auditoria
+                            FechaCreacion = DateTime.Now,
+                            Activo = true,
+                            UsuarioCreacion = pProyecto.UsuarioCreacion,
+                            //Predio Registros
+                            InstitucionEducativaSedeId = proyecto.InstitucionEducativaId,
+                            TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString(),
+                            UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud,
+                            UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud,
+                            Direccion = pProyecto.PredioPrincipal.Direccion,
+                            DocumentoAcreditacionCodigo = pProyecto.PredioPrincipal.DocumentoAcreditacionCodigo,
+                            NumeroDocumento = pProyecto.PredioPrincipal.NumeroDocumento,
+                            CedulaCatastral = pProyecto.PredioPrincipal.CedulaCatastral,
+                        };
+                        _context.Predio.Add(predioPrincipal);
+                        _context.SaveChanges();
+                        predioid = predioPrincipal.PredioId;
+                        pPredioPrincipal = predioPrincipal;
+                    }
+                    proyecto.PredioPrincipalId = pPredioPrincipal.PredioId;
                     proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                     proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
                     proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
@@ -542,27 +541,26 @@ namespace asivamosffie.services
 
 
                     //Agregar Todos los predios que tenga  proyecto
-                    foreach (var predio in pProyecto.ProyectoPredio)
-                    { 
-                     //   if (pProyecto.InstitucionEducativaId > 0)
+                    foreach (var ProyectoPredio in pProyecto.ProyectoPredio)
+                    {
+                        //if (proyecto.InstitucionEducativaId > 0)
                         {
-                            Predio predio1 = new Predio
-                            {
-                                //Predio Auditoria
-                                FechaCreacion = DateTime.Now,
-                                Activo = true,
-                                UsuarioCreacion = pProyecto.UsuarioCreacion,
-                                //Predio Registros
-                                InstitucionEducativaSedeId = pProyecto.InstitucionEducativaId,
-                                TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString(),
-                                UbicacionLatitud = predio.Predio.UbicacionLatitud,
-                                UbicacionLongitud = predio.Predio.UbicacionLongitud,
-                                Direccion = predio.Predio.Direccion,
-                                DocumentoAcreditacionCodigo = predio.Predio.DocumentoAcreditacionCodigo,
-                                NumeroDocumento = predio.Predio.NumeroDocumento,
-                                CedulaCatastral = predio.Predio.CedulaCatastral
-                            };
-                             
+                            Predio predio1 = new Predio();
+
+                            //Predio Auditoria
+                            predio1.FechaCreacion = DateTime.Now;
+                            predio1.Activo = true;
+                            predio1.UsuarioCreacion = pProyecto.UsuarioCreacion;
+                            //Predio Registros
+                            predio1.InstitucionEducativaSedeId = proyecto.InstitucionEducativaId;
+                            predio1.TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString();
+                            predio1.UbicacionLatitud = pProyecto.PredioPrincipal.UbicacionLatitud;
+                            predio1.UbicacionLongitud = pProyecto.PredioPrincipal.UbicacionLongitud;
+                            predio1.Direccion = ProyectoPredio.Predio.Direccion;
+                            predio1.DocumentoAcreditacionCodigo = ProyectoPredio.Predio.DocumentoAcreditacionCodigo;
+                            predio1.NumeroDocumento = ProyectoPredio.Predio.NumeroDocumento;
+                            predio1.CedulaCatastral = ProyectoPredio.Predio.CedulaCatastral;
+
                             _context.Predio.Add(predio1);
                             _context.SaveChanges();
                             //Relacion Proyecto Predio 
@@ -575,7 +573,7 @@ namespace asivamosffie.services
                                 //ProyectoPredio Registros
 
                                 PredioId = predio1.PredioId,
-                                ProyectoId = ProyectoCreado.ProyectoId,
+                                ProyectoId = proyecto.ProyectoId,
                                 //Definir que poner
                                 EstadoJuridicoCodigo = string.Empty
                             };
@@ -764,21 +762,23 @@ namespace asivamosffie.services
                     {
                         if (predio.Predio.PredioId == 0)
                         {
-                            Predio predioNuevo = new Predio();
+                            Predio predioNuevo = new Predio
+                            {
 
-                            //Predio Auditoria
-                            predioNuevo.FechaCreacion = DateTime.Now;
-                            predioNuevo.Activo = true;
-                            predioNuevo.UsuarioCreacion = pProyecto.UsuarioCreacion;
-                            //Predio Registros
-                            predioNuevo.InstitucionEducativaSedeId = pProyecto.InstitucionEducativaId;
-                            predioNuevo.TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString();
-                            predioNuevo.UbicacionLatitud = predio.Predio.UbicacionLatitud;
-                            predioNuevo.UbicacionLongitud = predio.Predio.UbicacionLongitud;
-                            predioNuevo.Direccion = predio.Predio.Direccion;
-                            predioNuevo.DocumentoAcreditacionCodigo = predio.Predio.DocumentoAcreditacionCodigo;
-                            predioNuevo.NumeroDocumento = predio.Predio.NumeroDocumento;
-                            predioNuevo.CedulaCatastral = predio.Predio.CedulaCatastral;
+                                //Predio Auditoria
+                                FechaCreacion = DateTime.Now,
+                                Activo = true,
+                                UsuarioCreacion = pProyecto.UsuarioCreacion,
+                                //Predio Registros
+                                InstitucionEducativaSedeId = pProyecto.InstitucionEducativaId,
+                                TipoPredioCodigo = pProyecto.TipoPredioCodigo.ToString(),
+                                UbicacionLatitud = predio.Predio.UbicacionLatitud,
+                                UbicacionLongitud = predio.Predio.UbicacionLongitud,
+                                Direccion = predio.Predio.Direccion,
+                                DocumentoAcreditacionCodigo = predio.Predio.DocumentoAcreditacionCodigo,
+                                NumeroDocumento = predio.Predio.NumeroDocumento,
+                                CedulaCatastral = predio.Predio.CedulaCatastral
+                            };
 
                             _context.Predio.Add(predioNuevo);
                             _context.SaveChanges();
@@ -815,8 +815,6 @@ namespace asivamosffie.services
                             predioAntiguo.CedulaCatastral = predio.Predio.CedulaCatastral;
                             _context.Update(predioAntiguo);
                         }
-
-
                     }
                     decimal valorinterventoria = 0;
                     decimal valorobra = 0;
@@ -902,7 +900,6 @@ namespace asivamosffie.services
                     proyectoAntiguo.ValorObra = valorobra;
                     proyectoAntiguo.ValorTotal = valorobra + valorinterventoria;
 
-
                     // Infraestructura  a intervenir 
                     foreach (var infraestructuraIntervenirProyecto in pProyecto.InfraestructuraIntervenirProyecto)
                     {
@@ -919,14 +916,12 @@ namespace asivamosffie.services
                                 ProyectoId = pProyecto.ProyectoId,
                                 InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo,
                                 Cantidad = infraestructuraIntervenirProyecto.Cantidad,
-
                             };
                             _context.InfraestructuraIntervenirProyecto.Add(infraestructuraIntervenirProyecto1);
                             _context.SaveChanges();
                         }
                         else
                         {
-
                             InfraestructuraIntervenirProyecto infraestructuraIntervenirProyecto1 = _context.InfraestructuraIntervenirProyecto.Find(infraestructuraIntervenirProyecto.InfraestrucutraIntervenirProyectoId);
                             {
                                 //InfraestructuraIntervenirProyecto Auditoria 
@@ -1958,7 +1953,7 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido.Replace("[proyecto]", proyecto.ProyectoAdministrativoId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[fecha]", Convert.ToDateTime(proyecto.FechaCreado).ToString("dd/MM/yyyy"));
 
                 //template = template.Replace("_Link_", urlDestino);                
-                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).Select(x=>x.Usuario.Email).ToList();
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Administrador).Include(y => y.Usuario).Select(x => x.Usuario.Email).ToList();
                 Helpers.Helpers.EnviarCorreoMultipleDestinatario(usuariosadmin, "Proyecto administrativo creado", template, pSender, pPassword, pMailServer, pMailPort);
                 string msg = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearProyectoAdministrativo, pUsuario, "ENVIAR PROYECTO");
             }
@@ -1975,7 +1970,7 @@ namespace asivamosffie.services
             var resultado = await _context.FuenteFinanciacion.
                 Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado).
                 Include(x => x.CofinanciacionDocumento).
-                ThenInclude(x=>x.CofinanciacionAportante).
+                ThenInclude(x => x.CofinanciacionAportante).
                 OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
             foreach (var res in resultado)
             {
