@@ -11,12 +11,11 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./expansion-panel-detallar-solicitud.component.scss']
 })
 export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
-
   contratacion: Contratacion = {} as Contratacion;
   estadoSemaforos = {
     sinDiligenciar: 'sin-diligenciar',
     enProceso: 'en-proceso',
-    completo: 'completo',
+    completo: 'completo'
   };
   public plazoProyecto: number = 0;
 
@@ -24,86 +23,79 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     private route: ActivatedRoute,
     private projectContractingService: ProjectContractingService,
     public dialog: MatDialog,
-    private router: Router,
-
+    private router: Router
   ) {
     this.getContratacion();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  getContratacion () {
+  getContratacion() {
     this.route.params.subscribe((params: Params) => {
-      this.projectContractingService.getContratacionByContratacionId(params.id)
-        .subscribe(response => {
-          this.contratacion = response;
-          this.setPlazoProyecto();
-          setTimeout(() => {
+      this.projectContractingService.getContratacionByContratacionId(params.id).subscribe(response => {
+        this.contratacion = response;
+        this.setPlazoProyecto();
+        setTimeout(() => {
+          const btnTablaProyectos = document.getElementById('btnTablaProyectos');
+          const btnTablaContratistas = document.getElementById('btnTablaContratistas');
+          const btnTablacaracteristicas = document.getElementById('btnTablacaracteristicas');
+          const btnconsideraciones = document.getElementById('btnconsideraciones');
+          const btnFuentesUsos = document.getElementById('btnFuentesUsos');
 
-            const btnTablaProyectos = document.getElementById('btnTablaProyectos');
-            const btnTablaContratistas = document.getElementById('btnTablaContratistas');
-            const btnTablacaracteristicas = document.getElementById('btnTablacaracteristicas');
-            const btnconsideraciones = document.getElementById('btnconsideraciones');
-            const btnFuentesUsos = document.getElementById('btnFuentesUsos');
+          btnTablaProyectos.click();
+          btnTablaContratistas.click();
+          btnTablacaracteristicas.click();
+          btnconsideraciones.click();
+          btnFuentesUsos.click();
+        }, 1000);
 
-            btnTablaProyectos.click();
-            btnTablaContratistas.click();
-            btnTablacaracteristicas.click();
-            btnconsideraciones.click();
-            btnFuentesUsos.click();
-
-          }, 1000);
-
-          console.log(response);
-        });
-
+        console.log(response);
+      });
     });
   }
 
-  setPlazoProyecto(){
-    if(!this.contratacion.plazoContratacion){
-      this.contratacion.plazoContratacion = { plazoMeses : 0, plazoDias :0 }
+  setPlazoProyecto() {
+    if (!this.contratacion.plazoContratacion) {
+      this.contratacion.plazoContratacion = { plazoMeses: 0, plazoDias: 0 };
     }
 
-    if(this.contratacion.tipoSolicitudCodigo = "1"){
-      const plazoDiasObras = this.contratacion.contratacionProyecto
-          .map(crtPrj => (+crtPrj.proyecto.plazoMesesObra * 30 + Number(crtPrj.proyecto.plazoDiasObra)));
+    if ((this.contratacion.tipoSolicitudCodigo = '1')) {
+      const plazoDiasObras = this.contratacion.contratacionProyecto.map(
+        crtPrj => +crtPrj.proyecto.plazoMesesObra * 30 + Number(crtPrj.proyecto.plazoDiasObra)
+      );
       this.plazoProyecto = Math.max(...plazoDiasObras);
-    }
-    else if (this.contratacion.tipoSolicitudCodigo == '2') {
-      const plazoDiasInterventoria = this.contratacion.contratacionProyecto
-          .map(crtPrj => (+crtPrj.proyecto.plazoMesesInterventoria * 30 + Number(crtPrj.proyecto.plazoDiasInterventoria)));
+    } else if (this.contratacion.tipoSolicitudCodigo == '2') {
+      const plazoDiasInterventoria = this.contratacion.contratacionProyecto.map(
+        crtPrj => +crtPrj.proyecto.plazoMesesInterventoria * 30 + Number(crtPrj.proyecto.plazoDiasInterventoria)
+      );
       this.plazoProyecto = Math.max(...plazoDiasInterventoria);
     }
   }
 
   semaforoAcordeon(acordeon: string) {
-
-    if ( acordeon === 'consideracionEspecial' ) {
+    if (acordeon === 'consideracionEspecial') {
       if (this.contratacion.esObligacionEspecial !== undefined) {
-        if ( this.contratacion.esObligacionEspecial === false ) {
+        if (this.contratacion.esObligacionEspecial === false) {
           return this.estadoSemaforos.completo;
         }
 
-        if ( this.contratacion.esObligacionEspecial === true ) {
-          if ( this.contratacion.consideracionDescripcion !== undefined ) {
+        if (this.contratacion.esObligacionEspecial === true) {
+          if (this.contratacion.consideracionDescripcion !== undefined) {
             return this.estadoSemaforos.completo;
           }
 
           return this.estadoSemaforos.enProceso;
-        } 
+        }
       } else {
-
         return this.estadoSemaforos.sinDiligenciar;
       }
-    } else if ( acordeon === 'datosContratista' ) {
+    } else if (acordeon === 'datosContratista') {
       if (this.contratacion['contratista']) {
         return this.estadoSemaforos.completo;
       } else {
         return this.estadoSemaforos.sinDiligenciar;
       }
-    } else if ( acordeon === 'caracteristicasTecnicas' ) {
+    } else if (acordeon === 'caracteristicasTecnicas') {
       let cantProyectosCompletos = 0;
       let cantProyectosEnProceso = 0;
       let cantidadProyectosSinDiligenciar = 0;
@@ -115,140 +107,148 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           // if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
           //   cantProyectosCompletos++;
           // }
-          //podria tener algun otro campo lleno, no solo tiene monitoreo, por lo que toca 
-          let caracteristicasconalgo=false;
+          //podria tener algun otro campo lleno, no solo tiene monitoreo, por lo que toca
+          let caracteristicasconalgo = false;
 
           if (
             contratacionProyecto['tieneMonitoreoWeb'] !== undefined ||
             contratacionProyecto['esReasignacion'] !== undefined ||
             contratacionProyecto['esAvanceobra'] !== undefined ||
-            contratacionProyecto['porcentajeAvanceObra'] !== undefined || 
+            contratacionProyecto['porcentajeAvanceObra'] !== undefined ||
             contratacionProyecto['requiereLicencia'] !== undefined ||
             contratacionProyecto['numeroLicencia'] !== undefined ||
-            contratacionProyecto['licenciaVigente'] != undefined || 
+            contratacionProyecto['licenciaVigente'] != undefined ||
             contratacionProyecto['fechaVigencia'] !== undefined
-            
-          ) 
-          {
+          ) {
             caracteristicasconalgo = true;
           }
 
           let registroCompleto: boolean = true;
 
-          if( 
-              contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined || 
-              contratacionProyecto[ 'esReasignacion' ] === undefined ||
-              ( contratacionProyecto[ 'esReasignacion' ] === true && contratacionProyecto[ 'esAvanceobra' ] === undefined ) ||
-              ( contratacionProyecto[ 'esAvanceobra' ] === true && contratacionProyecto[ 'porcentajeAvanceObra' ] === undefined ) ||
-              ( contratacionProyecto[ 'porcentajeAvanceObra' ] !== undefined && contratacionProyecto[ 'requiereLicencia' ] === undefined ) ||
-              ( contratacionProyecto[ 'requiereLicencia' ] === true && contratacionProyecto[ 'licenciaVigente' ] === undefined ) ||
-              ( contratacionProyecto[ 'licenciaVigente' ] === true && contratacionProyecto[ 'numeroLicencia' ] === undefined ) ||
-              ( contratacionProyecto[ 'licenciaVigente' ] === true && contratacionProyecto[ 'fechaVigencia' ] === undefined ) ||
+          if (
+            contratacionProyecto['tieneMonitoreoWeb'] === undefined ||
+            contratacionProyecto['esReasignacion'] === undefined ||
+            (contratacionProyecto['esReasignacion'] === true && contratacionProyecto['esAvanceobra'] === undefined) ||
+            (contratacionProyecto['esAvanceobra'] === true &&
+              contratacionProyecto['porcentajeAvanceObra'] === undefined) ||
+            (contratacionProyecto['porcentajeAvanceObra'] !== undefined &&
+              contratacionProyecto['requiereLicencia'] === undefined) ||
+            (contratacionProyecto['requiereLicencia'] === true &&
+              contratacionProyecto['licenciaVigente'] === undefined) ||
+            (contratacionProyecto['licenciaVigente'] === true &&
+              contratacionProyecto['numeroLicencia'] === undefined) ||
+            (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['fechaVigencia'] === undefined) ||
+            (contratacionProyecto['esReasignacion'] === false &&
+              contratacionProyecto['requiereLicencia'] === undefined) ||
+            (contratacionProyecto['esAvanceobra'] === false && contratacionProyecto['requiereLicencia'] === undefined)
+          ) {
+            registroCompleto = false;
+          }
 
-              ( contratacionProyecto[ 'esReasignacion' ] === false && contratacionProyecto[ 'requiereLicencia' ] === undefined ) ||
-              ( contratacionProyecto[ 'esAvanceobra' ] === false && contratacionProyecto[ 'requiereLicencia' ] === undefined ) 
-            )
-            {
-              registroCompleto = false;
-            }
-
-          if ( registroCompleto === false && caracteristicasconalgo===false) {
+          if (registroCompleto === false && caracteristicasconalgo === false) {
             cantidadProyectosSinDiligenciar++;
           }
-          if ( registroCompleto === false && caracteristicasconalgo===true ) {
+          if (registroCompleto === false && caracteristicasconalgo === true) {
             cantProyectosEnProceso++;
           }
-          if ( registroCompleto === true ) {
+          if (registroCompleto === true) {
             cantProyectosCompletos++;
           }
         }
 
         let respuesta: string;
-        
-        if ( cantProyectosEnProceso > 0 || cantProyectosCompletos > 0 ) {
+
+        if (cantProyectosEnProceso > 0 || cantProyectosCompletos > 0) {
           respuesta = this.estadoSemaforos.enProceso;
         }
-        if ( cantidadProyectosSinDiligenciar === this.contratacion.contratacionProyecto.length ) {
+        if (cantidadProyectosSinDiligenciar === this.contratacion.contratacionProyecto.length) {
           respuesta = this.estadoSemaforos.sinDiligenciar;
         }
-        if ( cantProyectosCompletos === this.contratacion.contratacionProyecto.length ) {
+        if (cantProyectosCompletos === this.contratacion.contratacionProyecto.length) {
           respuesta = this.estadoSemaforos.completo;
         }
-        
 
         return respuesta;
       }
-    } else if ( acordeon === 'fuentesUso' ) {
+    } else if (acordeon === 'fuentesUso') {
       let contratacionProyectoAportanteCompleto = 0;
       let contratacionProyectoAportanteEnProceso = 0;
       let contratacionProyectoAportanteSinDiligenciar = 0;
-      if ( this.contratacion.contratacionProyecto !== undefined ) {
-        for ( const contratacionProyecto of this.contratacion.contratacionProyecto ) {
+      if (this.contratacion.contratacionProyecto !== undefined) {
+        for (const contratacionProyecto of this.contratacion.contratacionProyecto) {
           let aportanteCompleto = 0;
           let aportanteEnProceso = 0;
           let aportanteSinDiligenciar = 0;
-          for ( const contratacionProyectoAportante of contratacionProyecto.contratacionProyectoAportante ) {
+          for (const contratacionProyectoAportante of contratacionProyecto.contratacionProyectoAportante) {
             let completos = 0;
             let enProceso = 0;
             let sinDiligenciar = 0;
-            if ( contratacionProyectoAportante.componenteAportante.length === 0 ) {
+            if (contratacionProyectoAportante.componenteAportante.length === 0) {
               sinDiligenciar++;
             } else {
-              for ( const componenteAportante of contratacionProyectoAportante.componenteAportante ) {
-                if ( componenteAportante[ 'registroCompleto' ] === undefined ) {
+              for (const componenteAportante of contratacionProyectoAportante.componenteAportante) {
+                if (componenteAportante['registroCompleto'] === undefined) {
                   sinDiligenciar++;
                 }
-                if ( componenteAportante[ 'registroCompleto' ] === false ) {
+                if (componenteAportante['registroCompleto'] === false) {
                   enProceso++;
                 }
-                if ( componenteAportante[ 'registroCompleto' ] === true ) {
+                if (componenteAportante['registroCompleto'] === true) {
                   completos++;
                 }
-              };
-              if ( enProceso < completos || enProceso > sinDiligenciar ) {
+              }
+              if (enProceso < completos || enProceso > sinDiligenciar) {
                 aportanteEnProceso++;
               }
-              if ( sinDiligenciar === contratacionProyectoAportante.componenteAportante.length ) {
+              if (sinDiligenciar === contratacionProyectoAportante.componenteAportante.length) {
                 aportanteSinDiligenciar++;
               }
-              if ( completos === contratacionProyectoAportante.componenteAportante.length ) {
+              if (completos === contratacionProyectoAportante.componenteAportante.length) {
                 aportanteCompleto++;
-              };
-            } 
+              }
+            }
           }
 
-          if ( aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length ) {
+          if (aportanteSinDiligenciar === contratacionProyecto.contratacionProyectoAportante.length) {
             contratacionProyectoAportanteSinDiligenciar++;
-          };
-          if ( aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar ) {
+          }
+          if (aportanteEnProceso < aportanteCompleto || aportanteEnProceso > aportanteSinDiligenciar) {
             contratacionProyectoAportanteEnProceso++;
-          };
-          if ( aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length ) {
+          }
+          if (aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length) {
             contratacionProyectoAportanteCompleto++;
-          };
+          }
         }
 
-        if ( contratacionProyectoAportanteSinDiligenciar === this.contratacion.contratacionProyecto.length ) {
+        if (contratacionProyectoAportanteSinDiligenciar === this.contratacion.contratacionProyecto.length) {
           return this.estadoSemaforos.sinDiligenciar;
         }
-        if ( contratacionProyectoAportanteCompleto === this.contratacion.contratacionProyecto.length ) {
+        if (contratacionProyectoAportanteCompleto === this.contratacion.contratacionProyecto.length) {
           return this.estadoSemaforos.completo;
         }
-        if ( contratacionProyectoAportanteEnProceso < contratacionProyectoAportanteCompleto || contratacionProyectoAportanteEnProceso > contratacionProyectoAportanteSinDiligenciar ) {
+        if (
+          contratacionProyectoAportanteEnProceso < contratacionProyectoAportanteCompleto ||
+          contratacionProyectoAportanteEnProceso > contratacionProyectoAportanteSinDiligenciar
+        ) {
           return this.estadoSemaforos.enProceso;
         }
       }
-    } else if ( acordeon === 'plazoEjecucion' ){
-        if(this.contratacion.plazoContratacion && this.contratacion.plazoContratacion.plazoDias > 0 && this.contratacion.plazoContratacion.plazoMeses > 0){
-          return this.estadoSemaforos.completo;
-        } else if (this.contratacion.plazoContratacion && (this.contratacion.plazoContratacion.plazoDias > 0 
-          || this.contratacion.plazoContratacion.plazoMeses > 0)){
-          return this.estadoSemaforos.enProceso;
-        } else {
-          return this.estadoSemaforos.sinDiligenciar;
-        }
+    } else if (acordeon === 'plazoEjecucion') {
+      if (
+        this.contratacion.plazoContratacion &&
+        this.contratacion.plazoContratacion.plazoDias > 0 &&
+        this.contratacion.plazoContratacion.plazoMeses > 0
+      ) {
+        return this.estadoSemaforos.completo;
+      } else if (
+        this.contratacion.plazoContratacion &&
+        (this.contratacion.plazoContratacion.plazoDias > 0 || this.contratacion.plazoContratacion.plazoMeses > 0)
+      ) {
+        return this.estadoSemaforos.enProceso;
+      } else {
+        return this.estadoSemaforos.sinDiligenciar;
+      }
     }
-
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -258,38 +258,39 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     });
   }
 
-  onChangeTerm(termLimit: PlazoContratacion)
-  {
+  onChangeTerm(termLimit: PlazoContratacion) {
     this.contratacion.plazoContratacion.plazoDias = termLimit.plazoDias;
-    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses
+    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses;
   }
 
-  onSubmitTerm(termLimit: PlazoContratacion){
+  onSubmitTerm(termLimit: PlazoContratacion) {
     this.contratacion.plazoContratacion.plazoDias = termLimit.plazoDias;
-    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses
-    this.projectContractingService.createEditTermLimit(this.contratacion.contratacionId, this.contratacion.plazoContratacion)
-    .subscribe(respuesta => {
-      this.openDialog('', `<b>${respuesta.message}</b>`);
-      this.contratacion = null;
-      console.log(respuesta);
-      this.getContratacion();
-
-    });
-
-  }
-
-  onSubmit() {
-    console.log(this.contratacion);
-
-    this.projectContractingService.createEditContratacion(this.contratacion)
+    this.contratacion.plazoContratacion.plazoMeses = termLimit.plazoMeses;
+    this.projectContractingService
+      .createEditTermLimit(this.contratacion.contratacionId, this.contratacion.plazoContratacion)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);
         this.contratacion = null;
         console.log(respuesta);
         this.getContratacion();
-
       });
-
   }
 
+  onSubmit() {
+    console.log(this.contratacion);
+    let contratista = {
+      contratistaId: this.contratacion.contratistaId,
+      contratacionId: this.contratacion.contratacionId,
+      tipoSolicitudCodigo: this.contratacion.tipoSolicitudCodigo,
+      EsObligacionEspecial: this.contratacion.esObligacionEspecial,
+      ConsideracionDescripcion: this.contratacion.consideracionDescripcion,
+      EstadoSolicitudCodigo: this.contratacion.estadoSolicitudCodigo
+    };
+    this.projectContractingService.createEditContratacion(contratista).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      this.contratacion = null;
+      console.log(respuesta);
+      this.getContratacion();
+    });
+  }
 }
