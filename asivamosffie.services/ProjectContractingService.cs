@@ -665,7 +665,15 @@ namespace asivamosffie.services
                     _context.SaveChanges();
                 }
 
+                Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == contratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
+                contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
+
+                _context.SaveChanges();
+
                 response.Data = contratacion.PlazoContratacion.PlazoContratacionId;
+                response.IsSuccessful = true;
+                response.Code = ConstantMessagesProyecto.OperacionExitosa;
+                response.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, contratacion.UsuarioCreacion, (string.IsNullOrEmpty(contratacion.UsuarioModificacion) ? "CREAR" : "EDITAR") + " CONTRATACION PROYECTO");
                 return response;
 
             }
