@@ -474,12 +474,12 @@ namespace asivamosffie.services
                         CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId,
                         Nombre = nombre,
                         TipoAportante = await _commonService.GetNombreDominioByDominioID((int)cofinanciacionAportante.TipoAportanteId),
-                        Vigencia = cofinanciacionAportante.Cofinanciacion.VigenciaCofinanciacionId,
+                        Vigencia = cofinanciacionAportante.CofinanciacionDocumento.FirstOrDefault().VigenciaAporte,
                         FechaCreacion = cofinanciacionAportante.FechaCreacion,
                         MunicipioId = cofinanciacionAportante.MunicipioId,
                         DepartamentoId = cofinanciacionAportante.DepartamentoId,
                         RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto,
-                        TieneFuentes = fuentesNum > 0 ? true : false
+                        TieneFuentes = fuentesNum > 0 
                     };
                     ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
                 }
