@@ -65,7 +65,7 @@ namespace asivamosffie.services
 
             //DOM 14 2   interventoria            
             pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
-            actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+            actaInicio = await getDataActaInicioAsync(pContratoId);
 
             string Vlrfase2ConstruccionObra = "", VlrFase1Preconstruccion = "";
             VlrFase1Preconstruccion = actaInicio.ValorFase1Preconstruccion;
@@ -81,7 +81,7 @@ namespace asivamosffie.services
             pTipoContrato = ConstanCodigoTipoContratacion.Obra;
             if (actaInicio.NumeroDRP1 == "ERROR")
             {
-                actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+                actaInicio = await getDataActaInicioAsync(pContratoId);
                 Vlrfase2ConstruccionObra = actaInicio.Valorfase2ConstruccionObra;
 
                 if (actaInicio.ContratacionId != null)
@@ -121,247 +121,10 @@ namespace asivamosffie.services
                 pTipoContrato = ConstanCodigoTipoContratacion.Obra;
                 plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            } 
+            }
             if (plantilla != null)
                 plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio, "cdaza");
             return ConvertirPDF(plantilla);
-        }
-        private async Task<VistaGenerarActaInicioContrato> getDataActaInicioAsync(int pContratoId, int pTipoContrato, int pUserId = 0)
-        { 
-            VistaGenerarActaInicioContrato actaInicio;
-            try
-            {
-                Contrato contrato = _context.Contrato
-                                                    .Where(
-                                                            r => !(bool)r.Eliminado
-                                                                     && r.ContratoId == pContratoId
-                                                                     && r.Contratacion.TipoSolicitudCodigo == pTipoContrato.ToString()
-                                                          )
-                                                    .Include(r => r.ContratoConstruccion)
-                                                    .ThenInclude(r => r.ConstruccionObservacion)
-                                                    .FirstOrDefault();
-
-                string strFechaPrevistaTerminacion = string.Empty;
-                string strFechaActaInicio = string.Empty;
-
-                DateTime FechaActaInicioFase1DateTime = new DateTime();
-                DateTime FechaActaInicioFase2DateTime = new DateTime();
-
-                DateTime FechaPrevistaTerminacionDateTime = new DateTime();
-
-                string strContratoObservacion = string.Empty;
-                int ContratacionId = 0;
-
-                Contratacion contratacion = null;
-
-                ContratoPoliza contratoPoliza = null;
-                Usuario Supervisor = null;
-
-                if (contrato != null)
-                {
-                    contratacion = _context.Contratacion
-                                                       .Where(c => c.ContratacionId == contrato.ContratacionId)
-                                                       .Include(pc=> pc.PlazoContratacion)
-                                                       .FirstOrDefault();
-
-                    ContratacionId = contrato.ContratacionId;
-                    strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
-
-                    FechaActaInicioFase1DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase1);
-                    FechaActaInicioFase2DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
-                    FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaTerminacionFase2);
-
-                    strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
-
-                    ConstruccionObservacion construccionObservacion = contrato.ContratoConstruccion?
-                                                                                    .FirstOrDefault()?.ConstruccionObservacion?
-                                                                                    .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Seis)
-                                                                                    .OrderByDescending(r => r.ConstruccionObservacionId)
-                                                                                    ?.FirstOrDefault();
-
-                    if (construccionObservacion != null)
-                        strContratoObservacion = construccionObservacion.Observaciones;
-
-                    contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
-                    Supervisor = contrato.UsuarioInterventoria;
-
-                }
-                string strTipoContratacion = ConstanMessages.SinDefinir;
-                Dominio TipoContratacionCodigo;
-
-                ContratacionProyecto contratacionProyecto = null;
-                string strLlaveMENContrato = string.Empty;
-                string strInstitucionEducativaLlaveMEN = string.Empty;
-                string strDepartamentoYMunicipioLlaveMEN = string.Empty;
-
-                Contratista contratista = null;
-
-                DisponibilidadPresupuestal disponibilidadPresupuestal = null;
-                string proponenteCodigo = string.Empty;
-                string proponenteNombre = string.Empty;
-
-                decimal ValorActualContratoTmp, ValorFase1PreconstruccionTmp, Valorfase2ConstruccionObraTmp;
-                ValorActualContratoTmp = ValorFase1PreconstruccionTmp = Valorfase2ConstruccionObraTmp = 0;
-
-                if (contratacion != null)
-                {
-                    Valorfase2ConstruccionObraTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId), ConstanCodigoTipoContrato.Interventoria);
-                    ValorFase1PreconstruccionTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId), ConstanCodigoTipoContrato.Obra);
-                    ValorActualContratoTmp = Valorfase2ConstruccionObraTmp + ValorFase1PreconstruccionTmp;
-
-                    TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
-                    if (TipoContratacionCodigo != null)
-                        strTipoContratacion = TipoContratacionCodigo.Nombre;
-
-                    contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
-
-                    contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
-
-                    disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
-
-                    if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-                    {
-                        proponenteCodigo = ((int)ConstanCodigoTipoContratacion.Obra).ToString();
-                        proponenteNombre = ConstanMessages.Obra;
-                    }
-                    else if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-                    {
-                        proponenteCodigo = ((int)ConstanCodigoTipoContratacion.Interventoria).ToString();
-                        proponenteNombre = ConstanMessages.Obra; 
-                    } 
-                }
-
-                string strTipoIdentificacionCodigoContratista = ConstanMessages.SinDefinir;
-                Dominio TipoIdentificacionCodigoContratista;
-                 
-                if (contratista != null)
-                {
-                    TipoIdentificacionCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
-                    if (TipoIdentificacionCodigoContratista != null)
-                        strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre; 
-                }
-
-                string strVigencia = ConstanMessages.SinDefinir;
-                string strNumeroDRP1 = ConstanMessages.SinDefinir;
-                string strFechaGeneracionDRP = ConstanMessages.SinDefinir;
-                string strObjetoDisponibilidadPresupuestal = string.Empty;
-                string strFecSolicitudDisponibPresup = string.Empty;
-
-
-                if (contratoPoliza != null)
-                    strVigencia = contrato.FechaTramite != null ? Convert.ToDateTime(contrato.FechaTramite).ToString("dd/MM/yyyy") : contrato.FechaTramite.ToString();
-
-
-                int PlazoDias = 0, PlazoMeses = 0;
-
-                if (disponibilidadPresupuestal != null)
-                {
-                    strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
-
-                    strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDrp != null ? Convert.ToDateTime(disponibilidadPresupuestal.FechaDrp).ToString("dd/MM/yyyy") : disponibilidadPresupuestal.FechaDrp.ToString();
-
-                    strObjetoDisponibilidadPresupuestal = disponibilidadPresupuestal.Objeto;
-
-                    strFecSolicitudDisponibPresup = disponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy");
-
-                    PlazoDias = Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias);
-                    PlazoMeses = Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses);
-                }
-
-                Int32 intCantidadProyectosAsociados = 0;
-
-                Proyecto proyecto = null;
-
-                if (contratacionProyecto != null)
-                {
-                    intCantidadProyectosAsociados = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).Count();
-                    proyecto = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
-                }
-
-                string InstitucionEducativaId = string.Empty;
-                int InstitucionEducativaIdInt = 0;
-
-                if (proyecto != null)
-                {
-                    InstitucionEducativaId = proyecto.InstitucionEducativaId.ToString();
-                    InstitucionEducativaIdInt = Convert.ToInt32(proyecto.InstitucionEducativaId);
-                }
-
-                if (!string.IsNullOrEmpty(InstitucionEducativaId))
-                    proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(Convert.ToInt32(InstitucionEducativaId));
-
-                if (proyecto != null)
-                {
-                    strLlaveMENContrato = proyecto.LlaveMen;
-                    if (InstitucionEducativaId != null)
-                        strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
-                    strDepartamentoYMunicipioLlaveMEN = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio); 
-                } 
-
-                string rutaActaSuscrita = string.Empty;
-                string strValor = string.Empty;
-                if (contrato != null)
-                {
-                    strValor = contrato.Valor.ToString();
-                    if (strValor.Length > 3)
-                        strValor = strValor.Remove(strValor.Length - 3);
-                    rutaActaSuscrita = contrato.RutaActaSuscrita;
-
-                }
-                actaInicio = new VistaGenerarActaInicioContrato(); 
-               
-                if (contrato != null)
-                    actaInicio = new VistaGenerarActaInicioContrato
-                    {
-                        NumeroContrato = contrato.NumeroContrato,
-                        VigenciaContrato = strVigencia,
-                        FechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
-                        ProponenteCodigo = proponenteCodigo,
-                        ProponenteNombre = proponenteNombre,
-                        NumeroDRP1 = strNumeroDRP1,
-                        FechaGeneracionDRP1 = strFechaGeneracionDRP,
-                        NumeroDRP2 = strNumeroDRP1,
-                        FechaGeneracionDRP2 = strFechaGeneracionDRP,
-                        FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
-                        FechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosConstruccionSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosConstruccionSupervisor.ToString(),
-                        FechaAprobacionRequisitosSupervisorDate = contrato.FechaAprobacionRequisitosConstruccionSupervisor,
-                        Objeto = strObjetoDisponibilidadPresupuestal,
-                        ValorInicialContrato = strValor,
-                        ValorActualContrato = ValorActualContratoTmp.ToString(),
-                        ValorFase1Preconstruccion = ValorFase1PreconstruccionTmp.ToString(),
-                        Valorfase2ConstruccionObra = Valorfase2ConstruccionObraTmp.ToString(),
-                        PlazoInicialContratoSupervisor = strFecSolicitudDisponibPresup,
-                        PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
-                        PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
-                        PlazoFase1PreDias = contrato.PlazoFase1PreDias,
-                        PlazoFase2ConstruccionMeses = contrato.PlazoFase2ConstruccionMeses,
-                        PlazoActualContratoMeses = PlazoMeses,
-                        PlazoActualContratoDias = PlazoDias,
-                        NombreEntidadContratistaObra = contratista.Nombre,
-                        NombreEntidadContratistaSupervisorInterventoria = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
-                        FechaActaInicio = strFechaActaInicio,
-                        FechaActaInicioFase1DateTime = FechaActaInicioFase1DateTime,
-                        FechaActaInicioFase2DateTime = FechaActaInicioFase2DateTime,
-                        FechaPrevistaTerminacion = strFechaPrevistaTerminacion,
-                        FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime,
-                        ObservacionOConsideracionesEspeciales = strContratoObservacion,
-                        LlaveMENContrato = strLlaveMENContrato,
-                        DepartamentoYMunicipioLlaveMEN = strDepartamentoYMunicipioLlaveMEN,
-                        InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
-                        CantidadProyectosAsociados = intCantidadProyectosAsociados,
-                        NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
-                        RutaActaSuscrita = rutaActaSuscrita,
-                        NumeroIdentificacionSupervisor = Supervisor?.NumeroIdentificacion,
-                        NumeroIdentificacionEntidadContratistaObra = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
-                        Contrato = contrato,
-                    };
-            }
-            catch (Exception e)
-            {
-                actaInicio = new VistaGenerarActaInicioContrato();
-            }
-            return actaInicio;
         }
 
         private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
@@ -565,7 +328,6 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
         }
-
 
         public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
@@ -876,7 +638,7 @@ namespace asivamosffie.services
                 VistaGenerarActaInicioContrato actaInicio;
 
                 //pTipoContrato = 2;
-                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32(contrato.TipoContratoCodigo));
+                actaInicio = await getDataActaInicioAsync(pContratoId);
 
                 //Contrato contrato = null;
                 //contrato = _context.Contrato.Where(r => r.NumeroContrato == pActaInicio.NumeroContrato).FirstOrDefault();
@@ -1058,7 +820,7 @@ namespace asivamosffie.services
             VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato();
             if (contrato != null)
                 //actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
-                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32(contratacion.TipoSolicitudCodigo));
+                actaInicio = await getDataActaInicioAsync(pContratoId);
 
             //perfilId = 8; //  Supervisor
             //perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
@@ -1617,7 +1379,7 @@ namespace asivamosffie.services
                 VistaGenerarActaInicioContrato actaInicio;
 
                 //pTipoContrato = 2;
-                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32(contrato.TipoContratoCodigo));
+                actaInicio = await getDataActaInicioAsync(pContratoId);
 
                 List<UsuarioPerfil> listaUsuarioPerfil = getCorreos((int)EnumeratorPerfil.Supervisor);
 
@@ -1660,7 +1422,7 @@ namespace asivamosffie.services
 
             int pIdTemplate = (int)enumeratorTemplate.ActaInicioFase2ObraInterventoria;
             VistaGenerarActaInicioContrato actaInicio;
-            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId, Convert.ToInt32(pContrato.Contratacion.TipoSolicitudCodigo));
+            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId);
 
             Respuesta respuesta = new Respuesta();
 
@@ -1695,7 +1457,7 @@ namespace asivamosffie.services
 
             int pIdTemplate = (int)enumeratorTemplate.ActaInicioFase2ObraInterventoria;
             VistaGenerarActaInicioContrato actaInicio;
-            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId, Convert.ToInt32(pContrato.Contratacion.TipoSolicitudCodigo));
+            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId);
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
 
@@ -1723,7 +1485,7 @@ namespace asivamosffie.services
 
             int pIdTemplate = (int)enumeratorTemplate.ObservacionesActaInicioFase2;
             VistaGenerarActaInicioContrato actaInicio;
-            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId, Convert.ToInt32(pContrato.Contratacion.TipoSolicitudCodigo));
+            actaInicio = await getDataActaInicioAsync(pContrato.ContratoId);
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
 
@@ -1890,83 +1652,266 @@ namespace asivamosffie.services
 
         }
 
-        //public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId )
         public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId, int pUserId)
         {
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
             VistaGenerarActaInicioContrato actaInicioInterventoria = new VistaGenerarActaInicioContrato();
             VistaGenerarActaInicioContrato actaInicioObra = new VistaGenerarActaInicioContrato();
-            int pTipoContrato = 0;
 
-            //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
+            actaInicioObra = await getDataActaInicioAsync(pContratoId);
 
-            //DOM 14 1   Obra            
-            pTipoContrato = 1;
-            actaInicioObra = await getDataActaInicioAsync(pContratoId, pTipoContrato, pUserId);
-
-            //DOM 14 2   Interventoría
-            pTipoContrato = 2;
-            actaInicioInterventoria = await getDataActaInicioAsync(pContratoId, pTipoContrato, pUserId);
-
-            actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
+            actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioObra);
 
             //return actaInicioObra;
             return actaInicioConsolidado;
 
         }
 
+        private async Task<VistaGenerarActaInicioContrato> getDataActaInicioAsync(int pContratoId)
+        {
+            VistaGenerarActaInicioContrato actaInicio;
+            try
+            {
+                Contrato contrato = _context.Contrato
+                                                    .Where(r => r.ContratoId == pContratoId)
+                                                    .Include(r => r.ContratoConstruccion).ThenInclude(r => r.ConstruccionObservacion)
+                                                    .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.PlazoContratacion)
+                                                    .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.DisponibilidadPresupuestal)
+                                                    .FirstOrDefault();
+
+                string strFechaPrevistaTerminacion = string.Empty;
+                string strFechaActaInicio = string.Empty;
+
+                DateTime FechaActaInicioFase1DateTime = new DateTime();
+                DateTime FechaActaInicioFase2DateTime = new DateTime();
+
+                DateTime FechaPrevistaTerminacionDateTime = new DateTime();
+
+                string strContratoObservacion = string.Empty;
+                int ContratacionId = 0;
+
+                Contratacion contratacion = null;
+
+                ContratoPoliza contratoPoliza = null;
+                Usuario Supervisor = null;
+
+                if (contrato != null)
+                {
+                    contratacion = _context.Contratacion
+                                                       .Where(c => c.ContratacionId == contrato.ContratacionId)
+                                                       .Include(pc => pc.PlazoContratacion)
+                                                       .FirstOrDefault();
+
+                    ContratacionId = contrato.ContratacionId;
+                    strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
+
+                    FechaActaInicioFase1DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase1);
+                    FechaActaInicioFase2DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
+                    FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaTerminacionFase2);
+
+                    strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
+
+                    ConstruccionObservacion construccionObservacion = contrato.ContratoConstruccion?
+                                                                                    .FirstOrDefault()?.ConstruccionObservacion?
+                                                                                    .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Seis)
+                                                                                    .OrderByDescending(r => r.ConstruccionObservacionId)
+                                                                                    ?.FirstOrDefault();
+
+                    if (construccionObservacion != null)
+                        strContratoObservacion = construccionObservacion.Observaciones;
+
+                    contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.InterventorId);
+                    Supervisor = contrato.UsuarioInterventoria;
+
+                }
+                string strTipoContratacion = ConstanMessages.SinDefinir;
+                Dominio TipoContratacionCodigo;
+
+                ContratacionProyecto contratacionProyecto = null;
+                string strLlaveMENContrato = string.Empty;
+                string strInstitucionEducativaLlaveMEN = string.Empty;
+                string strDepartamentoYMunicipioLlaveMEN = string.Empty;
+
+                Contratista contratista = null;
+                string proponenteCodigo = string.Empty;
+                string proponenteNombre = string.Empty;
+
+                decimal ValorActualContratoTmp,
+                    ValorFase1PreconstruccionTmp,
+                    Valorfase2ConstruccionObraTmp;
+                ValorActualContratoTmp = ValorFase1PreconstruccionTmp = Valorfase2ConstruccionObraTmp = 0;
+
+                if (contratacion != null)
+                {
+                    Valorfase2ConstruccionObraTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId), ConstanCodigoTipoContrato.Interventoria);
+                    ValorFase1PreconstruccionTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId), ConstanCodigoTipoContrato.Obra);
+                    ValorActualContratoTmp = Valorfase2ConstruccionObraTmp + ValorFase1PreconstruccionTmp;
+
+                    TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
+                    if (TipoContratacionCodigo != null)
+                        strTipoContratacion = TipoContratacionCodigo.Nombre;
+
+                    contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
+                    contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+
+
+                    if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                    {
+                        proponenteCodigo = ((int)ConstanCodigoTipoContratacion.Obra).ToString();
+                        proponenteNombre = ConstanMessages.Obra;
+                    }
+                    else if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                    {
+                        proponenteCodigo = ((int)ConstanCodigoTipoContratacion.Interventoria).ToString();
+                        proponenteNombre = ConstanMessages.Obra;
+                    }
+                }
+
+                string strTipoIdentificacionCodigoContratista = ConstanMessages.SinDefinir;
+                Dominio TipoIdentificacionCodigoContratista;
+
+                if (contratista != null)
+                {
+                    TipoIdentificacionCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                    if (TipoIdentificacionCodigoContratista != null)
+                        strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre;
+                }
+
+                string strVigencia = ConstanMessages.SinDefinir;
+
+
+
+                if (contratoPoliza != null)
+                    strVigencia = contrato.FechaTramite != null ? Convert.ToDateTime(contrato.FechaTramite).ToString("dd/MM/yyyy") : contrato.FechaTramite.ToString();
+
+
+
+                Int32 intCantidadProyectosAsociados = 0;
+
+                Proyecto proyecto = null;
+
+                if (contratacionProyecto != null)
+                {
+                    intCantidadProyectosAsociados = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).Count();
+                    proyecto = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
+                }
+
+                string InstitucionEducativaId = string.Empty;
+                int InstitucionEducativaIdInt = 0;
+
+                if (proyecto != null)
+                {
+                    InstitucionEducativaId = proyecto.InstitucionEducativaId.ToString();
+                    InstitucionEducativaIdInt = Convert.ToInt32(proyecto.InstitucionEducativaId);
+                }
+
+                if (!string.IsNullOrEmpty(InstitucionEducativaId))
+                    proyecto.InstitucionEducativa = await _commonService.GetInstitucionEducativaById(Convert.ToInt32(InstitucionEducativaId));
+
+                if (proyecto != null)
+                {
+                    strLlaveMENContrato = proyecto.LlaveMen;
+                    if (InstitucionEducativaId != null)
+                        strInstitucionEducativaLlaveMEN = proyecto.InstitucionEducativa.Nombre;
+                    strDepartamentoYMunicipioLlaveMEN = _commonService.GetNombreDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                }
+
+                string rutaActaSuscrita = string.Empty;
+                string strValor = string.Empty;
+                if (contrato != null)
+                {
+                    strValor = contrato.Valor.ToString();
+                    if (strValor.Length > 3)
+                        strValor = strValor.Remove(strValor.Length - 3);
+                    rutaActaSuscrita = contrato.RutaActaSuscrita;
+
+                }
+
+                actaInicio = new VistaGenerarActaInicioContrato
+                {
+                    NumeroContrato = contrato.NumeroContrato,
+                    VigenciaContrato = strVigencia,
+                    FechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
+                    ProponenteCodigo = proponenteCodigo,
+                    ProponenteNombre = proponenteNombre,
+                    NumeroDRP1 = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDrp,
+                    FechaGeneracionDRP1 = Convert.ToDateTime(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaDrp).ToString("dd/MM/yyyy") ?? ConstanMessages.SinDefinir,
+                    NumeroDRP2 = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDrp,
+                    FechaGeneracionDRP2 = Convert.ToDateTime(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaDrp).ToString("dd/MM/yyyy") ?? ConstanMessages.SinDefinir,
+                    FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
+                    FechaAprobacionRequisitosSupervisor = Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") ?? ConstanMessages.SinDefinir,
+                    FechaAprobacionRequisitosSupervisorDate = contrato.FechaAprobacionRequisitosConstruccionSupervisor,
+                    Objeto = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().Objeto,
+                    ValorInicialContrato = strValor,
+                    ValorActualContrato = ValorActualContratoTmp.ToString(),
+                    ValorFase1Preconstruccion = ValorFase1PreconstruccionTmp.ToString(),
+                    Valorfase2ConstruccionObra = Valorfase2ConstruccionObraTmp.ToString(),
+                    PlazoInicialContratoSupervisor = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.ToString("dd/MM/yyyy"),
+                    PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
+                    PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
+                    PlazoFase1PreDias = contrato.PlazoFase1PreDias,
+                    PlazoFase2ConstruccionMeses = contrato.PlazoFase2ConstruccionMeses,
+                    PlazoActualContratoMeses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0,
+                    PlazoActualContratoDias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0,
+                    NombreEntidadContratistaObra = contratista.Nombre,
+                    NombreEntidadContratistaSupervisorInterventoria = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
+                    FechaActaInicio = strFechaActaInicio,
+                    FechaActaInicioFase1DateTime = FechaActaInicioFase1DateTime,
+                    FechaActaInicioFase2DateTime = FechaActaInicioFase2DateTime,
+                    FechaPrevistaTerminacion = strFechaPrevistaTerminacion,
+                    FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime,
+                    ObservacionOConsideracionesEspeciales = strContratoObservacion,
+                    LlaveMENContrato = strLlaveMENContrato,
+                    DepartamentoYMunicipioLlaveMEN = strDepartamentoYMunicipioLlaveMEN,
+                    InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
+                    CantidadProyectosAsociados = intCantidadProyectosAsociados,
+                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
+                    RutaActaSuscrita = rutaActaSuscrita,
+                    NumeroIdentificacionSupervisor = Supervisor?.NumeroIdentificacion,
+                    NumeroIdentificacionEntidadContratistaObra = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
+                    Contrato = contrato
+                };
+            }
+
+            catch (Exception e)
+            {
+                actaInicio = new VistaGenerarActaInicioContrato();
+            }
+            return actaInicio;
+        }
+
         private async Task<VistaGenerarActaInicioContrato> GetDataConsolidadoActaInicioAsync(VistaGenerarActaInicioContrato actaInicioObra, VistaGenerarActaInicioContrato actaInicioInterventoria)
         {
 
-            VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
+            //interventoria
+            actaInicioObra.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
+            actaInicioObra.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
 
-            if (actaInicioObra.NumeroDRP1 == "ERROR" && actaInicioInterventoria.NumeroDRP1 == "ERROR")
-            {
-                return actaInicioConsolidado;
-            }
+            //obra
+            actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
+            actaInicioObra.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
 
-            else if (actaInicioObra.NumeroDRP1 == "ERROR")
-            {
-                actaInicioConsolidado = actaInicioInterventoria;
-            }
-            else if (actaInicioInterventoria.NumeroDRP1 == "ERROR")
-            {
-                actaInicioConsolidado = actaInicioObra;
-            }
-            else
-            {
-                //interventoria
-                actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
-                actaInicioConsolidado.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
+            actaInicioObra.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
+            actaInicioObra.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
 
-                //obra
-                actaInicioConsolidado.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
-                actaInicioConsolidado.NombreRepresentanteContratistaObra = actaInicioObra.NombreRepresentanteContratistaObra;
+            actaInicioObra.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
 
-                actaInicioConsolidado.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
-                actaInicioConsolidado.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
+            actaInicioObra.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra);
 
-                actaInicioConsolidado.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
+            actaInicioObra.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
 
-                actaInicioConsolidado.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra);
+            actaInicioObra.PlazoActualContratoMeses = actaInicioObra.PlazoActualContratoMeses;
 
-                actaInicioConsolidado.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
-                //actaInicioConsolidado.Valorfase2ConstruccionObra = actaInicioConsolidado.Valorfase2ConstruccionObra + actaInicioConsolidado.ValorFase1Preconstruccion;
-
-                //    Proyecto   ????
-                //             decimal? ValorObra 
-                // decimal? ValorInterventoria 
-                // decimal? ValorTotal 
-
-                //ValorFase1Preconstruccion = " PENDIENTE",
-                //        Valorfase2ConstruccionObra
-
-            }
+            actaInicioObra.PlazoActualContratoDias = actaInicioObra.PlazoActualContratoDias;
 
 
 
-            return actaInicioConsolidado;
+
+
+            return actaInicioObra;
 
         }
 

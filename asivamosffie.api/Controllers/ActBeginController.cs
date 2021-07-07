@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class ActBeginController : ControllerBase
     {
         public readonly IActBeginService _ActBegin;
@@ -70,8 +70,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId, pUserId);
+                
+                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId, 0);
             }
             catch (Exception ex)
             {
