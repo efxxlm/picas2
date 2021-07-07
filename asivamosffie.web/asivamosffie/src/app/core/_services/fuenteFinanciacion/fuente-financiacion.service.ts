@@ -156,6 +156,7 @@ export interface ControlRecurso{
   fechaConsignacion: Date,
   valorConsignacion: number,
   fechaCreacion?: Date,
+  registroPresupuestal?: RegistroPresupuestal
 
 }
 
