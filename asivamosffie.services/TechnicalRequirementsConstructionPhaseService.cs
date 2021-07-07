@@ -434,13 +434,17 @@ namespace asivamosffie.services
             }
         }
 
-        private bool TieneFasePreconstruccion(int pIdContrato)
+        private bool TieneFasePreconstruccion(int pProyectoId)
         {
             bool tieneFasePreconstruccion = false;
 
-            List<VRequisitosTecnicosInicioConstruccion> listaProyectos = _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.ContratoId == pIdContrato).ToList();
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                          .Where(cp => cp.ProyectoId == pProyectoId)
+                          .Include(cpa => cpa.ContratacionProyectoAportante).ThenInclude(ca => ca.ComponenteAportante)
+                          .FirstOrDefault();
 
-            if (listaProyectos.Where(r => r.TieneFasePreconstruccion > 0).Count() > 0)
+            if (contratacionProyecto.ContratacionProyectoAportante
+                .Count(ca => ca.ComponenteAportante.Any(ca=> ca.FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion)) > 0)
             {
                 tieneFasePreconstruccion = true;
             }
@@ -1422,13 +1426,12 @@ namespace asivamosffie.services
                                                 .ThenInclude(r => r.ConstruccionPerfil)
                                             .FirstOrDefault();
 
-            contrato.ContratoConstruccion.ToList().ForEach(cc =>
+            foreach (var cc in contrato.ContratoConstruccion)
             {
                 ContratoConstruccion construccionTemp = _context.ContratoConstruccion.Find(cc.ContratoConstruccionId);
-                bool completoConstruccion = true;
-
+                bool completoConstruccion = true; 
                 if (
-                        (TieneFasePreconstruccion(construccionTemp.ContratoId) && cc.RegistroCompletoDiagnostico != true) ||
+                        (TieneFasePreconstruccion(construccionTemp.ProyectoId) && cc.RegistroCompletoDiagnostico != true) ||
                         cc.RegistroCompletoPlanesProgramas != true ||
                         cc.RegistroCompletoManejoAnticipo != true ||
                         cc.RegistroCompletoProgramacionObra != true ||
@@ -1448,12 +1451,10 @@ namespace asivamosffie.services
                             completoConstruccion = false;
                         }
                     });
-                }
-
+                } 
                 construccionTemp.RegistroCompleto = completoConstruccion;
-                _context.SaveChanges();
-
-            });
+                _context.SaveChanges(); 
+            }  
 
             contrato.RegistroCompletoConstruccion = esCompleto;
             if (contrato.RegistroCompletoConstruccion == true)
@@ -1736,7 +1737,7 @@ namespace asivamosffie.services
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
                     (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaRadicado == null) ||
-                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null)  ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null) ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||
@@ -1822,12 +1823,12 @@ namespace asivamosffie.services
                                             .Where(p => p.ProyectoId == pProyectoId)
                                             .FirstOrDefault();
 
-            Contrato contrato = _context.Contrato.Find(pContratoId);            
+            Contrato contrato = _context.Contrato.Find(pContratoId);
 
 
             proyecto.FechaInicioEtapaObra = pFechaInicioObra ?? DateTime.MinValue;
 
-            
+
 
             // calcula la fecha final del contrato
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesObra.Value);
@@ -1835,8 +1836,8 @@ namespace asivamosffie.services
 
             if (contrato != null)
             {
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths( -(contrato.PlazoFase1PreMeses ?? 0) );
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays( -(contrato.PlazoFase1PreDias ?? 0) );
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths(-(contrato.PlazoFase1PreMeses ?? 0));
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(-(contrato.PlazoFase1PreDias ?? 0));
             }
 
             proyecto.PlazoEnSemanas = (proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7;
@@ -1914,7 +1915,7 @@ namespace asivamosffie.services
 
         public Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
         {
-        
+
             // obtengo la informacion del proyecto
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
                                                                         .Find(pContratoConstruccionId);
@@ -2793,7 +2794,7 @@ namespace asivamosffie.services
 
                                 break;
                             }
-                            case ConstanTiposNovedades.Reinicio:
+                        case ConstanTiposNovedades.Reinicio:
                             {
                                 for (int i = 0; i < programacions.Length; i++)
                                 {
@@ -3745,7 +3746,7 @@ namespace asivamosffie.services
 
                                 string valorTemp = worksheet.Cells[i, k].Text;
 
-                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "").Replace("-","");
+                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "").Replace("-", "");
 
                                 //Valor
                                 temp.Valor = string.IsNullOrEmpty(valorTemp) ? 0 : decimal.Parse(valorTemp);
@@ -4083,10 +4084,10 @@ namespace asivamosffie.services
 
         }
 
-        
-        
-        
-        
+
+
+
+
         public async Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo,
                                                                                 int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                                 int pContratoId, int pProyectoId)
@@ -4121,8 +4122,8 @@ namespace asivamosffie.services
                                                                         .FirstOrDefault();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Include( x => x.NovedadContractualDescripcion )
-                                                                .FirstOrDefault( x => x.NovedadContractualId == pNovedadContractualId);
+                                                                .Include(x => x.NovedadContractualDescripcion)
+                                                                .FirstOrDefault(x => x.NovedadContractualId == pNovedadContractualId);
 
             Proyecto proyectoTemp = CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
 
@@ -4571,7 +4572,7 @@ namespace asivamosffie.services
                     int idMes = 0;
                     for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
                     {
-                          if ( meses.Length < numeroMes)
+                        if (meses.Length < numeroMes)
                         {
                             MesEjecucion mes = new MesEjecucion()
                             {
@@ -4587,7 +4588,7 @@ namespace asivamosffie.services
 
                         numeroMes++;
                     }
-                    
+
 
                     MesEjecucion ultimoMes = _context.MesEjecucion
                                                             .Where(m => m.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
@@ -4942,7 +4943,7 @@ namespace asivamosffie.services
 
         }
 
-        
+
 
         public async Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
         {
@@ -5036,7 +5037,7 @@ namespace asivamosffie.services
                         int i = 1;
                         listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
                         {
-                        //    if ( listaSeguimientos.Where(x => x.NumeroSemana  )
+                            //    if ( listaSeguimientos.Where(x => x.NumeroSemana  )
                             SeguimientoSemanalTemp seguimientoSemanal = new SeguimientoSemanalTemp()
                             {
                                 ContratacionProyectoId = idContratacionproyecto,
