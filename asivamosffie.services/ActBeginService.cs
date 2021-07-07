@@ -228,8 +228,7 @@ namespace asivamosffie.services
                     else if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     {
                         proponenteCodigo = ((int)ConstanCodigoTipoContratacion.Interventoria).ToString();
-                        proponenteNombre = ConstanMessages.Obra;
-
+                        proponenteNombre = ConstanMessages.Obra; 
                     } 
                 }
 
@@ -240,8 +239,7 @@ namespace asivamosffie.services
                 {
                     TipoIdentificacionCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
                     if (TipoIdentificacionCodigoContratista != null)
-                        strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre;
-
+                        strTipoIdentificacionCodigoContratista = TipoIdentificacionCodigoContratista.Nombre; 
                 }
 
                 string strVigencia = ConstanMessages.SinDefinir;
