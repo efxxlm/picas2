@@ -117,10 +117,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                     this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
-                    if ( this.manejoAnticipoRequiere === false || this.manejoAnticipoRequiere === undefined ) {
-                        this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
-                    }
-
                     if ( this.contrato.contratacion.contratacionProyecto.length  > 0 && this.contrato.contratacion.contratacionProyecto.length < 2 ) {
                         this.contratacionProyectoId = this.contrato.contratacion.contratacionProyecto[0].contratacionProyectoId;
                     }
@@ -371,6 +367,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     enabledAcordeonSubFase( tipoAcordeon: string, esPreconstruccion: boolean ) {
         if ( this.solicitudPagoFasePreconstruccion !== undefined || this.solicitudPagoFaseConstruccion !== undefined ) {
             if ( esPreconstruccion === true ) {
+
                 if ( tipoAcordeon === 'criterioDePago' ) {
 
                     let semaforoCriterioPago = 'sin-diligenciar';
@@ -416,6 +413,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                             this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                             return '';
                         }
+                    } else {
+                        return 'en-alerta';
                     }
                 }
 
@@ -450,7 +449,9 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     }
                     if ( this.solicitudPagoFaseConstruccion.registroCompletoCriterio === true ) {
                         this.estadoRegistroCompletoSubAcordeonConstruccion.criterioRegistroCompleto = true;
-                        this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
+                        if ( this.manejoAnticipoRequiere === false || this.manejoAnticipoRequiere === undefined ) {
+                            this.estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto = true;
+                        }
                         semaforoCriterioPago = 'completo';
                     }
 
