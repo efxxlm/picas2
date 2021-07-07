@@ -159,9 +159,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.contrato = data.contrato;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
-      
-      const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-      const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+
+      const mesesPlazoInicial = data.contrato.contratacion.plazoContratacion.plazoMeses;
+      const diasPlazoInicial = data.contrato.contratacion.plazoContratacion.plazoDias;
 
       // calcula el plazo restante
       if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
