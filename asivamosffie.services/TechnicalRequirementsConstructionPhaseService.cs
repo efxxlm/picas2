@@ -60,7 +60,7 @@ namespace asivamosffie.services
 
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
-            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
+            lista.Where(c => c.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToList() // tipo contrato obra
                 .ForEach(c =>
                 {
                     if (c.TieneFaseConstruccion > 0)
@@ -118,9 +118,9 @@ namespace asivamosffie.services
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
             lista.Where(
-                        c => c.TipoContratoCodigo == "1" &&
-                        c.FechaAprobacionRequisitosConstruccionInterventor != null &&
-                        (c.EstadoCodigo != null ? int.Parse(c.EstadoCodigo) : 0) >= 3
+                        c => c.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra
+                          && c.FechaAprobacionRequisitosConstruccionInterventor != null 
+                          &&(c.EstadoCodigo != null ? int.Parse(c.EstadoCodigo) : 0) >= 3
                        )
                 .ToList() // tipo contrato obra
                 .ForEach(c =>
@@ -166,8 +166,7 @@ namespace asivamosffie.services
                                 Existeregistro = c.ExisteRegistro,
                                 c.EstaDevuelto,
                                 c.RegistroCompletoConstruccion,
-                                c.EstadoNombreVerificacion,
-
+                                c.EstadoNombreVerificacion, 
                             });
                         }
                     }
@@ -1337,8 +1336,8 @@ namespace asivamosffie.services
                     cc.ObservacionFlujoInversionSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
                     if (
-                            (TieneFasePreconstruccion(construccionTemp.ContratoId) && cc.TieneObservacionesDiagnosticoSupervisor == null) ||
-                            ((TieneFasePreconstruccion(construccionTemp.ContratoId) && cc.TieneObservacionesDiagnosticoSupervisor == true) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoSupervisor != null ? cc.ObservacionDiagnosticoSupervisor.Observaciones : null)) ||
+                            (TieneFasePreconstruccion(construccionTemp.ProyectoId) && cc.TieneObservacionesDiagnosticoSupervisor == null) ||
+                            ((TieneFasePreconstruccion(construccionTemp.ProyectoId) && cc.TieneObservacionesDiagnosticoSupervisor == true) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoSupervisor != null ? cc.ObservacionDiagnosticoSupervisor.Observaciones : null)) ||
                             cc.TieneObservacionesFlujoInversionSupervisor == null ||
                             (cc.TieneObservacionesFlujoInversionSupervisor == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionSupervisor != null ? cc.ObservacionFlujoInversionSupervisor.Observaciones : null)) ||
                             cc.TieneObservacionesManejoAnticipoSupervisor == null ||
@@ -1614,8 +1613,8 @@ namespace asivamosffie.services
                 cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
                 cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
-                if ((TieneFasePreconstruccion(cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == null) ||
-                     ((TieneFasePreconstruccion(cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == true) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
+                if ((TieneFasePreconstruccion(cc.ProyectoId) && cc.TieneObservacionesDiagnosticoApoyo == null) ||
+                     ((TieneFasePreconstruccion(cc.ProyectoId) && cc.TieneObservacionesDiagnosticoApoyo == true) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
                      cc.TieneObservacionesFlujoInversionSupervisor == null ||
                      (cc.TieneObservacionesFlujoInversionSupervisor == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
                      cc.TieneObservacionesManejoAnticipoSupervisor == null ||
@@ -2207,7 +2206,7 @@ namespace asivamosffie.services
 
                         //Observaciones Diagnostico
 
-                        if (TieneFasePreconstruccion(contratoCambiarEstado.ContratoId) && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (TieneFasePreconstruccion(ContratoConstruccion.ProyectoId) && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             if (ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor == true)
                             {
