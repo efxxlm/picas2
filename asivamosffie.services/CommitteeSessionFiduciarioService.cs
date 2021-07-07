@@ -1461,6 +1461,13 @@ namespace asivamosffie.services
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion);
                         break;
 
+                    case ConstanCodigoVariablesPlaceHolders.PLAZO_MESES:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoMeses.ToString());
+
+                        break;
+                    case ConstanCodigoVariablesPlaceHolders.PLAZO_DIAS:
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoDias.ToString());
+                        break;
 
                 }
             }

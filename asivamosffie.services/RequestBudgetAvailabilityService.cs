@@ -61,7 +61,7 @@ namespace asivamosffie.services
                     Include(x => x.DisponibilidadPresupuestalObservacion).
                     Include(x => x.Contratacion)
                       .ThenInclude(x => x.ContratacionProyecto)
-                          .ThenInclude(x => x.ContratacionProyectoAportante)
+                       .ThenInclude(x => x.ContratacionProyectoAportante)
                     .FirstOrDefaultAsync();
 
                 decimal saldototal = 0;
@@ -539,6 +539,7 @@ namespace asivamosffie.services
                                 blnEstado = true;
                         }
                     }
+                    var plazoContratacion = _context.PlazoContratacion.Find(ListDP.Contratacion.PlazoContratacionId);
                     DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                     {
                         //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
@@ -561,7 +562,7 @@ namespace asivamosffie.services
                         FechaSolicitud = ListDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == ListDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        Plazo = ListDP.Contratacion != null ? ListDP.Contratacion.PlazoContratacion?.PlazoMeses.ToString() + " meses / " + ListDP.Contratacion.PlazoContratacion?.PlazoDias.ToString() + " dias" : "",
+                        Plazo = ListDP.Contratacion != null ? plazoContratacion?.PlazoMeses.ToString() + " meses / " + plazoContratacion?.PlazoDias.ToString() + " dias" : "",
                         CuentaCarta = ListDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación

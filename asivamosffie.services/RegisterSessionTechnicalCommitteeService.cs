@@ -3975,11 +3975,11 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.PLAZO_MESES:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoMeses.ToString());
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoMeses.ToString());
 
                         break;
                     case ConstanCodigoVariablesPlaceHolders.PLAZO_DIAS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoDias.ToString());
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoDias.ToString());
                         break;
 
 
