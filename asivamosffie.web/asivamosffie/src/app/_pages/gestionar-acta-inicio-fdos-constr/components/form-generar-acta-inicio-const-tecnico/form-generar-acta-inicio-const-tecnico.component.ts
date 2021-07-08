@@ -218,9 +218,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     });
     */
     this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data1:any)=>{
-      this.conObervacionesActa = data1.esActa;
-      this.observacionesActaFase2 = data1.observaciones;
-      this.fechaCreacion = data1.fechaCreacion;
+      if ( data1 !== null ) {
+        this.conObervacionesActa = data1.esActa;
+        this.observacionesActaFase2 = data1.observaciones;
+        this.fechaCreacion = data1.fechaCreacion;
+      }
     });
   }
   generarFechaRestante() {
