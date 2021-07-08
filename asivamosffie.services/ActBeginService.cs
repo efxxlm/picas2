@@ -1654,15 +1654,17 @@ namespace asivamosffie.services
 
         public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId, int pUserId)
         {
-           
+            VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
+
             VistaGenerarActaInicioContrato actaInicioInterventoria = new VistaGenerarActaInicioContrato();
             VistaGenerarActaInicioContrato actaInicioObra = new VistaGenerarActaInicioContrato();
 
             actaInicioObra = await getDataActaInicioAsync(pContratoId);
 
-            return await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioObra);
+            actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioObra);
 
-          
+            //return actaInicioObra;
+            return actaInicioConsolidado;
 
         }
 
@@ -1676,7 +1678,6 @@ namespace asivamosffie.services
                                                     .Include(cp => cp.ContratoPoliza)
                                                     .Include(us => us.Interventor)
                                                     .Include(us => us.Supervisor)
-                                                    .Include(us => us.Apoyo)
                                                     .Include(r => r.ContratoConstruccion).ThenInclude(r => r.ConstruccionObservacion)
                                                     .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.PlazoContratacion)
                                                     .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.Contratista)
@@ -1854,8 +1855,8 @@ namespace asivamosffie.services
         {
 
             //interventoria
-            actaInicioObra.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
-            actaInicioObra.NombreRepresentanteContratistaInterventoria = actaInicioObra.NombreRepresentanteContratistaInterventoria;
+            actaInicioObra.NumeroIdentificacionRepresentanteContratistaInterventoria = actaInicioInterventoria.NumeroIdentificacionRepresentanteContratistaInterventoria;// Contratista . numeroIdentificaionRepresentante
+            actaInicioObra.NombreRepresentanteContratistaInterventoria = actaInicioInterventoria.NombreRepresentanteContratistaInterventoria;
 
             //obra
             actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria = actaInicioObra.NumeroIdentificacionRepresentanteContratistaObraInterventoria;
@@ -1864,18 +1865,20 @@ namespace asivamosffie.services
             actaInicioObra.NombreEntidadContratistaObra = actaInicioObra.NombreEntidadContratistaObra;
             actaInicioObra.NombreEntidadContratistaSupervisorInterventoria = actaInicioObra.NombreEntidadContratistaSupervisorInterventoria;
 
-            actaInicioObra.ValorFase1Preconstruccion = formatValor(actaInicioObra.ValorFase1Preconstruccion);
+            actaInicioObra.ValorFase1Preconstruccion = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
 
-            actaInicioObra.Valorfase2ConstruccionObra = formatValor(actaInicioObra.Valorfase2ConstruccionObra);
+            actaInicioObra.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra);
 
-            actaInicioObra.ValorActualContrato = formatValor(actaInicioObra.ValorFase1Preconstruccion);
+            actaInicioObra.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
 
             actaInicioObra.PlazoActualContratoMeses = actaInicioObra.PlazoActualContratoMeses;
 
             actaInicioObra.PlazoActualContratoDias = actaInicioObra.PlazoActualContratoDias;
-           
-            actaInicioObra.Contrato = actaInicioObra.Contrato;
-             
+
+
+
+
+
             return actaInicioObra;
 
         }
