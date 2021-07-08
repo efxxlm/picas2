@@ -13,7 +13,8 @@ import {
   FuenteFinanciacion,
   CuentaBancaria,
   RegistroPresupuestal,
-  VigenciaAporte
+  VigenciaAporte,
+  ControlRecurso
 } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -60,7 +61,7 @@ export class RegistrarComponent implements OnInit {
   fuentesDeRecursosListaArr: any[] = [];
   listaBase: CofinanciacionDocumento[];
   documentoFFIEID = 0;
-
+  constrolRecursos: ControlRecurso[] = [];
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -239,9 +240,14 @@ export class RegistrarComponent implements OnInit {
 
           listaCuentas.push(grupoCuenta);
         });
+        if(ff.controlRecurso){
+          ff.controlRecurso.forEach(c => {
+            this.constrolRecursos.push(c);
+          })         
+        }
 
         this.fuenteRecursosArray.push(grupo);
-      });
+      }); //subscribe
       // Registro Presupuestal
       lista[0].aportante.registroPresupuestal.forEach(rp => {
         const grupoRegistroP = this.createRP();
@@ -307,7 +313,7 @@ export class RegistrarComponent implements OnInit {
         this.commonService.listaDepartamentos(),
         this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId)
         //this.fuenteFinanciacionService.listaFuenteFinanciacion(),
-      ]).subscribe(res => {
+      ]).subscribe(res => {        
         this.nombresAportantes = res[4].filter(x => x.cofinanciacion.registroCompleto == true); //solo muestro los completos
         if (this.idAportante > 0) {
           //funciona porque recien empezo
@@ -359,6 +365,10 @@ export class RegistrarComponent implements OnInit {
       fuenteRecursosArray: this.fb.array([])
     });
 
+    if(this.idAportante !== 0){
+      this.addressForm.controls['cuantosRP'].disable();
+    }
+
     const fuentes = this.addressForm.get('fuenteRecursosArray') as FormArray;
     fuentes.push(this.crearFuente());
   }
@@ -373,9 +383,23 @@ export class RegistrarComponent implements OnInit {
     });
   }
 
+  onAddRP(){
+    const FormNumRP = this.addressForm.get('cuantosRP').value;
+    this.addressForm.get('cuantosRP').setValue(+FormNumRP + 1)
+    this.registrosPresupuestales.push(this.createRP());
+  }
+
+  eliminarRp(numeroRp: string, indexRp: number){
+    if(this.constrolRecursos.some(x => x.registroPresupuestal && x.registroPresupuestal.numeroRp === numeroRp)){
+      this.openDialog('Validacion', 'No es posible eliminar un Rp con una consignación asociada ');
+    }else{
+      this.registrosPresupuestales.removeAt(indexRp);
+    }
+  }
+
   CambioNumeroRP() {
     const FormNumRP = this.addressForm.get('cuantosRP').value;
-    if (FormNumRP > this.registrosPresupuestales.length && FormNumRP < 100) {
+    if (+FormNumRP > this.registrosPresupuestales.length && FormNumRP < 100) {
       while (this.registrosPresupuestales.length < FormNumRP) {
         this.registrosPresupuestales.push(this.createRP());
       }
@@ -709,13 +733,13 @@ export class RegistrarComponent implements OnInit {
               console.log( borrarForm.controls[i]  )
               this.listaFuentesEliminadas.push( borrarForm.controls[i] );
               borrarForm.removeAt(i);
-              this.openDialog('', '<b>La información a sido eliminada correctamente.</b>', false);
+              this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>', false);
             //}
           //});
       }
     } else {
       borrarForm.removeAt(i);
-      this.openDialog('', '<b>La información a sido eliminada correctamente.</b>', false);
+      this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>', false);
     }
   }
 
