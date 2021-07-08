@@ -313,6 +313,12 @@
                     " />
                 </span>
               </div>
+              <button mat-button color="warn" type="button" class="btn-eliminar" 
+              *ngIf="idAportante !== '0'"
+              (click)="onAddRP()">
+                <img src="assets/img/icon/mas.svg" alt="Agregar otro RP" />
+                Agregar otro RP
+              </button>
             </div>
           </div>
         </div>
@@ -469,6 +475,13 @@
                         " />
                     </span>
                   </div>
+                </div>
+                <div class="col-md-4 text-right">
+                  <button mat-button color="warn" *ngIf="true" type="button"
+                    class="btn-eliminar" (click)="eliminarRp(numeroRP.value, i)">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
+                    Eliminar RP
+                  </button>
                 </div>
               </div>
             </div>

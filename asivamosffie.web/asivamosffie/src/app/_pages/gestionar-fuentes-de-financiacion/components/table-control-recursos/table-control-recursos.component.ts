@@ -50,6 +50,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( param => {
       this.idFuente = param['idFuente'];
+      this.dataTable = [];
       this.fuenteFinanciacionServices.getSourceFundingBySourceFunding( this.idFuente ).subscribe( listaFuentes => {
         listaFuentes.forEach(element => {
           this.dataTable.push({ 

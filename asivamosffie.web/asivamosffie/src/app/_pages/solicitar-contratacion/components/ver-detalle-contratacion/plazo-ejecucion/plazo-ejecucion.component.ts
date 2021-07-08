@@ -19,8 +19,8 @@ export class PlazoEjecucionComponent implements OnInit {
   @Output() guardar = new EventEmitter<PlazoContratacion>();
   estaEditando = false;
   termLimitForm = this.fb.group({
-    plazoMeses: [null, [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
-    plazoDias: [null, [Validators.required, Validators.maxLength(2), Validators.min(1), Validators.max(29)]]
+    plazoMeses: [null, [Validators.required, Validators.maxLength(3), Validators.min(0), Validators.max(999)]],
+    plazoDias: [null, [Validators.required, Validators.maxLength(2), Validators.min(0), Validators.max(29)]]
   });
 
   ngOnInit(): void {
@@ -76,8 +76,11 @@ export class PlazoEjecucionComponent implements OnInit {
       plazo = this.monthsField.value * 30;
       plazo = plazo + this.daysField.value;
       
+      if(plazo == 0){
+        this.openDialog('', '<b> El plazo no puede ser menor a 1 día. </b>');
+        return false;
+      }
       if (plazo < this.plazoProyecto) {
-        console.log(this.plazoProyecto, plazo);
         this.openDialog('', '<b> El plazo no puede ser menor al del proyecto. </b>')
         return false;
       }else{

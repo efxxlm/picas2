@@ -39,7 +39,7 @@ export class ControlDeRecursosComponent implements OnInit {
   countResources: any = [];
   rpArray: RegistroPresupuestal[] = [];
   estaEditando = false;
-
+  
   constructor(
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -74,7 +74,7 @@ export class ControlDeRecursosComponent implements OnInit {
     this.activatedRoute.params.subscribe( param => {
       this.idFuente = param['idFuente'];
       this.idControl = param['idControl'];
-
+      this.countResources = []
       forkJoin([
         this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
         this.commonService.listaNombreAportante(),
@@ -160,7 +160,7 @@ export class ControlDeRecursosComponent implements OnInit {
         vigency.value = (vigency? vigency.value: 0) + Number(element.valorConsignacion);
     } 
     if(!vigency && element.registroPresupuestal){
-      this.countResources.push({ value: element.valorConsignacion, numeroRp: element.registroPresupuestal.numeroRp });
+      this.countResources.push({ value: element.valorConsignacion, numeroRp: element.registroPresupuestal.numeroRp, controlRecursoId: element.controlRecursoId });
     }
   }
 
@@ -172,7 +172,7 @@ export class ControlDeRecursosComponent implements OnInit {
         vigency.value = (vigency? vigency.value : 0) + Number(element.valorConsignacion);
     } 
     if(!vigency){
-      this.countResources.push({ value: element.valorConsignacion, vigenciaAporteId: element.vigenciaAporteId });
+      this.countResources.push({ value: element.valorConsignacion, vigenciaAporteId: element.vigenciaAporteId, controlRecursoId: element.controlRecursoId });
     }
   }
 
@@ -192,7 +192,7 @@ export class ControlDeRecursosComponent implements OnInit {
         this.addressForm.get('vigenciaValor').setValue(vigenciaSeleccionada.valorAporte)
       }
       this.addressForm.get('fechaConsignacion').setValue(cr.fechaConsignacion);
-      this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion);
+      this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion, {emitEvent:false} );
       this.changeNombreCuenta();
     })
   }
