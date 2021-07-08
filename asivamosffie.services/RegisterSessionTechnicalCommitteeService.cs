@@ -2536,7 +2536,8 @@ namespace asivamosffie.services
 
             if (estaCompleto)
             {
-                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                //comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Desarrollada_Sin_Acta;
                 comite.EsCompleto = true;
                 _context.SaveChanges();
             }
