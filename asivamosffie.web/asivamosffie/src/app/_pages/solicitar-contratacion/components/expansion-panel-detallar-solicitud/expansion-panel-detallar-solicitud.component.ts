@@ -59,7 +59,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       this.contratacion.plazoContratacion = { plazoMeses: 0, plazoDias: 0 };
     }
 
-    if ((this.contratacion.tipoSolicitudCodigo = '1')) {
+    if ((this.contratacion.tipoSolicitudCodigo == '1')) {
       const plazoDiasObras = this.contratacion.contratacionProyecto.map(
         crtPrj => +crtPrj.proyecto.plazoMesesObra * 30 + Number(crtPrj.proyecto.plazoDiasObra)
       );
