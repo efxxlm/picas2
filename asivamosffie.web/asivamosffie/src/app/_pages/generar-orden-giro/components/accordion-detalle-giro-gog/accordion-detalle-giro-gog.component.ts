@@ -9,9 +9,9 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Input() proyecto: any;
     @Output() estadoSemaforo = new EventEmitter<any>();
     ordenGiro: any;
-    solicitudPagoRegistrarSolicitudPago: any;
     listaSemaforos = {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDescuentosDireccionTecnica: 'sin-diligenciar',
@@ -30,14 +30,14 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+        console.log( this.proyecto );
         let tieneFasePreconstruccion = false;
         let tieneFaseConstruccion = false;
         // Verificar las fases diligenciadas en solicitud de pago;
-        if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
-            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
-                const fasePreconstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
-                const faseConstruccion = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
+        if ( this.proyecto.fases !== undefined ) {
+            if ( this.proyecto.fases.length > 0 ) {
+                const fasePreconstruccion = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
+                const faseConstruccion = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false );
 
                 if ( fasePreconstruccion !== undefined ) {
                     tieneFasePreconstruccion = true;
@@ -118,7 +118,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     }
 
     checkTieneDescuentos( esPreconstruccion: boolean ) {
-        const solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
+        const solicitudPagoFase = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
         
         if ( solicitudPagoFase !== undefined ) {
             if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === true ) {

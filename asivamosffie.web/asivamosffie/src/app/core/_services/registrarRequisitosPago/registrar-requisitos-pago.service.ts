@@ -30,7 +30,7 @@ export class RegistrarRequisitosPagoService {
   }
 
   getProyectosByIdContrato( pContratoId: number ) {
-    return this.http.get( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
+    return this.http.get<any[]>( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
   }
 
   getFormaPagoCodigoByFase( pEsPreconstruccion: string ) {

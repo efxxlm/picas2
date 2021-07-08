@@ -14,9 +14,9 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
+    @Input() solicitudPagoFase: any
     @Input() esPreconstruccion: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
-    solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any[];
     solicitudPagoFaseFactura: any;
     fasePreConstruccionFormaPagoCodigo: any;
@@ -50,10 +50,9 @@ export class DescDirTecnicaGogComponent implements OnInit {
         this.getDireccionTecnica();
     }
 
-    getDireccionTecnica() {
+    async getDireccionTecnica() {
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
-        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.criteriosFase;
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
@@ -65,8 +64,16 @@ export class DescDirTecnicaGogComponent implements OnInit {
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
         */
-        this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo )
-            .subscribe( getCriterioByFormaPagoCodigo => this.listaCriterios = getCriterioByFormaPagoCodigo );
+        this.listaCriterios = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo ).toPromise()
+
+        this.listaCriterios.forEach( value => {
+            const CRITERIO_INDEX = this.solicitudPagoFaseCriterio.findIndex( criterio => value.codigo === criterio.tipoCriterioCodigo )
+
+            if ( CRITERIO_INDEX === -1 ) {
+                this.listaCriterios.splice( CRITERIO_INDEX, 1 )
+            }
+        } )
+
         // Get data de la tabla descuentos
         this.solicitudPagoFaseCriterio.forEach( criterio => this.listData.valorNetoGiro += criterio.valorFacturado );
         this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => {

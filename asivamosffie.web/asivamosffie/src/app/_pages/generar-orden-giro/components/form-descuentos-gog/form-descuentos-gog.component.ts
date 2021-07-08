@@ -78,18 +78,6 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     ngOnChanges( changes: SimpleChanges ): void {
         if ( changes.listaCriterios.currentValue.length > 0 || changes.listaCriterios.currentValue !== undefined ) {
             this.criteriosArray = [ ...changes.listaCriterios.currentValue ];
-
-            if ( this.solicitudPago !== undefined ) {
-                const solicitudPagoFaseCriterio = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio;
-
-                this.criteriosArray.forEach( ( criterio, indexCriterio ) => {
-                    const criterioFind = solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterio.codigo );
-
-                    if ( criterioFind === undefined ) {
-                        this.criteriosArray.splice( indexCriterio, 1 );
-                    }
-                } );
-            }
         }
     }
 

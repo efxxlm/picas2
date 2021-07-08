@@ -21,6 +21,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esPreconstruccion: boolean;
+    @Input() solicitudPagoFase: any;
     @Output() tieneObservacion = new EventEmitter<boolean>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -30,7 +31,6 @@ export class TerceroCausacionGogComponent implements OnInit {
     listaCriterios: Dominio[] = [];
     listaFuenteTipoFinanciacion: Dominio[] = [];
     cantidadAportantes: number;
-    solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any;
     solicitudPagoFaseFactura: any;
     fasePreConstruccionFormaPagoCodigo: any;
@@ -110,8 +110,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
         }
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
-        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.criteriosFase;
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {

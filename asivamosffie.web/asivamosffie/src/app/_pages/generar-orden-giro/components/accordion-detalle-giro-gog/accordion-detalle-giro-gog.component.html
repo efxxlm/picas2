@@ -32,7 +32,11 @@
             <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
     </mat-accordion>
-    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
+    <!--    
+        Para el flujo nuevo de detalles de giro se utiliza el objeto proyecto recibido de form-generar-orden-giro.component.html
+        el cual se hace un recorrido de proyecto.fases para el coontinuar con el flujo de descuentos direccion tecnica y tercero de causacion por fases
+    -->
+    <div *ngFor="let solicitudPagoFase of proyecto.fases; index as i">
         <mat-accordion *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -43,6 +47,7 @@
     
                 <app-desc-dir-tecnica-gog   [solicitudPago]="solicitudPago"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                            [solicitudPagoFase]="solicitudPagoFase"
                                             [esVerDetalle]="esVerDetalle"
                                             (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsDescuentos = true : tieneObsDescuentosConstruccion = true">
                 </app-desc-dir-tecnica-gog>
@@ -58,6 +63,7 @@
     
                 <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
+                                            [solicitudPagoFase]="solicitudPagoFase"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsTercero = true : tieneObsTerceroConstruccion = true">
                 </app-tercero-causacion-gog>

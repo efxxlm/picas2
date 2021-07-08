@@ -59,15 +59,52 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
-                    Detalle del giro
+                <mat-panel-title class="expansion-style--title">
+                    Estrategia de pagos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? proyecto.semaforoDetalle : ''">
+                    Detalle del giro - {{ proyecto.llaveMen }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
+                                            [proyecto]="proyecto"
                                             (estadoSemaforo)="checkSemaforoDetalle( $event )">
             </app-accordion-detalle-giro-gog>
         </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Observaciones
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Soporte orden de giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+        </mat-expansion-panel>
+
+        <!--
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
+                    Detalle del giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+
+        </mat-expansion-panel>
+        -->
     </mat-accordion>
 </section>
