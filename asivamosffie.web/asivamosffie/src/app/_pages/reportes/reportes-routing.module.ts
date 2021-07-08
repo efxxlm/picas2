@@ -20,6 +20,7 @@ import { PreparacionComponent } from './component/proyecto/preparacion/preparaci
 import { SeguimientoTecnicoComponent } from './component/proyecto/seguimiento-tecnico/seguimiento-tecnico.component';
 import { SeguimientoFinancieroComponent } from './component/proyecto/seguimiento-financiero/seguimiento-financiero.component';
 import { EntregaComponent } from './component/proyecto/entrega/entrega.component';
+import { EmbeddedPowerBiComponent } from './component/embedded-power-bi/embedded-power-bi.component';
 
 const routes: Routes = [
   {
@@ -99,8 +100,16 @@ const routes: Routes = [
     component: MapaInteractivoComponent
   },
   {
+    path: 'mapaInteractivo/:id',
+    component: EmbeddedPowerBiComponent
+  },
+  {
     path: 'reportesEstandar',
     component: ReportesEstandarComponent
+  },
+  {
+    path: 'reportesEstandar/:id',
+    component: EmbeddedPowerBiComponent
   }
 ];
 

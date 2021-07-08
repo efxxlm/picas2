@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ReportService } from 'src/app/core/_services/reportService/report.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reportes-estandar',
@@ -10,17 +9,14 @@ import { ReportService } from 'src/app/core/_services/reportService/report.servi
   styleUrls: ['./reportes-estandar.component.scss']
 })
 export class ReportesEstandarComponent implements OnInit {
-  addressForm: FormGroup = this.fb.group({
-    etapa: [null],
-    procesoAcuerdo: [null],
-    reporte: [null],
-    departamento: [null],
-    municipio: [null]
+  addressForm = this.fb.group({
+    etapa: [null, Validators.required],
+    procesoAcuerdo: [null, Validators.required],
+    reporte: [null, Validators.required]
   });
 
   indicadorReporte: any[];
   reporteArray: any[];
-  embedInfo: Object;
 
   etapaArray = [
     {
@@ -156,13 +152,10 @@ export class ReportesEstandarComponent implements OnInit {
   ];
   departamentoArray = [];
   municipioArray = [];
-  constructor(private fb: FormBuilder, public commonService: CommonService, private report: ReportService) {}
+
+  constructor(private fb: FormBuilder, private report: ReportService, private router: Router) {}
 
   ngOnInit(): void {
-    this.commonService.listaDepartamentos().subscribe(response => {
-      this.departamentoArray = response;
-    });
-
     this.getIndicadorReporte();
     this.filtrarIndicadores();
   }
@@ -200,20 +193,7 @@ export class ReportesEstandarComponent implements OnInit {
     });
   }
 
-  getMunicipio(event: MatSelectChange) {
-    this.commonService.listaMunicipiosByIdDepartamento(event.value).subscribe(respuesta => {
-      this.municipioArray = respuesta;
-    });
-  }
-  onSubmit() {}
-
-  getReportEmbedInfoByIndicadorReporteId(id: number) {
-    this.report.getReportEmbedInfoByIndicadorReporteId(id).subscribe(response => {
-      this.embedInfo = response;
-    });
-  }
-
-  selectedOption(id: number) {
-    this.getReportEmbedInfoByIndicadorReporteId(id);
+  showReport() {
+    this.router.navigate(['/reportes/reportesEstandar', this.addressForm.get('reporte').value]);
   }
 }

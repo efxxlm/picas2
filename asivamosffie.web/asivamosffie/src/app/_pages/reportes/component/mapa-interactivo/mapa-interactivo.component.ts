@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ReportService } from 'src/app/core/_services/reportService/report.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mapa-interactivo',
@@ -9,13 +10,12 @@ import { ReportService } from 'src/app/core/_services/reportService/report.servi
 })
 export class MapaInteractivoComponent implements OnInit {
   addressForm = this.fb.group({
-    quieroVer: [null]
+    quieroVer: [null, Validators.required]
   });
-  myFilter = new FormControl();
+
   indicadorReporte: any[];
-  embedInfo: Object;
   //estaEditando = false;
-  constructor(private fb: FormBuilder, private report: ReportService) {}
+  constructor(private fb: FormBuilder, private report: ReportService, private router: Router) {}
 
   ngOnInit(): void {
     this.getIndicadorReporte();
@@ -27,19 +27,7 @@ export class MapaInteractivoComponent implements OnInit {
     });
   }
 
-  getReportEmbedInfo() {
-    this.report.getReportEmbedInfo().subscribe(response => {
-      console.log(response);
-    });
-  }
-
-  getReportEmbedInfoByIndicadorReporteId(id: number) {
-    this.report.getReportEmbedInfoByIndicadorReporteId(id).subscribe(response => {
-      this.embedInfo = response;
-    });
-  }
-
-  selectedOption(id: number) {
-    this.getReportEmbedInfoByIndicadorReporteId(id);
+  showReport() {
+    this.router.navigate(['/reportes/mapaInteractivo', this.addressForm.get('quieroVer').value]);
   }
 }
