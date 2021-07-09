@@ -37,5 +37,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool MostrarBitacora { get; set; }
+        [NotMapped]
+        public bool CumpleCondicionesTai { get; set; }
     }
 }

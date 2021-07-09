@@ -5024,5 +5024,56 @@ namespace asivamosffie.services
             }
         }
 
+        public bool ValidarCumpleTaiContratista(int pContratoId)
+        {
+            //Nueva restricción control de cambios
+            bool cumpleCondicionesTai = false;
+
+            ControversiaContractual controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == pContratoId && r.Eliminado != true).FirstOrDefault();
+
+            if (controversiaContractual != null)
+            {
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
+                            .FirstOrDefault();
+
+                if (sesionComiteSolicitud != null)
+                {
+                    if (sesionComiteSolicitud.ComiteTecnicoFiduciarioId != null)
+                    {
+                        ComiteTecnico comiteFiduciario = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoFiduciarioId);
+
+                        if (comiteFiduciario != null)
+                        {
+                            //cumple la primera condición de ser aprobada por el comite fiduciario
+                            if (comiteFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
+                            {
+                                //validar que esa controversia tenga actuaciones finalizadas y con actuación Remisión de Comunicación de decisión de TAI por Alianza Fiduciaria al contratista.
+                                ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Where(
+                                    r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId
+                                    && r.Eliminado != true
+                                    && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada
+                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalcontratista).FirstOrDefault();
+
+                                if (controversiaActuacion != null)
+                                {
+                                    if (DateTime.Now > controversiaActuacion.FechaActuacion)
+                                    {
+                                        cumpleCondicionesTai = true;
+                                    }
+                                    else
+                                    {
+                                        cumpleCondicionesTai = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return cumpleCondicionesTai;
+        }
+
     }
 }

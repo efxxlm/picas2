@@ -1,15 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Constants;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-using System.Globalization;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -19,23 +21,26 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
         private IHostingEnvironment _environment;
+        private readonly IContractualControversy _contractualControversy;
 
-        public DailyFollowUpService(devAsiVamosFFIEContext context, 
-                                    ICommonService commonService, 
+        public DailyFollowUpService(devAsiVamosFFIEContext context,
+                                    ICommonService commonService,
                                     ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService,
-                                    IHostingEnvironment hostingEnvironment)
+                                    IHostingEnvironment hostingEnvironment,
+                                    IContractualControversy contractualControversy)
         {
             _context = context;
             _commonService = commonService;
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
             _environment = hostingEnvironment;
+            _contractualControversy = contractualControversy;
         }
 
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp(int usuarioId)
         {
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
                                                                         .Where(
-                                                                                r => r.FechaActaInicioFase2 <= DateTime.Now && 
+                                                                                r => r.FechaActaInicioFase2 <= DateTime.Now &&
                                                                                 r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() &&
                                                                                 r.InterventorId == usuarioId
                                                                               )
@@ -48,6 +53,8 @@ namespace asivamosffie.services
                                                                        s.Eliminado != true)
                                                                 .OrderByDescending(r => r.FechaSeguimiento)
                                                                 .ToList();
+                //Nueva restricción control de cambios
+                p.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(p.ContratoId);
 
                 if (listaSeguimientoDiario.Count() > 0)
                 {
@@ -71,10 +78,11 @@ namespace asivamosffie.services
                     }
 
                     if (listaSeguimientoDiario
-                            .Where( x => x.EstadoCodigo != null &&
-                                    x.EstadoCodigo != "0" &&
-                                    x.EstadoCodigo != ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro )
-                            .Count() > 0 ){
+                            .Where(x => x.EstadoCodigo != null &&
+                                   x.EstadoCodigo != "0" &&
+                                   x.EstadoCodigo != ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro)
+                            .Count() > 0)
+                    {
                         p.MostrarBitacora = true;
                     }
 
@@ -89,7 +97,7 @@ namespace asivamosffie.services
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && 
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now &&
                                                                                r.ApoyoId == usuarioId &&
                                                                                r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()
                                                                                )
@@ -171,7 +179,7 @@ namespace asivamosffie.services
             List<Dominio> listaParametricas = _context.Dominio.Where(d => d.Activo == true).ToList();
 
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && 
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now &&
                                                                                r.SupervisorId == usuarioId &&
                                                                                r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                                                                         .ToListAsync();
@@ -192,15 +200,15 @@ namespace asivamosffie.services
                                                                 .FirstOrDefault();
 
                 //Estados mostrar ultimo sin editar
-               SeguimientoDiario seguimientoDiarioEnviado = _context.SeguimientoDiario
-                                                               .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
-                                                                      s.Eliminado != true &&
-                                                                          (
-                                                                              s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas ||
-                                                                              s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.Aprobado
-                                                                          )
-                                                                       )
-                                                               .OrderByDescending(r => r.FechaSeguimiento).FirstOrDefault();
+                SeguimientoDiario seguimientoDiarioEnviado = _context.SeguimientoDiario
+                                                                .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
+                                                                       s.Eliminado != true &&
+                                                                           (
+                                                                               s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas ||
+                                                                               s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.Aprobado
+                                                                           )
+                                                                        )
+                                                                .OrderByDescending(r => r.FechaSeguimiento).FirstOrDefault();
 
 
                 if (seguimientoDiario != null)
@@ -748,7 +756,7 @@ namespace asivamosffie.services
                 }
             }
 
-            
+
 
 
 
@@ -982,7 +990,7 @@ namespace asivamosffie.services
             }
         }
 
-        private async void EnviarNotificacionAApoyo( SeguimientoDiario seguimientoDiario )
+        private async void EnviarNotificacionAApoyo(SeguimientoDiario seguimientoDiario)
         {
             VProyectosXcontrato proyecto = _context.VProyectosXcontrato
                                                         .Where(x => x.ContratacionProyectoId == seguimientoDiario.ContratacionProyectoId)
@@ -1004,12 +1012,12 @@ namespace asivamosffie.services
                                                       .Replace("[SEDE]", proyecto.Sede)
                                                       .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
                                                       .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
-;
+            ;
             //List<Usuario> ListUsuarios = await _commonService.GetUsuariosByPerfil((int)EnumeratorPerfil.Miembros_Comite);
             List<string> listaMails = new List<string> { contrato?.Apoyo?.Email };
-            _commonService.EnviarCorreo(listaMails ,  template, "Seguimiento Diario Enviado");
+            _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Enviado");
 
-            
+
         }
 
         private async void EnviarNotificacionASupervisor(SeguimientoDiario seguimientoDiario)
@@ -1064,7 +1072,7 @@ namespace asivamosffie.services
                                                       .Replace("[SEDE]", proyecto.Sede)
                                                       .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
                                                       .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
-            
+
             List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
             _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Validado");
 
@@ -1093,7 +1101,7 @@ namespace asivamosffie.services
                                                       .Replace("[SEDE]", proyecto.Sede)
                                                       .Replace("[TIPO_INTERVENCION]", proyecto.TipoIntervencion)
                                                       .Replace("[FECHA_REPORTE]", seguimientoDiario.FechaSeguimiento.ToString("dd/MM/yyyy"));
-            
+
 
             List<string> listaMails = new List<string> { contrato?.Interventor?.Email };
             _commonService.EnviarCorreo(listaMails, template, "Seguimiento Diario Devuelto");
