@@ -26,5 +26,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal);
 
+        Task<Respuesta> DeleteBudgetRegister(IEnumerable<int> registros, string author);
+
     }
 }

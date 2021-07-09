@@ -64,6 +64,10 @@ export class FuenteFinanciacionService {
     return this.http.post(`${environment.apiUrl}/CofinancingContributor/CreateEditBudgetRecords/`, registroPresupuestal);
   }
 
+  deleteBudgetRecords( registros: number[] ){
+    return this.http.put(`${environment.apiUrl}/CofinancingContributor/RegistroPresupuestal/`, registros);
+  }
+
   eliminarFuentesFinanciacion( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
   }
