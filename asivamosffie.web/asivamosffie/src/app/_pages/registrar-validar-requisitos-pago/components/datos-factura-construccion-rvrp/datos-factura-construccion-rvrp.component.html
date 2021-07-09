@@ -48,11 +48,42 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
+                <label  class="label-left"
+                        for="tipoDocumento"
+                        [ngClass]="{ 'color-secondaryColor': (addressForm.get('tipoDocumento').invalid && addressForm.get('tipoDocumento').touched) || (addressForm.get('tipoDocumento').invalid && estaEditando) }">
+                        Tipo de documento
+                </label>
+              </div>
+              <div class="col">
+                  <mat-form-field class="select-width">
+                      <mat-select formControlName="tipoDocumento">
+                        <mat-option *ngFor="let documento of listaTipoDocumento" [value]="documento.codigo">
+                          {{ documento.nombre }}
+                        </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+                <span class="icon-incompleto">
+                  <img  class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="(addressForm.get('tipoDocumento').invalid && addressForm.get('tipoDocumento').touched) || (addressForm.get('tipoDocumento').invalid && estaEditando)">
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
                 <label for="numeroFactura" class="label-left" [ngClass]="{
                   'color-secondaryColor':
                     (addressForm.get('numeroFactura').invalid && addressForm.get('numeroFactura').touched) ||
                     (addressForm.get('numeroFactura').invalid && estaEditando)
-                }">Número de factura</label>
+                }">Número de documento</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -79,7 +110,7 @@
                   'color-secondaryColor':
                     (addressForm.get('fechaFactura').invalid && addressForm.get('fechaFactura').touched) ||
                     (addressForm.get('fechaFactura').invalid && estaEditando)
-                }">Fecha de factura</label>
+                }">Fecha de documento</label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">

@@ -22,6 +22,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
   @Input() esPreconstruccion = true;
   @Output() semaforoObservacion = new EventEmitter<boolean>();
   addressForm = this.fb.group({
+    tipoDocumento: [ null, Validators.required ],
     numeroFactura: [null, Validators.required],
     fechaFactura: [null, Validators.required],
     numeroDescuentos: [''],
@@ -29,6 +30,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     aplicaDescuento: [null],
     descuentos: this.fb.array([])
   });
+  listaTipoDocumento: Dominio[] = [
+    { nombre: 'Factura', codigo: '1' },
+    { nombre: 'Cuenta de cobro', codigo: '2' }
+  ];
   valorFacturado = 0;
   tiposDescuentoArray: Dominio[] = [];
   listaTipoDescuento: Dominio[] = [];
