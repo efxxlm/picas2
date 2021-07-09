@@ -1424,7 +1424,7 @@ namespace asivamosffie.services
                     controversiaActuacion.FechaActuacion == null ||
                     string.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo) ||
                     string.IsNullOrEmpty(controversiaActuacion.ProximaActuacionCodigo) ||
-                    (controversiaActuacion.ProximaActuacionCodigo == "4" && string.IsNullOrEmpty(controversiaActuacion.ProximaActuacionOtro)) ||
+                    (controversiaActuacion.ProximaActuacionCodigo == ConstanCodigoActuacionAdelantada.Otra && string.IsNullOrEmpty(controversiaActuacion.ProximaActuacionOtro)) ||
                     controversiaActuacion.CantDiasVencimiento == null ||
                     controversiaActuacion.FechaVencimiento == null ||
                     controversiaActuacion.EsRequiereContratista == null ||
