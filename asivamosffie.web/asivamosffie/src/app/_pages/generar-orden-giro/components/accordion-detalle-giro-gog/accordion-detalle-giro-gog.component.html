@@ -21,17 +21,22 @@
             <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoEstrategiaPago : ''">
-                    Estrategia de pagos
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <!--
+        Se comenta el acordeon Estrategia de pagos por cambios de orden de giro a flujo multiproyecto 08/07/2021
+        Los acordeones comentados suben al componente papa form-generar-orden-giro.component.html
 
-            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
-        </mat-expansion-panel>
-    </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoEstrategiaPago : ''">
+                        Estrategia de pagos
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
+            </mat-expansion-panel>
+        </mat-accordion>
+    -->
     <!--    
         Para el flujo nuevo de detalles de giro se utiliza el objeto proyecto recibido de form-generar-orden-giro.component.html
         el cual se hace un recorrido de proyecto.fases para el coontinuar con el flujo de descuentos direccion tecnica y tercero de causacion por fases
@@ -88,26 +93,32 @@
             </app-form-origen>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoObservacion : ''">
-                    Observaciones
-                </mat-panel-title>
-            </mat-expansion-panel-header>
 
-            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-observaciones-orden-giro-gog>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoSoporteUrl : ''">
-                    Soporte de orden de giro
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <!--
+        Se comentan los acordeones Observaciones y Soporte de orden de giro por cambios de orden de giro a flujo multiproyecto 08/07/2021
+        Los acordeones comentados suben al componente papa form-generar-orden-giro.component.html
 
-            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoSoporteUrl = 'en-proceso'"></app-soporte-orden-giro-gog>
-        </mat-expansion-panel>
-    </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoObservacion : ''">
+                        Observaciones
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoObservacion = 'en-proceso'"></app-observaciones-orden-giro-gog>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? listaSemaforos.semaforoSoporteUrl : ''">
+                        Soporte de orden de giro
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="listaSemaforos.semaforoSoporteUrl = 'en-proceso'"></app-soporte-orden-giro-gog>
+            </mat-expansion-panel>
+        </mat-accordion>
+    -->
 </section>

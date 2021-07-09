@@ -46,7 +46,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoInfoGeneral : ''">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? estadoSemaforos.acordeonInformacionGeneral : ''">
                     Información general
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -59,10 +59,12 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.acordeonEstrategiaPago">
                     Estrategia de pagos
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
+            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="estadoSemaforos.acordeonEstrategiaPago = 'en-proceso'"></app-form-estrateg-pagos-gog>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
@@ -81,18 +83,22 @@
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.acordeonObservacion">
                     Observaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
+            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-observaciones-orden-giro-gog>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.acordeonSoporteOrdenGiro">
                     Soporte orden de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
+
+            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-soporte-orden-giro-gog>
         </mat-expansion-panel>
 
         <!--

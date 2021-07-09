@@ -16,9 +16,15 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
     ordenGiroTercero: any;
     esRegistroNuevo: boolean;
     esVerDetalle = false;
-    semaforoInfoGeneral = 'sin-diligenciar';
+    ordenGiro: any;
     modalidadContratoArray: Dominio[] = [];
     listaDetalleGiro: { contratacionProyectoId: number, llaveMen: string, fases: any[], semaforoDetalle: string }[] = [];
+    estadoSemaforos = {
+        acordeonInformacionGeneral: 'sin-diligenciar',
+        acordeonEstrategiaPago: 'sin-diligenciar',
+        acordeonObservacion: 'sin-diligenciar',
+        acordeonSoporteOrdenGiro: 'sin-diligenciar'
+    }
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -99,6 +105,7 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                             }
                         } )
 
+                        // Get semaforo acordeones
                         // Get semaforo informacion general
                         if ( this.solicitudPago.ordenGiro !== undefined ) {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
@@ -110,10 +117,10 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                                             const ordenGiroTerceroTransferenciaElectronica = this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica[0];
                 
                                             if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === false ) {
-                                                this.semaforoInfoGeneral = 'en-proceso';
+                                                this.estadoSemaforos.acordeonInformacionGeneral = 'en-proceso';
                                             }
                                             if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === true ) {
-                                                this.semaforoInfoGeneral = 'completo';
+                                                this.estadoSemaforos.acordeonInformacionGeneral = 'completo';
                                             }
                                         }
                                     }
@@ -123,10 +130,60 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                                             const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
                 
                                             if ( ordenGiroTerceroChequeGerencia.registroCompleto === false ) {
-                                                this.semaforoInfoGeneral = 'en-proceso';
+                                                this.estadoSemaforos.acordeonInformacionGeneral = 'en-proceso';
                                             }
                                             if ( ordenGiroTerceroChequeGerencia.registroCompleto === true ) {
-                                                this.semaforoInfoGeneral = 'completo';
+                                                this.estadoSemaforos.acordeonInformacionGeneral = 'completo';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // Get semaforo estrategia de pago, observaciones y soporte de orden de giro
+                        if ( this.solicitudPago.ordenGiro !== undefined ) {
+                            this.ordenGiro = this.solicitudPago.ordenGiro;
+
+                            if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
+                                if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
+                                    const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
+
+                                    // Get semaforo estrategia de pago
+                                    if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
+                                        if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago.length > 0 ) {
+                                            const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago[0];
+
+                                            if ( ordenGiroDetalleEstrategiaPago.registroCompleto === false ) {
+                                                this.estadoSemaforos.acordeonEstrategiaPago = 'en-proceso';
+                                            }
+                                            if ( ordenGiroDetalleEstrategiaPago.registroCompleto === true ) {
+                                                this.estadoSemaforos.acordeonEstrategiaPago = 'completo';
+                                            }
+                                        }
+                                    }
+                                    // Get semaforo observaciones
+                                    if ( ordenGiroDetalle.ordenGiroDetalleObservacion !== undefined ) {
+                                        if ( ordenGiroDetalle.ordenGiroDetalleObservacion.length > 0 ) {
+                                            const ordenGiroObservacion = ordenGiroDetalle.ordenGiroDetalleObservacion[0];
+
+                                            if ( ordenGiroObservacion.registroCompleto === false ) {
+                                                this.estadoSemaforos.acordeonObservacion = 'en-proceso';
+                                            }
+                                            if ( ordenGiroObservacion.registroCompleto === true ) {
+                                                this.estadoSemaforos.acordeonObservacion = 'completo';
+                                            }
+                                        }
+                                    }
+                                    // Get semaforo soporte url
+                                    if ( ordenGiroDetalle.ordenGiroSoporte !== undefined ) {
+                                        if ( ordenGiroDetalle.ordenGiroSoporte.length > 0 ) {
+                                            const ordenGiroSoporte = ordenGiroDetalle.ordenGiroSoporte[0];
+
+                                            if ( ordenGiroSoporte.registroCompleto === false ) {
+                                                this.estadoSemaforos.acordeonSoporteOrdenGiro = 'en-proceso';
+                                            }
+                                            if ( ordenGiroSoporte.registroCompleto === true ) {
+                                                this.estadoSemaforos.acordeonSoporteOrdenGiro = 'completo';
                                             }
                                         }
                                     }
