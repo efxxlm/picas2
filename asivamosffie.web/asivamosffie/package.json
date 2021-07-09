@@ -12,8 +12,8 @@
     "pruebas": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pru",
     "preproduccion": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration=pre",
     "pro": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=pro",
-    "stag": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=stag --proxy-config proxy.conf.json",
-    "prod": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --prod --proxy-config proxy.conf.json"
+    "stag": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build -c=stag",
+    "prod": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --prod"
   },
   "private": true,
   "dependencies": {
