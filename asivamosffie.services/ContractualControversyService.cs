@@ -288,7 +288,7 @@ namespace asivamosffie.services
             controversiaActuacion.TipoControversia = vTipoControversiaCodigo == null ? "" : vTipoControversiaCodigo.Nombre;
             controversiaActuacion.SeguimientoActuacionDerivada = controversiaActuacion.SeguimientoActuacionDerivada.Where(x => !(bool)x.Eliminado).ToList();
             controversiaActuacion.EstadoActuacionReclamacionString = estado == null ? "" : estado.Nombre;
-            controversiaActuacion.ProximaActuacionCodigoString = !String.IsNullOrEmpty(controversiaActuacion.ProximaActuacionCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida) : String.Empty;
+            controversiaActuacion.ProximaActuacionCodigoString = !String.IsNullOrEmpty(controversiaActuacion.ProximaActuacionCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI) : String.Empty;
 
             foreach (var cont in controversiaActuacion.SeguimientoActuacionDerivada)
             {
