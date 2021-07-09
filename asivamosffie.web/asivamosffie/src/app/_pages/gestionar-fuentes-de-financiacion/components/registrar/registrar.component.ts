@@ -31,6 +31,7 @@ import { Aportante } from 'src/app/core/_services/project/project.service';
 export class RegistrarComponent implements OnInit {
 
   listaVigenciasEliminadas=[];
+  listaRpEliminados=[];
   listaFuentesEliminadas=[];
   estaEditando = false;
 
@@ -393,6 +394,10 @@ export class RegistrarComponent implements OnInit {
     if(this.constrolRecursos.some(x => x.registroPresupuestal && x.registroPresupuestal.numeroRp === numeroRp)){
       this.openDialog('Validacion', 'No es posible eliminar un Rp con una consignación asociada ');
     }else{
+      const rp: RegistroPresupuestal = this.registrosPresupuestales.controls[indexRp].value;
+      if(rp.registroPresupuestalId){
+      this.listaRpEliminados.push(rp.registroPresupuestalId)
+      }
       this.registrosPresupuestales.removeAt(indexRp);
     }
   }
@@ -970,6 +975,19 @@ export class RegistrarComponent implements OnInit {
         return false;
       }
     }
+    let valorTotalRps = 0;
+    this.registrosPresupuestales.value.forEach(element => {
+      valorTotalRps = valorTotalRps + element.valorRP
+    });
+   
+    if(!this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()) && valorTotalRps > valortotla ){
+      this.openDialog(
+        '',
+        '<b>Los valores RP son mayores que el valor total del aporte de la fuente</b>'
+      );
+      return false;
+    }
+
 
     if (bitValorok) {
       // guardo primero los RP
@@ -993,6 +1011,9 @@ export class RegistrarComponent implements OnInit {
           }
         });
       });
+      if(this.listaRpEliminados.length > 0){
+      this.fuenteFinanciacionService.deleteBudgetRecords(this.listaRpEliminados).subscribe()
+      }
       this.data = lista;
     }
 
