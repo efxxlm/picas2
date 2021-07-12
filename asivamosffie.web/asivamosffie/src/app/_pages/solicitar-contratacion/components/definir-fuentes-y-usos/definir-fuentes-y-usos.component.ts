@@ -152,16 +152,18 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
               const valorAportanteProyecto = esInterventoria === true ? apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorInterventoria : apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorObra;
-
+              let listaFuenteFinanciacion = [];
               apo[ 'cofinanciacionAportante' ].fuenteFinanciacion.forEach( fuente => {
                 const fuenteFind = listaFuenteTipoFinanciacion.find( fuenteTipo => fuenteTipo.codigo === fuente.fuenteRecursosCodigo );
-                
+
                 if ( fuenteFind !== undefined ) {
                   fuente.nombreFuente = fuenteFind.nombre;
                 }
+                if(fuente?.eliminado !== true && fuente?.eliminado !== 'undefined'){
+                  listaFuenteFinanciacion.push(fuente);
+                }
               } )
-
-              grupoAportante.get( 'listaFuenteFinanciacion' ).setValue( apo[ 'cofinanciacionAportante' ].fuenteFinanciacion );
+              grupoAportante.get( 'listaFuenteFinanciacion' ).setValue(listaFuenteFinanciacion);
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
               if (apo.valorAporte !== 0) {
@@ -191,7 +193,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
                   if ( faseSeleccionada !== undefined ) {
                     const indexFase = listaFase.findIndex( fase => fase === faseSeleccionada );
-                    
+
                     if ( indexFase !== -1 ) {
                       listaFase.splice( indexFase, 1 );
                     }
@@ -401,7 +403,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           if (value === true) {
             const listFase: Dominio[] = this.aportantes.controls[ j ].get( 'fasesSelect' ).value;
             const faseSeleccionada = this.componentes( j ).controls[ i ].get( 'fase' ).value;
-            
+
             if ( faseSeleccionada !== null ) {
               listFase.push( faseSeleccionada );
             }
