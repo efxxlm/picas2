@@ -8,6 +8,7 @@
         public const string Con_Acta_De_Sesion_Enviada = "4";
         public const string Con_Acta_De_Sesion_Aprobada = "5";
         public const string Aplazada = "6";
-        public const string Fallida = "7"; 
+        public const string Fallida = "7";
+        public const string Con_Acta_De_Sesion_Devuelta = "8";
     }
 }

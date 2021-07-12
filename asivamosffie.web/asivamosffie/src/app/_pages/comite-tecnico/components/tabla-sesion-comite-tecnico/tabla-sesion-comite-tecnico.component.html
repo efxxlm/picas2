@@ -44,7 +44,7 @@
                 >
                   Ver detalle
                 </a>
-                <a *ngIf="element.estadoComiteCodigo == this.estadosComite.desarrolladaSinActa"
+                <a *ngIf="element.estadoComiteCodigo == this.estadosComite.desarrolladaSinActa || element.estadoComiteCodigo == this.estadosComite.conActaDeSesionDevulta"
                   [routerLink]="['verDetalleEditarComiteTecnico', element.id]"
                   mat-raised-button color="accent"
                   class="btn-table"

@@ -598,6 +598,10 @@ namespace asivamosffie.services
                 if ((bool)ValidarTodosVotacion(comiteTecnicoOld))
                 {
                     comiteTecnicoOld.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnicoOld);
+                    if (comiteTecnicoOld.EstadoActaCodigo == ConstantCodigoActas.Devuelta)
+                    {
+                        comiteTecnicoOld.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Devuelta;
+                    }
                     comiteTecnicoOld.EsCompleto = false;
 
                     foreach (var SesionComentarios in comiteTecnicoOld.SesionComentario)

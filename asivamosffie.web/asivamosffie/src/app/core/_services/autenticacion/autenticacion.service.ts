@@ -26,7 +26,7 @@ export class AutenticacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/autenticacion/IniciarSesion`, usuario).
       pipe(
         map(user => {
-          // login successful if there's a jwt token in the response                
+          // login successful if there's a jwt token in the response
           // console.log(user.data);
 
           if (user && user.token) {
@@ -54,7 +54,7 @@ export class AutenticacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/autenticacion/IniciarSesion`, null).
       pipe(
         map(user => {
-          // login successful if there's a jwt token in the response                
+          // login successful if there's a jwt token in the response
           console.log(user.data);
 
           if (user && user.token) {
@@ -159,6 +159,8 @@ export interface Usuario {
   rol?: any[];
   primerNombre?: string;
   primerApellido?: string;
+  segundoNombre ?: string;
+  segundoApellido?: string;
 }
 
 export interface Respuesta {

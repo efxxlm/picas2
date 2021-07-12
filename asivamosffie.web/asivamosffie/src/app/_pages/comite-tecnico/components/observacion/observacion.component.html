@@ -40,7 +40,7 @@
     </table>
   </div>
 
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center" *ngIf="verDetalle === false">
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -54,7 +54,7 @@
     </span>
   </div>
 
-  <div class="text-center">
+  <div class="text-center" *ngIf="verDetalle === false">
     <button mat-button color="warn" class="btn-guardar" (click)="enviarObservacion()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>

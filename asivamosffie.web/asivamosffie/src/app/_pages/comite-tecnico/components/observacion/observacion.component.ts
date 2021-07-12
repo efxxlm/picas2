@@ -23,6 +23,7 @@ export class ObservacionComponent implements OnInit {
   contratacionId: number;
   listaObservaciones: ContratacionObservacion[] = []
   contratacionObservacion: ContratacionObservacion[] = []
+  verDetalle: boolean = false;
 
   editorStyle = {
     height: '45px'
@@ -57,14 +58,15 @@ export class ObservacionComponent implements OnInit {
       this.contratacionProyectoId = this.data.contratacionProyectoid;
       this.contratacionId = this.data.contratacionid;
       this.contratacionObservacion = this.data.contratacionObservacion;
-
+      this.verDetalle = this.data.verDetalle;
+      console.log("data: ",this.data);
       this.technicalCommitteSessionService
         .getSesionSolicitudObservacionProyecto(this.data.idsesionComiteSolicitud, this.data.contratacionProyectoid)
         .subscribe(observaciones => {
-          
+
           this.listaObservaciones = observaciones.filter( o => o.sesionParticipante.comiteTecnicoId == this.comiteTecnicoId );
           console.log( this.listaObservaciones )
-          
+
           this.contratacionObservacion = this.contratacionObservacion.filter( o => o.comiteTecnicoId == this.comiteTecnicoId );
 
           if (this.contratacionObservacion && this.contratacionObservacion.length > 0) {
@@ -135,7 +137,7 @@ export class ObservacionComponent implements OnInit {
           proyectoId: this.data.proyectoId,
           estadoProyectoObraCodigo: this.data.estadoProyectoObraCodigo,
           estadoProyectoInterventoriaCodigo: this.data.estadoProyectoInterventoriaCodigo,
-          
+
         }
       }
 

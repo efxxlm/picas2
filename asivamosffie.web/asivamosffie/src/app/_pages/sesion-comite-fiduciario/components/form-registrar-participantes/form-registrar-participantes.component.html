@@ -25,7 +25,10 @@
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
             <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
-              {{ miembro.primerNombre }} {{ miembro.primerApellido }}
+              {{ miembro['primerNombre'] }}
+              {{ miembro['segundoNombre'] ? miembro['segundoNombre'] : '' }}
+              {{ miembro['primerApellido'] }}
+              {{ miembro['segundoApellido'] ? miembro['segundoApellido'] : '' }}
             </mat-option>
           </mat-select>
         </mat-form-field>

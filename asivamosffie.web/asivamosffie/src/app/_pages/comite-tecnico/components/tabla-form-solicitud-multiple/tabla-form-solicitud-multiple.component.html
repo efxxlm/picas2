@@ -144,7 +144,8 @@
               element.contratacionObservacion,
               element.proyecto.proyectoId,
               element.proyecto.estadoProyectoObraCodigo,
-              0
+              0,
+              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false
             )
           "
           *ngIf="contratacion.tipoSolicitudCodigo === '1'"
@@ -152,8 +153,7 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoObraCodigo == null ||
-            element.proyecto.estadoProyectoObraCodigo == estadosProyecto.AprobadoComiteTecnico
+            element.proyecto.estadoProyectoObraCodigo == null
           "
         >
           Observaciones
@@ -168,7 +168,8 @@
               element.contratacionObservacion,
               element.proyecto.proyectoId,
               0,
-              element.proyecto.estadoProyectoInterventoriaCodigo
+              element.proyecto.estadoProyectoInterventoriaCodigo,
+              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false
             )
           "
           *ngIf="contratacion.tipoSolicitudCodigo === '2'"
@@ -176,8 +177,7 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoInterventoriaCodigo == null ||
-            element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico
+            element.proyecto.estadoProyectoInterventoriaCodigo == null
           "
         >
           Observaciones

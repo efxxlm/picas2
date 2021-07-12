@@ -382,7 +382,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.commonService.listaUsuarios().then(respuesta => {
       this.listaMiembros.forEach(m => {
         let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
-        m.nombre = `${usuario.primerNombre} ${usuario.primerApellido}`;
+        m.nombre = `${usuario.primerNombre} ${usuario.segundoNombre} ${usuario.primerApellido} ${usuario.segundoApellido}`
       });
 
       this.sesionComiteSolicitud.sesionSolicitudCompromiso.forEach(c => {
