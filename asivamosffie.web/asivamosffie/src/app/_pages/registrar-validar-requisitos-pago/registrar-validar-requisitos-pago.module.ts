@@ -31,11 +31,14 @@ import { FormListachequeoExpensasComponent } from './components/form-listacheque
 import { DatosFacturaConstruccionRvrpComponent } from './components/datos-factura-construccion-rvrp/datos-factura-construccion-rvrp.component';
 import { VerDetalleEditarExpensasComponent } from './components/ver-detalle-editar-expensas/ver-detalle-editar-expensas.component';
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
+import { FormDetalleFacturaProyectosComponent } from './components/form-detalle-factura-proyectos/form-detalle-factura-proyectos.component';
+import { FormProyectoComponent } from './components/form-proyecto/form-proyecto.component';
+import { FormDescripcionFacturaComponent } from './components/form-descripcion-factura/form-descripcion-factura.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent, FormAmortizacionAnticipoComponent, DialogSubsanacionComponent, FormSolicitudExpensasComponent, FormSolicitudOtrosCostosserviciosComponent, FormListachequeoExpensasComponent, DatosFacturaConstruccionRvrpComponent, VerDetalleEditarExpensasComponent, VerDetalleExpensasComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent, FormAmortizacionAnticipoComponent, DialogSubsanacionComponent, FormSolicitudExpensasComponent, FormSolicitudOtrosCostosserviciosComponent, FormListachequeoExpensasComponent, DatosFacturaConstruccionRvrpComponent, VerDetalleEditarExpensasComponent, VerDetalleExpensasComponent, FormDetalleFacturaProyectosComponent, FormProyectoComponent, FormDescripcionFacturaComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

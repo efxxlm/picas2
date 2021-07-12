@@ -24,9 +24,7 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label  class="label-left">
-                                    Saldo a amortizar
-                                </label>
+                                <label  class="label-left"> Saldo a amortizar </label>
                             </div>
                             <div class="col d-flex" style="margin-right: 5.4em;">
                                 <mat-form-field class="full-width" >
@@ -40,26 +38,26 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="porcentajeAmortizacion" class="label-left" [ngClass]="{
-                                    'color-secondaryColor':(addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) ||
-                                    (addressForm.get('porcentajeAmortizacion').invalid && estaEditando)}">Porcentaje de amortización</label>
+                                <label  for="porcentajeAmortizacion"
+                                        class="label-left"
+                                        [ngClass]="{ 'color-secondaryColor':(addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) || (addressForm.get('porcentajeAmortizacion').invalid && estaEditando) }">
+                                        Porcentaje de amortización
+                                </label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #porcentajeAmortizacion type="number"
-                                        formControlName="porcentajeAmortizacion"
-                                        (ngModelChange)="numberValidate( $event )" required>
+                                    <input matInput #porcentajeAmortizacion type="number" formControlName="porcentajeAmortizacion" (ngModelChange)="numberValidate( $event )" required>
                                 </mat-form-field>
                                 <span class="contador">%</span>
                             </div>
                             <span class="icon-incompleto">
-                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                    matTooltipClass="info-tooltip" *ngIf="
-                                    (addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) ||
-                                    (addressForm.get('porcentajeAmortizacion').invalid && estaEditando)
-                                  " />
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="(addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) || (addressForm.get('porcentajeAmortizacion').invalid && estaEditando)">
                             </span>
                         </div>
                     </div>
@@ -68,32 +66,38 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="valorAmortizacion" [ngClass]="{
-                                    'color-secondaryColor':
-                                      (addressForm.get('valorAmortizacion').invalid && addressForm.get('valorAmortizacion').touched) ||
-                                      (addressForm.get('valorAmortizacion').invalid && estaEditando)
-                                  }">
-                                    Valor de amortización
+                                <label  class="label-left"
+                                        for="valorAmortizacion"
+                                        [ngClass]="{ 'color-secondaryColor': (addressForm.get('valorAmortizacion').invalid && addressForm.get('valorAmortizacion').touched) || (addressForm.get('valorAmortizacion').invalid && estaEditando) }">
+                                        Valor de amortización
                                 </label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #valorAmortizacion currencyMask maxlength="20" required
-                                        formControlName="valorAmortizacion" (keypress)="validateNumberKeypress($event)"
-                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                    <input  matInput
+                                            #valorAmortizacion
+                                            currencyMask
+                                            maxlength="20"
+                                            required
+                                            formControlName="valorAmortizacion"
+                                            (keypress)="validateNumberKeypress($event)"
+                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                 </mat-form-field>
-                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                                    matTooltipClass="info-tooltip">{{20 - valorAmortizacion.value.length}}</span>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo numérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 20 - valorAmortizacion.value.length }}
+                                </span>
                             </div>
                             <span class="icon-incompleto">
-                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                    matTooltipClass="info-tooltip" *ngIf="
-                                    (addressForm.get('valorAmortizacion').invalid && addressForm.get('valorAmortizacion').touched) ||
-                                    (addressForm.get('valorAmortizacion').invalid && estaEditando)
-                                  " />
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="(addressForm.get('valorAmortizacion').invalid && addressForm.get('valorAmortizacion').touched) || (addressForm.get('valorAmortizacion').invalid && estaEditando)">
                             </span>
                         </div>
                     </div>

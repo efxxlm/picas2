@@ -1,6 +1,6 @@
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
@@ -12,7 +12,7 @@ import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observac
   templateUrl: './datos-factura-construccion-rvrp.component.html',
   styleUrls: ['./datos-factura-construccion-rvrp.component.scss']
 })
-export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges {
+export class DatosFacturaConstruccionRvrpComponent implements OnInit {
   @Input() solicitudPago: any;
   @Input() esVerDetalle = false;
   @Input() tieneObservacion: boolean;
@@ -59,13 +59,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     private obsMultipleSvc: ObservacionesMultiplesCuService,
     private registrarPagosSvc: RegistrarRequisitosPagoService
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.esVerDetalle === false) {
-      if (changes.tieneObservacion.currentValue === true) {
-        this.addressForm.enable();
-      }
-    }
-  }
 
   ngOnInit(): void {
     this.getDatosFactura();
@@ -76,219 +69,192 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     this.listaTipoDescuento = [...this.tiposDescuentoArray];
     const solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
 
-    if (this.esPreconstruccion === true) {
-      if (solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0) {
-        for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
-          if (solicitudPagoFase.esPreconstruccion === true) {
-            this.solicitudPagoFase = solicitudPagoFase;
+    if ( this.esPreconstruccion === true && solicitudPagoRegistrarSolicitudPago !== undefined ) {
+      if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+        if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+          for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
+            if (solicitudPagoFase.esPreconstruccion === true) {
+              this.solicitudPagoFase = solicitudPagoFase;
+            }
+          }
+        }
+      }
+    }
+
+    if ( this.esPreconstruccion === false && solicitudPagoRegistrarSolicitudPago !== undefined ) {
+      if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+        if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+          for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
+            if (solicitudPagoFase.esPreconstruccion === false) {
+              this.solicitudPagoFase = solicitudPagoFase;
+            }
           }
         }
       }
     }
 
-    if (this.esPreconstruccion === false) {
-      if (solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0) {
-        for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
-          if (solicitudPagoFase.esPreconstruccion === false) {
-            this.solicitudPagoFase = solicitudPagoFase;
+    if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+      if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        if (this.solicitudPagoFaseFactura !== undefined) {
+          this.estaEditando = true;
+          this.addressForm.markAllAsTouched();
+          this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
+          this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
+          this.addressForm.get('numeroFactura').setValue(this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null);
+          this.addressForm.get('fechaFactura').setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date(this.solicitudPagoFaseFactura.fecha) : null );
+          this.addressForm.get('aplicaDescuento').setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
+          this.addressForm.get('numeroDescuentos').setValue( this.solicitudPagoFaseFacturaDescuento.length > 0 ? `${this.solicitudPagoFaseFacturaDescuento.length}` : '' );
+          this.addressForm.get('valorAPagarDespues').setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
+    
+          for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
+            this.descuentos.markAllAsTouched();
+            this.descuentos.push(
+              this.fb.group({
+                solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
+                solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
+                valorDescuento: [descuento.valorDescuento]
+              })
+            );
+          }
+    
+          if (this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined) {
+            this.addressForm.disable();
+            this.descuentos.disable();
+          }
+    
+          if (this.esVerDetalle === false) {
+            // Get observacion CU autorizar solicitud de pago 4.1.9
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( 
+              this.listaMenusId.autorizarSolicitudPagoId,
+              this.solicitudPago.solicitudPagoId,
+              this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+              this.datosFacturaCodigo
+            ).subscribe( response => {
+                const observacion = response.find(obs => obs.archivada === false);
+                if (observacion !== undefined) {
+                  this.esAutorizar = true;
+                  this.observacion = observacion;
+    
+                  if (this.observacion.tieneObservacion === true) {
+                    this.addressForm.enable();
+                    this.semaforoObservacion.emit(true);
+                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                  }
+                }
+            } );
+    
+            // Get observacion CU verificar solicitud de pago 4.1.8
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+              this.listaMenusId.aprobarSolicitudPagoId,
+              this.solicitudPago.solicitudPagoId,
+              this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+              this.datosFacturaCodigo
+            ).subscribe( response => {
+                const observacion = response.find(obs => obs.archivada === false);
+                if (observacion !== undefined) {
+                  this.esAutorizar = false;
+                  this.observacion = observacion;
+    
+                  if (this.observacion.tieneObservacion === true) {
+                    this.addressForm.enable();
+                    this.semaforoObservacion.emit(true);
+                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                  }
+                }
+            } );
           }
         }
-      }
-    }
-
-    this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
-    if (this.solicitudPagoFaseFactura !== undefined) {
-      this.estaEditando = true;
-      this.addressForm.markAllAsTouched();
-      this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
-      this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
-      this.addressForm
-        .get('numeroFactura')
-        .setValue(this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null);
-      this.addressForm
-        .get('fechaFactura')
-        .setValue(
-          this.solicitudPagoFaseFactura.fecha !== undefined ? new Date(this.solicitudPagoFaseFactura.fecha) : null
-        );
-      this.addressForm
-        .get('aplicaDescuento')
-        .setValue(
-          this.solicitudPagoFaseFactura.tieneDescuento !== undefined
-            ? this.solicitudPagoFaseFactura.tieneDescuento
-            : null
-        );
-      this.addressForm
-        .get('numeroDescuentos')
-        .setValue(
-          this.solicitudPagoFaseFacturaDescuento.length > 0 ? `${this.solicitudPagoFaseFacturaDescuento.length}` : ''
-        );
-      this.addressForm
-        .get('valorAPagarDespues')
-        .setValue(
-          this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined
-            ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento
-            : null
-        );
-
-      for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
-        this.descuentos.markAllAsTouched();
-        this.descuentos.push(
-          this.fb.group({
-            solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
-            solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
-            tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
-            valorDescuento: [descuento.valorDescuento]
-          })
-        );
-      }
-
-      if (this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined) {
-        this.addressForm.disable();
-        this.descuentos.disable();
-      }
-
-      if (this.esVerDetalle === false) {
-        // Get observacion CU autorizar solicitud de pago 4.1.9
-        this.obsMultipleSvc
-          .getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-            this.listaMenusId.autorizarSolicitudPagoId,
-            this.solicitudPago.solicitudPagoId,
-            this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
-            this.datosFacturaCodigo
-          )
-          .subscribe(response => {
-            const observacion = response.find(obs => obs.archivada === false);
-            if (observacion !== undefined) {
-              this.esAutorizar = true;
-              this.observacion = observacion;
-
-              if (this.observacion.tieneObservacion === true) {
-                this.addressForm.enable();
-                this.semaforoObservacion.emit(true);
-                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-              }
-            }
-          });
-
-        // Get observacion CU verificar solicitud de pago 4.1.8
-        this.obsMultipleSvc
-          .getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-            this.listaMenusId.aprobarSolicitudPagoId,
-            this.solicitudPago.solicitudPagoId,
-            this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
-            this.datosFacturaCodigo
-          )
-          .subscribe(response => {
-            const observacion = response.find(obs => obs.archivada === false);
-            if (observacion !== undefined) {
-              this.esAutorizar = false;
-              this.observacion = observacion;
-
-              if (this.observacion.tieneObservacion === true) {
-                this.addressForm.enable();
-                this.semaforoObservacion.emit(true);
-                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-              }
-            }
-          });
-      }
-    }
-    for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {
-      this.valorFacturado += criterio.valorFacturado;
-    }
-    this.addressForm.get('numeroDescuentos').valueChanges.subscribe(value => {
-      value = Number(value);
-      if (value <= this.listaTipoDescuento.length) {
-        if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
-          if (value > 0) {
-            this.descuentos.clear();
-            for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
-              this.estaEditando = true;
-              this.descuentos.markAllAsTouched();
-              this.descuentos.push(
-                this.fb.group({
-                  solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
-                  solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
-                  tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
-                  valorDescuento: [descuento.valorDescuento]
-                })
-              );
-            }
-
-            this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
-            const nuevosDescuentos = value - this.descuentos.length;
-            if (value < this.descuentos.length) {
-              this.openDialog(
-                '',
-                '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-              );
-              this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
-              return;
-            }
-            for (let i = 0; i < nuevosDescuentos; i++) {
-              this.estaEditando = true;
-              this.descuentos.markAllAsTouched();
-              this.descuentos.push(
-                this.fb.group({
-                  solicitudPagoFaseFacturaDescuentoId: [0],
-                  solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                  tipoDescuentoCodigo: [null],
-                  valorDescuento: [null]
-                })
-              );
-            }
-          }
-        } else {
-          if (value > 0) {
-            if (this.descuentos.dirty === true) {
-              this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
-              const nuevosDescuentos = value - this.descuentos.length;
-              if (value < this.descuentos.length) {
-                this.openDialog(
-                  '',
-                  '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                );
-                this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
-                return;
-              }
-              for (let i = 0; i < nuevosDescuentos; i++) {
-                this.estaEditando = true;
-                this.descuentos.markAllAsTouched();
-                this.descuentos.push(
-                  this.fb.group({
-                    solicitudPagoFaseFacturaDescuentoId: [0],
-                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                    tipoDescuentoCodigo: [null],
-                    valorDescuento: [null]
-                  })
-                );
-              }
-            }
-            if (this.descuentos.dirty === false) {
-              this.descuentos.clear();
-              for (let i = 0; i < value; i++) {
-                this.estaEditando = true;
-                this.descuentos.markAllAsTouched();
-                this.descuentos.push(
-                  this.fb.group({
-                    solicitudPagoFaseFacturaDescuentoId: [0],
-                    solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
-                    tipoDescuentoCodigo: [null],
-                    valorDescuento: [null]
-                  })
-                );
-              }
-            }
-          }
+        for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {
+          this.valorFacturado += criterio.valorFacturado;
         }
-      } else {
-        this.addressForm.get('numeroDescuentos').setValue(String(this.listaTipoDescuento.length));
-        this.openDialog(
-          '',
-          `<b>Tiene parametrizados ${this.listaTipoDescuento.length} descuentos para aplicar al pago.</b>`
-        );
+        this.addressForm.get('numeroDescuentos').valueChanges.subscribe(value => {
+          value = Number(value);
+          if (value <= this.listaTipoDescuento.length) {
+            if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
+              if (value > 0) {
+                this.descuentos.clear();
+                for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
+                  this.estaEditando = true;
+                  this.descuentos.markAllAsTouched();
+                  this.descuentos.push(
+                    this.fb.group({
+                      solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
+                      solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                      tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
+                      valorDescuento: [descuento.valorDescuento]
+                    })
+                  );
+                }
+    
+                this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+                const nuevosDescuentos = value - this.descuentos.length;
+                if (value < this.descuentos.length) {
+                  this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                  this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
+                  return;
+                }
+                for (let i = 0; i < nuevosDescuentos; i++) {
+                  this.estaEditando = true;
+                  this.descuentos.markAllAsTouched();
+                  this.descuentos.push(
+                    this.fb.group({
+                      solicitudPagoFaseFacturaDescuentoId: [0],
+                      solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                      tipoDescuentoCodigo: [null],
+                      valorDescuento: [null]
+                    })
+                  );
+                }
+              }
+            } else {
+              if (value > 0) {
+                if (this.descuentos.dirty === true) {
+                  this.addressForm.get('numeroDescuentos').setValidators(Validators.min(this.descuentos.length));
+                  const nuevosDescuentos = value - this.descuentos.length;
+                  if (value < this.descuentos.length) {
+                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                    this.addressForm.get('numeroDescuentos').setValue(String(this.descuentos.length));
+                    return;
+                  }
+                  for (let i = 0; i < nuevosDescuentos; i++) {
+                    this.estaEditando = true;
+                    this.descuentos.markAllAsTouched();
+                    this.descuentos.push(
+                      this.fb.group({
+                        solicitudPagoFaseFacturaDescuentoId: [0],
+                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        tipoDescuentoCodigo: [null],
+                        valorDescuento: [null]
+                      })
+                    );
+                  }
+                }
+                if (this.descuentos.dirty === false) {
+                  this.descuentos.clear();
+                  for (let i = 0; i < value; i++) {
+                    this.estaEditando = true;
+                    this.descuentos.markAllAsTouched();
+                    this.descuentos.push(
+                      this.fb.group({
+                        solicitudPagoFaseFacturaDescuentoId: [0],
+                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        tipoDescuentoCodigo: [null],
+                        valorDescuento: [null]
+                      })
+                    );
+                  }
+                }
+              }
+            }
+          } else {
+            this.addressForm.get('numeroDescuentos').setValue(String(this.listaTipoDescuento.length));
+            this.openDialog( '', `<b>Tiene parametrizados ${this.listaTipoDescuento.length} descuentos para aplicar al pago.</b>` );
+          }
+        });
       }
-    });
+    }
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -380,15 +346,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
           this.registrarPagosSvc.deleteSolicitudPagoFaseFacturaDescuento(descuentoId).subscribe(
             () => {
               this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
-              this.routes
-                .navigateByUrl('/', { skipLocationChange: true })
-                .then(() =>
-                  this.routes.navigate([
-                    '/registrarValidarRequisitosPago/verDetalleEditar',
-                    this.solicitudPago.contratoId,
-                    this.solicitudPago.solicitudPagoId
-                  ])
-                );
+              this.routes.navigateByUrl('/', { skipLocationChange: true })
+                .then(() => this.routes.navigate([ '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId ]) );
             },
             err => this.openDialog('', `<b>${err.message}</b>`)
           );
@@ -425,11 +384,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
     this.addressForm.markAllAsTouched();
     this.descuentos.markAllAsTouched();
 
-    if (
-      this.addressForm.get('numeroFactura').valid &&
-      this.addressForm.get('fechaFactura').valid &&
-      this.addressForm.get('aplicaDescuento').valid
-    ) {
+    if ( this.addressForm.get('numeroFactura').valid && this.addressForm.get('fechaFactura').valid && this.addressForm.get('aplicaDescuento').valid ) {
       const getSolicitudPagoFaseFacturaDescuento = () => {
         if (this.descuentos.length > 0) {
           if (this.addressForm.get('aplicaDescuento').value === true) {
@@ -485,15 +440,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
             this.observacion.archivada = !this.observacion.archivada;
             this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(this.observacion).subscribe();
           }
-          this.routes
-            .navigateByUrl('/', { skipLocationChange: true })
-            .then(() =>
-              this.routes.navigate([
-                '/registrarValidarRequisitosPago/verDetalleEditar',
-                this.solicitudPago.contratoId,
-                this.solicitudPago.solicitudPagoId
-              ])
-            );
+          this.routes.navigateByUrl('/', { skipLocationChange: true })
+            .then( () => this.routes.navigate([ '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId ]) );
         },
         err => this.openDialog('', `<b>${err.message}</b>`)
       );

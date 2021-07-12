@@ -1,0 +1,93 @@
+<section class="mt-2em" *ngIf="proyecto !== undefined">
+    <form [formGroup]="addressForm">
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Detalle factura - {{ proyecto.get( 'llaveMen' ).value }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label  class="label-left"
+                                  for="fase"
+                                  [ngClass]="{ 'color-secondaryColor': (addressForm.get('fase').invalid && addressForm.get('fase').touched) || (addressForm.get('fase').invalid) }">
+                                  Fase del proyecto
+                          </label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select multiple formControlName="fase" required (ngModelChange)="getValueFase($event)">
+                                    <mat-option *ngFor="let fase of listaFases" [value]="fase">
+                                        {{ fase.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span class="icon-incompleto ml-08em">
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf=" (addressForm.get('fase').invalid && addressForm.get('fase').touched) || (addressForm.get('fase').invalid)">
+                        </span>
+                      </div>
+                    </div>
+                </div>
+
+                <div *ngIf="fases.length > 0" class="mt-3em">
+                    <mat-accordion *ngFor="let fase of fases.controls; index as i">
+                        <mat-expansion-panel class="expansion-style sub-expansion-black">
+                            <mat-expansion-panel-header class="expansion-style--header">
+                              <mat-panel-title class="expansion-style--title font-size-09em sin-diligenciar">
+                                Criterios de pago incluidos en el proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                        [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
+                                                        [listaMenusId]="listaMenusId"
+                                                        [contrato]="contrato"
+                                                        [faseCodigo]="fase.get( 'codigo' ).value"
+                                                        [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                        [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs.criteriosPagoFacturaCodigo">
+                            </app-form-criterios-pago>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="fase.get( 'codigo' ).value === fasesContrato.construccion">
+                            <mat-expansion-panel-header class="expansion-style--header">
+                                <mat-panel-title class="expansion-style--title font-size-09em sin-diligenciar">
+                                    Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"
+                                                            [contrato]="contrato"
+                                                            [listaMenusId]="listaMenusId"
+                                                            [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs.amortizacionAnticipoCodigo">
+                            </app-form-amortizacion-anticipo>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="expansion-style sub-expansion-black">
+                            <mat-expansion-panel-header class="expansion-style--header">
+                                <mat-panel-title class="expansion-style--title font-size-08em sin-diligenciar">
+                                    Descuentos dirección técnica asociados al proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                    [datosFacturaCodigo]="registrarSolicitudPagoObs.datosFacturaCodigo"
+                                                                    [listaMenusId]="listaMenusId">
+                            </app-datos-factura-construccion-rvrp>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</section>

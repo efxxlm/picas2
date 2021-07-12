@@ -3,46 +3,35 @@
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="faseContrato">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fase del contrato</th>
-        <td mat-cell *matCellDef="let element" align="center">
-          <b> {{ element.faseContrato }} </b>
-        </td>
+        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.faseContrato }} </b> </td>
       </ng-container>
+
       <ng-container matColumnDef="valorFacturado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor facturado</th>
-        <td mat-cell *matCellDef="let element" align="center">
-          {{
-            element.valorFacturado !== undefined
-              ? (element.valorFacturado | currency: '':'symbol-narrow':'.0-0')
-              : (0 | currency: '':'symbol-narrow':'.0-0')
-          }}
-        </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado !== undefined ? (element.valorFacturado | currency: '':'symbol-narrow':'.0-0') : (0 | currency: '':'symbol-narrow':'.0-0') }} </td>
       </ng-container>
+
       <ng-container matColumnDef="porcentajeFacturado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentaje facturado</th>
-        <td mat-cell *matCellDef="let element" align="center">
-          {{ element.porcentajeFacturado !== undefined ? element.porcentajeFacturado.toFixed(2) : 0 }}%
-        </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado !== undefined ? element.porcentajeFacturado.toFixed(2) : 0 }}% </td>
       </ng-container>
+
       <ng-container matColumnDef="saldoPorPagar">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo por pagar</th>
-        <td mat-cell *matCellDef="let element" align="center">
-          {{
-            element.saldoPorPagar !== undefined
-              ? (element.saldoPorPagar | currency: '':'symbol-narrow':'.0-0')
-              : (0 | currency: '':'symbol-narrow':'.0-0')
-          }}
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar !== undefined ? (element.saldoPorPagar | currency: '':'symbol-narrow':'.0-0') : (0 | currency: '':'symbol-narrow':'.0-0') }}
         </td>
       </ng-container>
+
       <ng-container matColumnDef="porcentajePorPagar">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentaje por pagar</th>
-        <td mat-cell *matCellDef="let element" align="center">
-          {{ element.porcentajePorPagar !== undefined ? element.porcentajePorPagar.toFixed(2) : 0 }}%
-        </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar !== undefined ? element.porcentajePorPagar.toFixed(2) : 0 }}% </td>
       </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
+
   <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
     <mat-card class="shipping-card" style="margin-top: 3em">
       <mat-card-header class="header-card header-card--margin">
@@ -53,55 +42,40 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label
-                  class="label-left"
-                  for="fechaSolicitud"
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
-                      (addressForm.get('fechaSolicitud').invalid && estaEditando)
-                  }"
-                >
-                  Fecha de solicitud
+                <label  class="label-left"
+                        for="fechaSolicitud"
+                        [ngClass]="{ 'color-secondaryColor': (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) || (addressForm.get('fechaSolicitud').invalid && estaEditando) }">
+                        Fecha de solicitud
                 </label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input
-                    matInput
-                    formControlName="fechaSolicitud"
-                    [min]="minDate"
-                    [matDatepicker]="pickerFechaRevision"
-                    readonly
-                    (click)="pickerFechaRevision.open()"
-                    required
-                    placeholder="DD/MM/AAAA"
-                  />
-                  <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                  <input  matInput
+                          formControlName="fechaSolicitud"
+                          [min]="minDate"
+                          [matDatepicker]="pickerFechaRevision"
+                          readonly
+                          (click)="pickerFechaRevision.open()"
+                          required
+                          placeholder="DD/MM/AAAA">
+                          <mat-datepicker #pickerFechaRevision></mat-datepicker>
                 </mat-form-field>
-                <button
-                  mat-button
-                  color="primary"
-                  type="button"
-                  (click)="pickerFechaRevision.open()"
-                  class="btn-calendario"
-                >
-                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                <button mat-button
+                        color="primary"
+                        type="button"
+                        (click)="pickerFechaRevision.open()"
+                        class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                 </button>
               </div>
               <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
-                    (addressForm.get('fechaSolicitud').invalid && estaEditando)
-                  "
-                />
+                <img  class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="(addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) || (addressForm.get('fechaSolicitud').invalid && estaEditando)">
               </span>
             </div>
           </div>
@@ -110,88 +84,70 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label
-                  for="numeroRadicado"
-                  class="label-left"
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
-                      (addressForm.get('numeroRadicado').invalid && estaEditando)
-                  }"
-                  >Número de radicado SAC</label
-                >
+                <label  for="numeroRadicado"
+                        class="label-left"
+                        [ngClass]="{ 'color-secondaryColor': (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) || (addressForm.get('numeroRadicado').invalid && estaEditando)}">
+                        Número de radicado SAC</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input
-                    matInput
-                    #numeroRadicado
-                    type="text"
-                    maxlength="20"
-                    formControlName="numeroRadicado"
-                    required
-                  />
+                  <input  matInput
+                          #numeroRadicado
+                          type="text"
+                          maxlength="20"
+                          formControlName="numeroRadicado"
+                          required>
                 </mat-form-field>
                 <span class="contador">{{ 20 - numeroRadicado.value.length }}</span>
               </div>
               <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
-                    (addressForm.get('numeroRadicado').invalid && estaEditando)
-                  "
-                />
+                <img  class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="(addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) || (addressForm.get('numeroRadicado').invalid && estaEditando)">
               </span>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label
-                  class="label-left"
-                  for="faseContrato"
-                  [ngClass]="{
-                    'color-secondaryColor':
-                      (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
-                      (addressForm.get('faseContrato').invalid && estaEditando)
-                  }"
-                  >Fase del contrato</label
-                >
+        <!--
+          Se comenta el campo Fase del contrato por control de cambios 23 y flujo multiproyecto
+          El campo se mueve al acordeon "Detalle factura para proyectos asociados" y es asociado a cada proyecto seleccionado
+
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label  class="label-left"
+                          for="faseContrato"
+                          [ngClass]="{ 'color-secondaryColor': (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) || (addressForm.get('faseContrato').invalid && estaEditando) }">
+                          Fase del contrato
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select multiple formControlName="faseContrato" required (ngModelChange)="getValueFase($event)">
+                      <mat-option *ngFor="let fase of fasesArray" [value]="fase.codigo">
+                        {{ fase.nombre }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img  class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf=" (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) || (addressForm.get('faseContrato').invalid && estaEditando)">
+                </span>
               </div>
-              <div class="col">
-                <mat-form-field class="select-width">
-                  <mat-select multiple formControlName="faseContrato" required (ngModelChange)="getValueFase($event)">
-                    <mat-option *ngFor="let fase of fasesArray" [value]="fase.codigo">
-                      {{ fase.nombre }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
-                    (addressForm.get('faseContrato').invalid && estaEditando)
-                  "
-                />
-              </span>
             </div>
           </div>
-        </div>
+        -->
       </mat-card-content>
     </mat-card>
 
@@ -254,6 +210,8 @@
                 Criterios de pago incluidos en la factura
               </mat-panel-title>
             </mat-expansion-panel-header>
+
+            <!--
             <app-form-criterios-pago
               [solicitudPago]="contrato.solicitudPagoOnly"
               [contratacionProyectoId]="contratacionProyectoId"
@@ -266,6 +224,7 @@
               (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event"
             >
             </app-form-criterios-pago>
+            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -343,6 +302,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
+            <!--
             <app-form-criterios-pago
               [solicitudPago]="contrato.solicitudPagoOnly"
               [esPreconstruccion]="false"
@@ -356,6 +316,7 @@
               (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriterios = $event"
             >
             </app-form-criterios-pago>
+            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
@@ -372,6 +333,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
+            <!--
             <app-form-amortizacion-anticipo
               [solicitudPago]="contrato.solicitudPagoOnly"
               [contrato]="contrato"
@@ -383,6 +345,7 @@
               (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionAmortizacion = $event"
             >
             </app-form-amortizacion-anticipo>
+            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -399,17 +362,15 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-detalle-factura-proyectos-asociados
-              [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-              [solicitudPago]="contrato.solicitudPagoOnly"
-              [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
-              [listaMenusId]="listaMenusId"
-              [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
-              [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
-              [esPreconstruccion]="false"
-              *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true"
-              (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto = $event"
-            >
+            <app-detalle-factura-proyectos-asociados  [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                      [solicitudPago]="contrato.solicitudPagoOnly"
+                                                      [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                      [listaMenusId]="listaMenusId"
+                                                      [tieneObservacionOrdenGiro]="tieneObservacionOrdenGiro"
+                                                      [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                      [esPreconstruccion]="false"
+                                                      *ngIf="estadoRegistroCompletoSubAcordeonConstruccion.amortizacionRegistroCompleto === true"
+                                                      (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriteriosProyecto = $event">
             </app-detalle-factura-proyectos-asociados>
           </mat-expansion-panel>
 
