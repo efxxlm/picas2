@@ -57,16 +57,17 @@ namespace asivamosffie.services
                 {
                     Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == pProyecto.LocalizacionIdMunicipio).FirstOrDefault();
                     Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
-
+                    List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
                     Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
+                    
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
                         LlaveMen = pProyecto.LlaveMen,
                         ProyectoId = pProyecto.ProyectoId,
                         Departamento = departamento.Descripcion,
                         Municipio = municipio.Descripcion,
-                        InstitucionEducativa = _context.InstitucionEducativaSede.Find(pProyecto.InstitucionEducativaId).Nombre,
-                        Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
+                        InstitucionEducativa = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.InstitucionEducativaId).FirstOrDefault().Nombre,
+                        Sede = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.SedeId).FirstOrDefault().Nombre,
                         EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
                         EstadoProyectoObra = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoObraCodigo)?.FirstOrDefault()?.Nombre,
@@ -74,8 +75,7 @@ namespace asivamosffie.services
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO",
                         EstadoProyectoObraCodigo = pProyecto.EstadoProyectoObraCodigo,
-                        EstadoProyectoInterventoriaCodigo = pProyecto.EstadoProyectoInterventoriaCodigo,
-
+                        EstadoProyectoInterventoriaCodigo = pProyecto.EstadoProyectoInterventoriaCodigo 
                     };
 
                     if (!(bool)pProyecto.RegistroCompleto)

@@ -40,10 +40,10 @@ namespace asivamosffie.services
                                             .Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionIntegrante)
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .Include(r => r.ProcesoSeleccionProponente).Where(r => !(bool)r.Eliminado)
-                                            .Include(r => r.ProcesoSeleccionCotizacion).Where(r => !(bool)r.Eliminado)
-                                            .Include(r => r.ProcesoSeleccionCronograma).Where(r => !(bool)r.Eliminado)
-                                            .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
+                                            .Include(r => r.ProcesoSeleccionProponente)
+                                            .Include(r => r.ProcesoSeleccionCotizacion)
+                                            .Include(r => r.ProcesoSeleccionCronograma)
+                                            .Include(r => r.ProcesoSeleccionGrupo)
                                             .OrderByDescending(x => x.FechaCreacion)
                                             .ToListAsync();
 
@@ -165,19 +165,19 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
 
-                    //ProcesoSeleccionAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     ProcesoSeleccionAntiguo.Eliminado = false;
-                    //ProcesoSeleccionAntiguo.FechaModificacion = DateTime.Now;
 
                     _context.ProcesoSeleccion.Update(ProcesoSeleccionAntiguo);
                 }
 
                 if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0 && procesoSeleccion.EsDistribucionGrupos != true)
                 {
-                    ProcesoSeleccionGrupo grupo = new ProcesoSeleccionGrupo();
-                    grupo.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
-                    grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    grupo.FechaCreacion = DateTime.Now;
+                    ProcesoSeleccionGrupo grupo = new ProcesoSeleccionGrupo
+                    {
+                        ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId,
+                        UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper(),
+                        FechaCreacion = DateTime.Now
+                    };
                     procesoSeleccion.ProcesoSeleccionGrupo.Add(grupo);
                 }
 
@@ -703,13 +703,13 @@ namespace asivamosffie.services
                 else
                 {
                     var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
-                    if ( municipio != null)
+                    if (municipio != null)
                     {
                         var departamento = _context.Localizacion.Find(municipio.IdPadre);
                         proces.municipioString = municipio.Descripcion;
                         proces.departamentoString = departamento.Descripcion;
                     }
-                    
+
                 }
 
             }
@@ -1027,7 +1027,7 @@ namespace asivamosffie.services
                         contratista = new Contratista();
 
                         contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
-                    contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
+                        contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
                         contratista.Nombre = p.NombreProponente;
                         contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
                         contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
@@ -1313,7 +1313,7 @@ namespace asivamosffie.services
                             //Correo  del representante legal de la UT o consorcio
                             if (!string.IsNullOrEmpty(worksheet.Cells[i, 32].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 32].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
 
-                            
+
 
                             //#28
                             //Municipio  del representante legal de la UT o consorcio
@@ -1471,9 +1471,7 @@ namespace asivamosffie.services
         {
             //depende del tipo
             if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
-            {
-                bool esCompleto = true;
-
+            { 
                 if (
                      string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
                      string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
@@ -1488,190 +1486,177 @@ namespace asivamosffie.services
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes))
-
                 )
-                    esCompleto = false;
+                    return false;
 
-                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+                foreach (var psg in procesoSeleccion.ProcesoSeleccionGrupo.Where(psg => psg.Eliminado != true))
                 {
                     if (
-                         string.IsNullOrEmpty(psg.NombreGrupo) ||
-                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
-                         psg.PlazoMeses == null
-
-                       )
-                        esCompleto = false;
-                });
-
-                if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
-                {
-                    if (
-                     string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
-                     string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
-                     procesoSeleccion.ProcesoSeleccionProponente == null ||
-                     procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
-
-
-                )
-                        esCompleto = false;
-                }
-
-                return esCompleto;
-            }
-            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
-            {
-                bool esCompleto = true;
-                if (
-                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
-                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
-                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                 //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
-
-                )
-                    esCompleto = false;
-
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
-                {
-                    esCompleto = false;
-                }
-
-                procesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(psp =>
-               {
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio)
-                       if (
-                                     string.IsNullOrEmpty(psp.NombreProponente) ||
-                                     string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-
-                                     //string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                                     string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                                     psp.LocalizacionIdMunicipio == null ||
-                                     string.IsNullOrEmpty(psp.DireccionProponente) ||
-                                     string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                                     string.IsNullOrEmpty(psp.EmailProponente)
-                               )
-                           esCompleto = false;
-
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
-                       if (
-                             string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
-                             string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                             psp.LocalizacionIdMunicipio == null ||
-                             string.IsNullOrEmpty(psp.DireccionProponente) ||
-                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                             string.IsNullOrEmpty(psp.EmailProponente)
-                       )
-                           esCompleto = false;
-
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
-                       if (
-                             string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                             psp.LocalizacionIdMunicipio == null ||
-                             string.IsNullOrEmpty(psp.DireccionProponente) ||
-                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                             string.IsNullOrEmpty(psp.EmailProponente)
-                       )
-                           esCompleto = false;
-
-               });
-
-                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
-              {
-                  if (
                        string.IsNullOrEmpty(psg.NombreGrupo) ||
                        string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
                        (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
                        (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
                        (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
                        psg.PlazoMeses == null
-
                      )
-                      esCompleto = false;
-              });
+                        return false;
+                }
 
-                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
-               {
-                   if (
-                          string.IsNullOrEmpty(psc.NombreOrganizacion) ||
-                          psc.ValorCotizacion == null ||
-                          string.IsNullOrEmpty(psc.Descripcion) ||
-                          string.IsNullOrEmpty(psc.UrlSoporte)
+
+                if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                {
+                    if (
+                         string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
+                         string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
+                         procesoSeleccion.ProcesoSeleccionProponente == null ||
+                         procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
                        )
-                       esCompleto = false;
-               });
-
-                return esCompleto;
+                        return false;
+                }
+                return true;
             }
-            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
-            {
-                bool esCompleto = true;
-
+            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
+            { 
                 if (
-                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
-                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
-                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
-                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                     string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                     string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                     string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                     //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+                     string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
                 )
-                    esCompleto = false;
+                    return false;
 
-                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
-               {
-                   if (
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
+                    return false;
+
+
+                foreach (var psp in procesoSeleccion.ProcesoSeleccionProponente)
+                {
+
+                    if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio)
+                        if (
+                                      string.IsNullOrEmpty(psp.NombreProponente) ||
+                                      string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
+                                      string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                                      psp.LocalizacionIdMunicipio == null ||
+                                      string.IsNullOrEmpty(psp.DireccionProponente) ||
+                                      string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                                      string.IsNullOrEmpty(psp.EmailProponente)
+                                )
+                            return false;
+
+                    if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
+                        if (
+                              string.IsNullOrEmpty(psp.NombreProponente) ||
+                              string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
+                              string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
+                              string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                              string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                              psp.LocalizacionIdMunicipio == null ||
+                              string.IsNullOrEmpty(psp.DireccionProponente) ||
+                              string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                              string.IsNullOrEmpty(psp.EmailProponente)
+                        )
+                            return false;
+
+                    if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
+                        if (
+                              string.IsNullOrEmpty(psp.NombreProponente) ||
+                              string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                              string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                              psp.LocalizacionIdMunicipio == null ||
+                              string.IsNullOrEmpty(psp.DireccionProponente) ||
+                              string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                              string.IsNullOrEmpty(psp.EmailProponente)
+                        )
+                            return false;
+
+                }
+
+                foreach (var psg in procesoSeleccion.ProcesoSeleccionGrupo.Where(psg => psg.Eliminado != true))
+                {
+                    if (
+                             string.IsNullOrEmpty(psg.NombreGrupo) ||
+                             string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                             (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                             (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                             (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                             psg.PlazoMeses == null
+                      )
+                        return false;
+                }
+
+
+                foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc=> psc.Eliminado != true))
+                {
+                    if (
                         string.IsNullOrEmpty(psc.NombreOrganizacion) ||
                         psc.ValorCotizacion == null ||
                         string.IsNullOrEmpty(psc.Descripcion) ||
                         string.IsNullOrEmpty(psc.UrlSoporte)
+                        )
+                        return false;
+                } 
+                return true;
+            }
+            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+            { 
+                if (
+                     string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                     string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                     string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+                     string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
                    )
-                       esCompleto = false;
+                    return false;
 
-               });
 
-                if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0)
-                {
-                    esCompleto = false;
-                }
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
+                    return false;
 
-                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+                if(procesoSeleccion.ProcesoSeleccionProponente.Count(psp => psp.Eliminado != true) != procesoSeleccion.CantidadProponentesInvitados )
+
+                    foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc => psc.Eliminado != true))
                 {
                     if (
-                         string.IsNullOrEmpty(psg.NombreGrupo) ||
-                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
-                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
-                         psg.PlazoMeses == null
+                         string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                         psc.ValorCotizacion == null ||
+                         string.IsNullOrEmpty(psc.Descripcion) ||
+                         string.IsNullOrEmpty(psc.UrlSoporte)
+                    )
+                        return false;
+                }
 
-                       )
-                        esCompleto = false;
-                });
-
-                return esCompleto;
-
+                if (procesoSeleccion.ProcesoSeleccionGrupo.Count(psg => psg.Eliminado != true) == 0)
+                    return false;
+  
+                foreach (var psg in procesoSeleccion.ProcesoSeleccionGrupo.Where(ps => ps.Eliminado != true))
+                {
+                    if (
+                       string.IsNullOrEmpty(psg.NombreGrupo) ||
+                       string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                       (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                       (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                       (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                       psg.PlazoMeses == null
+                     )
+                        return false;
+                }
+                return true;
             }
-
             return false;
-
         }
 
 
