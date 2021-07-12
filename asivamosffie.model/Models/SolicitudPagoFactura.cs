@@ -3,15 +3,10 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class SolicitudPagoFaseFactura
+    public partial class SolicitudPagoFactura
     {
-        public SolicitudPagoFaseFactura()
-        {
-            SolicitudPagoFaseFacturaDescuento = new HashSet<SolicitudPagoFaseFacturaDescuento>();
-        }
-
-        public int SolicitudPagoFaseFacturaId { get; set; }
-        public int? SolicitudPagoFaseId { get; set; }
+        public int SolicitudPagoFacturaId { get; set; }
+        public int? SolicitudPagoId { get; set; }
         public DateTime? Fecha { get; set; }
         public decimal? ValorFacturado { get; set; }
         public string Numero { get; set; }
@@ -26,7 +21,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }
 
-        public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
-        public virtual ICollection<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
+        public virtual SolicitudPago SolicitudPago { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int SolicitudPagoFaseFacturaDescuentoId { get; set; }
-        public int SolicitudPagoFaseFacturaId { get; set; }
+        public int SolicitudPagoFaseId { get; set; }
         public string TipoDescuentoCodigo { get; set; }
         public decimal? ValorDescuento { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -23,7 +23,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }
 
-        public virtual SolicitudPagoFaseFactura SolicitudPagoFaseFactura { get; set; }
+        public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
         public virtual ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
     }
 }

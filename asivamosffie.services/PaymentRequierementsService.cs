@@ -317,6 +317,17 @@ namespace asivamosffie.services
             //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
             int intCantidadDependenciasSolicitudPago = 2;
 
+            foreach (var SolicitudPagoFaseFactura in pSolicitudPago.SolicitudPagoFactura.Where(r => r.Eliminado != true))
+            {
+                //#7 Factura para proyectos asociados
+                intCantidadDependenciasSolicitudPago++;
+
+                //#7 Factura Descuentos de la Dirección Técnica
+                intCantidadDependenciasSolicitudPago++;
+
+                intCantidadDependenciasSolicitudPago++;
+            }
+
             foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
             {
                 //#4 Registrar  Solicitud de pago
@@ -332,18 +343,7 @@ namespace asivamosffie.services
                             //#6 Observacion Amortizacion
                             intCantidadDependenciasSolicitudPago++;
                         }
-                    }
-                    foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura.Where(r => r.Eliminado != true))
-                    {
-                        //#7 Factura para proyectos asociados
-                        intCantidadDependenciasSolicitudPago++;
-
-                        //#7 Factura Descuentos de la Dirección Técnica
-                        intCantidadDependenciasSolicitudPago++;
-
-                        intCantidadDependenciasSolicitudPago++;
-                    }
-
+                    } 
                 }
             }
 

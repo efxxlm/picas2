@@ -16,7 +16,7 @@ namespace asivamosffie.model.Models
             SeguimientoSemanalTemp = new HashSet<SeguimientoSemanalTemp>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
             SolicitudPago = new HashSet<SolicitudPago>();
-            SolicitudPagoFaseCriterioProyecto = new HashSet<SolicitudPagoFaseCriterioProyecto>();
+            SolicitudPagoFase = new HashSet<SolicitudPagoFase>();
         }
 
         public int ContratacionProyectoId { get; set; }
@@ -55,6 +55,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SeguimientoSemanalTemp> SeguimientoSemanalTemp { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual ICollection<SolicitudPago> SolicitudPago { get; set; }
-        public virtual ICollection<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
+        public virtual ICollection<SolicitudPagoFase> SolicitudPagoFase { get; set; }
     }
 }
