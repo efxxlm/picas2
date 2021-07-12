@@ -70,6 +70,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       );
       this.plazoProyecto = Math.max(...plazoDiasInterventoria);
     }
+    console.log( this.plazoProyecto );
   }
 
   semaforoAcordeon(acordeon: string) {
@@ -234,17 +235,8 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
         }
       }
     } else if (acordeon === 'plazoEjecucion') {
-      if (
-        this.contratacion.plazoContratacion &&
-        this.contratacion.plazoContratacion.plazoDias > 0 &&
-        this.contratacion.plazoContratacion.plazoMeses > 0
-      ) {
+      if ( this.contratacion.plazoContratacion && ( this.contratacion.plazoContratacion.plazoDias > 0 || this.contratacion.plazoContratacion.plazoMeses > 0 ) ) {
         return this.estadoSemaforos.completo;
-      } else if (
-        this.contratacion.plazoContratacion &&
-        (this.contratacion.plazoContratacion.plazoDias > 0 || this.contratacion.plazoContratacion.plazoMeses > 0)
-      ) {
-        return this.estadoSemaforos.enProceso;
       } else {
         return this.estadoSemaforos.sinDiligenciar;
       }
