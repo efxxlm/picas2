@@ -1970,6 +1970,7 @@ namespace asivamosffie.services
                         pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                         pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                         pDisponibilidadPresObservacion.EsNovedad = esNovedad;
+                        pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = novedad.NovedadContractualRegistroPresupuestalId;
 
                         _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                     }
@@ -1983,6 +1984,8 @@ namespace asivamosffie.services
 
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                    pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = null;
+
                     _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 }
 
