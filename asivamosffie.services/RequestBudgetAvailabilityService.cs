@@ -539,7 +539,13 @@ namespace asivamosffie.services
                                 blnEstado = true;
                         }
                     }
-                    var plazoContratacion = _context.PlazoContratacion.Find(ListDP.Contratacion.PlazoContratacionId);
+                    var plazoContratacion = new PlazoContratacion();
+
+                    if (ListDP.Contratacion != null)
+                    {
+                        plazoContratacion = _context.PlazoContratacion.Find(ListDP.Contratacion.PlazoContratacionId);
+                    }
+
                     DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                     {
                         //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
