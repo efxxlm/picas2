@@ -85,19 +85,19 @@
                     matInput
                     #nombreOrganizacion
                     type="text"
-                    maxlength="20"
+                    maxlength="1000"
                     formControlName="nombreOrganizacion"
                     required
                   />
                   <input type="hidden" formControlName="procesoSeleccionCotizacionId" />
                 </mat-form-field>
                 <span
-                  class="contador"
+                  class="contador miles"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo alfanumérico"
                   matTooltipClass="info-tooltip"
                 >
-                  {{ 20 - nombreOrganizacion.value.length }}
+                  {{ 1000 - nombreOrganizacion.value.length }}
                 </span>
                 <span class="icon-incompleto">
                   <img
