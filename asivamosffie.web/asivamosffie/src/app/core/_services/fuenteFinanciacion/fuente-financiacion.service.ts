@@ -64,6 +64,10 @@ export class FuenteFinanciacionService {
     return this.http.post(`${environment.apiUrl}/CofinancingContributor/CreateEditBudgetRecords/`, registroPresupuestal);
   }
 
+  deleteBudgetRecords( registros: number[] ){
+    return this.http.put(`${environment.apiUrl}/CofinancingContributor/RegistroPresupuestal/`, registros);
+  }
+
   eliminarFuentesFinanciacion( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
   }
@@ -81,7 +85,7 @@ export class FuenteFinanciacionService {
   }
 
   getSourceFundingBySourceFunding( id: number ){
-    return this.http.get<ControlRecurso[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/ResourceControl/GetResourceFundingBySourceFunding/${id}`);
   }
 
   getResourceControlById( id: number){
@@ -156,6 +160,7 @@ export interface ControlRecurso{
   fechaConsignacion: Date,
   valorConsignacion: number,
   fechaCreacion?: Date,
+  registroPresupuestal?: RegistroPresupuestal
 
 }
 

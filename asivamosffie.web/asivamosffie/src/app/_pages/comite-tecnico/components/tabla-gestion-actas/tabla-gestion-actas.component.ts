@@ -43,7 +43,8 @@ export class TablaGestionActasComponent implements OnInit {
         });
         const lista: ComiteGrilla[] = response.filter(c => [EstadosComite.desarrolladaSinActa,
         EstadosComite.conActaDeSesionEnviada,
-        EstadosComite.conActaDeSesionAprobada].includes(c.estadoComiteCodigo));
+        EstadosComite.conActaDeSesionAprobada,
+        EstadosComite.conActaDeSesionDevulta].includes(c.estadoComiteCodigo));
         this.dataSource = new MatTableDataSource(lista);
         this.initPaginator();
       });

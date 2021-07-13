@@ -168,5 +168,20 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("RegistroPresupuestal")]
+        [HttpPut]
+        public async Task<IActionResult> DeleteBudgetRecords(IEnumerable<int> registroPresupuestal)
+        {
+            try
+            {
+                var result = await _contributor.DeleteBudgetRegister(registroPresupuestal, HttpContext.User.FindFirst("User").Value.ToUpper());
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

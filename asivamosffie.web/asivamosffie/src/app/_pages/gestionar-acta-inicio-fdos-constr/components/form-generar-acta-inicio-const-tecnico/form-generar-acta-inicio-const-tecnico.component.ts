@@ -159,9 +159,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.contrato = data.contrato;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
-      
-      const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-      const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+
+      const mesesPlazoInicial = data.contrato.contratacion.plazoContratacion.plazoMeses;
+      const diasPlazoInicial = data.contrato.contratacion.plazoContratacion.plazoDias;
 
       // calcula el plazo restante
       if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
@@ -218,9 +218,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     });
     */
     this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data1:any)=>{
-      this.conObervacionesActa = data1.esActa;
-      this.observacionesActaFase2 = data1.observaciones;
-      this.fechaCreacion = data1.fechaCreacion;
+      if ( data1 !== null ) {
+        this.conObervacionesActa = data1.esActa;
+        this.observacionesActaFase2 = data1.observaciones;
+        this.fechaCreacion = data1.fechaCreacion;
+      }
     });
   }
   generarFechaRestante() {

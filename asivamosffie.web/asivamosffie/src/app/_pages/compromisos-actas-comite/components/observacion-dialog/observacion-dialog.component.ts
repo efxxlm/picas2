@@ -17,7 +17,12 @@ export class ObservacionDialogComponent implements OnInit {
   constructor ( @Inject(MAT_DIALOG_DATA) public data ) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource( this.data.elemento.sesionSolicitudObservacionProyecto );
+    this.dataSource = new MatTableDataSource( [
+      {
+        fechaCreacion: this.data.elemento.fechaObs,
+        observacion: this.data.elemento.sesionSolicitudObservacionProyecto
+      }
+    ] );
     this.dataSource.sort = this.sort;
   }
 

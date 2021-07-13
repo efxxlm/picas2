@@ -3,7 +3,7 @@
     <h1 class="title-menu--h1">Mapa interactivo y estadísticas generales</h1>
   </div>
   <div class="mt-1em">
-    <form [formGroup]="addressForm">
+    <form [formGroup]="addressForm" (ngSubmit)="showReport()">
       <div class="row">
         <div class="col-md-9 mx-auto">
           <div class="row">
@@ -20,7 +20,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="quieroVer" required (ngModelChange)="selectedOption($event)">
+                <mat-select formControlName="quieroVer" required>
                   <mat-option *ngFor="let quieroVer of indicadorReporte" [value]="quieroVer.indicadorReporteId">
                     {{ quieroVer.nombre }}
                   </mat-option>
@@ -30,9 +30,9 @@
           </div>
         </div>
       </div>
+      <div class="text-center mt-1em">
+        <button mat-raised-button color="accent" type="submit" [disabled]="addressForm.invalid">Ver reporte</button>
+      </div>
     </form>
-  </div>
-  <div *ngIf="embedInfo" class="animatedDown mt-1em">
-    <app-embedded-power-bi [embedInfo]="embedInfo"></app-embedded-power-bi>
   </div>
 </section>

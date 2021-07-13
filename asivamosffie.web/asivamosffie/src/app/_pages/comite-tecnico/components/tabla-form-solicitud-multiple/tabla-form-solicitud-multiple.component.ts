@@ -153,18 +153,18 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
           switch  (estadoSolicitud.codigo){
             case EstadosSolicitud.AprobadaPorComiteTecnico:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico));
-              break;  
+              break;
             }
             case EstadosSolicitud.RechazadaPorComiteTecnico:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico));
-              break;  
+              break;
             }
             case EstadosSolicitud.DevueltaPorComiteTecnico:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico));
-              break;  
+              break;
             }
           }
-          
+
         });
       }
     } else {
@@ -196,7 +196,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     contratacionObservacion: ContratacionObservacion[],
     proyectoId: number,
     estadoProyectoObraCodigo: number,
-    estadoProyectoInterventoriaCodigo: number
+    estadoProyectoInterventoriaCodigo: number,
+    verDetalle: boolean
   ) {
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
@@ -211,7 +212,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
         contratacionObservacion,
         proyectoId,
         estadoProyectoObraCodigo,
-        estadoProyectoInterventoriaCodigo
+        estadoProyectoInterventoriaCodigo,
+        verDetalle
       }
     });
 
@@ -257,7 +259,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               //            resolve();
               //          })
 
-            }) 
+            })
 
         })
 

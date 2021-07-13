@@ -141,7 +141,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionCotizacionId: [],
       nombreOrganizacion: [null, Validators.compose([
-        Validators.required, Validators.minLength(2), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
       ],
       valor: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])

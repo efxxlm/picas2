@@ -297,7 +297,7 @@ namespace asivamosffie.services
 
                 }
                 DateTime? fechaComitetecnico = null;
-                string numerocomietetecnico = "";
+               
                 var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
                     Include(x => x.ComiteTecnico).ToList();
                 if (comite.Count() > 0)
@@ -313,11 +313,11 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId)
         {
-            Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                .Include(r => r.ContratacionProyecto)
-                    .ThenInclude(r => r.ContratacionObservacion)
+            Contratacion contratacion = await 
+                _context.Contratacion
+                .Where(r => r.ContratacionId == pContratacionId)
+                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.SesionSolicitudObservacionProyecto)
+                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionObservacion)
                 .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
@@ -665,7 +665,15 @@ namespace asivamosffie.services
                     _context.SaveChanges();
                 }
 
+                Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == contratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
+                contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
+
+                _context.SaveChanges();
+
                 response.Data = contratacion.PlazoContratacion.PlazoContratacionId;
+                response.IsSuccessful = true;
+                response.Code = ConstantMessagesProyecto.OperacionExitosa;
+                response.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, contratacion.UsuarioCreacion, (string.IsNullOrEmpty(contratacion.UsuarioModificacion) ? "CREAR" : "EDITAR") + " CONTRATACION PROYECTO");
                 return response;
 
             }
@@ -718,9 +726,7 @@ namespace asivamosffie.services
                             await CreateEditComponenteAportante(ComponenteAportante, true);
                         }
                     }
-                }
-
-
+                } 
                 //Contratacion
                 if (Pcontratacion.ContratacionId == 0)
                 {
@@ -986,16 +992,16 @@ namespace asivamosffie.services
 
             if (
                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
-              && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
-              && pContratacionProyectoAntiguo.RequiereLicencia.HasValue   //Pregunta 4
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1
+              && pContratacionProyectoAntiguo.EsAvanceobra.HasValue         //Pregunta 2
+              && pContratacionProyectoAntiguo.RequiereLicencia.HasValue     //Pregunta 4
                )
                 return true;
 
 
             if (
-               pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
+               pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue     //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue   //Pregunta 1
                && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue    //Pregunta 5
             )
@@ -1003,19 +1009,17 @@ namespace asivamosffie.services
 
             if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
-                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue   //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
                 if (pContratacionProyectoAntiguo.RequiereLicencia == false)
-                    return true;
-
-
+                    return true; 
             }
 
 
             if (
-                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue //Pregunta 0?
                && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
@@ -1023,7 +1027,8 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
-                    if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
+                    if (pContratacionProyectoAntiguo.NumeroLicencia != null 
+                      && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
                         return true;
 
                 }

@@ -38,7 +38,8 @@ export class TablaSesionComiteFiduciarioComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.getCommitteeSession()
       .subscribe( response => {
         let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada ||
-                                                          c.estadoComiteCodigo == this.estadosComite.aplazada )
+                                                          c.estadoComiteCodigo == this.estadosComite.aplazada ||
+                                                          c.estadoComiteCodigo == this.estadosComite.conActaDeSesionDevulta)
         this.dataSource = new MatTableDataSource( lista );
         this.initPaginator();
       });

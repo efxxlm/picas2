@@ -1,13 +1,6 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  AfterViewInit,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  Input
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ReportService } from 'src/app/core/_services/reportService/report.service';
 import * as pbi from 'powerbi-client';
 
 @Component({
@@ -15,23 +8,27 @@ import * as pbi from 'powerbi-client';
   templateUrl: './embedded-power-bi.component.html',
   styleUrls: ['./embedded-power-bi.component.scss']
 })
-export class EmbeddedPowerBiComponent implements OnInit, AfterViewInit, OnChanges {
-  @Input() embedInfo: any;
-
+export class EmbeddedPowerBiComponent implements OnInit {
+  embedId: number;
+  embedInfo: Object;
   report: pbi.Embed;
+
   @ViewChild('reportContainer', { static: false }) reportContainer: ElementRef;
-  constructor() {}
 
-  ngOnInit(): void {}
+  constructor(private route: ActivatedRoute, private reportService: ReportService) {}
 
-  ngAfterViewInit() {
-    this.showReport(this.embedInfo);
+  ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      this.embedId = params.id;
+      this.getReportEmbedInfoByIndicadorReporteId(this.embedId);
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.embedInfo) {
-      this.ngAfterViewInit();
-    }
+  getReportEmbedInfoByIndicadorReporteId(id: number) {
+    this.reportService.getReportEmbedInfoByIndicadorReporteId(id).subscribe(response => {
+      this.embedInfo = response;
+      this.showReport(this.embedInfo);
+    });
   }
 
   showReport(token) {

@@ -203,5 +203,29 @@ namespace asivamosffie.services
                 return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
             }
         }
+
+        public async Task<Respuesta> DeleteBudgetRegister(IEnumerable<int> registros, string author)
+        {
+            try
+            {
+                foreach (var item in registros)
+                {
+                    var registroPresupuestal = await _context.RegistroPresupuestal.FindAsync(item);
+                    if (registroPresupuestal != null)
+                    {
+                        _context.RegistroPresupuestal.Remove(registroPresupuestal);
+                    }
+
+                }
+
+                var result = await _context.SaveChangesAsync();
+
+                return new Respuesta { IsSuccessful = true, IsValidation = false, Data = result, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
+            }
+        }
     }
 }

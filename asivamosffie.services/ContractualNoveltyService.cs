@@ -107,7 +107,7 @@ namespace asivamosffie.services
                         if (
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Adición ||
                                 descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales ||
-                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga
                             )
                         {
                             novedad.vaComite = true;

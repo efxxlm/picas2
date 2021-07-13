@@ -69,22 +69,15 @@ namespace asivamosffie.services
             {
                 Contrato contrato =
                     await _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                      .Include(r => r.Contratacion)
-                          .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                       .Include(r => r.ContratoObservacion)
-                       .Include(r => r.Contratacion)
-                          .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.ContratacionProyectoAportante)
-                                  .ThenInclude(r => r.ComponenteAportante)
-                                      .ThenInclude(r => r.ComponenteUso)
-                        .Include(r => r.Contratacion)
-                           .ThenInclude(r => r.Contratista)
-                               .ThenInclude(r => r.ProcesoSeleccionProponente)
-                        .Include(r => r.Contratacion)
-                           .ThenInclude(r => r.DisponibilidadPresupuestal)
-                        .Include(r => r.ContratoPoliza)
-                        .FirstOrDefaultAsync();
+                      .Include(r=> r.Interventor)
+                      .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
+                      .Include(r => r.ContratoObservacion)
+                      .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.ComponenteAportante).ThenInclude(r => r.ComponenteUso)
+                      .Include(r => r.Contratacion).ThenInclude(r => r.Contratista).ThenInclude(r => r.ProcesoSeleccionProponente)
+                      .Include(r => r.Contratacion).ThenInclude(r => r.DisponibilidadPresupuestal)
+                      .Include(r => r.ContratoPoliza)
+                      .Include(r=> r.Contratacion).ThenInclude(r=> r.PlazoContratacion)
+                      .FirstOrDefaultAsync();
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
@@ -111,9 +104,9 @@ namespace asivamosffie.services
 
                 if (contrato.TieneFase2 == null)
                     contrato.TieneFase2 = false;
-                //Modificar Usuario 
-                //Ya que falta hacer caso de uso gestion usuarios
-                contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioModificacion).FirstOrDefault();
+  
+
+                contrato.UsuarioInterventoria = contrato.Interventor;
                 return contrato;
             }
             catch (Exception)

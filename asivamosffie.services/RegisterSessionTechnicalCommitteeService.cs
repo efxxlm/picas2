@@ -2536,7 +2536,8 @@ namespace asivamosffie.services
 
             if (estaCompleto)
             {
-                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                //comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
+                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Desarrollada_Sin_Acta;
                 comite.EsCompleto = true;
                 _context.SaveChanges();
             }
@@ -3975,11 +3976,11 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoVariablesPlaceHolders.PLAZO_MESES:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoMeses.ToString());
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoMeses.ToString());
 
                         break;
                     case ConstanCodigoVariablesPlaceHolders.PLAZO_DIAS:
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion.PlazoDias.ToString());
+                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.PlazoContratacion?.PlazoDias.ToString());
                         break;
 
 

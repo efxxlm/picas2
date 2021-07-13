@@ -279,7 +279,7 @@
           </div>
         </div>
         <div class="row" *ngIf="addressForm.get('tieneRP').value == 1 || registrosPresupuestales.controls.length > 0">
-          <div class="col-md-8">
+          <div class="col-md-9 px-0">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" [ngClass]="{
@@ -287,7 +287,7 @@
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
                   }">
-                  ¿Cuántos RP tiene asociados?
+                  RP asociados
                 </label>
               </div>
               <div class="col d-flex">
@@ -297,10 +297,9 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    required
                   />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                <!-- <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">
                   {{ 2 - cuantosRP.value.length }}
                 </span>
@@ -311,8 +310,14 @@
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
                     " />
-                </span>
+                </span> -->
               </div>
+              <button mat-button color="warn" type="button" class="btn-eliminar" 
+              *ngIf="idAportante !== '0'"
+              (click)="onAddRP()">
+                <img src="assets/img/icon/mas.svg" alt="Agregar otro RP" />
+                Agregar RP
+              </button>
             </div>
           </div>
         </div>
@@ -469,6 +474,13 @@
                         " />
                     </span>
                   </div>
+                </div>
+                <div class="col-md-4 text-right">
+                  <button mat-button color="warn" *ngIf="true" type="button"
+                    class="btn-eliminar" (click)="eliminarRp(numeroRP.value, i)">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
+                    Eliminar RP
+                  </button>
                 </div>
               </div>
             </div>

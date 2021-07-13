@@ -17,7 +17,7 @@ export interface SolicitudesContractuales{
     fecha?: Date,
     nombreSesion?: string,
     data?: any[],
-    
+
 }
 
 export interface ComiteTecnico{
@@ -116,7 +116,7 @@ export interface SesionComiteSolicitud {
 
     tipoSolicitud?: string,
     numeroSolicitud?: string,
-    fechaSolicitud?: Date, 
+    fechaSolicitud?: Date,
     completo?: boolean,
     numeroHijo?: string,
 
@@ -253,7 +253,7 @@ export interface ComiteGrilla{
     id?: number,
     fechaComite?: string,
     numeroComite?: string,
-    estadoComite?: string, 
+    estadoComite?: string,
     estadoComiteCodigo?: string,
     estadoActa?: string,
     estadoActaCodigo?: string,
@@ -331,8 +331,9 @@ interface EstadoComite{
     conActaDeSesionAprobada?: string,
     aplazada?: string,
     fallida?: string,
+    conActaDeSesionDevulta?: string,
   }
-  
+
   export const EstadosComite: EstadoComite = {
     sinConvocatoria: "1",
     convocada: "2",
@@ -341,7 +342,7 @@ interface EstadoComite{
     conActaDeSesionAprobada: "5",
     aplazada: "6",
     fallida: "7",
-
+    conActaDeSesionDevulta : "8"
   }
 
   interface TipoSolicitud{
@@ -350,9 +351,9 @@ interface EstadoComite{
     ModificacionContractual?: string,
     ActualizacionCronogramaProcesoseleccion?: string,
     ActuacionesControversiasContractuales?: string,
-    
+
   }
-  
+
   export const TiposSolicitud: TipoSolicitud = {
     AperturaDeProcesoDeSeleccion: "1",
     Contratacion: "2",
@@ -368,7 +369,7 @@ interface EstadoComite{
     Aprobada?: string,
     Devuelta?: string,
   }
-  
+
   export const EstadosActaComite: EstadoActaComite = {
     SinActa: "1",
     EnProcesoAprobacion: "2",

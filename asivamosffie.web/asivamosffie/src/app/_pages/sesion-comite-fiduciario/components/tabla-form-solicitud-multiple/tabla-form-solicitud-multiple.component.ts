@@ -119,7 +119,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               break;
             default:
               this.listaEstados = this.listaEstadosCompleta.filter(e => ["4", "6", "8"].includes(e.codigo));
-              
+
           }
 
         }
@@ -137,18 +137,18 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
           switch  (estadoSolicitud.codigo){
             case EstadosSolicitud.AprobadaPorComiteFiduciario:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteFiduciario));
-              break;  
+              break;
             }
             case EstadosSolicitud.RechazadaPorComiteFiduciario:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteFiduciario));
-              break;  
+              break;
             }
             case EstadosSolicitud.DevueltaPorComiteFiduciario:{
               Array.prototype.push.apply(this.listaEstados, this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteFiduciario));
-              break;  
+              break;
             }
           }
-          
+
         });
       }
     } else {
@@ -196,7 +196,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     contratacionObservacion: ContratacionObservacion[],
     proyectoId: number,
     estadoProyectoObraCodigo: number,
-    estadoProyectoInterventoriaCodigo: number,) {
+    estadoProyectoInterventoriaCodigo: number,
+    verDetalle: boolean) {
 
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoFiduciarioId;
@@ -212,7 +213,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
         proyectoId,
         estadoProyectoObraCodigo,
         estadoProyectoInterventoriaCodigo,
-
+        verDetalle
       }
     });
 
@@ -269,7 +270,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               //            resolve();
               //          })
 
-            }) 
+            })
 
         })
 

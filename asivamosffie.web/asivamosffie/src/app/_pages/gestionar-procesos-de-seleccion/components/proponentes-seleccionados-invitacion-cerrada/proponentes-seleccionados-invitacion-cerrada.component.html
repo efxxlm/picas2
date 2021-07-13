@@ -44,10 +44,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
                     (addressForm.get('cuantosProponentes').invalid && estaEditando)
@@ -90,10 +90,10 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
               (addressForm.get('nombresProponentes').invalid && addressForm.get('nombresProponentes').touched) ||
               (addressForm.get('nombresProponentes').invalid && estaEditando)
@@ -136,6 +136,7 @@
       <!-- </div> -->
       <div *ngIf="nuevo">
         <app-form-datos-proponentes-nuevo
+          *ngFor='let in of counter() ;let i = index'
           #proponente
           [procesoSeleccion]="procesoSeleccion"
           [noTanNuevo]="true"

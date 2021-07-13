@@ -12,6 +12,13 @@
         //NO map NO esta En el Mismo TipoDominioId
         public const string Sin_Revision = "13";
     }
+
+    public static class ConstanMessages // TipoDominio 85
+    {
+        public const string SinDefinir = "sin definir";
+        public const string Obra = "obra";
+    }
+
     public static class ConstanCodigoEstadoActaInicioObra // TipoDominio 85
     {
         public const string Con_acta_suscrita_y_cargada = "20";
