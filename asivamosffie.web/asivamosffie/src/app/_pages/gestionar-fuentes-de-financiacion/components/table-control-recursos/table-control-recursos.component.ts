@@ -44,7 +44,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
                 private fuenteFinanciacionServices: FuenteFinanciacionService,
                 private router: Router,
                 private dialog: MatDialog,
-             ) 
+             )
   { }
 
   ngOnInit(): void {
@@ -53,9 +53,10 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
       this.dataTable = [];
       this.fuenteFinanciacionServices.getSourceFundingBySourceFunding( this.idFuente ).subscribe( listaFuentes => {
         listaFuentes.forEach(element => {
-          this.dataTable.push({ 
+          this.dataTable.push({
             fechaCreacion: element.fechaCreacion,
             nombreCuentaBanco: element.cuentaBancaria.nombreCuentaBanco,
+            numeroCuentaBanco: element.cuentaBancaria.numeroCuentaBanco,
             aportanteId: element.fuenteFinanciacion.aportanteId,
             numeroRp: element.registroPresupuestal ? element.registroPresupuestal.numeroRp : 'No aplica',
             vigenciaCofinanciacionId: element.fuenteFinanciacion.aportante.cofinanciacion.vigenciaCofinanciacionId,
@@ -77,7 +78,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
       })
     });
 
-    
+
   }
 
   ngAfterViewInit() {
@@ -104,7 +105,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       // console.log(`Dialog result: ${result}`);
       if(result === true)
@@ -113,22 +114,22 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
           // console.log(res);
           this.openDialog("",res.message);
         });
-      }           
+      }
     });
   }
   openDialog(modalTitle: string, modalText: string,borrarForm?: any) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:false }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       // console.log(`Dialog result: ${result}`);
-      
-        this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])   
+
+        this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])
         setTimeout(() => {
-          location.reload(); 
-        }, 1000);    
-                 
+          location.reload();
+        }, 1000);
+
     });
   }
 
