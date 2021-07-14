@@ -106,15 +106,13 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
             int idAccionCrearProcesoSeleccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proceso_Seleccion, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = "";
+            string strCrearEditar = string.Empty;
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
 
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
-
-                    //int? countMaxId = _context.ProcesoSeleccion.Max(p => (int?)p.ProcesoSeleccionId);
                     int countMax = _context.ProcesoSeleccion.Count(p => p.TipoProcesoCodigo == procesoSeleccion.TipoProcesoCodigo);
 
                     //Auditoria
@@ -190,7 +188,7 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma)
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    await this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
+                     this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
                 }
 
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
@@ -198,7 +196,7 @@ namespace asivamosffie.services
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion == null ? "" : cotizacion.NombreOrganizacion.ToUpper();
                     cotizacion.UrlSoporte = cotizacion.UrlSoporte == null ? "" : cotizacion.UrlSoporte.ToUpper();
-                    await this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
+                     this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
                 //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
@@ -214,19 +212,19 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal == null ? "" : proponente.NombreRepresentanteLegal.ToUpper();
-                    proponente.NombreProponente = proponente.NombreProponente.ToUpper();
-                    proponente.DireccionProponente = proponente.DireccionProponente.ToUpper();
-                    proponente.EmailProponente = proponente.EmailProponente.ToUpper();
+                    proponente.NombreRepresentanteLegal =   proponente.NombreRepresentanteLegal.ToUpper() ?? string.Empty;
+                    proponente.NombreProponente = proponente.NombreProponente.ToUpper() ?? string.Empty;
+                    proponente.DireccionProponente = proponente.DireccionProponente.ToUpper() ?? string.Empty;
+                    proponente.EmailProponente = proponente.EmailProponente.ToUpper() ?? string.Empty;
                     proponente.Eliminado = false;
-                    await this.CreateEditarProcesoSeleccionProponente(proponente);
+                     this.CreateEditarProcesoSeleccionProponente(proponente);
                 }
 
                 foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
                 {
                     integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    integrante.NombreIntegrante = integrante.NombreIntegrante.ToUpper();
-                    await this.CreateEditarProcesoSeleccionIntegrante(integrante);
+                    integrante.NombreIntegrante = integrante.NombreIntegrante.ToUpper() ?? string.Empty;
+                     this.CreateEditarProcesoSeleccionIntegrante(integrante);
                 }
 
                 await _context.SaveChangesAsync();
@@ -388,8 +386,7 @@ namespace asivamosffie.services
 
 
         #region Servicios Cronograma;
-
-
+         
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
         {
             return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado).ToListAsync();
@@ -584,11 +581,9 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
+         
         #region Servicios Proceso Seleccion Cotizacion;
-
-
+         
         public async Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion()
         {
 
@@ -681,8 +676,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
+         
         #region Servicios Proceso Seleccion Proponente;
 
         public async Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id)
@@ -810,9 +804,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
-
+         
         #region Servicios Proceso Seleccion Integrante;
 
         public async Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id)
@@ -873,8 +865,7 @@ namespace asivamosffie.services
                     strCrearEditar = "EDIT PROCESO SELECCION INTEGRANTE";
                     procesoSeleccionIntegranteAntiguo = _context.ProcesoSeleccionIntegrante.Find(procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId);
 
-                    //Registros
-
+                    //Registros 
                     procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
                     procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
                     procesoSeleccionIntegranteAntiguo.PorcentajeParticipacion = procesoSeleccionIntegrante.PorcentajeParticipacion;
@@ -882,8 +873,7 @@ namespace asivamosffie.services
                     procesoSeleccionIntegranteAntiguo.Eliminado = false;
                     procesoSeleccionIntegranteAntiguo.FechaModificacion = DateTime.Now;
                     procesoSeleccionIntegranteAntiguo.UsuarioModificacion = procesoSeleccionIntegrante.UsuarioModificacion;
-
-
+                     
                     _context.ProcesoSeleccionIntegrante.Update(procesoSeleccionIntegranteAntiguo);
                 }
 
@@ -891,7 +881,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta = new Respuesta
+                return  new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
@@ -903,8 +893,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-
-
+         
         //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento)
         {
@@ -1000,8 +989,7 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
+         
         //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
         {
