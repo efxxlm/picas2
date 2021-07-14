@@ -165,9 +165,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud, bool showRechazado)
-        {
-
-
+        { 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal =
                                                                                 await _context.DisponibilidadPresupuestal
                                                                                                     .Where(r => !(bool)r.Eliminado &&
@@ -215,9 +213,7 @@ namespace asivamosffie.services
                 RegistroPresupuestal.DisponibilidadPresupuestal.EstadoSolicitudCodigo = RegistroPresupuestal.EstadoSolicitudCodigo;
                 RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
-                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
-                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
+                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp; 
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
                 RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
 
@@ -306,7 +302,7 @@ namespace asivamosffie.services
 
                     var contratacion = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId).ToList();
                     // LCT
-                    bool rechazadaFiduciaria = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId && x.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario && x.Eliminado != true).Count() > 0 ? true : false;
+                    bool rechazadaFiduciaria = ListContratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId && x.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario && x.Eliminado != true).Count() > 0;
 
                     DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
                     {
@@ -505,6 +501,7 @@ namespace asivamosffie.services
             return estadosdisponibles;
         }
 
+     
         public async Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
@@ -521,9 +518,11 @@ namespace asivamosffie.services
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
                 //envio correo
-                var usuarioJuridico = _context.UsuarioPerfil.Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||
-                 x.PerfilId == (int)EnumeratorPerfil.Tecnica)
-                ).Include(y => y.Usuario).ToList();
+                var usuarioJuridico = _context.UsuarioPerfil
+                    .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||  x.PerfilId == (int)EnumeratorPerfil.Tecnica))
+                    .Include(y => y.Usuario)
+                    .ToList();
+
                 bool blEnvioCorreo = true;
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DRPCancelado);
                 string template = TemplateRecoveryPassword.Contenido;
@@ -2029,6 +2028,10 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: rechaza disponibilidad por validacion pres
         impacto: CU 3.3.2*/
+
+        /*autor: JMartinezC
+        * descripción: cuando se rechaza tambien la contratacion debe quedar en estado rechazado
+        */
         public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esNovedad
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
@@ -2056,6 +2059,11 @@ namespace asivamosffie.services
                 else
                 {
 
+                    Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
+                    contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
+                    contratacionCancelar.FechaModificacion = DateTime.Now;
+                    contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                     
                     int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                     DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
@@ -2063,6 +2071,7 @@ namespace asivamosffie.services
                     pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = null;
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                     pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+
                     _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
 
                 }
