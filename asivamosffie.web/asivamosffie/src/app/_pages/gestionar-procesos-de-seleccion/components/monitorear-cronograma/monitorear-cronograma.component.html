@@ -9,20 +9,14 @@
             Monitorear cronograma proceso {{procesoSeleccion.numeroProceso}}
         </h1>
         <span class="subtittle">Selección privada</span>
-        <button mat-raised-button color="primary" class="btn-ver-objetivo" (click)="verAyuda = !verAyuda">
-            <img src="assets/img/icon/ojo-blanco.svg" alt="Ver objeto">
-            Ver objeto
-        </button>
+        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
 
         <div class="text-info" *ngIf="verAyuda">
             <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
                 <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
             </button>
 
-            Mejorar los ambientes para el desarrollo pedagógico de los estudiantes, hecho que se traduce en aspectos
-            motivacionales que llevan a un mejor aprendizaje, al tiempo que asegura la capacidad del sistema para
-            absorber y retener al mayor número de población estudiantil y a largo plazo favorece los índices de
-            desarrollo social de la población.
+            
         </div>
     </div>
 

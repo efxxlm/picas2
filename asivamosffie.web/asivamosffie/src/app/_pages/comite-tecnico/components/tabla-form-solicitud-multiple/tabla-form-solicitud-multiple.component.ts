@@ -197,7 +197,10 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     proyectoId: number,
     estadoProyectoObraCodigo: number,
     estadoProyectoInterventoriaCodigo: number,
-    verDetalle: boolean
+    verDetalle: boolean,
+    institucionEducativa:string,
+    sede:string,
+    departamento:string,
   ) {
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
@@ -213,7 +216,10 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
         proyectoId,
         estadoProyectoObraCodigo,
         estadoProyectoInterventoriaCodigo,
-        verDetalle
+        verDetalle,
+        institucionEducativa,
+        sede,
+        departamento
       }
     });
 
