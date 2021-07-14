@@ -2320,45 +2320,38 @@ namespace asivamosffie.services
                                                                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                                            .ThenInclude(r => r.SesionSolicitudCompromiso)
                                                                                .ThenInclude(r => r.CompromisoSeguimiento)
-                                                                    .Select(x => new
-                                                                    {
-                                                                        Id = x.ComiteTecnicoId,
-                                                                        FechaComite = x.FechaOrdenDia,
-                                                                        EstadoComite = x.EstadoComiteCodigo,
-                                                                        x.NumeroComite,
-                                                                        x.EsComiteFiduciario,
-                                                                        x.EstadoActaCodigo,
-                                                                        x.EsCompleto
-
-                                                                    }).Distinct().OrderByDescending(r => r.Id).ToListAsync();
+                                                                    .Distinct().OrderByDescending(r => r.ComiteTecnicoId).ToListAsync();
 
                 foreach (var comite in ListComiteTecnico)
                 {
-                    if (!(bool)comite.EsComiteFiduciario)
-                    {
-                        ComiteGrilla comiteGrilla = new ComiteGrilla
-                        {
-                            Id = comite.Id,
-                            FechaComite = comite.FechaComite.Value,
-                            EstadoComiteCodigo = comite.EstadoComite,
-                            EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "",
-                            NumeroComite = comite.NumeroComite,
-                            EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
-                            EstadoActaCodigo = comite.EstadoActaCodigo,
-                            RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
-                            RegistroCompleto = comite.EsCompleto,
-                            //NumeroCompromisos = numeroCompromisos(comite.Id, false),
-                            //NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
-                            EsComiteFiduciario = comite.EsComiteFiduciario,
-                        };
+                    string EstadoComite = "";
+                    if (!string.IsNullOrEmpty(comite.EstadoActaCodigo))
+                        EstadoComite = ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre;
 
-                        ListComiteGrilla.Add(comiteGrilla);
-                    }
+                    ComiteGrilla comiteGrilla = new ComiteGrilla
+                    {
+                        Id = comite.ComiteTecnicoId,
+                        FechaComite = comite.FechaOrdenDia.Value,
+                        EstadoComiteCodigo = !string.IsNullOrEmpty(comite.EstadoComiteCodigo) ? comite.EstadoComiteCodigo : "",
+                        EstadoComite = !string.IsNullOrEmpty(EstadoComite) ? EstadoComite : "",
+                        NumeroComite = comite.NumeroComite,
+                        EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
+                        EstadoActaCodigo = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? comite.EstadoActaCodigo : "",
+                        RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
+                        RegistroCompleto = comite.EsCompleto,
+                        //NumeroCompromisos = numeroCompromisos(comite.Id, false),
+                        //NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
+                        EsComiteFiduciario = comite.EsComiteFiduciario,
+                    };
+                    ListComiteGrilla.Add(comiteGrilla);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string error = "";
+                error = ex.InnerException.ToString();
             }
+
             return ListComiteGrilla;
         }
 
@@ -3578,7 +3571,7 @@ namespace asivamosffie.services
             List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
             List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
 
-            if(pContratacion.PlazoContratacion == null)
+            if (pContratacion.PlazoContratacion == null)
             {
                 pContratacion.PlazoContratacion = new PlazoContratacion();
             }
