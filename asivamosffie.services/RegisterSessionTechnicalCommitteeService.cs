@@ -3107,13 +3107,20 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.PRESUPUESTO_OFICIAL_PS:
+                            string valor = "";
+                            if (!string.IsNullOrEmpty(ProcesoSeleccionGrupo.TipoPresupuestoCodigo))
+                            {
+                                if (ProcesoSeleccionGrupo.TipoPresupuestoCodigo == ConstantCodigoTipoPresupuesto.Presupuesto_oficial)
+                                {
+                                    valor = ProcesoSeleccionGrupo.Valor != null ? "$" + String.Format("{0:n0}", ProcesoSeleccionGrupo.Valor) : "";
+                                }
+                                else if (ProcesoSeleccionGrupo.TipoPresupuestoCodigo == ConstantCodigoTipoPresupuesto.Categoria_de_ejecucion)
+                                {
+                                    valor = ProcesoSeleccionGrupo.ValorMinimoCategoria != null ? "$" + String.Format("{0:n0}", ProcesoSeleccionGrupo.ValorMinimoCategoria) : "" + " - " + ProcesoSeleccionGrupo.ValorMaximoCategoria != null ? "$" + String.Format("{0:n0}", ProcesoSeleccionGrupo.ValorMaximoCategoria) : "";
+                                }
+                            }
                             DetallesGrupoProcesosSeleccion = DetallesGrupoProcesosSeleccion
-                                 .Replace(placeholderDominio.Nombre,
-                                 !string.IsNullOrEmpty(ProcesoSeleccionGrupo.TipoPresupuestoCodigo) ?
-                            ListaParametricas.Where(r => r.Codigo == ProcesoSeleccionGrupo.TipoPresupuestoCodigo
-                            && r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección)
-                            .FirstOrDefault().Nombre
-                            : "");
+                                 .Replace(placeholderDominio.Nombre,valor);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.PLAZO_EN_MESES_PS:
