@@ -188,7 +188,7 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma)
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                     this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
+                    this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
                 }
 
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
@@ -196,7 +196,7 @@ namespace asivamosffie.services
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion == null ? "" : cotizacion.NombreOrganizacion.ToUpper();
                     cotizacion.UrlSoporte = cotizacion.UrlSoporte == null ? "" : cotizacion.UrlSoporte.ToUpper();
-                     this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
+                    this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
                 //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
@@ -211,20 +211,20 @@ namespace asivamosffie.services
                 }
                 foreach (ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente)
                 {
-                    proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    proponente.NombreRepresentanteLegal =   proponente.NombreRepresentanteLegal.ToUpper() ?? string.Empty;
-                    proponente.NombreProponente = proponente.NombreProponente.ToUpper() ?? string.Empty;
-                    proponente.DireccionProponente = proponente.DireccionProponente.ToUpper() ?? string.Empty;
-                    proponente.EmailProponente = proponente.EmailProponente.ToUpper() ?? string.Empty;
+                    proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
+                    proponente.NombreRepresentanteLegal = proponente.NombreRepresentanteLegal;
+                    proponente.NombreProponente = proponente.NombreProponente;
+                    proponente.DireccionProponente = proponente.DireccionProponente;
+                    proponente.EmailProponente = proponente.EmailProponente;
                     proponente.Eliminado = false;
-                     this.CreateEditarProcesoSeleccionProponente(proponente);
+                    this.CreateEditarProcesoSeleccionProponente(proponente);
                 }
 
                 foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
                 {
                     integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    integrante.NombreIntegrante = integrante.NombreIntegrante.ToUpper() ?? string.Empty;
-                     this.CreateEditarProcesoSeleccionIntegrante(integrante);
+                    integrante.NombreIntegrante = integrante.NombreIntegrante;
+                    this.CreateEditarProcesoSeleccionIntegrante(integrante);
                 }
 
                 await _context.SaveChangesAsync();
@@ -386,7 +386,7 @@ namespace asivamosffie.services
 
 
         #region Servicios Cronograma;
-         
+
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
         {
             return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado).ToListAsync();
@@ -581,9 +581,9 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
         #region Servicios Proceso Seleccion Cotizacion;
-         
+
         public async Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion()
         {
 
@@ -676,7 +676,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
         #region Servicios Proceso Seleccion Proponente;
 
         public async Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id)
@@ -804,7 +804,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
         #region Servicios Proceso Seleccion Integrante;
 
         public async Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id)
@@ -873,7 +873,7 @@ namespace asivamosffie.services
                     procesoSeleccionIntegranteAntiguo.Eliminado = false;
                     procesoSeleccionIntegranteAntiguo.FechaModificacion = DateTime.Now;
                     procesoSeleccionIntegranteAntiguo.UsuarioModificacion = procesoSeleccionIntegrante.UsuarioModificacion;
-                     
+
                     _context.ProcesoSeleccionIntegrante.Update(procesoSeleccionIntegranteAntiguo);
                 }
 
@@ -881,7 +881,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return  new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
@@ -893,7 +893,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-         
+
         //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento)
         {
@@ -989,7 +989,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         //Registrar Seguimiento cronograma
         public async Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo)
         {
@@ -1459,7 +1459,7 @@ namespace asivamosffie.services
         {
             //depende del tipo
             if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
-            { 
+            {
                 if (
                      string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
                      string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
@@ -1504,7 +1504,7 @@ namespace asivamosffie.services
                 return true;
             }
             else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
-            { 
+            {
                 if (
                      string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
                      string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
@@ -1581,7 +1581,7 @@ namespace asivamosffie.services
                 }
 
 
-                foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc=> psc.Eliminado != true))
+                foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc => psc.Eliminado != true))
                 {
                     if (
                         string.IsNullOrEmpty(psc.NombreOrganizacion) ||
@@ -1590,11 +1590,11 @@ namespace asivamosffie.services
                         string.IsNullOrEmpty(psc.UrlSoporte)
                         )
                         return false;
-                } 
+                }
                 return true;
             }
             else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
-            { 
+            {
                 if (
                      string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
                      string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
@@ -1614,22 +1614,22 @@ namespace asivamosffie.services
                 if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
                     return false;
 
-                if(procesoSeleccion.ProcesoSeleccionProponente.Count(psp => psp.Eliminado != true) != procesoSeleccion.CantidadProponentesInvitados )
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count(psp => psp.Eliminado != true) != procesoSeleccion.CantidadProponentesInvitados)
 
                     foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc => psc.Eliminado != true))
-                {
-                    if (
-                         string.IsNullOrEmpty(psc.NombreOrganizacion) ||
-                         psc.ValorCotizacion == null ||
-                         string.IsNullOrEmpty(psc.Descripcion) ||
-                         string.IsNullOrEmpty(psc.UrlSoporte)
-                    )
-                        return false;
-                }
+                    {
+                        if (
+                             string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                             psc.ValorCotizacion == null ||
+                             string.IsNullOrEmpty(psc.Descripcion) ||
+                             string.IsNullOrEmpty(psc.UrlSoporte)
+                        )
+                            return false;
+                    }
 
                 if (procesoSeleccion.ProcesoSeleccionGrupo.Count(psg => psg.Eliminado != true) == 0)
                     return false;
-  
+
                 foreach (var psg in procesoSeleccion.ProcesoSeleccionGrupo.Where(ps => ps.Eliminado != true))
                 {
                     if (
