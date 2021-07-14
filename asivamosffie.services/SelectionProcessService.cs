@@ -153,8 +153,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes;
                     ProcesoSeleccionAntiguo.CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje;
                     ProcesoSeleccionAntiguo.CantidadCotizaciones = procesoSeleccion.CantidadCotizaciones;
-                    ProcesoSeleccionAntiguo.CantidadProponentes = procesoSeleccion.CantidadProponentes;
-                    ProcesoSeleccionAntiguo.EsCompleto = EsCompleto(procesoSeleccion);
+                    ProcesoSeleccionAntiguo.CantidadProponentes = procesoSeleccion.CantidadProponentes; 
                     ProcesoSeleccionAntiguo.EstadoProcesoSeleccionCodigo = procesoSeleccion.EstadoProcesoSeleccionCodigo;
                     ProcesoSeleccionAntiguo.EtapaProcesoSeleccionCodigo = procesoSeleccion.EtapaProcesoSeleccionCodigo;
                     ProcesoSeleccionAntiguo.EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion;
@@ -162,6 +161,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
+                    ProcesoSeleccionAntiguo.RegistroCompletoProponentes = ValidarRegistroCompletoProponente(ProcesoSeleccionAntiguo.ProcesoSeleccionProponente.ToList());
 
                     ProcesoSeleccionAntiguo.Eliminado = false;
 
@@ -755,13 +755,14 @@ namespace asivamosffie.services
             try
             {
 
-                if (string.IsNullOrEmpty(procesoSeleccionProponente.ProcesoSeleccionProponenteId.ToString()) || procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
+                if (procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION PROPONENTE";
                     procesoSeleccionProponente.FechaCreacion = DateTime.Now;
                     procesoSeleccionProponente.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion.ToUpper();
                     procesoSeleccionProponente.Eliminado = false;
+                    procesoSeleccionProponente.RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente);
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
                 }
                 else
@@ -773,7 +774,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionProponenteAntiguo = _context.ProcesoSeleccionProponente.Find(procesoSeleccionProponente.ProcesoSeleccionProponenteId);
 
                     //Registros
-
+                    ProcesoSeleccionProponenteAntiguo.RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente);
                     ProcesoSeleccionProponenteAntiguo.ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId;
                     ProcesoSeleccionProponenteAntiguo.TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo;
                     ProcesoSeleccionProponenteAntiguo.NombreProponente = procesoSeleccionProponente.NombreProponente;
@@ -802,6 +803,28 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, procesoSeleccionProponente.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
+        }
+
+        private bool? ValidarRegistroCompletoProponente(ProcesoSeleccionProponente procesoSeleccionProponente)
+        {
+            return (
+                  !string.IsNullOrEmpty(procesoSeleccionProponente.NombreProponente)
+               || !string.IsNullOrEmpty(procesoSeleccionProponente.NumeroIdentificacion)
+               || !string.IsNullOrEmpty(procesoSeleccionProponente.LocalizacionIdMunicipio)
+               || !string.IsNullOrEmpty(procesoSeleccionProponente.DireccionProponente)
+               || !string.IsNullOrEmpty(procesoSeleccionProponente.TelefonoProponente)
+               || !string.IsNullOrEmpty(procesoSeleccionProponente.EmailProponente)
+                );
+        }
+
+        private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
+        { 
+            foreach (var procesoSeleccionProponente in ListProcesoSeleccionProponente)
+            {
+                if (ValidarRegistroCompletoProponente(procesoSeleccionProponente) == false)
+                    return false;
+            } 
+            return true;
         }
         #endregion
 
@@ -1613,7 +1636,7 @@ namespace asivamosffie.services
 
                 if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
                     return false;
-
+                 
                 if (procesoSeleccion.ProcesoSeleccionProponente.Count(psp => psp.Eliminado != true) != procesoSeleccion.CantidadProponentesInvitados)
 
                     foreach (var psc in procesoSeleccion.ProcesoSeleccionCotizacion.Where(psc => psc.Eliminado != true))
@@ -1642,6 +1665,13 @@ namespace asivamosffie.services
                      )
                         return false;
                 }
+
+                foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente)
+                { 
+                    if (ValidarRegistroCompletoProponente(ProcesoSeleccionProponente) == false)
+                        return false;
+                } 
+
                 return true;
             }
             return false;
