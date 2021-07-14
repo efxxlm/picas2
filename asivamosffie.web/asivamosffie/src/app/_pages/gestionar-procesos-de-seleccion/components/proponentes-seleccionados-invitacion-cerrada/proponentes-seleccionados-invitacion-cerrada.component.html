@@ -136,10 +136,10 @@
       <!-- </div> -->
       <div *ngIf="nuevo">
         <app-form-datos-proponentes-nuevo
-          *ngFor='let in of counter() ;let i = index'
           #proponente
           [procesoSeleccion]="procesoSeleccion"
           [noTanNuevo]="true"
+          [amountNuevosProponentes]="amountNuevosProponentes(amountNuevosProponentes)"
           (guardar)="onSubmitNuevoProponente()"
         >
         </app-form-datos-proponentes-nuevo>

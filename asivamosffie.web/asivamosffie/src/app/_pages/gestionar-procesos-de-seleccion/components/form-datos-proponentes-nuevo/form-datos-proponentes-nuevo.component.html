@@ -1,176 +1,26 @@
 <div class="pt-1em">
-  <mat-card-title class="header-card--text"> Proponente Nuevo </mat-card-title>
-  <div class="row">
-    <div class="pr-1">
-      <label
-        class="label-left"
-        for="tipoProponente"
-        [class.color-secondaryColor]="
-          (tipoProponente.invalid && tipoProponente.touched) || (tipoProponente.invalid && estaEditando)
-        "
-      >
-        Tipos de proponente nuevo
-      </label>
-    </div>
-    <div class="col-md-6">
-      <mat-form-field class="select-width">
-        <mat-select [formControl]="tipoProponente" (selectionChange)="limpiarForms()" required>
-          <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
-            {{ proponente.nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <span class="icon-incompleto">
-      <img
-        class="icon-incompleto--img"
-        src="assets/img/icon/incompleto.svg"
-        alt="este campo es requerido"
-        [matTooltipPosition]="'above'"
-        matTooltip="Debe ingresar la información en el campo para continuar"
-        matTooltipClass="info-tooltip"
-        *ngIf="(tipoProponente.invalid && tipoProponente.touched) || (tipoProponente.invalid && estaEditando)"
-      />
-    </span>
-  </div>
-  <form
-    *ngIf="tipoProponente.value.codigo == 1"
-    [formGroup]="personaNaturalForm"
-    novalidate
-    (ngSubmit)="onSubmitPersonaNatural()"
-  >
-    <div class="row">
-      <div class="pr-1">
-        <label
-          for="nombre"
-          class="label-left"
-          [class.color-secondaryColor]="(myControl.invalid && myControl.touched) || (myControl.invalid && estaEditando)"
-        >
-          Nombre del proponente
-        </label>
-      </div>
-      <div class="col d-flex">
-        <mat-form-field
-          class="full-width"
-          [matTooltipPosition]="'above'"
-          matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
-          matTooltipClass="info-tooltip"
-          >
-          <input
-            matInput
-            #nombre
-            type="text"
-            maxlength="1000"
-            [formControl]="myControl"
-            required
-            [matAutocomplete]="auto"
-          />
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option
-              (click)="seleccionAutocomplete(nombres)"
-              *ngFor="let nombres of filteredName | async"
-              [value]="nombres"
-            >
-              {{ nombres }}
-            </mat-option>
-          </mat-autocomplete>
-          <input type="hidden" formControlName="procesoSeleccionProponenteId" />
-        </mat-form-field>
-        <span
-          class="contador miles"
-          [matTooltipPosition]="'above'"
-          matTooltip="Campo alfanumérico"
-          matTooltipClass="info-tooltip"
-        >
-          {{ 1000 - nombre.value.length }}
-        </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="(myControl.invalid && myControl.touched) || (myControl.invalid && estaEditando)"
-          />
-        </span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="pr-1">
-        <label
-          for="numeroIdentificacion"
-          class="label-left"
-          [class.color-secondaryColor]="
-            (personaNaturalForm.get('numeroIdentificacion')?.invalid &&
-              personaNaturalForm.get('numeroIdentificacion').touched) ||
-            (personaNaturalForm.get('numeroIdentificacion')?.invalid && estaEditando)
-          "
-        >
-          Número de identificación del proponente
-        </label>
-      </div>
-      <div class="col d-flex">
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            #numeroIdentificacion
-            type="number"
-            maxlength="12"
-            formControlName="numeroIdentificacion"
-            required
-            (keypress)="validateNumberKeypress($event)"
-            onKeyPress="if(this.value.length>=this.maxLength) return false;"
-            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-          />
-        </mat-form-field>
-        <span
-          class="contador"
-          [matTooltipPosition]="'above'"
-          matTooltip="Campo numérico"
-          matTooltipClass="info-tooltip"
-        >
-          {{ 12 - numeroIdentificacion.value.length }}
-        </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (personaNaturalForm.get('numeroIdentificacion')?.invalid &&
-                personaNaturalForm.get('numeroIdentificacion').touched) ||
-              (personaNaturalForm.get('numeroIdentificacion')?.invalid && estaEditando)
-            "
-          />
-        </span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarNuevosProponentes()">
+    <div formArrayName="proponentes">
+      <div *ngFor="let proponente of proponentesField.controls; let j = index" [formGroupName]="j">
+        <mat-card-title class="header-card--text"> Proponente Nuevo {{ j + 1 }}</mat-card-title>
         <div class="row">
           <div class="pr-1">
             <label
-              for="depaetamento"
               class="label-left"
+              for="tipoProponenteCodigo"
               [class.color-secondaryColor]="
-                (personaNaturalForm.get('depaetamento')?.invalid && personaNaturalForm.get('depaetamento').touched) ||
-                (personaNaturalForm.get('depaetamento')?.invalid && estaEditando)
+                (proponente.get('tipoProponenteCodigo').invalid && proponente.get('tipoProponenteCodigo').touched) ||
+                (proponente.get('tipoProponenteCodigo').invalid && estaEditando)
               "
             >
-              Departamento del domicilio del proponente
+              Tipos de proponente nuevo
             </label>
           </div>
-          <div class="col">
-            <mat-form-field class="select-width capitalize">
-              <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
-                  {{ departamento.descripcion }}
+          <div class="col-md-6">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="tipoProponenteCodigo" (selectionChange)="limpiarForms()" required>
+                <mat-option *ngFor="let proponenteName of listaProponentes" [value]="proponenteName.codigo">
+                  {{ proponenteName.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -184,825 +34,97 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaNaturalForm.get('depaetamento')?.invalid && personaNaturalForm.get('depaetamento').touched) ||
-                (personaNaturalForm.get('depaetamento')?.invalid && estaEditando)
+                (proponente.get('tipoProponenteCodigo').invalid && proponente.get('tipoProponenteCodigo').touched) ||
+                (proponente.get('tipoProponenteCodigo').invalid && estaEditando)
               "
             />
           </span>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="municipio"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaNaturalForm.get('municipio')?.invalid && personaNaturalForm.get('municipio').touched) ||
-                (personaNaturalForm.get('municipio')?.invalid && estaEditando)
-              "
-            >
-              Municipio del domicilio del proponente
-            </label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width capitalize">
-              <mat-select formControlName="municipio" required>
-                <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                  {{ municipio.descripcion }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (personaNaturalForm.get('municipio')?.invalid && personaNaturalForm.get('municipio').touched) ||
-                (personaNaturalForm.get('municipio')?.invalid && estaEditando)
-              "
-            />
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="pr-1">
-        <label
-          for="direccion"
-          class="label-left"
-          [class.color-secondaryColor]="
-            (personaNaturalForm.get('direccion')?.invalid && personaNaturalForm.get('direccion').touched) ||
-            (personaNaturalForm.get('direccion')?.invalid && estaEditando)
-          "
-        >
-          Dirección del proponente
-        </label>
-      </div>
-      <div class="col d-flex">
-        <mat-form-field class="full-width">
-          <input matInput #direccion type="text" maxlength="500" formControlName="direccion" required />
-        </mat-form-field>
-        <span
-          class="contador"
-          [matTooltipPosition]="'above'"
-          matTooltip="Campo alfanumérico"
-          matTooltipClass="info-tooltip"
-        >
-          {{ 500 - direccion.value.length }}
-        </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (personaNaturalForm.get('direccion')?.invalid && personaNaturalForm.get('direccion').touched) ||
-              (personaNaturalForm.get('direccion')?.invalid && estaEditando)
-            "
-          />
-        </span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="telefono"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaNaturalForm.get('telefono')?.invalid && personaNaturalForm.get('telefono').touched) ||
-                (personaNaturalForm.get('telefono')?.invalid && estaEditando)
-              "
-            >
-              Teléfono del proponente
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #telefono
-                type="number"
-                maxlength="10"
-                formControlName="telefono"
-                required
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 10 - telefono.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaNaturalForm.get('telefono')?.invalid && personaNaturalForm.get('telefono').touched) ||
-                  (personaNaturalForm.get('telefono')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="pr-1">
-        <label
-          for="correoElectronico"
-          class="label-left"
-          [class.color-secondaryColor]="
-            (personaNaturalForm.get('correoElectronico')?.invalid &&
-              personaNaturalForm.get('correoElectronico').touched) ||
-            (personaNaturalForm.get('correoElectronico')?.invalid && estaEditando)
-          "
-        >
-          Correo electrónico del proponente
-        </label>
-      </div>
-      <div class="col d-flex">
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            #correoElectronico
-            type="email"
-            maxlength="1000"
-            formControlName="correoElectronico"
-            required
-          />
-        </mat-form-field>
-        <span class="contador miles">
-          {{ 1000 - correoElectronico.value.length }}
-        </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (personaNaturalForm.get('correoElectronico')?.invalid &&
-                personaNaturalForm.get('correoElectronico').touched) ||
-              (personaNaturalForm.get('correoElectronico')?.invalid && estaEditando)
-            "
-          />
-        </span>
-      </div>
-    </div>
-    <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
-      </button>
-    </div>
-  </form>
-
-  <form
-    *ngIf="tipoProponente.value.codigo == 2"
-    [formGroup]="personaJuridicaIndividualForm"
-    novalidate
-    (ngSubmit)="onSubmitPersonaJuridicaIndividual()"
-  >
-    <div class="row">
-      <div class="pr-1">
-        <label
-          for="nombre"
-          class="label-left"
-          [class.color-secondaryColor]="
-            (myJuridica.invalid && myJuridica.touched) || (myJuridica.invalid && estaEditando)
-          "
-        >
-          Nombre
-        </label>
-      </div>
-      <div class="col d-flex">
-        <mat-form-field
-          class="full-width"
-          [matTooltipPosition]="'above'"
-          matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
-          matTooltipClass="info-tooltip"
-        >
-          <input
-            matInput
-            #nombre2
-            type="text"
-            maxlength="1000"
-            [formControl]="myJuridica"
-            required
-            [matAutocomplete]="auto2"
-          />
-          <mat-autocomplete #auto2="matAutocomplete">
-            <mat-option
-              (click)="seleccionAutocomplete(nombres)"
-              *ngFor="let nombres of filteredNameJuridica | async"
-              [value]="nombres"
-            >
-              {{ nombres }}
-            </mat-option>
-          </mat-autocomplete>
-          <input type="hidden" formControlName="procesoSeleccionProponenteId" />
-        </mat-form-field>
-        <span
-          class="contador miles"
-          [matTooltipPosition]="'above'"
-          matTooltip="Campo alfanumérico"
-          matTooltipClass="info-tooltip"
-        >
-          {{ 1000 - nombre2.value.length }}
-        </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="(myJuridica.invalid && myJuridica.touched) || (myJuridica.invalid && estaEditando)"
-          />
-        </span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="numeroIdentificacion"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid &&
-                  personaJuridicaIndividualForm.get('numeroIdentificacion').touched) ||
-                (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid && estaEditando)
-              "
-            >
-              Número de identificación tributaria (NIT)
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #numeroIdentificacion2
-                type="number"
-                maxlength="12"
-                formControlName="numeroIdentificacion"
-                required
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 12 - numeroIdentificacion2.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid &&
-                    personaJuridicaIndividualForm.get('numeroIdentificacion').touched) ||
-                  (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="representanteLegal"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('representanteLegal')?.invalid &&
-                  personaJuridicaIndividualForm.get('representanteLegal').touched) ||
-                (personaJuridicaIndividualForm.get('representanteLegal')?.invalid && estaEditando)
-              "
-            >
-              Representante legal
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #representanteLegal2
-                type="text"
-                maxlength="1000"
-                formControlName="representanteLegal"
-                required
-              />
-            </mat-form-field>
-            <span
-              class="contador miles"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo alfanumérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 1000 - representanteLegal2.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaJuridicaIndividualForm.get('representanteLegal')?.invalid &&
-                    personaJuridicaIndividualForm.get('representanteLegal').touched) ||
-                  (personaJuridicaIndividualForm.get('representanteLegal')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="cedulaRepresentanteLegal"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid &&
-                  personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').touched) ||
-                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
-              "
-            >
-              Cédula del representante legal
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #cedulaRepresentanteLegal2
-                type="number"
-                maxlength="12"
-                formControlName="cedulaRepresentanteLegal"
-                required
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 12 - cedulaRepresentanteLegal2.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid &&
-                    personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').touched) ||
-                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="depaetamento"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('depaetamento')?.invalid &&
-                  personaJuridicaIndividualForm.get('depaetamento').touched) ||
-                (personaJuridicaIndividualForm.get('depaetamento')?.invalid && estaEditando)
-              "
-            >
-              Departamento del domicilio del proponente
-            </label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width capitalize">
-              <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
-                  {{ departamento.descripcion }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (personaJuridicaIndividualForm.get('depaetamento')?.invalid &&
-                  personaJuridicaIndividualForm.get('depaetamento').touched) ||
-                (personaJuridicaIndividualForm.get('depaetamento')?.invalid && estaEditando)
-              "
-            />
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="municipio"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('municipio')?.invalid &&
-                  personaJuridicaIndividualForm.get('municipio').touched) ||
-                (personaJuridicaIndividualForm.get('municipio')?.invalid && estaEditando)
-              "
-            >
-              Municipio del domicilio del proponente
-            </label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width capitalize">
-              <mat-select formControlName="municipio" required>
-                <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                  {{ municipio.descripcion }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (personaJuridicaIndividualForm.get('municipio')?.invalid &&
-                  personaJuridicaIndividualForm.get('municipio').touched) ||
-                (personaJuridicaIndividualForm.get('municipio')?.invalid && estaEditando)
-              "
-            />
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="direccion"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('direccion')?.invalid &&
-                  personaJuridicaIndividualForm.get('direccion').touched) ||
-                (personaJuridicaIndividualForm.get('direccion')?.invalid && estaEditando)
-              "
-            >
-              Dirección del proponente
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion" required />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo alfanumérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 500 - direccion2.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaJuridicaIndividualForm.get('direccion')?.invalid &&
-                    personaJuridicaIndividualForm.get('direccion').touched) ||
-                  (personaJuridicaIndividualForm.get('direccion')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="telefono"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('telefono')?.invalid &&
-                  personaJuridicaIndividualForm.get('telefono').touched) ||
-                (personaJuridicaIndividualForm.get('telefono')?.invalid && estaEditando)
-              "
-            >
-              Teléfono del proponente
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #telefono2
-                type="number"
-                maxlength="10"
-                formControlName="telefono"
-                required
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 10 - telefono2.value.length }}
-            </span>
-          </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (personaJuridicaIndividualForm.get('telefono')?.invalid &&
-                  personaJuridicaIndividualForm.get('telefono').touched) ||
-                (personaJuridicaIndividualForm.get('telefono')?.invalid && estaEditando)
-              "
-            />
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="correoElectronico"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('correoElectronico')?.invalid &&
-                  personaJuridicaIndividualForm.get('correoElectronico').touched) ||
-                (personaJuridicaIndividualForm.get('correoElectronico')?.invalid && estaEditando)
-              "
-            >
-              Correo electrónico del proponente
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #correoElectronico2
-                type="email"
-                maxlength="1000"
-                formControlName="correoElectronico"
-                required
-              />
-            </mat-form-field>
-            <span class="contador miles">
-              {{ 1000 - correoElectronico2.value.length }}
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (personaJuridicaIndividualForm.get('correoElectronico')?.invalid &&
-                    personaJuridicaIndividualForm.get('correoElectronico').touched) ||
-                  (personaJuridicaIndividualForm.get('correoElectronico')?.invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
-      </button>
-    </div>
-  </form>
-
-  <form
-    *ngIf="tipoProponente.value.codigo == 4"
-    [formGroup]="unionTemporalForm"
-    novalidate
-    (ngSubmit)="onSubmitUnionTemporal()"
-  >
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="pr-1">
-            <label
-              for="cuantasEntidades"
-              class="label-left"
-              [class.color-secondaryColor]="
-                (unionTemporalForm.get('cuantasEntidades')?.invalid &&
-                  unionTemporalForm.get('cuantasEntidades').touched) ||
-                (unionTemporalForm.get('cuantasEntidades')?.invalid && estaEditando)
-              "
-            >
-              ¿Cuántas entidades integran la unión temporal o Consorcio?
-            </label>
-          </div>
-          <div class="col d-flex">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                #cuantasEntidades
-                type="number"
-                min="1"
-                max="99"
-                formControlName="cuantasEntidades"
-                (keyup)="CambioNumeroCotizantes()"
-                maxlength="2"
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                required
-              />
-              <input type="hidden" formControlName="procesoSeleccionProponenteId" />
-            </mat-form-field>
-            <span
-              class="contador"
-              [matTooltipPosition]="'above'"
-              matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip"
-            >
-              {{ 2 - cuantasEntidades.value.length }}
-            </span>
-          </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (unionTemporalForm.get('cuantasEntidades')?.invalid &&
-                  unionTemporalForm.get('cuantasEntidades').touched) ||
-                (unionTemporalForm.get('cuantasEntidades')?.invalid && estaEditando)
-              "
-            />
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      *ngIf="
-        unionTemporalForm.controls.cuantasEntidades.value > 0 && unionTemporalForm.controls.cuantasEntidades.value < 100
-      "
-    >
-      <div class="row">
-        <div class="col-md-12">
+        <div *ngIf="proponente.get('tipoProponenteCodigo').value == 4">
           <div class="row">
-            <div class="pr-1">
-              <label
-                for="nombreConsorcio"
-                class="label-left"
-                [class.color-secondaryColor]="
-                  (unionTemporalForm.get('nombreConsorcio')?.invalid &&
-                    unionTemporalForm.get('nombreConsorcio').touched) ||
-                  (unionTemporalForm.get('nombreConsorcio')?.invalid && estaEditando)
-                "
-              >
-                Nombre de la UT o Consorcio
-              </label>
-            </div>
-            <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombreConsorcio" required />
-              </mat-form-field>
-              <span
-                class="contador miles"
-                [matTooltipPosition]="'above'"
-                matTooltip="Campo alfanumérico"
-                matTooltipClass="info-tooltip"
-              >
-                {{ 1000 - nombre3.value.length }}
-              </span>
-              <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (unionTemporalForm.get('nombreConsorcio')?.invalid &&
-                      unionTemporalForm.get('nombreConsorcio').touched) ||
-                    (unionTemporalForm.get('nombreConsorcio')?.invalid && estaEditando)
-                  "
-                />
-              </span>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="cuantasEntidades"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('cuantasEntidades')?.invalid && proponente.get('cuantasEntidades').touched) ||
+                      (proponente.get('cuantasEntidades')?.invalid && estaEditando)
+                    "
+                  >
+                    ¿Cuántas entidades integran la unión temporal o Consorcio?
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      #cuantasEntidades
+                      type="number"
+                      min="1"
+                      max="99"
+                      formControlName="cuantasEntidades"
+                      (keyup)="CambioNumeroCotizantes(j)"
+                      maxlength="2"
+                      (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      required
+                    />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 2 - cuantasEntidades.value.length }}
+                  </span>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (proponente.get('cuantasEntidades')?.invalid && proponente.get('cuantasEntidades').touched) ||
+                      (proponente.get('cuantasEntidades')?.invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <h2 class="card-subTitle">Integrantes</h2>
-      <div formGroupName="entidades">
-        <div *ngFor="let entidad of entidades.controls; let i = index">
-          <div [formGroupName]="i">
-            <mat-card-title class="header-card--text sub-text"> Integrante {{ i + 1 }} </mat-card-title>
+          <div *ngIf="proponente.get('cuantasEntidades').value > 0 && proponente.get('cuantasEntidades').value < 100">
             <div class="row">
               <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
                     <label
-                      for="nombre"
+                      for="nombreProponente"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
-                        (entidad.get('nombre')?.invalid && estaEditando)
+                        (proponente.get('nombreProponente')?.invalid && proponente.get('nombreProponente').touched) ||
+                        (proponente.get('nombreProponente')?.invalid && estaEditando)
                       "
                     >
-                      Nombre
+                      Nombre de la UT o Consorcio
                     </label>
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
-                      <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required />
+                      <input
+                        matInput
+                        #nombre3
+                        type="text"
+                        maxlength="1000"
+                        formControlName="nombreProponente"
+                        required
+                      />
                     </mat-form-field>
                     <span
                       class="contador miles"
@@ -1021,8 +143,8 @@
                         matTooltip="Debe ingresar la información en el campo para continuar"
                         matTooltipClass="info-tooltip"
                         *ngIf="
-                          (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
-                          (entidad.get('nombre')?.invalid && estaEditando)
+                          (proponente.get('nombreProponente')?.invalid && proponente.get('nombreProponente').touched) ||
+                          (proponente.get('nombreProponente')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1030,93 +152,149 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label
-                      for="porcentaje"
-                      class="label-left"
-                      [class.color-secondaryColor]="
-                        (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
-                        (entidad.get('porcentaje')?.invalid && estaEditando)
-                      "
-                    >
-                      Porcentaje de participación
-                    </label>
+            <h2 class="card-subTitle">Integrantes</h2>
+            <div formArrayName="entidades">
+              <div *ngFor="let entidad of getEntidades(j).controls; let i = index">
+                <div [formGroupName]="i">
+                  <mat-card-title class="header-card--text sub-text"> Integrante {{ i + 1 }} </mat-card-title>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label
+                            for="nombre"
+                            class="label-left"
+                            [class.color-secondaryColor]="
+                              (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                              (entidad.get('nombre')?.invalid && estaEditando)
+                            "
+                          >
+                            Nombre
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                          <mat-form-field class="full-width">
+                            <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required />
+                          </mat-form-field>
+                          <span
+                            class="contador miles"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Campo alfanumérico"
+                            matTooltipClass="info-tooltip"
+                          >
+                            {{ 1000 - nombre3.value.length }}
+                          </span>
+                          <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="
+                                (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                                (entidad.get('nombre')?.invalid && estaEditando)
+                              "
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="full-width">
-                      <input
-                        matInput
-                        #porcentaje
-                        type="number"
-                        min="1"
-                        max="100"
-                        maxLength="3"
-                        formControlName="porcentaje"
-                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        required
-                      />
-                      <input type="hidden" formControlName="procesoSeleccionIntegranteId" />
-                    </mat-form-field>
-                    <span class="contador">%</span>
-                    <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="
-                          (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
-                          (entidad.get('porcentaje')?.invalid && estaEditando)
-                        "
-                      />
-                    </span>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label
+                            for="porcentaje"
+                            class="label-left"
+                            [class.color-secondaryColor]="
+                              (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                              (entidad.get('porcentaje')?.invalid && estaEditando)
+                            "
+                          >
+                            Porcentaje de participación
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                          <mat-form-field class="full-width">
+                            <input
+                              matInput
+                              #porcentaje
+                              type="number"
+                              min="1"
+                              max="100"
+                              maxLength="3"
+                              formControlName="porcentaje"
+                              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                              required
+                            />
+                            <input type="hidden" formControlName="procesoSeleccionIntegranteId" />
+                          </mat-form-field>
+                          <span class="contador">%</span>
+                          <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="
+                                (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                                (entidad.get('porcentaje')?.invalid && estaEditando)
+                              "
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 text-right" *ngIf="getEntidades(j).controls.length > 1">
+                      <button
+                        mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="borrarArray(entidades, i)"
+                      >
+                        <img src="assets/img/icon/menos.svg" alt="Eliminar integrante" />
+                        Eliminar integrante
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4 text-right" *ngIf="unionTemporalForm.value.entidades.length > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(entidades, i)">
-                  <img src="assets/img/icon/menos.svg" alt="Eliminar integrante" />
-                  Eliminar integrante
-                </button>
-              </div>
             </div>
+            <h2 class="card-subTitle">Datos del representante legal</h2>
           </div>
         </div>
-      </div>
-      <h2 class="card-subTitle">Datos del representante legal</h2>
-      <!--no se ve en el ultimo diseño, lo vuelo jflorez
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label for="numeroIdentificacion" class="label-left">Número de identificación tributaria (NIT)</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #numeroIdentificacion3 type="number" maxlength="12" formControlName="numeroIdentificacion" required>
-                </mat-form-field>
-                <span class="contador">{{12 - numeroIdentificacion3.value.length}}</span>
-              </div>
-            </div>
-          </div>
-        </div>-->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="row">
+        <div
+          *ngIf="
+            proponente.get('tipoProponenteCodigo').value == 1 ||
+            proponente.get('tipoProponenteCodigo').value == 2 ||
+            (proponente.get('tipoProponenteCodigo').value == 4 &&
+              proponente.get('cuantasEntidades').value > 0 &&
+              proponente.get('cuantasEntidades').value < 100)
+          "
+        >
+          <div
+            class="row"
+            *ngIf="
+              proponente.get('tipoProponenteCodigo').value == 1 || proponente.get('tipoProponenteCodigo').value == 2
+            "
+          >
             <div class="pr-1">
               <label
-                for="myJuridica2"
+                for="nombre"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (myJuridica2.invalid && myJuridica2.touched) || (myJuridica2.invalid && estaEditando)
+                  (proponente.get('nombreProponente')?.invalid && proponente.get('nombreProponente').touched) ||
+                  (proponente.get('nombreProponente')?.invalid && estaEditando)
                 "
               >
-                Representante legal
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 1"> Nombre del proponente </span>
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 2"> Nombre </span>
               </label>
             </div>
             <div class="col d-flex">
@@ -1131,19 +309,20 @@
                   #nombre
                   type="text"
                   maxlength="1000"
-                  [formControl]="myJuridica2"
+                  formControlName="nombreProponente"
                   required
-                  [matAutocomplete]="auto3"
+                  [matAutocomplete]="auto"
                 />
-                <mat-autocomplete #auto3="matAutocomplete">
+                <mat-autocomplete #auto="matAutocomplete">
                   <mat-option
-                    (click)="seleccionAutocomplete2(nombres)"
-                    *ngFor="let nombres of filteredNameJuridica2 | async"
+                    (click)="seleccionAutocomplete(nombres)"
+                    *ngFor="let nombres of filteredName | async"
                     [value]="nombres"
                   >
                     {{ nombres }}
                   </mat-option>
                 </mat-autocomplete>
+                <input type="hidden" formControlName="procesoSeleccionProponenteId" />
               </mat-form-field>
               <span
                 class="contador miles"
@@ -1161,27 +340,31 @@
                   [matTooltipPosition]="'above'"
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
-                  *ngIf="(myJuridica2.invalid && myJuridica2.touched) || (myJuridica2.invalid && estaEditando)"
+                  *ngIf="
+                    (proponente.get('nombreProponente')?.invalid && proponente.get('nombreProponente').touched) ||
+                    (proponente.get('nombreProponente')?.invalid && estaEditando)
+                  "
                 />
               </span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
               <label
-                for="cedulaRepresentanteLegal"
+                for="numeroIdentificacion"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid &&
-                    unionTemporalForm.get('cedulaRepresentanteLegal').touched) ||
-                  (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
+                  (proponente.get('numeroIdentificacion')?.invalid && proponente.get('numeroIdentificacion').touched) ||
+                  (proponente.get('numeroIdentificacion')?.invalid && estaEditando)
                 "
               >
-                Cédula del representante legal
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 1">
+                  Número de identificación del proponente
+                </span>
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 2">
+                  Número de identificación tributaria (NIT)
+                </span>
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 4"> Cédula del representante legal </span>
               </label>
             </div>
             <div class="col d-flex">
@@ -1191,7 +374,7 @@
                   #numeroIdentificacion
                   type="number"
                   maxlength="12"
-                  formControlName="cedulaRepresentanteLegal"
+                  formControlName="numeroIdentificacion"
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
@@ -1215,108 +398,223 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid &&
-                      unionTemporalForm.get('cedulaRepresentanteLegal').touched) ||
-                    (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
+                    (proponente.get('numeroIdentificacion')?.invalid &&
+                      proponente.get('numeroIdentificacion').touched) ||
+                    (proponente.get('numeroIdentificacion')?.invalid && estaEditando)
                   "
                 />
               </span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label
-                for="depaetamento"
-                class="label-left"
-                [class.color-secondaryColor]="
-                  (unionTemporalForm.get('depaetamento')?.invalid && unionTemporalForm.get('depaetamento').touched) ||
-                  (unionTemporalForm.get('depaetamento')?.invalid && estaEditando)
-                "
-              >
-                Departamento del domicilio del proponente
-              </label>
+
+          <!-- esto es de Individual y juridica -->
+          <div class="row" *ngIf="proponente.get('tipoProponenteCodigo').value == 2">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="nombreRepresentanteLegal"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('nombreRepresentanteLegal')?.invalid &&
+                        proponente.get('nombreRepresentanteLegal').touched) ||
+                      (proponente.get('nombreRepresentanteLegal')?.invalid && estaEditando)
+                    "
+                  >
+                    Representante legal
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      #nombreRepresentanteLegal2
+                      type="text"
+                      maxlength="1000"
+                      formControlName="nombreRepresentanteLegal"
+                      required
+                    />
+                  </mat-form-field>
+                  <span
+                    class="contador miles"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 1000 - nombreRepresentanteLegal2.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (proponente.get('nombreRepresentanteLegal')?.invalid &&
+                          proponente.get('nombreRepresentanteLegal').touched) ||
+                        (proponente.get('nombreRepresentanteLegal')?.invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
-            <div class="col">
-              <mat-form-field class="select-width capitalize">
-                <mat-select formControlName="depaetamento" required (selectionChange)="changeDepartamento()">
-                  <mat-option *ngFor="let departamento of listaDepartamentos" class="capitalize" [value]="departamento">
-                    {{ departamento.descripcion }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (unionTemporalForm.get('depaetamento')?.invalid && unionTemporalForm.get('depaetamento').touched) ||
-                  (unionTemporalForm.get('depaetamento')?.invalid && estaEditando)
-                "
-              />
-            </span>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label
-                for="municipio"
-                class="label-left"
-                [class.color-secondaryColor]="
-                  (unionTemporalForm.get('municipio')?.invalid && unionTemporalForm.get('municipio').touched) ||
-                  (unionTemporalForm.get('municipio')?.invalid && estaEditando)
-                "
-              >
-                Municipio del domicilio del proponente
-              </label>
+          <div class="row" *ngIf="proponente.get('tipoProponenteCodigo').value == 2">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="cedulaRepresentanteLegal"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('cedulaRepresentanteLegal')?.invalid &&
+                        proponente.get('cedulaRepresentanteLegal').touched) ||
+                      (proponente.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
+                    "
+                  >
+                    Cédula del representante legal
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      #cedulaRepresentanteLegal2
+                      type="number"
+                      maxlength="12"
+                      formControlName="cedulaRepresentanteLegal"
+                      required
+                      (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 12 - cedulaRepresentanteLegal2.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (proponente.get('cedulaRepresentanteLegal')?.invalid &&
+                          proponente.get('cedulaRepresentanteLegal').touched) ||
+                        (proponente.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
-            <div class="col">
-              <mat-form-field class="select-width capitalize">
-                <mat-select formControlName="municipio" required>
-                  <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
-                    {{ municipio.descripcion }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (unionTemporalForm.get('municipio')?.invalid && unionTemporalForm.get('municipio').touched) ||
-                  (unionTemporalForm.get('municipio')?.invalid && estaEditando)
-                "
-              />
-            </span>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
+          <!-- esto es de Individual y juridica -->
+
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="nombreDepartamento"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('nombreDepartamento')?.invalid && proponente.get('nombreDepartamento').touched) ||
+                      (proponente.get('nombreDepartamento')?.invalid && estaEditando)
+                    "
+                  >
+                    Departamento del domicilio del proponente
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select formControlName="nombreDepartamento" required (selectionChange)="changeDepartamento()">
+                      <mat-option
+                        *ngFor="let departamento of listaDepartamentos"
+                        class="capitalize"
+                        [value]="departamento"
+                      >
+                        {{ departamento.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (proponente.get('nombreDepartamento')?.invalid && proponente.get('nombreDepartamento').touched) ||
+                      (proponente.get('nombreDepartamento')?.invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="nombreMunicipio"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('nombreMunicipio')?.invalid && proponente.get('nombreMunicipio').touched) ||
+                      (proponente.get('nombreMunicipio')?.invalid && estaEditando)
+                    "
+                  >
+                    Municipio del domicilio del proponente
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width capitalize">
+                    <mat-select formControlName="nombreMunicipio" required>
+                      <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
+                        {{ municipio.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (proponente.get('nombreMunicipio')?.invalid && proponente.get('nombreMunicipio').touched) ||
+                      (proponente.get('nombreMunicipio')?.invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <div class="pr-1">
               <label
-                for="direccion"
+                for="direccionProponente"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('direccion')?.invalid && unionTemporalForm.get('direccion').touched) ||
-                  (unionTemporalForm.get('direccion')?.invalid && estaEditando)
+                  (proponente.get('direccionProponente')?.invalid && proponente.get('direccionProponente').touched) ||
+                  (proponente.get('direccionProponente')?.invalid && estaEditando)
                 "
               >
                 Dirección del proponente
@@ -1324,7 +622,14 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #direccion3 type="text" maxlength="500" formControlName="direccion" required />
+                <input
+                  matInput
+                  #direccionProponente
+                  type="text"
+                  maxlength="500"
+                  formControlName="direccionProponente"
+                  required
+                />
               </mat-form-field>
               <span
                 class="contador"
@@ -1332,7 +637,7 @@
                 matTooltip="Campo alfanumérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 500 - direccion3.value.length }}
+                {{ 500 - direccionProponente.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -1343,81 +648,77 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('direccion')?.invalid && unionTemporalForm.get('direccion').touched) ||
-                    (unionTemporalForm.get('direccion')?.invalid && estaEditando)
+                    (proponente.get('direccionProponente')?.invalid && proponente.get('direccionProponente').touched) ||
+                    (proponente.get('direccionProponente')?.invalid && estaEditando)
                   "
                 />
               </span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
           <div class="row">
-            <div class="pr-1">
-              <label
-                for="telefono"
-                class="label-left"
-                [class.color-secondaryColor]="
-                  (unionTemporalForm.get('telefono')?.invalid && unionTemporalForm.get('telefono').touched) ||
-                  (unionTemporalForm.get('telefono')?.invalid && estaEditando)
-                "
-              >
-                Teléfono del proponente
-              </label>
-            </div>
-            <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  #telefono3
-                  type="number"
-                  maxlength="10"
-                  formControlName="telefono"
-                  (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  required
-                />
-              </mat-form-field>
-              <span
-                class="contador"
-                [matTooltipPosition]="'above'"
-                matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip"
-              >
-                {{ 10 - telefono3.value.length }}
-              </span>
-              <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (unionTemporalForm.get('telefono')?.invalid && unionTemporalForm.get('telefono').touched) ||
-                    (unionTemporalForm.get('telefono')?.invalid && estaEditando)
-                  "
-                />
-              </span>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    for="telefonoProponente"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (proponente.get('telefonoProponente')?.invalid && proponente.get('telefonoProponente').touched) ||
+                      (proponente.get('telefonoProponente')?.invalid && estaEditando)
+                    "
+                  >
+                    Teléfono del proponente
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      #telefonoProponente
+                      type="number"
+                      maxlength="10"
+                      formControlName="telefonoProponente"
+                      required
+                      (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 10 - telefonoProponente.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (proponente.get('telefonoProponente')?.invalid &&
+                          proponente.get('telefonoProponente').touched) ||
+                        (proponente.get('telefonoProponente')?.invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
               <label
-                for="correoElectronico"
+                for="emailProponente"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('correoElectronico')?.invalid &&
-                    unionTemporalForm.get('correoElectronico').touched) ||
-                  (unionTemporalForm.get('correoElectronico')?.invalid && estaEditando)
+                  (proponente.get('emailProponente')?.invalid && proponente.get('emailProponente').touched) ||
+                  (proponente.get('emailProponente')?.invalid && estaEditando)
                 "
               >
                 Correo electrónico del proponente
@@ -1427,15 +728,15 @@
               <mat-form-field class="full-width">
                 <input
                   matInput
-                  #correoElectronico3
+                  #emailProponente
                   type="email"
                   maxlength="1000"
-                  formControlName="correoElectronico"
+                  formControlName="emailProponente"
                   required
                 />
               </mat-form-field>
               <span class="contador miles">
-                {{ 1000 - correoElectronico3.value.length }}
+                {{ 1000 - emailProponente.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -1446,21 +747,20 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('correoElectronico')?.invalid &&
-                      unionTemporalForm.get('correoElectronico').touched) ||
-                    (unionTemporalForm.get('correoElectronico')?.invalid && estaEditando)
+                    (proponente.get('emailProponente')?.invalid && proponente.get('emailProponente').touched) ||
+                    (proponente.get('emailProponente')?.invalid && estaEditando)
                   "
                 />
               </span>
             </div>
           </div>
         </div>
+        <div class="text-center">
+          <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="j + 1 === amountNuevosProponentes">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
-      </button>
     </div>
   </form>
 </div>
