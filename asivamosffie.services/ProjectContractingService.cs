@@ -1015,9 +1015,7 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyectoAntiguo.RequiereLicencia == false)
                     return true;
-            }
-
-
+            } 
             if (
                   pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue //Pregunta 0?
                && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
@@ -1046,7 +1044,7 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyecto.ContratacionId > 0)
                 {
-                    ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionId);
+                    ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
                     contratacionProyectoOld.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                     contratacionProyectoOld.FechaModificacion = DateTime.Now;
                     contratacionProyectoOld.RegistroValido = pContratacionProyecto.RegistroValido; 
