@@ -66,8 +66,7 @@
             <mat-card-content>
               <p><b>Tipo de contrato</b>: {{ dataNovedad.contrato.contratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}</p>
               <p><b>Valor del contrato</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-              <p><b>Plazo</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
-                {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p><b>Plazo</b>: {{ dataNovedad.contrato.contratacion[ 'plazoContratacion' ].plazoMeses }} meses / {{ dataNovedad.contrato.contratacion[ 'plazoContratacion' ].plazoDias }} días</p>
           </mat-card-content>
           </mat-card>
         </div>
@@ -107,7 +106,7 @@
               <div *ngFor="let aportante of dataNovedad.novedadContractualAportante; let i = index">
                 <section>
                   <h1 style="margin-bottom: .2em;margin-top: 1em;"><b>Aportante {{ i+1 }}</b></h1>
-                  <p><b>Tipo de aportante</b>: {{ aportante.tipoAportante }}</p>
+                  <p><b>Tipo de aportante</b>: {{ aportante[ 'tipoAportante' ] }}</p>
                   <p><b>Nombre del aportante</b>: {{ aportante.nombreAportante }}</p>
                   <p><b>Valor del aportante al proyecto</b>: {{ aportante.valorAporte | currency: '':'symbol':'3.0' }}</p>
                 </section>
@@ -116,7 +115,7 @@
                   <div *ngFor="let fuente of componente.componenteFuenteNovedad; let f = index">
                     <h3><b>Fuente {{ f+1 }}</b></h3>
                     <p><b>Fuente</b>: {{ fuente.fuenteFinanciacion.nombreFuente }}</p>
-                    <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency: '':'symbol':'3.0' }}</p>
+                    <p><b>Valor solicitado de la fuente</b>: {{ fuente[ 'valorFuente' ] | currency: '':'symbol':'3.0' }}</p>
                   </div>
                 </section>
               </div>
