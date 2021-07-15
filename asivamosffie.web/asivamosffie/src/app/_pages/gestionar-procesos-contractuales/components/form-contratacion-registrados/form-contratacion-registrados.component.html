@@ -61,7 +61,10 @@
             <mat-card-content>
               <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].tipoSolicitudCodigo  === '2' ? 'Interventoria' : 'Obra' }} </p>
               <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p *ngIf="contratacion?.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses /
+                {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p *ngIf="contratacion?.plazoContratacion && !contratacion?.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ contratacion?.plazoContratacion?.plazoMeses }} meses /
+                  {{ contratacion?.plazoContratacion?.plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -79,7 +82,7 @@
               <section>
                 <b>Observaciones</b>
                 <div [innerHTML]="form.get( 'observaciones' ).value">
-                  
+
                 </div>
               </section>
               <p><b>URL con soporte</b>: {{ form.get( 'rutaDocumento' ).value }} </p>

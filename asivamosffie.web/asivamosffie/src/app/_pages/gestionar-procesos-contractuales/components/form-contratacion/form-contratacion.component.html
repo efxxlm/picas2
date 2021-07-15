@@ -164,8 +164,10 @@
             <mat-card-content class="mt-1em">
               <p><b>Tipo de contrato</b>: {{ dataContratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}
               </p>
-              <p><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
+              <p *ngIf="dataContratacion.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ dataContratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
                 {{ dataContratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p *ngIf="dataContratacion.plazoContratacion && !dataContratacion.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ dataContratacion.plazoContratacion?.plazoMeses }} meses /
+                  {{ dataContratacion.plazoContratacion?.plazoDias }} días</p>
               <p><b>Valor del contrato</b>:
                 {{ dataContratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}
               </p>

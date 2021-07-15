@@ -170,7 +170,8 @@ namespace asivamosffie.services
                     .Where(r => r.ContratacionId == pContratacionId)
                           .Include(r => r.DisponibilidadPresupuestal)
                           .Include(r => r.Contratista)
-                           .Include(r => r.Contrato).FirstOrDefaultAsync();
+                          .Include(r => r.PlazoContratacion)
+                          .Include(r => r.Contrato).FirstOrDefaultAsync();
 
                 contratacion.FechaTramite = DateTime.Now;
 

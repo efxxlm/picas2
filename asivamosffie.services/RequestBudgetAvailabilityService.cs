@@ -81,7 +81,7 @@ namespace asivamosffie.services
                         if (proyectospp.ProyectoId == null) //proyecto administrativo
                         {
                             //Poner el nuevo ValorSolicitadoGenerado
-                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitadoGenerado) ?? 0;
+                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => (x.ValorSolicitadoGenerado != null ? x.ValorSolicitadoGenerado : x.ValorSolicitado)) ?? 0;
                             int intaportante = 0;
                             var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
                                 Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion).ToList();
@@ -115,6 +115,7 @@ namespace asivamosffie.services
                                             Fuente = namefuente,
                                             Estado_de_las_fuentes = "",
                                             FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                            ValorFuente = font.ValorFuente != null ? font.ValorFuente : 0,
                                             Valor_solicitado_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente,
                                             Nuevo_saldo_de_la_fuente = 0,
                                             Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - (decimal)saldofuente,
@@ -952,7 +953,8 @@ namespace asivamosffie.services
                     //Registros
                     disponibilidadPresupuestalAntiguo.Objeto = disponibilidad.Objeto;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidad.AportanteId;
-
+                    //valor solicitud
+                    disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidad.ValorSolicitud;
 
                     disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach(pro =>
                     {

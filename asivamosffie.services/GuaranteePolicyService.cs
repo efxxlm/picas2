@@ -1887,12 +1887,14 @@ namespace asivamosffie.services
                     if (disponibilidadPresupuestal != null)
                     {
                         contratoObjeto = disponibilidadPresupuestal.Objeto;
+                        if (contratacion.PlazoContratacion != null)
+                        {
+                            if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoDias.ToString()))
+                                plazoDias = Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias);
 
-                        if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoDias.ToString()))
-                            plazoDias = Convert.ToInt32(contratacion.PlazoContratacion.PlazoDias);
-
-                        if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoMeses.ToString()))
-                            plazoMeses = Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses);
+                            if (!string.IsNullOrEmpty(contratacion.PlazoContratacion.PlazoMeses.ToString()))
+                                plazoMeses = Convert.ToInt32(contratacion.PlazoContratacion.PlazoMeses);
+                        }
 
                         PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias";
                     }
@@ -1950,6 +1952,8 @@ namespace asivamosffie.services
                 }
                 catch (Exception e)
                 {
+                    string error = "";
+                    error = e.InnerException.ToString();
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza();
                 }
             }
