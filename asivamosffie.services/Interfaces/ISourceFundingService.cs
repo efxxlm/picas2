@@ -18,6 +18,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
+        Task<Respuesta> ValidaEliminarFuenteFinanciancion(int id, string UsuarioModifico);
         Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico);
 
         Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId);

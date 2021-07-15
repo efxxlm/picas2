@@ -731,16 +731,18 @@ export class RegistrarComponent implements OnInit {
           });
       } else {
         this.fuenteFinanciacionService
-          //.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId)
-          //.subscribe(response => {
-            //this.openDialog('', response.message, false);
-            //if (response.code === '200') {
+          .validarEliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId)
+          .subscribe(response => {
+            this.openDialog('', response.message, false);
+            if (!response.isValidation) {
               console.log( borrarForm.controls[i]  )
               this.listaFuentesEliminadas.push( borrarForm.controls[i] );
               borrarForm.removeAt(i);
               this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>', false);
-            //}
-          //});
+            }else{
+              
+            }
+          });
       }
     } else {
       borrarForm.removeAt(i);
