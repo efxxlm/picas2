@@ -26,11 +26,11 @@
         </section>
         <div  *ngIf="dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != 'undefined' && dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != null">
           <p><b>Número de comité fiduciario</b>:{{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
-          <p><b>Fecha de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>  
+          <p><b>Fecha de comité fiduciario</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
         </div>
         <div *ngIf="dataNovedad['sesionComiteSolicitud'][0].comiteTecnico != 'undefined' && dataNovedad['sesionComiteSolicitud'][0].comiteTecnico != null">
           <p><b>Número de comité técnico</b>:{{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnico.numeroComite }}</p>
-          <p><b>Fecha de comité técnico</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>  
+          <p><b>Fecha de comité técnico</b>: {{ dataNovedad['sesionComiteSolicitud'][0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</p>
         </div>
       </mat-card-content>
   </mat-card>
@@ -50,8 +50,10 @@
             <mat-card-content>
               <p><b>Tipo de contrato</b>: {{ dataNovedad.contrato.contratacion.tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }}</p>
               <p><b>Valor del contrato</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-              <p><b>Plazo</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
+              <p *ngIf="dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses /
                 {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p *ngIf="dataNovedad.contrato.contratacion.plazoContratacion && !dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses"><b>Plazo</b>: {{ dataNovedad.contrato.contratacion.plazoContratacion?.plazoMeses }} meses /
+                  {{ dataNovedad.contrato.contratacion.plazoContratacion?.plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -98,7 +100,7 @@
               <div *ngFor="let element of dataNovedad.novedadContractualDescripcion; let f = index">
                 <h3 *ngIf="dataNovedad?.novedadContractualDescripcion.length > 1"><b>Novedad {{ f+1 }}</b></h3>
                 <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
-                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>: 
+                <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>:
                   <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalMeses + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{element.plazoAdicionalDias + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</span></p>
                 <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha de inicio de la suspensión</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
                 <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha final de la suspensión</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
@@ -108,10 +110,10 @@
                   <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0].clausulaAmodificar"></span>
                   <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0].ajusteSolicitadoAclausula"></span>
                 </p>
-                <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>  
+                <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>
               </div>
               <h2 class="card-subTitle back-color" *ngIf="adicionBoolean">Aportantes</h2>
-              
+
               <div *ngFor="let aportante of dataNovedad.novedadContractualAportante; let i = index">
                 <section>
                   <h1 style="margin-bottom: .2em;margin-top: 1em;"><b>Aportante {{ i+1 }}</b></h1>
@@ -128,7 +130,7 @@
                   </div>
                 </section>
               </div>
-        
+
             </mat-card-content>
           </mat-card>
         </div>
@@ -170,7 +172,7 @@
 
         <div class="text-center w-15">
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table"
                   (click)="getDdp( dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp )">
                   Descargar DDP
@@ -200,7 +202,7 @@
       </mat-expansion-panel>
     </mat-accordion>
   </div>
-  
+
   <!--Esta condición estaba. se deja? - *ngIf="estadoCodigo === '2'"-->
 
   <div class="mt-2em" align="left" *ngIf="estadoCodigo === '12' || estadoCodigo === '19'">

@@ -757,11 +757,10 @@ namespace asivamosffie.services
                                .ThenInclude(x => x.Aportante)
                                   .ThenInclude(x => x.CofinanciacionDocumento)
                                    .ThenInclude(r => r.FuenteFinanciacion)
-
-
+                   .Include(r => r.PlazoContratacion)
                    .Include(r => r.Contratista)
                    .Include(r => r.Contrato)
-                  .Include(r => r.ContratacionProyecto)
+                   .Include(r => r.ContratacionProyecto)
                      .ThenInclude(r => r.Proyecto)
                          .ThenInclude(r => r.ProyectoAportante)
                              .ThenInclude(r => r.Aportante)
