@@ -538,7 +538,7 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width capitalize">
-                    <mat-select formControlName="nombreDepartamento" required (selectionChange)="changeDepartamento()">
+                    <mat-select formControlName="nombreDepartamento" required (selectionChange)="changeDepartamento(j)">
                       <mat-option
                         *ngFor="let departamento of listaDepartamentos"
                         class="capitalize"
@@ -584,7 +584,7 @@
                 <div class="col">
                   <mat-form-field class="select-width capitalize">
                     <mat-select formControlName="nombreMunicipio" required>
-                      <mat-option *ngFor="let municipio of listaMunicipios" class="capitalize" [value]="municipio">
+                      <mat-option *ngFor="let municipio of listaMunicipios[j]" class="capitalize" [value]="municipio">
                         {{ municipio.descripcion }}
                       </mat-option>
                     </mat-select>

@@ -65,6 +65,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         if (!this.procesoSeleccion.procesoSeleccionProponente) this.procesoSeleccion.procesoSeleccionProponente = [];
 
         for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
+          if (this.procesoSeleccion.procesoSeleccionProponente[i].tipoProponenteCodigo === '1') this.nuevo = true
           lista = lista.filter(
             p => p.numeroIdentificacion != this.procesoSeleccion.procesoSeleccionProponente[i].numeroIdentificacion
           );
