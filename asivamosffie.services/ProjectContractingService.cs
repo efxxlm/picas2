@@ -243,7 +243,7 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.ContratacionProyectoAportante)
                       .ThenInclude(r => r.ComponenteAportante)
                            .ThenInclude(r => r.ComponenteUso)
-                 .Include(p => p.PlazoContratacion)         
+                 .Include(p => p.PlazoContratacion)
                            .FirstOrDefaultAsync();
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
@@ -297,7 +297,7 @@ namespace asivamosffie.services
 
                 }
                 DateTime? fechaComitetecnico = null;
-               
+
                 var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
                     Include(x => x.ComiteTecnico).ToList();
                 if (comite.Count() > 0)
@@ -313,7 +313,7 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId)
         {
-            Contratacion contratacion = await 
+            Contratacion contratacion = await
                 _context.Contratacion
                 .Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.ContratacionProyecto).ThenInclude(r => r.SesionSolicitudObservacionProyecto)
@@ -640,7 +640,7 @@ namespace asivamosffie.services
 
                 var contratacion = _context.Contratacion.Find(contratacionId);
 
-                if (contratacion.PlazoContratacion  != null)
+                if (contratacion.PlazoContratacion != null)
                 {
                     await _context.Set<PlazoContratacion>()
                          .Where(order => order.PlazoContratacionId == contratacion.PlazoContratacion.PlazoContratacionId)
@@ -726,7 +726,7 @@ namespace asivamosffie.services
                             await CreateEditComponenteAportante(ComponenteAportante, true);
                         }
                     }
-                } 
+                }
                 //Contratacion
                 if (Pcontratacion.ContratacionId == 0)
                 {
@@ -1014,7 +1014,7 @@ namespace asivamosffie.services
               )
             {
                 if (pContratacionProyectoAntiguo.RequiereLicencia == false)
-                    return true; 
+                    return true;
             }
 
 
@@ -1027,7 +1027,7 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
-                    if (pContratacionProyectoAntiguo.NumeroLicencia != null 
+                    if (pContratacionProyectoAntiguo.NumeroLicencia != null
                       && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
                         return true;
 
@@ -1048,6 +1048,7 @@ namespace asivamosffie.services
                 {
                     pContratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                     pContratacionProyecto.FechaModificacion = DateTime.Now;
+
                 }
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
@@ -1177,12 +1178,15 @@ namespace asivamosffie.services
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
              || !contratacion.EsObligacionEspecial.HasValue
              || contratacion.ContratistaId == null
-             || ( contratacion.PlazoContratacion == null || (contratacion.PlazoContratacion.PlazoDias == 0 && contratacion.PlazoContratacion.PlazoMeses == 0))
+             || (contratacion.PlazoContratacion == null || (contratacion.PlazoContratacion.PlazoDias == 0 && contratacion.PlazoContratacion.PlazoMeses == 0))
              )
                 return false;
 
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
+                if (ContratacionProyecto.RegistroValido != true)
+                    return false;
+
                 if (!ContratacionProyecto.RegistroCompleto.HasValue)
                     return false;
                 else if (!(bool)ContratacionProyecto.RegistroCompleto)

@@ -28,15 +28,15 @@ namespace asivamosffie.services
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             return await _context.Contrato
-                                        .Where(c => c.ContratoId == pContratoId)
-                                        .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
-                                        .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                                        .Include(c => c.Contratacion).ThenInclude(c => c.PlazoContratacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u => u.ResponsableAprobacion)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
-                                        .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
-                                        .FirstOrDefaultAsync();
+                                          .Where(c => c.ContratoId == pContratoId)
+                                          .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
+                                          .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                          .Include(c => c.Contratacion).ThenInclude(c => c.PlazoContratacion)
+                                          .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
+                                          .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u => u.ResponsableAprobacion)
+                                          .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
+                                          .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
+                                          .FirstOrDefaultAsync();
         }
 
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
@@ -149,8 +149,7 @@ namespace asivamosffie.services
                             {
                                 UsuarioModificacion = pAuthor,
                                 FechaModificacion = DateTime.Now,
-                                RegistroCompleto = ValidarRegistroCompletoPolizaGarantia(PolizaGarantia),
-
+                                RegistroCompleto = ValidarRegistroCompletoPolizaGarantia(PolizaGarantia), 
                                 TipoGarantiaCodigo = PolizaGarantia.TipoGarantiaCodigo,
                                 EsIncluidaPoliza = PolizaGarantia.EsIncluidaPoliza,
                                 ValorAmparo = PolizaGarantia.ValorAmparo,
@@ -314,8 +313,7 @@ namespace asivamosffie.services
             {
                 if (!ValidarRegistroCompletoPolizaObservacion(PolizaObservacion))
                     return false;
-            }
-
+            } 
             return true;
         }
 
@@ -329,14 +327,12 @@ namespace asivamosffie.services
                || !pPolizaListaChequeo.TieneCondicionesGeneralesPoliza.HasValue
                 ) return false;
 
-            if (
-                  pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario == false
-            //   || pPolizaListaChequeo.CumpleDatosBeneficiarioGarantiaBancaria == false
+            return (
+                  pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario == false 
                || pPolizaListaChequeo.CumpleDatosTomadorAfianzado == false
                || pPolizaListaChequeo.TieneReciboPagoDatosRequeridos == false
                || pPolizaListaChequeo.TieneCondicionesGeneralesPoliza == false
-                ) return false;
-            return true;
+                ); 
         }
 
         private bool ValidarRegistroCompletoPolizaGarantia(PolizaGarantia polizaGarantia)
@@ -349,7 +345,7 @@ namespace asivamosffie.services
                      || !polizaGarantia.VigenciaAmparo.HasValue
                      || !polizaGarantia.Vigencia.HasValue
                      ) return false;
-            } 
+            }
             return true;
         }
 
@@ -358,11 +354,10 @@ namespace asivamosffie.services
             if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Devuelta)
                 return false;
 
-            if (!polizaObservacion.FechaAprobacion.HasValue
+            return (
+                  !polizaObservacion.FechaAprobacion.HasValue
                 || polizaObservacion.ResponsableAprobacionId == 0
-                ) return false;
-
-            return true;
+                ); 
         }
 
         #endregion
