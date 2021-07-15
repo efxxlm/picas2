@@ -185,6 +185,8 @@
       </button>
     </div>
   </form>
+
+  <!--
   <div *ngIf="tienePreconstruccion === true">
     <mat-accordion>
       <mat-expansion-panel class="expansion-style sub-expansion">
@@ -210,8 +212,6 @@
                 Criterios de pago incluidos en la factura
               </mat-panel-title>
             </mat-expansion-panel-header>
-
-            <!--
             <app-form-criterios-pago
               [solicitudPago]="contrato.solicitudPagoOnly"
               [contratacionProyectoId]="contratacionProyectoId"
@@ -224,7 +224,6 @@
               (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event"
             >
             </app-form-criterios-pago>
-            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -301,8 +300,6 @@
                 Criterios de pago incluidos en la factura
               </mat-panel-title>
             </mat-expansion-panel-header>
-
-            <!--
             <app-form-criterios-pago
               [solicitudPago]="contrato.solicitudPagoOnly"
               [esPreconstruccion]="false"
@@ -316,7 +313,6 @@
               (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionCriterios = $event"
             >
             </app-form-criterios-pago>
-            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
@@ -332,8 +328,6 @@
                 Amortización del anticipo
               </mat-panel-title>
             </mat-expansion-panel-header>
-
-            <!--
             <app-form-amortizacion-anticipo
               [solicitudPago]="contrato.solicitudPagoOnly"
               [contrato]="contrato"
@@ -345,7 +339,6 @@
               (semaforoObservacion)="estadoSemaforosObservacionesConstruccion.observacionAmortizacion = $event"
             >
             </app-form-amortizacion-anticipo>
-            -->
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -404,7 +397,6 @@
       </mat-expansion-panel>
     </mat-accordion>
   </div>
-  <!--
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">

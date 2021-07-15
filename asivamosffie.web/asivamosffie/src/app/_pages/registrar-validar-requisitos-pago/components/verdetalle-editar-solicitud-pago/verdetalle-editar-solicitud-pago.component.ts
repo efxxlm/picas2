@@ -93,7 +93,6 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             this.contrato = response;
                             // console.log( this.contrato );
                             if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
-                                console.log( this.contrato.tablaDRP );
                                 this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
@@ -165,25 +164,44 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === true ) {
-
             const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
-            let semaforoSolicitudPago = 'sin-diligenciar';
+            let semaforoSolicitudPago = 'sin-diligenciar'
 
             if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-                const solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase;
+                if ( solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined || solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
+                    semaforoSolicitudPago = 'en-proceso'
+                }
 
-                if ( solicitudPagoFase.length > 0 ) {
-                    if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
-                        semaforoSolicitudPago = 'en-proceso';
-                    }
-    
-                    if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
-                        semaforoSolicitudPago = 'completo';
-                        this.registroCompletoAcordeones.registroCompletoSolicitudPago = true; 
-                    }
+                if ( solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
+                    semaforoSolicitudPago = 'completo'
                 }
             }
             return semaforoSolicitudPago;
+        }
+
+        // Acordeon descripcion de la factura
+        if ( nombreAcordeon === 'descripcionFactura' && tieneRegistroAnterior === false ) {
+            return 'en-alerta';
+        }
+        if ( nombreAcordeon === 'descripcionFactura' && tieneRegistroAnterior === true ) {
+            let semaforoDescripcionFactura = 'sin-diligenciar'
+            const solicitudPagoFactura = this.contrato.solicitudPagoOnly.solicitudPagoFactura[ 0 ]
+
+            if ( solicitudPagoFactura !== undefined ) {
+                if ( this.contrato.solicitudPagoOnly.esFactura !== undefined || solicitudPagoFactura.numero !== undefined || solicitudPagoFactura.fecha !== undefined ) {
+                    semaforoDescripcionFactura = 'en-proceso'
+                }
+
+                if ( this.contrato.solicitudPagoOnly.esFactura !== undefined && solicitudPagoFactura.numero !== undefined && solicitudPagoFactura.fecha !== undefined ) {
+                    semaforoDescripcionFactura = 'completo'
+                }
+            } else {
+                if ( this.contrato.solicitudPagoOnly.esFactura !== undefined ) {
+                    semaforoDescripcionFactura = 'en-proceso'
+                }
+            }
+
+            return semaforoDescripcionFactura
         }
 
         // Acordeon lista de chequeo

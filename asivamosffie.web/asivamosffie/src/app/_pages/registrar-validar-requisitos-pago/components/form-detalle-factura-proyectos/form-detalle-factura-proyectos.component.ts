@@ -66,14 +66,27 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
         this.solicitudPago = this.contrato.solicitudPagoOnly
         const getProyectosByIdContrato = await this.registrarPagosSvc.getProyectosByIdContrato( this.contrato.contratoId ).toPromise()
         const LISTA_PROYECTOS: any[] = getProyectosByIdContrato[ 1 ]
+        const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ 0 ]
 
         LISTA_PROYECTOS.forEach( proyecto => {
-            proyecto.check = null
+            let check = null
+
+            if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    const fase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.contratacionProyectoId === proyecto.contratacionProyectoId )
+
+                    if ( fase !== undefined ) {
+                        check = true
+                    }
+                }
+            }
+            
+            proyecto.check = check
 
             this.projects.push(
                 this.fb.group(
                     {
-                        check: [ null ],
+                        check: [ check ],
                         contratacionProyectoId: [ proyecto.contratacionProyectoId ],
                         llaveMen: [ proyecto.llaveMen ],
                         tipoIntervencion: [ proyecto.tipoIntervencion ],
@@ -83,7 +96,6 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
             );
         } )
 
-        console.log( LISTA_PROYECTOS );
         this.dataSource = new MatTableDataSource( LISTA_PROYECTOS );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

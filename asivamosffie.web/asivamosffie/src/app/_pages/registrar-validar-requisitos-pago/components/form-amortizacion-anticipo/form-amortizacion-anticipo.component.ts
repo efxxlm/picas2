@@ -20,6 +20,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() amortizacionAnticipoCodigo: string;
     @Input() tieneObservacionOrdenGiro: boolean;
+    @Input() contratacionProyectoId: number;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     esPreconstruccion = false;
     solicitudPagoFase: any;
@@ -70,65 +71,67 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ 0 ] !== undefined ) {
                 if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
                     for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
-                        if (solicitudPagoFase.esPreconstruccion === false) {
+                        if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
                             this.solicitudPagoFase = solicitudPagoFase;
                         }
                     }
                 }
           
-                if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
-                    const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
-                    this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
-                    this.estaEditando = true;
-
-                    this.addressForm.markAllAsTouched();
-                    this.addressForm.setValue(
-                        {
-                            porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
-                            valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
+                if ( this.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
+                        const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
+                        this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
+                        this.estaEditando = true;
+    
+                        this.addressForm.markAllAsTouched();
+                        this.addressForm.setValue(
+                            {
+                                porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                                valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
+                            }
+                        );
+              
+                        if (this.esVerDetalle === false) {
+                            // Get observacion CU autorizar solicitud de pago 4.1.9
+                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                this.listaMenusId.autorizarSolicitudPagoId,
+                                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                this.solicitudPagoFaseAmortizacionId,
+                                this.amortizacionAnticipoCodigo
+                            )
+                            .subscribe(response => {
+                                const observacion = response.find(obs => obs.archivada === false);
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = true;
+                                    this.observacion = observacion;
+                                
+                                    if (this.observacion.tieneObservacion === true) {
+                                        this.semaforoObservacion.emit(true);
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
+                                }
+                            });
+              
+                            // Get observacion CU verificar solicitud de pago 4.1.8
+                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                this.listaMenusId.aprobarSolicitudPagoId,
+                                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                this.solicitudPagoFaseAmortizacionId,
+                                this.amortizacionAnticipoCodigo
+                            )
+                            .subscribe(response => {
+                                const observacion = response.find(obs => obs.archivada === false);
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = false;
+                                    this.observacion = observacion;
+    
+                                    if (this.observacion.tieneObservacion === true) {
+                                        this.semaforoObservacion.emit(true);
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
+                                }
+                            });
                         }
-                    );
-          
-                    if (this.esVerDetalle === false) {
-                        // Get observacion CU autorizar solicitud de pago 4.1.9
-                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                            this.listaMenusId.autorizarSolicitudPagoId,
-                            this.contrato.solicitudPagoOnly.solicitudPagoId,
-                            this.solicitudPagoFaseAmortizacionId,
-                            this.amortizacionAnticipoCodigo
-                        )
-                        .subscribe(response => {
-                            const observacion = response.find(obs => obs.archivada === false);
-                            if ( observacion !== undefined ) {
-                                this.esAutorizar = true;
-                                this.observacion = observacion;
-                            
-                                if (this.observacion.tieneObservacion === true) {
-                                    this.semaforoObservacion.emit(true);
-                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                }
-                            }
-                        });
-          
-                        // Get observacion CU verificar solicitud de pago 4.1.8
-                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                            this.listaMenusId.aprobarSolicitudPagoId,
-                            this.contrato.solicitudPagoOnly.solicitudPagoId,
-                            this.solicitudPagoFaseAmortizacionId,
-                            this.amortizacionAnticipoCodigo
-                        )
-                        .subscribe(response => {
-                            const observacion = response.find(obs => obs.archivada === false);
-                            if ( observacion !== undefined ) {
-                                this.esAutorizar = false;
-                                this.observacion = observacion;
-
-                                if (this.observacion.tieneObservacion === true) {
-                                    this.semaforoObservacion.emit(true);
-                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                }
-                            }
-                        });
                     }
                 }
             }

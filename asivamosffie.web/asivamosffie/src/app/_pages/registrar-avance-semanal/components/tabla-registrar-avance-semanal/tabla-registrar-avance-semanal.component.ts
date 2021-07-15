@@ -3,12 +3,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AutenticacionService } from './../../../../core/_services/autenticacion/autenticacion.service';
 import { DialogCargarActaComponent } from './../dialog-cargar-acta/dialog-cargar-acta.component';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-tabla-registrar-avance-semanal',
@@ -145,4 +147,16 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
         this.getDataTable();
       });
   }
+
+  downloadPDF() {
+    html2canvas( document.getElementById( 'example-pdf' ) ).then(canvas => {
+      const contentDataURL = canvas.toDataURL('image/jpeg', 1.0)
+
+      let pdf = new jsPDF('l', 'cm', 'a4', false); //Generates PDF in landscape mode
+      // let pdf = new jsPDF('p', 'cm', 'a4'); //Generates PDF in portrait mode
+      pdf.addImage(contentDataURL, 'PNG', 0, 0, 29.8, 21.5, 'undefined', 'FAST')
+      pdf.save('Filename.pdf');   
+    });
+  }
+
 }

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { TiposDeFase } from 'src/app/_interfaces/solicitud-pago.interface';
 
 @Component({
   selector: 'app-datos-factura-construccion-rvrp',
@@ -19,8 +20,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
   @Input() datosFacturaCodigo: string;
   @Input() listaMenusId: any;
   @Input() tieneObservacionOrdenGiro: boolean;
-  @Input() esPreconstruccion = true;
+  @Input() faseCodigo: string;
+  @Input() contratacionProyectoId: number;
   @Output() semaforoObservacion = new EventEmitter<boolean>();
+  esPreconstruccion = true;
   addressForm = this.fb.group({
     tipoDocumento: [ null, Validators.required ],
     numeroFactura: [null, Validators.required],
@@ -34,11 +37,11 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     { nombre: 'Factura', codigo: '1' },
     { nombre: 'Cuenta de cobro', codigo: '2' }
   ];
+  fasesContrato = TiposDeFase;
   valorFacturado = 0;
   tiposDescuentoArray: Dominio[] = [];
   listaTipoDescuento: Dominio[] = [];
   solicitudPagoFaseFacturaDescuento: any[] = [];
-  solicitudPagoFaseFacturaId = 0;
   solicitudPagoFaseFactura: any;
   solicitudPagoFase: any;
   esAutorizar: boolean;
@@ -69,11 +72,16 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     this.listaTipoDescuento = [...this.tiposDescuentoArray];
     const solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
 
+    // Verificar la fase seleccionada en el proyecto
+    if ( this.faseCodigo === this.fasesContrato.construccion ) {
+      this.esPreconstruccion = false;
+    }
+
     if ( this.esPreconstruccion === true && solicitudPagoRegistrarSolicitudPago !== undefined ) {
       if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
         if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
           for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
-            if (solicitudPagoFase.esPreconstruccion === true) {
+            if (solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
               this.solicitudPagoFase = solicitudPagoFase;
             }
           }
@@ -85,7 +93,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
       if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
         if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
           for (const solicitudPagoFase of solicitudPagoRegistrarSolicitudPago.solicitudPagoFase) {
-            if (solicitudPagoFase.esPreconstruccion === false) {
+            if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
               this.solicitudPagoFase = solicitudPagoFase;
             }
           }
@@ -94,34 +102,22 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     }
 
     if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-      if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
-        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
-        if (this.solicitudPagoFaseFactura !== undefined) {
+      if ( this.solicitudPagoFase !== undefined ) {
+        this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
+        if (this.solicitudPagoFaseFacturaDescuento !== undefined) {
           this.estaEditando = true;
           this.addressForm.markAllAsTouched();
-          this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
-          this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
-          this.addressForm.get('numeroFactura').setValue(this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null);
-          this.addressForm.get('fechaFactura').setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date(this.solicitudPagoFaseFactura.fecha) : null );
-          this.addressForm.get('aplicaDescuento').setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
-          this.addressForm.get('numeroDescuentos').setValue( this.solicitudPagoFaseFacturaDescuento.length > 0 ? `${this.solicitudPagoFaseFacturaDescuento.length}` : '' );
-          this.addressForm.get('valorAPagarDespues').setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
-    
+
           for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
             this.descuentos.markAllAsTouched();
             this.descuentos.push(
               this.fb.group({
                 solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
-                solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
                 tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
                 valorDescuento: [descuento.valorDescuento]
               })
             );
-          }
-    
-          if (this.solicitudPagoFaseFactura.registroCompleto === true && this.tieneObservacionOrdenGiro === undefined) {
-            this.addressForm.disable();
-            this.descuentos.disable();
           }
     
           if (this.esVerDetalle === false) {
@@ -129,7 +125,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( 
               this.listaMenusId.autorizarSolicitudPagoId,
               this.solicitudPago.solicitudPagoId,
-              this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+              this.solicitudPagoFase.solicitudPagoFaseId,
               this.datosFacturaCodigo
             ).subscribe( response => {
                 const observacion = response.find(obs => obs.archivada === false);
@@ -138,7 +134,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                   this.observacion = observacion;
     
                   if (this.observacion.tieneObservacion === true) {
-                    this.addressForm.enable();
                     this.semaforoObservacion.emit(true);
                     this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
                   }
@@ -149,7 +144,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
               this.listaMenusId.aprobarSolicitudPagoId,
               this.solicitudPago.solicitudPagoId,
-              this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+              this.solicitudPagoFase.solicitudPagoFaseId,
               this.datosFacturaCodigo
             ).subscribe( response => {
                 const observacion = response.find(obs => obs.archivada === false);
@@ -158,7 +153,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                   this.observacion = observacion;
     
                   if (this.observacion.tieneObservacion === true) {
-                    this.addressForm.enable();
                     this.semaforoObservacion.emit(true);
                     this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
                   }
@@ -166,13 +160,15 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             } );
           }
         }
+
         for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {
           this.valorFacturado += criterio.valorFacturado;
         }
+
         this.addressForm.get('numeroDescuentos').valueChanges.subscribe(value => {
           value = Number(value);
           if (value <= this.listaTipoDescuento.length) {
-            if (this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
+            if (this.solicitudPagoFaseFacturaDescuento !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0) {
               if (value > 0) {
                 this.descuentos.clear();
                 for (const descuento of this.solicitudPagoFaseFacturaDescuento) {
@@ -181,7 +177,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                   this.descuentos.push(
                     this.fb.group({
                       solicitudPagoFaseFacturaDescuentoId: [descuento.solicitudPagoFaseFacturaDescuentoId],
-                      solicitudPagoFaseFacturaId: [descuento.solicitudPagoFaseFacturaId],
+                      solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
                       tipoDescuentoCodigo: [descuento.tipoDescuentoCodigo],
                       valorDescuento: [descuento.valorDescuento]
                     })
@@ -201,7 +197,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                   this.descuentos.push(
                     this.fb.group({
                       solicitudPagoFaseFacturaDescuentoId: [0],
-                      solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                      solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
                       tipoDescuentoCodigo: [null],
                       valorDescuento: [null]
                     })
@@ -224,7 +220,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                     this.descuentos.push(
                       this.fb.group({
                         solicitudPagoFaseFacturaDescuentoId: [0],
-                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
                         tipoDescuentoCodigo: [null],
                         valorDescuento: [null]
                       })
@@ -239,7 +235,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                     this.descuentos.push(
                       this.fb.group({
                         solicitudPagoFaseFacturaDescuentoId: [0],
-                        solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+                        solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
                         tipoDescuentoCodigo: [null],
                         valorDescuento: [null]
                       })
@@ -316,7 +312,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
       this.descuentos.push(
         this.fb.group({
           solicitudPagoFaseFacturaDescuentoId: [0],
-          solicitudPagoFaseFacturaId: [this.solicitudPagoFaseFacturaId],
+          solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
           tipoDescuentoCodigo: [null],
           valorDescuento: [null]
         })
@@ -384,69 +380,49 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     this.addressForm.markAllAsTouched();
     this.descuentos.markAllAsTouched();
 
-    if ( this.addressForm.get('numeroFactura').valid && this.addressForm.get('fechaFactura').valid && this.addressForm.get('aplicaDescuento').valid ) {
-      const getSolicitudPagoFaseFacturaDescuento = () => {
-        if (this.descuentos.length > 0) {
-          if (this.addressForm.get('aplicaDescuento').value === true) {
-            return this.descuentos.value;
-          } else {
-            return [];
-          }
+    const getSolicitudPagoFaseFacturaDescuento = () => {
+      if (this.descuentos.length > 0) {
+        if (this.addressForm.get('aplicaDescuento').value === true) {
+          return this.descuentos.value;
         } else {
           return [];
         }
-      };
+      } else {
+        return [];
+      }
+    };
 
-      const solicitudPagoFaseFactura = [
-        {
-          solicitudPagoFaseFacturaId: this.solicitudPagoFaseFacturaId,
-          solicitudPagoFaseId: this.solicitudPagoFase.solicitudPagoFaseId,
-          fecha:
-            this.addressForm.get('fechaFactura').value !== null
-              ? new Date(this.addressForm.get('fechaFactura').value).toISOString()
-              : this.addressForm.get('fechaFactura').value,
-          valorFacturado: this.valorFacturado,
-          numero: this.addressForm.get('numeroFactura').value,
-          tieneDescuento: this.addressForm.get('aplicaDescuento').value,
-          valorFacturadoConDescuento: this.addressForm.get('valorAPagarDespues').value,
-          solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
-        }
-      ];
-
-      if (this.esPreconstruccion === true) {
-        if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
-          for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
-            if (solicitudPagoFase.esPreconstruccion === true) {
-              solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
-            }
+    if (this.esPreconstruccion === true) {
+      if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
+        for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+          if (solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
+            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento();
           }
         }
       }
-
-      if (this.esPreconstruccion === false) {
-        if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
-          for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
-            if (solicitudPagoFase.esPreconstruccion === false) {
-              solicitudPagoFase.solicitudPagoFaseFactura = solicitudPagoFaseFactura;
-            }
-          }
-        }
-      }
-
-      this.registrarPagosSvc.createEditNewPayment(this.solicitudPago).subscribe(
-        response => {
-          this.openDialog('', `<b>${response.message}</b>`);
-          if (this.observacion !== undefined) {
-            this.observacion.archivada = !this.observacion.archivada;
-            this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(this.observacion).subscribe();
-          }
-          this.routes.navigateByUrl('/', { skipLocationChange: true })
-            .then( () => this.routes.navigate([ '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId ]) );
-        },
-        err => this.openDialog('', `<b>${err.message}</b>`)
-      );
-    } else {
-      this.openDialog('', `<b>Formulario incompleto</b>`);
     }
+
+    if (this.esPreconstruccion === false) {
+      if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
+        for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+          if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
+            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento();
+          }
+        }
+      }
+    }
+
+    this.registrarPagosSvc.createEditNewPayment(this.solicitudPago).subscribe(
+      response => {
+        this.openDialog('', `<b>${response.message}</b>`);
+        if (this.observacion !== undefined) {
+          this.observacion.archivada = !this.observacion.archivada;
+          this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(this.observacion).subscribe();
+        }
+        this.routes.navigateByUrl('/', { skipLocationChange: true })
+          .then( () => this.routes.navigate([ '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId ]) );
+      },
+      err => this.openDialog('', `<b>${err.message}</b>`)
+    );
   }
 }

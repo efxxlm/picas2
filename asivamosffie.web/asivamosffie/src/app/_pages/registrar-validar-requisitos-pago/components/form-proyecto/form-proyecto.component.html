@@ -69,7 +69,8 @@
                             <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"
                                                             [contrato]="contrato"
                                                             [listaMenusId]="listaMenusId"
-                                                            [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs.amortizacionAnticipoCodigo">
+                                                            [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs.amortizacionAnticipoCodigo"
+                                                            [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
                             </app-form-amortizacion-anticipo>
                         </mat-expansion-panel>
 
@@ -82,7 +83,9 @@
 
                             <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
                                                                     [datosFacturaCodigo]="registrarSolicitudPagoObs.datosFacturaCodigo"
-                                                                    [listaMenusId]="listaMenusId">
+                                                                    [listaMenusId]="listaMenusId"
+                                                                    [faseCodigo]="fase.get( 'codigo' ).value"
+                                                                    [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
                             </app-datos-factura-construccion-rvrp>
                         </mat-expansion-panel>
                     </mat-accordion>

@@ -45,7 +45,6 @@ export class FormProyectoComponent implements OnInit {
         } else {
             this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
         }
-
         const LISTA_FASES = await this.commonSvc.listaFases().toPromise()
 
         LISTA_FASES.forEach( ( fase, index ) => {
@@ -58,6 +57,33 @@ export class FormProyectoComponent implements OnInit {
         } );
 
         this.listaFases = LISTA_FASES
+
+        const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ 0 ]
+        const fases = []
+
+        if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+            if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( solicitudPagoFase => {
+                    if ( solicitudPagoFase.esPreconstruccion === true ) {
+                        const fase = LISTA_FASES.find( fase => fase.codigo === this.fasesContrato.preConstruccion )
+
+                        if ( fase !== undefined ) {
+                            fases.push( fase )
+                        }
+                    } else {
+                        const fase = LISTA_FASES.find( fase => fase.codigo === this.fasesContrato.construccion )
+
+                        if ( fase !== undefined ) {
+                            fases.push( fase )
+                        }
+                    }
+                } )
+            }
+        }
+
+        if ( fases.length > 0 ) {
+            this.addressForm.get( 'fase' ).setValue( fases )
+        }
     }
 
     getValueFase( listFaseCodigo: Dominio[] ) {
