@@ -1046,15 +1046,10 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyecto.ContratacionId > 0)
                 {
-                    _context
-                           .Set<ContratacionProyecto>()
-                           .Where(r => r.ContratacionProyectoId == pContratacionProyecto.ContratacionId)
-                           .Update(r => new ContratacionProyecto
-                           {
-                               UsuarioModificacion = pContratacionProyecto.UsuarioCreacion,
-                               FechaModificacion = DateTime.Now,
-                               RegistroValido = pContratacionProyecto.RegistroValido
-                           }); 
+                    ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionId);
+                    contratacionProyectoOld.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                    contratacionProyectoOld.FechaModificacion = DateTime.Now;
+                    contratacionProyectoOld.RegistroValido = pContratacionProyecto.RegistroValido; 
                 }
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)
