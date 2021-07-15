@@ -31,6 +31,7 @@ namespace asivamosffie.services
                                         .Where(c => c.ContratoId == pContratoId)
                                         .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
                                         .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                        .Include(c => c.Contratacion).ThenInclude(c => c.PlazoContratacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantiaActualizacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaObservacion).ThenInclude(u => u.ResponsableAprobacion)
                                         .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
