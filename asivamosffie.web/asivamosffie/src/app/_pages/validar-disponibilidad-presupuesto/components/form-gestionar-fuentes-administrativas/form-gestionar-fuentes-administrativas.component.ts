@@ -5,6 +5,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { element } from 'protractor';
+import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 
 @Component({
   selector: 'app-form-gestionar-fuentes-administrativas',
@@ -40,6 +41,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   disponibilidadPresupuestalProyectoid: any;
   valorGestionado: any;
   estaEditando = false;
+  pTipoDDP = TipoDDP;
 
   constructor(
     private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
@@ -47,12 +49,31 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data
   ) { }
 
-  ngOnInit(): void { 
-    console.log("Viene id"+this.data);
-    console.log(this.data);
+  ngOnInit(): void {
     this.solicitud=this.data.elemento.id;
     this.nombreAportante=this.data.elemento.nombreAportante;
-    this.valorAportante=this.data.elemento.valorAportante;
+    console.log(this.data);
+    if (this.data.tipoddp == this.pTipoDDP.DDP_especial) {
+      let valorAportante = 0;
+      if(this.data.elemento.aportantes.length> 0){
+        this.data.elemento.aportantes.forEach(aportante => {
+          valorAportante = valorAportante + aportante?.valorAportanteAlProyecto;
+        });
+        this.valorAportante = valorAportante;
+      }
+    }else if (this.data.tipoddp == this.pTipoDDP.DDP_administrativo) {
+        let valorAportante = 0;
+        if(this.data.elemento.aportantes.length> 0){
+          this.data.elemento.aportantes.forEach(aportante => {
+            aportante.fuentesFinanciacion.forEach(fuente => {
+              valorAportante = valorAportante + fuente?.valorFuente;
+            });
+          });
+          this.valorAportante = valorAportante;
+        }
+    }else{
+      this.valorAportante=this.data.elemento.valorAportante;
+    }
     this.llaveMen=this.data.elemento.llaveMen;
     this.tipoInterventor=this.data.elemento.tipoInterventor;
     this.departamento=this.data.elemento.departamento;
@@ -62,11 +83,10 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     this.disponibilidadPresupuestalProyectoid=this.data.elemento.disponibilidadPresupuestalProyectoid;
     this.valorGestionado=this.data.elemento.valorGestionado;
     this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalid(this.data.elemento.id).subscribe(lista => {
-      console.log(lista);
       this.fuentesbase=lista;
       let esEdicion=false;
       lista.forEach(element => {
-        this.fuentesArray.push({name:element.fuente,value:element.fuenteFinanciacionID});  
+        this.fuentesArray.push({name:element.fuente,value:element.fuenteFinanciacionID});
         if(element.gestionFuenteFinanciacionID>0)
         {
           esEdicion=true;
@@ -74,7 +94,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
       });
       if(esEdicion)
       {
-        let fuentesarray=this.fuentes;  
+        let fuentesarray=this.fuentes;
         fuentesarray.clear();
 
         lista.forEach(element => {
@@ -89,19 +109,18 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
             fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
             fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
             fuentesarray.push(fuent);
-             console.log(fuentesarray);
           }
         });
       }
-      
-      
+
+
     });
   }
 
-  
+
   fuenteCambio(fuente:any)
   {
-    let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+    let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);
     console.log( fuenteSeleccionada);
     //valido que no se haya seleccionado previamente
     let cont=0;
@@ -114,7 +133,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     });
     if(cont>1)
     {
-     this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
+     this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>");
      console.log(fuente.get("fuentecampo"));
      fuente.get("fuentecampo").setValue("");
     }
@@ -124,20 +143,20 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
       console.log(fuenteSeleccionada[0].Saldo_actual_de_la_fuente)
     }
 
-    
+
   }
   reste(fuente:any)
   {
     console.log(fuente.controls.saldoActual.value)
     if(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value<0)
     {
-      let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+      let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);
       this.openDialog("","El saldo actual de la fuente <b>"+fuenteSeleccionada[0].fuente+"</b> es menor al valor solicitado de la fuente, verifique por favor.");
-      fuente.get('valorSolicitado').setValue(0);  
+      fuente.get('valorSolicitado').setValue(0);
     }
-    
+
     fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
-    
+
   }
   openDialog(modalTitle: string, modalText: string,reload=false) {
     let dialog=this.dialog.open(ModalDialogComponent, {
@@ -173,7 +192,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if(result === true)
@@ -194,18 +213,18 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
                   mensaje = error.message;
                 }
                 this.openDialog('Error', mensaje);
-                
+
               },
             () =>{
               //else
-            }); 
+            });
         }
         else{
           borrarForm.removeAt(id);
           this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
         }
-        
-      }           
+
+      }
     });
   }
 
@@ -232,7 +251,18 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    // console.log(this.addressForm.controls.fuentes.value);
+    let valorSolicitado: number = 0;
+    console.log(this.addressForm.controls.fuentes.value);
+
+    this.addressForm.controls.fuentes.value.forEach(fuente => {
+      valorSolicitado = valorSolicitado + fuente.valorSolicitado;
+    });
+
+    console.log( valorSolicitado, this.valorAportante )
+    if ( valorSolicitado != this.valorAportante ){
+      this.openDialog('', '<b>El valor solicitado es diferente al valor del aportante.</b>', false);
+      return false;
+    }
     let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {
       let CreateFinancialFundingGestion={
@@ -243,11 +273,10 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
         DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid};
       this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
         {
-          console.log("Guardado");
           mensaje=result.message
         });
-    });      
-    this.openDialog('','<b>La información a sido guardada exitosamente.</b>',true);  
-    
+    });
+    this.openDialog('','<b>La información a sido guardada exitosamente.</b>',true);
+
   }
 }

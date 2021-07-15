@@ -19,8 +19,7 @@ namespace asivamosffie.model.APIModels
         public decimal Nuevo_saldo_de_la_fuente { get; set; }
         public decimal Nuevo_saldo_de_la_fuente_al_guardar { get; set; }
         public string Estado_de_las_fuentes { get; set; }
-
-
+        public decimal? ValorFuente { get; set; }
         public int? GestionFuenteFinanciacionID { get; set; }
     }
 }
