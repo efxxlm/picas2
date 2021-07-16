@@ -2325,8 +2325,8 @@ namespace asivamosffie.services
                 foreach (var comite in ListComiteTecnico)
                 {
                     string EstadoComite = "";
-                    if (!string.IsNullOrEmpty(comite.EstadoActaCodigo))
-                        EstadoComite = ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre;
+                    if (!string.IsNullOrEmpty(comite.EstadoComiteCodigo))
+                        EstadoComite = ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComiteCodigo).FirstOrDefault().Nombre;
 
                     ComiteGrilla comiteGrilla = new ComiteGrilla
                     {
