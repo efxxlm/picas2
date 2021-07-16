@@ -4815,6 +4815,38 @@ namespace asivamosffie.services
                                 }
 
                                 break;
+                            case ConstanCodigoTipoSolicitud.Defensa_judicial:
+                                DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(SesionComiteSolicitud.SolicitudId);
+
+                                foreach (Dominio placeholderDominio in placeholders)
+                                {
+                                    switch (placeholderDominio.Codigo)
+                                    {
+                                        case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, defensaJudicial.NumeroProceso);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
+                                            string FechaSolicitud = string.Empty;
+                                            if (defensaJudicial.FechaCreacion != null)
+                                            {
+                                                FechaSolicitud = ((DateTime)defensaJudicial.FechaCreacion).ToString("dd-MM-yyy");
+                                            }
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, FechaSolicitud);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre,
+                                                ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                                && r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre);
+                                            break;
+                                    }
+                                }
+
+                                break;
                             default:
                                 break;
                         }
