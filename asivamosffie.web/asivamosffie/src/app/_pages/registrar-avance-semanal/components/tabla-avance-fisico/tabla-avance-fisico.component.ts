@@ -210,10 +210,14 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
         }
     }
 
-    valuePending( value: number, registro: any ) {
+    valuePending( value: number, registro: any )
+     { 
+       
+ 
         if ( isNaN( Number( value ) ) === true ) {
             registro.avanceFisicoCapitulo = '0';
         } else {
+         
             if ( Number( value ) < 0 ) {
                 registro.avanceFisicoCapitulo = '0';
                 return;
@@ -222,6 +226,11 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
             this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
             let totalAvanceFisicoSemana = 0;
             if ( Number( value ) > 100 ) {
+                registro.avanceFisicoCapitulo = 100;
+                return;
+            }
+            /*  
+            if ( Number( value ) > 100 ) {
                 registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
             if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
@@ -229,7 +238,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
             }
             if ( Number( value ) < 0 ) {
                 registro.avanceFisicoCapitulo = null;
-            }
+            }*/
             for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
                 
                 let avanceValue = 0;
@@ -244,8 +253,9 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                 }
                 totalAvanceFisicoSemana += Number( avanceValue );
             }
-            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
+            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false ); 
         }
+ 
     }
 
     valuePendingProgramacionObra() {
