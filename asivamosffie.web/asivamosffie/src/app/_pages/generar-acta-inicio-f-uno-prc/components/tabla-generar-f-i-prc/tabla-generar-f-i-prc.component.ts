@@ -33,9 +33,9 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
   cargarTablaDeDatos() {
     this.service.GetListGrillaActaInicio(2).subscribe((data:any) => {
       for (let actas of data){
-        if (actas.tipoContratoNombre === 'Obra'){
+       if (actas.tipoContratoNombre === 'Obra'){
           this.dataTable.push(actas);
-        }
+         }
       }
       
       if ( this.dataTable.length > 0 ) {

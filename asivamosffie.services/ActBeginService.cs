@@ -1338,7 +1338,7 @@ namespace asivamosffie.services
 
                     if (item.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
                         nombreTipoContrato = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(ConstanCodigoTipoContratacionSTRING.Interventoria);
-
+                    actaInicio.TipoContratoCodigo = item.Contratacion.TipoSolicitudCodigo;
                     actaInicio.EstadoVerificacion = strEstadoVerificacion;
                     actaInicio.ContratoId = item.ContratoId;
                     actaInicio.NumeroContratoObra = item.NumeroContrato;

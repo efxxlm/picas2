@@ -14,51 +14,9 @@ export interface Contrato {
   numeroContrato: string;
   estado: string;
   enviadoparaInterventor: boolean;
-  actaSuscrita: boolean;
+  actaSuscrita: boolean; 
 }
-
-const ELEMENT_DATA: Contrato[] = [
-  {
-    idContrato: 1,
-    fechaAprobacionRequisitos: "20/06/2020",
-    numeroContrato: "C223456789",
-    estado: "Sin validar",
-    enviadoparaInterventor: null,
-    actaSuscrita: null
-  },
-  {
-    idContrato: 2,
-    fechaAprobacionRequisitos: "21/06/2020",
-    numeroContrato: "C223456790",
-    estado: "Con observaciones",
-    enviadoparaInterventor: null,
-    actaSuscrita: null
-  },
-  {
-    idContrato: 3,
-    fechaAprobacionRequisitos: "22/06/2020",
-    numeroContrato: "C223456791",
-    estado: "Con observaciones",
-    enviadoparaInterventor: true,
-    actaSuscrita: null
-  },
-  {
-    idContrato: 4,
-    fechaAprobacionRequisitos: "26/06/2020",
-    numeroContrato: "C223456794",
-    estado: "Con acta en proceso de firma",
-    enviadoparaInterventor: null,
-    actaSuscrita: null
-  },
-  {
-    idContrato: 5,
-    fechaAprobacionRequisitos: "27/06/2020",
-    numeroContrato: "C223456795",
-    estado: "Con acta suscrita y cargada",
-    enviadoparaInterventor: null,
-    actaSuscrita: true
-  }
-];
+ 
 @Component({
   selector: 'app-tabla-contr-intrvn-fdos-constr',
   templateUrl: './tabla-contr-intrvn-fdos-constr.component.html',
@@ -71,22 +29,17 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable:any = [];
-  loadDataItems: Subscription;
+  loadDataItems: Subscription; 
+  TipoContratoInterventoria: string ="2";
   constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
-    /*
-    this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
-      if (loadDataItems != '') {
-        this.dataTable = loadDataItems;
-      }
-    });
-    */
-    this.services.GetListGrillaActaInicio(8).subscribe((data:any) => {
+ 
+    this.services.GetListGrillaActaInicio(8).subscribe((data:any) => {  
       for(let contratos of data){
-        if(contratos.tipoContrato == 'Interventoria'){
+       if(contratos.tipoContratoCodigo === this.TipoContratoInterventoria){
           this.dataTable.push(contratos);
-        }
+         }
       }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
