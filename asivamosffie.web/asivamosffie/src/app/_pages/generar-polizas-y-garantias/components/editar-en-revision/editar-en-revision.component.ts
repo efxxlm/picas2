@@ -384,7 +384,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
             return [
                 {
-                    polizaObservacionId: this.polizaObservacionId,
+                   // polizaObservacionId: this.polizaObservacionId,
                     contratoPolizaId: this.contratoPoliza.contratoPolizaId,
                     fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
                     estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
