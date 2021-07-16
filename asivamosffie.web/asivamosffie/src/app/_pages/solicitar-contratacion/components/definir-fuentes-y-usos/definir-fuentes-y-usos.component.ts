@@ -7,6 +7,8 @@ import { CommonService, Dominio } from 'src/app/core/_services/common/common.ser
 import { forkJoin } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatSelectChange } from '@angular/material/select';
+import { FuenteFinanciacion } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 
 @Component({
   selector: 'app-definir-fuentes-y-usos',
@@ -279,6 +281,31 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       control.get('usoDescripcion').setValue(null);
     })
 
+  }
+
+  changeFoundingSource2(selection:MatSelectChange, indexAportante:number, uso: FormControl){
+    const aportante = this.aportantes.controls[ indexAportante ]
+
+    if(aportante && 'FFIE' !== aportante.get('nombreAportante').value){
+      const foundingSources = aportante.get( 'listaFuenteFinanciacion' ).value
+      const foundingSourceId = selection.value;
+      const source = foundingSources.find(x => x.fuenteFinanciacionId === foundingSourceId);
+      const hasDeposits = source.controlRecurso && source.controlRecurso.length > 0;
+
+      let sumResources = 0;
+      if(hasDeposits){        
+        source.controlRecurso.forEach(element => {
+          sumResources = sumResources + Number(element.valorAporte);
+        });
+      }
+
+      if(!hasDeposits){
+        uso.get("fuenteFinanciacionId").setValue(null, { emitEvent: false})
+        this.openDialog('', `<b>No se ha definido aportes para esta fuente, verifique por favor con él área financiera.</b>`);
+      }else if(uso.get("valorUso").value && sumResources < Number(uso.get("valorUso").value)){
+        this.openDialog('', `<b>El valor solicitado de la contratación es menor a los aportes de esta fuente, verifique por favor con él área financiera.</b>`);
+      }
+    }
   }
 
   getListaUsosFiltrado(posicionAportante, posicionComponente, posicionUso) {
