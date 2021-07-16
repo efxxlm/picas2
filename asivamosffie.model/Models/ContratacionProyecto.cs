@@ -43,6 +43,7 @@ namespace asivamosffie.model.Models
         public string RutaCargaActaTerminacionContrato { get; set; }
         public decimal? AvanceFisicoSemanal { get; set; }
         public decimal? ProgramacionSemanal { get; set; }
+        public bool? RegistroValido { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }

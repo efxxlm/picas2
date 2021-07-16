@@ -52,7 +52,7 @@ namespace asivamosffie.services
                 List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == retorno.FuenteFinanciacionId).ToList();
                 retorno.ControlRecurso = cr;
             }
-            
+
             if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
             {
                 retorno.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -258,6 +258,63 @@ namespace asivamosffie.services
             return retorno;
         }
 
+        public async Task<Respuesta> ValidaEliminarFuenteFinanciancion(int id, string UsuarioModifico)
+        {
+            int idAccionEliminarFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
+
+            //verifico que no tenga relación con proyectos de infraestructura
+            var proyectoFuentes = _context.ProyectoFuentes.Where(x => x.FuenteId == id && !(bool)x.Eliminado).Count();
+            if (proyectoFuentes > 0)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = true,
+                      Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                  };
+            }
+            //verifico que no tenga control de recursos
+            var proyectoFuentesCR = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == id && x.Eliminado != true).Count();
+            if (proyectoFuentesCR > 0)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = true,
+                      Code = ConstantMessagesFuentesFinanciacion.EliminarFuenteConControlRecursos,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminarFuenteConControlRecursos, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                  };
+            }
+
+            //verifico que no tenga relación con proyectos administrativos
+            var proyectoFuentesad = _context.AportanteFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == id && !(bool)x.Eliminado).Count();
+            if (proyectoFuentesad > 0)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = true,
+                      Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                  };
+            }
+
+            return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false
+                  };
+        }
+
         public async Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico)
         {
 
@@ -265,50 +322,11 @@ namespace asivamosffie.services
 
             try
             {
-                //verifico que no tenga relación con proyectos de infraestructura
-                var proyectoFuentes = _context.ProyectoFuentes.Where(x => x.FuenteId == id && !(bool)x.Eliminado).Count();
-                if (proyectoFuentes > 0)
+                var validationResponse = await ValidaEliminarFuenteFinanciancion(id, UsuarioModifico);
+                if (validationResponse.IsValidation)
                 {
-                    return
-                      new Respuesta
-                      {
-                          IsSuccessful = true,
-                          IsException = false,
-                          IsValidation = false,
-                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
-                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
-                      };
+                    return validationResponse;
                 }
-                //verifico que no tenga control de recursos
-                var proyectoFuentesCR = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == id && x.Eliminado != true).Count();
-                if (proyectoFuentesCR > 0)
-                {
-                    return
-                      new Respuesta
-                      {
-                          IsSuccessful = true,
-                          IsException = false,
-                          IsValidation = false,
-                          Code = ConstantMessagesFuentesFinanciacion.EliminarFuenteConControlRecursos,
-                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminarFuenteConControlRecursos, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
-                      };
-                }
-
-                //verifico que no tenga relación con proyectos administrativos
-                var proyectoFuentesad = _context.AportanteFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == id && !(bool)x.Eliminado).Count();
-                if (proyectoFuentesad > 0)
-                {
-                    return
-                      new Respuesta
-                      {
-                          IsSuccessful = true,
-                          IsException = false,
-                          IsValidation = false,
-                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
-                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
-                      };
-                }
-
 
                 var entity = await _context.FuenteFinanciacion.FindAsync(id);
                 entity.FechaModificacion = DateTime.Now;
@@ -1028,7 +1046,7 @@ namespace asivamosffie.services
 
             try
             {
-                var entity = await _context.CuentaBancaria.FindAsync(id);
+                var entity = await _context.CuentaBancaria.Where(x => x.CuentaBancariaId == id).Include(x => x.ControlRecurso).FirstOrDefaultAsync();
                 entity.FechaModificacion = DateTime.Now;
                 entity.UsuarioModificacion = UsuarioModifico;
                 entity.Eliminado = true;

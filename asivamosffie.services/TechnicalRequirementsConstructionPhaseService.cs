@@ -79,11 +79,10 @@ namespace asivamosffie.services
                                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
                                     CantidadProyectosRequisitosValidados = c.CantidadProyectosRequisitosValidados,
                                     EstadoCodigo = c.EstadoCodigo,
-                                    EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                    EstadoNombre = c.EstadoNombre, 
                                     Existeregistro = c.ExisteRegistro,
                                     c.EstaDevuelto,
-                                    c.RegistroCompletoConstruccion,
-
+                                    c.RegistroCompletoConstruccion 
                                 });
                             }
                         }

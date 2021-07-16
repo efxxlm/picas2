@@ -152,6 +152,23 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("FuentesFinanciacion/ValidDelete")]
+        public async Task<IActionResult> ValidaEliminarFuentesFinanciacion(int id)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _sourceFunding.ValidaEliminarFuenteFinanciancion(id, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
         [Route("GetFuentesFinanciacionByAportanteId")]
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {

@@ -532,25 +532,28 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       };
     };
 
-    if (valoresCorrectos) {
-
-      this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
-        .subscribe(
-          respuesta => {
-            this.openDialog('', `<b>${respuesta.message}</b>`);
-            this.realizoPeticion = true;
-            if (respuesta.code === '200') {
-              //this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
-              this.ngOnInit();
-
-            }
-          },
-          err => this.openDialog('', `<b>${err.message}</b>`)
-        );
-
-    } else {
-      this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
+    if ( valoresCorrectos !== true ) {
+      this.openDialog('', '<b>Recuerde que la sumatoria de los componentes debe ser igual al valor total de los aportes para que el registro pase a completo.</b>');
+      this.contratacionProyecto[ 'registroValido' ] = false;
     }
+
+    if ( valoresCorrectos === true ) {
+      this.contratacionProyecto[ 'registroValido' ] = true;
+    }
+
+    this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
+      .subscribe(
+        respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
+          this.realizoPeticion = true;
+          if (respuesta.code === '200') {
+            //this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
+            this.ngOnInit();
+
+          }
+        },
+        err => this.openDialog('', `<b>${err.message}</b>`)
+      );
 
   }
 }
