@@ -23,7 +23,7 @@
       <p> <strong>Tipo de identificación:</strong> <i> {{ getTipoDocumento( contrato.contratacion.contratista.tipoIdentificacionCodigo ) }} </i> </p>
       <p> <strong>Número de identificación:</strong> <i>  {{ contrato.contratacion.contratista.numeroIdentificacion }} </i> </p>
       <p> <strong>Valor del contrato:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency: '':'symbol':'3.0' }} </i> </p>
-      <p> <strong>Plazo:</strong> <i> {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoMeses }} meses / {{ contrato.contratacion.disponibilidadPresupuestal[ 0 ].plazoDias }} días </i> </p>
+      <p> <strong>Plazo:</strong> <i> {{ contrato.contratacion.plazoContratacion.plazoMeses }} meses / {{ contrato.contratacion.plazoContratacion.plazoDias }} días </i> </p>
     </mat-card-content>
   </mat-card>
 

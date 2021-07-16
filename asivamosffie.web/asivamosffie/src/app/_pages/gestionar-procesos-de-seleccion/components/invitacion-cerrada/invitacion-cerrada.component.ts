@@ -245,15 +245,13 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoDatos(pProceso: any): number {
     let retorno = 0;
-    console.log("vantidad propo" + pProceso.procesoSeleccionProponente.length);
+    // console.log("vantidad propo" + pProceso.procesoSeleccionProponente.length);
 
-    if (pProceso.procesoSeleccionProponente.length >= 3) {
+    if (pProceso.ProcesoSeleccionProponenteId == false) {
       retorno = 2;
     }
-    else {
-      if (pProceso.procesoSeleccionProponente.length > 0 && pProceso.procesoSeleccionProponente.length < 3) {
-        retorno = 1;
-      }
+    else if (pProceso.ProcesoSeleccionProponenteId == true) {
+      retorno = 1;
     }
 
     return retorno;

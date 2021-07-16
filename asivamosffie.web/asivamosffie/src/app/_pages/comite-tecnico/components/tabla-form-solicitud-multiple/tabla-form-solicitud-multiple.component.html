@@ -145,7 +145,10 @@
               element.proyecto.proyectoId,
               element.proyecto.estadoProyectoObraCodigo,
               0,
-              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false
+              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false,
+              element.proyectoGrilla.institucionEducativa,
+              element.proyectoGrilla.sede,
+              element.proyectoGrilla.departamento
             )
           "
           *ngIf="contratacion.tipoSolicitudCodigo === '1'"
@@ -167,9 +170,12 @@
               element.contratacionId,
               element.contratacionObservacion,
               element.proyecto.proyectoId,
-              0,
               element.proyecto.estadoProyectoInterventoriaCodigo,
-              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false
+              0,
+              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false,
+              element.proyectoGrilla.institucionEducativa,
+              element.proyectoGrilla.sede,
+              element.proyectoGrilla.departamento
             )
           "
           *ngIf="contratacion.tipoSolicitudCodigo === '2'"

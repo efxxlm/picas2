@@ -45,7 +45,7 @@ namespace asivamosffie.api.Controllers
            impacto: CU 4.1.3*/
         [HttpPost]
         [Route("CreateEditNovedadContractual")]
-        public async Task<IActionResult> CreateEditNovedadContractual(NovedadContractual novedadContractual)
+        public async Task<IActionResult> CreateEditNovedadContractual([FromBody] NovedadContractual novedadContractual)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -63,12 +63,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditNovedadContractualTramite")]
-        public async Task<IActionResult> CreateEditNovedadContractualTramite(NovedadContractual novedadContractual)
+        public async Task<IActionResult> CreateEditNovedadContractualTramite([FromBody] NovedadContractual novedadContractual)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _contractualModification.CreateEditNovedadContractualTramite(novedadContractual);
 
                 return Ok(respuesta);

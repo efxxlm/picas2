@@ -167,7 +167,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
     // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
     // al valor solicitado de la fuente, verifique por favor.`);
     let dialogRef = this.dialog.open(FormGestionarFuentesAdministrativasComponent, {
-      width: '70em', data: { elemento: id, codigo: this.detailavailabilityBudget.numeroSolicitud, ver: this.esModificacion }
+      width: '70em', data: { elemento: id, codigo: this.detailavailabilityBudget.numeroSolicitud, ver: this.esModificacion, tipoddp: this.detailavailabilityBudget.tipoSolicitudCodigo }
     });
     dialogRef.afterClosed().subscribe(result => {
       location.reload();

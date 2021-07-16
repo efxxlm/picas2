@@ -129,7 +129,6 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
   ngOnInit(): void {
 
     this.aprobaciones.clear();
-
     this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach(v => {
       let grupoVotacion = this.crearAprobaciones();
 
@@ -142,7 +141,6 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
       this.aprobaciones.push(grupoVotacion)
     })
-
     this.proyectos.clear();
 
     //this.data.sesionComiteSolicitud.contratacion.contratacionProyecto.forEach( cp => {

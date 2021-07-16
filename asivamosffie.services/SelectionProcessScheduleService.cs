@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services
 {
-    public class SelectionProcessScheduleService: ISelectionProcessScheduleService
+    public class SelectionProcessScheduleService : ISelectionProcessScheduleService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionCronograma>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.CronogramaSeguimiento).ToListAsync();
+            return await _context.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x => x.CronogramaSeguimiento).ToListAsync();
         }
 
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
@@ -143,7 +143,7 @@ namespace asivamosffie.services
             try
             {
                 _context.Update(updateObj);
-                 await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return _response = new Respuesta
                 {
                     IsSuccessful = true,
@@ -183,40 +183,24 @@ namespace asivamosffie.services
         public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
         {
             List<ProcesoSeleccionMonitoreo> listaMonitoreo = new List<ProcesoSeleccionMonitoreo>();
-
-            
-
-            listaMonitoreo = _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x => x.ProcesoSeleccionCronogramaMonitoreo).Include(x => x.ProcesoSeleccion).ToList();
+            listaMonitoreo = await _context.ProcesoSeleccionMonitoreo.Where(r => r.ProcesoSeleccionId == pProcesoSeleccionId)
+                                                                     .Include(x => x.ProcesoSeleccionCronogramaMonitoreo)
+                                                                     .Include(x => x.ProcesoSeleccion)
+                                                                     .ToListAsync();
+            List<SesionComiteSolicitud> ListSesionComiteSolicitud = _context.SesionComiteSolicitud
+                                                                     .Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                                                                     .ToList();
 
             foreach (var monitoreo in listaMonitoreo)
             {
-                List<string> listaEstadosTecnico = new List<string> { "4", "6" };
-                List<string> listaEstadosFiduciario = new List<string> { "5", "7" };
-                string observacion = "";
-                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
-                                                                    .Where(x => x.SolicitudId == monitoreo.ProcesoSeleccionMonitoreoId &&
-                                                                           x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion 
-                                                                           //&&
-                                                                           //listaEstadosTecnico.Contains( x.EstadoCodigo )
-                                                                           )
+                SesionComiteSolicitud sesionComiteSolicitud = ListSesionComiteSolicitud
+                                                                                      .Where(x => x.SolicitudId == monitoreo.ProcesoSeleccionMonitoreoId)
+                                                                                      .FirstOrDefault();
 
-                                                                    ?.FirstOrDefault();
-
-                observacion = string.IsNullOrEmpty(sesionComiteSolicitud?.ObservacionesFiduciario) ? sesionComiteSolicitud?.Observaciones : sesionComiteSolicitud?.ObservacionesFiduciario;
-
-                //if ( string.IsNullOrEmpty(observacion)){
-                //    observacion = _context.SesionComiteSolicitud
-                //                                                    .Where(x => x.SolicitudId == monitoreo.ProcesoSeleccionMonitoreoId &&
-                //                                                           x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion &&
-                //                                                           listaEstadosFiduciario.Contains(x.EstadoCodigo))
-                //                                                    ?.FirstOrDefault()
-                //                                                    ?.ObservacionesFiduciario;
-                //}
-
-                monitoreo.ObservacionDevolucionRechazo = observacion;
+                monitoreo.ObservacionDevolucionRechazo = string.IsNullOrEmpty(sesionComiteSolicitud?.ObservacionesFiduciario) ? sesionComiteSolicitud?.Observaciones : sesionComiteSolicitud?.ObservacionesFiduciario;
             }
 
-            return listaMonitoreo; 
+            return listaMonitoreo;
         }
 
         public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma
@@ -224,13 +208,14 @@ namespace asivamosffie.services
             )
         {
             Respuesta _response = new Respuesta();
-            int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.Crear_Cronograma_monitoreo)).Select(x => x.DominioId).First();
+            int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones
+                                                                       && x.Codigo.Equals(ConstantCodigoAcciones.Crear_Cronograma_monitoreo)).Select(x => x.DominioId).First();
             try
             {
                 if (procesoSeleccionCronograma != null)
                 {
                     //Editar
-                    if (procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
+                    if (procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId > 0)
                     {
                         ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId);
 
@@ -278,15 +263,15 @@ namespace asivamosffie.services
                                 proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
 
                                 procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.Add(proceso);
-                                
+
                             }
-                            
+
                         }
                     }
                     // nuevo
                     else
                     {
-                        
+
                         procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
                         procesoSeleccionCronograma.Eliminado = false;
                         procesoSeleccionCronograma.NumeroProceso = Helpers.Helpers.Consecutive("ACTCRONO", _context.ProcesoSeleccionMonitoreo.Count());
@@ -311,7 +296,7 @@ namespace asivamosffie.services
                                     NumeroActividad = proceso.NumeroActividad,
                                     ProcesoSeleccionCronogramaId = proceso.ProcesoSeleccionCronogramaId,
                                     //ProcesoSeleccionMonitoreoId = proceso.
-                                    
+
                                 };
 
 
@@ -320,16 +305,16 @@ namespace asivamosffie.services
                         }
 
                         foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
-                        {                            
+                        {
                             proceso.FechaCreacion = DateTime.Now;
                             proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
                         }
                         _context.Add(procesoSeleccionCronograma);
                     }
-                    
+
 
                     //por aqui actualizo el estado de la solicitud si lo estoy envaiando a comite y se envia notificacion
-                    if(procesoSeleccionCronograma.EnviadoComiteTecnico==true)
+                    if (procesoSeleccionCronograma.EnviadoComiteTecnico == true)
                     {
                         //jflorez ya no le cambio el estado porque no debería afectar al papá
                         /*var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
@@ -342,7 +327,7 @@ namespace asivamosffie.services
                             bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
                         }
                     }
-                    
+
 
                     await _context.SaveChangesAsync();
 
