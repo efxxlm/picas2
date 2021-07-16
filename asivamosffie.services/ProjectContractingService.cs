@@ -382,6 +382,7 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.ContratacionProyectoAportante)
                             .ThenInclude(r => r.CofinanciacionAportante)
                               .ThenInclude(r => r.FuenteFinanciacion)
+                                .ThenInclude(r => r.ControlRecurso)
                 .FirstOrDefaultAsync();
 
             foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)

@@ -369,7 +369,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   }
 
   getStyle() {
-    if ( this.idSesion == 0 || this.estadosComite.sinConvocatoria == this.objetoComiteTecnico.estadoComiteCodigo)
+    if ( this.idSesion == 0 || this.estadosComite.sinConvocatoria == this.objetoComiteTecnico?.estadoComiteCodigo)
       return 'auto'
     else
       return 'none'

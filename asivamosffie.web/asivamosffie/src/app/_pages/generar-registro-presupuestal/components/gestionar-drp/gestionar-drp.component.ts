@@ -75,23 +75,21 @@ export class GestionarDrpComponent implements OnInit {
           this.detailavailabilityBudget.proyectos.forEach(element => {
             listaComponentesUsoAportante = [];
             element.aportantes.forEach(aportante => {
-
               this.listacomponentes = [];
               // filtro por aportante
               element.componenteGrilla.filter( r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId).forEach(element2 => {
                 this.listacomponentes.push({
-                  componente: element2.componente, uso: [
-                    { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
-                  ], valorUso: [
-                    { valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
-                  ], valorTotal: element2.valorTotal,
+                  componente: element2.componente,
+                  uso: [{ nombre: element2.uso }],
+                  valorUso: [{ valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }],
+                  valorTotal: element2.valorTotal,
                   fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
                 });
               });
               //dataSource.push(new MatTableDataSource(this.listacomponentes));
               listaComponentesUsoAportante.push( new MatTableDataSource(this.listacomponentes) )
             });
-            element['listaComponentesUsoAportante'] = listaComponentesUsoAportante
+            element['listaComponentesUsoAportante'] = listaComponentesUsoAportante;
           });
 
         }
@@ -101,7 +99,6 @@ export class GestionarDrpComponent implements OnInit {
       });
     }
     //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-
   }
 
 

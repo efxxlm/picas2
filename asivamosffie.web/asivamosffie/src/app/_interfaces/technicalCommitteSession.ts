@@ -78,7 +78,7 @@ export interface SesionComiteTema{
 
     completo?: boolean,
 
-    sesionTemaVoto?: SesionTemaVoto[]
+    sesionTemaVoto?: SesionTemaVoto[],
     temaCompromiso?: TemaCompromiso[],
 
 }
@@ -320,6 +320,7 @@ export interface TemaCompromiso{
     nombreResponsable?: string,
     responsableNavigation?: SesionParticipante,
     nombreEstado?: string,
+    esCumplido?: boolean,
 
 }
 

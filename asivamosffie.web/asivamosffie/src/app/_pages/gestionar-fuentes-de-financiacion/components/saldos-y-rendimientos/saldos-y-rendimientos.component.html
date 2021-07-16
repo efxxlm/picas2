@@ -19,7 +19,7 @@
       <img src="assets/img/icon/lupa.svg" alt="Buscar" />
     </button>
   </div>
-  
+
   <div class="table-responsive mb-2em text-center">
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- saldoActual Column -->
@@ -28,20 +28,20 @@
           Saldo actual
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.saldoActual }}
+          {{ element.saldoActual | currency: 'COP':'symbol-narrow':'.0-0'}}
         </td>
       </ng-container>
-  
+
       <!-- comprometidoEnDdp Column -->
       <ng-container matColumnDef="comprometidoEnDdp">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Comprometido en DDP
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.comprometidoEnDdp }}
+          {{ element.comprometidoEnDdp | currency: 'COP':'symbol-narrow':'.0-0'}}
         </td>
       </ng-container>
-  
+
       <!-- rendimientosIncorporados Column -->
       <ng-container matColumnDef="rendimientosIncorporados">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -49,7 +49,7 @@
         </th>
         <td mat-cell *matCellDef="let element">{{ element.rendimientosIncorporados }}</td>
       </ng-container>
-  
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

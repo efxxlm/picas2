@@ -209,7 +209,6 @@ export class ControlDeRecursosComponent implements OnInit {
 
   changeVigencia(){
     const vigenciaSelected = this.addressForm.get('vigencia').value;
-    console.log(vigenciaSelected)
     this.addressForm.get('vigenciaValor').setValue(vigenciaSelected.valorAporte);
   }
 
@@ -301,9 +300,14 @@ export class ControlDeRecursosComponent implements OnInit {
   }
 
   validateVigency(editingResource: ControlRecurso){
+    const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const valorVigencia = !this.vigenciaValorField.value ? 0 : Number(this.vigenciaValorField.value);
     const vigencia = this.vigenciaField.value;
     const newTotal = this.countResources.find(x => x.vigenciaAporteId === vigencia.vigenciaAporteId)
+
+    if(controlRecursoId && newTotal.controlRecursoId == controlRecursoId){
+      newTotal.value = 0;
+    }
     const total = ( newTotal ? newTotal.value : 0 )+ Number(this.addressForm.get("valorConsignacion").value);
 
     if ((!this.countResources || this.countResources == 0)

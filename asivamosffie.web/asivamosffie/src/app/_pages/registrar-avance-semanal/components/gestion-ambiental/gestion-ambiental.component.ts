@@ -68,7 +68,9 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
         manejoMaterialInsumo: '1',
         manejoResiduosConstruccion: '2',
         manejoResiduosPeligrosos: '3',
-        otra: '4'
+        otra: '4',
+        otra2: '5',
+
     };
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
@@ -86,7 +88,7 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private routes: Router,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
-        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService, 
         private guardadoParcialAvanceSemanalSvc: GuardadoParcialAvanceSemanalService )
     {
         this.crearFormulario();
@@ -607,7 +609,14 @@ export class GestionAmbientalComponent implements OnInit, OnDestroy {
                 }
             );
     }
-
+    getCantidadListaActividades() {
+        this.commonSvc.listaTipoActividades()
+            .subscribe(
+                actividades => {
+                    this.tipoActividades = actividades;
+                }
+            );
+    }
     valuePending( value: string ) {
         if ( isNaN( Number( value ) ) === true ) {
             this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( '' );

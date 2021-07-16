@@ -2325,8 +2325,8 @@ namespace asivamosffie.services
                 foreach (var comite in ListComiteTecnico)
                 {
                     string EstadoComite = "";
-                    if (!string.IsNullOrEmpty(comite.EstadoActaCodigo))
-                        EstadoComite = ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre;
+                    if (!string.IsNullOrEmpty(comite.EstadoComiteCodigo))
+                        EstadoComite = ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComiteCodigo).FirstOrDefault().Nombre;
 
                     ComiteGrilla comiteGrilla = new ComiteGrilla
                     {
@@ -4800,6 +4800,38 @@ namespace asivamosffie.services
                                             if (novedad.FechaSolictud.HasValue)
                                             {
                                                 FechaSolicitud = ((DateTime)novedad.FechaSolictud).ToString("dd-MM-yyy");
+                                            }
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, FechaSolicitud);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre,
+                                                ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                                && r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre);
+                                            break;
+                                    }
+                                }
+
+                                break;
+                            case ConstanCodigoTipoSolicitud.Defensa_judicial:
+                                DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(SesionComiteSolicitud.SolicitudId);
+
+                                foreach (Dominio placeholderDominio in placeholders)
+                                {
+                                    switch (placeholderDominio.Codigo)
+                                    {
+                                        case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, defensaJudicial.NumeroProceso);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
+                                            string FechaSolicitud = string.Empty;
+                                            if (defensaJudicial.FechaCreacion != null)
+                                            {
+                                                FechaSolicitud = ((DateTime)defensaJudicial.FechaCreacion).ToString("dd-MM-yyy");
                                             }
                                             RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
                                                 .Replace(placeholderDominio.Nombre, FechaSolicitud);

@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
-import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud, TemaCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionSecretarioComponent } from '../observacion-secretario/observacion-secretario.component';
 import { componentFactoryName } from '@angular/compiler';
@@ -189,7 +189,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
     this.listaCompromisos.forEach( compromiso => {
       if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
-        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false; 
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
         //compromiso.responsableSesionParticipante = null;
         //compromiso.compromisoSeguimiento = null;
         compromiso.fechaCreacion = new Date();
@@ -197,12 +197,23 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         compromiso.fechaModificacion = new Date();
         comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
         console.log( compromiso )
-        
+
       };
       if ( compromiso.temaCompromisoId !== undefined ) {
         compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
-        comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
-        console.log( compromiso )
+        compromiso.fechaCreacion = new Date();
+        compromiso.fechaCumplimiento = new Date();
+        compromiso.fechaModificacion = new Date();
+        let temaCompromiso: TemaCompromiso = {
+          temaCompromisoId: compromiso?.temaCompromisoId,
+          sesionTemaId: compromiso?.sesionTemaId,
+          tarea: compromiso?.tarea,
+          responsable: compromiso?.responsable,
+          fechaCumplimiento: compromiso?.fechaCumplimiento,
+          estadoCodigo: compromiso?.estadoCodigo,
+          esCumplido: compromiso?.esCumplido
+        };
+        comite.sesionComiteTema[0].temaCompromiso.push( temaCompromiso );
       };
     } );
 

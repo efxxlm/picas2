@@ -98,7 +98,7 @@
                   <mat-form-field
                     class="select-width"
                   >
-                    <mat-select required 
+                    <mat-select required
                     formControlName="depaetamento"
                     (selectionChange)="getMunAportante($event.value, j)"
                     >
@@ -146,7 +146,7 @@
                 </div>
                 <div class="col capitalize">
                   <mat-form-field class="select-width">
-                    <mat-select 
+                    <mat-select
                     formControlName="municipio"
                     (selectionChange)="getVigenciaByMun($event.value, j)">
                       <mat-option
@@ -240,7 +240,7 @@
                       (selectionChange)="changeAportante(j)"
                     >
                       <mat-option *ngFor="let listado of listaVigencias[j]" [value]="listado.cofinanciacionAportanteId">
-                        Vigencia:{{ listado.vigencia }} Creado el:{{ listado.fechaCreacion | date: 'dd/MM/yyyy' }}
+                        Vigencia:{{ listado.vigencia }} - Número del acuerdo:{{ listado.numeroAcuerdo }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

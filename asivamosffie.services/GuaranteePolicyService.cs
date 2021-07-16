@@ -327,7 +327,7 @@ namespace asivamosffie.services
                || !pPolizaListaChequeo.TieneCondicionesGeneralesPoliza.HasValue
                 ) return false;
 
-            return (
+            return !(
                   pPolizaListaChequeo.CumpleDatosAseguradoBeneficiario == false 
                || pPolizaListaChequeo.CumpleDatosTomadorAfianzado == false
                || pPolizaListaChequeo.TieneReciboPagoDatosRequeridos == false
@@ -354,7 +354,7 @@ namespace asivamosffie.services
             if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevisionPoliza.Devuelta)
                 return false;
 
-            return (
+            return !(
                   !polizaObservacion.FechaAprobacion.HasValue
                 || polizaObservacion.ResponsableAprobacionId == 0
                 ); 

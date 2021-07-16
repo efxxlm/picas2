@@ -1082,8 +1082,39 @@ namespace asivamosffie.services
                     .ThenInclude(x => x.ContratacionProyecto)
                     .ThenInclude(x => x.Proyecto).
                     Include(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).ToList();
+                int registroNovedadId = 0;
 
-                foreach (var gestion in gestionfuentes)
+                if (pRegistro != null)
+                {
+                    registroNovedadId = pRegistro.NovedadContractualRegistroPresupuestalId > 0 ? pRegistro.NovedadContractualRegistroPresupuestalId : 0;
+                }
+                List <DetailValidarDisponibilidadPresupuesal> ListdetailavailabilityBudget = await _requestBudgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(pDisponibilidad.DisponibilidadPresupuestalId, esNovedad, registroNovedadId);
+                DetailValidarDisponibilidadPresupuesal detailavailabilityBudget = ListdetailavailabilityBudget.FirstOrDefault();
+
+                if (detailavailabilityBudget != null)
+                {
+                    detailavailabilityBudget?.Proyectos?.ForEach(proyecto =>
+                    {
+                        proyecto.Aportantes.ForEach(aportante =>
+                        {
+                            aportante.FuentesFinanciacion.ForEach(fuente =>
+                            {
+                                var tr = plantilla_fuentes
+                                    .Replace("[LLAVEMEN]", proyecto.LlaveMen)
+                                    .Replace("[INSTITUCION]", proyecto.InstitucionEducativa)
+                                    .Replace("[SEDE]", proyecto.Sede)
+                                    .Replace("[APORTANTE]", aportante.Nombre)
+                                    .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
+                                    .Replace("[FUENTE]", fuente.Fuente)
+                                    .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
+                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Valor_solicitado_de_la_fuente > 0 ? fuente.Valor_solicitado_de_la_fuente : 0))
+                                    .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
+                                tablafuentes += tr;
+                            });
+                        });
+                    });
+                }
+                /*foreach (var gestion in gestionfuentes)
                 {
                     ProyectoAportante proyectoAportante = gestion.DisponibilidadPresupuestalProyecto.Proyecto.ProyectoAportante.Where(r => r.AportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId)?.FirstOrDefault();
 
@@ -1155,7 +1186,7 @@ namespace asivamosffie.services
                         .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(SaldoActualFuente)).ToString())
                         .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(ValorSaldoFuente)).ToString());
                     tablafuentes += tr;
-                }
+                }*/
 
 
 
@@ -2059,10 +2090,13 @@ namespace asivamosffie.services
                 else
                 {
 
-                    Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
-                    contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
-                    contratacionCancelar.FechaModificacion = DateTime.Now;
-                    contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    if (DisponibilidadCancelar.ContratacionId != null)
+                    {
+                        Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
+                        contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
+                        contratacionCancelar.FechaModificacion = DateTime.Now;
+                        contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    }
                      
                     int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
