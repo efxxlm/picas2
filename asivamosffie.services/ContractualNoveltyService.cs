@@ -1270,8 +1270,9 @@ namespace asivamosffie.services
                 int idObservacion = 0;
 
                 if (pNovedadContractual.NovedadContractualObservaciones.Count() > 0)
+                {
                     idObservacion = pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault().NovedadContractualObservacionesId;
-
+                }
                 NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
 
                 novedadContractual.UsuarioModificacion = pNovedadContractual.UsuarioCreacion;
@@ -1418,7 +1419,6 @@ namespace asivamosffie.services
                 novedadContractualOld.FechaEnvioActaSupervisor = novedadContractual.FechaEnvioActaSupervisor;
                 novedadContractualOld.FechaFirmaSupervisor = novedadContractual.FechaFirmaSupervisor;
                 novedadContractualOld.UrlSoporteFirmas = novedadContractual.UrlSoporteFirmas;
-
                 novedadContractualOld.RazonesNoContinuaProceso = novedadContractual.RazonesNoContinuaProceso;
 
                 switch (novedadContractualOld.EstadoProcesoCodigo)
@@ -1465,6 +1465,11 @@ namespace asivamosffie.services
                     // devuelta
                     case "3":
                         {
+                            foreach (NovedadContractualObservaciones novedadObservaciones in novedadContractual.NovedadContractualObservaciones)
+                            {
+                                novedadObservaciones.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                                await CreateEditNovedadContractualObservacion(novedadObservaciones);
+                            }
                             novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_tramite;
                             break;
                         }
@@ -1520,7 +1525,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = novedadContractual,
                     Code = ConstantMessagesContractualControversy.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, GeneralCodes.Error, idAccionCrearEditarNovedadContractual, novedadContractual.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, GeneralCodes.Error, idAccionCrearEditarNovedadContractual, novedadContractual.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
         }
@@ -3345,6 +3350,62 @@ namespace asivamosffie.services
 
         #endregion private 
 
+        public async Task<Respuesta> CreateEditNovedadContractualObservacion(NovedadContractualObservaciones novedadContractualObservaciones)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual_Tramite, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            try
+            {
+                if (novedadContractualObservaciones != null)
+                {
+
+                    if (novedadContractualObservaciones.NovedadContractualObservacionesId <= 0)
+                    {
+                        strCrearEditar = "CREAR OBSERVACION";
+                        novedadContractualObservaciones.FechaCreacion = DateTime.Now;
+                        _context.NovedadContractualObservaciones.Add(novedadContractualObservaciones);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        strCrearEditar = "ACTUALIZAR OBSERVACION";
+
+                        await _context.Set<NovedadContractualObservaciones>().Where(r => r.NovedadContractualObservacionesId == novedadContractualObservaciones.NovedadContractualObservacionesId)
+                                                                       .UpdateAsync(r => new NovedadContractualObservaciones()
+                                                                       {
+                                                                           FechaModificacion = DateTime.Now,
+                                                                           UsuarioModificacion = novedadContractualObservaciones.UsuarioCreacion,
+                                                                           Observaciones = novedadContractualObservaciones.Observaciones,
+                                                                           EsSupervision = novedadContractualObservaciones.EsSupervision,
+                                                                           EsTramiteNovedades = novedadContractualObservaciones.EsTramiteNovedades,
+                                                                           Archivado = novedadContractualObservaciones.Archivado,
+                                                                       });
+                        _context.SaveChanges();
+                    }
+                }
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, GeneralCodes.OperacionExitosa, idAccion, novedadContractualObservaciones.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, GeneralCodes.Error, idAccion, novedadContractualObservaciones.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
     }
 
 
