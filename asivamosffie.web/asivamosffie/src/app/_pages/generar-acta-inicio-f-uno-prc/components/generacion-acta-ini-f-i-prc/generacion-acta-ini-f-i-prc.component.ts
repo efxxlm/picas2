@@ -200,8 +200,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
     }
     if ( this.contrato !== undefined && value !== null ) {
-      const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-      const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+      const mesesPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoMeses;
+      const diasPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoDias;
       this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
       this.plazoMesesFase2 = value;
       this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
