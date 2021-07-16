@@ -90,6 +90,8 @@
                           <input  matInput
                                   type="number"
                                   min="0"
+                                  maxlength="4"
+                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                   [max]="avanceFisicoCapitulo.programacionCapitulo"
                                   [(ngModel)]="avanceFisicoCapitulo.avanceFisicoCapitulo"
                                   required
