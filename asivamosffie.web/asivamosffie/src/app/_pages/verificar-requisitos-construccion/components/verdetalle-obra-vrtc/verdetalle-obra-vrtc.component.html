@@ -80,7 +80,11 @@
         <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; let j = index">
           <mat-expansion-panel class="expansion-style sub-expansion aux">
             <mat-expansion-panel-header class="expansion-style--header">
-              <mat-panel-title class="expansion-style--title sin-diligenciar">
+              <mat-panel-title class="expansion-style--title"
+                [class.sin-diligenciar]="perfil.registroCompleto === undefined"
+                [class.en-proceso]="perfil.registroCompleto === false"
+                [class.completo]="perfil.registroCompleto === true"
+              >
                 Perfil {{ j + 1 }}
               </mat-panel-title>
             </mat-expansion-panel-header>
