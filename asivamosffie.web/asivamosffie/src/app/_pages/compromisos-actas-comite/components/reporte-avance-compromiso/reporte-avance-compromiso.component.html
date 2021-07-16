@@ -90,7 +90,7 @@
             <quill-editor   class="quill-editor-style ml-1em"
                             [styles]="editorStyle"
                             [modules]="config"
-                            (onContentChanged)="maxLength($event, 1000)"
+                            (onContentChanged)="maxLength($event, 500)"
                             formControlName="reporteEstado"
                             #observacion
                             required>
