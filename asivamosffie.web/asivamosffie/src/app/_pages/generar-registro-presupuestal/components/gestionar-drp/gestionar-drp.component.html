@@ -35,7 +35,7 @@
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Plazo  de la modificación:</strong>
-                
+
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
             </p>
@@ -132,7 +132,7 @@
                 </mat-expansion-panel-header>
                 <div class="table-responsive text-center" *ngIf="proyecto['listaComponentesUsoAportante']">
                     <table mat-table [dataSource]="proyecto['listaComponentesUsoAportante'][j]" matSort class="mat-elevation-z8">
-    
+
                         <ng-container matColumnDef="componente">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
                             <td mat-cell *matCellDef="let element"> <b>{{element.componente}}</b></td>
@@ -141,9 +141,11 @@
                         <ng-container matColumnDef="uso">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
                             <td mat-cell *matCellDef="let element">
-                                <div  class="supportElement" *ngFor="let el of element.uso ; let i = index">
-                                        {{el.nombre}}
+                              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let uso of element.uso ; let i = index">
+                                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let nombre of uso.nombre ; let j = index">
+                                  {{ nombre }}
                                 </div>
+                              </div>
                             </td>
                         </ng-container>
 
@@ -153,22 +155,24 @@
                                 {{element.fuenteFinanciacion }}
                             </td>
                         </ng-container>
-    
+
                         <ng-container matColumnDef="valorUso">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
                             <td mat-cell *matCellDef="let element">
-                                <div class="supportElement" *ngFor="let el of element.valorUso ; let i = index">
-                                        {{el.valor }}
+                                <div class="supportElement" *ngFor="let valorUso of element.valorUso ; let i = index">
+                                    <div  class="supportElement" *ngFor="let valor of valorUso.valor ; let j = index">
+                                        {{ valor }}
+                                    </div>
                                 </div>
                             </td>
                         </ng-container>
-    
+
                         <ng-container matColumnDef="valorTotal">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total </th>
                             <td mat-cell *matCellDef="let element"> {{element.valorTotal| currency:'':'symbol':'3.0'}} </td>
                         </ng-container>
-    
-    
+
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
@@ -177,7 +181,7 @@
             </mat-expansion-panel>
 
 
-            
+
         </mat-expansion-panel>
     </mat-accordion>
     <div class="botones">
