@@ -9,17 +9,19 @@
             Monitorear cronograma proceso {{procesoSeleccion.numeroProceso}}
         </h1>
         <span class="subtittle">Selección privada</span>
-        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
-
-        <div class="text-info" *ngIf="verAyuda">
-            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
-                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
-            </button>
-
-            
-        </div>
     </div>
 
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Objeto
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div [innerHTML]="procesoSeleccion.objeto"></div>
+        </mat-card-content>
+      </mat-card>
+    
     <div class="ajsutar-cronograma--actions">
         <button mat-raised-button color="accent" class="ajsutar-cronograma--btn"
             [ngClass]="{'active': ajustarCronograma === true}"
