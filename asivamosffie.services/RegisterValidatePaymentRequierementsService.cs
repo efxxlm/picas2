@@ -744,7 +744,7 @@ namespace asivamosffie.services
 
                     solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
-
+                    solicitudPagoFaseOld.TieneDescuento = SolicitudPagoFase.TieneDescuento;
                     solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
                 }
                 else
@@ -797,7 +797,7 @@ namespace asivamosffie.services
                     solicitudPagoFaseFacturaOld.UsuarioModificacion = SolicitudPagoFactura.UsuarioModificacion;
                     solicitudPagoFaseFacturaOld.FechaModificacion = SolicitudPagoFactura.FechaModificacion;
                     solicitudPagoFaseFacturaOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFactura);
-                    solicitudPagoFaseFacturaOld.TieneDescuento = SolicitudPagoFactura.TieneDescuento;
+                   
                     solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFactura.Fecha;
                     solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFactura.ValorFacturado;
                     solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFactura.Numero;
@@ -2002,11 +2002,9 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFactura solicitudPagoFaseFactura)
         {
 
-            if (solicitudPagoFaseFactura.TieneDescuento == false)
-                return true;
+          
             if (
-                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
-                || !solicitudPagoFaseFactura.TieneDescuento.HasValue
+                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString()) 
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
                 )
@@ -2029,13 +2027,7 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
                 );
         }
-
-        //private bool ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto solicitudPagoFaseCriterioProyecto)
-        //{
-        //    if (string.IsNullOrEmpty(solicitudPagoFaseCriterioProyecto.ValorFacturado.ToString()))
-        //        return false;
-        //    return true;
-        //}
+         
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
         {

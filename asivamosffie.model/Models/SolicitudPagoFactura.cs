@@ -16,7 +16,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
-        public bool? TieneDescuento { get; set; }
         public decimal? ValorFacturadoConDescuento { get; set; }
         public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }

@@ -24,6 +24,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoCriterio { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public bool? EsAnticipio { get; set; }
+        public bool? TieneDescuento { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual SolicitudPagoRegistrarSolicitudPago SolicitudPagoRegistrarSolicitudPago { get; set; }
