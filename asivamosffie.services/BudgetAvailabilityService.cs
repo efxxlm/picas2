@@ -2090,10 +2090,13 @@ namespace asivamosffie.services
                 else
                 {
 
-                    Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
-                    contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
-                    contratacionCancelar.FechaModificacion = DateTime.Now;
-                    contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    if (DisponibilidadCancelar.ContratacionId != null)
+                    {
+                        Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
+                        contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
+                        contratacionCancelar.FechaModificacion = DateTime.Now;
+                        contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    }
                      
                     int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
