@@ -509,6 +509,36 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
+                if (DisponibilidadCancelar.ContratacionId != null)
+                {
+                    Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
+                    if (contratacionCancelar != null)
+                    {
+                        contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal;
+                        contratacionCancelar.FechaModificacion = DateTime.Now;
+                        contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                        //dejar libres los proyectos asociados a la contrataciòn
+                        List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ContratacionId == DisponibilidadCancelar.ContratacionId).ToList();
+                        if (contratacionProyectos.Count()>0)
+                        {
+                            contratacionProyectos.ForEach(contratacion => {
+                                Proyecto proyecto = _context.Proyecto.Find(contratacion.ProyectoId);
+                                if (proyecto != null)
+                                {
+                                    if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                    {
+                                        proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    }
+                                    else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                    {
+                                        proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_cancelada;
                 DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                 DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
@@ -2089,15 +2119,37 @@ namespace asivamosffie.services
                 }
                 else
                 {
-
                     if (DisponibilidadCancelar.ContratacionId != null)
                     {
                         Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
-                        contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
-                        contratacionCancelar.FechaModificacion = DateTime.Now;
-                        contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                        if (contratacionCancelar != null)
+                        {
+                            contratacionCancelar.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Rechazada_por_validacion_presupuestal;
+                            contratacionCancelar.FechaModificacion = DateTime.Now;
+                            contratacionCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                            //dejar libres los proyectos asociados a la contrataciòn
+                            List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ContratacionId == DisponibilidadCancelar.ContratacionId).ToList();
+                            if (contratacionProyectos.Count() > 0)
+                            {
+                                contratacionProyectos.ForEach(contratacion => {
+                                    Proyecto proyecto = _context.Proyecto.Find(contratacion.ProyectoId);
+                                    if (proyecto != null)
+                                    {
+                                        if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                        {
+                                            proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                        }
+                                        else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                        {
+                                            proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
-                     
+
+
                     int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                     DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
