@@ -219,7 +219,13 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes)
-    this.examinarProponentes();
+    if (changes.procesoSeleccionProponente.previousValue) {
+      let differenceProponente = this.differenceDeArray(changes.procesoSeleccionProponente.currentValue, changes.procesoSeleccionProponente.previousValue)
+      console.log(differenceProponente);
+      this.examinarProponentes(differenceProponente);
+    } else {
+      this.examinarProponentes(this.procesoSeleccionProponente);
+    }
   }
 
   private _filter(value: string): string[] {
@@ -715,8 +721,12 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     this.unionTemporalForm.get('correoElectronico').setValue('');
   }
 
-  examinarProponentes() {
-    for (let proponente of this.procesoSeleccionProponente) {
+  private differenceDeArray(arr1, arr2) {
+    return arr1.filter(elemento => arr2.indexOf(elemento) == -1);
+  }
+
+  examinarProponentes(differenceProponente) {
+    for (let proponente of differenceProponente) {
       if (proponente.tipoProponenteCodigo === '1') {
         this.proponentesField.push(
           this.fb.group({
