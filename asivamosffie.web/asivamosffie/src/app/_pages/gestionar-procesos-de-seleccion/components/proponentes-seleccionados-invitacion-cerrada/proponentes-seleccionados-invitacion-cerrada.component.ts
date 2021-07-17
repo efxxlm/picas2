@@ -28,6 +28,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   idProponenteExistente: string;
 
   addressForm: FormGroup;
+  tipoProponenteCodigoNuevo: boolean = false;
   nuevo: boolean = false;
 
   constructor(
@@ -65,7 +66,6 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         if (!this.procesoSeleccion.procesoSeleccionProponente) this.procesoSeleccion.procesoSeleccionProponente = [];
 
         for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
-          if (this.procesoSeleccion.procesoSeleccionProponente[i].tipoProponenteCodigo === '1') this.nuevo = true
           lista = lista.filter(
             p => p.numeroIdentificacion != this.procesoSeleccion.procesoSeleccionProponente[i].numeroIdentificacion
           );
@@ -163,6 +163,10 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       ) {
         this.addressForm.get('nombresProponentes').value.forEach(element => {
           // console.log(element);
+          if (element.tipoProponenteCodigo === '1') {
+            this.tipoProponenteCodigoNuevo = true
+            this.nuevo = true
+          }
           if (element != 'Nuevo') {
             let elemento: ProcesoSeleccionProponente = element;
             if (
@@ -180,7 +184,9 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
             // console.log(this.procesoSeleccion.procesoSeleccionProponente);
           }
         });
-        this.nuevo = this.addressForm.get('nombresProponentes').value.includes('Nuevo');
+        if(this.addressForm.get('nombresProponentes').value.includes('Nuevo') || this.tipoProponenteCodigoNuevo) {
+          this.nuevo = true;
+        }
       } else {
         this.openDialog(
           '',
@@ -266,6 +272,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   amountNuevosProponentes() {
     let amountNuevoProponente = this.addressForm.get('cuantosProponentes').value;
     let nombresProponentes = this.addressForm.get('nombresProponentes').value;
-    return amountNuevoProponente - nombresProponentes.length + 1;
+    let hayNuevos = 0;
+    this.addressForm.get('nombresProponentes').value.includes('Nuevo') ? hayNuevos = 1: hayNuevos = 0;
+    return amountNuevoProponente - nombresProponentes.length + hayNuevos;
   }
 }

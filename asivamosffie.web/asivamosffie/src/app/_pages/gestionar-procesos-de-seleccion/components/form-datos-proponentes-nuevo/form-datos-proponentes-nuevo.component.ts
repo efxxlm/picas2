@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormArray, FormGroup } from '@angular/forms';
 import {
   ProcesoSeleccion,
@@ -17,7 +17,7 @@ import { startWith, map } from 'rxjs/operators';
   templateUrl: './form-datos-proponentes-nuevo.component.html',
   styleUrls: ['./form-datos-proponentes-nuevo.component.scss']
 })
-export class FormDatosProponentesNuevoComponent implements OnInit {
+export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Input() noTanNuevo: boolean = false;
   @Input() amountNuevosProponentes: number;
@@ -178,76 +178,6 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     this.declararSelect();
   }
   ngOnInit() {
-    for (let proponente of this.procesoSeleccionProponente) {
-      if (proponente.tipoProponenteCodigo === '1') {
-        this.proponentesField.push(
-          this.fb.group({
-            ProcesoSeleccionProponenteId: [
-              proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : 0,
-            ],
-            tipoProponenteCodigo: [
-              proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : null,
-              Validators.required
-            ],
-            nombreProponente: [
-              proponente.nombreProponente ? proponente.nombreProponente : null,
-              Validators.compose([Validators.minLength(2), Validators.maxLength(1000)])
-            ],
-            procesoSeleccionProponenteId: [
-              proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : null
-            ],
-            numeroIdentificacion: [
-              proponente.numeroIdentificacion ? proponente.numeroIdentificacion : null,
-              Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-            ],
-            nombreDepartamento: [
-              proponente.nombreDepartamento ? proponente.nombreDepartamento : null,
-              Validators.required
-            ],
-            nombreMunicipio: [proponente.nombreMunicipio ? proponente.nombreMunicipio : null, Validators.required],
-            localizacionIdMunicipio: [
-              proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
-              Validators.required
-            ],
-            direccionProponente: [
-              proponente.direccionProponente ? proponente.direccionProponente : null,
-              Validators.compose([Validators.required, Validators.maxLength(500)])
-            ],
-            telefonoProponente: [
-              proponente.telefonoProponente ? proponente.telefonoProponente : null,
-              Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10)])
-            ],
-            emailProponente: [
-              proponente.emailProponente ? proponente.emailProponente : null,
-              Validators.compose([
-                Validators.required,
-                Validators.minLength(10),
-                Validators.maxLength(1000),
-                Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
-              ])
-            ],
-            procesoSeleccionId: [
-              proponente.procesoSeleccionId ? proponente.procesoSeleccionId : null,
-              Validators.required
-            ],
-            nombreRepresentanteLegal: [
-              proponente.nombreRepresentanteLegal ? proponente.nombreRepresentanteLegal : null,
-              Validators.required
-            ],
-            cedulaRepresentanteLegal: [
-              proponente.cedulaRepresentanteLegal ? proponente.cedulaRepresentanteLegal : null,
-              Validators.required
-            ],
-            cuantasEntidades: [proponente.cuantasEntidades ? proponente.cuantasEntidades : null, Validators.required],
-            entidades: [proponente.entidades ? proponente.entidades : this.fb.array([])]
-          })
-        );
-      }
-    }
-    for (let index = 0; index < this.amountNuevosProponentes; index++) {
-      this.agregarProponentes();
-    }
-
     // this.addressForm.valueChanges.subscribe(value => {
     //   console.log(value)
     //   console.log(this.getEntidades(0))
@@ -285,6 +215,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
         resolve();
       });
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
+    this.examinarProponentes();
   }
 
   private _filter(value: string): string[] {
@@ -778,6 +713,75 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     this.unionTemporalForm.get('direccion').setValue('');
     this.unionTemporalForm.get('telefono').setValue('');
     this.unionTemporalForm.get('correoElectronico').setValue('');
+  }
+
+  examinarProponentes() {
+    for (let proponente of this.procesoSeleccionProponente) {
+      if (proponente.tipoProponenteCodigo === '1') {
+        this.proponentesField.push(
+          this.fb.group({
+            ProcesoSeleccionProponenteId: [
+              proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : 0,
+            ],
+            tipoProponenteCodigo: [
+              proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : null,
+              Validators.required
+            ],
+            nombreProponente: [
+              proponente.nombreProponente ? proponente.nombreProponente : null,
+              Validators.compose([Validators.minLength(2), Validators.maxLength(1000)])
+            ],
+            numeroIdentificacion: [
+              proponente.numeroIdentificacion ? proponente.numeroIdentificacion : null,
+              Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+            ],
+            nombreDepartamento: [
+              proponente.nombreDepartamento ? proponente.nombreDepartamento : null,
+              Validators.required
+            ],
+            nombreMunicipio: [proponente.nombreMunicipio ? proponente.nombreMunicipio : null, Validators.required],
+            localizacionIdMunicipio: [
+              proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
+              Validators.required
+            ],
+            direccionProponente: [
+              proponente.direccionProponente ? proponente.direccionProponente : null,
+              Validators.compose([Validators.required, Validators.maxLength(500)])
+            ],
+            telefonoProponente: [
+              proponente.telefonoProponente ? proponente.telefonoProponente : null,
+              Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+            ],
+            emailProponente: [
+              proponente.emailProponente ? proponente.emailProponente : null,
+              Validators.compose([
+                Validators.required,
+                Validators.minLength(10),
+                Validators.maxLength(1000),
+                Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+              ])
+            ],
+            procesoSeleccionId: [
+              proponente.procesoSeleccionId ? proponente.procesoSeleccionId : null,
+              Validators.required
+            ],
+            nombreRepresentanteLegal: [
+              proponente.nombreRepresentanteLegal ? proponente.nombreRepresentanteLegal : null,
+              Validators.required
+            ],
+            cedulaRepresentanteLegal: [
+              proponente.cedulaRepresentanteLegal ? proponente.cedulaRepresentanteLegal : null,
+              Validators.required
+            ],
+            cuantasEntidades: [proponente.cuantasEntidades ? proponente.cuantasEntidades : null, Validators.required],
+            entidades: [proponente.entidades ? proponente.entidades : this.fb.array([])]
+          })
+        );
+      }
+    }
+    for (let index = 0; index < this.amountNuevosProponentes; index++) {
+      this.agregarProponentes();
+    }
   }
 
   guardarNuevosProponentes() {
