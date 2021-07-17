@@ -139,7 +139,11 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoObraCodigo == null
+            element.proyecto.estadoProyectoObraCodigo == null||
+            element.proyecto.estadoProyectoObraCodigo == 1 ||
+            element.proyecto.estadoProyectoObraCodigo == 2 ||
+            element.proyecto.estadoProyectoObraCodigo == 3 ||
+            element.proyecto.estadoProyectoObraCodigo == 4
           "
         >
           Observaciones
@@ -163,7 +167,11 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoInterventoriaCodigo == null
+            element.proyecto.estadoProyectoInterventoriaCodigo == null||
+            element.proyecto.estadoProyectoInterventoriaCodigo == 1 ||
+            element.proyecto.estadoProyectoInterventoriaCodigo == 2 ||
+            element.proyecto.estadoProyectoInterventoriaCodigo == 3 ||
+            element.proyecto.estadoProyectoInterventoriaCodigo == 4
           "
         >
           Observaciones
