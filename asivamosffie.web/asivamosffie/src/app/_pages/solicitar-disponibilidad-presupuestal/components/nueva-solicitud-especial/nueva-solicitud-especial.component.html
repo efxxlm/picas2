@@ -339,7 +339,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN" required />
+                    <input matInput #llaveMEN type="text" maxlength="50" formControlName="llaveMEN" required />
                   </mat-form-field>
                   <span
                     class="contador"
@@ -347,7 +347,7 @@
                     matTooltip="Campo alfanumérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 8 - llaveMEN.value.length }}
+                    {{ 50 - llaveMEN.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
