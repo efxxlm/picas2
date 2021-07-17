@@ -24,12 +24,14 @@ namespace asivamosffie.services
 
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly ISourceFundingService _sourceFundingService;
         private readonly string _connectionString;
 
-        public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration)
+        public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration, ISourceFundingService sourceFundingService)
         {
             _context = context;
             _commonService = commonService;
+            _sourceFundingService = sourceFundingService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
 
@@ -90,8 +92,25 @@ namespace asivamosffie.services
                                 foreach (var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                                 {
                                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+                                    List<GrillaFuentesFinanciacion> fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId);
+                                    foreach (var fuente in fuentesNew)
+                                    {
+                                        fuentes.Add(new GrillaFuentesFinanciacion
+                                        {
+                                            Fuente = fuente.Fuente,
+                                            Estado_de_las_fuentes = string.Empty,
+                                            FuenteFinanciacionID = fuente.FuenteFinanciacionID,
+                                            ValorFuente = fuente.ValorFuente,
+                                            Valor_solicitado_de_la_fuente = fuente.Valor_solicitado_de_la_fuente,
+                                            Nuevo_saldo_de_la_fuente = fuente.Nuevo_saldo_de_la_fuente,
+                                            Saldo_actual_de_la_fuente = fuente.Saldo_actual_de_la_fuente,
+                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.Nuevo_saldo_de_la_fuente_al_guardar,
+                                            Saldo_actual_de_la_fuente_al_guardar = fuente.Saldo_actual_de_la_fuente_al_guardar
+                                        });
+                                    }
                                     foreach (var font in apo.AportanteFuenteFinanciacion)
                                     {
+                                        /*
                                         //Poner el nuevo ValorSolicitadoGenerado
                                         //el saldo actual de la fuente son todas las solicitudes a la fuentes
                                         decimal? saldofuente = 0;
@@ -110,7 +129,8 @@ namespace asivamosffie.services
                                                   && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
 
                                         string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
-                                        fuentes.Add(new GrillaFuentesFinanciacion
+                                        */
+                                        /*fuentes.Add(new GrillaFuentesFinanciacion
                                         {
                                             Fuente = namefuente,
                                             Estado_de_las_fuentes = "",
@@ -122,7 +142,7 @@ namespace asivamosffie.services
                                             Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? (decimal)gestionAlGuardar.NuevoSaldoGenerado : 0,
                                             Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? (decimal)gestionAlGuardar.SaldoActualGenerado : 0,
                                         });
-                                        saldototal += (decimal)font.FuenteFinanciacion.ValorFuente - (decimal)saldofuente;
+                                        saldototal += (decimal)font.FuenteFinanciacion.ValorFuente - (decimal)saldofuente;*/
                                         nombreAportante = getNombreAportante(_context.CofinanciacionAportante.Find(font.FuenteFinanciacion.AportanteId));
                                         valorAportate = font.ValorFuente;
                                         if (!aportantes.Any(c => c.CofinanciacionAportanteId == apo.AportanteId))
@@ -182,8 +202,27 @@ namespace asivamosffie.services
                             foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
                             {
                                 List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+                                int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
 
-                                foreach (var font in ppapor.Aportante.FuenteFinanciacion)
+                                List<GrillaFuentesFinanciacion> fuentesnew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId);
+                                foreach (var fuente in fuentesnew)
+                                {
+
+                                    fuentes.Add(new GrillaFuentesFinanciacion
+                                    {
+                                        Fuente = fuente.Fuente,
+                                        Estado_de_las_fuentes = string.Empty,
+                                        FuenteFinanciacionID = fuente.FuenteFinanciacionID,
+                                        //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                        Saldo_actual_de_la_fuente = fuente.Saldo_actual_de_la_fuente,
+                                        Valor_solicitado_de_la_fuente = fuente.Valor_solicitado_de_la_fuente,
+                                        //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                        Nuevo_saldo_de_la_fuente = fuente.Nuevo_saldo_de_la_fuente,
+                                        Nuevo_saldo_de_la_fuente_al_guardar = fuente.Nuevo_saldo_de_la_fuente_al_guardar,
+                                        Saldo_actual_de_la_fuente_al_guardar = fuente.Saldo_actual_de_la_fuente_al_guardar,
+                                    });
+                                }
+                                /*foreach (var font in ppapor.Aportante.FuenteFinanciacion)
                                 {
 
                                     int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
@@ -239,7 +278,7 @@ namespace asivamosffie.services
                                         Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
                                         Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                                     });
-                                }
+                                }*/
                                 if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                                 {
                                     var valorproyecto = ListDP.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? ppapor.ValorInterventoria : ppapor.ValorObra;
