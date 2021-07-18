@@ -750,6 +750,10 @@ namespace asivamosffie.services
                                                                                            x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                                                            x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid)
                                                                                     .ToList();
+                var gestionAlGuardar = _context.GestionFuenteFinanciacion
+                    .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid &&
+                                x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
+                    .FirstOrDefault();
 
                 decimal valorDisponible = 0;
 
@@ -790,6 +794,9 @@ namespace asivamosffie.services
                     Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
+
                 });
             }
             return ListaRetorno;
@@ -991,6 +998,10 @@ namespace asivamosffie.services
                 {
                     gestionid = gestionfienteid.FirstOrDefault();
                 }
+                var gestionAlGuardar = _context.GestionFuenteFinanciacion
+                    .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestaId &&
+                        x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
+                    .FirstOrDefault();
                 decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 decimal valorSolicitado = 0;
                 if (valor == 0)//si es disponibilidad especial entonces la relacion es diferente
@@ -1032,9 +1043,12 @@ namespace asivamosffie.services
                     GestionFuenteFinanciacionID = gestionid,
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                    ValorFuente = financiacion.ValorFuente != null ? financiacion.ValorFuente : 0,
                     Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor - valorSolicitado,
                     Saldo_actual_de_la_fuente = saldoFuente.Value - valor,
-                    Valor_solicitado_de_la_fuente = valorSolicitado
+                    Valor_solicitado_de_la_fuente = valorSolicitado,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
                 });
             }
             return ListaRetorno;

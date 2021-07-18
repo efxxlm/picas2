@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
+import { EstadoSolicitudContratacion, EstadoSolicitudContratacionCodigo } from 'src/app/_interfaces/estados-solicitudContratacion.interface';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     'id'
   ];
   dataSource = new MatTableDataSource();
+  estadosContratacion: EstadoSolicitudContratacion = EstadoSolicitudContratacionCodigo;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

@@ -8,7 +8,10 @@ using asivamosffie.model.APIModels;
 namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
-    {
+    { 
+        Task<List<VRegistarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew();
+
+        Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
         Task SendEmailWhenNoWeeklyAproved();
 
         Task SendEmailWhenNoWeeklyValidate();
@@ -28,8 +31,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio);
 
         Task<GestionObraCalidadEnsayoLaboratorio> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId);
-
-        Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
 
         Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId);
 

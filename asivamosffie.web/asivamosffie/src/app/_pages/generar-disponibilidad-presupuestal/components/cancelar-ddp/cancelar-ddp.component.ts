@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cancelar-ddp',
@@ -30,7 +31,7 @@ export class CancelarDdpComponent implements OnInit {
   tipo: any;
   nSolicitud: any;
 
-  constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService) {
+  constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,private router: Router) {
     this.declararOnservaciones();
     this.minDate = new Date();
   }
@@ -70,10 +71,16 @@ export class CancelarDdpComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef= this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+
+      this.router.navigate(['/generarDisponibilidadPresupuestal']);
+      dialogRef.close();
+      this.dialog.closeAll();
+  });
   }
 
   devolverSolicitud() {

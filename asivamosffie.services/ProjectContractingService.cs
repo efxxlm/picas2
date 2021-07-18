@@ -468,31 +468,32 @@ namespace asivamosffie.services
                 .Where(r => !(bool)r.Eliminado)
                 .ToListAsync();
 
-            //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
-            //                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Include(r => r.ComiteTecnico)
-            //                    .FirstOrDefault();
-
             List<Dominio> ListParametricas =
                 _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
                                     || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
-            ListContratacion.ForEach(Contratacion =>
-               {
+            foreach (var Contratacion in ListContratacion)
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
+                        Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
 
-                   try
-                   {
-                       if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
-                           Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
+                    if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
+                        Contratacion.EstadoSolicitudNombre = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
 
-                       if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
-                           Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
+                    if (
+                        Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria
+                     || Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado
+                     || Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados
+                        )
+                        Contratacion.RegistroCompleto = true;
+                }
+                catch (Exception e)
+                {
 
-                   }
-                   catch (Exception e)
-                   {
-
-                   }
-               });
+                }
+            }
             return ListContratacion.OrderByDescending(r => r.ContratacionId).ToList();
 
         }
@@ -1016,7 +1017,7 @@ namespace asivamosffie.services
             {
                 if (pContratacionProyectoAntiguo.RequiereLicencia == false)
                     return true;
-            } 
+            }
             if (
                   pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue //Pregunta 0?
                && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
@@ -1048,7 +1049,7 @@ namespace asivamosffie.services
                     ContratacionProyecto contratacionProyectoOld = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
                     contratacionProyectoOld.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                     contratacionProyectoOld.FechaModificacion = DateTime.Now;
-                    contratacionProyectoOld.RegistroValido = pContratacionProyecto.RegistroValido; 
+                    contratacionProyectoOld.RegistroValido = pContratacionProyecto.RegistroValido;
                 }
 
                 foreach (var ContratacionProyectoAportante in pContratacionProyecto.ContratacionProyectoAportante)

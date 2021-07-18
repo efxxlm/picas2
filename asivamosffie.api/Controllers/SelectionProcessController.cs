@@ -149,7 +149,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 procesoSeleccionCronograma.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCronograma(procesoSeleccionCronograma, false);
+                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionCronograma(procesoSeleccionCronograma, false);
                 return respuesta;
                 //
             }
@@ -302,7 +302,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 procesoSeleccionCotizacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
+                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionCotizacion(procesoSeleccionCotizacion);
                 return Ok(respuesta);
                 //
             }
@@ -359,7 +359,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 procesoSeleccionProponente.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
+                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -423,7 +423,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 procesoSeleccionIntegrante.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _selectionProcessService.CreateEditarProcesoSeleccionIntegrante(procesoSeleccionIntegrante);
+                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionIntegrante(procesoSeleccionIntegrante);
                 return Ok(respuesta);
             }
             catch (Exception ex)

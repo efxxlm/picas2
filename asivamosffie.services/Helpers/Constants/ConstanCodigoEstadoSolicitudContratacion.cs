@@ -23,6 +23,8 @@
         public const string En_firma_fiduciaria = "19";//
         public const string Liquidado = "20";
         public const string Sin_tramitar_ante_fiduciaria = "21";
+        public const string Rechazada_por_validacion_presupuestal = "22";
+        public const string Cancelado_por_generacion_presupuestal = "23";
 
     }
 }
