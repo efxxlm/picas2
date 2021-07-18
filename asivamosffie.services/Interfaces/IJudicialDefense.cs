@@ -19,7 +19,7 @@ namespace asivamosffie.services.Interfaces
         Task<byte[]> GetPlantillaDefensaJudicial(int pContratoId, int tipoArchivo);
         Task<Respuesta> CambiarEstadoDefensaJudicial(int pDefensaJudicialId, string pCodigoEstado, string pUsuarioModifica);
         Task<Respuesta> EliminarDefensaJudicial(int pDefensaJudicialId, string pUsuarioModifica);
-        Task<List<ProyectoGrilla>> GetListProyects( int pProyectoId);
+        Task<List<ProyectoGrilla>> GetListProyects(int pProyectoId);
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
         Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato);
         Task<List<Contrato>> GetListContract();
@@ -35,7 +35,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion, int cantContratos);
         Task VencimientoTerminosDefensaJudicial();
         Task<Respuesta> DeleteDemandanteConvocante(int demandanteConvocadoId, string pUsuarioModificacion, int numeroDemandantes);
-        Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID);
+        Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID, int tipoArchivo);
 
     }
 }

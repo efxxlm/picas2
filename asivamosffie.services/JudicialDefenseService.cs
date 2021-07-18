@@ -666,7 +666,7 @@ namespace asivamosffie.services
             string TipoPlantilla;
 
             //ficha de estudio
-            if (tipoArchivo == 1)
+            if (tipoArchivo == 1 || tipoArchivo == 2)
             {
                 TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial).ToString();
             }
@@ -677,7 +677,7 @@ namespace asivamosffie.services
             }
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(Plantilla.Contenido, pDefensaJudicialId);
+            Plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(Plantilla.Contenido, pDefensaJudicialId, tipoArchivo);
             return PDF.Convertir(Plantilla);
 
         }
@@ -735,13 +735,27 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        public async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID)
+        public async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID, int tipoArchivo)
         {
             string str = "";
             string valor = "";
 
             var defPrincial = await GetVistaDatosBasicosProceso(prmdefensaJudicialID);
-
+            if (tipoArchivo > 0)
+            {
+                if (tipoArchivo == 1)
+                {
+                    strContenido = strContenido.Replace("_NombreFicha_", "Estudio");
+                }
+                else
+                {
+                    strContenido = strContenido.Replace("_NombreFicha_", "Solicitud");
+                }
+            }
+            else
+            {
+                strContenido = strContenido.Replace("_NombreFicha_", string.Empty);
+            }
             strContenido = strContenido.Replace("_Numero_Solicitud_", defPrincial.NumeroProceso);
             strContenido = strContenido.Replace("_Fecha_Solicitud_", defPrincial.FechaCreacion.ToString("dd/MM/yyyy"));
             //strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);

@@ -2978,7 +2978,7 @@ namespace asivamosffie.services
                 ConstanCodigoTipoSolicitud.ControversiasContractuales => await ReplacePlantillaControversiasContractuales(pRegistroId, pComiteTecnicoId),
                 ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales => await ReplacePlantillaActuacionesControversiasContractuales(pRegistroId, pComiteTecnicoId),
                 ConstanCodigoTipoSolicitud.Novedad_Contractual => await ReplacePlantillaNovedadContractual(pRegistroId),
-                ConstanCodigoTipoSolicitud.Defensa_judicial => await _judicialDefense.GetPlantillaDefensaJudicial(pRegistroId,1),
+                ConstanCodigoTipoSolicitud.Defensa_judicial => await _judicialDefense.GetPlantillaDefensaJudicial(pRegistroId,2),
                 _ => Array.Empty<byte>(),
             };
         }
@@ -6275,7 +6275,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoTipoSolicitud.Defensa_judicial:
                             RegistrosDefensaJudicial += PlantillaDefensaJudicial;
-                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial,scst.SolicitudId);
+                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial,scst.SolicitudId,2);
                             break;
 
                         default:
