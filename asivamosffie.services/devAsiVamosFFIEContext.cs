@@ -277,6 +277,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VProyectosBalance> VProyectosBalance { get; set; }
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
+        public virtual DbSet<VRegistarAvanceSemanalNew> VRegistarAvanceSemanalNew { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRegistrarLiquidacionContrato> VRegistrarLiquidacionContrato { get; set; }
@@ -290,6 +291,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSaldoPresupuestalXcontrato> VSaldoPresupuestalXcontrato { get; set; }
         public virtual DbSet<VSaldoPresupuestalXproyecto> VSaldoPresupuestalXproyecto { get; set; }
         public virtual DbSet<VSaldosFuenteXaportanteId> VSaldosFuenteXaportanteId { get; set; }
+        public virtual DbSet<VSeguimientoSemanalRegistrar> VSeguimientoSemanalRegistrar { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
@@ -313,8 +315,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
+ 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -9569,6 +9570,48 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
             });
 
+            modelBuilder.Entity<VRegistarAvanceSemanalNew>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RegistarAvanceSemanalNew");
+
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaUltimoReporte)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
             modelBuilder.Entity<VRegistrarAvanceSemanal>(entity =>
             {
                 entity.HasNoKey();
@@ -9931,11 +9974,20 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_SaldosFuenteXAportanteId");
 
-                entity.Property(e => e.ComprometidoEnDdp).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ComprometidoEnDdp).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.RendimientosIncorporados).HasColumnType("numeric(18, 0)");
 
-                entity.Property(e => e.SaldoActual).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.SaldoActual).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VSeguimientoSemanalRegistrar>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SeguimientoSemanalRegistrar");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VSesionParticipante>(entity =>

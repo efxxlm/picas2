@@ -8,7 +8,7 @@ using asivamosffie.model.APIModels;
 namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
-    { 
+    {
         Task<List<VRegistarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew();
 
         Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
