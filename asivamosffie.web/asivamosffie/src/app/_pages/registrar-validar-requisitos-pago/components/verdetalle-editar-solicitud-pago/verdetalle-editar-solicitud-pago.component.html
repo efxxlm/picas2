@@ -200,14 +200,16 @@
 
           <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-              <mat-panel-title class="expansion-style--title sin-diligenciar">
+              <mat-panel-title class="expansion-style--title" [ngClass]="semaforoDetalleFactura">
                 Detalle factura para proyectos asociados
               </mat-panel-title>
             </mat-expansion-panel-header>
 
             <app-form-detalle-factura-proyectos [contrato]="contrato"
                                                 [listaMenusId]="menusIdPath"
-                                                [registrarSolicitudPagoObs]="listaTipoObservacionSolicitudes.registrarSolicitudPago">
+                                                [registrarSolicitudPagoObs]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
+                                                (estadoSemaforo)="semaforoDetalleFactura = $event; $event === 'completo' ? registroCompletoAcordeones.registroCompletoDetalleFactura = true : ''"
+                                                *ngIf="registroCompletoAcordeones.registroCompletoSolicitudPago === true">
             </app-form-detalle-factura-proyectos>
           </mat-expansion-panel>
         </mat-accordion>
@@ -216,59 +218,43 @@
   </ng-container>
   <ng-template #esOtrosCostos>
     <!-- Formulario de otros costos -->
-    <app-form-solicitud-otros-costosservicios
-      [tipoSolicitud]="contrato.solicitudPagoOnly.tipoSolicitudCodigo"
-      [solicitudPago]="contrato.solicitudPagoOnly"
-      [esUnEditar]="true"
-      [contrato]="contrato"
-    ></app-form-solicitud-otros-costosservicios>
+    <app-form-solicitud-otros-costosservicios [tipoSolicitud]="contrato.solicitudPagoOnly.tipoSolicitudCodigo"
+                                              [solicitudPago]="contrato.solicitudPagoOnly"
+                                              [esUnEditar]="true"
+                                              [contrato]="contrato">
+    </app-form-solicitud-otros-costosservicios>
   </ng-template>
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title
-          class="expansion-style--title"
-          [ngClass]="
-            tieneObservacionSemaforoListaChequeo === true
-              ? 'en-proceso'
-              : enabledAcordeon('listaChequeo', registroCompletoAcordeones.registroCompletoSolicitudPago)
-          "
-        >
-          Validar lista de chequeo
+        <mat-panel-title  class="expansion-style--title"
+                          [ngClass]="tieneObservacionSemaforoListaChequeo === true ? 'en-proceso' : enabledAcordeon('listaChequeo', registroCompletoAcordeones.registroCompletoDetalleFactura)">
+                          Validar lista de chequeo
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-validar-lista-chequeo
-        [contrato]="contrato"
-        [listaMenusId]="menusIdPath"
-        [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
-        *ngIf="registroCompletoAcordeones.registroCompletoSolicitudPago === true"
-        (semaforoObservacion)="tieneObservacionSemaforoListaChequeo = $event"
-      >
+      <app-validar-lista-chequeo  [contrato]="contrato"
+                                  [listaMenusId]="menusIdPath"
+                                  [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
+                                  *ngIf="registroCompletoAcordeones.registroCompletoDetalleFactura === true"
+                                  (semaforoObservacion)="tieneObservacionSemaforoListaChequeo = $event">
       </app-validar-lista-chequeo>
     </mat-expansion-panel>
   </mat-accordion>
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title
-          class="expansion-style--title"
-          [ngClass]="
-            tieneObservacionSemaforoSoporte === true
-              ? 'en-proceso'
-              : enabledAcordeon('soporteSolicitud', registroCompletoAcordeones.registroCompletoListaChequeo)
-          "
-        >
-          Soporte de la solicitud
+        <mat-panel-title  class="expansion-style--title"
+                          [ngClass]="tieneObservacionSemaforoSoporte === true ? 'en-proceso' : enabledAcordeon('soporteSolicitud', registroCompletoAcordeones.registroCompletoListaChequeo)">
+                          Soporte de la solicitud
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-form-soporte-solicitud-url
-        [solicitudPago]="contrato.solicitudPagoOnly"
-        [listaMenusId]="menusIdPath"
-        [soporteSolicitudCodigo]="listaTipoObservacionSolicitudes.soporteSolicitudCodigo"
-        *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"
-        (semaforoObservacion)="tieneObservacionSemaforoSoporte = $event"
-      >
+
+      <app-form-soporte-solicitud-url [solicitudPago]="contrato.solicitudPagoOnly"
+                                      [listaMenusId]="menusIdPath"
+                                      [soporteSolicitudCodigo]="listaTipoObservacionSolicitudes.soporteSolicitudCodigo"
+                                      *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"
+                                      (semaforoObservacion)="tieneObservacionSemaforoSoporte = $event">
       </app-form-soporte-solicitud-url>
     </mat-expansion-panel>
   </mat-accordion>

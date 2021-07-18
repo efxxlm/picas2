@@ -52,7 +52,8 @@
                 <app-form-proyecto  [proyecto]="proyecto"
                                     [contrato]="contrato"
                                     [listaMenusId]="listaMenusId"
-                                    [registrarSolicitudPagoObs]="registrarSolicitudPagoObs">
+                                    [registrarSolicitudPagoObs]="registrarSolicitudPagoObs"
+                                    (estadoSemaforoProyecto)="proyecto.get( 'registroCompleto' ).setValue( $event );checkRegistroCompleto()">
                 </app-form-proyecto>
             </div>
         </div>

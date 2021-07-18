@@ -3,7 +3,7 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoFase">
                         Detalle factura - {{ proyecto.get( 'llaveMen' ).value }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -44,7 +44,7 @@
                     <mat-accordion *ngFor="let fase of fases.controls; index as i">
                         <mat-expansion-panel class="expansion-style sub-expansion-black">
                             <mat-expansion-panel-header class="expansion-style--header">
-                              <mat-panel-title class="expansion-style--title font-size-09em sin-diligenciar">
+                              <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="fase.get( 'registroCompletoCriterio' ).value">
                                 Criterios de pago incluidos en el proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                               </mat-panel-title>
                             </mat-expansion-panel-header>
@@ -76,7 +76,7 @@
 
                         <mat-expansion-panel class="expansion-style sub-expansion-black">
                             <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title font-size-08em sin-diligenciar">
+                                <mat-panel-title class="expansion-style--title font-size-08em" [ngClass]="fase.get( 'registroCompletoDescuentos' ).value">
                                     Descuentos dirección técnica asociados al proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>

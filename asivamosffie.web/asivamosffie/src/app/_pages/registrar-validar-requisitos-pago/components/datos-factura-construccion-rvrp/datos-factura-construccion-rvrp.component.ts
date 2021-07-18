@@ -103,6 +103,9 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
     if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
       if ( this.solicitudPagoFase !== undefined ) {
+        if ( this.solicitudPagoFase.tieneDescuento !== undefined ) {
+          this.addressForm.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFase.tieneDescuento )
+        }
         this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
         if (this.solicitudPagoFaseFacturaDescuento !== undefined) {
           this.estaEditando = true;
@@ -396,7 +399,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
       if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
         for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
           if (solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
-            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento();
+            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento()
+            solicitudPagoFase.tieneDescuento = this.addressForm.get('aplicaDescuento').value
           }
         }
       }
@@ -406,7 +410,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
       if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
         for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
           if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
-            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento();
+            solicitudPagoFase.solicitudPagoFaseFacturaDescuento = getSolicitudPagoFaseFacturaDescuento()
+            solicitudPagoFase.tieneDescuento = this.addressForm.get('aplicaDescuento').value
           }
         }
       }

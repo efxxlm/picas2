@@ -1,5 +1,5 @@
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { TiposDeFase } from 'src/app/_interfaces/solicitud-pago.interface';
 
@@ -14,10 +14,13 @@ export class FormProyectoComponent implements OnInit {
     @Input() contrato: any;
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
+    @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
     postConstruccion = '3';
     solicitudPagoCargarFormaPago: any;
+    solicitudPagoFase = [];
+    estadoSemaforoFase = 'sin-diligenciar'
     addressForm = this.fb.group(
         {
             fase: [ null, Validators.required ],
@@ -62,6 +65,10 @@ export class FormProyectoComponent implements OnInit {
         const fases = []
 
         if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+            this.solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase
+        }
+
+        if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
             if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
                 solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( solicitudPagoFase => {
                     if ( solicitudPagoFase.esPreconstruccion === true ) {
@@ -83,6 +90,26 @@ export class FormProyectoComponent implements OnInit {
 
         if ( fases.length > 0 ) {
             this.addressForm.get( 'fase' ).setValue( fases )
+        }
+
+        if ( this.solicitudPagoFase.length > 0 ) {
+            const fasescompleto = this.solicitudPagoFase.filter( fase => fase.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value && fase.registroCompleto === true )
+            const fasesEnProceso = this.solicitudPagoFase.filter( fase => fase.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value && fase.registroCompleto === false )
+
+            if ( fasescompleto.length === fases.length ) {
+                this.estadoSemaforoFase = 'completo'
+                this.estadoSemaforoProyecto.emit( true )
+            }
+
+            if ( fasescompleto.length < fases.length && fasesEnProceso.length > 0 ) {
+                this.estadoSemaforoFase = 'en-proceso'
+                this.estadoSemaforoProyecto.emit( false )
+            }
+
+            if ( fasesEnProceso.length === fases.length ) {
+                this.estadoSemaforoFase = 'en-proceso'
+                this.estadoSemaforoProyecto.emit( false )
+            }
         }
     }
 
@@ -106,11 +133,57 @@ export class FormProyectoComponent implements OnInit {
             } )
 
             for ( const fase of listaFase ) {
+                const esPreconstruccion = fase.codigo === this.fasesContrato.preConstruccion ? true : false
+                let registroCompletoCriterio = 'sin-diligenciar'
+                let registroCompletoDescuentos = 'sin-diligenciar'
+                
+                if ( this.solicitudPagoFase.length > 0 ) {
+                    const faseFind = this.solicitudPagoFase.find( value => value.esPreconstruccion === esPreconstruccion && value.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value )
+
+                    if ( faseFind !== undefined ) {
+                        // Set Value semaforo criterios de pago
+                        if ( faseFind.registroCompleto === false ) {
+                            registroCompletoCriterio = 'en-proceso'
+                        }
+
+                        if ( faseFind.registroCompleto === true ) {
+                            registroCompletoCriterio = 'completo'
+                        }
+
+                        // Set Value semaforo descuentos de direccion tecnica
+                        const solicitudPagoFaseFacturaDescuento = faseFind.solicitudPagoFaseFacturaDescuento
+
+                        if ( faseFind.tieneDescuento !== undefined ) {
+                            if ( faseFind.tieneDescuento === false ) {
+                                registroCompletoDescuentos = 'completo'
+                            }
+
+                            if ( faseFind.tieneDescuento === true ) {
+                                if ( solicitudPagoFaseFacturaDescuento.length > 0 ) {
+                                    const descuentosRegistroCompleto = solicitudPagoFaseFacturaDescuento.filter( descuento => descuento.registroCompleto === true )
+
+                                    if ( descuentosRegistroCompleto.length < solicitudPagoFaseFacturaDescuento.length ) {
+                                        registroCompletoDescuentos = 'en-proceso'
+                                    }
+
+                                    if ( descuentosRegistroCompleto.length === solicitudPagoFaseFacturaDescuento.length ) {
+                                        registroCompletoDescuentos = 'completo'
+                                    }
+                                } else {
+                                    registroCompletoDescuentos = 'en-proceso'
+                                }
+                            }
+                        }
+                    }
+                }
+
                 this.fases.push(
                     this.fb.group(
                         {
                             codigo: fase.codigo,
                             nombre: fase.nombre,
+                            registroCompletoCriterio,
+                            registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
                             llaveMen: this.proyecto.get( 'llaveMen' ).value
                         }
@@ -119,11 +192,57 @@ export class FormProyectoComponent implements OnInit {
             }
         } else {
             for ( const fase of listaFase ) {
+                const esPreconstruccion = fase.codigo === this.fasesContrato.preConstruccion ? true : false
+                let registroCompletoCriterio = 'sin-diligenciar'
+                let registroCompletoDescuentos = 'sin-diligenciar'
+                
+                if ( this.solicitudPagoFase.length > 0 ) {
+                    const faseFind = this.solicitudPagoFase.find( value => value.esPreconstruccion === esPreconstruccion && value.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value )
+
+                    if ( faseFind !== undefined ) {
+                        // Set Value semaforo criterios de pago
+                        if ( faseFind.registroCompleto === false ) {
+                            registroCompletoCriterio = 'en-proceso'
+                        }
+
+                        if ( faseFind.registroCompleto === true ) {
+                            registroCompletoCriterio = 'completo'
+                        }
+
+                        // Set Value semaforo descuentos de direccion tecnica
+                        const solicitudPagoFaseFacturaDescuento = faseFind.solicitudPagoFaseFacturaDescuento
+
+                        if ( faseFind.tieneDescuento !== undefined ) {
+                            if ( faseFind.tieneDescuento === false ) {
+                                registroCompletoDescuentos = 'completo'
+                            }
+
+                            if ( faseFind.tieneDescuento === true ) {
+                                if ( solicitudPagoFaseFacturaDescuento.length > 0 ) {
+                                    const descuentosRegistroCompleto = solicitudPagoFaseFacturaDescuento.filter( descuento => descuento.registroCompleto === true )
+
+                                    if ( descuentosRegistroCompleto.length < solicitudPagoFaseFacturaDescuento.length ) {
+                                        registroCompletoDescuentos = 'en-proceso'
+                                    }
+
+                                    if ( descuentosRegistroCompleto.length === solicitudPagoFaseFacturaDescuento.length ) {
+                                        registroCompletoDescuentos = 'completo'
+                                    }
+                                } else {
+                                    registroCompletoDescuentos = 'en-proceso'
+                                }
+                            }
+                        }
+                    }
+                }
+
                 this.fases.push(
                     this.fb.group(
                         {
                             codigo: fase.codigo,
                             nombre: fase.nombre,
+                            registroCompletoCriterio,
+                            registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
                             llaveMen: this.proyecto.get( 'llaveMen' ).value
                         }

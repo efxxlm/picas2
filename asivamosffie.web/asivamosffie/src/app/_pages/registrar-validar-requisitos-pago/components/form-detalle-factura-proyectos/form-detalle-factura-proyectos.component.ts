@@ -1,5 +1,5 @@
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
     @Input() contrato: any;
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPago: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -87,6 +88,7 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
                 this.fb.group(
                     {
                         check: [ check ],
+                        registroCompleto: [ null ],
                         contratacionProyectoId: [ proyecto.contratacionProyectoId ],
                         llaveMen: [ proyecto.llaveMen ],
                         tipoIntervencion: [ proyecto.tipoIntervencion ],
@@ -114,6 +116,35 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
                     }
                 }
             } );
+        }
+    }
+
+    checkRegistroCompleto() {
+        const proyectosTrue = this.projects.controls.filter( control => control.get( 'check' ).value === true )
+
+        if ( proyectosTrue.length > 0 ) {
+            const registrosCompleto = proyectosTrue.filter( control => control.get( 'registroCompleto' ).value === true )
+            const registrosEnProceso = proyectosTrue.filter( control => control.get( 'registroCompleto' ).value === false )
+
+            if ( registrosCompleto.length > 0 ) {
+                if ( registrosCompleto.length === proyectosTrue.length ) {
+                    this.estadoSemaforo.emit( 'completo' )
+                }
+
+                if ( registrosCompleto.length < proyectosTrue.length && registrosEnProceso.length > 0 ) {
+                    this.estadoSemaforo.emit( 'en-proceso' )
+                }
+            }
+
+            if ( registrosEnProceso.length > 0 ) {
+                if ( registrosEnProceso.length === proyectosTrue.length ) {
+                    this.estadoSemaforo.emit( 'en-proceso' )
+                }
+            }
+
+            if ( registrosCompleto.length === 0 && registrosEnProceso.length === 0 ) {
+                this.estadoSemaforo.emit( 'sin-diligenciar' )
+            }
         }
     }
 

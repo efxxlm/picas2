@@ -31,10 +31,12 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     tieneObservacionSemaforoListaChequeo = false;
     tieneObservacionSemaforoSoporte = false;
     semaforoFormaDePago = 'sin-diligenciar';
+    semaforoDetalleFactura = 'en-alerta';
     // Acordeones habilitados
     registroCompletoAcordeones: any = {
         registroCompletoFormaDePago: false,
         registroCompletoSolicitudPago: false,
+        registroCompletoDetalleFactura: false,
         registroCompletoListaChequeo: false,
         registroCompletoOtrosCostos: false
     }
@@ -174,6 +176,8 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
                 if ( solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
                     semaforoSolicitudPago = 'completo'
+                    this.semaforoDetalleFactura = 'sin-diligenciar'
+                    this.registroCompletoAcordeones.registroCompletoSolicitudPago = true
                 }
             }
             return semaforoSolicitudPago;
