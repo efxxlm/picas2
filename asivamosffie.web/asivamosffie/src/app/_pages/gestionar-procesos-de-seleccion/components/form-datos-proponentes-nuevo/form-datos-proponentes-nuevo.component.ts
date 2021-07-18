@@ -25,7 +25,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   listaDepartamentos: Localizacion[] = [];
-  listaMunicipios= [];
+  listaMunicipios = [];
   listaProponentes: Dominio[] = [];
   tipoProponente: FormControl;
   myControl = new FormControl();
@@ -41,7 +41,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     return this.addressForm.get('proponentes') as FormArray;
   }
 
-  getEntidades(i) {
+  getEntidades(i: string | number) {
     return this.proponentesField.controls[i].get('entidades') as FormArray;
   }
 
@@ -178,11 +178,6 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     this.declararSelect();
   }
   ngOnInit() {
-    // this.addressForm.valueChanges.subscribe(value => {
-    //   console.log(value)
-    //   console.log(this.getEntidades(0))
-    // })
-
     return new Promise<void>(resolve => {
       forkJoin([
         this.commonService.listaTipoProponente(),
@@ -218,14 +213,23 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
     if (changes.procesoSeleccionProponente.previousValue) {
-      let differenceProponente = this.differenceDeArray(changes.procesoSeleccionProponente.currentValue, changes.procesoSeleccionProponente.previousValue)
-      console.log(differenceProponente);
-      this.examinarProponentes(differenceProponente);
+      let differenceAddingProponente = this.differenceDeArray(
+        changes.procesoSeleccionProponente.currentValue,
+        changes.procesoSeleccionProponente.previousValue
+      );
+      let differenceEliminating = this.differenceDeArray(
+        changes.procesoSeleccionProponente.previousValue,
+        changes.procesoSeleccionProponente.currentValue
+      );
+
+      this.removeProponentes(differenceEliminating);
+      this.examineProponentes(differenceAddingProponente);
     } else {
-      this.examinarProponentes(this.procesoSeleccionProponente);
+      this.examineProponentes(this.procesoSeleccionProponente);
     }
+    this.addNewProponenteForm();
+    this.removeRemainingProponenteForm();
   }
 
   private _filter(value: string): string[] {
@@ -299,10 +303,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     });
   }
 
-  changeDepartamento(i) {
+  changeDepartamento(i: string | number) {
     let idDepartamento: string;
 
-    console.log(this.addressForm.get('proponentes').value[i].nombreDepartamento)
+    // console.log(this.addressForm.get('proponentes').value[i].nombreDepartamento);
     idDepartamento = this.addressForm.get('proponentes').value[i].nombreDepartamento.localizacionId;
     // switch (this.tipoProponente.value.codigo) {
     //   case '1':
@@ -325,7 +329,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     this.tipoProponente = new FormControl('', [Validators.required]);
   }
 
-  CambioNumeroCotizantes(i) {
+  CambioNumeroCotizantes(i: string | number) {
     const cuantasEntidades = this.proponentesField.controls[i].get('cuantasEntidades');
     const entidadesField = this.getEntidades(i);
 
@@ -377,7 +381,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   onSubmitPersonaNatural() {
-    console.log(this.personaNaturalForm);
+    // console.log(this.personaNaturalForm);
     if (this.personaNaturalForm.invalid) {
       this.estaEditando = true;
       this.personaNaturalForm.markAllAsTouched();
@@ -447,7 +451,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   onSubmitUnionTemporal() {
-    console.log(this.unionTemporalForm);
+    // console.log(this.unionTemporalForm);
     if (
       this.unionTemporalForm.get('nombreConsorcio').value == '' ||
       this.unionTemporalForm.get('telefono').value == '' ||
@@ -721,17 +725,31 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     this.unionTemporalForm.get('correoElectronico').setValue('');
   }
 
-  private differenceDeArray(arr1, arr2) {
+  private differenceDeArray(arr1: any[], arr2: any[]) {
     return arr1.filter(elemento => arr2.indexOf(elemento) == -1);
   }
 
-  examinarProponentes(differenceProponente) {
-    for (let proponente of differenceProponente) {
+  removeProponentes(differenceEliminating: any[]) {
+    for (let proponente of differenceEliminating) {
+      if (proponente.tipoProponenteCodigo === '1') {
+        // console.log(this.proponentesField);
+        for (let i = 0; i < this.proponentesField.controls.length; i++) {
+          const element = this.proponentesField.controls[i].value.numeroIdentificacion;
+          if (element === proponente.numeroIdentificacion) {
+            this.borrarArray(this.proponentesField, i);
+          }
+        }
+      }
+    }
+  }
+
+  examineProponentes(differenceAddingProponente: any[]) {
+    for (let proponente of differenceAddingProponente) {
       if (proponente.tipoProponenteCodigo === '1') {
         this.proponentesField.push(
           this.fb.group({
             ProcesoSeleccionProponenteId: [
-              proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : 0,
+              proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : 0
             ],
             tipoProponenteCodigo: [
               proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : null,
@@ -789,8 +807,25 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
         );
       }
     }
-    for (let index = 0; index < this.amountNuevosProponentes; index++) {
-      this.agregarProponentes();
+  }
+
+  addNewProponenteForm() {
+    let amountNuevos = this.amountNuevosProponentes - this.procesoSeleccionProponente.length + 1;
+    if (this.procesoSeleccionProponente.includes('Nuevo')) {
+      for (let index = 0; index < amountNuevos; index++) {
+        this.agregarProponentes();
+      }
+    }
+  }
+
+  removeRemainingProponenteForm() {
+    let i = 0;
+    while (this.proponentesField.controls.length > this.amountNuevosProponentes) {
+      const element = this.proponentesField.controls[i].value.numeroIdentificacion;
+      if (element === null || element === undefined || element === '') {
+        this.borrarArray(this.proponentesField, i);
+      }
+      i++;
     }
   }
 

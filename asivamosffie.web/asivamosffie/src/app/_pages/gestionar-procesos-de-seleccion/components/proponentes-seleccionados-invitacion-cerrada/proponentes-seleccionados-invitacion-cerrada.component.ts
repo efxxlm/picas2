@@ -253,27 +253,19 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   }
 
   onSubmitNuevoProponente() {
-    if (this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value) {
-      for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
-        console.log(this.procesoSeleccion.procesoSeleccionProponente[i]);
-        if (this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId !== '0')
-          this.procesoSeleccion.procesoSeleccionProponente.splice(i, 1);
-      }
+    // if (this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value) {
+    //   for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
+    //     console.log(this.procesoSeleccion.procesoSeleccionProponente[i]);
+    //     if (this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId !== '0')
+    //       this.procesoSeleccion.procesoSeleccionProponente.splice(i, 1);
+    //   }
 
-      this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
-      return false;
-    }
+    //   this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
+    //   return false;
+    // }
     this.addressForm.get('nombresProponentes').setValue(null);
     console.log(this.procesoSeleccion.procesoSeleccionProponente);
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     this.guardar.emit(null);
-  }
-
-  amountNuevosProponentes() {
-    let amountNuevoProponente = this.addressForm.get('cuantosProponentes').value;
-    let nombresProponentes = this.addressForm.get('nombresProponentes').value;
-    let hayNuevos = 0;
-    this.addressForm.get('nombresProponentes').value.includes('Nuevo') ? hayNuevos = 1: hayNuevos = 0;
-    return amountNuevoProponente - nombresProponentes.length + hayNuevos;
   }
 }

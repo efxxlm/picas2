@@ -141,7 +141,7 @@
           #proponente
           [procesoSeleccion]="procesoSeleccion"
           [noTanNuevo]="true"
-          [amountNuevosProponentes]="amountNuevosProponentes(amountNuevosProponentes)"
+          [amountNuevosProponentes]="addressForm.get('cuantosProponentes').value"
           [procesoSeleccionProponente]="addressForm.get('nombresProponentes').value"
           (guardar)="onSubmitNuevoProponente()"
         >
