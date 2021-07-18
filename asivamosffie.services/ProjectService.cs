@@ -59,7 +59,7 @@ namespace asivamosffie.services
                     Localizacion departamento = ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
                     List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
                     Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(pProyecto.EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Juridico_Predios);
-                    
+
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
                         LlaveMen = pProyecto.LlaveMen,
@@ -75,7 +75,7 @@ namespace asivamosffie.services
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO",
                         EstadoProyectoObraCodigo = pProyecto.EstadoProyectoObraCodigo,
-                        EstadoProyectoInterventoriaCodigo = pProyecto.EstadoProyectoInterventoriaCodigo 
+                        EstadoProyectoInterventoriaCodigo = pProyecto.EstadoProyectoInterventoriaCodigo
                     };
 
                     if (!(bool)pProyecto.RegistroCompleto)
@@ -130,8 +130,8 @@ namespace asivamosffie.services
 
                 //VALIDAR PREDIO PRINCIPAL
                 if (
-      /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
-   || */(string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud) || proyecto.PredioPrincipal.UbicacionLatitud == "°")
+   /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
+|| */(string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud) || proyecto.PredioPrincipal.UbicacionLatitud == "°")
                   || (string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud) || proyecto.PredioPrincipal.UbicacionLongitud == "°")
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.Direccion)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.DocumentoAcreditacionCodigo)
@@ -1063,10 +1063,10 @@ namespace asivamosffie.services
                             //Institución Educativa 
                             //Validar si existe institucion educativa y guardar id el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
                             //Volver a dejar como estaba buscando con nombre
-                            int idInstitucionEducativaSede = await _commonService.getInstitucionEducativaIdByName((worksheet.Cells[i, 8].Text));
+                            int? idInstitucionEducativaSede = _context.InstitucionEducativaSede.Where(r => r.CodigoDane.Trim() == (worksheet.Cells[i, 9].Text).Trim()).FirstOrDefault()?.InstitucionEducativaSedeId ?? 0;
                             if (idInstitucionEducativaSede > 0)
                             {
-                                temporalProyecto.InstitucionEducativaId = idInstitucionEducativaSede;
+                                temporalProyecto.InstitucionEducativaId = (int)idInstitucionEducativaSede;
                             }
                             else
                             {
@@ -1082,7 +1082,7 @@ namespace asivamosffie.services
                             //Código DANE IE  
                             //Validar si existe la sede y poner id si no crear sede y poner id  el codigo dane es mejor identificador de id, es único, así el Excel es menos complejo con la lista
                             //Volver a dejar como estaba buscando con nombre
-                            int SedeId = await _commonService.getSedeInstitucionEducativaIdByNameAndInstitucionPadre(worksheet.Cells[i, 10].Text, idInstitucionEducativaSede);
+                            int SedeId = _context.InstitucionEducativaSede.Where(r => r.CodigoDane.Trim() == (worksheet.Cells[i, 11].Text).Trim()).FirstOrDefault()?.InstitucionEducativaSedeId ?? 0;
                             if (SedeId > 0)
                             { temporalProyecto.SedeId = SedeId; }
                             else

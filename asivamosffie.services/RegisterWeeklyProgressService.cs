@@ -140,10 +140,15 @@ namespace asivamosffie.services
             return GestionObraCalidadEnsayoLaboratorio;
         }
 
+        public async Task<List<VRegistarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew()
+        {
+            return await _context.VRegistarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
+        }
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
+
 
         public List<dynamic> GetPeriodoReporteMensualFinanciero(SeguimientoSemanal pSeguimientoSemanal)
         {
