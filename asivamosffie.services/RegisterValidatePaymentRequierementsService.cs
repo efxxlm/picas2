@@ -488,6 +488,8 @@ namespace asivamosffie.services
                         .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                         .Update(s => new SolicitudPago
                         {
+                            EsAnticipio = pSolicitudPago.EsAnticipio,
+                            EsFactura = pSolicitudPago.EsFactura, 
                             FechaModificacion = DateTime.Now,
                             TieneObservacion = false,
                             ObservacionDevolucionOrdenGiro = null,
