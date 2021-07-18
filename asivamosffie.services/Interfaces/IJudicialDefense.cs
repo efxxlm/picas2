@@ -35,6 +35,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion, int cantContratos);
         Task VencimientoTerminosDefensaJudicial();
         Task<Respuesta> DeleteDemandanteConvocante(int demandanteConvocadoId, string pUsuarioModificacion, int numeroDemandantes);
+        Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID);
 
     }
 }

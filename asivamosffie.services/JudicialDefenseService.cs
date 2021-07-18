@@ -530,7 +530,7 @@ namespace asivamosffie.services
                 {
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
                     && r.DefensaJudicialId == pDefensaJudicialId).
-                    //Include(x=>x.DefensaJudicialContratacionProyecto).
+                    Include(x=>x.DefensaJudicialContratacionProyecto).
                     //Include(x => x.DemandadoConvocado).
                     //Include(x => x.DemandanteConvocante).
                     Include(x => x.DefensaJudicialSeguimiento).
@@ -735,7 +735,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        private async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID)
+        public async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID)
         {
             string str = "";
             string valor = "";
