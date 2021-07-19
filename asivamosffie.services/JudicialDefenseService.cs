@@ -800,6 +800,7 @@ namespace asivamosffie.services
                     && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
 
                     plantillatrContratos = plantillatrContratos.Replace("_Llave_MEN_", defcontratac.ContratacionProyecto.Proyecto.LlaveMen);
+                    plantillatrContratos = plantillatrContratos.Replace("_Region_", Region.Descripcion);
                     plantillatrContratos = plantillatrContratos.Replace("_Departamento_", Departamento.Descripcion);
                     plantillatrContratos = plantillatrContratos.Replace("_Municipio_", Municipio.Descripcion);
 
