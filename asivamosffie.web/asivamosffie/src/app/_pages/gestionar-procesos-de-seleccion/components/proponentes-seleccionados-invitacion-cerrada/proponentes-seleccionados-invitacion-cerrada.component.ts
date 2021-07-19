@@ -144,11 +144,11 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     });
   }
 
-  changeProponente($event: any) {
-    // console.log(this.addressForm.get('cuantosProponentes').value);
+  changeProponente() {
+    console.log(this.addressForm.get('cuantosProponentes').value);
     //this.procesoSeleccion.procesoSeleccionProponente=[];
     // console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
-    // console.log(this.addressForm.get('nombresProponentes').value.length);
+    console.log(this.addressForm.get('nombresProponentes').value.length);
     console.log(this.addressForm.get('nombresProponentes').value);
     if (this.addressForm.get('cuantosProponentes').value > 0) {
       if (
@@ -158,8 +158,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         this.procesoSeleccion.procesoSeleccionProponente = [];
       }
       if (
-        this.addressForm.get('cuantosProponentes').value >= this.addressForm.get('nombresProponentes').value.length &&
-        this.addressForm.get('cuantosProponentes').value > this.procesoSeleccion.procesoSeleccionProponente.length
+        this.addressForm.get('cuantosProponentes').value <= this.addressForm.get('nombresProponentes').value.length
       ) {
         this.addressForm.get('nombresProponentes').value.forEach(element => {
           // console.log(element);
@@ -233,6 +232,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       });
       // console.log(proceso)
       this.addressForm.get('nombresProponentes').setValue(proceso);
+      this.changeProponente()
       // console.log(this.addressForm.get('nombresProponentes').value);
     });
   }
