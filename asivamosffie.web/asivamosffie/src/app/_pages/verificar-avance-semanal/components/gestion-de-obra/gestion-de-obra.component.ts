@@ -34,6 +34,7 @@ export class GestionDeObraComponent implements OnInit {
             const gestionAmbiental = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
             let totalCompletados = 0;
             let totalActividades = 0;
+
             if ( gestionAmbiental.seEjecutoGestionAmbiental === false ) {
               if ( gestionAmbiental.registroCompletoObservacionApoyo === false ) {
                 this.semaforoGestionAmbiental = 'en-proceso';
@@ -72,7 +73,7 @@ export class GestionDeObraComponent implements OnInit {
                   totalCompletados++;
                 }
               }
-              if ( totalActividades > 0 && ( totalCompletados < totalActividades ) ) {
+              if ( totalActividades > 0 && totalCompletados > 0 && ( totalCompletados < totalActividades ) ) {
                 this.semaforoGestionAmbiental = 'en-proceso';
               }
               if ( totalActividades > 0 && ( totalCompletados === totalActividades ) ) {
@@ -95,7 +96,7 @@ export class GestionDeObraComponent implements OnInit {
                 completadosCalidad++;
               }
             }
-            if ( gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 && ( completadosCalidad < gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length ) ) {
+            if ( gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 && completadosCalidad > 0 && ( completadosCalidad < gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length ) ) {
               this.semaforoGestionCalidad = 'en-proceso';
             }
             if ( gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 && ( completadosCalidad === gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length ) ) {
