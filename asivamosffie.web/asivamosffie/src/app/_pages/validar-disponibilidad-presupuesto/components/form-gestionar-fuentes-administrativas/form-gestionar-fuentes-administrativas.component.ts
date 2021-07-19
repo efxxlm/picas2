@@ -62,15 +62,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
         this.valorAportante = valorAportante;
       }
     }else if (this.data.tipoddp == this.pTipoDDP.DDP_administrativo) {
-        let valorAportante = 0;
-        if(this.data.elemento.aportantes.length> 0){
-          this.data.elemento.aportantes.forEach(aportante => {
-            aportante.fuentesFinanciacion.forEach(fuente => {
-              valorAportante = valorAportante + fuente?.valorFuente;
-            });
-          });
-          this.valorAportante = valorAportante;
-        }
+        this.valorAportante = this.data.elemento?.valorSolicitud != null ? this.data.elemento?.valorSolicitud : 0;
     }else{
       this.valorAportante=this.data.elemento.valorAportante;
     }
