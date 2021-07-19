@@ -378,12 +378,8 @@ namespace asivamosffie.api.Controllers
 
 
         #endregion
-
-
-
-        #region Proceso Seleccion Integrante
-
-
+         
+        #region Proceso Seleccion Integrante 
         [Route("GetProcesoSeleccionIntegranteById")]
         public async Task<IActionResult> GetProcesoSeleccionIntegranteById(int Id)
         {

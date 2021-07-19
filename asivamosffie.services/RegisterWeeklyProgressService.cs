@@ -140,15 +140,14 @@ namespace asivamosffie.services
             return GestionObraCalidadEnsayoLaboratorio;
         }
 
-        public async Task<List<VRegistarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew()
+        public async Task<List<VRegistrarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew()
         {
-            return await _context.VRegistarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
+            return await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
-
 
         public List<dynamic> GetPeriodoReporteMensualFinanciero(SeguimientoSemanal pSeguimientoSemanal)
         {
@@ -1070,9 +1069,9 @@ namespace asivamosffie.services
             }
 
         }
-   
+
         public Respuesta CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistroCompleto)
-        { 
+        {
             try
             {
                 switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
@@ -1161,14 +1160,14 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 return new Respuesta();
-                 
+
             }
             catch (Exception ex)
             {
                 return new Respuesta();
             }
         }
-         
+
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion, bool pEliminarRegistrCompleto)
         {
             SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlertaOld = _context.SeguimientoSemanalGestionObraAlerta.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
@@ -2604,10 +2603,10 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CumpleRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionSenalizacion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSeguridadSalud.UrlSoporteGestion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CantidadAccidentes = SeguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes;
-                        SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionCapacitacion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionCapacitacion; 
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionCapacitacion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionCapacitacion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionRevisionElementosProteccion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionRevisionElementosProteccion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.ObservacionRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.ObservacionRevisionSenalizacion;
-                         
+
                         List<SeguridadSaludCausaAccidente> seguridadSaludCausaAccidentesDelete = _context.SeguridadSaludCausaAccidente.Where(r => r.SeguimientoSemanalGestionObraSeguridadSaludId == r.SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId).ToList();
 
                         if (seguridadSaludCausaAccidentesDelete.Count() > 0)
