@@ -159,23 +159,23 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
     this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
     this.nomRepresentanteLegal = data.contratacion.contratista.representanteLegal;
-    this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
+    this.nitContratistaInterventoria = data.contratacion?.contratista?.numeroIdentificacion;
     this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
     this.vigenciaContrato = data.fechaTramite;
     this.valorFUno = data.valorFase1;
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-    this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.mesPlazoIni= data.contratacion.plazoContratacion.plazoMeses;
+    this.diasPlazoIni= data.contratacion.plazoContratacion.plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
-    this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+    this.numIdentifiacionSupervisor = data?.usuarioInterventoria?.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     this.rutaDocumento = data.rutaActaFase1;
     if(this.opcion == 1){
       this.dataSupervisor = true;
-      this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+      this.numIdentifiacionSupervisor = data?.usuarioInterventoria?.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     }
   }

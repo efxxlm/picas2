@@ -250,8 +250,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-    this.diasPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.mesPlazoIni = data.contratacion.plazoContratacion.plazoMeses;
+    this.diasPlazoIni = data.contratacion.plazoContratacion.plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
@@ -291,8 +291,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
     }
     if ( this.contrato !== undefined && value !== null ) {
-      const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-      const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+      const mesesPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoMeses;
+      const diasPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoDias;
       this.plazoMesesFase1 = value;
       this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
       this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
@@ -318,8 +318,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
     }
     if ( this.contrato !== undefined && value !== null ) {
-      const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-      const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+      const mesesPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoMeses;
+      const diasPlazoInicial = this.contrato.contratacion.plazoContratacion.plazoDias;
       this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
       this.plazoMesesFase2 = value;
       this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
