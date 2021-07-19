@@ -103,7 +103,7 @@
       </div>
       <!-- <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' "> -->
       <div class="pt-1em" *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index">
-        <div *ngIf="proponente.tipoProponenteCodigo === '2'">
+        <div *ngIf="proponente.tipoIdentificacionCodigo === '2'">
           <mat-card-title class="header-card--text sub-text"> Proponente {{ i + 1 }} </mat-card-title>
           <p>
             <strong>Nombre del proponente:</strong>

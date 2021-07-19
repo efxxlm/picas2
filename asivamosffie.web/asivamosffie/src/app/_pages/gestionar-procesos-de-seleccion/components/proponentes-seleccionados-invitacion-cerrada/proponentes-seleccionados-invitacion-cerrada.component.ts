@@ -94,7 +94,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               });
         });
 
-        // console.log(this.nombresProponentesList)
+        console.log(this.nombresProponentesList)
         resolve();
       });
     });
@@ -173,7 +173,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               elemento.procesoSeleccionProponenteId != '0' &&
               this.procesoSeleccion.procesoSeleccionId != elemento.procesoSeleccionId
             ) {
-              elemento.procesoSeleccionProponenteId = '0';
+              // elemento.procesoSeleccionProponenteId = '0';
               elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
             }
             if (!this.procesoSeleccion.procesoSeleccionProponente.includes(elemento)) {
