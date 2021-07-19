@@ -60,7 +60,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
         Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
       ],
       nombreDepartamento: [null, Validators.required],
-      nombreMunicipio: [null, Validators.required],
+
       localizacionIdMunicipio: [null, Validators.required],
       direccionProponente: [null, Validators.compose([Validators.required, Validators.maxLength(500)])],
       telefonoProponente: [
@@ -80,7 +80,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
       nombreRepresentanteLegal: [null, Validators.required],
       cedulaRepresentanteLegal: [null, Validators.required],
       cuantasEntidades: [null, Validators.required],
-      entidades: this.fb.array([])
+      entidades: this.fb.array([]),
+      tipoIdentificacionCodigo: ['1', Validators.required]
     });
   }
 
@@ -767,7 +768,6 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
               proponente.nombreDepartamento ? proponente.nombreDepartamento : null,
               Validators.required
             ],
-            nombreMunicipio: [proponente.nombreMunicipio ? proponente.nombreMunicipio : null, Validators.required],
             localizacionIdMunicipio: [
               proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
               Validators.required
@@ -802,7 +802,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
               Validators.required
             ],
             cuantasEntidades: [proponente.cuantasEntidades ? proponente.cuantasEntidades : null, Validators.required],
-            entidades: [proponente.entidades ? proponente.entidades : this.fb.array([])]
+            entidades: [proponente.entidades ? proponente.entidades : this.fb.array([])],
+            tipoIdentificacionCodigo: [
+              proponente.tipoIdentificacionCodigo ? proponente.tipoIdentificacionCodigo : null,
+              Validators.required
+            ],
           })
         );
       }
@@ -836,7 +840,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     for (let proponente of this.addressForm.get('proponentes').value) {
       this.procesoSeleccion.procesoSeleccionProponente.push(proponente);
     }
-
+    
     this.guardar.emit(null);
   }
 }

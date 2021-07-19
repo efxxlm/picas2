@@ -577,11 +577,11 @@
               <div class="row">
                 <div class="pr-1">
                   <label
-                    for="nombreMunicipio"
+                    for="localizacionIdMunicipio"
                     class="label-left"
                     [class.color-secondaryColor]="
-                      (proponente.get('nombreMunicipio')?.invalid && proponente.get('nombreMunicipio').touched) ||
-                      (proponente.get('nombreMunicipio')?.invalid && estaEditando)
+                      (proponente.get('localizacionIdMunicipio')?.invalid && proponente.get('localizacionIdMunicipio').touched) ||
+                      (proponente.get('localizacionIdMunicipio')?.invalid && estaEditando)
                     "
                   >
                     Municipio del domicilio del proponente
@@ -589,8 +589,8 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width capitalize">
-                    <mat-select formControlName="nombreMunicipio" required>
-                      <mat-option *ngFor="let municipio of listaMunicipios[j]" class="capitalize" [value]="municipio">
+                    <mat-select formControlName="localizacionIdMunicipio" required>
+                      <mat-option *ngFor="let municipio of listaMunicipios[j]" class="capitalize" [value]="municipio.localizacionId">
                         {{ municipio.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -605,8 +605,8 @@
                     matTooltip="Debe ingresar la información en el campo para continuar"
                     matTooltipClass="info-tooltip"
                     *ngIf="
-                      (proponente.get('nombreMunicipio')?.invalid && proponente.get('nombreMunicipio').touched) ||
-                      (proponente.get('nombreMunicipio')?.invalid && estaEditando)
+                      (proponente.get('localizacionIdMunicipio')?.invalid && proponente.get('localizacionIdMunicipio').touched) ||
+                      (proponente.get('localizacionIdMunicipio')?.invalid && estaEditando)
                     "
                   />
                 </span>
