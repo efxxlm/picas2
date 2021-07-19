@@ -675,7 +675,7 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes()
         {
-            var proceso = await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId && !(bool)p.Eliminado).ToListAsync();
+            var proceso = await _context.ProcesoSeleccionProponente.Where(p => !(bool)p.Eliminado).ToListAsync();
             foreach (var proces in proceso)
             {
                 if (proces.LocalizacionIdMunicipio == null)
