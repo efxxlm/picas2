@@ -202,10 +202,20 @@ namespace asivamosffie.services
                             foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
                             {
                                 List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+                                List<GrillaFuentesFinanciacion> fuentesNew = new List<GrillaFuentesFinanciacion>();
+
                                 int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
 
-                                List<GrillaFuentesFinanciacion> fuentesnew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId);
-                                foreach (var fuente in fuentesnew)
+                                if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                                {
+                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId);
+                                }
+                                else
+                                {
+                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId);
+                                }
+
+                                foreach (var fuente in fuentesNew)
                                 {
 
                                     fuentes.Add(new GrillaFuentesFinanciacion

@@ -76,7 +76,7 @@
             <mat-select
               formControlName="nombresProponentes"
               required
-              (selectionChange)="changeProponente($event)"
+              (selectionChange)="changeProponente()"
               multiple
             >
               <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
@@ -102,8 +102,8 @@
         </span>
       </div>
       <!-- <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' "> -->
-      <div class="pt-1em" *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index">
-        <div *ngIf="proponente.tipoProponenteCodigo === '2'">
+      <div *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index">
+        <div class="pt-1em" *ngIf="proponente.tipoIdentificacionCodigo === '2'">
           <mat-card-title class="header-card--text sub-text"> Proponente {{ i + 1 }} </mat-card-title>
           <p>
             <strong>Nombre del proponente:</strong>
@@ -140,8 +140,7 @@
         <app-form-datos-proponentes-nuevo
           #proponente
           [procesoSeleccion]="procesoSeleccion"
-          [noTanNuevo]="true"
-          [amountNuevosProponentes]="amountNuevosProponentes(amountNuevosProponentes)"
+          [amountNuevosProponentes]="addressForm.get('cuantosProponentes').value"
           [procesoSeleccionProponente]="addressForm.get('nombresProponentes').value"
           (guardar)="onSubmitNuevoProponente()"
         >

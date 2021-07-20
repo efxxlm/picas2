@@ -530,7 +530,7 @@ namespace asivamosffie.services
                 {
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
                     && r.DefensaJudicialId == pDefensaJudicialId).
-                    //Include(x=>x.DefensaJudicialContratacionProyecto).
+                    Include(x=>x.DefensaJudicialContratacionProyecto).
                     //Include(x => x.DemandadoConvocado).
                     //Include(x => x.DemandanteConvocante).
                     Include(x => x.DefensaJudicialSeguimiento).
@@ -666,7 +666,7 @@ namespace asivamosffie.services
             string TipoPlantilla;
 
             //ficha de estudio
-            if (tipoArchivo == 1)
+            if (tipoArchivo == 1 || tipoArchivo == 2)
             {
                 TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial).ToString();
             }
@@ -677,7 +677,7 @@ namespace asivamosffie.services
             }
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(Plantilla.Contenido, pDefensaJudicialId);
+            Plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(Plantilla.Contenido, pDefensaJudicialId, tipoArchivo);
             return PDF.Convertir(Plantilla);
 
         }
@@ -735,13 +735,27 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        private async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID)
+        public async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int prmdefensaJudicialID, int tipoArchivo)
         {
             string str = "";
             string valor = "";
 
             var defPrincial = await GetVistaDatosBasicosProceso(prmdefensaJudicialID);
-
+            if (tipoArchivo > 0)
+            {
+                if (tipoArchivo == 1)
+                {
+                    strContenido = strContenido.Replace("_NombreFicha_", "Estudio");
+                }
+                else
+                {
+                    strContenido = strContenido.Replace("_NombreFicha_", "Solicitud");
+                }
+            }
+            else
+            {
+                strContenido = strContenido.Replace("_NombreFicha_", string.Empty);
+            }
             strContenido = strContenido.Replace("_Numero_Solicitud_", defPrincial.NumeroProceso);
             strContenido = strContenido.Replace("_Fecha_Solicitud_", defPrincial.FechaCreacion.ToString("dd/MM/yyyy"));
             //strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
@@ -786,6 +800,7 @@ namespace asivamosffie.services
                     && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
 
                     plantillatrContratos = plantillatrContratos.Replace("_Llave_MEN_", defcontratac.ContratacionProyecto.Proyecto.LlaveMen);
+                    plantillatrContratos = plantillatrContratos.Replace("_Region_", Region.Descripcion);
                     plantillatrContratos = plantillatrContratos.Replace("_Departamento_", Departamento.Descripcion);
                     plantillatrContratos = plantillatrContratos.Replace("_Municipio_", Municipio.Descripcion);
 

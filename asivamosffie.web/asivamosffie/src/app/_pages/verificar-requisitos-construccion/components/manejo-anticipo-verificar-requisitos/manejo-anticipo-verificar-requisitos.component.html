@@ -2,18 +2,18 @@
   <mat-card class="border-1">
     <mat-card-content>
       <p><b>¿El contrato requiere anticipo? </b>: {{ contratacion.manejoAnticipoRequiere === true ? 'Si' : 'No' }}</p>
-      <p>
+      <p *ngIf="contratacion.manejoAnticipoRequiere === true">
         <b>¿Cuenta con plan de inversión aprobado para el anticipo?</b>:
         {{ contratacion.manejoAnticipoPlanInversion === true ? 'Si' : 'No' }}
       </p>
-      <p>
+      <p *ngIf="contratacion.manejoAnticipoRequiere === true">
         <b>¿Cuenta con cronograma de amortización aprobado?</b>:
         {{ contratacion.manejoAnticipoCronogramaAmortizacion === true ? 'Si' : 'No' }}
       </p>
     </mat-card-content>
   </mat-card>
 </div>
-<section class="mt-3em mb-1em px-2em" *ngIf="contratacion.manejoAnticipoRutaSoporte">
+<section class="mt-3em mb-1em px-2em" *ngIf="contratacion.manejoAnticipoRutaSoporte && contratacion.manejoAnticipoRequiere === true">
   <div align="left" *ngIf="contratacion">
     <p><b>URL con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
   </div>

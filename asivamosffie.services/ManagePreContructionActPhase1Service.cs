@@ -1,4 +1,4 @@
-﻿        using asivamosffie.model.APIModels;
+﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
@@ -69,7 +69,7 @@ namespace asivamosffie.services
             {
                 Contrato contrato =
                     await _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                      .Include(r=> r.Interventor)
+                      .Include(r => r.Interventor)
                       .Include(r => r.Supervisor)
                       .Include(r => r.Apoyo)
                       .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
@@ -78,7 +78,7 @@ namespace asivamosffie.services
                       .Include(r => r.Contratacion).ThenInclude(r => r.Contratista).ThenInclude(r => r.ProcesoSeleccionProponente)
                       .Include(r => r.Contratacion).ThenInclude(r => r.DisponibilidadPresupuestal)
                       .Include(r => r.ContratoPoliza)
-                      .Include(r=> r.Contratacion).ThenInclude(r=> r.PlazoContratacion)
+                      .Include(r => r.Contratacion).ThenInclude(r => r.PlazoContratacion)
                       .FirstOrDefaultAsync();
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -106,9 +106,12 @@ namespace asivamosffie.services
 
                 if (contrato.TieneFase2 == null)
                     contrato.TieneFase2 = false;
-  
 
                 contrato.UsuarioInterventoria = contrato.Interventor;
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria)
+                    contrato.UsuarioInterventoria = contrato.Apoyo;
+
+
                 return contrato;
             }
             catch (Exception)
@@ -302,19 +305,19 @@ namespace asivamosffie.services
         }
 
         private void SendMailNotificarAInterventor(Contrato prmContrato)
-        { 
-            List<EnumeratorPerfil> enumeratorPerfils = 
+        {
+            List<EnumeratorPerfil> enumeratorPerfils =
                                             new List<EnumeratorPerfil>
                                                                     {
                                                                       EnumeratorPerfil.Interventor
                                                                     };
-             
+
             Template TemplateMail = _context.Template.Find((int)enumeratorTemplate.NotificarInterventor);
 
             string strContenido = TemplateMail.Contenido
                             .Replace("[NUMERO_CONTRATO]", prmContrato.NumeroContrato);
 
-            _commonService.EnviarCorreo(enumeratorPerfils, strContenido , TemplateMail.Asunto);
+            _commonService.EnviarCorreo(enumeratorPerfils, strContenido, TemplateMail.Asunto);
         }
 
         public async Task<byte[]> GetActaByIdPerfil(int pContratoId, int pUserId, AppSettingsService pAppSettingsService, bool pEsContruccion)
@@ -628,14 +631,14 @@ namespace asivamosffie.services
             return null;
         }
 
-        public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId , int pAuthor)
+        public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId, int pAuthor)
         {
             List<GrillaActaInicio> lstActaInicio = new List<GrillaActaInicio>();
             List<Contrato> lstContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado && r.FechaAprobacionRequisitosSupervisor.HasValue)
                 .Include(r => r.Contratacion)
                 .Include(r => r.ContratoObservacion)
                 .OrderByDescending(r => r.FechaAprobacionRequisitosSupervisor)
-                .Where(c=> c.InterventorId == pAuthor || c.SupervisorId == pAuthor)
+                .Where(c => c.InterventorId == pAuthor || c.SupervisorId == pAuthor)
                 .ToListAsync();
 
             List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();

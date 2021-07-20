@@ -94,7 +94,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               });
         });
 
-        // console.log(this.nombresProponentesList)
+        console.log(this.nombresProponentesList)
         resolve();
       });
     });
@@ -144,11 +144,11 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     });
   }
 
-  changeProponente($event: any) {
-    // console.log(this.addressForm.get('cuantosProponentes').value);
+  changeProponente() {
+    console.log(this.addressForm.get('cuantosProponentes').value);
     //this.procesoSeleccion.procesoSeleccionProponente=[];
     // console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
-    // console.log(this.addressForm.get('nombresProponentes').value.length);
+    console.log(this.addressForm.get('nombresProponentes').value.length);
     console.log(this.addressForm.get('nombresProponentes').value);
     if (this.addressForm.get('cuantosProponentes').value > 0) {
       if (
@@ -158,8 +158,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         this.procesoSeleccion.procesoSeleccionProponente = [];
       }
       if (
-        this.addressForm.get('cuantosProponentes').value >= this.addressForm.get('nombresProponentes').value.length &&
-        this.addressForm.get('cuantosProponentes').value > this.procesoSeleccion.procesoSeleccionProponente.length
+        this.addressForm.get('cuantosProponentes').value <= this.addressForm.get('nombresProponentes').value.length
       ) {
         this.addressForm.get('nombresProponentes').value.forEach(element => {
           // console.log(element);
@@ -173,7 +172,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               elemento.procesoSeleccionProponenteId != '0' &&
               this.procesoSeleccion.procesoSeleccionId != elemento.procesoSeleccionId
             ) {
-              elemento.procesoSeleccionProponenteId = '0';
+              // elemento.procesoSeleccionProponenteId = '0';
               elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
             }
             if (!this.procesoSeleccion.procesoSeleccionProponente.includes(elemento)) {
@@ -233,6 +232,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       });
       // console.log(proceso)
       this.addressForm.get('nombresProponentes').setValue(proceso);
+      this.changeProponente()
       // console.log(this.addressForm.get('nombresProponentes').value);
     });
   }
@@ -253,27 +253,19 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   }
 
   onSubmitNuevoProponente() {
-    if (this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value) {
-      for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
-        console.log(this.procesoSeleccion.procesoSeleccionProponente[i]);
-        if (this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId !== '0')
-          this.procesoSeleccion.procesoSeleccionProponente.splice(i, 1);
-      }
+    // if (this.procesoSeleccion.procesoSeleccionProponente.length != this.addressForm.get('cuantosProponentes').value) {
+    //   for (let i = 0; i < this.procesoSeleccion.procesoSeleccionProponente.length; i++) {
+    //     console.log(this.procesoSeleccion.procesoSeleccionProponente[i]);
+    //     if (this.procesoSeleccion.procesoSeleccionProponente[i].procesoSeleccionProponenteId !== '0')
+    //       this.procesoSeleccion.procesoSeleccionProponente.splice(i, 1);
+    //   }
 
-      this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
-      return false;
-    }
+    //   this.openDialog('', 'Debe seleccionar la cantidad de proponentes igual a la que seran invitados');
+    //   return false;
+    // }
     this.addressForm.get('nombresProponentes').setValue(null);
     console.log(this.procesoSeleccion.procesoSeleccionProponente);
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     this.guardar.emit(null);
-  }
-
-  amountNuevosProponentes() {
-    let amountNuevoProponente = this.addressForm.get('cuantosProponentes').value;
-    let nombresProponentes = this.addressForm.get('nombresProponentes').value;
-    let hayNuevos = 0;
-    this.addressForm.get('nombresProponentes').value.includes('Nuevo') ? hayNuevos = 1: hayNuevos = 0;
-    return amountNuevoProponente - nombresProponentes.length + hayNuevos;
   }
 }

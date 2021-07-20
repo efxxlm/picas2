@@ -336,6 +336,7 @@ export class FormularioProyectosComponent implements OnInit {
 
             this.proyecto.cantidadAportantes =
               respuesta.proyectoAportante.length == 0 ? null : respuesta.proyectoAportante.length;
+            this.CodigoDaneIE = this.proyecto.institucionEducativa?.codigoDane;
             this.codigoDaneSede = this.proyecto.sede?.codigoDane;
             this.getInstitucion(respuesta.institucionEducativaId, respuesta.sedeId);
 

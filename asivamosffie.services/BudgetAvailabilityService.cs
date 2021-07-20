@@ -529,7 +529,7 @@ namespace asivamosffie.services
                                     {
                                         proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     }
-                                    else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                    else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                                     {
                                         proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     }
@@ -2139,7 +2139,7 @@ namespace asivamosffie.services
                                         {
                                             proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                         }
-                                        else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                        else if (contratacionCancelar.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                                         {
                                             proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                         }
