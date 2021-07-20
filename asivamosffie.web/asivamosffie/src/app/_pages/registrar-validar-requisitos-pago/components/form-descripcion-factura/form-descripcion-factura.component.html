@@ -1,120 +1,139 @@
-<form [formGroup]="addressForm" (ngSubmit)="guardar()">
-    <mat-card class="shipping-card" style="margin-top: 3em">
-        <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text"> Descripción de la factura </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left">
-          <div class="row">
-            <div class="col-md-8">
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+    <form [formGroup]="addressForm">
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Descripción de la factura
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p style="margin-bottom: 2em;" *ngIf="addressForm.get( 'esFactura' ).value === true"><strong>Tipo de documento:</strong> Si </p>
+                <p style="margin-bottom: 2em;" *ngIf="addressForm.get( 'esFactura' ).value === false"><strong>Tipo de documento:</strong> No </p>
+                <p style="margin-top: 2em;"><strong style="font-size: 16px;">Número de documento:</strong> {{ addressForm.get( 'numeroDocumento' ).value }} </p>
+                <p style="margin-top: 2em;"><strong style="font-size: 16px;">Fecha de documento:</strong> {{ addressForm.get( 'fechaDocumento' ).value | date: 'dd/MM/yyyy' }} </p>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <form [formGroup]="addressForm" (ngSubmit)="guardar()">
+        <mat-card class="shipping-card" style="margin-top: 3em">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text"> Descripción de la factura </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left">
               <div class="row">
-                <div class="pr-1">
-                  <label  class="label-left"
-                          for="esFactura"
-                          [ngClass]="{ 'color-secondaryColor': (addressForm.get('esFactura').invalid && addressForm.get('esFactura').touched) || (addressForm.get('esFactura').invalid) }">
-                          Tipo de documento
-                  </label>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label  class="label-left"
+                              for="esFactura"
+                              [ngClass]="{ 'color-secondaryColor': (addressForm.get('esFactura').invalid && addressForm.get('esFactura').touched) || (addressForm.get('esFactura').invalid) }">
+                              Tipo de documento
+                      </label>
+                    </div>
+                    <div class="col">
+                      <mat-radio-group class="radioInput" formControlName="esFactura" required>
+                        <mat-radio-button [value]="true">Factura</mat-radio-button>
+                        <mat-radio-button [value]="false">Cuenta de cobro</mat-radio-button>
+                      </mat-radio-group>
+                      <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    </div>
+                      <span class="icon-incompleto">
+                        <img  class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="(addressForm.get('esFactura').invalid && addressForm.get('esFactura').touched) || (addressForm.get('esFactura').invalid)">
+                      </span>
+                  </div>
                 </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="esFactura" required>
-                    <mat-radio-button [value]="true">Factura</mat-radio-button>
-                    <mat-radio-button [value]="false">Cuenta de cobro</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
-                  <span class="icon-incompleto">
-                    <img  class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="(addressForm.get('esFactura').invalid && addressForm.get('esFactura').touched) || (addressForm.get('esFactura').invalid)">
-                  </span>
               </div>
-            </div>
-          </div>
+        
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label  for="numeroDocumento"
+                              class="label-left"
+                              [ngClass]="{  'color-secondaryColor': (addressForm.get('numeroDocumento').invalid && addressForm.get('numeroDocumento').touched) || (addressForm.get('numeroDocumento').invalid) }">
+                              Número de documento
+                      </label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input  matInput
+                                #numeroDocumento
+                                type="text"
+                                maxlength="10"
+                                formControlName="numeroDocumento"
+                                required>
+                      </mat-form-field>
+                      <span class="contador">{{10 - numeroDocumento.value.length}}</span>
+                    </div>
+                    <span class="icon-incompleto">
+                      <img  class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="(addressForm.get('numeroDocumento').invalid && addressForm.get('numeroDocumento').touched) || (addressForm.get('numeroDocumento').invalid)">
+                    </span>
+                  </div>
+                </div>
+              </div>
+        
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label  class="label-left"
+                              for="fechaDocumento"
+                              [ngClass]="{ 'color-secondaryColor': (addressForm.get('fechaDocumento').invalid && addressForm.get('fechaDocumento').touched) || (addressForm.get('fechaDocumento').invalid) }">
+                              Fecha de documento
+                      </label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="example-full-width">
+                        <input  matInput
+                                formControlName="fechaDocumento"
+                                [matDatepicker]="pickerPoliza"
+                                readonly
+                                (click)="pickerPoliza.open()"
+                                required
+                                placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerPoliza></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button
+                              color="primary"
+                              type="button"
+                              (click)="pickerPoliza.open()"
+                              class="btn-calendario">
+                              <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
+                    </div>
+                    <span class="icon-incompleto">
+                      <img  class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="(addressForm.get('fechaDocumento').invalid && addressForm.get('fechaDocumento').touched) || (addressForm.get('fechaDocumento').invalid)">
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+        </mat-card>
     
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label  for="numeroDocumento"
-                          class="label-left"
-                          [ngClass]="{  'color-secondaryColor': (addressForm.get('numeroDocumento').invalid && addressForm.get('numeroDocumento').touched) || (addressForm.get('numeroDocumento').invalid) }">
-                          Número de documento
-                  </label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input  matInput
-                            #numeroDocumento
-                            type="text"
-                            maxlength="10"
-                            formControlName="numeroDocumento"
-                            required>
-                  </mat-form-field>
-                  <span class="contador">{{10 - numeroDocumento.value.length}}</span>
-                </div>
-                <span class="icon-incompleto">
-                  <img  class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="(addressForm.get('numeroDocumento').invalid && addressForm.get('numeroDocumento').touched) || (addressForm.get('numeroDocumento').invalid)">
-                </span>
-              </div>
-            </div>
-          </div>
-    
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label  class="label-left"
-                          for="fechaDocumento"
-                          [ngClass]="{ 'color-secondaryColor': (addressForm.get('fechaDocumento').invalid && addressForm.get('fechaDocumento').touched) || (addressForm.get('fechaDocumento').invalid) }">
-                          Fecha de documento
-                  </label>
-                </div>
-                <div class="col d-flex align-items-center">
-                  <mat-form-field class="example-full-width">
-                    <input  matInput
-                            formControlName="fechaDocumento"
-                            [matDatepicker]="pickerPoliza"
-                            readonly
-                            (click)="pickerPoliza.open()"
-                            required
-                            placeholder="DD/MM/AAAA">
-                            <mat-datepicker #pickerPoliza></mat-datepicker>
-                  </mat-form-field>
-                  <button mat-button
-                          color="primary"
-                          type="button"
-                          (click)="pickerPoliza.open()"
-                          class="btn-calendario">
-                          <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                  </button>
-                </div>
-                <span class="icon-incompleto">
-                  <img  class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="(addressForm.get('fechaDocumento').invalid && addressForm.get('fechaDocumento').touched) || (addressForm.get('fechaDocumento').invalid)">
-                </span>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-    </mat-card>
-
-    <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
-          <img src="assets/img/icon/guardar.svg" alt="Guardado">
-        </button>
-    </div>
-</form>
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+              <img src="assets/img/icon/guardar.svg" alt="Guardado">
+            </button>
+        </div>
+    </form>
+</ng-template>

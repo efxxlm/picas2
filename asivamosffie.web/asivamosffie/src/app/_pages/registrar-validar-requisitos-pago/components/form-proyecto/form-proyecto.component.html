@@ -3,7 +3,7 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoFase">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforoFase">
                         Detalle factura - {{ proyecto.get( 'llaveMen' ).value }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select multiple formControlName="fase" required (ngModelChange)="getValueFase($event)">
+                                <mat-select multiple formControlName="fase" required (ngModelChange)="getValueFase($event)" [disabled]="esVerDetalle">
                                     <mat-option *ngFor="let fase of listaFases" [value]="fase">
                                         {{ fase.nombre }}
                                     </mat-option>
@@ -44,7 +44,7 @@
                     <mat-accordion *ngFor="let fase of fases.controls; index as i">
                         <mat-expansion-panel class="expansion-style sub-expansion-black">
                             <mat-expansion-panel-header class="expansion-style--header">
-                              <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="fase.get( 'registroCompletoCriterio' ).value">
+                              <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="esVerDetalle === true ? '' : fase.get( 'registroCompletoCriterio' ).value">
                                 Criterios de pago incluidos en el proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                               </mat-panel-title>
                             </mat-expansion-panel-header>
@@ -54,14 +54,15 @@
                                                         [listaMenusId]="listaMenusId"
                                                         [contrato]="contrato"
                                                         [faseCodigo]="fase.get( 'codigo' ).value"
+                                                        [esVerDetalle]="esVerDetalle"
                                                         [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                        [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs.criteriosPagoFacturaCodigo">
+                                                        [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''">
                             </app-form-criterios-pago>
                         </mat-expansion-panel>
 
                         <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="fase.get( 'codigo' ).value === fasesContrato.construccion">
                             <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title font-size-09em sin-diligenciar">
+                                <mat-panel-title class="expansion-style--title font-size-09em">
                                     Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
@@ -69,22 +70,24 @@
                             <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"
                                                             [contrato]="contrato"
                                                             [listaMenusId]="listaMenusId"
-                                                            [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs.amortizacionAnticipoCodigo"
+                                                            [esVerDetalle]="esVerDetalle"
+                                                            [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.amortizacionAnticipoCodigo : ''"
                                                             [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
                             </app-form-amortizacion-anticipo>
                         </mat-expansion-panel>
 
                         <mat-expansion-panel class="expansion-style sub-expansion-black">
                             <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title font-size-08em" [ngClass]="fase.get( 'registroCompletoDescuentos' ).value">
+                                <mat-panel-title class="expansion-style--title font-size-08em" [ngClass]="esVerDetalle === true ? '' : fase.get( 'registroCompletoDescuentos' ).value">
                                     Descuentos dirección técnica asociados al proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
 
                             <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                    [datosFacturaCodigo]="registrarSolicitudPagoObs.datosFacturaCodigo"
+                                                                    [datosFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.datosFacturaCodigo : ''"
                                                                     [listaMenusId]="listaMenusId"
                                                                     [faseCodigo]="fase.get( 'codigo' ).value"
+                                                                    [esVerDetalle]="esVerDetalle"
                                                                     [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
                             </app-datos-factura-construccion-rvrp>
                         </mat-expansion-panel>

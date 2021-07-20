@@ -168,6 +168,21 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
           this.valorFacturado += criterio.valorFacturado;
         }
 
+        if ( this.solicitudPagoFaseFacturaDescuento !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
+          let totalDescuentos = 0;
+          let valorDespuesDescuentos = 0;
+
+          this.descuentos.controls.forEach(control => {
+            if (control.value.valorDescuento !== null) {
+              totalDescuentos += control.value.valorDescuento;
+            }
+          });
+
+          valorDespuesDescuentos = this.valorFacturado - totalDescuentos;
+          this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` )
+          this.addressForm.get('valorAPagarDespues').setValue( valorDespuesDescuentos );
+        }
+
         this.addressForm.get('numeroDescuentos').valueChanges.subscribe(value => {
           value = Number(value);
           if (value <= this.listaTipoDescuento.length) {

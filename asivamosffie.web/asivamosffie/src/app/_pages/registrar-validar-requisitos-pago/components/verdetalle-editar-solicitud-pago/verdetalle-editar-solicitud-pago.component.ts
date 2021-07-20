@@ -176,7 +176,6 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
                 if ( solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
                     semaforoSolicitudPago = 'completo'
-                    this.semaforoDetalleFactura = 'sin-diligenciar'
                     this.registroCompletoAcordeones.registroCompletoSolicitudPago = true
                 }
             }

@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormDescripcionFacturaComponent implements OnInit {
 
     @Input() contrato: any;
+    @Input() esVerDetalle = false;
     solicitudPago: any;
     estaEditando = false;
     solicitudPagoId = 0;

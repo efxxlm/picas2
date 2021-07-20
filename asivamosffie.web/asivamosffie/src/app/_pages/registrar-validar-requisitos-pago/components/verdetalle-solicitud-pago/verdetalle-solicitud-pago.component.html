@@ -157,162 +157,38 @@
                         </mat-card-content>
                     </mat-card>
                 </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
+
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Registrar solicitud de pago
-                        </mat-panel-title>
+                      <mat-panel-title class="expansion-style--title">
+                        Registrar solicitud de pago
+                      </mat-panel-title>
                     </mat-expansion-panel-header>
-    
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSourceRegistrarSolicitud" matSort class="mat-elevation-z8">
-                            <ng-container matColumnDef="faseContrato">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
-                                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.faseContrato }} </b> </td>
-                            </ng-container>
-                            <ng-container matColumnDef="valorFacturado">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado !== undefined ? ( element.valorFacturado | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="porcentajeFacturado">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
-                                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado !== undefined ? element.porcentajeFacturado.toFixed( 2 ) : 0 }}% </td>
-                            </ng-container>
-                            <ng-container matColumnDef="saldoPorPagar">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
-                                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar !== undefined ? ( element.saldoPorPagar | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="porcentajePorPagar">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
-                                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar !== undefined ? element.porcentajePorPagar.toFixed( 2 ) : 0 }}% </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="displayedColumnsRegistrarSolicitud"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumnsRegistrarSolicitud;"></tr>
-                        </table>
-                    </div>
-    
-                    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
-                        <mat-card-header class="header-card header-card--margin">
-                            <mat-card-title class="header-card--text textoGris">
-                                Registro
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content style="text-align: left;">
-                            <p><strong>Fecha de solicitud:</strong> {{ solicitudPagoRegistrarSolicitudPago.fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
-                            <p><strong>Número de radicado SAC:</strong> {{ solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac }} </p>
-                            <p *ngIf="tienePreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción<span *ngIf="tieneConstruccion === true">, Fase 2 - Construcción.</span><span *ngIf="tienePreconstruccion === true && tieneConstruccion === false">.</span></p>
-                        </mat-card-content>
-                    </mat-card>
-                    <mat-accordion>
-                        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="tienePreconstruccion === true">
-                            <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title ">
-                                    Fase 1 - Preconstrucción
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <mat-accordion>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Criterios de pago incluidos en la factura
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-
-                                    <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                                [esVerDetalle]="true">
-                                    </app-form-criterios-pago>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Detalle factura para proyectos asociados
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos-asociados>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Datos de la factura
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-datos-factura-construccion-rvrp>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </mat-expansion-panel>
-    
-                        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="tieneConstruccion === true">
-                            <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title ">
-                                    Fase 2 - Construcción
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <mat-accordion>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Criterios de pago incluidos en la factura
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-
-                                    <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                [esPreconstruccion]="false"
-                                                                [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                                [esVerDetalle]="true">
-                                    </app-form-criterios-pago>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title">
-                                            Amortización del anticipo
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato" [esVerDetalle]="true"></app-form-amortizacion-anticipo>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Detalle factura para proyectos asociados
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <app-detalle-factura-proyectos-asociados    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                                [esVerDetalle]="true"
-                                                                                [esPreconstruccion]="false"
-                                                                                [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago">
-                                    </app-detalle-factura-proyectos-asociados>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                                    <mat-expansion-panel-header class="expansion-style--header">
-                                        <mat-panel-title class="expansion-style--title ">
-                                            Datos de la factura
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                                            [esPreconstruccion]="false"
-                                                                            [esVerDetalle]="true">
-                                    </app-datos-factura-construccion-rvrp>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                    <!--
-                    <mat-accordion>
-                        <mat-expansion-panel class="expansion-style sub-expansion">
-                            <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title ">
-                                    Descuentos Dirección Técnica
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <app-form-descuentos-direccion-tecnica [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-form-descuentos-direccion-tecnica>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                    -->
-                </mat-expansion-panel>
+        
+                    <app-form-registrar-solicitud-de-pago [contrato]="contrato" [esVerDetalle]="esVerDetalle"></app-form-registrar-solicitud-de-pago>
+                  </mat-expansion-panel>
+        
+                  <mat-expansion-panel class="expansion-style">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                      <mat-panel-title class="expansion-style--title">
+                        Descripción de la factura
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+        
+                    <app-form-descripcion-factura [contrato]="contrato" [esVerDetalle]="esVerDetalle"></app-form-descripcion-factura>
+                  </mat-expansion-panel>
+        
+                  <mat-expansion-panel class="expansion-style">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                      <mat-panel-title class="expansion-style--title">
+                        Detalle factura para proyectos asociados
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+        
+                    <app-form-detalle-factura-proyectos [contrato]="contrato" [esVerDetalle]="esVerDetalle"></app-form-detalle-factura-proyectos>
+                  </mat-expansion-panel>
             </mat-accordion>
+
         </div>  
     </ng-container>
     <ng-template #esOtrosCostos>

@@ -21,6 +21,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     @Input() registrarSolicitudPago: any;
     @Input() contrato: any;
     @Input() tieneObservacionOrdenGiro: boolean;
+    @Input() esVerDetalle = false;
     @Output() tieneObservacionSemaforo = new EventEmitter<boolean>();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -185,50 +186,52 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                             );
 
 
-                            // Get observacion CU autorizar solicitud de pago 4.1.9
-                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                this.listaMenusId.autorizarSolicitudPagoId,
-                                this.contrato.solicitudPagoOnly.solicitudPagoId,
-                                this.solicitudPagofaseId,
-                                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
-                                .subscribe(
-                                    response => {
-                                        const observacion = response.find( obs => obs.archivada === false );
+                            if ( this.esVerDetalle === false ) {
+                                // Get observacion CU autorizar solicitud de pago 4.1.9
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                    this.listaMenusId.autorizarSolicitudPagoId,
+                                    this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                    this.solicitudPagofaseId,
+                                    this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
+                                    .subscribe(
+                                        response => {
+                                            const observacion = response.find( obs => obs.archivada === false );
 
-                                        if ( observacion !== undefined ) {
-                                            this.esAutorizar = true;
-                                            this.observacion = observacion;
+                                            if ( observacion !== undefined ) {
+                                                this.esAutorizar = true;
+                                                this.observacion = observacion;
 
-                                            if ( this.observacion.tieneObservacion === true ) {
-                                                this.tieneObservacion = true;
-                                                this.tieneObservacionSemaforo.emit( true );
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                if ( this.observacion.tieneObservacion === true ) {
+                                                    this.tieneObservacion = true;
+                                                    this.tieneObservacionSemaforo.emit( true );
+                                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                }
                                             }
                                         }
-                                    }
-                                );
+                                    );
 
-                            // Get observacion CU verificar solicitud de pago 4.1.8
-                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                this.listaMenusId.aprobarSolicitudPagoId,
-                                this.contrato.solicitudPagoOnly.solicitudPagoId,
-                                this.solicitudPagoRegistrarSolicitudPagoId,
-                                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
-                                .subscribe(
-                                    response => {
-                                        const observacion = response.find( obs => obs.archivada === false );
-                                        if ( observacion !== undefined ) {
-                                            this.esAutorizar = false;
-                                            this.observacion = observacion;
+                                // Get observacion CU verificar solicitud de pago 4.1.8
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                    this.listaMenusId.aprobarSolicitudPagoId,
+                                    this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                    this.solicitudPagoRegistrarSolicitudPagoId,
+                                    this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
+                                    .subscribe(
+                                        response => {
+                                            const observacion = response.find( obs => obs.archivada === false );
+                                            if ( observacion !== undefined ) {
+                                                this.esAutorizar = false;
+                                                this.observacion = observacion;
 
-                                            if ( this.observacion.tieneObservacion === true ) {
-                                                this.tieneObservacion = true;
-                                                this.tieneObservacionSemaforo.emit( true );
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                if ( this.observacion.tieneObservacion === true ) {
+                                                    this.tieneObservacion = true;
+                                                    this.tieneObservacionSemaforo.emit( true );
+                                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                }
                                             }
                                         }
-                                    }
-                                );
+                                    );
+                            }
                         }
                     }
                     // Tabla pendiente por integrar

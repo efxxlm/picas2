@@ -19,6 +19,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
 
     listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     dataSource = new MatTableDataSource();
+    esVerDetalle = true;
     dataSourceRegistrarSolicitud = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;

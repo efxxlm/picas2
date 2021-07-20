@@ -14,6 +14,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() contrato: any;
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
+    @Input() esVerDetalle = false;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
