@@ -184,17 +184,20 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo)
                 {
                     grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    grupo.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     this.CreateEditarProcesoSeleccionGrupo(grupo);
                 }
 
                 foreach (ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma)
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    cronograma.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
                 }
 
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
                 {
+                    cotizacion.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion == null ? "" : cotizacion.NombreOrganizacion.ToUpper();
                     cotizacion.UrlSoporte = cotizacion.UrlSoporte == null ? "" : cotizacion.UrlSoporte.ToUpper();
@@ -225,6 +228,7 @@ namespace asivamosffie.services
 
                 foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
                 {
+                    integrante.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     integrante.NombreIntegrante = integrante.NombreIntegrante;
                     this.CreateEditarProcesoSeleccionIntegrante(integrante);
@@ -451,7 +455,7 @@ namespace asivamosffie.services
             try
             {
 
-                if (string.IsNullOrEmpty(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId.ToString()) || procesoSeleccionCronograma.ProcesoSeleccionCronogramaId == 0)
+                if (procesoSeleccionCronograma.ProcesoSeleccionCronogramaId == 0)
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
@@ -461,7 +465,7 @@ namespace asivamosffie.services
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-
+             
                 }
                 else
                 {
