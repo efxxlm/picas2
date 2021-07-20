@@ -277,8 +277,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VProyectosBalance> VProyectosBalance { get; set; }
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
-        public virtual DbSet<VRegistarAvanceSemanalNew> VRegistarAvanceSemanalNew { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
+        public virtual DbSet<VRegistrarAvanceSemanalNew> VRegistrarAvanceSemanalNew { get; set; }
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRegistrarLiquidacionContrato> VRegistrarLiquidacionContrato { get; set; }
         public virtual DbSet<VRegistrarPersonalObra> VRegistrarPersonalObra { get; set; }
@@ -315,7 +315,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
- 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=ClondevAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -3020,8 +3028,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreMuestra).HasMaxLength(40);
-
-                entity.Property(e => e.Observacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -9570,48 +9576,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
             });
 
-            modelBuilder.Entity<VRegistarAvanceSemanalNew>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("V_RegistarAvanceSemanalNew");
-
-                entity.Property(e => e.EstadoObra).HasMaxLength(250);
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaUltimoReporte)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LlaveMen)
-                    .HasColumnName("LlaveMEN")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Sede)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.TipoIntervencion)
-                    .IsRequired()
-                    .HasMaxLength(250);
-            });
-
             modelBuilder.Entity<VRegistrarAvanceSemanal>(entity =>
             {
                 entity.HasNoKey();
@@ -9656,6 +9620,46 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoContrato)
                     .IsRequired()
                     .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VRegistrarAvanceSemanalNew>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RegistrarAvanceSemanalNew");
+
+                entity.Property(e => e.EstadoObra).HasMaxLength(250);
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaUltimoReporte)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion).HasMaxLength(250);

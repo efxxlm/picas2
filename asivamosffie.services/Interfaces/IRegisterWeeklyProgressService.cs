@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
-        Task<List<VRegistarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew();
+        Task<List<VRegistrarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew();
 
         Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
         Task SendEmailWhenNoWeeklyAproved();

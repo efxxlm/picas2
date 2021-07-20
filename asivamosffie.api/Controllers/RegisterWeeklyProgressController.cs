@@ -66,7 +66,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetVRegistrarAvanceSemanal")]
         [HttpGet]
-        public async Task<ActionResult<List<VRegistarAvanceSemanalNew>>> GetVRegistrarAvanceSemanalNew()
+        public async Task<ActionResult<List<VRegistrarAvanceSemanalNew>>> GetVRegistrarAvanceSemanalNew()
         {
             try
             {
