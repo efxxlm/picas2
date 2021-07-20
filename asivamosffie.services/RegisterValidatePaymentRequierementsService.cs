@@ -481,7 +481,7 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 decimal? ValorFacturado =
-                    pSolicitudPago?.SolicitudPagoFactura? 
+                    pSolicitudPago?.SolicitudPagoFactura?
                     .Sum(r => r.ValorFacturado);
 
                 _context.Set<SolicitudPago>()
@@ -489,7 +489,7 @@ namespace asivamosffie.services
                         .Update(s => new SolicitudPago
                         {
                             EsAnticipio = pSolicitudPago.EsAnticipio,
-                            EsFactura = pSolicitudPago.EsFactura, 
+                            EsFactura = pSolicitudPago.EsFactura,
                             FechaModificacion = DateTime.Now,
                             TieneObservacion = false,
                             ObservacionDevolucionOrdenGiro = null,
@@ -502,7 +502,7 @@ namespace asivamosffie.services
             {
                 pSolicitudPago.ValorFacturado =
                      pSolicitudPago?
-                    .SolicitudPagoFactura? 
+                    .SolicitudPagoFactura?
                     .Sum(r => r.ValorFacturado);
 
                 pSolicitudPago.TieneObservacion = false;
@@ -732,7 +732,7 @@ namespace asivamosffie.services
             {
                 if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
                     CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
-                 
+
                 if (!SolicitudPagoFase.EsPreconstruccion)
                     if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
                         CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
@@ -760,6 +760,9 @@ namespace asivamosffie.services
                     SolicitudPagoFase.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
                     _context.SolicitudPagoFase.Add(SolicitudPagoFase);
                 }
+
+                CreateEditSolicitudPagoFaseDescuento(SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento, pUsuarioCreacion);
+
             }
         }
 
@@ -792,14 +795,14 @@ namespace asivamosffie.services
         private void CreateEditSolicitudPagoFaseFactura(ICollection<SolicitudPagoFactura> pSolicitudPagoFacturaList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoFactura in pSolicitudPagoFacturaList)
-            { 
+            {
                 if (SolicitudPagoFactura.SolicitudPagoFacturaId > 0)
                 {
                     SolicitudPagoFactura solicitudPagoFaseFacturaOld = _context.SolicitudPagoFactura.Find(SolicitudPagoFactura.SolicitudPagoFacturaId);
                     solicitudPagoFaseFacturaOld.UsuarioModificacion = SolicitudPagoFactura.UsuarioModificacion;
                     solicitudPagoFaseFacturaOld.FechaModificacion = SolicitudPagoFactura.FechaModificacion;
                     solicitudPagoFaseFacturaOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFactura);
-                   
+
                     solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFactura.Fecha;
                     solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFactura.ValorFacturado;
                     solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFactura.Numero;
@@ -2004,14 +2007,14 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFactura solicitudPagoFaseFactura)
         {
 
-          
+
             if (
-                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString()) 
+                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
                 )
                 return false;
-             
+
             return true;
         }
 
@@ -2029,7 +2032,7 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
                 );
         }
-         
+
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
         {
@@ -2043,7 +2046,7 @@ namespace asivamosffie.services
             if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Count() == 0)
                 return false;
 
-          
+
             foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
             {
                 if (!ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase))
