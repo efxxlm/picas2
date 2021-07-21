@@ -271,6 +271,7 @@ namespace asivamosffie.services
                                 defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                                 defFicha.EsCompleto = ValidarRegistroCompletoFichaEstudio(defFicha);
                                 _context.FichaEstudio.Add(defFicha);
+                                _context.SaveChanges();
                             }
                             else
                             {
@@ -327,6 +328,7 @@ namespace asivamosffie.services
                             defFicha.EsCompleto = true;
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                             _context.DefensaJudicialSeguimiento.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         //si entra aqui, cambio el estado de la defensa judicial
                         defensaJudicialBD.EstadoProcesoCodigo = "9";//en desaroolo
@@ -341,6 +343,7 @@ namespace asivamosffie.services
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                             defFicha.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
                             _context.DemandadoConvocado.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         else
                         {
@@ -385,6 +388,7 @@ namespace asivamosffie.services
                             defFicha.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
                             defFicha.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
                             _context.DemandanteConvocante.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         else
                         {
