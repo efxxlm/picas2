@@ -104,10 +104,10 @@ namespace asivamosffie.services
                     {
                         var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
                         if (municipio != null)
-                        {
+                        { 
                             var departamento = _context.Localizacion.Find(municipio.IdPadre);
-                            proces.municipioString = municipio.Descripcion;
-                            proces.departamentoString = departamento.Descripcion;
+                            proces.Municipio = municipio;
+                            proces.Departamento = departamento;
                         }
                     }
                 }
