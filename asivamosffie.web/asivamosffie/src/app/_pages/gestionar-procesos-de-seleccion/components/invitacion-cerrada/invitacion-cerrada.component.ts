@@ -247,10 +247,10 @@ export class InvitacionCerradaComponent implements OnInit {
     let retorno = 0;
     // console.log("vantidad propo" + pProceso.procesoSeleccionProponente.length);
 
-    if (pProceso.ProcesoSeleccionProponenteId == false) {
+    if (pProceso.registroCompletoProponentes === false) {
       retorno = 2;
     }
-    else if (pProceso.ProcesoSeleccionProponenteId == true) {
+    else if (pProceso.registroCompletoProponentes === true) {
       retorno = 1;
     }
 

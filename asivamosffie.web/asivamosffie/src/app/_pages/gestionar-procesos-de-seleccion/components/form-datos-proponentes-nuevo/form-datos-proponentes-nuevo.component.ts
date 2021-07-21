@@ -228,6 +228,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
       this.examineProponentes(differenceAddingProponente);
     } else {
       this.examineProponentes(this.procesoSeleccionProponente);
+      this.addressForm.markAllAsTouched();
     }
     this.addNewProponenteForm();
     this.removeRemainingProponenteForm();
@@ -308,7 +309,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     let idDepartamento: string;
 
     // console.log(this.addressForm.get('proponentes').value[i].nombreDepartamento);
-    idDepartamento = this.addressForm.get('proponentes').value[i].nombreDepartamento.localizacionId;
+    idDepartamento = this.addressForm.get('proponentes').value[i].nombreDepartamento;
     // switch (this.tipoProponente.value.codigo) {
     //   case '1':
     //     idDepartamento = this.personaNaturalForm.get('depaetamento').value.localizacionId;
@@ -745,6 +746,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   examineProponentes(differenceAddingProponente: any[]) {
+    let index = 0
     for (let proponente of differenceAddingProponente) {
       if (proponente.tipoProponenteCodigo === '1') {
         this.proponentesField.push(
@@ -764,10 +766,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
               proponente.numeroIdentificacion ? proponente.numeroIdentificacion : null,
               Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
             ],
-            nombreDepartamento: [
-              proponente.nombreDepartamento ? proponente.nombreDepartamento : null,
-              Validators.required
-            ],
+            nombreDepartamento: [proponente.departamento ? proponente.departamento.localizacionId : null, Validators.required],
             localizacionIdMunicipio: [
               proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
               Validators.required
@@ -806,9 +805,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
             tipoIdentificacionCodigo: [
               proponente.tipoIdentificacionCodigo ? proponente.tipoIdentificacionCodigo : null,
               Validators.required
-            ],
+            ]
           })
         );
+        this.changeDepartamento(index)
+        index++
       }
     }
   }
@@ -840,7 +841,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     for (let proponente of this.addressForm.get('proponentes').value) {
       this.procesoSeleccion.procesoSeleccionProponente.push(proponente);
     }
-    
+
     this.guardar.emit(null);
   }
 }
