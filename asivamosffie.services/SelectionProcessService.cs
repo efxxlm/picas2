@@ -143,7 +143,7 @@ namespace asivamosffie.services
                         Justificacion = procesoSeleccion.Justificacion,
                         CriteriosSeleccion = procesoSeleccion.CriteriosSeleccion,
                         TipoIntervencionCodigo = procesoSeleccion.TipoIntervencionCodigo,
-                        TipoAlcanceCodigo = procesoSeleccion.TipoAlcanceCodigo, 
+                        TipoAlcanceCodigo = procesoSeleccion.TipoAlcanceCodigo,
                         TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo,
                         EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos,
                         CantGrupos = procesoSeleccion.CantGrupos,
@@ -161,11 +161,11 @@ namespace asivamosffie.services
                         TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo,
                         CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados,
                         UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados,
-                        SolicitudId = procesoSeleccion.SolicitudId, 
+                        SolicitudId = procesoSeleccion.SolicitudId,
                         UsuarioCreacion = procesoSeleccion.UsuarioCreacion,
                         FechaCreacion = DateTime.Now,
                         Eliminado = false,
-                        EsCompleto = EsCompleto(procesoSeleccion), 
+                        EsCompleto = EsCompleto(procesoSeleccion),
                     };
                     _context.ProcesoSeleccion.Add(procesoSeleccionNew);
                     _context.SaveChanges();
@@ -206,11 +206,10 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
                     ProcesoSeleccionAntiguo.RegistroCompletoProponentes = ValidarRegistroCompletoProponente(ProcesoSeleccionAntiguo.ProcesoSeleccionProponente.ToList());
-
+                    ProcesoSeleccionAntiguo.EsCompleto = EsCompleto(procesoSeleccion);
                     ProcesoSeleccionAntiguo.Eliminado = false;
 
                 }
-
                 if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0 && procesoSeleccion.EsDistribucionGrupos != true)
                 {
                     ProcesoSeleccionGrupo grupo = new ProcesoSeleccionGrupo
