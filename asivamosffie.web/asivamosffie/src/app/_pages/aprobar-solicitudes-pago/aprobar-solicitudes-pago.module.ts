@@ -27,9 +27,11 @@ import { DialogEnvioAutorizacionComponent } from './components/dialog-envio-auto
 import { FormObservacionExpensasComponent } from './components/form-observacion-expensas/form-observacion-expensas.component';
 import { FormAmortizacionComponent } from './components/form-amortizacion/form-amortizacion.component';
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
+import { DescripcionFacturaComponent } from './components/descripcion-factura/descripcion-factura.component';
+import { DetalleFacturaProyectosComponent } from './components/detalle-factura-proyectos/detalle-factura-proyectos.component';
 
 @NgModule({
-  declarations: [ DialogObservacionesItemListchequeoComponent, AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent, VerDetalleExpensasComponent],
+  declarations: [ DialogObservacionesItemListchequeoComponent, AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent, VerDetalleExpensasComponent, DescripcionFacturaComponent, DetalleFacturaProyectosComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,

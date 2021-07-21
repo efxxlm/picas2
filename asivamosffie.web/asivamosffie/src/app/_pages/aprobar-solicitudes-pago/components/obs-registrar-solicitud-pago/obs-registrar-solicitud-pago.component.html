@@ -35,11 +35,10 @@
             <p><strong>Fecha de solicitud:</strong> {{
                 solicitudPago.solicitudPagoRegistrarSolicitudPago[0].fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
             <p><strong>Número de radicado SAC:</strong> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].numeroRadicadoSac }} </p>
-            <p *ngIf="tienePreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción<span *ngIf="tieneConstruccion === true">, Fase 2 - Construcción.</span><span *ngIf="tienePreconstruccion === true && tieneConstruccion === false">.</span></p>
         </mat-card-content>
     </mat-card>
 
-    <!-- Observacion a la solicitud -->
+    <!--
     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
         <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
@@ -259,7 +258,6 @@
         </mat-expansion-panel>
     </mat-accordion>
 
-    <!--
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
