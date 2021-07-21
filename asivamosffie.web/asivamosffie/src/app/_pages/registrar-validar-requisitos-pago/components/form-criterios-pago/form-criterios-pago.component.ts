@@ -40,6 +40,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     btnBoolean = false;
     montoMaximoPendiente = 0;
     esPreconstruccion = true;
+    manejoAnticipoRequiere = false;
     addressForm = this.fb.group({
         criterioPago: [ null, Validators.required ],
         criterios: this.fb.array( [] )
@@ -68,17 +69,56 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     async getCriterios() {
-        console.log( this.solicitudPago )
+        console.log( this.contrato )
         // Verificar la fase seleccionada en el proyecto
         if ( this.faseCodigo === this.fasesContrato.construccion ) {
             this.esPreconstruccion = false;
         }
         // Se obtiene la forma pago codigo dependiendo la fase seleccionada
         const FORMA_PAGO_CODIGO = this.esPreconstruccion === true ? this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo : this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo
-        const LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
+        let LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
+        let seDiligencioAnticipo: boolean;
+        let listaSolicitudesPago = [];
+        let criterioAnticipo: Dominio = null;
         const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximo( this.solicitudPago.solicitudPagoId, this.esPreconstruccion === true ? 'True' : 'False' ).toPromise();
+        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
         this.montoMaximoPendiente = montoMaximoPendiente.valorPendientePorPagar;
+
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipó' )
+        if ( this.manejoAnticipoRequiere === false || undefined ) {
+            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipó' )
+        }
+
+        if ( this.contrato.solicitudPago.length > 0 ) {
+            listaSolicitudesPago = this.contrato.solicitudPago.filter( value => value.solicitudPagoId !== this.solicitudPago.solicitudPagoId )
+        }
+
+        if ( listaSolicitudesPago.length > 0 ) {
+            listaSolicitudesPago.forEach( solicitud => {
+                if ( solicitud.solicitudPagoRegistrarSolicitudPago !== undefined && solicitud.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
+                    const solicitudPagoRegistrarSolicitudPago = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ]
+
+                    if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                        solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( fase => {
+                            if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
+                                const faseCriterioFind = fase.solicitudPagoFaseCriterio.find( faseCriterio => faseCriterio.tipoCriterioCodigo === criterioAnticipo.codigo )
+
+                                if ( faseCriterioFind !== undefined ) {
+                                    seDiligencioAnticipo = true
+                                }
+                            }
+                        } )
+                    }
+                }
+            } )
+        }
+
+        if ( seDiligencioAnticipo === true ) {
+            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.codigo !== criterioAnticipo.codigo )
+        }
+
         this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
+
 
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
             this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0]

@@ -22,6 +22,7 @@ export class FormProyectoComponent implements OnInit {
     solicitudPagoCargarFormaPago: any;
     solicitudPagoFase = [];
     estadoSemaforoFase = 'sin-diligenciar'
+    manejoAnticipoRequiere = false;
     addressForm = this.fb.group(
         {
             fase: [ null, Validators.required ],
@@ -61,6 +62,8 @@ export class FormProyectoComponent implements OnInit {
         } );
 
         this.listaFases = LISTA_FASES
+        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+
 
         const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ 0 ]
         const fases = []
