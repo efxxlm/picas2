@@ -93,6 +93,25 @@ namespace asivamosffie.services
                 procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
 
 
+                foreach (var proces in procesoSeleccion.ProcesoSeleccionProponente)
+                {
+                    if (proces.LocalizacionIdMunicipio == null)
+                    {
+                        proces.municipioString = "Error municipio";
+                        proces.departamentoString = "Error departamento";
+                    }
+                    else
+                    {
+                        var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
+                        if (municipio != null)
+                        {
+                            var departamento = _context.Localizacion.Find(municipio.IdPadre);
+                            proces.municipioString = municipio.Descripcion;
+                            proces.departamentoString = departamento.Descripcion;
+                        }
+                    }
+                }
+
                 return procesoSeleccion;
             }
             catch (Exception ex)
@@ -722,10 +741,8 @@ namespace asivamosffie.services
                         var departamento = _context.Localizacion.Find(municipio.IdPadre);
                         proces.municipioString = municipio.Descripcion;
                         proces.departamentoString = departamento.Descripcion;
-                    }
-
-                }
-
+                    } 
+                } 
             }
             return proceso;
 
