@@ -97,8 +97,8 @@ namespace asivamosffie.services
                 {
                     if (proces.LocalizacionIdMunicipio == null)
                     {
-                        proces.municipioString = "Error municipio";
-                        proces.departamentoString = "Error departamento";
+                        proces.municipioString = string.Empty;
+                        proces.departamentoString = string.Empty;
                     }
                     else
                     {
