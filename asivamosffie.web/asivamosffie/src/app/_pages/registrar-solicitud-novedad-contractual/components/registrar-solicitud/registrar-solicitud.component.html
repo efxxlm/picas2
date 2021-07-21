@@ -127,13 +127,13 @@
       <p>
         <strong>Plazo:</strong>
         {{
-            contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
-            (contrato?.contratacion?.disponibilidadPresupuestal[0]?.plazoMeses) : 0
+          contrato?.contratacion?.plazoContratacion != null ?
+          (contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
         }}
         meses /
         {{
-            contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
-            (contrato?.contratacion?.disponibilidadPresupuestal[0]?.plazoDias) : 0
+            contrato?.contratacion?.plazoContratacion != null ?
+            (contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
         }}
         días
       </p>

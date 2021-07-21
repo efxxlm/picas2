@@ -44,17 +44,15 @@
       <p>
         <strong> Plazo: </strong>
         {{
-          novedad.contrato.contratacion.disponibilidadPresupuestal[
-            novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
-          ].plazoDias
-        }}
-        Días
-        {{
-          novedad.contrato.contratacion.disponibilidadPresupuestal[
-            novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
-          ].plazoMeses
+          novedad?.contrato?.contratacion?.plazoContratacion != null ?
+          (novedad?.contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
         }}
         Meses
+        {{
+          novedad?.contrato?.contratacion?.plazoContratacion != null ?
+          (novedad?.contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
+        }}
+        Días
       </p>
       <p>
         <strong> Fecha de inicio de contrato: </strong>
