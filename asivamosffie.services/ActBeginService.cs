@@ -1260,7 +1260,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor) 
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
             ContratoObservacion contratoObservacion = new ContratoObservacion();
             List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
@@ -1268,7 +1268,7 @@ namespace asivamosffie.services
             Contrato contrato = await _context.Contrato.FindAsync(pContratoId);
 
             if (contrato != null)
-            { 
+            {
                 contratoObservacion = _context.ContratoObservacion
                                                         .Where(
                                                                 r => r.ContratoId == pContratoId &&
@@ -1277,7 +1277,7 @@ namespace asivamosffie.services
                                                                 r.Archivado != true
                                                                )
                                                         .OrderByDescending(r => r.ContratoObservacionId)
-                                                        ?.FirstOrDefault(); 
+                                                        ?.FirstOrDefault();
             }
             return contratoObservacion;
 
@@ -1375,7 +1375,7 @@ namespace asivamosffie.services
             }
             catch (Exception)
             {
-                 
+
             }
 
             return lstActaInicio;
@@ -1741,6 +1741,8 @@ namespace asivamosffie.services
 
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.InterventorId);
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                        contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.SupervisorId);
                     Supervisor = contrato.UsuarioInterventoria;
 
                 }

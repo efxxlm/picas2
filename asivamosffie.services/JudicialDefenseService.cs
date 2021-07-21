@@ -271,6 +271,7 @@ namespace asivamosffie.services
                                 defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                                 defFicha.EsCompleto = ValidarRegistroCompletoFichaEstudio(defFicha);
                                 _context.FichaEstudio.Add(defFicha);
+                                _context.SaveChanges();
                             }
                             else
                             {
@@ -327,6 +328,7 @@ namespace asivamosffie.services
                             defFicha.EsCompleto = true;
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                             _context.DefensaJudicialSeguimiento.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         //si entra aqui, cambio el estado de la defensa judicial
                         defensaJudicialBD.EstadoProcesoCodigo = "9";//en desaroolo
@@ -341,6 +343,7 @@ namespace asivamosffie.services
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                             defFicha.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
                             _context.DemandadoConvocado.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         else
                         {
@@ -385,6 +388,7 @@ namespace asivamosffie.services
                             defFicha.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
                             defFicha.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
                             _context.DemandanteConvocante.Add(defFicha);
+                            _context.SaveChanges();
                         }
                         else
                         {
@@ -778,6 +782,7 @@ namespace asivamosffie.services
             var ListaLocalizaciones = _context.Localizacion.ToList();
             var ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
             var ListaParametricas = _context.Dominio.ToList();
+
             if (defPrincial.DefensaJudicialContratacionProyecto != null)
             {
 
@@ -808,15 +813,32 @@ namespace asivamosffie.services
 
                     plantillatrContratos = plantillatrContratos.Replace("_Sede_", Sede.Nombre);
 
+                    /**
+                     * Estos datos se toman del contrato
+                    **/
+
                     //Plazo de obra
-                    plantillatrContratos = plantillatrContratos.Replace("_MesesObra_", defcontratac.ContratacionProyecto.Proyecto.PlazoDiasObra.ToString());
-                    plantillatrContratos = plantillatrContratos.Replace("_DiasObra_", defcontratac.ContratacionProyecto.Proyecto.PlazoMesesObra.ToString());
+                    plantillatrContratos = plantillatrContratos.Replace("_MesesObra_", defcontratac.ContratacionProyecto.Proyecto.PlazoMesesObra.ToString());
+                    plantillatrContratos = plantillatrContratos.Replace("_DiasObra_", defcontratac.ContratacionProyecto.Proyecto.PlazoDiasObra.ToString());
                     //Plazo de Interventoría
-                    plantillatrContratos = plantillatrContratos.Replace("_Meses_", defcontratac.ContratacionProyecto.Proyecto.PlazoDiasInterventoria.ToString());
-                    plantillatrContratos = plantillatrContratos.Replace("_Dias_", defcontratac.ContratacionProyecto.Proyecto.PlazoMesesInterventoria.ToString());
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_obra_", (defcontratac.ContratacionProyecto.Proyecto.ValorObra != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorObra) : "0");
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Interventoria_", (defcontratac.ContratacionProyecto.Proyecto.ValorInterventoria != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorInterventoria) : "0");
-                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Total_proyecto_", (defcontratac.ContratacionProyecto.Proyecto.ValorTotal != null) ? "$" + String.Format("{0:n0}", defcontratac.ContratacionProyecto.Proyecto.ValorTotal) : "0");
+                    plantillatrContratos = plantillatrContratos.Replace("_Meses_", defcontratac.ContratacionProyecto.Proyecto.PlazoMesesInterventoria.ToString());
+                    plantillatrContratos = plantillatrContratos.Replace("_Dias_", defcontratac.ContratacionProyecto.Proyecto.PlazoDiasInterventoria.ToString());
+
+                    decimal valor_obra = 0;
+                    decimal valor_interventoria = 0;
+                    decimal valor_total = 0;
+                    if (defcontratac.ContratacionProyecto.Proyecto != null)
+                    {
+                        List<ProyectoAportante> proyectoAportantes = _context.ProyectoAportante.Where(r => r.ProyectoId == defcontratac.ContratacionProyecto.Proyecto.ProyectoId && r.Eliminado != true).ToList();
+                        proyectoAportantes.ForEach(pa =>{
+                            valor_obra += pa.ValorObra.Value;
+                            valor_interventoria += pa.ValorInterventoria.Value;
+                            valor_total += pa.ValorTotalAportante.Value;
+                        });
+                    }
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_obra_", ("$" + String.Format("{0:n0}", valor_obra)));
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Interventoria_", ("$" + String.Format("{0:n0}", valor_interventoria)));
+                    plantillatrContratos = plantillatrContratos.Replace("_Valor_Total_proyecto_", ("$" + String.Format("{0:n0}", valor_total)));
                     plantillatrContratos = plantillatrContratos.Replace("_contador_", contador.ToString());
                     plantillatrContratos = plantillatrContratos.Replace("_Numero_Contrato_", defcontratac.numeroContrato);
 

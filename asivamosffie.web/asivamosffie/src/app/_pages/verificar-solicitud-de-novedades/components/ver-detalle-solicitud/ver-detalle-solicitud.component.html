@@ -49,15 +49,13 @@
         <strong>Plazo:</strong>
         <span>
           {{
-            novedad.contrato.contratacion.disponibilidadPresupuestal[
-              novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
-            ].plazoMeses
+            novedad.contrato?.contratacion?.plazoContratacion != null ?
+            (novedad.contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
           }}
           Meses
           {{
-            novedad.contrato.contratacion.disponibilidadPresupuestal[
-              novedad.contrato.contratacion.disponibilidadPresupuestal.length - 1
-            ].plazoDias
+            novedad.contrato?.contratacion?.plazoContratacion != null ?
+            (novedad.contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
           }}
           Días
         </span>

@@ -93,6 +93,25 @@ namespace asivamosffie.services
                 procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
 
 
+                foreach (var proces in procesoSeleccion.ProcesoSeleccionProponente)
+                {
+                    if (proces.LocalizacionIdMunicipio == null)
+                    {
+                        proces.municipioString = string.Empty;
+                        proces.departamentoString = string.Empty;
+                    }
+                    else
+                    {
+                        var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
+                        if (municipio != null)
+                        { 
+                            var departamento = _context.Localizacion.Find(municipio.IdPadre);
+                            proces.Municipio = municipio;
+                            proces.Departamento = departamento;
+                        }
+                    }
+                }
+
                 return procesoSeleccion;
             }
             catch (Exception ex)
@@ -118,13 +137,35 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR PROCESO SELECCION";
                     ProcesoSeleccion procesoSeleccionNew = new ProcesoSeleccion
                     {
+                        NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax),
+                        Objeto = procesoSeleccion.Objeto,
+                        AlcanceParticular = procesoSeleccion.AlcanceParticular,
+                        Justificacion = procesoSeleccion.Justificacion,
+                        CriteriosSeleccion = procesoSeleccion.CriteriosSeleccion,
+                        TipoIntervencionCodigo = procesoSeleccion.TipoIntervencionCodigo,
+                        TipoAlcanceCodigo = procesoSeleccion.TipoAlcanceCodigo,
+                        TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo,
+                        EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos,
+                        CantGrupos = procesoSeleccion.CantGrupos,
+                        ResponsableTecnicoUsuarioId = procesoSeleccion.ResponsableTecnicoUsuarioId,
+                        ResponsableEstructuradorUsuarioid = procesoSeleccion.ResponsableEstructuradorUsuarioid,
+                        CondicionesJuridicasHabilitantes = procesoSeleccion.CondicionesJuridicasHabilitantes,
+                        CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes,
+                        CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje,
+                        CantidadCotizaciones = procesoSeleccion.CantidadCotizaciones,
+                        CantidadProponentes = procesoSeleccion.CantidadProponentes,
+                        EstadoProcesoSeleccionCodigo = "1",
+                        EtapaProcesoSeleccionCodigo = "1",
+                        EvaluacionDescripcion = procesoSeleccion.EvaluacionDescripcion,
+                        UrlSoporteEvaluacion = procesoSeleccion.UrlSoporteEvaluacion,
+                        TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo,
+                        CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados,
+                        UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados,
+                        SolicitudId = procesoSeleccion.SolicitudId,
                         UsuarioCreacion = procesoSeleccion.UsuarioCreacion,
                         FechaCreacion = DateTime.Now,
                         Eliminado = false,
                         EsCompleto = EsCompleto(procesoSeleccion),
-                        NumeroProceso = Helpers.Helpers.Consecutive(procesoSeleccion.TipoProcesoCodigo, countMax),
-                        EstadoProcesoSeleccionCodigo = "1",
-                        EtapaProcesoSeleccionCodigo = "1",
                     };
                     _context.ProcesoSeleccion.Add(procesoSeleccionNew);
                     _context.SaveChanges();
@@ -165,11 +206,10 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
                     ProcesoSeleccionAntiguo.RegistroCompletoProponentes = ValidarRegistroCompletoProponente(ProcesoSeleccionAntiguo.ProcesoSeleccionProponente.ToList());
-
+                    ProcesoSeleccionAntiguo.EsCompleto = EsCompleto(procesoSeleccion);
                     ProcesoSeleccionAntiguo.Eliminado = false;
 
                 }
-
                 if (procesoSeleccion.ProcesoSeleccionGrupo.Count() == 0 && procesoSeleccion.EsDistribucionGrupos != true)
                 {
                     ProcesoSeleccionGrupo grupo = new ProcesoSeleccionGrupo
@@ -184,17 +224,20 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionGrupo grupo in procesoSeleccion.ProcesoSeleccionGrupo)
                 {
                     grupo.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    grupo.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     this.CreateEditarProcesoSeleccionGrupo(grupo);
                 }
 
                 foreach (ProcesoSeleccionCronograma cronograma in procesoSeleccion.ProcesoSeleccionCronograma)
                 {
                     cronograma.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
+                    cronograma.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     this.CreateEditarProcesoSeleccionCronograma(cronograma, true);
                 }
 
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
                 {
+                    cotizacion.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion == null ? "" : cotizacion.NombreOrganizacion.ToUpper();
                     cotizacion.UrlSoporte = cotizacion.UrlSoporte == null ? "" : cotizacion.UrlSoporte.ToUpper();
@@ -225,6 +268,7 @@ namespace asivamosffie.services
 
                 foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
                 {
+                    integrante.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
                     integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
                     integrante.NombreIntegrante = integrante.NombreIntegrante;
                     this.CreateEditarProcesoSeleccionIntegrante(integrante);
@@ -451,7 +495,7 @@ namespace asivamosffie.services
             try
             {
 
-                if (string.IsNullOrEmpty(procesoSeleccionCronograma.ProcesoSeleccionCronogramaId.ToString()) || procesoSeleccionCronograma.ProcesoSeleccionCronogramaId == 0)
+                if (procesoSeleccionCronograma.ProcesoSeleccionCronogramaId == 0)
                 {
                     //Auditoria
                     strCrearEditar = "CREAR PROCESO SELECCION CRONOGRAMA";
@@ -461,7 +505,7 @@ namespace asivamosffie.services
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-
+             
                 }
                 else
                 {
@@ -696,10 +740,8 @@ namespace asivamosffie.services
                         var departamento = _context.Localizacion.Find(municipio.IdPadre);
                         proces.municipioString = municipio.Descripcion;
                         proces.departamentoString = departamento.Descripcion;
-                    }
-
-                }
-
+                    } 
+                } 
             }
             return proceso;
 

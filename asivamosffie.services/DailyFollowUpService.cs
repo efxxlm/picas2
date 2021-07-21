@@ -45,9 +45,15 @@ namespace asivamosffie.services
                                                                                 r.InterventorId == usuarioId
                                                                               )
                                                                         .ToListAsync();
-
-            listaInfoProyectos.ForEach(p =>
+            foreach (var p in listaInfoProyectos)
             {
+                //no se muestran los que no tengan fase de construcción (requisitos)
+                int existe = _context.ContratoConstruccion.Where(r => r.ContratoId == p.ContratoId && r.ProyectoId == p.ProyectoId).Count();
+                if (existe <= 0)
+                {
+                    listaInfoProyectos.Remove(p);
+                    break;
+                }
                 List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
                                                                 .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
                                                                        s.Eliminado != true)
@@ -87,7 +93,7 @@ namespace asivamosffie.services
                     }
 
                 }
-            });
+            }
 
             return listaInfoProyectos;
         }
