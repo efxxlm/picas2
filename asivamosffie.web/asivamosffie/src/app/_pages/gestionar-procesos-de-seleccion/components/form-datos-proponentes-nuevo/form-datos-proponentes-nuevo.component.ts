@@ -748,7 +748,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   examineProponentes(differenceAddingProponente: any[]) {
     let index = 0
     for (let proponente of differenceAddingProponente) {
-      if (proponente.tipoProponenteCodigo === '1') {
+      console.log(proponente)
+      // if (proponente.tipoProponenteCodigo === '1') {
         this.proponentesField.push(
           this.fb.group({
             ProcesoSeleccionProponenteId: [
@@ -810,7 +811,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
         );
         this.changeDepartamento(index)
         index++
-      }
+      // }
     }
   }
 
