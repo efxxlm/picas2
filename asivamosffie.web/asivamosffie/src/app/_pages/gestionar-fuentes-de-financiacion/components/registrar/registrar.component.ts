@@ -188,11 +188,18 @@ export class RegistrarComponent implements OnInit {
             x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
           );
           this.listaDocumentos = this.listaDocumentosApropiacion.filter(
-            x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
+            x => x.tipoDocumentoId == ff.cofinanciacionDocumento.tipoDocumentoId
           );
+          /*this.listaDocumentos = this.listaDocumentosApropiacion.filter(
+            x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
+          );*/
           //this.listaDocumentos.forEach(element => {
-          this.valorTotal = numerodoc[0].valorDocumento;
+          //this.valorTotal = numerodoc[0].valorDocumento;
           //});
+          this.valorTotal = 0;
+          this.listaDocumentos.forEach(element => {
+            this.valorTotal += element.valorDocumento;
+          });
           this.documentoFFIEID = ff.cofinanciacionDocumentoId;
           this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         }
