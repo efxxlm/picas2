@@ -750,8 +750,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
 
   examineProponentes(differenceAddingProponente: any[]) {
     let index = 0;
+    console.log(differenceAddingProponente);
     for (let proponente of differenceAddingProponente) {
-      console.log(proponente);
       // if (proponente.tipoProponenteCodigo === '1') {
       this.proponentesField.push(
         this.fb.group({
@@ -815,22 +815,24 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
           ]
         })
       );
-      for (let element of proponente.procesoSeleccionIntegrante.length) {
-        this.getEntidades(index).push(
-          this.fb.group({
-            procesoSeleccionIntegranteId: [
-              element.procesoSeleccionIntegranteId ? element.procesoSeleccionIntegranteId : null
-            ],
-            nombreIntegrante: [
-              element.nombreIntegrante ? element.nombreIntegrante : null,
-              Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])
-            ],
-            porcentajeParticipacion: [
-              element.porcentajeParticipacion ? element.porcentajeParticipacion : null,
-              Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])
-            ]
-          })
-        );
+      if (proponente.procesoSeleccionIntegrante.length) {
+        for (let element of proponente.procesoSeleccionIntegrante) {
+          this.getEntidades(index).push(
+            this.fb.group({
+              procesoSeleccionIntegranteId: [
+                element.procesoSeleccionIntegranteId ? element.procesoSeleccionIntegranteId : null
+              ],
+              nombreIntegrante: [
+                element.nombreIntegrante ? element.nombreIntegrante : null,
+                Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+              ],
+              porcentajeParticipacion: [
+                element.porcentajeParticipacion ? element.porcentajeParticipacion : null,
+                Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])
+              ]
+            })
+          );
+        }
       }
       this.changeDepartamento(index);
       index++;
