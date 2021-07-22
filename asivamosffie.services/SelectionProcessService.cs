@@ -104,7 +104,7 @@ namespace asivamosffie.services
                     {
                         var municipio = _context.Localizacion.Find(proces.LocalizacionIdMunicipio);
                         if (municipio != null)
-                        { 
+                        {
                             var departamento = _context.Localizacion.Find(municipio.IdPadre);
                             proces.Municipio = municipio;
                             proces.Departamento = departamento;
@@ -266,13 +266,7 @@ namespace asivamosffie.services
                     this.CreateEditarProcesoSeleccionProponente(proponente);
                 }
 
-                foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccion.ProcesoSeleccionIntegrante)
-                {
-                    integrante.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
-                    integrante.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    integrante.NombreIntegrante = integrante.NombreIntegrante;
-                    this.CreateEditarProcesoSeleccionIntegrante(integrante);
-                }
+
 
                 _context.SaveChanges();
 
@@ -505,7 +499,7 @@ namespace asivamosffie.services
 
 
                     _context.ProcesoSeleccionCronograma.Add(procesoSeleccionCronograma);
-             
+
                 }
                 else
                 {
@@ -740,8 +734,8 @@ namespace asivamosffie.services
                         var departamento = _context.Localizacion.Find(municipio.IdPadre);
                         proces.municipioString = municipio.Descripcion;
                         proces.departamentoString = departamento.Descripcion;
-                    } 
-                } 
+                    }
+                }
             }
             return proceso;
 
@@ -784,7 +778,7 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
 
             try
-            { 
+            {
                 if (procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
                 {
                     procesoSeleccionProponente.FechaCreacion = DateTime.Now;
@@ -795,7 +789,7 @@ namespace asivamosffie.services
                     _context.SaveChanges();
                 }
                 else
-                { 
+                {
                     _context.Set<ProcesoSeleccionProponente>()
                             .Where(r => r.ProcesoSeleccionProponenteId == procesoSeleccionProponente.ProcesoSeleccionProponenteId)
                             .Update(r => new ProcesoSeleccionProponente
@@ -812,11 +806,21 @@ namespace asivamosffie.services
                                 CedulaRepresentanteLegal = procesoSeleccionProponente.CedulaRepresentanteLegal,
                                 NumeroIdentificacion = procesoSeleccionProponente.NumeroIdentificacion,
                                 LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio,
-                                DireccionProponente= procesoSeleccionProponente.DireccionProponente,
+                                DireccionProponente = procesoSeleccionProponente.DireccionProponente,
                                 TelefonoProponente = procesoSeleccionProponente.TelefonoProponente,
                                 EmailProponente = procesoSeleccionProponente.EmailProponente
                             });
-                     
+
+
+
+                    foreach (ProcesoSeleccionIntegrante integrante in procesoSeleccionProponente.ProcesoSeleccionIntegrante)
+                    {
+                        integrante.ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId;
+                        integrante.ProcesoSeleccionProponenteId = procesoSeleccionProponente.ProcesoSeleccionProponenteId;
+                        integrante.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion.ToUpper();
+                        integrante.NombreIntegrante = integrante.NombreIntegrante;
+                        this.CreateEditarProcesoSeleccionIntegrante(integrante);
+                    }
                 }
 
                 return respuesta;
@@ -894,9 +898,8 @@ namespace asivamosffie.services
         public Respuesta CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante)
         {
             try
-            {
-
-                if (string.IsNullOrEmpty(procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId.ToString()) || procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId == 0)
+            { 
+                if (procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId == 0)
                 {
                     procesoSeleccionIntegrante.FechaCreacion = DateTime.Now;
                     procesoSeleccionIntegrante.UsuarioCreacion = procesoSeleccionIntegrante.UsuarioCreacion.ToUpper();
@@ -909,7 +912,7 @@ namespace asivamosffie.services
                     procesoSeleccionIntegranteAntiguo = _context.ProcesoSeleccionIntegrante.Find(procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId);
                     //Registros 
                     procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
-                    procesoSeleccionIntegranteAntiguo.ProcesoSeleccionId = procesoSeleccionIntegrante.ProcesoSeleccionId;
+                    procesoSeleccionIntegranteAntiguo.ProcesoSeleccionProponenteId = procesoSeleccionIntegrante.ProcesoSeleccionProponenteId;
                     procesoSeleccionIntegranteAntiguo.PorcentajeParticipacion = procesoSeleccionIntegrante.PorcentajeParticipacion;
                     procesoSeleccionIntegranteAntiguo.NombreIntegrante = procesoSeleccionIntegrante.NombreIntegrante;
                     procesoSeleccionIntegranteAntiguo.Eliminado = false;

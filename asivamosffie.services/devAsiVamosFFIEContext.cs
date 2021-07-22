@@ -2138,7 +2138,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.PlazoContratacion)
                     .WithMany(p => p.Contratacion)
                     .HasForeignKey(d => d.PlazoContratacionId)
-                    .HasConstraintName("FK__Contratac__Plazo__1590259A");
+                    .HasConstraintName("FK__Contratac__Plazo__39788055");
             });
 
             modelBuilder.Entity<ContratacionObservacion>(entity =>
@@ -4985,9 +4985,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(40)
                     .HasComment("Nombre de la muestra");
 
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(500)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
 
                 entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
 
@@ -8938,7 +8936,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajeParticipacion).HasComment("% de Participación");
 
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.ProcesoSeleccionProponenteId).HasComment("Llave foranea a la tabla en mención");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -8955,7 +8953,13 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ProcesoSeleccionIntegrante)
                     .HasForeignKey(d => d.ProcesoSeleccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccion");
+                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccionId");
+
+                entity.HasOne(d => d.ProcesoSeleccionProponente)
+                    .WithMany(p => p.ProcesoSeleccionIntegrante)
+                    .HasForeignKey(d => d.ProcesoSeleccionProponenteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccionProponenteId");
             });
 
             modelBuilder.Entity<ProcesoSeleccionMonitoreo>(entity =>
