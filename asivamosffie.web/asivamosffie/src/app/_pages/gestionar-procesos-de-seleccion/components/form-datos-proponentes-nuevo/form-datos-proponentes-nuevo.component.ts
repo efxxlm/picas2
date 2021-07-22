@@ -334,7 +334,6 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   CambioNumeroCotizantes(i: string | number) {
     const cuantasEntidades = this.proponentesField.controls[i].get('cuantasEntidades');
     const entidadesField = this.getEntidades(i);
-    console.log(entidadesField)
 
     if (cuantasEntidades.value != '' && cuantasEntidades.value != 0 && cuantasEntidades.value != null) {
       if (cuantasEntidades.value > entidadesField.controls.length && cuantasEntidades.value < 100) {
@@ -373,7 +372,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   createIntegrante(): FormGroup {
     return this.fb.group({
       procesoSeleccionIntegranteId: [null],
-      nombreIntegrante: [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
+      nombreIntegrante: [
+        null,
+        Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      ],
       porcentajeParticipacion: [null, Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])]
     });
   }
@@ -747,71 +749,91 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   examineProponentes(differenceAddingProponente: any[]) {
-    let index = 0
+    let index = 0;
     for (let proponente of differenceAddingProponente) {
-      console.log(proponente)
+      console.log(proponente);
       // if (proponente.tipoProponenteCodigo === '1') {
-        this.proponentesField.push(
+      this.proponentesField.push(
+        this.fb.group({
+          ProcesoSeleccionProponenteId: [
+            proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : 0
+          ],
+          tipoProponenteCodigo: [
+            proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : null,
+            Validators.required
+          ],
+          nombreProponente: [
+            proponente.nombreProponente ? proponente.nombreProponente : null,
+            Validators.compose([Validators.minLength(2), Validators.maxLength(1000)])
+          ],
+          numeroIdentificacion: [
+            proponente.numeroIdentificacion ? proponente.numeroIdentificacion : null,
+            Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+          ],
+          nombreDepartamento: [
+            proponente.departamento ? proponente.departamento.localizacionId : null,
+            Validators.required
+          ],
+          localizacionIdMunicipio: [
+            proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
+            Validators.required
+          ],
+          direccionProponente: [
+            proponente.direccionProponente ? proponente.direccionProponente : null,
+            Validators.compose([Validators.required, Validators.maxLength(500)])
+          ],
+          telefonoProponente: [
+            proponente.telefonoProponente ? proponente.telefonoProponente : null,
+            Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10)])
+          ],
+          emailProponente: [
+            proponente.emailProponente ? proponente.emailProponente : null,
+            Validators.compose([
+              Validators.required,
+              Validators.minLength(10),
+              Validators.maxLength(1000),
+              Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+            ])
+          ],
+          procesoSeleccionId: [
+            proponente.procesoSeleccionId ? proponente.procesoSeleccionId : null,
+            Validators.required
+          ],
+          nombreRepresentanteLegal: [
+            proponente.nombreRepresentanteLegal ? proponente.nombreRepresentanteLegal : null,
+            Validators.required
+          ],
+          cedulaRepresentanteLegal: [
+            proponente.cedulaRepresentanteLegal ? proponente.cedulaRepresentanteLegal : null,
+            Validators.required
+          ],
+          cuantasEntidades: [proponente.procesoSeleccionIntegrante.length ? proponente.procesoSeleccionIntegrante.length : null, Validators.required],
+          procesoSeleccionIntegrante: this.fb.array([]),
+          tipoIdentificacionCodigo: [
+            proponente.tipoIdentificacionCodigo ? proponente.tipoIdentificacionCodigo : null,
+            Validators.required
+          ]
+        })
+      );
+      for (let element of proponente.procesoSeleccionIntegrante.length) {
+        this.getEntidades(index).push(
           this.fb.group({
-            ProcesoSeleccionProponenteId: [
-              proponente.procesoSeleccionProponenteId ? proponente.procesoSeleccionProponenteId : 0
+            procesoSeleccionIntegranteId: [
+              element.procesoSeleccionIntegranteId ? element.procesoSeleccionIntegranteId : null
             ],
-            tipoProponenteCodigo: [
-              proponente.tipoProponenteCodigo ? proponente.tipoProponenteCodigo : null,
-              Validators.required
+            nombreIntegrante: [
+              element.nombreIntegrante ? element.nombreIntegrante : null,
+              Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])
             ],
-            nombreProponente: [
-              proponente.nombreProponente ? proponente.nombreProponente : null,
-              Validators.compose([Validators.minLength(2), Validators.maxLength(1000)])
-            ],
-            numeroIdentificacion: [
-              proponente.numeroIdentificacion ? proponente.numeroIdentificacion : null,
-              Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-            ],
-            nombreDepartamento: [proponente.departamento ? proponente.departamento.localizacionId : null, Validators.required],
-            localizacionIdMunicipio: [
-              proponente.localizacionIdMunicipio ? proponente.localizacionIdMunicipio : null,
-              Validators.required
-            ],
-            direccionProponente: [
-              proponente.direccionProponente ? proponente.direccionProponente : null,
-              Validators.compose([Validators.required, Validators.maxLength(500)])
-            ],
-            telefonoProponente: [
-              proponente.telefonoProponente ? proponente.telefonoProponente : null,
-              Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10)])
-            ],
-            emailProponente: [
-              proponente.emailProponente ? proponente.emailProponente : null,
-              Validators.compose([
-                Validators.required,
-                Validators.minLength(10),
-                Validators.maxLength(1000),
-                Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
-              ])
-            ],
-            procesoSeleccionId: [
-              proponente.procesoSeleccionId ? proponente.procesoSeleccionId : null,
-              Validators.required
-            ],
-            nombreRepresentanteLegal: [
-              proponente.nombreRepresentanteLegal ? proponente.nombreRepresentanteLegal : null,
-              Validators.required
-            ],
-            cedulaRepresentanteLegal: [
-              proponente.cedulaRepresentanteLegal ? proponente.cedulaRepresentanteLegal : null,
-              Validators.required
-            ],
-            cuantasEntidades: [proponente.cuantasEntidades ? proponente.cuantasEntidades : null, Validators.required],
-            procesoSeleccionIntegrante: this.fb.array([]),
-            tipoIdentificacionCodigo: [
-              proponente.tipoIdentificacionCodigo ? proponente.tipoIdentificacionCodigo : null,
-              Validators.required
+            porcentajeParticipacion: [
+              element.porcentajeParticipacion ? element.porcentajeParticipacion : null,
+              Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])
             ]
           })
         );
-        this.changeDepartamento(index)
-        index++
+      }
+      this.changeDepartamento(index);
+      index++;
       // }
     }
   }
@@ -837,7 +859,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   guardarNuevosProponentes() {
-    console.log(this.addressForm.value)
+    console.log(this.addressForm.value);
     this.estaEditando = true;
     this.personaJuridicaIndividualForm.markAllAsTouched();
 
