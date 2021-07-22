@@ -63,12 +63,8 @@
     <mat-accordion formGroupName="aportantes" *ngFor="let aportante of aportantes.controls; let j = index">
       <mat-expansion-panel class="expansion-style" [formGroupName]="j">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title
-            class="expansion-style--title"
-            [ngClass]="
-              aportante.get('estadoSemaforo').value !== null ? aportante.get('estadoSemaforo').value : 'sin-diligenciar'
-            "
-          >
+          <mat-panel-title  class="expansion-style--title"
+                            [ngClass]="aportante.get('estadoSemaforo').value !== null ? checkTotalUsosPorAportante( j ) : 'sin-diligenciar'">
           {{ aportante.get('nombreAportante').value }}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -381,7 +377,7 @@
                                       required
                                       maxLength="20"
                                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                       formControlName="valorUso"
                                     />
