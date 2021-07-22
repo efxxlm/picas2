@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'verDetalleAutorizarSolicitud/:idContrato/:idSolicitudPago',
-    component: VerDetalleAutorizarSolicitudComponent
+    component: FormAutorizarSolicitudComponent
   }
 ];
 @NgModule({

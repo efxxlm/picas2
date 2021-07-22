@@ -15,97 +15,68 @@ export class FormAmortizacionComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
     @Input() contrato: any;
-    @Input() aprobarSolicitudPagoId: any;
+    @Input() tieneObservacion: boolean;
+    @Input() listaMenusId: any;
     @Input() amortizacionAnticipoCodigo: string;
-    @Output() estadoSemaforo = new EventEmitter<string>();
-    solicitudPagoObservacionId = 0;
+    @Input() tieneObservacionOrdenGiro: boolean;
+    @Input() contratacionProyectoId: number;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
+    esPreconstruccion = false;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
     valorTotalDelContrato = 0;
-    addressForm: FormGroup;
-    detalleForm = this.fb.group({
-        porcentajeAmortizacion: [null, Validators.required],
-        valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
+    esAutorizar: boolean;
+    observacion: any;
+    solicitudPagoObservacionId = 0;
+    addressForm = this.fb.group({
+      porcentajeAmortizacion: [null, Validators.required],
+      valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
     });
-    editorStyle = {
-      height: '45px',
-      overflow: 'auto'
-    };
-    config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
-    };
     estaEditando = false;
+
     constructor(
-        private fb: FormBuilder,
-        private routes: Router,
-        private activatedRoute: ActivatedRoute,
-        private dialog: MatDialog,
-        private obsMultipleSvc: ObservacionesMultiplesCuService )
-    {
-        this.addressForm = this.crearFormulario();
-    }
+        private fb: FormBuilder )
+    {}
 
     ngOnInit(): void {
-        if ( this.contrato.contratacion.disponibilidadPresupuestal.length > 0 ) {
+        this.getDataAmortizacion()
+    }
+
+    getDataAmortizacion() {
+        if (this.contrato.contratacion.disponibilidadPresupuestal.length > 0) {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
         }
-
-        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-            for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                if ( solicitudPagoFase.esPreconstruccion === false ) {
-                    this.solicitudPagoFase = solicitudPagoFase;
+      
+        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0] !== undefined ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ 0 ] !== undefined ) {
+                if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
+                    for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+                        if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
+                            this.solicitudPagoFase = solicitudPagoFase;
+                        }
+                    }
+                }
+          
+                if ( this.solicitudPagoFase !== undefined ) {
+                    if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
+                        const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
+                        this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
+                        this.estaEditando = true;
+    
+                        this.addressForm.markAllAsTouched();
+                        this.addressForm.setValue(
+                            {
+                                porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                                valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
+                            }
+                        );
+                    }
                 }
             }
         }
-
-        if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
-            const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
-            this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
-            // Get observaciones
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                this.aprobarSolicitudPagoId,
-                this.solicitudPago.solicitudPagoId,
-                this.solicitudPagoFaseAmortizacionId,
-                this.amortizacionAnticipoCodigo )
-                .subscribe(
-                    response => {
-                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
-
-                        if ( obsSupervisor !== undefined ) {
-                            if ( obsSupervisor.registroCompleto === false ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
-                            }
-                            if ( obsSupervisor.registroCompleto === true ) {
-                                this.estadoSemaforo.emit( 'completo' );
-                            }
-                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
-                            this.estaEditando = true;
-                            this.addressForm.markAllAsTouched();
-                            this.addressForm.setValue(
-                                {
-                                    fechaCreacion: obsSupervisor.fechaCreacion,
-                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
-                                }
-                            );
-                        }
-                    }
-                );
-            // Get detalle amortización
-            this.detalleForm.setValue(
-                {
-                    porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
-                    valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
-                }
-            );
-        }
     }
 
+    /*
     crearFormulario() {
         return this.fb.group({
             fechaCreacion: [ null ],
@@ -168,5 +139,6 @@ export class FormAmortizacionComponent implements OnInit {
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }
+    */
 
 }

@@ -1,3 +1,8 @@
+import { ObsDatosFacturaComponent } from './components/obs-datos-factura/obs-datos-factura.component';
+import { ObsCriterioPagosComponent } from './components/obs-criterio-pagos/obs-criterio-pagos.component';
+import { FormProyectoComponent } from './components/form-proyecto/form-proyecto.component';
+import { DetalleFacturaProyectosComponent } from './components/detalle-factura-proyectos/detalle-factura-proyectos.component';
+import { DescripcionFacturaComponent } from './components/descripcion-factura/descripcion-factura.component';
 import { DialogObservacionesItemListchequeoComponent } from './components/dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 import { ObsValidListachequeoComponent } from './components/obs-valid-listachequeo/obs-valid-listachequeo.component';
 import { FormAmortizacionComponent } from './components/form-amortizacion/form-amortizacion.component';
@@ -33,7 +38,7 @@ import { DialogEnvSolicitudAutorizComponent } from './components/dialog-env-soli
 
 
 @NgModule({
-  declarations: [ DialogObservacionesItemListchequeoComponent, ObsValidListachequeoComponent, AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent, FormObservacionExpensasComponent, VerDetalleExpensasComponent, FormAmortizacionComponent],
+  declarations: [ ObsCriterioPagosComponent, ObsDatosFacturaComponent, FormProyectoComponent, DescripcionFacturaComponent, DetalleFacturaProyectosComponent, DialogObservacionesItemListchequeoComponent, ObsValidListachequeoComponent, AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent, FormObservacionExpensasComponent, VerDetalleExpensasComponent, FormAmortizacionComponent],
   imports: [
     CommonModule,
     MaterialModule,

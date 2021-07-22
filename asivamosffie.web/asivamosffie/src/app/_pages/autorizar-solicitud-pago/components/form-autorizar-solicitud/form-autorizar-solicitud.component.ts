@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
@@ -35,6 +35,8 @@ export class FormAutorizarSolicitudComponent implements OnInit {
     tieneFormaPago = true;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
+    tipoObservacionCodigo = '2';
+    esVerDetalle = false;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     otrosCostosForm = this.fb.group({
@@ -77,7 +79,12 @@ export class FormAutorizarSolicitudComponent implements OnInit {
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private fb: FormBuilder,
-        private commonSvc: CommonService) {
+        private commonSvc: CommonService)
+    {
+        const pathFind = this.activatedRoute.snapshot.url.find( ( urlSegment: UrlSegment ) => urlSegment.path === 'verDetalleAutorizarSolicitud' )
+
+        if ( pathFind !== undefined ) this.esVerDetalle = true;
+
         this.obsMultipleSvc.listaMenu()
             .subscribe(response => this.menusIdPath = response);
         this.obsMultipleSvc.listaTipoObservacionSolicitudes()
@@ -115,13 +122,13 @@ export class FormAutorizarSolicitudComponent implements OnInit {
                                     }
                                 }
                                 this.contrato = response;
-                                console.log(this.contrato);
+
                                 // Get observaciones Soporte de la solicitud
                                 this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                     this.menusIdPath.autorizarSolicitudPagoId,
                                     this.activatedRoute.snapshot.params.idSolicitudPago,
-                                    this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
-                                    this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo )
+                                    this.activatedRoute.snapshot.params.idSolicitudPago,
+                                    this.tipoObservacionCodigo )
                                     .subscribe(
                                         response => {
                                             const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
@@ -148,6 +155,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
                                     );
 
                                 if (this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos) {
+                                    /*
                                     // Get observaciones otros costos
                                     this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                         this.menusIdPath.autorizarSolicitudPagoId,
@@ -173,6 +181,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
                                                 }
                                             }
                                         );
+                                    */
                                     this.commonSvc.tiposDePagoExpensas()
                                         .subscribe(response => {
                                             this.tipoPagoArray = response;
@@ -286,13 +295,12 @@ export class FormAutorizarSolicitudComponent implements OnInit {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: Number(this.activatedRoute.snapshot.params.idSolicitudPago),
             observacion: this.addressForm.get('observaciones').value !== null ? this.addressForm.get('observaciones').value : this.addressForm.get('observaciones').value,
-            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo,
+            tipoObservacionCodigo: this.tipoObservacionCodigo,
             menuId: this.menusIdPath.autorizarSolicitudPagoId,
-            idPadre: this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+            idPadre: Number(this.activatedRoute.snapshot.params.idSolicitudPago),
             tieneObservacion: this.addressForm.get('tieneObservaciones').value !== null ? this.addressForm.get('tieneObservaciones').value : this.addressForm.get('tieneObservaciones').value
         };
 
-        console.log(pSolicitudPagoObservacion);
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(pSolicitudPagoObservacion)
             .subscribe(
                 response => {
@@ -309,6 +317,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
             )
     }
 
+    /*
     guardar() {
         this.estaEditando = true;
         this.otrosCostosObsForm.markAllAsTouched();
@@ -342,6 +351,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
                 err => this.openDialog('', `<b>${err.message}</b>`)
             )
     }
+    */
 
     guardarCertificado() {
         this.estaEditando = true;
