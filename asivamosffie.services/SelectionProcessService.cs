@@ -779,11 +779,26 @@ namespace asivamosffie.services
             {
                 if (procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
                 {
-                    procesoSeleccionProponente.FechaCreacion = DateTime.Now;
-                    procesoSeleccionProponente.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion.ToUpper();
-                    procesoSeleccionProponente.Eliminado = false;
-                    procesoSeleccionProponente.RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente);
-                    _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
+                    ProcesoSeleccionProponente procesoSeleccionProponente1 = new ProcesoSeleccionProponente
+                    {
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+                        UsuarioCreacion = procesoSeleccionProponente.UsuarioModificacion,
+                        RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente),
+                        ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId,
+                        TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo,
+                        NombreProponente = procesoSeleccionProponente.NombreProponente,
+                        TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo,
+                        NombreRepresentanteLegal = procesoSeleccionProponente.NombreRepresentanteLegal,
+                        CedulaRepresentanteLegal = procesoSeleccionProponente.CedulaRepresentanteLegal,
+                        NumeroIdentificacion = procesoSeleccionProponente.NumeroIdentificacion,
+                        LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio,
+                        DireccionProponente = procesoSeleccionProponente.DireccionProponente,
+                        TelefonoProponente = procesoSeleccionProponente.TelefonoProponente,
+                        EmailProponente = procesoSeleccionProponente.EmailProponente 
+                    };
+                     
+                    _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente1);
                     _context.SaveChanges();
                 }
                 else
@@ -851,8 +866,8 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
         {
-            if (ListProcesoSeleccionProponente.Count() > 0)
-                return false;
+            if (ListProcesoSeleccionProponente.Count()== 0)
+                return null;
 
             foreach (var procesoSeleccionProponente in ListProcesoSeleccionProponente)
             {
@@ -906,6 +921,7 @@ namespace asivamosffie.services
                     procesoSeleccionIntegrante.UsuarioCreacion = procesoSeleccionIntegrante.UsuarioCreacion.ToUpper();
                     procesoSeleccionIntegrante.Eliminado = false;
                     _context.ProcesoSeleccionIntegrante.Add(procesoSeleccionIntegrante);
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -920,6 +936,7 @@ namespace asivamosffie.services
                     procesoSeleccionIntegranteAntiguo.FechaModificacion = DateTime.Now;
                     procesoSeleccionIntegranteAntiguo.UsuarioModificacion = procesoSeleccionIntegrante.UsuarioModificacion;
                     _context.ProcesoSeleccionIntegrante.Update(procesoSeleccionIntegranteAntiguo);
+                    _context.SaveChanges();
                 }
 
                 return new Respuesta();
