@@ -175,7 +175,15 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       let contratacionProyectoAportanteCompleto = 0;
       let contratacionProyectoAportanteEnProceso = 0;
       let contratacionProyectoAportanteSinDiligenciar = 0;
+      let esRegistroValido = undefined;
+
       if (this.contratacion.contratacionProyecto !== undefined) {
+        const proyecto = this.contratacion.contratacionProyecto.find( proyecto => proyecto[ 'registroValido' ] === false )
+
+        if ( proyecto !== undefined ) {
+          esRegistroValido = false
+        }
+
         for (const contratacionProyecto of this.contratacion.contratacionProyecto) {
           let aportanteCompleto = 0;
           let aportanteEnProceso = 0;
@@ -219,6 +227,11 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           if (aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length) {
             contratacionProyectoAportanteCompleto++;
           }
+        
+        }
+
+        if ( esRegistroValido === false ) {
+          return this.estadoSemaforos.enProceso;
         }
 
         if (contratacionProyectoAportanteSinDiligenciar === this.contratacion.contratacionProyecto.length) {
