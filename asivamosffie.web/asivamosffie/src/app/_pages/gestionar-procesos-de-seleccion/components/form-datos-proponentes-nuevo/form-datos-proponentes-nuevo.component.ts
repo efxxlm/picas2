@@ -42,7 +42,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   getEntidades(i: string | number) {
-    return this.proponentesField.controls[i].get('entidades') as FormArray;
+    return this.proponentesField.controls[i].get('procesoSeleccionIntegrante') as FormArray;
   }
 
   agregarProponentes() {
@@ -80,7 +80,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
       nombreRepresentanteLegal: [null, Validators.required],
       cedulaRepresentanteLegal: [null, Validators.required],
       cuantasEntidades: [null, Validators.required],
-      entidades: this.fb.array([]),
+      procesoSeleccionIntegrante: this.fb.array([]),
       tipoIdentificacionCodigo: ['1', Validators.required]
     });
   }
@@ -143,7 +143,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     procesoSeleccionProponenteId: [],
     cuantasEntidades: [null, Validators.compose([Validators.required])],
     nombreConsorcio: [null, Validators.compose([Validators.minLength(2), Validators.maxLength(1000)])],
-    entidades: this.fb.array([]),
+    procesoSeleccionIntegrante: this.fb.array([]),
     nombre: [null, Validators.compose([Validators.minLength(2), Validators.maxLength(100)])],
     numeroIdentificacion: [null, Validators.compose([Validators.required, Validators.maxLength(12)])],
     cedulaRepresentanteLegal: [null, Validators.compose([Validators.required, Validators.maxLength(12)])],
@@ -334,6 +334,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   CambioNumeroCotizantes(i: string | number) {
     const cuantasEntidades = this.proponentesField.controls[i].get('cuantasEntidades');
     const entidadesField = this.getEntidades(i);
+    console.log(entidadesField)
 
     if (cuantasEntidades.value != '' && cuantasEntidades.value != 0 && cuantasEntidades.value != null) {
       if (cuantasEntidades.value > entidadesField.controls.length && cuantasEntidades.value < 100) {
@@ -371,9 +372,9 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
 
   createIntegrante(): FormGroup {
     return this.fb.group({
-      procesoSeleccionIntegranteId: [],
-      nombre: [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
-      porcentaje: [null, Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])]
+      procesoSeleccionIntegranteId: [null],
+      nombreIntegrante: [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
+      porcentajeParticipacion: [null, Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])]
     });
   }
 
@@ -482,7 +483,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     }
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 
-    let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
+    let listaIntegrantes = this.unionTemporalForm.get('procesoSeleccionIntegrante') as FormArray;
 
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.unionTemporalForm.get('procesoSeleccionProponenteId').value,
@@ -589,7 +590,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
               this.personaJuridicaIndividualForm.get('correoElectronico').setValue(proponente.emailProponente);
             }
             case '4': {
-              let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
+              let listaIntegrantes = this.unionTemporalForm.get('procesoSeleccionIntegrante') as FormArray;
 
               this.unionTemporalForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.unionTemporalForm
@@ -660,7 +661,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
           this.personaJuridicaIndividualForm.get('correoElectronico').setValue(proponente.emailProponente);
         }
         case '4': {
-          let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
+          let listaIntegrantes = this.unionTemporalForm.get('procesoSeleccionIntegrante') as FormArray;
 
           this.unionTemporalForm.get('depaetamento').setValue(departamentoSeleccionado);
           this.unionTemporalForm.get('procesoSeleccionProponenteId').setValue(0),
@@ -713,7 +714,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
     this.personaJuridicaIndividualForm.get('telefono').setValue('');
     this.personaJuridicaIndividualForm.get('correoElectronico').setValue('');
 
-    let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
+    let listaIntegrantes = this.unionTemporalForm.get('procesoSeleccionIntegrante') as FormArray;
 
     this.unionTemporalForm.get('depaetamento').setValue('');
     this.unionTemporalForm.get('procesoSeleccionProponenteId').setValue(''),
@@ -802,7 +803,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
               Validators.required
             ],
             cuantasEntidades: [proponente.cuantasEntidades ? proponente.cuantasEntidades : null, Validators.required],
-            entidades: [proponente.entidades ? proponente.entidades : this.fb.array([])],
+            procesoSeleccionIntegrante: this.fb.array([]),
             tipoIdentificacionCodigo: [
               proponente.tipoIdentificacionCodigo ? proponente.tipoIdentificacionCodigo : null,
               Validators.required
@@ -836,6 +837,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit, OnChanges {
   }
 
   guardarNuevosProponentes() {
+    console.log(this.addressForm.value)
     this.estaEditando = true;
     this.personaJuridicaIndividualForm.markAllAsTouched();
 

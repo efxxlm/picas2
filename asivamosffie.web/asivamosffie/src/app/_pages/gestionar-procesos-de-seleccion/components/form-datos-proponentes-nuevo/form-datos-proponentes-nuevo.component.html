@@ -159,7 +159,7 @@
               </div>
             </div>
             <h2 class="card-subTitle">Integrantes</h2>
-            <div formArrayName="entidades">
+            <div formArrayName="procesoSeleccionIntegrante">
               <div *ngFor="let entidad of getEntidades(j).controls; let i = index">
                 <div [formGroupName]="i">
                   <mat-card-title class="header-card--text sub-text"> Integrante {{ i + 1 }} </mat-card-title>
@@ -168,11 +168,11 @@
                       <div class="row">
                         <div class="pr-1">
                           <label
-                            for="nombre"
+                            for="nombreIntegrante"
                             class="label-left"
                             [class.color-secondaryColor]="
-                              (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
-                              (entidad.get('nombre')?.invalid && estaEditando)
+                              (entidad.get('nombreIntegrante')?.invalid && entidad.get('nombreIntegrante').touched) ||
+                              (entidad.get('nombreIntegrante')?.invalid && estaEditando)
                             "
                           >
                             Nombre
@@ -180,7 +180,7 @@
                         </div>
                         <div class="col d-flex">
                           <mat-form-field class="full-width">
-                            <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required />
+                            <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombreIntegrante" required />
                           </mat-form-field>
                           <span
                             class="contador miles"
@@ -199,8 +199,8 @@
                               matTooltip="Debe ingresar la información en el campo para continuar"
                               matTooltipClass="info-tooltip"
                               *ngIf="
-                                (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
-                                (entidad.get('nombre')?.invalid && estaEditando)
+                                (entidad.get('nombreIntegrante')?.invalid && entidad.get('nombreIntegrante').touched) ||
+                                (entidad.get('nombreIntegrante')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -213,11 +213,11 @@
                       <div class="row">
                         <div class="pr-1">
                           <label
-                            for="porcentaje"
+                            for="porcentajeParticipacion"
                             class="label-left"
                             [class.color-secondaryColor]="
-                              (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
-                              (entidad.get('porcentaje')?.invalid && estaEditando)
+                              (entidad.get('porcentajeParticipacion')?.invalid && entidad.get('porcentajeParticipacion').touched) ||
+                              (entidad.get('porcentajeParticipacion')?.invalid && estaEditando)
                             "
                           >
                             Porcentaje de participación
@@ -227,12 +227,12 @@
                           <mat-form-field class="full-width">
                             <input
                               matInput
-                              #porcentaje
+                              #porcentajeParticipacion
                               type="number"
                               min="1"
                               max="100"
                               maxLength="3"
-                              formControlName="porcentaje"
+                              formControlName="porcentajeParticipacion"
                               oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                               required
                             />
@@ -248,8 +248,8 @@
                               matTooltip="Debe ingresar la información en el campo para continuar"
                               matTooltipClass="info-tooltip"
                               *ngIf="
-                                (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
-                                (entidad.get('porcentaje')?.invalid && estaEditando)
+                                (entidad.get('porcentajeParticipacion')?.invalid && entidad.get('porcentajeParticipacion').touched) ||
+                                (entidad.get('porcentajeParticipacion')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -262,7 +262,7 @@
                         color="warn"
                         type="button"
                         class="btn-eliminar"
-                        (click)="borrarArray(entidades, i)"
+                        (click)="borrarArray(procesoSeleccionIntegrante, i)"
                       >
                         <img src="assets/img/icon/menos.svg" alt="Eliminar integrante" />
                         Eliminar integrante
