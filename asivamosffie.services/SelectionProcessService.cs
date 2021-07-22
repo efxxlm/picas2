@@ -785,7 +785,7 @@ namespace asivamosffie.services
                         Eliminado = false,
                         UsuarioCreacion = procesoSeleccionProponente.UsuarioModificacion,
                         RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente),
-                        ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId, 
+                        ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId,
                         TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo,
                         NombreProponente = procesoSeleccionProponente.NombreProponente,
                         TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo,
@@ -795,11 +795,12 @@ namespace asivamosffie.services
                         LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio,
                         DireccionProponente = procesoSeleccionProponente.DireccionProponente,
                         TelefonoProponente = procesoSeleccionProponente.TelefonoProponente,
-                        EmailProponente = procesoSeleccionProponente.EmailProponente 
+                        EmailProponente = procesoSeleccionProponente.EmailProponente
                     };
-                     
+
                     _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente1);
                     _context.SaveChanges();
+                    procesoSeleccionProponente.ProcesoSeleccionProponenteId = procesoSeleccionProponente1.ProcesoSeleccionProponenteId;
                 }
                 else
                 {
