@@ -83,16 +83,14 @@ namespace asivamosffie.services
             {
                 var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .IncludeFilter(r => r.ProcesoSeleccionProponente.Where(r => !(bool)r.Eliminado))
-                                            .IncludeFilter(r => r.ProcesoSeleccionIntegrante.Where(r => !(bool)r.Eliminado))
+                                            .Include(r => r.ProcesoSeleccionProponente.Where(r => !(bool)r.Eliminado)).ThenInclude(r=> r.ProcesoSeleccionIntegrante.Where(r=> r.Eliminado != true)) 
                                             .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                                             .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
                 procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
-
-
+                 
                 foreach (var proces in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     if (proces.LocalizacionIdMunicipio == null)
