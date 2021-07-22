@@ -16,6 +16,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Router } from '@angular/router';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { opendir } from 'fs';
+import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -42,6 +43,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   cantidadAprobado: number = 0;
   cantidadNoAprobado: number = 0;
   resultadoVotacion: string = '';
+  listaMiembrosNoFilter: Usuario[];
 
   proyectos: ContratacionProyecto[];
 
@@ -107,6 +109,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       if (value.cuantosCompromisos > 10) {
         value.cuantosCompromisos = 10;
       }
+    });
+    this.commonService.listaUsuarios().then(respuesta => {
+      this.listaMiembrosNoFilter = respuesta;
     });
   }
 
@@ -417,4 +422,26 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
   }
+
+  Observaciones(elemento: SesionComiteSolicitud) {
+     console.log(elemento.tipoSolicitudCodigo, elemento);
+     if (elemento?.sesionSolicitudVoto) {
+        elemento.sesionSolicitudVoto.forEach(voto => {
+          let usuario: Usuario = this.listaMiembrosNoFilter.find(m => m.usuarioId == voto?.sesionParticipante?.usuarioId);
+          voto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
+       });
+     }
+
+    if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.AperturaDeProcesoDeSeleccion){
+      const dialog = this.dialog.open(VotacionSolicitudComponent, {
+        width: '70em',
+        data: { sesionComiteSolicitud: elemento,  esVerDetalle: true }
+      });
+
+      dialog.afterClosed().subscribe(c => {
+        //no se que pasa
+      });
+    }
+  }
+
 }
