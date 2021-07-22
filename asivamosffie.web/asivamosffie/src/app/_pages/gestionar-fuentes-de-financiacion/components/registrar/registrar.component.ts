@@ -244,7 +244,7 @@ export class RegistrarComponent implements OnInit {
         if(ff.controlRecurso){
           ff.controlRecurso.forEach(c => {
             this.constrolRecursos.push(c);
-          })         
+          })
         }
 
         this.fuenteRecursosArray.push(grupo);
@@ -314,7 +314,7 @@ export class RegistrarComponent implements OnInit {
         this.commonService.listaDepartamentos(),
         this.cofinanciacionService.listaAportantesByTipoAportante(this.tipoAportanteId)
         //this.fuenteFinanciacionService.listaFuenteFinanciacion(),
-      ]).subscribe(res => {        
+      ]).subscribe(res => {
         this.nombresAportantes = res[4].filter(x => x.cofinanciacion.registroCompleto == true); //solo muestro los completos
         if (this.idAportante > 0) {
           //funciona porque recien empezo
@@ -518,6 +518,9 @@ export class RegistrarComponent implements OnInit {
   }
 
   changeNombreAportanteFFIE() {
+    this.valorTotal = 0;
+    this.addressForm.get('tipoDocumento').setValue(null);
+
     if (this.addressForm.get('nombreAportanteFFIE').value) {
       this.tipoDocumentoap = [];
       this.idAportante = this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
@@ -740,7 +743,7 @@ export class RegistrarComponent implements OnInit {
               borrarForm.removeAt(i);
               this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>', false);
             }else{
-              
+
             }
           });
       }
@@ -791,11 +794,16 @@ export class RegistrarComponent implements OnInit {
   }
 
   filterDocumento(variable) {
+    this.valorTotal = 0;
     this.listaDocumentosApropiacion = this.listaBase.filter(x => x.tipoDocumentoId == variable);
     this.listaDocumentos = this.listaDocumentosApropiacion;
+    console.log(this.listaDocumentos);
     this.documentoFFIEID = this.listaDocumentos[0].cofinanciacionDocumentoId;
     if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
-      this.valorTotal += this.listaDocumentos[0].valorDocumento;
+      this.listaDocumentos.forEach(element => {
+        this.valorTotal += element.valorDocumento;
+      });
+      //this.valorTotal += this.listaDocumentos[0].valorDocumento;
     } else {
       this.listaDocumentos.forEach(element => {
         this.valorTotal += element.valorDocumento;
@@ -981,7 +989,7 @@ export class RegistrarComponent implements OnInit {
     this.registrosPresupuestales.value.forEach(element => {
       valorTotalRps = valorTotalRps + element.valorRP
     });
-   
+
     if(!this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()) && valorTotalRps > valortotla ){
       this.openDialog(
         '',
