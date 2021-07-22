@@ -83,7 +83,7 @@ namespace asivamosffie.services
             {
                 var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .Include(r => r.ProcesoSeleccionProponente.Where(r => !(bool)r.Eliminado)).ThenInclude(r=> r.ProcesoSeleccionIntegrante.Where(r=> r.Eliminado != true)) 
+                                            .Include(r => r.ProcesoSeleccionProponente).ThenInclude(r=> r.ProcesoSeleccionIntegrante) 
                                             .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
@@ -851,6 +851,9 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
         {
+            if (ListProcesoSeleccionProponente.Count() > 0)
+                return false;
+
             foreach (var procesoSeleccionProponente in ListProcesoSeleccionProponente)
             {
                 if (ValidarRegistroCompletoProponente(procesoSeleccionProponente) == false)
