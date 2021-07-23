@@ -165,16 +165,11 @@
                   />
                 </span>
                 <div class="select-width-2">
-                  <mat-form-field class="field">
-                    <mat-select
-                      [formControl]="element.get('estadoActividad')"
-                      required
-                      *ngIf="activo[i]"
-                      [class.invalid]="
-                        (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) ||
-                        (element.get('estadoActividad').invalid && estaEditando)
-                      "
-                    >
+                  <!-- <mat-form-field class="field"> -->
+                    <mat-select [formControl]="element.get('estadoActividad')"
+                                required
+                                *ngIf="activo[i]"
+                                [class.invalid]=" (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) || (element.get('estadoActividad').invalid && estaEditando)">
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
                       </mat-option>
@@ -182,7 +177,7 @@
                     <div *ngIf="!activo[i]">
                       {{ element.get('estadoActividad').value.nombre }}
                     </div>
-                  </mat-form-field>
+                  <!-- </mat-form-field> -->
                 </div>
               </td>
             </ng-container>
