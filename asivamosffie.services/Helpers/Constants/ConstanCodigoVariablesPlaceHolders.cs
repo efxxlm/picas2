@@ -320,8 +320,8 @@
         public const string TP_NOVEDAD_DETALLES = "243";
         public const string NUMERO_DRP = "244";
         public const string SALDO_APORTANTE = "245";
-        public const string PLAZO_DIAS = "246";
-        public const string PLAZO_MESES = "247";
+        public const string PLAZO_DIAS = "247";
+        public const string PLAZO_MESES = "246";
         #endregion
     }
 }
