@@ -7233,6 +7233,8 @@ namespace asivamosffie.services
                 Contratacion contratacion = null;
                 DisponibilidadPresupuestal disponibilidadPresupuestal = null;
 
+                string row_template = "<td rowspan='[ROWSPAN]'><div>[ROW]</div></td>";
+
                 #region detalle solicitud
                 DetallesSolicitudes += DetalleSolicitud;
                 NovedadesAdicion += NovedadAdicion;
@@ -7459,48 +7461,79 @@ namespace asivamosffie.services
                     {
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
+                            bool ind_ya_entro = false;
                             foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                             {
                                 RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
+                                string nombreTrAportante = string.Empty;
+                                string valorTrAportante = string.Empty;
+
+                                if (!ind_ya_entro)
+                                {
+                                    string rowspan = ComponenteAportante.ComponenteUso.Count().ToString();
+                                    /*
+                                     * Nombre aportante
+                                    */
+
+                                    string nombre_aportante_row = row_template;
+                                    nombre_aportante_row = nombre_aportante_row.Replace("[ROWSPAN]", rowspan);
+
+                                    string strNombreAportante = string.Empty;
+                                    switch (ContratacionProyectoAportante.CofinanciacionAportante.TipoAportanteId)
+                                    {
+                                        case ConstanTipoAportante.Ffie:
+                                            strNombreAportante = ConstanStringTipoAportante.Ffie;
+                                            break;
+
+                                        case ConstanTipoAportante.ET:
+
+                                            if (ContratacionProyectoAportante.CofinanciacionAportante.Departamento != null && ContratacionProyectoAportante.CofinanciacionAportante.Municipio == null)
+                                            {
+                                                strNombreAportante = "Gobernación de " + ContratacionProyectoAportante.CofinanciacionAportante.Departamento.Descripcion;
+                                            }
+                                            else if (ContratacionProyectoAportante.CofinanciacionAportante.Municipio != null)
+                                            {
+                                                strNombreAportante = "Alcaldía de " + ContratacionProyectoAportante.CofinanciacionAportante.Municipio.Descripcion;
+                                            }
+                                            break;
+                                        case ConstanTipoAportante.Tercero:
+                                            strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.NombreAportante.Nombre;
+                                            break;
+                                    }
+                                    nombreTrAportante = nombre_aportante_row.Replace("[ROW]", strNombreAportante);
+                                    /*
+                                     * Valor aportante
+                                    */
+                                    string valor_aportante_row = row_template;
+                                    valor_aportante_row = valor_aportante_row.Replace("[ROWSPAN]", rowspan);
+
+                                    string ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorObra);
+                                    if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                                    {
+                                        ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorInterventoria);
+                                    }
+
+                                    valorTrAportante = valor_aportante_row.Replace("[ROW]", ValorAportante);
+
+                                    ind_ya_entro = true;
+                                }
+                                else
+                                {
+                                    nombreTrAportante = string.Empty;
+                                    valorTrAportante = string.Empty;
+                                }
+
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
                                     {
                                         case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE_FUENTES_USO:
-                                            string strNombreAportante = string.Empty;
-                                            switch (ContratacionProyectoAportante.CofinanciacionAportante.TipoAportanteId)
-                                            {
-                                                case ConstanTipoAportante.Ffie:
-                                                    strNombreAportante = ConstanStringTipoAportante.Ffie;
-                                                    break;
-
-                                                case ConstanTipoAportante.ET:
-
-                                                    if (ContratacionProyectoAportante.CofinanciacionAportante.Departamento != null)
-                                                    {
-                                                        strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.Departamento.Descripcion;
-                                                    }
-                                                    else
-                                                    {
-                                                        strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.Municipio.Descripcion;
-                                                    }
-                                                    break;
-                                                case ConstanTipoAportante.Tercero:
-                                                    strNombreAportante = ContratacionProyectoAportante.CofinanciacionAportante.NombreAportante.Nombre;
-                                                    break;
-                                            }
-                                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, strNombreAportante);
+                                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, nombreTrAportante);
                                             break;
 
                                         case ConstanCodigoVariablesPlaceHolders.VALOR_APORTANTE_PROYECTO_FUENTES_USO:
-                                            string ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorObra);
-                                            if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-                                            {
-                                                ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorInterventoria);
-                                            }
-                                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, ValorAportante);
+                                            RegistrosFuentesUso = RegistrosFuentesUso.Replace(placeholderDominio.Nombre, valorTrAportante); 
                                             break;
-
 
                                         case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
                                             string strFase = string.Empty;
@@ -7538,7 +7571,7 @@ namespace asivamosffie.services
                                                 string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteUso.TipoUsoCodigo)?.FirstOrDefault()?.Nombre;
 
                                                 RegistrosFuentesUso = RegistrosFuentesUso.Replace("[USO_FUENTES_USO]", strTipoUso);
-                                                RegistrosFuentesUso = RegistrosFuentesUso.Replace("[VALOR_USO_FUENTE_USO]", "$" + String.Format("{0:n0}", ComponenteUso.ValorUso.ToString()));
+                                                RegistrosFuentesUso = RegistrosFuentesUso.Replace("[VALOR_USO_FUENTE_USO]", "$" + String.Format("{0:n0}", ComponenteUso.ValorUso));
 
                                             }
                                             RegistrosRegistrosUsosFuenteUsos = RegistrosRegistrosUsosFuenteUsos.Replace(placeholderDominio.Nombre, "USO FUENTES USO");
