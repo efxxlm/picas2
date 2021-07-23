@@ -27,7 +27,7 @@ namespace asivamosffie.services
         #region Opt
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
-            return await _context.Contrato
+             Contrato contrato =await _context.Contrato
                                           .Where(c => c.ContratoId == pContratoId)
                                           .Include(c => c.Contratacion).ThenInclude(d => d.DisponibilidadPresupuestal)
                                           .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
@@ -37,6 +37,10 @@ namespace asivamosffie.services
                                           .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaGarantia)
                                           .Include(p => p.ContratoPoliza).ThenInclude(p => p.PolizaListaChequeo)
                                           .FirstOrDefaultAsync();
+
+
+            contrato.FechaAprobacionComite = _context.SesionComiteSolicitud.Where(s => s.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && s.SesionComiteSolicitudId == contrato.ContratacionId).Include(r => r.ComiteTecnico).Select(r => r.ComiteTecnico.FechaOrdenDia).FirstOrDefault();
+            return contrato;
         }
 
         public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
