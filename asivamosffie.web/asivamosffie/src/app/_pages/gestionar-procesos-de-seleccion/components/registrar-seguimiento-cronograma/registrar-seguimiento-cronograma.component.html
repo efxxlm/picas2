@@ -164,7 +164,7 @@
                     "
                   />
                 </span>
-                <div class="select-width-2">
+                <div class="select-width-2 mover-required" [class.mx-auto]="!activo[i]">
                   <!-- <mat-form-field class="field"> -->
                     <mat-select [formControl]="element.get('estadoActividad')"
                                 required
@@ -196,7 +196,7 @@
                     }}
                   </span>
                   <span class="contador mt-1em" *ngIf="!element.get('observacion').value && activo[i]"> 800 </span>
-                  <span class="required-quill">*</span>
+                  <span class="required-quill" *ngIf="activo[i]">*</span>
                   <span class="icon-incompleto mt-1em ml-1em">
                     <img
                       class="icon-incompleto--img"
