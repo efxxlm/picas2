@@ -39,7 +39,7 @@ namespace asivamosffie.services
                                           .FirstOrDefaultAsync();
 
 
-            contrato.FechaAprobacionComite = _context.SesionComiteSolicitud.Where(s => s.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && s.SolicitudId == contrato.ContratacionId).Include(r => r.ComiteTecnico).Select(r => r.ComiteTecnico.FechaOrdenDia).FirstOrDefault()?? DateTime.Now;
+            contrato.FechaAprobacionComite = _context.SesionComiteSolicitud.Where(s => s.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && s.SolicitudId == contrato.ContratacionId).Include(r => r.ComiteTecnicoFiduciario).Select(r => r.ComiteTecnico.FechaOrdenDia).FirstOrDefault()?? DateTime.Now;
             return contrato;
         }
 
