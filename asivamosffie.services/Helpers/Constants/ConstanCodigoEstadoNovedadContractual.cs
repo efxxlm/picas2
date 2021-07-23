@@ -2,6 +2,8 @@
 {
     public static class ConstanCodigoEstadoNovedadContractual
     {
+		//TIPO DOMINIO : 157
+
 		public const string En_proceso_de_registro = "1";
 		public const string Con_novedad_aprobada_por_interventor = "2";
 		public const string En_proceso_de_verificacion = "3";
@@ -29,6 +31,6 @@
 		public const string Firmado = "25";
 		public const string Registrado = "26";
 		public const string Aprobada_para_envio_comite = "27";
-
+		public const string DevueltaProcesoContractual = "28";
 	}
 }

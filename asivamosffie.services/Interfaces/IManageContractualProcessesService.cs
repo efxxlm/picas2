@@ -27,5 +27,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> RegistrarTramiteNovedadContractual(NovedadContractual pNovedadContractual);
         Task<Respuesta> RegistrarTramiteLiquidacion(Contratacion pContratacion);
+        Task<Respuesta> DevolverProcesosContractuales(ProcesosContractualesObservacion procesosContractualesObservacion);
+
     }
 }

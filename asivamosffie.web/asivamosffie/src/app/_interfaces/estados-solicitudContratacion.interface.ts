@@ -22,6 +22,8 @@ export interface EstadoSolicitudContratacion {
   Sin_tramitar_ante_fiduciaria    :string;
   Rechazada_por_validacion_presupuestal    :string;
   Cancelado_por_generacion_presupuestal    :string;
+  DevueltaProcesoContractual    :string;
+  DevueltaLiquidacionProcesoContractual    :string;
 }
 
 export enum EstadoSolicitudContratacionCodigo {
@@ -47,5 +49,8 @@ export enum EstadoSolicitudContratacionCodigo {
   Liquidado = "20",
   Sin_tramitar_ante_fiduciaria = "21",
   Rechazada_por_validacion_presupuestal = "22",
-  Cancelado_por_generacion_presupuestal = "23"
+  Cancelado_por_generacion_presupuestal = "23",
+  DevueltaProcesoContractual = "24",
+  DevueltaLiquidacionProcesoContractual = "25"
+
 }

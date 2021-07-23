@@ -384,5 +384,7 @@
         public const string Cambiar_Estado_Traslado_Balance_Financiero = "283";
 
         public const string Cambiar_Estado_Balance_Financiero = "284";
+        public const string CrearEditarProcesosContractualesObservacion = "285";
+
     }
 }

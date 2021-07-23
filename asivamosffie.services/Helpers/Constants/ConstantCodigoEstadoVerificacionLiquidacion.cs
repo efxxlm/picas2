@@ -7,6 +7,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Con_verificacion = "2"; 
         
-        public const string Enviado_a_liquidacion = "3"; 
+        public const string Enviado_a_liquidacion = "3";
+
+        public const string DevueltaLiquidacionProcesoContractual = "4";
     }
 }

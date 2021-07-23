@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 @Component({
   selector: 'app-tabla-solicitudes-sin-tramitar',
@@ -151,4 +152,11 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   }
 
+  openDialogObservaciones(element:any) {
+    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '70em',
+      data: element,
+      id:'dialogObservaciones'
+    });
+  }
 };

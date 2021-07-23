@@ -156,6 +156,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProcesoSeleccionMonitoreo> ProcesoSeleccionMonitoreo { get; set; }
         public virtual DbSet<ProcesoSeleccionObservacion> ProcesoSeleccionObservacion { get; set; }
         public virtual DbSet<ProcesoSeleccionProponente> ProcesoSeleccionProponente { get; set; }
+        public virtual DbSet<ProcesosContractualesObservacion> ProcesosContractualesObservacion { get; set; }
         public virtual DbSet<Programacion> Programacion { get; set; }
         public virtual DbSet<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }
         public virtual DbSet<Proyecto> Proyecto { get; set; }
@@ -316,8 +317,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8936,8 +8935,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajeParticipacion).HasComment("% de Participación");
 
-                entity.Property(e => e.ProcesoSeleccionProponenteId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -9121,6 +9118,33 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ProcesoSeleccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProcesoSeleccionProponente_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesosContractualesObservacion>(entity =>
+            {
+                entity.Property(e => e.Archivado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Programacion>(entity =>
@@ -14665,6 +14689,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoSolicitud)
                     .IsRequired()
                     .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VListaProyectos>(entity =>

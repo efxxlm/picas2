@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class ProcesoSeleccionIntegrante
     {
         public int ProcesoSeleccionIntegranteId { get; set; }
-        public int ProcesoSeleccionProponenteId { get; set; }
         public int PorcentajeParticipacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -15,6 +14,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public string NombreIntegrante { get; set; }
         public int ProcesoSeleccionId { get; set; }
+        public int ProcesoSeleccionProponenteId { get; set; }
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
         public virtual ProcesoSeleccionProponente ProcesoSeleccionProponente { get; set; }

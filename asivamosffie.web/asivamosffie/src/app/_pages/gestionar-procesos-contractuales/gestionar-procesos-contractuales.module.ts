@@ -25,6 +25,8 @@ import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
 import { TablaRegistradosComponent } from './components/tabla-registrados/tabla-registrados.component';
 import { FormContratacionRegistradosComponent } from './components/form-contratacion-registrados/form-contratacion-registrados.component';
 import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
+import { TablaSolicitudesDevueltasComponent } from './components/tabla-solicitudes-devueltas/tabla-solicitudes-devueltas.component';
+import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/t
     FormContratacionRegistradosComponent,
     TablaSolicitudesEnviadasComponent,
     DomSafePipe,
-    TablaInformeAnexosComponent
+    TablaInformeAnexosComponent,
+    TablaSolicitudesDevueltasComponent,
+    DialogObservacionesComponent
   ],
   imports: [
     CommonModule,

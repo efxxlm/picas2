@@ -54,6 +54,15 @@
         </mat-expansion-panel-header>
         <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event" [$data]="$data"></app-tabla-registrados>
       </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonDevueltas">
+            Devueltas por procesos contractuales
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-solicitudes-devueltas [$data]="$data" (estadoSemaforo)="estadoAcordeonDevueltas = $event"></app-tabla-solicitudes-devueltas>
+      </mat-expansion-panel>
     </mat-accordion>
   </section>
 
