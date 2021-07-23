@@ -29,7 +29,7 @@ namespace asivamosffie.services
         public readonly IConverter _converter;
         private readonly IContractualNoveltyService _IContractualNoveltyService;
         private readonly IJudicialDefense _judicialDefense;
-        
+
         public RegisterSessionTechnicalCommitteeService(devAsiVamosFFIEContext context, IProjectService projectService, IConverter converter, ICommonService commonService, IProjectContractingService projectContractingService, IContractualControversy contractualControversy, IContractualNoveltyService contractualNoveltyService, IJudicialDefense judicialDefense)
         {
             _IProjectContractingService = projectContractingService;
@@ -1564,7 +1564,6 @@ namespace asivamosffie.services
             return completo;
         }
 
-
         private bool? ValidarRegistroCompletoSesionComiteTemaActa(SesionComiteTema pSesionComiteTema)
         {
             if (
@@ -1581,6 +1580,8 @@ namespace asivamosffie.services
                 return ValidarRegistroCompletoSesionComiteTema(pSesionComiteTema);
             }
         }
+
+
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
@@ -1598,7 +1599,6 @@ namespace asivamosffie.services
                 return ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitud);
             }
         }
-
 
         public async Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico)
         {
@@ -2331,21 +2331,20 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(comite.EstadoComiteCodigo))
                         EstadoComite = ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComiteCodigo).FirstOrDefault().Nombre;
 
-                    ComiteGrilla comiteGrilla = new ComiteGrilla
-                    {
-                        Id = comite.ComiteTecnicoId,
-                        FechaComite = comite.FechaOrdenDia.Value,
-                        EstadoComiteCodigo = !string.IsNullOrEmpty(comite.EstadoComiteCodigo) ? comite.EstadoComiteCodigo : "",
-                        EstadoComite = !string.IsNullOrEmpty(EstadoComite) ? EstadoComite : "",
-                        NumeroComite = comite.NumeroComite,
-                        EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
-                        EstadoActaCodigo = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? comite.EstadoActaCodigo : "",
-                        RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
-                        RegistroCompleto = comite.EsCompleto,
-                        //NumeroCompromisos = numeroCompromisos(comite.Id, false),
-                        //NumeroCompromisosCumplidos = numeroCompromisos(comite.Id, true),
-                        EsComiteFiduciario = comite.EsComiteFiduciario,
-                    };
+                    ComiteGrilla comiteGrilla = new ComiteGrilla();
+
+                    comiteGrilla.Id = comite.ComiteTecnicoId;
+                    comiteGrilla.FechaComite = comite.FechaOrdenDia.Value;
+                    comiteGrilla.EstadoComiteCodigo = !string.IsNullOrEmpty(comite.EstadoComiteCodigo) ? comite.EstadoComiteCodigo : "";
+                    comiteGrilla.EstadoComite = !string.IsNullOrEmpty(EstadoComite) ? EstadoComite : "";
+                    comiteGrilla.NumeroComite = comite.NumeroComite;
+                    comiteGrilla.EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "";
+                    comiteGrilla.EstadoActaCodigo = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? comite.EstadoActaCodigo : "";
+                    comiteGrilla.RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto";
+                    comiteGrilla.RegistroCompleto = comite.EsCompleto;
+
+                    comiteGrilla.EsComiteFiduciario = comite.EsComiteFiduciario;
+
                     ListComiteGrilla.Add(comiteGrilla);
                 }
             }
@@ -2438,7 +2437,6 @@ namespace asivamosffie.services
                    };
             }
         }
-
 
         public async Task<Respuesta> CreateEditTemasCompromiso(SesionComiteTema pSesionComiteTema)
         {
@@ -2978,10 +2976,11 @@ namespace asivamosffie.services
                 ConstanCodigoTipoSolicitud.ControversiasContractuales => await ReplacePlantillaControversiasContractuales(pRegistroId, pComiteTecnicoId),
                 ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales => await ReplacePlantillaActuacionesControversiasContractuales(pRegistroId, pComiteTecnicoId),
                 ConstanCodigoTipoSolicitud.Novedad_Contractual => await ReplacePlantillaNovedadContractual(pRegistroId),
-                ConstanCodigoTipoSolicitud.Defensa_judicial => await _judicialDefense.GetPlantillaDefensaJudicial(pRegistroId,2),
+                ConstanCodigoTipoSolicitud.Defensa_judicial => await _judicialDefense.GetPlantillaDefensaJudicial(pRegistroId, 2),
                 _ => Array.Empty<byte>(),
             };
         }
+
         public async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
         {
             Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
@@ -3000,7 +2999,6 @@ namespace asivamosffie.services
 
         }
 
-
         public async Task<ProcesoSeleccion> GetProcesosSelecccionByProcesoSeleccionId(int pId)
         {
             ProcesoSeleccion proceso =
@@ -3017,7 +3015,6 @@ namespace asivamosffie.services
             return proceso;
 
         }
-
 
         public async Task<byte[]> ReplacePlantillaProcesosSeleccion(int pProcesoSeleccionId)
         {
@@ -3124,7 +3121,7 @@ namespace asivamosffie.services
                                 }
                             }
                             DetallesGrupoProcesosSeleccion = DetallesGrupoProcesosSeleccion
-                                 .Replace(placeholderDominio.Nombre,valor);
+                                 .Replace(placeholderDominio.Nombre, valor);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.PLAZO_EN_MESES_PS:
@@ -5620,7 +5617,7 @@ namespace asivamosffie.services
 
                             if (defensaJudicial.DefensaJudicialContratacionProyecto != null)
                             {
-                               contratacionProyectoDf = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
+                                contratacionProyectoDf = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
 
                             }
                             if (contratacionProyectoDf != null)
@@ -6275,7 +6272,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoTipoSolicitud.Defensa_judicial:
                             RegistrosDefensaJudicial += PlantillaDefensaJudicial;
-                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial,scst.SolicitudId,2);
+                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial, scst.SolicitudId, 2);
                             break;
 
                         default:
