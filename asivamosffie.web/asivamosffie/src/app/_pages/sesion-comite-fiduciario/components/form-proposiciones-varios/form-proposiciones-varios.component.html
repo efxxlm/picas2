@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="esVerDetalle !== true">
   <mat-card class="shipping-card">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
@@ -205,3 +205,43 @@
     </button>
   </div>
 </form>
+<div *ngIf="esVerDetalle === true">
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <div *ngFor="let temas of tema.controls; let i = index">
+          <div>
+            <mat-card-title class="header-card--text pl-0 alineacion-titulos2"> Tema {{ i + 1 }} </mat-card-title>
+            <div class="row">
+              <p>
+                <strong> Tema: </strong>
+                {{ temas.get('tema').value }}
+              </p>
+            </div>
+            <div class="row">
+              <p>
+                <strong> Responsable: </strong>
+                {{ temas.get('responsable').value?.nombre }}
+              </p>
+            </div>
+            <div class="row">
+              <p>
+                <strong> Tiempo de intervención: </strong>
+                {{ temas.get('tiempoIntervencion').value }} Minutos
+              </p>
+            </div>
+            <div class="row">
+              <p>
+                <strong> URL con soporte: </strong>
+                {{ temas.get('url')?.value }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

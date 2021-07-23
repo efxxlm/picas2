@@ -43,6 +43,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 export class TablaRegistrarValidacionSolicitudesContractialesComponent implements OnInit {
   @Input() ObjetoComiteTecnico: ComiteTecnico;
   @Output() validar: EventEmitter<any> = new EventEmitter();
+  @Input() esVerDetalle: boolean;
 
   listaMiembros: Usuario[];
   tiposSolicitud = TiposSolicitud;
@@ -212,7 +213,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico, esVerDetalle: this.esVerDetalle },
         maxHeight: '90em'
       });
 
@@ -230,7 +231,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     } else if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
       const dialog = this.dialog.open(VotacionSolicitudActualizaCronogramaComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico, esVerDetalle: this.esVerDetalle },
         maxHeight: '90em'
       });
 
@@ -248,7 +249,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     } else {
       const dialog = this.dialog.open(VotacionSolicitudComponent, {
         width: '70em',
-        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico,  esVerDetalle: this.esVerDetalle }
       });
 
       dialog.afterClosed().subscribe(c => {

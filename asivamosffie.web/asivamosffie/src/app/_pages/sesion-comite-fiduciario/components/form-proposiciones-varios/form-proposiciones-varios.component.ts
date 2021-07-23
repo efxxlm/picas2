@@ -17,6 +17,7 @@ export class FormProposicionesVariosComponent {
 
   @Input() objetoComiteTecnico: ComiteTecnico
   @Output() semaforo: EventEmitter<string> = new EventEmitter();
+  @Input() esVerDetalle: boolean;
   listaMiembros: Dominio[] = [];
 
 
@@ -127,15 +128,15 @@ export class FormProposicionesVariosComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionComiteTema( temas )
         .subscribe( respuesta => {
-          
+
           if ( respuesta.code == "200" ){
             this.openDialogGuardar('', `<b>${respuesta.message}</b>`)
           }else{
             this.openDialog('', `<b>${respuesta.message}</b>`)
           }
-            //this.validarCompletos(respuesta.data); 
+            //this.validarCompletos(respuesta.data);
             //this.router.navigate(['/comiteFiduciario/registrarSesionDeComiteFiduciario', this.objetoComiteTecnico.comiteTecnicoId])
-            
+
         })
 
     }else{
@@ -211,7 +212,7 @@ export class FormProposicionesVariosComponent {
 
         if ( grupo.length === 0 )
           this.semaforo.emit('completo');
-          
+
         this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
@@ -220,7 +221,7 @@ export class FormProposicionesVariosComponent {
 
   cargarRegistros(){
 
-    
+
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => t.esProposicionesVarios )
 
     lista.forEach( te => {
