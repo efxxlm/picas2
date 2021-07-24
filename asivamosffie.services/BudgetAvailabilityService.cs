@@ -600,7 +600,7 @@ namespace asivamosffie.services
                                                          .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
-            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDdp != null).Count();
+            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDdp != null).Count() + 1;
             /*busco usuario Juridico*/
             var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).ToList();
             int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_presupuestal;
@@ -2463,14 +2463,14 @@ namespace asivamosffie.services
                                                     .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
-            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
+            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count()+1;
             try
             {
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
 
                 if (esNovedad)
                 {
-                    consecutivo = _context.NovedadContractualRegistroPresupuestal.Where(x => x.NumeroDrp != null).Count();
+                    consecutivo = _context.NovedadContractualRegistroPresupuestal.Where(x => x.NumeroDrp != null).Count()+1;
 
 
                     NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
