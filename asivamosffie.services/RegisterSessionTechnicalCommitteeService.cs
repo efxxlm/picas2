@@ -2977,6 +2977,7 @@ namespace asivamosffie.services
                 ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales => await ReplacePlantillaActuacionesControversiasContractuales(pRegistroId, pComiteTecnicoId),
                 ConstanCodigoTipoSolicitud.Novedad_Contractual => await ReplacePlantillaNovedadContractual(pRegistroId),
                 ConstanCodigoTipoSolicitud.Defensa_judicial => await _judicialDefense.GetPlantillaDefensaJudicial(pRegistroId, 2),
+                ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso => await ReplacePlantillaProcesosSeleccion(pRegistroId),
                 _ => Array.Empty<byte>(),
             };
         }
@@ -4598,7 +4599,7 @@ namespace asivamosffie.services
             try
             {
 
-                List<int> ListProcesoSeleccionIdSolicitudId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Select(r => r.SolicitudId).ToList();
+                List<int> ListProcesoSeleccionIdSolicitudId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).Select(r => r.SolicitudId).ToList();
                 List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
                 List<int> ListNovedadContractual = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).Select(r => r.SolicitudId).ToList();
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
@@ -4789,7 +4790,8 @@ namespace asivamosffie.services
                                 break;
 
                             //TIPO SOLICITUD PROCESOS DE SELECCION
-                            case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                            case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion: 
+                            case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
 
                                 ProcesoSeleccion procesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
@@ -5157,6 +5159,7 @@ namespace asivamosffie.services
 
                         //TIPO SOLICITUD PROCESOS DE SELECCION
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                             registrosContratacion += PlantillaProcesosSelecccion;
                             ProcesoSeleccion procesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
@@ -6292,6 +6295,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                             RegistrosFichaProcesosSeleccion += PlantillaFichaProcesosSeleccion;
                             RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
                             break;
