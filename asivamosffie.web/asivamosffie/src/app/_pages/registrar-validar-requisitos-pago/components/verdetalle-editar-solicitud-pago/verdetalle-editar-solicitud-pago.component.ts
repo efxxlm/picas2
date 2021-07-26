@@ -49,6 +49,9 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
       'saldo'
     ];
     tieneObservacionOrdenGiro: boolean;
+    observacion: any = undefined;
+    esAutorizar = false;
+    tipoObservacionCodigo = '2';
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -101,6 +104,38 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
                                 if ( this.contrato.solicitudPagoOnly.estadoCodigo === this.listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion && this.contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined ) {
                                     this.tieneObservacionOrdenGiro = true;
+                                }
+
+                                if ( this.contrato.solicitudPagoOnly !== undefined ) {
+                                    // Get observacion solicitud de pago
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                        this.menusIdPath.aprobarSolicitudPagoId,
+                                        this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                        this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                        this.tipoObservacionCodigo )
+                                        .subscribe(
+                                            response => {
+                                                const observacion = response.find( obs => obs.archivada === false );
+
+                                                if ( observacion !== undefined ) this.observacion = observacion;
+                                            }
+                                        );
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                        this.menusIdPath.autorizarSolicitudPagoId,
+                                        this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                        this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                        this.tipoObservacionCodigo )
+                                        .subscribe(
+                                            response => {
+                                                const observacion = response.find( obs => obs.archivada === false );
+
+                                                if ( observacion !== undefined ) {
+                                                    this.esAutorizar = true;
+
+                                                    this.observacion = observacion;
+                                                }
+                                            }
+                                        );
                                 }
 
                                 // Get semaforo forma de pago y registro completo

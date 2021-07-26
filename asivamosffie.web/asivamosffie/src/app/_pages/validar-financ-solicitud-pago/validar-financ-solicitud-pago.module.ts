@@ -1,3 +1,9 @@
+import { DescripcionFacturaComponent } from './components/descripcion-factura/descripcion-factura.component';
+import { FormAmortizacionComponent } from './components/form-amortizacion/form-amortizacion.component';
+import { FormProyectoComponent } from './components/form-proyecto/form-proyecto.component';
+import { ObsRegistrarSolicitudPagoComponent } from './components/obs-registrar-solicitud-pago/obs-registrar-solicitud-pago.component';
+import { ObsDatosFacturaComponent } from './components/obs-datos-factura/obs-datos-factura.component';
+import { ObsCriterioPagosComponent } from './components/obs-criterio-pagos/obs-criterio-pagos.component';
 import { DialogObservacionesVfspComponent } from './components/dialog-observaciones-vfsp/dialog-observaciones-vfsp.component';
 import { FormValidListchequeoVfspComponent } from './components/form-valid-listchequeo-vfsp/form-valid-listchequeo-vfsp.component';
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
@@ -31,7 +37,7 @@ import { DetalleValidListchqValidfspComponent } from './components/detalle-valid
 
 
 @NgModule({
-  declarations: [ DialogObservacionesVfspComponent, FormValidListchequeoVfspComponent, VerDetalleExpensasComponent, VerDetalleEditarExpensasComponent, RegistrarSolicitudPagoComponent, FormSolicitudExpensasComponent, DetalleFacturaProyectosComponent, DescuentosDireccionTecnicaComponent, DatosFacturaComponent, CriteriosPagoComponent, AmortizacionPagoComponent, ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
+  declarations: [ ObsCriterioPagosComponent, ObsDatosFacturaComponent, ObsRegistrarSolicitudPagoComponent, FormProyectoComponent, FormAmortizacionComponent, DescripcionFacturaComponent, DialogObservacionesVfspComponent, FormValidListchequeoVfspComponent, VerDetalleExpensasComponent, VerDetalleEditarExpensasComponent, RegistrarSolicitudPagoComponent, FormSolicitudExpensasComponent, DetalleFacturaProyectosComponent, DescuentosDireccionTecnicaComponent, DatosFacturaComponent, CriteriosPagoComponent, AmortizacionPagoComponent, ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,

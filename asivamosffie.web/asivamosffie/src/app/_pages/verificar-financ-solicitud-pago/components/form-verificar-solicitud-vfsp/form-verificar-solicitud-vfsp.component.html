@@ -160,6 +160,7 @@
                     </mat-card-content>
                 </mat-card>
             </mat-expansion-panel>
+
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title">
@@ -167,7 +168,27 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registrar-solicitud-pago [contrato]="contrato"></app-registrar-solicitud-pago>
+                <app-obs-registrar-solicitud-pago [contrato]="contrato"></app-obs-registrar-solicitud-pago>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Descripción de la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-descripcion-factura [contrato]="contrato"></app-descripcion-factura>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Detalle factura para proyectos asociados
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-detalle-factura-proyectos [contrato]="contrato"></app-detalle-factura-proyectos>
             </mat-expansion-panel>
         </mat-accordion>
     </ng-container>

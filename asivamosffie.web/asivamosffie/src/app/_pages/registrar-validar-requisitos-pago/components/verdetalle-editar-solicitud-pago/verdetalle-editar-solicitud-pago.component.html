@@ -260,29 +260,35 @@
   </mat-accordion>
 
   <div class="mt-3em">
-    <mat-card
-      class="shipping-card border"
-      align="left"
-      style="width: 80%"
-      *ngIf="
-        contrato.solicitudPagoOnly.estadoCodigo ===
-          listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion &&
-        contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined
-      "
-    >
+    <mat-card class="shipping-card border"
+              align="left"
+              style="width: 80%"
+              *ngIf="contrato.solicitudPagoOnly.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion && contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined">
       <mat-card-header class="header-card">
         <mat-card-title class="header-card--text card-title-detalle">
           Devolución de generar orden de giro
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <section
-          [innerHTML]="contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro"
-          style="margin-left: 2em"
+        <section  [innerHTML]="contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro" style="margin-left: 2em"
         ></section>
       </mat-card-content>
     </mat-card>
   </div>
+
+  <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
+    <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+            Observación de la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+        <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a la solicitud de pago?:</b> Si</p>
+        <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde la {{ esAutorizar === true ? 'coordinación' : 'apoyo a la supervisión' }} tiene observaciones a la solicitud de pago?:</b> No</p>
+        <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
+    </mat-card-content>
+  </mat-card>
 
   <div style="margin-top: 1em; margin-bottom: 1em">
     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
