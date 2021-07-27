@@ -227,7 +227,9 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   }
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
-    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses * 30.43));
+    let meses = this.addressForm.get('mesPlazoEjFase2').value;
+    let dias = this.addressForm.get('diasPlazoEjFase2').value;
+    newdate.setDate(newdate.getDate() + (meses * 30.43) + dias);
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias)
     // console.log(newDateFinal);
