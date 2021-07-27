@@ -265,3 +265,33 @@ interface Contratista {
 
   tipoIdentificacionNotMapped?: string;
 }
+
+export interface TipoSolicitud {
+  Inicio_De_Proceso_De_Seleccion              :string;
+  Contratacion                                :string;
+  Modificacion_Contractual                    :string;
+  ControversiasContractuales                  :string;
+  Defensa_judicial                            :string;
+  Actualizacion_Cronograma_Proceso_Seleccion  :string;
+  Evaluacion_De_Proceso                       :string;
+  Actuaciones_Controversias_Contractuales     :string;
+  Actuaciones_Controversias_Reclamaciones     :string;
+  Actuaciones_Defensa_judicial                :string;
+  Novedad_Contractual                         :string;
+  Liquidacion_Contractual                     :string;
+}
+
+export enum TipoSolicitudCodigo {
+  Inicio_De_Proceso_De_Seleccion              = "1" ,
+  Contratacion                                = "2" ,
+  Modificacion_Contractual                    = "3" ,
+  ControversiasContractuales                  = "4" ,
+  Defensa_judicial                            = "5" ,
+  Actualizacion_Cronograma_Proceso_Seleccion  = "6" ,
+  Evaluacion_De_Proceso                       = "7" ,
+  Actuaciones_Controversias_Contractuales     = "8" ,
+  Actuaciones_Controversias_Reclamaciones     = "9" ,
+  Actuaciones_Defensa_judicial                = "10",
+  Novedad_Contractual                         = "11",
+  Liquidacion_Contractual                     = "12",
+}

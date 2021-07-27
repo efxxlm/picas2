@@ -32,7 +32,23 @@ const routes: Routes = [
   {
     path: 'verificarCumplimiento/:id',
     component: TablaVerificarCumplimientosComponent
-  }
+  },
+  {
+    path: 'verDetalleComiteFiduciario/:id',
+    component: RegistrarSesionComiteFiduciarioComponent
+  },
+  {
+    path: 'verDetalleEditarComiteFiduciario/:id',
+    component: RegistrarSesionComiteFiduciarioComponent
+  },
+  {
+    path: 'verDetalleEditarComiteFiduciario/:id/verDetalleEditarParticipantes',
+    component: FormRegistrarParticipantesComponent
+  },
+  {
+    path: 'verDetalleComiteFiduciario/:id/verDetalleParticipantes',
+    component: FormRegistrarParticipantesComponent
+  },
 ];
 
 @NgModule({

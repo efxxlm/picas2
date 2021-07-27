@@ -51,6 +51,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     estaEditando = false;
     listaUsuarios: any[] = [];
     minDate: Date;
+    minDateExpedicion: Date;
     editorStyle = {
         height: '100px'
     };
@@ -90,6 +91,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
             .subscribe(
                 response => {
                     this.contrato = response;
+                    this.minDateExpedicion = this.contrato.fechaAprobacionComite
                     console.log( this.contrato )
                 }
             )

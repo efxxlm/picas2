@@ -35,12 +35,18 @@
                 <!-- <section class="example-section">
                   <mat-checkbox formControlName="aprobacion"></mat-checkbox>
                 </section> -->
-                <div class="d-flex">
-                  <mat-radio-group class="radioInput" formControlName="aprobacion">
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group">*</span>
+                <div *ngIf="data.esVerDetalle === true">
+                  <span *ngIf="listaVotacion.controls[i].get('aprobacion').value === true">Sí</span>
+                  <span *ngIf="listaVotacion.controls[i].get('aprobacion').value !== true">No</span>
+                </div>
+                <div *ngIf="data.esVerDetalle !== true">
+                  <div class="d-flex">
+                    <mat-radio-group class="radioInput" formControlName="aprobacion">
+                      <mat-radio-button [value]="true">Sí</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                  </div>
                 </div>
                 <span class="icon-incompleto">
                   <img
@@ -63,7 +69,7 @@
                 </section>
               </td> -->
               <td class="mat-cell cdk-cell ng-star-inserted">
-                <section class="w-quill">
+                <section class="w-quill" *ngIf="data.esVerDetalle !== true">
                   <div class="d-flex">
                     <quill-editor
                       class="quill-editor-style card"
@@ -92,6 +98,7 @@
                     </div>
                   </div>
                 </section>
+                <div *ngIf="data.esVerDetalle === true" [innerHtml]="temas.get('observaciones').value"></div>
               </td>
             </tr>
           </tbody>
@@ -101,7 +108,7 @@
       <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                   (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
 
-      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid" *ngIf="data.esVerDetalle !== true">
         <img src="assets/img/icon/guardar.svg" alt="guardar" />
       </button>
     </form>

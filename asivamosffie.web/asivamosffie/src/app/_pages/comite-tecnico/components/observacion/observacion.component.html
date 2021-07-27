@@ -25,7 +25,10 @@
       <tbody>
         <tr *ngFor="let observacion of listaObservaciones">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.sesionParticipante.usuario.primerNombre }}
+            {{ observacion?.sesionParticipante?.usuario?.primerNombre }}
+            {{ observacion?.sesionParticipante?.usuario?.segundoNombre }}
+            {{ observacion?.sesionParticipante?.usuario?.primerApellido }}
+            {{ observacion?.sesionParticipante?.usuario?.segundoApellido }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <div class="p-table" [innerHTML]="observacion.observacion"></div>

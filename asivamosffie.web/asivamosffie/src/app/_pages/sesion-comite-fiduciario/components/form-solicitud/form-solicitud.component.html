@@ -216,6 +216,26 @@
             </span>
           </div>
         </div>
+        <div class="col-md-4" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.AperturaDeProcesoDeSeleccion">
+          <div class="row">
+            <div class="col">
+              <button
+                 mat-raised-button
+                type="button"
+                (click)="
+                  Observaciones(
+                    sesionComiteSolicitud
+                  )
+                "
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                >
+                Ver Observaciones votación
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="pr-1">

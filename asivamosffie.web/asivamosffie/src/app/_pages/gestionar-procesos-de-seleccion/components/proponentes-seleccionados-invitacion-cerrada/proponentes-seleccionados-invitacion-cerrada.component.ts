@@ -169,8 +169,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
           if (element != 'Nuevo') {
             let elemento: ProcesoSeleccionProponente = element;
             if (
-              elemento.procesoSeleccionProponenteId != '0' &&
-              this.procesoSeleccion.procesoSeleccionId != elemento.procesoSeleccionId
+              elemento.procesoSeleccionProponenteId != '0' // &&
+              // this.procesoSeleccion.procesoSeleccionId != elemento.procesoSeleccionId
             ) {
               // elemento.procesoSeleccionProponenteId = '0';
               elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;

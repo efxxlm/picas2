@@ -86,6 +86,8 @@ namespace asivamosffie.services.Interfaces
         void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo);
 
         Task<string> ReemplazarDatosPlantillaNovedadContractual(string pPlantilla, NovedadContractual novedadContractual);
+        string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion);
+        string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion);
 
     }
 }

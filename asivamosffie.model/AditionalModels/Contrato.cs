@@ -15,6 +15,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public IFormFile PFile { get; set; }
+         
+        [NotMapped]
+        public DateTime? FechaAprobacionComite { get; set; }
 
         [NotMapped]
         public DateTime? FechaEnvioFirmaFormat { get; set; }

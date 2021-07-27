@@ -469,6 +469,26 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     return dialogRef.afterClosed()
   }
 
+  checkTotalUsosPorAportante( index: number ) {
+    const componentes = this.aportantes.controls[ index ].value.componentes;
+    let total = 0
+
+    componentes.forEach( componente => componente.usos.forEach( uso => {
+      if ( uso.valorUso !== ( undefined || null ) ) total += uso.valorUso;
+    } ) )
+
+
+    if ( total !== 0 ) {
+      if ( total !== this.aportantes.controls[ index ].get( 'valorAportanteProyecto' ).value ) {
+        return 'en-proceso'
+      } else {
+        return 'completo'
+      }
+    } else {
+      return 'sin-diligenciar'
+    }
+  }
+
   onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();

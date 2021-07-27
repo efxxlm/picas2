@@ -127,8 +127,6 @@ export interface SesionComiteSolicitud {
     procesoSeleccion?: ProcesoSeleccion,
     procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo,
     sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
-
-
 }
 
 export interface ProcesoSeleccionMonitoreo{
@@ -228,7 +226,8 @@ export interface SesionSolicitudVoto{
 
     nombreParticipante?: string,
 
-    sesionComiteSolicitud?: SesionComiteSolicitud
+    sesionComiteSolicitud?: SesionComiteSolicitud,
+    sesionParticipante?: SesionParticipante,
 
 }
 

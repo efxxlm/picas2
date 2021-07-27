@@ -2,6 +2,7 @@
 {
     public static class ConstanCodigoEstadoSolicitudContratacion
     {
+        //TIPO DOMINIO : 31
         public const string Sin_Registro = "1";
         public const string En_Revision = "2";
         public const string En_tramite = "3";
@@ -25,6 +26,8 @@
         public const string Sin_tramitar_ante_fiduciaria = "21";
         public const string Rechazada_por_validacion_presupuestal = "22";
         public const string Cancelado_por_generacion_presupuestal = "23";
+        public const string DevueltaProcesoContractual = "24";
+        public const string DevueltaLiquidacionProcesoContractual = "25";
 
     }
 }

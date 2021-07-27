@@ -393,6 +393,15 @@ namespace asivamosffie.services
                                         List<string> uso = new List<string>();
                                         List<decimal> usovalor = new List<decimal>();
                                         decimal total = 0;
+
+                                        //fase
+                                        string strFase = string.Empty;
+
+                                        if (!string.IsNullOrEmpty(compAp.FaseCodigo))
+                                        {
+                                            strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre;
+                                        }
+
                                         foreach (var comp in compAp.ComponenteUso)
                                         {
                                             var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
@@ -411,7 +420,7 @@ namespace asivamosffie.services
                                                 ValorTotal = total,
                                                 ValorUso = usovalor,
                                                 cofinanciacionAportanteId = ppapor.Aportante.CofinanciacionAportanteId,
-
+                                                Fase = strFase
                                             });
                                     }
                                     valorgestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado);

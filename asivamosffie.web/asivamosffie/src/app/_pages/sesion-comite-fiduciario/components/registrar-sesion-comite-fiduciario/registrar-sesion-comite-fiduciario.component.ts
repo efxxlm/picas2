@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,19 +15,35 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
   cargoRegistro: boolean = false
 
-  estadosComite = EstadosComite
-  
+  estadosComite = EstadosComite;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
+
   estadoAcordeon : string = "";
 
   constructor(
                 public dialog: MatDialog,
                 private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
                 private activatedRoute: ActivatedRoute,
-                private router: Router,
-
-             ) 
-  { 
-
+                private router: Router
+             )
+  {
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'registrarSesionDeComiteFiduciario' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarComiteFiduciario' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleComiteFiduciario' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
   }
 
   openDialogAplazarSesion() {
@@ -56,7 +72,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
         this.router.navigate(["/comiteFiduciario"]);
       })
   }
-  
+
   changeSemaforo(e){
     this.estadoAcordeon = e;
     console.log( e )
@@ -78,7 +94,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
             let btnOtros = document.getElementById( 'btnOtros' )
             let btnTablaValidaciones = document.getElementById( 'btnTablaValidaciones' )
             let btnProposiciones = document.getElementById( 'btnProposiciones' )
-            
+
 
             btnOtros.click();
             btnTablaValidaciones.click();
@@ -88,7 +104,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
         })
     })
-    
+
 
   }
 

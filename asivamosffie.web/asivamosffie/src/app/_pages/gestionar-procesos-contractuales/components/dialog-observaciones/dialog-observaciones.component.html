@@ -1,0 +1,42 @@
+<button
+  mat-button
+  mat-dialog-close
+  class="modal--btn-cerrar"
+  [mat-dialog-close]="null"
+>
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1" style ="margin-bottom: 20px;">
+    Devolver <b>  {{ data.tipoSolicitud }}  </b> - {{ data.numeroSolicitud }}
+  </h1>
+</div>
+
+<form [formGroup]="observacion" novalidate (ngSubmit)="onSubmit()">
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+        <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+            (onContentChanged)="maxLength($event, 500)" formControlName="observacion"></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observacion.get('observacion').value">
+        {{500 - (textoLimpio(observacion.get('observacion').value)>500?500:textoLimpio(observacion.get('observacion').value))}}
+    </span>
+    <span class="contador miles" *ngIf="!observacion.get('observacion').value">
+        500
+    </span>
+  </div>
+
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observacion.get('observacion').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

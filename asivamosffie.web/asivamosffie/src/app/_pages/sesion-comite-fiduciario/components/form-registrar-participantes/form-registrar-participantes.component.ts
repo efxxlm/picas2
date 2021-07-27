@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
@@ -43,6 +43,8 @@ export class FormRegistrarParticipantesComponent {
 
   miembrosArray: SesionParticipante[] = [];
   estaEditando = false;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -53,7 +55,22 @@ export class FormRegistrarParticipantesComponent {
     private router: Router,
 
   ) {
-
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'registrarParticipantes' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarParticipantes' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleParticipantes' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
   }
 
   ngOnInit(): void {

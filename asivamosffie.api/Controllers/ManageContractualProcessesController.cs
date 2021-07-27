@@ -168,5 +168,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("DevolverProcesosContractuales")]
+        [HttpPost]
+        public async Task<IActionResult> DevolverProcesosContractuales([FromBody] ProcesosContractualesObservacion procesosContractualesObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                procesosContractualesObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.DevolverProcesosContractuales(procesosContractualesObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

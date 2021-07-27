@@ -24,7 +24,7 @@
             <p><strong>Valor del contrato: </strong>{{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}</p>
             <p><strong>Plazo: </strong>{{detailavailabilityBudget?.plazo}}</p>
             <p><strong>Objeto:</strong></p>
-            <div><strong>1. </strong><div [innerHtml]="detailavailabilityBudget?.objeto"></div> </div>
+            <div [innerHtml]="detailavailabilityBudget?.objeto"></div>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Tipo de modificación:</strong>
                 Adición
@@ -136,6 +136,11 @@
                         <ng-container matColumnDef="componente">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
                             <td mat-cell *matCellDef="let element"> <b>{{element.componente}}</b></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fase">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase </th>
+                          <td mat-cell *matCellDef="let element">{{element.fase}}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="uso">

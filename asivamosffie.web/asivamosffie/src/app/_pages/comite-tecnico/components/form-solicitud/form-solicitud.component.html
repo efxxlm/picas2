@@ -86,7 +86,7 @@
         <div class="col d-flex">
           <quill-editor
             class="quill-editor-style card position-relative quill-editor-style--max-height"
-            
+
             [modules]="config"
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="desarrolloSolicitud"
@@ -198,6 +198,26 @@
             </span>
           </div>
         </div>
+        <div class="col-md-4" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.AperturaDeProcesoDeSeleccion">
+          <div class="row">
+            <div class="col">
+              <button
+                 mat-raised-button
+                type="button"
+                (click)="
+                  Observaciones(
+                    sesionComiteSolicitud
+                  )
+                "
+                mat-raised-button
+                color="accent"
+                class="btn-table"
+                >
+                Ver Observaciones votación
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="pr-1">
@@ -215,7 +235,7 @@
         <div class="col d-flex">
           <quill-editor
             class="quill-editor-style card position-relative quill-editor-style--max-height"
-            
+
             [modules]="config"
             required
             (onContentChanged)="maxLength($event, 5000)"
@@ -362,7 +382,7 @@
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
-              
+
               <span
                 class="contador"
                 [matTooltipPosition]="'above'"

@@ -6,11 +6,17 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar sesión {{ objetoComiteTecnico.numeroComite }}
+          <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+              Ver detalle sesión {{ objetoComiteTecnico.numeroComite }}
+          </ng-container>
+          <ng-template #noEsVerDetalle>
+              {{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} sesión {{ objetoComiteTecnico.numeroComite }}
+          </ng-template>
         </h1>
-        <p class="info-container">
+        <p *ngIf="esVerDetalle === true"></p>
+        <p *ngIf="esVerDetalle !== true" class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
-            <span class="info-text en-proceso">En proceso</span>    
+            <span class="info-text en-proceso">En proceso</span>
             <span class="info-text completo">Completo</span>
         </p>
     </div>
@@ -18,11 +24,11 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
-                    Validación de solicitudes contractuales
+              <mat-panel-title class="expansion-style--title" [ngClass]="{'completo': esVerDetalle !== true}">
+                Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
+            <button
                 (click)="tablaValidaciones.cargarRegistro()"
                 style="display: none;"
                 id="btnTablaValidaciones"
@@ -35,14 +41,14 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
-                    Otros temas
+                <mat-panel-title class="expansion-style--title" [ngClass]="{'completo': esVerDetalle !== true}">
+                  Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            
-            <button 
-                type="button" 
-                (click)="tablaOtros.cargarRegistros()" 
+
+            <button
+                type="button"
+                (click)="tablaOtros.cargarRegistros()"
                 style="display: none;"
                 id=btnOtros>
             </button>
@@ -55,22 +61,22 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "
-				[ngClass]="estadoAcordeon">
-                    Proposiciones y varios 
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoAcordeon">
+                    Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <button 
-                type="button" 
-                (click)="proposiciones.cargarRegistros()" 
+            <button
+                type="button"
+                (click)="proposiciones.cargarRegistros()"
                 style="display: none;"
                 id=btnProposiciones>
             </button>
-            
+
             <app-form-proposiciones-varios
                 #proposiciones
                 [objetoComiteTecnico]="objetoComiteTecnico"
+                [esVerDetalle]= "esVerDetalle"
 				(semaforo)="changeSemaforo($event)"
             >
         </app-form-proposiciones-varios>
@@ -78,8 +84,32 @@
     </mat-accordion>
 
     <div class="text-center mt-2em mb-2em">
-        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
-        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
-        <a routerLink="registrarParticipantes" [disabled]="!cargoRegistro" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
-    </div>
+      <button *ngIf="esVerDetalle !== true"  mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
+      <button *ngIf="esVerDetalle !== true"  mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
+      <a
+        *ngIf="esVerDetalle !== true && esRegistroNuevo === true"
+        routerLink="registrarParticipantes"
+        [disabled]="!cargoRegistro"
+        mat-raised-button color="accent"
+        class="btn-ancho"
+      >
+        Registrar participantes
+      </a>
+      <a *ngIf="esVerDetalle !== true && esRegistroNuevo !== true"
+        routerLink="verDetalleEditarParticipantes"
+        [disabled]="!cargoRegistro"
+        mat-raised-button color="accent"
+        class="btn-ancho"
+      >
+        Ver/Editar participantes
+      </a>
+      <a *ngIf="esVerDetalle === true"
+        routerLink="verDetalleParticipantes"
+        [disabled]="!cargoRegistro"
+        mat-raised-button color="accent"
+        class="btn-ancho"
+      >
+        Ver Detalle participantes
+      </a>
+  </div>
 </section>

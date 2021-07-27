@@ -65,7 +65,8 @@
             [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
             *ngIf=" (element.estadoSolicitudCodigo == estadosContratacion.Sin_Registro && element.usuarioModificacion !== undefined)
                     || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteTecnico)
-                    || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteFiduciario)">
+                    || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteFiduciario)
+                    || (element.estadoSolicitudCodigo === estadosContratacion.DevueltaProcesoContractual)">
             Ver detalle / Editar
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"
@@ -87,7 +88,10 @@
                           || (element.estadoSolicitudCodigo === estadosContratacion.Registradas_por_la_fiduciaria)
                           || (element.estadoSolicitudCodigo === estadosContratacion.Rechazada_por_validacion_presupuestal)
                           || (element.estadoSolicitudCodigo === estadosContratacion.Cancelado_por_generacion_presupuestal)
-                          || (element.estadoSolicitudCodigo === estadosContratacion.Registrados)">
+                          || (element.estadoSolicitudCodigo === estadosContratacion.Registrados)
+                          || (element.estadoSolicitudCodigo === estadosContratacion.DevueltaLiquidacionProcesoContractual)
+                          || (element.estadoSolicitudCodigo === estadosContratacion.Sin_tramitar_ante_fiduciaria)
+                        ">
                   Ver detalle
           </button>
           <button mat-raised-button color="accent" class="btn-table"

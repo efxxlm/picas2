@@ -58,37 +58,31 @@
           <table mat-table [dataSource]="dataSource" matSort>
             <!-- actividad Column -->
             <ng-container matColumnDef="actividad">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Actividad
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</th>
               <td mat-cell *matCellDef="let element; index as i">
                 <textarea
-                    [formControl]="element.get('descripcion')"
-                    readOnly="true"
-                    hidden="hidden"
-                    style="margin: 0px; width: 162px; border: none; height: 15em"
-                  >
-                  </textarea>
-                  <div [innerHtml]="descripciones[i]"></div>
+                  [formControl]="element.get('descripcion')"
+                  readOnly="true"
+                  hidden="hidden"
+                  style="margin: 0px; width: 162px; border: none; height: 15em"
+                >
+                </textarea>
+                <div [innerHtml]="descripciones[i]"></div>
               </td>
             </ng-container>
-        
+
             <!-- fechaMaxima Column -->
             <ng-container matColumnDef="fechaMaxima">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Fecha máxima
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha máxima</th>
               <td mat-cell *matCellDef="let element; index as i">
                 <input [formControl]="element.get('fechaMaxima')" matInput readonly />
                 <mat-datepicker #picker></mat-datepicker>
               </td>
             </ng-container>
-        
+
             <!-- etapaActualProceso Column -->
             <ng-container matColumnDef="etapaActualProceso">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Etapa actual del proceso
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Etapa actual del proceso</th>
               <td mat-cell *matCellDef="let element; index as i">
                 <p>
                   <input
@@ -100,12 +94,10 @@
                 </p>
               </td>
             </ng-container>
-        
+
             <!-- fechaMonitoreo Column -->
             <ng-container matColumnDef="fechaMonitoreo">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Fecha de monitoreo
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de monitoreo</th>
               <td mat-cell *matCellDef="let element; index as i" class="position-relative">
                 <div *ngIf="activo[i]">
                   <div class="d-flex justify-content-center btn-calendario-container toptd">
@@ -153,12 +145,10 @@
                 </div>
               </td>
             </ng-container>
-        
+
             <!-- estadoActividad Column -->
             <ng-container matColumnDef="estadoActividad">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Estado de la actividad
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la actividad</th>
               <td mat-cell *matCellDef="let element; index as i">
                 <span class="icon-incompleto mt-1em">
                   <img
@@ -174,17 +164,12 @@
                     "
                   />
                 </span>
-                <div class="select-width-2">
-                  <mat-form-field class="field">
-                    <mat-select
-                      [formControl]="element.get('estadoActividad')"
-                      required
-                      *ngIf="activo[i]"
-                      [class.invalid]="
-                        (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) ||
-                        (element.get('estadoActividad').invalid && estaEditando)
-                      "
-                    >
+                <div class="select-width-2 mover-required" [class.mx-auto]="!activo[i]">
+                  <!-- <mat-form-field class="field"> -->
+                    <mat-select [formControl]="element.get('estadoActividad')"
+                                required
+                                *ngIf="activo[i]"
+                                [class.invalid]=" (element.get('estadoActividad').invalid && element.get('estadoActividad').touched) || (element.get('estadoActividad').invalid && estaEditando)">
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
                       </mat-option>
@@ -192,16 +177,14 @@
                     <div *ngIf="!activo[i]">
                       {{ element.get('estadoActividad').value.nombre }}
                     </div>
-                  </mat-form-field>
+                  <!-- </mat-form-field> -->
                 </div>
               </td>
             </ng-container>
-        
+
             <!-- observacion Column -->
             <ng-container matColumnDef="observacion">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Observación
-              </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Observación</th>
               <td mat-cell *matCellDef="let element; index as i">
                 <div class="d-flex justify-content-center">
                   <span class="contador mt-1em" *ngIf="element.get('observacion').value && activo[i]">
@@ -213,7 +196,7 @@
                     }}
                   </span>
                   <span class="contador mt-1em" *ngIf="!element.get('observacion').value && activo[i]"> 800 </span>
-                  <span class="required-quill">*</span>
+                  <span class="required-quill" *ngIf="activo[i]">*</span>
                   <span class="icon-incompleto mt-1em ml-1em">
                     <img
                       class="icon-incompleto--img"
@@ -246,181 +229,10 @@
               </td>
             </ng-container>
 
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           </table>
         </div>
-        <!-- <div class="table-responsive">
-          <table
-            formGroupName="actividades"
-            class="mat-table cdk-table mat-sort mat-table-style table-form table-form--3"
-          >
-            <thead>
-              <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Actividad</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha máxima</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Etapa actual del proceso</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de monitoreo</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">Estado de la actividad</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">Observación</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="actividades.length > 0">
-              <tr *ngFor="let form of actividades.controls; let i = index" [formGroupName]="i">
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <textarea
-                    formControlName="descripcion"
-                    readOnly="true"
-                    hidden="hidden"
-                    style="margin: 0px; width: 162px; border: none; height: 15em"
-                  >
-                  </textarea>
-                  <div [innerHtml]="descripciones[i]"></div>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <mat-form-field class="example-full-width">
-                    <input formControlName="fechaMaxima" matInput readonly />
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
-                    <input
-                      type="text"
-                      formControlName="etapaActualProceso"
-                      readonly
-                      style="border: 0; color: #174193; text-align: center; width: 100%; min-width: 6.5em"
-                    />
-                  </p>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted position-relative">
-                  <div *ngIf="activo[i]">
-                    <div class="d-flex justify-content-center btn-calendario-container toptd">
-                      <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
-                      </button>
-
-                      <span class="required-calendar">*</span>
-                      <span
-                        class="icon-incompleto"
-                        *ngIf="
-                          (form.get('fechaMonitoreo').invalid && form.get('fechaMonitoreo').touched) ||
-                          (form.get('fechaMonitoreo').invalid && estaEditando)
-                        "
-                      >
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                        />
-                      </span>
-                    </div>
-                    <mat-form-field class="example-full-width calendar-class">
-                      <input
-                        matInput
-                        [matDatepicker]="picker"
-                        formControlName="fechaMonitoreo"
-                        [max]="maxDate"
-                        readonly
-                        (click)="picker.open()"
-                        placeholder="DD/MM/AAAA"
-                      />
-
-                      <input formControlName="procesoSeleccionCronogramaId" type="hidden" />
-                      <input formControlName="estadoActividadInicialCodigo" type="hidden" />
-
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                  <div *ngIf="!activo[i]">
-                    {{ form.get('fechaMonitoreo').value | date: 'dd/MM/yyyy' }}
-                  </div>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <span class="icon-incompleto mt-1em">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
-                        (form.get('estadoActividad').invalid && estaEditando)
-                      "
-                    />
-                  </span>
-                  <div class="select-width-2">
-                    <mat-form-field class="field">
-                      <mat-select
-                        formControlName="estadoActividad"
-                        required
-                        *ngIf="activo[i]"
-                        [class.invalid]="
-                          (form.get('estadoActividad').invalid && form.get('estadoActividad').touched) ||
-                          (form.get('estadoActividad').invalid && estaEditando)
-                        "
-                      >
-                        <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
-                          {{ tipo.nombre }}
-                        </mat-option>
-                      </mat-select>
-                      <div *ngIf="!activo[i]">
-                        {{ form.get('estadoActividad').value.nombre }}
-                      </div>
-                    </mat-form-field>
-                  </div>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <div class="d-flex justify-content-center">
-                    <span class="contador mt-1em" *ngIf="form.get('observacion').value && activo[i]">
-                      {{
-                        800 -
-                          (textoLimpio(form.get('observacion').value) > 800
-                            ? 800
-                            : textoLimpio(form.get('observacion').value))
-                      }}
-                    </span>
-                    <span class="contador mt-1em" *ngIf="!form.get('observacion').value && activo[i]"> 800 </span>
-                    <span class="required-quill">*</span>
-                    <span class="icon-incompleto mt-1em ml-1em">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="
-                          (form.get('observacion').invalid && form.get('observacion').touched) ||
-                          (form.get('observacion').invalid && estaEditando)
-                        "
-                      />
-                    </span>
-                  </div>
-                  <quill-editor
-                    class="quill-editor-style quill-dentro-de-la-tabla sin-required"
-                    [class.invalid]="
-                      (form.get('observacion').invalid && form.get('observacion').touched) ||
-                      (form.get('observacion').invalid && estaEditando)
-                    "
-                    [styles]="editorStyle"
-                    [modules]="config"
-                    (onContentChanged)="maxLength($event, 800)"
-                    required
-                    formControlName="observacion"
-                    *ngIf="activo[i]"
-                  ></quill-editor>
-                  <div *ngIf="!activo[i]" [innerHtml]="form.get('observacion').value"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div> -->
       </div>
     </mat-card-content>
   </mat-card>

@@ -218,7 +218,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(observaciones => {
-      this.cargarRegistro();
+      //this.cargarRegistro();
     })
   }
 

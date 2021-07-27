@@ -35,7 +35,7 @@ export class GestionarDrpComponent implements OnInit {
   public fechaContrato = "";
   public solicitudContrato = "";
   public estadoSolicitud = "";
-  displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'fuenteFinanciacion', 'valorTotal'];
+  displayedColumns: string[] = ['componente', 'fase','uso', 'valorUso', 'fuenteFinanciacion', 'valorTotal'];
   esModificacion = false;
   dataSource = [];
   detailavailabilityBudget: any;
@@ -80,6 +80,7 @@ export class GestionarDrpComponent implements OnInit {
               element.componenteGrilla.filter( r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId).forEach(element2 => {
                 this.listacomponentes.push({
                   componente: element2.componente,
+                  fase: element2?.fase,
                   uso: [{ nombre: element2.uso }],
                   valorUso: [{ valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }],
                   valorTotal: element2.valorTotal,

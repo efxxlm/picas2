@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { DataSolicitud } from '../../../_interfaces/procesosContractuales.interface';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
-import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +43,7 @@ export class ProcesosContractualesService {
 
     const formData = new FormData();
     formData.append( 'contratacionId', `${ contratacion.contratacionId }` );
-    
+
     if ( contratacion.observaciones !== null ) {
       formData.append( 'observaciones', contratacion.observaciones );
     };
@@ -67,7 +66,7 @@ export class ProcesosContractualesService {
   getNovedadById ( id: number ) {
     return this.http.get<NovedadContractual>( `${ this.url }/getNovedadById?id=${id}` )
   }
-  
+
   registrarTramiteNovedadContractual( novedadContractual: NovedadContractual ) {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteNovedadContractual`, novedadContractual );
   }
@@ -75,6 +74,11 @@ export class ProcesosContractualesService {
   registrarTramiteLiquidacion( pContratacion: DataSolicitud ) {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteLiquidacion`, pContratacion );
   }
+
+  devolverProcesosContractuales( procesosContractualesObservacion : any) {
+    return this.http.post<Respuesta>( `${ this.url }/DevolverProcesosContractuales`, procesosContractualesObservacion);
+  }
+
 
 
 };

@@ -14,7 +14,7 @@ import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto } from 'src/a
   styleUrls: ['./votacion-solicitud.component.scss']
 })
 export class VotacionSolicitudComponent implements OnInit {
-  
+
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
@@ -86,15 +86,16 @@ export class VotacionSolicitudComponent implements OnInit {
   constructor(
               private fb: FormBuilder,
               public dialogRef: MatDialogRef<VotacionSolicitudComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteSolicitud: SesionComiteSolicitud, 
-                                                      objetoComiteTecnico: ComiteTecnico 
+              @Inject(MAT_DIALOG_DATA) public data: {
+                                                      sesionComiteSolicitud: SesionComiteSolicitud,
+                                                      objetoComiteTecnico: ComiteTecnico,
+                                                      esVerDetalle: boolean
                                                     },
               private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
               public dialog: MatDialog,
               private router: Router,
 
-             ) 
+             )
   {
 
   }
@@ -103,7 +104,7 @@ export class VotacionSolicitudComponent implements OnInit {
 
     this.data.sesionComiteSolicitud.sesionSolicitudVoto.forEach( v => {
       let grupoVotacion = this.crearParticipante();
-      
+
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
       grupoVotacion.get('observaciones').setValue( v.observacion );
@@ -160,7 +161,7 @@ export class VotacionSolicitudComponent implements OnInit {
 
       sesionComiteSolicitud.sesionSolicitudVoto.push( sesionSolicitudVoto );
     })
-    
+
     sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.AprobadaPorComiteFiduciario;
     sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
       if ( sv.esAprobado != true )
@@ -177,7 +178,7 @@ export class VotacionSolicitudComponent implements OnInit {
       }
 
     })
-    
+
   }
- 
+
 }

@@ -47,8 +47,9 @@
 }
 
 .select-width-2 {
-  width: 8em;
+  width: 5.3em;
   display: flex;
+  position: relative;
   .field {
     max-width: calc(100% - 2em);
     margin-right: auto;

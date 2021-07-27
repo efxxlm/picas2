@@ -1180,6 +1180,154 @@ namespace asivamosffie.services
         }
 
         #endregion
-    }
 
+        public async Task<Respuesta> CreateEditProcesosContractualesObservacion(ProcesosContractualesObservacion procesosContractualesObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.CrearEditarProcesosContractualesObservacion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            try
+            {
+                ProcesosContractualesObservacion procesosContractualesObservacionOld = _context.ProcesosContractualesObservacion.Find(procesosContractualesObservacion.ProcesosContractualesObservacionId);
+
+                if (procesosContractualesObservacion.ProcesosContractualesObservacionId == 0 && procesosContractualesObservacionOld == null)
+                {
+                    List<ProcesosContractualesObservacion> listprocesosContractualesObservacion = _context.ProcesosContractualesObservacion.Where(r => r.SolicitudId == procesosContractualesObservacion.SolicitudId && r.TipoSolicitudCodigo == procesosContractualesObservacion.TipoSolicitudCodigo && r.Eliminado != true && r.Archivado != true).ToList();
+
+                    listprocesosContractualesObservacion.ForEach(pco => {
+                        pco.Archivado = true;
+                    });
+
+                    strCrearEditar = "CREAR PROCESOS CONTRACTUALES OBSERVACION";
+                    procesosContractualesObservacion.FechaCreacion = DateTime.Now;
+                    procesosContractualesObservacion.RegistroCompleto = procesosContractualesObservacion.TieneObservacion == true && !string.IsNullOrEmpty(procesosContractualesObservacion.Observacion) ? true : procesosContractualesObservacion.TieneObservacion == false ? true : false;
+
+                    _context.ProcesosContractualesObservacion.Add(procesosContractualesObservacion);
+                }
+                else
+                {
+                    strCrearEditar = "ACTUALIZAR PROCESOS CONTRACTUALES OBSERVACION";
+
+                    await _context.Set<ProcesosContractualesObservacion>().Where(r => r.ProcesosContractualesObservacionId == procesosContractualesObservacion.ProcesosContractualesObservacionId)
+                                                                   .UpdateAsync(r => new ProcesosContractualesObservacion()
+                                                                   {
+                                                                       FechaModificacion = DateTime.Now,
+                                                                       UsuarioModificacion = procesosContractualesObservacion.UsuarioCreacion,
+                                                                       Observacion = procesosContractualesObservacion.Observacion,
+                                                                       TipoObservacionCodigo = procesosContractualesObservacion.TipoObservacionCodigo,
+                                                                       TieneObservacion = procesosContractualesObservacion.TieneObservacion,
+                                                                       RegistroCompleto = procesosContractualesObservacion.TieneObservacion == true && !string.IsNullOrEmpty(procesosContractualesObservacion.Observacion) ? true : procesosContractualesObservacion.TieneObservacion == false ? true : false
+                                                                   });
+                }
+
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, GeneralCodes.OperacionExitosa, idAccion, procesosContractualesObservacion.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, GeneralCodes.Error, idAccion, procesosContractualesObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        public async Task<Respuesta> DevolverProcesosContractuales(ProcesosContractualesObservacion procesosContractualesObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (procesosContractualesObservacion != null)
+                {
+                    //crear observación
+                    await CreateEditProcesosContractualesObservacion(procesosContractualesObservacion);
+
+                    //actualiza estados de devolucíón
+                    if (procesosContractualesObservacion.SolicitudId > 0)
+                    {
+                        switch (procesosContractualesObservacion.TipoSolicitudCodigo)
+                        {
+                            case ConstanCodigoTipoSolicitud.Contratacion:
+                                {
+                                    Contratacion contratacion = _context.Contratacion
+                                        .Where(r => r.ContratacionId == procesosContractualesObservacion.SolicitudId)
+                                        .Include(r => r.Contrato)
+                                        .Include(r => r.DisponibilidadPresupuestal)
+                                        .FirstOrDefault();
+
+                                    contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltaProcesoContractual;
+                                    contratacion.FechaModificacion = DateTime.Now;
+                                    contratacion.UsuarioCreacion = procesosContractualesObservacion.UsuarioCreacion;
+                                    break;
+                                }
+                            case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                                {
+                                    NovedadContractual novedadContractual = _context.NovedadContractual
+                                                            .Where(r => r.NovedadContractualId == procesosContractualesObservacion.SolicitudId)
+                                                            .Include(r => r.Contrato)
+                                                                .ThenInclude(r => r.Contratacion)
+                                                            .FirstOrDefault();
+                                    if (novedadContractual != null)
+                                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.DevueltaProcesoContractual;
+                                    novedadContractual.FechaModificacion = DateTime.Now;
+                                    novedadContractual.UsuarioCreacion = procesosContractualesObservacion.UsuarioCreacion;
+                                    break;
+                                }
+                            case ConstanCodigoTipoSolicitud.Liquidacion_Contractual:
+                                {
+                                    //si entra por acá asumimos que es de liquidación
+                                    Contratacion contratacion = _context.Contratacion
+                                        .Where(r => r.ContratacionId == procesosContractualesObservacion.SolicitudId)
+                                        .FirstOrDefault();
+                                    if (contratacion != null)
+                                    {
+                                        contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.DevueltaLiquidacionProcesoContractual;
+                                        contratacion.EstadoTramiteLiquidacion = ConstantCodigoEstadoVerificacionLiquidacion.DevueltaLiquidacionProcesoContractual;
+                                        contratacion.FechaModificacion = DateTime.Now;
+                                        contratacion.UsuarioCreacion = procesosContractualesObservacion.UsuarioCreacion;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                }
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantMessagesResourceControl.OperacionExitosa, idAccion, procesosContractualesObservacion.UsuarioCreacion, "CAMBIAR ESTADO SOLICITUD")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantMessagesResourceControl.Error, idAccion, procesosContractualesObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+    }
 }

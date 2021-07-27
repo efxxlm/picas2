@@ -167,7 +167,10 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoInterventoriaCodigo == null
+            element.proyecto.estadoProyectoInterventoriaCodigo == null||
+            (element.proyecto.estadoProyectoInterventoriaCodigo == 3  && estaEditando)||
+            (element.proyecto.estadoProyectoInterventoriaCodigo == 5  && estaEditando)||
+            (element.proyecto.estadoProyectoInterventoriaCodigo == 7  && estaEditando)
           "
         >
           Observaciones

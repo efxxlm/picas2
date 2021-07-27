@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ComiteTecnico, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 
 export interface OrdenDelDia {
@@ -36,7 +37,8 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
   }
 
   constructor(
-    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService
+    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService
   ) { }
 
   ngOnInit(): void {
@@ -58,15 +60,16 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
   }
 
   verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string, element: any ) {
-    
+
     if (pTablaId == '6'){
       pRegistroId = element.procesoSeleccionMonitoreo.procesoSeleccionId;
       pTablaId = '1';
     }
 
     //console.log(pTablaId, pRegistroId)
-    this.fiduciaryCommitteeSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
-      .subscribe(resp => { 
+    this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId, this.ObjetoComiteTecnico.comiteTecnicoId)
+    //this.fiduciaryCommitteeSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
+      .subscribe(resp => {
         console.log(resp);
         const documento = `FichaSolicitud ${numeroSolicitud}.pdf`;
         const text = documento,

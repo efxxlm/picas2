@@ -204,6 +204,11 @@ div.mat-select-arrow {
   top: 25%;
   color: $mainColor;
 
+  .mover-required & {
+    right: -8px;
+    top: 2px;
+  }
+
   .right-igual-quill & {
     right: 0.9em;
   }

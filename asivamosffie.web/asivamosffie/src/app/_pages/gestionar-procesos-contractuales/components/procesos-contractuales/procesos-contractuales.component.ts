@@ -15,6 +15,7 @@ export class ProcesosContractualesComponent implements OnInit {
   estadoAcordeon: string;
   estadoAcordeonEnviadaFiduciaria = '';
   estadoAcordeonRegistrados = '';
+  estadoAcordeonDevueltas = '';
 
   constructor ( private procesosContractualesSvc: ProcesosContractualesService ) {
     this.$data = this.procesosContractualesSvc.getGrilla();

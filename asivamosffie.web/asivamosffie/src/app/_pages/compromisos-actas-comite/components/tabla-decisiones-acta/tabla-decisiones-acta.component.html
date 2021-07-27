@@ -51,7 +51,10 @@
                   color="accent" 
                   class="btn-table"
                   *ngIf="contratacion.tipoSolicitudCodigo === '1'"
-                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoObraCodigo )"
+                  [disabled]="
+                    contratacion.sesionSolicitudObservacionProyecto &&
+                    contratacion.sesionSolicitudObservacionProyecto.length > 0
+                  "
                   (click)="openDialogObservacion( element )">
                   Observaciones
           </button>
@@ -60,7 +63,10 @@
                   color="accent" 
                   class="btn-table"
                   *ngIf="contratacion.tipoSolicitudCodigo === '2'"
-                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoInterventoriaCodigo )"
+                  [disabled]="
+                    contratacion.sesionSolicitudObservacionProyecto &&
+                    contratacion.sesionSolicitudObservacionProyecto.length > 0
+                  "
                   (click)="openDialogObservacion( element )">
                   Observaciones
           </button>

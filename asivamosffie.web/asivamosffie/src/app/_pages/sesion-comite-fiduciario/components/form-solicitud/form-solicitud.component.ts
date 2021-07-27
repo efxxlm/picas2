@@ -9,6 +9,7 @@ import { SesionComiteSolicitud, SesionParticipante, SesionSolicitudCompromiso, T
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -37,6 +38,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   resultadoVotacion: string = '';
 
   proyectos: ContratacionProyecto[];
+  listaMiembrosNoFilter: Usuario[];
 
   addressForm = this.fb.group({
     desarrolloSolicitud: [],
@@ -101,6 +103,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.valueChanges
     .subscribe(value => {
       if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
+    this.commonService.listaUsuarios().then(respuesta => {
+      this.listaMiembrosNoFilter = respuesta;
     });
   }
 
@@ -382,6 +387,27 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
   }
+
+  Observaciones(elemento: SesionComiteSolicitud) {
+    console.log(elemento.tipoSolicitudCodigo, elemento);
+    if (elemento?.sesionSolicitudVoto) {
+       elemento.sesionSolicitudVoto.forEach(voto => {
+         let usuario: Usuario = this.listaMiembrosNoFilter.find(m => m.usuarioId == voto?.sesionParticipante?.usuarioId);
+         voto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
+      });
+    }
+
+   if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.AperturaDeProcesoDeSeleccion){
+     const dialog = this.dialog.open(VotacionSolicitudComponent, {
+       width: '70em',
+       data: { sesionComiteSolicitud: elemento,  esVerDetalle: true }
+     });
+
+     dialog.afterClosed().subscribe(c => {
+       //no se que pasa
+     });
+   }
+ }
 
 
 }
