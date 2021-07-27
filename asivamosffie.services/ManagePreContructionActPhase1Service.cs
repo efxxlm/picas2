@@ -79,6 +79,7 @@ namespace asivamosffie.services
                       .Include(r => r.Contratacion).ThenInclude(r => r.DisponibilidadPresupuestal)
                       .Include(r => r.ContratoPoliza)
                       .Include(r => r.Contratacion).ThenInclude(r => r.PlazoContratacion)
+                      .Include(r => r.ContratoConstruccion).ThenInclude(r => r.ConstruccionObservacion)
                       .FirstOrDefaultAsync();
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -464,7 +465,8 @@ namespace asivamosffie.services
                       .ToString()).FirstOrDefaultAsync();
             }
 
-            Usuario Supervisor = contrato.UsuarioInterventoria;
+            Usuario Supervisor = contrato.Supervisor;
+            Usuario Interventor = contrato.Interventor;
 
             //Registros Proyectos 
             string PlantillaRegistrosProyectos = _context.Plantilla
@@ -509,21 +511,32 @@ namespace asivamosffie.services
 
             MesesFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoMeses + (contrato.Contratacion.PlazoContratacion.PlazoMeses == 1 ? " mes /" : " meses / ");
             DiasFase1Contrato = contrato.Contratacion.PlazoContratacion.PlazoDias + (contrato.Contratacion.PlazoContratacion.PlazoDias == 1 ? " día " : " días  ");
+            string strContratoObservacion = string.Empty;
+            string strFechaActaInicio = string.Empty;
+            strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd-MM-yyyy") : contrato.FechaActaInicioFase2.ToString();
 
+            ConstruccionObservacion construccionObservacion = contrato.ContratoConstruccion?
+                                                                .FirstOrDefault()?.ConstruccionObservacion?
+                                                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Seis)
+                                                                .OrderByDescending(r => r.ConstruccionObservacionId)
+                                                                ?.FirstOrDefault();
+
+            if (construccionObservacion != null)
+                strContratoObservacion = construccionObservacion.Observaciones;
 
             plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
             plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_CONTRATO_OBRA]", contrato.NumeroContrato);
             plantilla.Contenido = plantilla.Contenido.Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos);
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_ACTA_INICIO_OBRA]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : "");
+            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_ACTA_INICIO_OBRA]", pEsContruccion != true ? contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : "" : strFechaActaInicio);
             plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_POLIZA]", contrato.ContratoPoliza.FirstOrDefault().NumeroPoliza);
 
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.PrimerNombre + " " + Supervisor?.PrimerApellido);
-            plantilla.Contenido = plantilla.Contenido.Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " - ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVENTORIA]", Supervisor?.NumeroIdentificacion);
+            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Interventor != null ? Interventor.PrimerNombre + " " + Interventor.PrimerApellido + " , ": "" + Supervisor != null ? Supervisor?.PrimerNombre + " " + Supervisor?.PrimerApellido : "");
+            plantilla.Contenido = plantilla.Contenido.Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " " + contrato?.Contratacion?.Contratista?.RepresentanteLegal);
+            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVENTORIA]", " "+contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
 
             plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal);
+            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", " "+contrato?.Contratacion?.Contratista?.RepresentanteLegal);
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina);
@@ -544,7 +557,7 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_1]", MesesFase1 + DiasFase1);
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_2]", MesesFase2 + DiasFase2);
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_PREVISTA_TERMINACION]", contrato.FechaTerminacionFase2.HasValue ? ((DateTime)contrato.FechaTerminacionFase2).ToString("dd-MM-yyyy") : ((DateTime)contrato.FechaTerminacion).ToString("dd-MM-yyyy"));
-            plantilla.Contenido = plantilla.Contenido.Replace("[OBSERVACIONES]", contrato.ObservacionConsideracionesEspeciales);
+            plantilla.Contenido = plantilla.Contenido.Replace("[OBSERVACIONES]", pEsContruccion != true ? contrato.ObservacionConsideracionesEspeciales : strContratoObservacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[CC_SUPERVISOR]", contrato?.UsuarioInterventoria?.NumeroIdentificacion ?? " ");
