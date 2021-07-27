@@ -412,7 +412,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
             }
             if ( this.addressForm.get( 'criterios' ).dirty === false ) {
-                if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                if ( this.solicitudPagoFase !== undefined && this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                     this.criterios.controls.forEach( ( criterio, indexValue ) => {
                         values.forEach( ( value, index ) => {
                             if ( value.codigo === criterio.value.tipoCriterioCodigo ) {

@@ -107,6 +107,11 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 }
 
                                 if ( this.contrato.solicitudPagoOnly !== undefined ) {
+                                    const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
+
+                                    if ( solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
+                                        this.semaforoDetalleFactura = 'sin-diligenciar'
+                                    }
                                     // Get observacion solicitud de pago
                                     this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                         this.menusIdPath.aprobarSolicitudPagoId,
