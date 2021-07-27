@@ -25,386 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-
-        #region Solicitud Pago
-
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
-        {
-            return await _context.SolicitudPagoObservacion
-                                           .Where(s => s.MenuId == pMenuId
-                                               && s.SolicitudPagoId == pSolicitudPagoId
-                                               && s.IdPadre == pPadreId
-                                               && s.TipoObservacionCodigo == pTipoObservacionCodigo)
-                                            .Select(p => new
-                                            {
-                                                p.SolicitudPagoObservacionId,
-                                                p.TieneObservacion,
-                                                p.Archivada,
-                                                p.FechaCreacion,
-                                                p.Observacion,
-                                                p.RegistroCompleto
-                                            }).ToListAsync();
-        }
-
-        public async Task<dynamic> GetListSolicitudPago(int pMenuId)
-        {
-            List<VSolicitudPago> result = new List<VSolicitudPago>();
-
-            switch (pMenuId)
-            {
-                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                    result = await _context.VSolicitudPago.Where(s =>
-                            s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
-                                                    .OrderByDescending(r => r.FechaModificacion)
-                                                    .ToListAsync();
-                    break;
-
-                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
-                    result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
-                                               .OrderByDescending(r => r.FechaModificacion)
-                                               .ToListAsync();
-                    break;
-
-                case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
-                    result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
-                                               .OrderByDescending(r => r.FechaModificacion)
-                                               .ToListAsync();
-                    break;
-
-
-                case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
-                    result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
-                                               .OrderByDescending(r => r.FechaModificacion)
-                                               .ToListAsync();
-                    break;
-
-                default:
-                    break;
-            }
-
-            return result.Select(r => new
-            {
-
-                r.TieneObservacion,
-                r.TieneSubsanacion,
-                r.RegistroCompletoAutorizar,
-                r.RegistroCompletoVerificar,
-                r.TipoSolicitudCodigo,
-                r.ContratoId,
-                r.SolicitudPagoId,
-                r.FechaCreacion,
-                r.NumeroSolicitud,
-                r.NumeroContrato,
-                r.EstadoNombre,
-                r.EstadoNombre2,
-                r.EstadoCodigo,
-                r.ModalidadNombre,
-                r.RegistroCompletoVerificacionFinanciera,
-                r.RegistroCompletoValidacionFinanciera,
-                r.EstaRechazada
-            });
-
-        }
-
-        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
-        {
-            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
-            solicitudPago.FechaModificacion = DateTime.Now;
-            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
-
-            if (TieneObservacion)
-                solicitudPago.TieneObservacion = true;
-            else
-            {
-                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
-                    solicitudPago.TieneObservacion = true;
-                else
-                    solicitudPago.TieneObservacion = false;
-            }
-
-        }
-
-        public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
-                {
-                    if (pSolicitudPagoObservacion.Archivada == null)
-                        pSolicitudPagoObservacion.Archivada = false;
-
-                    await _context.Set<SolicitudPagoObservacion>()
-                                  .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
-                                  .UpdateAsync(r => new SolicitudPagoObservacion()
-                                  {
-                                      Archivada = pSolicitudPagoObservacion.Archivada,
-                                      FechaModificacion = DateTime.Now,
-                                      UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
-                                      RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion),
-                                      TieneObservacion = pSolicitudPagoObservacion.TieneObservacion,
-                                      Observacion = pSolicitudPagoObservacion.Observacion,
-                                  });
-                }
-                else
-                {
-                    pSolicitudPagoObservacion.Archivada = false;
-                    pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
-                    pSolicitudPagoObservacion.Eliminado = false;
-                    pSolicitudPagoObservacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
-
-                    _context.Entry(pSolicitudPagoObservacion).State = EntityState.Added;
-                    _context.SaveChanges();
-                }
-
-                Respuesta respuesta =
-                   new Respuesta
-                   {
-                       IsSuccessful = true,
-                       IsException = false,
-                       IsValidation = false,
-                       Code = GeneralCodes.OperacionExitosa,
-                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
-                   };
-
-                if (pSolicitudPagoObservacion.Archivada != true)
-                    await ValidateCompleteObservation(pSolicitudPagoObservacion, pSolicitudPagoObservacion.UsuarioCreacion);
-
-                return respuesta;
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        private async Task<bool> ValidateCompleteObservation(SolicitudPagoObservacion pSolicitudPagoObservacion, string pUsuarioMod)
-        {
-            try
-            {
-                SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
-                //Sumar cantidad Listas de chequeo
-                int intCantidadDependenciasSolicitudPago = solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
-
-                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago
-                    || pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
-                    intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
-
-
-                int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
-                                                              && r.MenuId == pSolicitudPagoObservacion.MenuId
-                                                              && r.Eliminado != true
-                                                              && r.RegistroCompleto == true
-                                                              && r.Archivada != true).Count();
-
-                bool TieneObservacion =
-                                 _context.SolicitudPagoObservacion.Any
-                                                            (r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
-                                                            && r.MenuId == pSolicitudPagoObservacion.MenuId
-                                                            && r.Eliminado != true
-                                                            && r.Archivada != true
-                                                            && r.TieneObservacion == true
-                                                            );
-
-
-                //Valida si la cantidad de relaciones de solicitud Pago
-                //es igual a la cantidad de observaciones de esa Solicitud pago 
-                bool blRegistroCompleto = false;
-                DateTime? FechaRegistroCompleto = null;
-                if (intCantidadObservacionesSolicitudPago >= intCantidadDependenciasSolicitudPago)
-                {
-                    FechaRegistroCompleto = DateTime.Now;
-                    blRegistroCompleto = true;
-                }
-
-                switch (pSolicitudPagoObservacion.MenuId)
-                {
-                    case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                        await _context.Set<SolicitudPago>()
-                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                        .UpdateAsync(r => new SolicitudPago()
-                        {
-                            TieneObservacion = TieneObservacion,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioMod,
-                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
-                            RegistroCompletoVerificar = blRegistroCompleto,
-                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
-                        });
-                        break;
-
-                    case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
-                        await _context.Set<SolicitudPago>()
-                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                        .UpdateAsync(r => new SolicitudPago()
-                        {
-                            TieneObservacion = TieneObservacion,
-                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuarioMod,
-                            RegistroCompletoAutorizar = blRegistroCompleto,
-                            FechaRegistroCompletoAutorizar = FechaRegistroCompleto
-                        });
-                        break;
-
-                    case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
-                        await _context.Set<SolicitudPago>()
-                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                       .UpdateAsync(r => new SolicitudPago()
-                       {
-                           TieneObservacion = TieneObservacion,
-                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Verificacion_Financiera).ToString(),
-                           FechaModificacion = DateTime.Now,
-                           UsuarioModificacion = pUsuarioMod,
-                           RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
-                           FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto
-                       });
-                        break;
-
-                    case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
-                        await _context.Set<SolicitudPago>()
-                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                       .UpdateAsync(r => new SolicitudPago()
-                       {
-                           TieneObservacion = TieneObservacion,
-                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Validacion_Financiera).ToString(),
-                           FechaModificacion = DateTime.Now,
-                           UsuarioModificacion = pUsuarioMod,
-                           RegistroCompletoValidacionFinanciera = blRegistroCompleto,
-                           FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto
-                       });
-                        break;
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private int CantidadDependenciasSolicitudPago(SolicitudPago solicitudPago)
-        {
-            switch (solicitudPago.TipoSolicitudCodigo)
-            {
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
-
-                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
-
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
-                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
-                    return 2;
-                default: return 0;
-            }
-
-        }
-
-        private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
-        {
-            //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
-            int intCantidadDependenciasSolicitudPago = 2;
-
-            foreach (var SolicitudPagoFaseFactura in pSolicitudPago.SolicitudPagoFactura.Where(r => r.Eliminado != true))
-            {
-                //#7 Factura para proyectos asociados
-                intCantidadDependenciasSolicitudPago++;
-
-                //#7 Factura Descuentos de la Dirección Técnica
-                intCantidadDependenciasSolicitudPago++;
-
-                intCantidadDependenciasSolicitudPago++;
-            }
-
-            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
-            {
-                //#4 Registrar  Solicitud de pago
-                intCantidadDependenciasSolicitudPago++;
-
-                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
-                {
-
-                    if (SolicitudPagoFase.EsPreconstruccion != true)
-                    {
-                        foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
-                        {
-                            //#6 Observacion Amortizacion
-                            intCantidadDependenciasSolicitudPago++;
-                        }
-                    } 
-                }
-            }
-
-            return intCantidadDependenciasSolicitudPago;
-        }
-
-        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
-        {
-            if (!pSolicitudPagoObservacion.TieneObservacion)
-            {
-                return true;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
-                    return true;
-            }
-
-            return false;
-        }
-
-        public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
-        {
-            _context.Set<SolicitudPagoObservacion>()
-                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
-                              && s.TieneObservacion == false)
-                    .Update(s => new SolicitudPagoObservacion()
-                    {
-                        Archivada = true,
-                        FechaModificacion = DateTime.Now,
-                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
-                    });
-
-            _context.Set<SolicitudPago>()
-                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
-                .Update(s => new SolicitudPago
-                {
-                    OrdenGiroId = null,
-                    ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
-
-                    RegistroCompleto = false,
-                    FechaRegistroCompleto = null,
-
-                    RegistroCompletoVerificar = false,
-                    FechaRegistroCompletoVerificar = null,
-
-                    RegistroCompletoAutorizar = false,
-                    FechaRegistroCompletoAutorizar = null,
-
-                    RegistroCompletoVerificacionFinanciera = false,
-                    FechaRegistroCompletoVerificacionFinanciera = null,
-
-                    RegistroCompletoValidacionFinanciera = false,
-                    FechaRegistroCompletoValidacionFinanciera = null,
-
-                    FechaModificacion = DateTime.Now,
-                    UsuarioModificacion = pSolicitudPago.UsuarioCreacion
-                }); ;
-        }
-        #endregion
-
+       
         #region Financiera
         private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
         {
@@ -613,6 +234,386 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region Solicitud Pago
+
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
+        {
+            return await _context.SolicitudPagoObservacion
+                                           .Where(s => s.MenuId == pMenuId
+                                               && s.SolicitudPagoId == pSolicitudPagoId
+                                               && s.IdPadre == pPadreId
+                                               && s.TipoObservacionCodigo == pTipoObservacionCodigo)
+                                            .Select(p => new
+                                            {
+                                                p.SolicitudPagoObservacionId,
+                                                p.TieneObservacion,
+                                                p.Archivada,
+                                                p.FechaCreacion,
+                                                p.Observacion,
+                                                p.RegistroCompleto
+                                            }).ToListAsync();
+        }
+
+        public async Task<dynamic> GetListSolicitudPago(int pMenuId)
+        {
+            List<VSolicitudPago> result = new List<VSolicitudPago>();
+
+            switch (pMenuId)
+            {
+                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                            s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
+                                                    .OrderByDescending(r => r.FechaModificacion)
+                                                    .ToListAsync();
+                    break;
+
+                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
+                                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
+                case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
+                                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
+
+                case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
+                                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result.Select(r => new
+            {
+
+                r.TieneObservacion,
+                r.TieneSubsanacion,
+                r.RegistroCompletoAutorizar,
+                r.RegistroCompletoVerificar,
+                r.TipoSolicitudCodigo,
+                r.ContratoId,
+                r.SolicitudPagoId,
+                r.FechaCreacion,
+                r.NumeroSolicitud,
+                r.NumeroContrato,
+                r.EstadoNombre,
+                r.EstadoNombre2,
+                r.EstadoCodigo,
+                r.ModalidadNombre,
+                r.RegistroCompletoVerificacionFinanciera,
+                r.RegistroCompletoValidacionFinanciera,
+                r.EstaRechazada
+            });
+
+        }
+
+        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
+            solicitudPago.FechaModificacion = DateTime.Now;
+            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
+
+            if (TieneObservacion)
+                solicitudPago.TieneObservacion = true;
+            else
+            {
+                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
+                    solicitudPago.TieneObservacion = true;
+                else
+                    solicitudPago.TieneObservacion = false;
+            }
+
+        }
+
+        public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
+                {
+                    if (pSolicitudPagoObservacion.Archivada == null)
+                        pSolicitudPagoObservacion.Archivada = false;
+
+                    await _context.Set<SolicitudPagoObservacion>()
+                                  .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
+                                  .UpdateAsync(r => new SolicitudPagoObservacion()
+                                  {
+                                      Archivada = pSolicitudPagoObservacion.Archivada,
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
+                                      RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion),
+                                      TieneObservacion = pSolicitudPagoObservacion.TieneObservacion,
+                                      Observacion = pSolicitudPagoObservacion.Observacion,
+                                  });
+                }
+                else
+                {
+                    pSolicitudPagoObservacion.Archivada = false;
+                    pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
+                    pSolicitudPagoObservacion.Eliminado = false;
+                    pSolicitudPagoObservacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
+
+                    _context.Entry(pSolicitudPagoObservacion).State = EntityState.Added;
+                    _context.SaveChanges();
+                }
+
+                Respuesta respuesta =
+                   new Respuesta
+                   {
+                       IsSuccessful = true,
+                       IsException = false,
+                       IsValidation = false,
+                       Code = GeneralCodes.OperacionExitosa,
+                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
+                   };
+
+                if (pSolicitudPagoObservacion.Archivada != true)
+                    await ValidateCompleteObservation(pSolicitudPagoObservacion, pSolicitudPagoObservacion.UsuarioCreacion);
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private async Task<bool> ValidateCompleteObservation(SolicitudPagoObservacion pSolicitudPagoObservacion, string pUsuarioMod)
+        {
+            try
+            {
+                SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
+                //Sumar cantidad Listas de chequeo
+                int intCantidadDependenciasSolicitudPago = solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
+
+                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago
+                    || pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
+                    intCantidadDependenciasSolicitudPago = 1;
+                   // intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+                    
+                int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
+                                                              && r.MenuId == pSolicitudPagoObservacion.MenuId
+                                                              && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
+                                                              && r.Archivada != true).Count();
+
+                bool TieneObservacion =
+                                 _context.SolicitudPagoObservacion.Any
+                                                            (r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
+                                                            && r.MenuId == pSolicitudPagoObservacion.MenuId
+                                                            && r.Eliminado != true
+                                                            && r.Archivada != true
+                                                            && r.TieneObservacion == true
+                                                            );
+
+
+                //Valida si la cantidad de relaciones de solicitud Pago
+                //es igual a la cantidad de observaciones de esa Solicitud pago 
+                bool blRegistroCompleto = false;
+                DateTime? FechaRegistroCompleto = null;
+                if (intCantidadObservacionesSolicitudPago >= intCantidadDependenciasSolicitudPago)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
+                    blRegistroCompleto = true;
+                }
+
+                switch (pSolicitudPagoObservacion.MenuId)
+                {
+                    case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                        await _context.Set<SolicitudPago>()
+                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                        .UpdateAsync(r => new SolicitudPago()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
+                            RegistroCompletoVerificar = blRegistroCompleto,
+                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                        await _context.Set<SolicitudPago>()
+                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                        .UpdateAsync(r => new SolicitudPago()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            RegistroCompletoAutorizar = blRegistroCompleto,
+                            FechaRegistroCompletoAutorizar = FechaRegistroCompleto
+                        });
+                        break;
+
+                    case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
+                        await _context.Set<SolicitudPago>()
+                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                       .UpdateAsync(r => new SolicitudPago()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Verificacion_Financiera).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
+                           FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto
+                       });
+                        break;
+
+                    case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
+                        await _context.Set<SolicitudPago>()
+                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                       .UpdateAsync(r => new SolicitudPago()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Validacion_Financiera).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoValidacionFinanciera = blRegistroCompleto,
+                           FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto
+                       });
+                        break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private int CantidadDependenciasSolicitudPago(SolicitudPago solicitudPago)
+        {
+            switch (solicitudPago.TipoSolicitudCodigo)
+            {
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
+
+                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
+
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
+                    return 2;
+                default: return 0;
+            }
+
+        }
+
+        private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
+        {
+            //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
+            int intCantidadDependenciasSolicitudPago = 2;
+
+            foreach (var SolicitudPagoFaseFactura in pSolicitudPago.SolicitudPagoFactura.Where(r => r.Eliminado != true))
+            {
+                //#7 Factura para proyectos asociados
+                intCantidadDependenciasSolicitudPago++;
+
+                //#7 Factura Descuentos de la Dirección Técnica
+                intCantidadDependenciasSolicitudPago++;
+
+                intCantidadDependenciasSolicitudPago++;
+            }
+
+            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
+            {
+                //#4 Registrar  Solicitud de pago
+                intCantidadDependenciasSolicitudPago++;
+
+                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
+                {
+
+                    if (SolicitudPagoFase.EsPreconstruccion != true)
+                    {
+                        foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
+                        {
+                            //#6 Observacion Amortizacion
+                            intCantidadDependenciasSolicitudPago++;
+                        }
+                    } 
+                }
+            }
+
+            return intCantidadDependenciasSolicitudPago;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        {
+            if (!pSolicitudPagoObservacion.TieneObservacion)
+            {
+                return true;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<SolicitudPagoObservacion>()
+                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
+                              && s.TieneObservacion == false)
+                    .Update(s => new SolicitudPagoObservacion()
+                    {
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+
+            _context.Set<SolicitudPago>()
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Update(s => new SolicitudPago
+                {
+                    OrdenGiroId = null,
+                    ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
+
+                    RegistroCompleto = false,
+                    FechaRegistroCompleto = null,
+
+                    RegistroCompletoVerificar = false,
+                    FechaRegistroCompletoVerificar = null,
+
+                    RegistroCompletoAutorizar = false,
+                    FechaRegistroCompletoAutorizar = null,
+
+                    RegistroCompletoVerificacionFinanciera = false,
+                    FechaRegistroCompletoVerificacionFinanciera = null,
+
+                    RegistroCompletoValidacionFinanciera = false,
+                    FechaRegistroCompletoValidacionFinanciera = null,
+
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                }); ;
+        }
+        #endregion
+
+    
         #region  Emails
         public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
         {
