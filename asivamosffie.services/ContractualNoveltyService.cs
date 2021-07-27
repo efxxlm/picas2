@@ -19,14 +19,15 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
+        private readonly IContractualControversy _contractualControversy;
 
 
-        public ContractualNoveltyService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public ContractualNoveltyService(devAsiVamosFFIEContext context, ICommonService commonService, IContractualControversy contractualControversy)
         {
 
             _commonService = commonService;
             _context = context;
-
+            _contractualControversy = contractualControversy;
             //_settings = settings;
         }
 
@@ -228,7 +229,8 @@ namespace asivamosffie.services
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
                         (existeNovedad > 0 ? listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0 :
-                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0)
+                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0) &&
+                        !_contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId)
                     )
                 {
                     if(contrato?.Contratacion?.Contratista != null)

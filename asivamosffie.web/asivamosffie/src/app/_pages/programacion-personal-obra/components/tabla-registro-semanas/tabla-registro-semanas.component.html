@@ -9,7 +9,7 @@
                     <div class="border-semana">
                         {{ semana[0]?.numeroSemana }}
                     </div>
-                    <div class="border-semana">
+                    <div class="border-semana" *ngIf="verDetalle !== true">
                         <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
                             <input  matInput
                                     type="number"
@@ -23,6 +23,11 @@
                                     style="width: 2em;">
                         </mat-form-field>
                     </div>
+                    <div class="border-semana" *ngIf="verDetalle === true">
+                      <div *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
+                        <span>{{ semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal }}</span>
+                      </div>
+                    </div>
                 </section>
             </section>
         </section>
@@ -31,18 +36,23 @@
                 <div class="border-semana">
                     {{ semana[0]?.numeroSemana }}
                 </div>
-                <div class="border-semana">
+                <div class="border-semana" *ngIf="verDetalle !== true">
                     <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
                         <input matInput type="text" maxlength="3" [(ngModel)]="semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal" required style="width: 2em;">
                     </mat-form-field>
+                </div>
+                <div class="border-semana" *ngIf="verDetalle === true">
+                  <div *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
+                    <span>{{ semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal }}</span>
+                  </div>
                 </div>
             </section>
         </section>
     </div>
 
-    <div>
-        <p class="color-text-descriptivo">
-            <i> 
+    <div *ngIf="verDetalle !== true">
+        <p class="color-text-descriptivo" >
+            <i>
             Registrar la cantidad de personal operativo (obreros y técnicos) requerido para la ejecución de las actividades por cada semana.
             <br>
             El valor puede ser 0, no puede estar el campo vacío.
@@ -50,7 +60,7 @@
         </p>
     </div>
 
-    <div class="text-center">
+    <div class="text-center" *ngIf="verDetalle !== true">
         <button mat-button
                 color="warn"
                 class="btn-guardar"

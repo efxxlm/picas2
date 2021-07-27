@@ -67,10 +67,11 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     });
   }
 
-  openRegistroProgramacion( contrato: any ) {
+  openRegistroProgramacion( contrato: any, verDetalle: boolean ) {
     const dialogProgramacion = this.dialog.open( DialogRegistroProgramacionComponent, {
       width: '80em',
-      data: { contrato }
+      data: { contrato: contrato,
+              verDetalle: verDetalle }
     });
 
     dialogProgramacion.afterClosed()

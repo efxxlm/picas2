@@ -317,8 +317,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7361,6 +7359,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPagoFase>(entity =>
             {
+                entity.Property(e => e.EsAnticipio).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -9667,6 +9667,8 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_RegistrarAvanceSemanalNew");
+
+                entity.Property(e => e.ContratoId).HasColumnName("contratoId");
 
                 entity.Property(e => e.EstadoObra).HasMaxLength(250);
 

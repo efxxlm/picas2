@@ -48,55 +48,55 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoObra }} </td>
     </ng-container>
-  
+
     <ng-container matColumnDef="gestion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
       <td mat-cell *matCellDef="let element">
-  
+
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion === undefined"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion === undefined && element?.cumpleCondicionesTai === false"
                 [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoCrear === false">
                 Registrar avance semanal
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true"
+                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true && element?.cumpleCondicionesTai === false"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoEditar === false">
                 Consultar/Editar bitácora
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
                 (click)="enviarVerificacion( element.seguimientoSemanalId )"
-                *ngIf="element.enviarVerificacion === true"
+                *ngIf="element.enviarVerificacion === true && element?.cumpleCondicionesTai === false"
                 [disabled]="permisos.tienePermisoEditar === false">
                 {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ? 'Enviar a verificación' : 'Enviar para registrar informe final' }}
         </button>
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="element.verCargarActa === true"
+                *ngIf="element.verCargarActa === true && cumpleCondicionesTai === false"
                 (click)="openDialogCargarActa( element )"
                 [disabled]="permisos.tienePermisoCrear === false">
                 Cargar acta de terminación de contrato
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined && element?.cumpleCondicionesTai === false"
                 [routerLink]="[ 'verDetalleEditar', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoEditar === false">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === false"
+                *ngIf="(element.numeroSemana !== primeraSemana && element.verEditarBitacora === false) || element?.cumpleCondicionesTai === true"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoLeer === false">
                 Consultar bitácora
@@ -104,10 +104,10 @@
 
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  
+
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </section>

@@ -7,7 +7,7 @@ namespace asivamosffie.services.Helpers.Constants
 	
     public static class ConstanCodigoActuacionAdelantada
     {
-
+        /*Tipo dominio 90*/
         public const string Proyeccion_Comunicacion_Inicio_TAI = "1";
         public const string Aprobacion_Comunicacion_Inicio_TAI_Director_Juridico = "2";
         public const string RemisiondeComunicaciondeIniciodeTAIaAlianzaFiduciaria= "3";
@@ -24,5 +24,6 @@ namespace asivamosffie.services.Helpers.Constants
         public const string RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora= "14";
         public const string EnviodedecisionesComunicadasalaUGPAFFIE= "15";
         public const string Otra = "16";
+        public const string Comunicacion_decision_TAI_al_contratista = "17";
     }
 }

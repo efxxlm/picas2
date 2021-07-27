@@ -16,6 +16,7 @@ export class TablaRegistroSemanasComponent implements OnInit {
 
   @Input() registroSemanas: DetalleProgramacionPersonal[];
   @Input() contratoConstruccionId: number;
+  @Input()  verDetalle: boolean;
   @Output() seRealizoPeticion = new EventEmitter<boolean>();
   registroSemanasTabla: any[] = [];
 

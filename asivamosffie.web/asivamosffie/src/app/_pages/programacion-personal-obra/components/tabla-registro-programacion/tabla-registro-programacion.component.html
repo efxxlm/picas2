@@ -45,43 +45,52 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de programación inicial </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoProgramacionInicial }} </td>
     </ng-container>
-  
+
     <ng-container matColumnDef="gestion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15"> Gestión </th>
       <td mat-cell *matCellDef="let element">
-  
+
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                (click)="openRegistroProgramacion( element )"
-                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinProgramacionPersonal">
+                (click)="openRegistroProgramacion( element, false )"
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinProgramacionPersonal && element?.cumpleCondicionesTai === false">
                 Registrar programación de personal
         </button>
 
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
                 (click)="aprobarProgramacion( element.contratacionProyectoId )"
-                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal && element?.cumpleCondicionesTai === false">
                 Aprobar programación
         </button>
 
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
-                (click)="openRegistroProgramacion( element )"
-                *ngIf=" element.estadoProgramacionInicialCodigo === estadosProgramacion.enRegistroProgramacion
+                (click)="openRegistroProgramacion( element , false)"
+                *ngIf=" (element.estadoProgramacionInicialCodigo === estadosProgramacion.enRegistroProgramacion
                         || element.estadoProgramacionInicialCodigo === estadosProgramacion.conAprobacionProgramacionPersonal
-                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
+                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal) && element?.cumpleCondicionesTai === false">
                 Ver detalle/Editar
         </button>
-  
+
+
+        <button mat-raised-button
+                color="accent"
+                class="btn-table"
+                (click)="openRegistroProgramacion( element , true )"
+                *ngIf="element?.cumpleCondicionesTai === true">
+                Ver detalle
+        </button>
+
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  
+
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

@@ -27,17 +27,24 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
 
         private readonly ICommonService _commonService;
+        private readonly IContractualControversy _contractualControversy;
 
-        public RegisterPersonalProgrammingService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> mailSettings)
+        public RegisterPersonalProgrammingService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> mailSettings, IContractualControversy contractualControversy)
         {
             _mailSettings = mailSettings.Value;
             _context = context;
             _commonService = commonService;
+            _contractualControversy = contractualControversy;
         }
 
         public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
-            return await _context.VRegistrarPersonalObra.ToListAsync();
+            List<VRegistrarPersonalObra> vRegistrarPersonalObra = await _context.VRegistrarPersonalObra.ToListAsync();
+            vRegistrarPersonalObra.ForEach(r => {
+                //Nueva restricción control de cambios
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId);
+            });
+            return vRegistrarPersonalObra;
         }
 
         private int CalcularSemanasPlazoProyecto(int ContratacionProyectoId)

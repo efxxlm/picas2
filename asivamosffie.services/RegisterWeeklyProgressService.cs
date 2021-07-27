@@ -28,6 +28,7 @@ namespace asivamosffie.services
 
         private ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        private readonly IContractualControversy _contractualControversy;
         //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
 
@@ -35,12 +36,14 @@ namespace asivamosffie.services
             devAsiVamosFFIEContext context,
             ICommonService commonService,
             //     ICheckWeeklyProgressService checkWeeklyProgressService,
-            IDocumentService documentService)
+            IDocumentService documentService,
+            IContractualControversy contractualControversy)
         {
             //     _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
+            _contractualControversy = contractualControversy;
         }
 
         #endregion
@@ -142,7 +145,13 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew()
         {
-            return await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
+
+            List<VRegistrarAvanceSemanalNew> vRegistrarAvanceSemanal = await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
+            vRegistrarAvanceSemanal.ForEach(r =>{
+                //Nueva restricción control de cambios
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId);
+            });
+            return vRegistrarAvanceSemanal;
         }
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {

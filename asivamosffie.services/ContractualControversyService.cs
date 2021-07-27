@@ -4953,12 +4953,12 @@ namespace asivamosffie.services
                             //cumple la primera condición de ser aprobada por el comite fiduciario
                             if (comiteFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
                             {
-                                //validar que esa controversia tenga actuaciones finalizadas y con actuación Remisión de Comunicación de decisión de TAI por Alianza Fiduciaria al contratista.
+                                //validar que esa controversia tenga actuaciones finalizadas y con actuación "Comunicacion_decision_TAI_al_contratista"
                                 ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Where(
                                     r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId
                                     && r.Eliminado != true
                                     && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada
-                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalcontratista).FirstOrDefault();
+                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.Comunicacion_decision_TAI_al_contratista).FirstOrDefault();
 
                                 if (controversiaActuacion != null)
                                 {

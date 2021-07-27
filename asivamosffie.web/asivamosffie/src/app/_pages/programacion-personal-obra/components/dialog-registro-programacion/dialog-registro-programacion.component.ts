@@ -17,7 +17,11 @@ export class DialogRegistroProgramacionComponent implements OnInit {
     private programacionPersonalSvc: ProgramacionPersonalObraService,
     private routes: Router,
     private dialogRef: MatDialogRef<DialogRegistroProgramacionComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataContrato )
+    @Inject(MAT_DIALOG_DATA) public dataContrato: {
+      contrato: any,
+      verDetalle: boolean
+    },
+    )
   {
     this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratacionProyectoId )
       .subscribe(
