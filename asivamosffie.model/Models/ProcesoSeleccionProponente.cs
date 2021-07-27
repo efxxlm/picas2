@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public ProcesoSeleccionProponente()
         {
             Contratista = new HashSet<Contratista>();
+            ProcesoSeleccionIntegrante = new HashSet<ProcesoSeleccionIntegrante>();
         }
 
         public int ProcesoSeleccionProponenteId { get; set; }
@@ -31,5 +32,6 @@ namespace asivamosffie.model.Models
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
         public virtual ICollection<Contratista> Contratista { get; set; }
+        public virtual ICollection<ProcesoSeleccionIntegrante> ProcesoSeleccionIntegrante { get; set; }
     }
 }

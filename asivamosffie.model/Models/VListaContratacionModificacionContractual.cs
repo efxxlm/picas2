@@ -6,6 +6,7 @@ namespace asivamosffie.model.Models
     public partial class VListaContratacionModificacionContractual
     {
         public string TipoSolicitud { get; set; }
+        public string TipoSolicitudCodigo { get; set; }
         public int? SesionComiteSolicitudId { get; set; }
         public string NumeroDdp { get; set; }
         public string EstadoCodigo { get; set; }

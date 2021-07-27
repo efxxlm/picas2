@@ -156,6 +156,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProcesoSeleccionMonitoreo> ProcesoSeleccionMonitoreo { get; set; }
         public virtual DbSet<ProcesoSeleccionObservacion> ProcesoSeleccionObservacion { get; set; }
         public virtual DbSet<ProcesoSeleccionProponente> ProcesoSeleccionProponente { get; set; }
+        public virtual DbSet<ProcesosContractualesObservacion> ProcesosContractualesObservacion { get; set; }
         public virtual DbSet<Programacion> Programacion { get; set; }
         public virtual DbSet<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }
         public virtual DbSet<Proyecto> Proyecto { get; set; }
@@ -316,14 +317,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=ClondevAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -5351,7 +5345,13 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ProcesoSeleccionIntegrante)
                     .HasForeignKey(d => d.ProcesoSeleccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccion");
+                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccionId");
+
+                entity.HasOne(d => d.ProcesoSeleccionProponente)
+                    .WithMany(p => p.ProcesoSeleccionIntegrante)
+                    .HasForeignKey(d => d.ProcesoSeleccionProponenteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProcesoSeleccionIntegrante_ProcesoSeleccionProponenteId");
             });
 
             modelBuilder.Entity<ProcesoSeleccionMonitoreo>(entity =>
@@ -5458,6 +5458,37 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ProcesoSeleccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProcesoSeleccionProponente_ProcesoSeleccion");
+            });
+
+            modelBuilder.Entity<ProcesosContractualesObservacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Archivado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.ProcesosContractualesObservacionId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Programacion>(entity =>
@@ -6937,6 +6968,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
             {
+                entity.Property(e => e.EsFiduciario).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -8934,6 +8967,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoSolicitud)
                     .IsRequired()
                     .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VListaProyectos>(entity =>
