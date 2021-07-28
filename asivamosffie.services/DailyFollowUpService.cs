@@ -701,7 +701,7 @@ namespace asivamosffie.services
                                                                 .Include(r => r.SeguimientoDiario)
                                                                 .FirstOrDefaultAsync();
 
-            Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContrato(contratacion.Proyecto.ContratoConstruccion.FirstOrDefault().ContratoConstruccionId);
+            Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContratoFase2(contratacion.Proyecto.ContratoConstruccion.FirstOrDefault().ContratoConstruccionId);
 
             // DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
             // DateTime fechaFin = fechaInicial.AddMonths(contratacion.Proyecto.PlazoMesesObra.Value);

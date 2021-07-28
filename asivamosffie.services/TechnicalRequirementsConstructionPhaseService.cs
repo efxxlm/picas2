@@ -1829,19 +1829,43 @@ namespace asivamosffie.services
 
 
             // calcula la fecha final del contrato
-            //DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesObra.Value);
+            DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesObra.Value);
+            proyecto.FechaFinEtapaObra = fechaFinalContrato.AddDays(proyecto.PlazoDiasObra.Value);
+
+            if (contrato != null)
+            {
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths(-(contrato.PlazoFase1PreMeses ?? 0));
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(-(contrato.PlazoFase1PreDias ?? 0));
+
+            }
+
+            proyecto.PlazoEnSemanas = (proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7;
+
+            return proyecto;
+        }
+
+        private Proyecto CalcularFechasContratoFase2(int pProyectoId, DateTime? pFechaInicioObra, int pContratoId)
+        {
+            Proyecto proyecto = _context.Proyecto
+                                            .Where(p => p.ProyectoId == pProyectoId)
+                                            .FirstOrDefault();
+
+            Contrato contrato = _context.Contrato.Find(pContratoId);
+
+
+            proyecto.FechaInicioEtapaObra = pFechaInicioObra ?? DateTime.MinValue;
+
+
+
+            // calcula la fecha final del contrato
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra;
-            //proyecto.FechaFinEtapaObra = fechaFinalContrato.AddDays(proyecto.PlazoDiasObra.Value);
             proyecto.FechaFinEtapaObra = fechaFinalContrato;
 
             if (contrato != null)
             {
-                //proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths(-(contrato.PlazoFase1PreMeses ?? 0));
-                //proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(-(contrato.PlazoFase1PreDias ?? 0));
                 proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths((contrato.PlazoFase2ConstruccionMeses ?? 0));
                 proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays((contrato.PlazoFase2ConstruccionDias ?? 0));
                 proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(-1); //el primer día cuenta
-
             }
 
             proyecto.PlazoEnSemanas = (proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7;
@@ -1925,6 +1949,18 @@ namespace asivamosffie.services
                                                                         .Find(pContratoConstruccionId);
 
             return CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
+
+
+        }
+
+        public Proyecto CalcularFechaInicioContratoFase2(int pContratoConstruccionId)
+        {
+
+            // obtengo la informacion del proyecto
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Find(pContratoConstruccionId);
+
+            return CalcularFechasContratoFase2(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
 
 
         }
