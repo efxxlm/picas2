@@ -73,32 +73,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                                 fases: []
                             }
 
-                            solicitudPagoFase.forEach( fase => {
-                                const CRITERIOS = []
-                                // Objeto fase que se agregara al array de fases del objeto proyecto
-                                const FASE = {
-                                    esPreconstruccion: fase.esPreconstruccion,
-                                    solicitudPagoFaseId: fase.solicitudPagoFaseId,
-                                    solicitudPagoRegistrarSolicitudPagoId: fase.solicitudPagoRegistrarSolicitudPagoId,
-                                    solicitudPagoFaseFactura: fase.solicitudPagoFaseFactura,
-                                    criteriosFase: []
-                                }
-
-                                fase.solicitudPagoFaseCriterio.forEach( criterio => {
-                                    // Busqueda de los proyectos asociados a la fase y criterio
-                                    const CRITERIOS_PROYECTO = criterio.solicitudPagoFaseCriterioProyecto.find( criterioProyecto => criterioProyecto.contratacionProyectoId === proyecto.contratacionProyectoId )
-                                    
-                                    if ( CRITERIOS_PROYECTO !== undefined ) {
-                                        CRITERIOS.push( criterio )
-                                    }
-                                } )
-
-                                FASE.criteriosFase = CRITERIOS
-
-                                if ( FASE.criteriosFase.length > 0 ) {
-                                    PROYECTO.fases.push( FASE )
-                                }
-                            } )
+                            const listFase = solicitudPagoFase.filter( fase => fase.contratacionProyectoId === proyecto.contratacionProyectoId )
+                            PROYECTO.fases = listFase
 
                             if ( PROYECTO.fases.length > 0 ) {
                                 this.listaDetalleGiro.push( PROYECTO )

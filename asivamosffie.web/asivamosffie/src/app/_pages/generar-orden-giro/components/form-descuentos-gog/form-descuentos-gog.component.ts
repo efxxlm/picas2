@@ -22,6 +22,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     @Input() esPreconstruccion: boolean;
     @Input() listaCriterios: Dominio[] = [];
     @Input() solicitudPago: any;
+    @Input() solicitudPagoFase: any;
     @Input() descuento: any;
     @Input() valorNetoGiro: number;
     @Input() esVerDetalle: boolean;
@@ -106,7 +107,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
                 for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
                     const formArrayCriterios = [];
-                    const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId && descuentoTecnica.esPreconstruccion === this.esPreconstruccion );
+                    const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId && descuentoTecnica.esPreconstruccion === this.esPreconstruccion && descuentoTecnica.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
 
                     if ( detalleDescuentoTecnica.length > 0 ) {
                         // Get forArray de los criterios
@@ -705,6 +706,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     
                 this.getCriterios( indexDescuento ).controls.forEach( ( criterioControl, indexCriterio ) => {
                     const ordenGiroDetalleDescuento = {
+                        contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,
                         ordenGiroDetalleDescuentoTecnicaId: criterioControl.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value,
                         solicitudPagoFaseFacturaDescuentoId: descuentoControl.get( 'solicitudPagoFaseFacturaDescuentoId' ).value,

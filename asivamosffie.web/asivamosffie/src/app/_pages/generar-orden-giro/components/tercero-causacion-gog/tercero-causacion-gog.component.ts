@@ -32,7 +32,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     listaFuenteTipoFinanciacion: Dominio[] = [];
     cantidadAportantes: number;
     solicitudPagoFaseCriterio: any;
-    solicitudPagoFaseFactura: any;
+    solicitudPagoFaseFacturaDescuento: any;
     fasePreConstruccionFormaPagoCodigo: any;
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
@@ -110,8 +110,8 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
         }
         // Get Tablas
-        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.criteriosFase;
-        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+        this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
             this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
@@ -120,8 +120,8 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
         // Get data valor neto giro
         this.solicitudPagoFaseCriterio.forEach( criterio => this.valorNetoGiro += criterio.valorFacturado );
-        if ( this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length > 0 ) {
-            this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
+        if ( this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
+            this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
         /*
             get listaCriterios para lista desplegable
@@ -199,7 +199,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             const listaAportanteDescuentos = [];
 
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion );
+                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
                                 const listaDescuentos = [];
                                 const listaAportantes = [];
                                 const conceptosDePago = [];
@@ -1026,6 +1026,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 let terceroCausacion: any;
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                     terceroCausacion = {
+                        contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
                         ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                         valorNetoGiro: this.valorNetoGiro,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,

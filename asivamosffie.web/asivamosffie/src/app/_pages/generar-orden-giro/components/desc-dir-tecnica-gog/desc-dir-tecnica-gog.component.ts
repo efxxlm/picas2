@@ -14,11 +14,12 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
-    @Input() solicitudPagoFase: any
+    @Input() solicitudPagoFase: any;
     @Input() esPreconstruccion: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
     solicitudPagoFaseCriterio: any[];
     solicitudPagoFaseFactura: any;
+    solicitudPagoFaseFacturaDescuento: any;
     fasePreConstruccionFormaPagoCodigo: any;
     recibeListaChqueo = false;
     tiposDescuentoArray: Dominio[] = [];
@@ -52,8 +53,8 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
     async getDireccionTecnica() {
         // Get Tablas
-        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.criteriosFase;
-        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+        this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
             this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
@@ -66,6 +67,7 @@ export class DescDirTecnicaGogComponent implements OnInit {
         */
         this.listaCriterios = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo ).toPromise()
 
+        console.log( this.listaCriterios )
         this.listaCriterios.forEach( value => {
             const CRITERIO_INDEX = this.solicitudPagoFaseCriterio.findIndex( criterio => value.codigo === criterio.tipoCriterioCodigo )
 
@@ -76,7 +78,7 @@ export class DescDirTecnicaGogComponent implements OnInit {
 
         // Get data de la tabla descuentos
         this.solicitudPagoFaseCriterio.forEach( criterio => this.listData.valorNetoGiro += criterio.valorFacturado );
-        this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
+        this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
             this.listData.valorNetoGiro -= descuento.valorDescuento;
             this.listData.valorTotalDescuentos += descuento.valorDescuento;
 

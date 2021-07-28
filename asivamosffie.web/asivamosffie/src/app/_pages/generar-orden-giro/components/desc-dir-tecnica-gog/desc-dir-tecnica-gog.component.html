@@ -43,11 +43,12 @@
 
     <app-form-descuentos-gog    [solicitudPagoFaseCriterio]="solicitudPagoFaseCriterio"
                                 [listaCriterios]="listaCriterios"
-                                [solicitudPagoFaseFacturaDescuento]="this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento"
+                                [solicitudPagoFaseFacturaDescuento]="solicitudPagoFaseFacturaDescuento"
                                 [valorNetoGiro]="listData.valorNetoGiro"
                                 [solicitudPago]="solicitudPago"
                                 [esVerDetalle]="esVerDetalle"
                                 [esPreconstruccion]="esPreconstruccion"
+                                [solicitudPagoFase]="solicitudPagoFase"
                                 (tieneObservacion)="tieneObservacion.emit( true )">
     </app-form-descuentos-gog>
 </section>

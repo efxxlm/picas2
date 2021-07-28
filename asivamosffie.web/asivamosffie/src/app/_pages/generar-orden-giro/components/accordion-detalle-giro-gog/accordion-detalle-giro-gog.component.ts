@@ -70,11 +70,11 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
         const solicitudPagoFase = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
         
         if ( solicitudPagoFase !== undefined ) {
-            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === true ) {
+            if ( solicitudPagoFase.tieneDescuento === true ) {
                 return true;
             }
 
-            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === false ) {
+            if ( solicitudPagoFase.tieneDescuento === false ) {
                 if ( esPreconstruccion === true ) {
                     if ( this.listaSemaforos.semaforoDescuentosDireccionTecnica !== undefined ) {
                         delete this.listaSemaforos.semaforoDescuentosDireccionTecnica
