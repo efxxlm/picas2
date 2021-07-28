@@ -1130,7 +1130,7 @@ namespace asivamosffie.services
                     _context.Set<OrdenGiroDetalleTerceroCausacion>()
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
                             .Update(r => new OrdenGiroDetalleTerceroCausacion()
-                            {
+                            { ContratacionProyectoId = pOrdenGiroDetalleTerceroCausacion.ContratacionProyectoId,
                                 TieneDescuento = pOrdenGiroDetalleTerceroCausacion.TieneDescuento,
                                 ValorNetoGiro = pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro,
                                 OrdenGiroDetalleId = pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleId,
@@ -1140,7 +1140,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
-                            });
+                            }) ;
                 }
 
                 if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
@@ -1249,6 +1249,7 @@ namespace asivamosffie.services
                                  .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId)
                                  .Update(r => new OrdenGiroDetalleDescuentoTecnica()
                                  {
+                                     ContratacionProyectoId = pOrdenGiroDetalleDescuentoTecnica.ContratacionProyectoId,
                                      SolicitudPagoFaseFacturaDescuentoId = pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId,
                                      TipoPagoCodigo = pOrdenGiroDetalleDescuentoTecnica.TipoPagoCodigo,
                                      CriterioCodigo = pOrdenGiroDetalleDescuentoTecnica.CriterioCodigo,
