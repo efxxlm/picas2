@@ -318,14 +318,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -11811,7 +11804,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EsCumplido).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
 
-                entity.Property(e => e.EsFiduciario).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.EsFiduciario)
+                    .HasDefaultValueSql("((0))")
+                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
@@ -13915,10 +13910,14 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Llave foranea a la tabla en mención");
 
+                entity.Property(e => e.NitOrganizacion).HasMaxLength(255);
+
                 entity.Property(e => e.NombreMaquina)
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasComment("Nombre del equipo o dispositivo desde donde se esta conectando el usuario por ultima vez.");
+
+                entity.Property(e => e.NombreOrganizacion).HasMaxLength(255);
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(255)

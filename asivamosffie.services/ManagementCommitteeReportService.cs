@@ -309,7 +309,9 @@ namespace asivamosffie.services
                                 Usuario = new Usuario()
                             };
 
-                            VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable).FirstOrDefault();
+                            VSesionParticipante vSesionParticipante = 
+                                                                    listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable)
+                                                                                      .FirstOrDefault();
 
                             if (vSesionParticipante != null)
                             {
@@ -323,9 +325,9 @@ namespace asivamosffie.services
                                 participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
                                 participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
                                 participante.esAprobado = ListParticipanteVotos
-                                                                           .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
-                                                                             && s.SesionParticipanteId == participante.SesionParticipanteId
-                                                                             ).Select(r => r.EsAprobado).LastOrDefault();
+                                                                               .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
+                                                                                   && s.SesionParticipanteId == participante.SesionParticipanteId).Select(r => r.EsAprobado)
+                                                                               .LastOrDefault();
                                 tc.ResponsableNavigation = participante;
                             }
                         } 

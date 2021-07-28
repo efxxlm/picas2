@@ -466,7 +466,7 @@ namespace asivamosffie.services
             }
 
             Usuario Supervisor = contrato.Supervisor;
-            Usuario Interventor = contrato.Interventor;
+            Usuario Interventor = contrato.Apoyo;
 
             //Registros Proyectos 
             string PlantillaRegistrosProyectos = _context.Plantilla

@@ -53,6 +53,8 @@ namespace asivamosffie.model.Models
         public string TipoAsignacionCodigo { get; set; }
         public bool? TieneContratoAsignado { get; set; }
         public bool? TieneGrupo { get; set; }
+        public string NombreOrganizacion { get; set; }
+        public string NitOrganizacion { get; set; }
 
         public virtual Localizacion Municipio { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
