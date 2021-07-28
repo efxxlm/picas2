@@ -3042,6 +3042,7 @@ namespace asivamosffie.services
         {
             pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
             pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionIntegrante = _context.ProcesoSeleccionIntegrante.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
 
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
             List<Usuario> listaUsuarios = _context.Usuario.ToList();
@@ -3306,7 +3307,7 @@ namespace asivamosffie.services
                                           {
                                               participantes = participantes + ParticipanteUnionTemporal;
                                               participantes = participantes.Replace("[NOMBRE]", ppi.NombreIntegrante)
-                                                                            .Replace("[PARTICIPACION]", ppi.PorcentajeParticipacion.ToString());
+                                                                            .Replace("[PARTICIPACION]", ppi.PorcentajeParticipacion != null ? ppi.PorcentajeParticipacion.ToString() + " %" : "0 %");
                                           });
 
                                            proponentes = proponentes + UnionTemporal;
@@ -3720,9 +3721,10 @@ namespace asivamosffie.services
             {
                 foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
                 {
+                    bool ind_ya_entro = false;
+
                     foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                     {
-                        bool ind_ya_entro = false;
                         foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                         {
                             RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
@@ -3732,7 +3734,12 @@ namespace asivamosffie.services
 
                             if (!ind_ya_entro)
                             {
-                                string rowspan = ComponenteAportante.ComponenteUso.Count().ToString();
+                                int total = 0;
+                                foreach(var cpa in ContratacionProyectoAportante.ComponenteAportante)
+                                {
+                                    total += cpa.ComponenteUso.Count();
+                                }
+                                string rowspan = total.ToString();
                                 /*
                                  * Nombre aportante
                                 */
@@ -3798,11 +3805,11 @@ namespace asivamosffie.services
                                     case ConstanCodigoVariablesPlaceHolders.FASE_FUENTES_USO:
                                         string strFase = string.Empty;
 
-                                        if (ContratacionProyectoAportante.ComponenteAportante.Count() > 0)
+                                        if (ComponenteAportante != null)
                                         {
-                                            if (!string.IsNullOrEmpty(ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().FaseCodigo))
+                                            if (!string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
                                             {
-                                                strFase = ListaParametricas.Where(r => r.Codigo == ContratacionProyectoAportante.ComponenteAportante.FirstOrDefault().FaseCodigo &&
+                                                strFase = ListaParametricas.Where(r => r.Codigo == ComponenteAportante.FaseCodigo &&
                                                 r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre;
                                             }
 
@@ -4598,7 +4605,7 @@ namespace asivamosffie.services
         {
             try
             {
-
+                string msg = "<p style='text-align:left;margin-top:5px;margin-bottom:15px;'>[MSG]</p>";
                 List<int> ListProcesoSeleccionIdSolicitudId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).Select(r => r.SolicitudId).ToList();
                 List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
                 List<int> ListNovedadContractual = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).Select(r => r.SolicitudId).ToList();
@@ -5120,6 +5127,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_COMPROMISOS_SOLICITUD:
 
+                                        registrosCompromisosSolicitud = string.Empty;
                                         foreach (var compromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                                         {
                                             // bool ReplaceComplete = false;
@@ -5150,7 +5158,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5319,6 +5327,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_COMPROMISOS_SOLICITUD:
 
+                                        registrosCompromisosSolicitud = string.Empty;
                                         foreach (var compromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                                         {
                                             // bool ReplaceComplete = false; 
@@ -5348,7 +5357,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5603,6 +5612,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_COMPROMISOS_SOLICITUD:
 
+                                        registrosCompromisosSolicitud = string.Empty;
                                         foreach (var compromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                                         {
                                             // bool ReplaceComplete = false;
@@ -5633,7 +5643,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5844,6 +5854,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_COMPROMISOS_SOLICITUD:
 
+                                        registrosCompromisosSolicitud = string.Empty;
                                         foreach (var compromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                                         {
                                             // bool ReplaceComplete = false;
@@ -5874,7 +5885,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5973,6 +5984,8 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.REGISTROS_TEMAS:
 
+                                registrosCompromisosSolicitud = string.Empty;
+
                                 foreach (var compromiso in Tema.TemaCompromiso)
                                 {
                                     // bool ReplaceComplete = false;
@@ -6001,7 +6014,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>nuevos temas</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -6215,7 +6228,7 @@ namespace asivamosffie.services
                                 }
 
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
-                             .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -6392,12 +6405,12 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TEMAS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, RegistrosNuevosTemas);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(RegistrosNuevosTemas) ? msg.Replace("[MSG]", "No se trabajaron <strong>Nuevos temas</strong> para esta solicitud.") : RegistrosNuevosTemas);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_PROPOSICIONES_VARIOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, RegistrosProposicionVarios);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(RegistrosProposicionVarios) ? msg.Replace("[MSG]", "No se tienen <strong>proposiciones y varios</strong> para esta solicitud.") : RegistrosProposicionVarios);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_FIRMAS:
