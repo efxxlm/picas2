@@ -149,6 +149,8 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                     this.formUsuario.setValue(
                                                                                         {
                                                                                             procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
+                                                                                            nombreOrganizacion: getUsuario.nombreOrganizacion !== undefined ? getUsuario.nombreOrganizacion : null,
+                                                                                            nitOrganizacion: getUsuario.nitOrganizacion !== undefined ? getUsuario.nitOrganizacion : null,
                                                                                             primerNombre: getUsuario.primerNombre !== undefined ? getUsuario.primerNombre : null,
                                                                                             segundoNombre: getUsuario.segundoNombre !== undefined ? getUsuario.segundoNombre : null,
                                                                                             primerApellido: getUsuario.primerApellido !== undefined ? getUsuario.primerApellido : null,
@@ -201,6 +203,8 @@ export class FormGestionarUsuariosComponent implements OnInit {
         return this.fb.group(
             {
                 procedencia: [ null, Validators.required ],
+                nombreOrganizacion: [ null, Validators.required ],
+                nitOrganizacion: [ null, Validators.required ],
                 primerNombre: [ null, Validators.required ],
                 segundoNombre: [ null, Validators.required ],
                 primerApellido: [ null, Validators.required ],
@@ -358,6 +362,8 @@ export class FormGestionarUsuariosComponent implements OnInit {
         const pUsuario = {
             usuarioId: this.usuarioId,
             procedenciaCodigo: this.formUsuario.get( 'procedencia' ).value,
+            nombreOrganizacion: this.formUsuario.get( 'nombreOrganizacion' ).value,
+            nitOrganizacion: this.formUsuario.get( 'nitOrganizacion' ).value,
             primerNombre: this.formUsuario.get( 'primerNombre' ).value,
             segundoNombre: this.formUsuario.get( 'segundoNombre' ).value,
             primerApellido: this.formUsuario.get( 'primerApellido' ).value,

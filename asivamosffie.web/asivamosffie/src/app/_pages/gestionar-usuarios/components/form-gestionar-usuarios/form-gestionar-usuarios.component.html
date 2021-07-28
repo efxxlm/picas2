@@ -1,942 +1,1259 @@
 <section class="container text-center mb-2em" *ngIf="esRegistroNuevo !== undefined">
-    <div class="text-right">
-        <a routerLink="/gestionUsuarios" mat-button color="primary" class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
-    </div>
+  <div class="text-right">
+    <a routerLink="/gestionUsuarios" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
 
-    <h1 class="title-menu--h1"> {{ esRegistroNuevo === true ? 'Crear usuario' : 'Ver Detalle/Editar usuario' }} </h1>
+  <h1 class="title-menu--h1">{{ esRegistroNuevo === true ? 'Crear usuario' : 'Ver Detalle/Editar usuario' }}</h1>
 
-    <form [formGroup]="formUsuario" (ngSubmit)="guardar()">
-        <mat-card class="shipping-card" align="left">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text">
-                    Registro
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="ml-2em">
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="procedencia"
-                                    [class.color-secondaryColor]="( formUsuario.get('procedencia').invalid && formUsuario.get('procedencia').touched) || ( formUsuario.get('procedencia').invalid && esRegistroNuevo === false )">
-                                    Procedencia
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="procedencia" required>
-                                  <mat-option *ngFor="let value of listaProcedencia" [value]="value.codigo">
-                                      {{ value.nombre }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('procedencia').invalid && formUsuario.get('procedencia').touched ) || ( formUsuario.get('procedencia').invalid && esRegistroNuevo === false )">
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="primerNombre"
-                                          [class.color-secondaryColor]="( formUsuario.get('primerNombre').invalid && formUsuario.get('primerNombre').touched) || ( formUsuario.get('primerNombre').invalid && esRegistroNuevo === false )">
-                                          Primer nombre
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="20"
-                                            #primerNombre
-                                            formControlName="primerNombre"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 20 - primerNombre.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('primerNombre').invalid && formUsuario.get('primerNombre').touched ) || ( formUsuario.get('primerNombre').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="segundoNombre"
-                                          [class.color-secondaryColor]="( formUsuario.get('segundoNombre').invalid && formUsuario.get('segundoNombre').touched) || ( formUsuario.get('segundoNombre').invalid && esRegistroNuevo === false )">
-                                          Segundo nombre
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="20"
-                                            #segundoNombre
-                                            formControlName="segundoNombre"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 20 - segundoNombre.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('segundoNombre').invalid && formUsuario.get('segundoNombre').touched ) || ( formUsuario.get('segundoNombre').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="primerApellido"
-                                          [class.color-secondaryColor]="( formUsuario.get('primerApellido').invalid && formUsuario.get('primerApellido').touched) || ( formUsuario.get('primerApellido').invalid && esRegistroNuevo === false )">
-                                          Primer apellido
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="20"
-                                            #primerApellido
-                                            formControlName="primerApellido"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 20 - primerApellido.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('primerApellido').invalid && formUsuario.get('primerApellido').touched ) || ( formUsuario.get('primerApellido').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="segundoApellido"
-                                          [class.color-secondaryColor]="( formUsuario.get('segundoApellido').invalid && formUsuario.get('segundoApellido').touched) || ( formUsuario.get('segundoApellido').invalid && esRegistroNuevo === false )">
-                                          Segundo apellido
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="20"
-                                            #segundoApellido
-                                            formControlName="segundoApellido"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 20 - segundoApellido.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('segundoApellido').invalid && formUsuario.get('segundoApellido').touched ) || ( formUsuario.get('segundoApellido').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="tipoDocumento"
-                                    [class.color-secondaryColor]="( formUsuario.get('tipoDocumento').invalid && formUsuario.get('tipoDocumento').touched) || ( formUsuario.get('tipoDocumento').invalid && esRegistroNuevo === false )">
-                                    Tipo de documento de identificación
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 87%;">
-                                <mat-select class="padding-left" formControlName="tipoDocumento" required>
-                                  <mat-option *ngFor="let value of listaTipoDocumento" [value]="value.codigo">
-                                      {{ value.nombre }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('tipoDocumento').invalid && formUsuario.get('tipoDocumento').touched ) || ( formUsuario.get('tipoDocumento').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="numeroIdentificacion"
-                                          [class.color-secondaryColor]="( formUsuario.get('numeroIdentificacion').invalid && formUsuario.get('numeroIdentificacion').touched) || ( formUsuario.get('numeroIdentificacion').invalid && esRegistroNuevo === false )">
-                                          Número de identificación
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="20"
-                                            #numeroIdentificacion
-                                            formControlName="numeroIdentificacion"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 20 - numeroIdentificacion.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('numeroIdentificacion').invalid && formUsuario.get('numeroIdentificacion').touched ) || ( formUsuario.get('numeroIdentificacion').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          for="correo"
-                                          [class.color-secondaryColor]="( formUsuario.get('correo').invalid && formUsuario.get('correo').touched) || ( formUsuario.get('correo').invalid && esRegistroNuevo === false )">
-                                          Correo electrónico
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="100"
-                                            #correo
-                                            formControlName="correo"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 100 - correo.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('correo').invalid && formUsuario.get('correo').touched ) || ( formUsuario.get('correo').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="telefonoFijo"
-                                          [class.color-secondaryColor]="( formUsuario.get('telefonoFijo').invalid && formUsuario.get('telefonoFijo').touched) || ( formUsuario.get('telefonoFijo').invalid && esRegistroNuevo === false )">
-                                          Teléfono fijo
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="7"
-                                            #telefonoFijo
-                                            formControlName="telefonoFijo"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 7 - telefonoFijo.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('telefonoFijo').invalid && formUsuario.get('telefonoFijo').touched ) || ( formUsuario.get('telefonoFijo').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: .9em;"
-                                          for="telefonoCelular"
-                                          [class.color-secondaryColor]="( formUsuario.get('telefonoCelular').invalid && formUsuario.get('telefonoCelular').touched) || ( formUsuario.get('telefonoCelular').invalid && esRegistroNuevo === false )">
-                                          Teléfono celular
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                    <input  matInput
-                                            type="text"
-                                            maxlength="10"
-                                            #telefonoCelular
-                                            formControlName="telefonoCelular"
-                                            style="width: 100%;"
-                                            required>
-                                </mat-form-field>
-                                <span   class="contador"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Campo alfanumérico"
-                                        matTooltipClass="info-tooltip">
-                                        {{ 10 - telefonoCelular.value.length }}
-                                </span>
-                            </div>
-                            <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('telefonoCelular').invalid && formUsuario.get('telefonoCelular').touched ) || ( formUsuario.get('telefonoCelular').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="departamento"
-                                    [class.color-secondaryColor]="( formUsuario.get('departamento').invalid && formUsuario.get('departamento').touched) || ( formUsuario.get('departamento').invalid && esRegistroNuevo === false )">
-                                    Departamento
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="departamento" required (ngModelChange)="getMunicipiosByDepartamento( $event )">
-                                  <mat-option *ngFor="let value of listaDepartamento" [value]="value">
-                                      {{ firstLetterUpperCase( value.descripcion ) }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('departamento').invalid && formUsuario.get('departamento').touched ) || ( formUsuario.get('departamento').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="municipio"
-                                    [class.color-secondaryColor]="( formUsuario.get('municipio').invalid && formUsuario.get('municipio').touched) || ( formUsuario.get('municipio').invalid && esRegistroNuevo === false )">
-                                    Municipio
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 91%;">
-                                <section *ngIf="formUsuario.get( 'municipio' ).value === null">
-                                    <mat-select class="padding-left" formControlName="municipio" required>
-                                        <mat-option *ngFor="let value of listaMunicipio" [value]="value">
-                                            {{ firstLetterUpperCase( value.descripcion ) }}
-                                        </mat-option>
-                                    </mat-select>
-                                </section>
-                                <section *ngIf="formUsuario.get( 'municipio' ).value !== null">
-                                    <mat-select class="padding-left" formControlName="municipio" required>
-                                        <mat-option [value]="formUsuario.get( 'municipio' ).value">
-                                            {{ firstLetterUpperCase( formUsuario.get( 'municipio' ).value.descripcion ) }}
-                                        </mat-option>
-                                    </mat-select>
-                                </section>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('municipio').invalid && formUsuario.get('municipio').touched ) || ( formUsuario.get('municipio').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label  class="label-left"
-                                        style="margin-top: .8em;"
-                                        for="fechaCreacion"
-                                        [class.color-secondaryColor]="( formUsuario.get('fechaCreacion').invalid && formUsuario.get('fechaCreacion').touched) || (formUsuario.get('fechaCreacion').invalid && esRegistroNuevo === false )">
-                                        Fecha de creación
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                  <input    matInput
-                                            [matDatepicker]="fechaCreacion"
-                                            formControlName="fechaCreacion"
-                                            placeholder="DD/MM/AAAA"
-                                            (click)="fechaCreacion.open()"
-                                            required
-                                            readonly>
-                                  <mat-datepicker #fechaCreacion></mat-datepicker>
-                                </mat-form-field>
-                                <button mat-button
-                                        color="primary"
-                                        type="button"
-                                        (click)="fechaCreacion.open()"
-                                        class="btn-calendario">
-                                        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
-                                </button>
-                                <span class="icon-incompleto" style="margin-top: .5em;">
-                                  <img  class="icon-incompleto--img"
-                                        src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip"
-                                        *ngIf="( formUsuario.get('fechaCreacion').invalid && formUsuario.get('fechaCreacion').touched) || (formUsuario.get('fechaCreacion').invalid && esRegistroNuevo === false )">
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label  class="label-left"
-                                        style="margin-top: .8em;"
-                                        for="fechaExpiracion"
-                                        [class.color-secondaryColor]="( formUsuario.get('fechaExpiracion').invalid && formUsuario.get('fechaExpiracion').touched) || (formUsuario.get('fechaExpiracion').invalid && esRegistroNuevo === false )">
-                                        Fecha de expiración
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field>
-                                  <input    matInput
-                                            [matDatepicker]="fechaExpiracion"
-                                            formControlName="fechaExpiracion"
-                                            placeholder="DD/MM/AAAA"
-                                            (click)="fechaExpiracion.open()"
-                                            required
-                                            readonly>
-                                  <mat-datepicker #fechaExpiracion></mat-datepicker>
-                                </mat-form-field>
-                                <button mat-button
-                                        color="primary"
-                                        type="button"
-                                        (click)="fechaExpiracion.open()"
-                                        class="btn-calendario">
-                                        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
-                                </button>
-                                <span class="icon-incompleto" style="margin-top: .5em;">
-                                  <img  class="icon-incompleto--img"
-                                        src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip"
-                                        *ngIf="( formUsuario.get('fechaExpiracion').invalid && formUsuario.get('fechaExpiracion').touched) || (formUsuario.get('fechaExpiracion').invalid && esRegistroNuevo === false )">
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-left: .5em !important;">
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: .9em;"
-                                    for="urlSoporte"
-                                    [class.color-secondaryColor]="( formUsuario.get('urlSoporte').invalid && formUsuario.get('urlSoporte').touched) || ( formUsuario.get('urlSoporte').invalid && esRegistroNuevo === false )">
-                                    URL con soporte
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field style="width: 95%;">
-                                <input  matInput
-                                        type="text"
-                                        maxlength="400"
-                                        #urlSoporte
-                                        formControlName="urlSoporte"
-                                        style="width: 100%;"
-                                        required>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('urlSoporte').invalid && formUsuario.get('urlSoporte').touched ) || ( formUsuario.get('urlSoporte').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-left: .5em !important;">
-                    <div class="col-md-12">
-                      <div class="d-flex">
-                        <div class="pr-1">
-                            <label  class="label-left"
-                                    [class.color-secondaryColor]="( formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched) || ( formUsuario.get('observaciones').invalid && esRegistroNuevo === false )">
-                                    Observaciones
-                            </label>
-                        </div>
-                        <div class="col d-flex" style="width: 100%;">
-                            <quill-editor   class="quill-editor-style card position-relative"
-                                            [styles]="editorStyle"
-                                            [modules]="config"
-                                            style="width: 100%;"
-                                            [class.invalid]="( formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched) || (formUsuario.get('observaciones').invalid && esRegistroNuevo === false )"
-                                            (onContentChanged)="maxLength($event, 500)"
-                                            formControlName="observaciones"
-                                            #observaciones
-                                            required>
-                            </quill-editor>
-                            <span class="contador miles" *ngIf="formUsuario.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                {{500 - textoLimpio( observaciones.quillEditor, 2000 )}}
-                            </span>
-                            <span class="contador miles" *ngIf="formUsuario.get('observaciones').value === null" style="margin-top: 3.5em;">
-                                500
-                            </span>
-                            <span class="icon-incompleto" style="margin-top: 3.7em;">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched ) || ( formUsuario.get('observaciones').invalid && esRegistroNuevo === false )"
-                                />
-                            </span>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    
-        <mat-card class="shipping-card" align="left" *ngIf="formUsuario.get( 'procedencia' ).value !== null">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text">
-                    Procedencia
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="ml-2em">
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    for="dependencia"
-                                    [class.color-secondaryColor]="( formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched) || ( formUsuario.get('dependencia').invalid && esRegistroNuevo === false )">
-                                    Dependencia
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="dependencia" required>
-                                  <mat-option *ngFor="let value of listaDependencia" [value]="value.codigo">
-                                      {{ value.nombre }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched ) || ( formUsuario.get('dependencia').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                            <label  class="label-left"
-                                    for="tieneGrupo"
-                                    [ngClass]="{'color-secondaryColor': (formUsuario.get('tieneGrupo').invalid && formUsuario.get('tieneGrupo').touched) || formUsuario.get('tieneGrupo').invalid && esRegistroNuevo === false }">
-                                    ¿Pertenece a un grupo?
-                            </label>
-                        </div>
-                        <div>
-                            <mat-radio-group class="radioInput" formControlName="tieneGrupo" required>
-                                <mat-radio-button [value]="true"> Sí </mat-radio-button>
-                                <mat-radio-button [value]="false"> No </mat-radio-button>
-                            </mat-radio-group>
-                            <span class="required-form-group" style="margin-left: 1px">*</span>
-                        </div>
-                        <span class="icon-incompleto">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('tieneGrupo').invalid && formUsuario.get('tieneGrupo').touched) || (formUsuario.get('tieneGrupo').invalid && esRegistroNuevo === false )">
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                <div class="row" *ngIf="formUsuario.get('tieneGrupo').value === true">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="grupo"
-                                    [class.color-secondaryColor]="( formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched) || ( formUsuario.get('grupo').invalid && esRegistroNuevo === false )">
-                                    Grupo
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="grupo" required>
-                                  <mat-option *ngFor="let value of listaGrupo" [value]="value.codigo">
-                                      {{ value.nombre }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched ) || ( formUsuario.get('grupo').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-left: .5em !important;">
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label    class="label-left"
-                                    style="margin-top: 1.8em;"
-                                    for="rol"
-                                    [class.color-secondaryColor]="( formUsuario.get('rol').invalid && formUsuario.get('rol').touched) || ( formUsuario.get('rol').invalid && esRegistroNuevo === false )">
-                                    Rol
-                          </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field appearance="fill" style="width: 96%;">
-                                <mat-select class="padding-left" formControlName="rol" required>
-                                  <mat-option *ngFor="let value of listaRoles" [value]="value.perfilId">
-                                      {{ value.nombre }}
-                                  </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span class="icon-incompleto" style="margin-top: .5em;">
-                          <img
-                            class="icon-incompleto--img"
-                            src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
-                            [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip"
-                            *ngIf="( formUsuario.get('rol').invalid && formUsuario.get('rol').touched ) || ( formUsuario.get('rol').invalid && esRegistroNuevo === false )"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="row" *ngIf="formUsuario.get( 'rol' ).value !== null">
-                  <div class="col-md-7">
-                    <div class="row">
-                      <div class="pr-1">
-                          <label  class="label-left"
-                                  for="tieneContratos"
-                                  [ngClass]="{'color-secondaryColor': (formUsuario.get('tieneContratos').invalid && formUsuario.get('tieneContratos').touched) || formUsuario.get('tieneContratos').invalid && esRegistroNuevo === false }">
-                                  ¿Tiene asignado contratos?
-                          </label>
-                      </div>
-                      <div>
-                          <mat-radio-group class="radioInput" formControlName="tieneContratos" required>
-                              <mat-radio-button [value]="true"> Sí </mat-radio-button>
-                              <mat-radio-button [value]="false"> No </mat-radio-button>
-                          </mat-radio-group>
-                          <span class="required-form-group" style="margin-left: 1px">*</span>
-                      </div>
-                      <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="( formUsuario.get('tieneContratos').invalid && formUsuario.get('tieneContratos').touched) || (formUsuario.get('tieneContratos').invalid && esRegistroNuevo === false )">
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row" *ngIf="formUsuario.get( 'tieneContratos' ).value === true">
-                    <div class="col-md-7">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label    class="label-left"
-                                          style="margin-top: 1.8em;"
-                                          for="tipoAsignacionCodigo"
-                                          [class.color-secondaryColor]="( formUsuario.get('tipoAsignacionCodigo').invalid && formUsuario.get('tipoAsignacionCodigo').touched) || ( formUsuario.get('tipoAsignacionCodigo').invalid && esRegistroNuevo === false )">
-                                          Rol asignado al contrato
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field appearance="fill" style="width: 91%;">
-                                    <mat-select class="padding-left" formControlName="tipoAsignacionCodigo" required (ngModelChange)="getlistaContratos( $event )">
-                                      <mat-option *ngFor="let value of listaAsignaciones" [value]="value.codigo">
-                                          {{ value.nombre }}
-                                      </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <span class="icon-incompleto" style="margin-top: .5em;">
-                                <img    class="icon-incompleto--img"
-                                        src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-                                        [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip"
-                                        *ngIf="( formUsuario.get('tipoAsignacionCodigo').invalid && formUsuario.get('tipoAsignacionCodigo').touched ) || ( formUsuario.get('tipoAsignacionCodigo').invalid && esRegistroNuevo === false )">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <section *ngIf="formUsuario.get( 'tieneContratos' ).value === true">
-                    <h3 class="colorMainColor" style="margin: .5em 0 0 .5em !important;"><b> {{ getRolSeleccionado( formUsuario.get( 'rol' ).value ) }} </b></h3>
-
-                    <div class="row" style="margin-left: .5em !important;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label  class="label-left"
-                                            style="margin-top: 1.8em;"
-                                            for="contratos"
-                                            [class.color-secondaryColor]="( formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched) || ( formUsuario.get('contratos').invalid && esRegistroNuevo === false )">
-                                            Asignar contratos
-                                    </label>
-                                </div>
-                                <div class="col d-flex">
-                                    <mat-form-field appearance="fill" style="width: 96%;">
-                                        <mat-select class="padding-left" multiple formControlName="contratos" required (ngModelChange)="getlistaAsignaciones( $event )">
-                                            <mat-option *ngFor="let value of listaContratos" [value]="value.contratoId">
-                                                {{ value.numeroContrato }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <span class="icon-incompleto" style="margin-top: .5em;">
-                                    <img
-                                      class="icon-incompleto--img"
-                                      src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-                                      [matTooltipPosition]="'above'"
-                                      matTooltip="Debe ingresar la información en el campo para continuar"
-                                      matTooltipClass="info-tooltip"
-                                      *ngIf="( formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched ) || ( formUsuario.get('contratos').invalid && esRegistroNuevo === false )"
-                                    />
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="shipping-card" align="left" *ngIf="esRegistroNuevo === false && perfil !== undefined">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text">
-                    Auditoria
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="ml-2em">
-                <p><b>Estado: </b> <i> {{ perfil.eliminado === false ? 'Activo' : 'Inactivo' }} </i></p>
-                <p><b>Ultimo Ingreso: </b> <i> {{ perfil.fechaUltimoIngreso !== undefined ? ( perfil.fechaUltimoIngreso | date: 'dd/MM/yyyy' ) : '' }} </i></p>
-                <p><b>Ultimo cambio de Contraseña: </b> <i> {{ perfil.fechaCambioPassword !== undefined ? ( perfil.fechaCambioPassword | date: 'dd/MM/yyyy' ) : '' }} </i></p>
-            </mat-card-content>
-        </mat-card>
-    
-        <div class="text-center mt-1em">
-            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formUsuario.dirty === false">
-                <img [src]="esRegistroNuevo === true ? 'assets/img/icon/crear-usuario.svg' : 'assets/img/icon/guardar.svg'">
-            </button>
+  <form [formGroup]="formUsuario" (ngSubmit)="guardar()">
+    <mat-card class="shipping-card" align="left">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text"> Registro </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="procedencia"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('procedencia').invalid && formUsuario.get('procedencia').touched) ||
+                    (formUsuario.get('procedencia').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Procedencia
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="procedencia" required>
+                    <mat-option *ngFor="let value of listaProcedencia" [value]="value.codigo">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('procedencia').invalid && formUsuario.get('procedencia').touched) ||
+                    (formUsuario.get('procedencia').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
         </div>
-    </form>
+
+        <div class="row animatedDown" *ngIf="formUsuario.get('procedencia').value == 2">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="nombreOrganizacion"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('nombreOrganizacion').invalid && formUsuario.get('nombreOrganizacion').touched) ||
+                    (formUsuario.get('nombreOrganizacion').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Nombre de la organización
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="nombreOrganizacion"
+                    #nombreOrganizacion
+                    maxlength="1000"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador miles"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 1000 - nombreOrganizacion.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('nombreOrganizacion').invalid &&
+                        formUsuario.get('nombreOrganizacion').touched) ||
+                      (formUsuario.get('nombreOrganizacion').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="formUsuario.get('procedencia').value == 2">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="nitOrganizacion"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('nitOrganizacion').invalid && formUsuario.get('nitOrganizacion').touched) ||
+                    (formUsuario.get('nitOrganizacion').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Nit de la organización
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="nitOrganizacion"
+                    #nitOrganizacion
+                    maxlength="20"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - nitOrganizacion.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('nitOrganizacion').invalid && formUsuario.get('nitOrganizacion').touched) ||
+                      (formUsuario.get('nitOrganizacion').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="primerNombre"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('primerNombre').invalid && formUsuario.get('primerNombre').touched) ||
+                    (formUsuario.get('primerNombre').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Primer nombre
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="text" formControlName="primerNombre" #primerNombre maxlength="20" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - primerNombre.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('primerNombre').invalid && formUsuario.get('primerNombre').touched) ||
+                      (formUsuario.get('primerNombre').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="segundoNombre"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('segundoNombre').invalid && formUsuario.get('segundoNombre').touched) ||
+                    (formUsuario.get('segundoNombre').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Segundo nombre
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input matInput type="text" maxlength="20" #segundoNombre formControlName="segundoNombre" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - segundoNombre.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('segundoNombre').invalid && formUsuario.get('segundoNombre').touched) ||
+                    (formUsuario.get('segundoNombre').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="primerApellido"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('primerApellido').invalid && formUsuario.get('primerApellido').touched) ||
+                    (formUsuario.get('primerApellido').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Primer apellido
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    type="text"
+                    maxlength="20"
+                    #primerApellido
+                    formControlName="primerApellido"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - primerApellido.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('primerApellido').invalid && formUsuario.get('primerApellido').touched) ||
+                    (formUsuario.get('primerApellido').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="segundoApellido"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('segundoApellido').invalid && formUsuario.get('segundoApellido').touched) ||
+                    (formUsuario.get('segundoApellido').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Segundo apellido
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    type="text"
+                    maxlength="20"
+                    #segundoApellido
+                    formControlName="segundoApellido"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - segundoApellido.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('segundoApellido').invalid && formUsuario.get('segundoApellido').touched) ||
+                    (formUsuario.get('segundoApellido').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tipoDocumento"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('tipoDocumento').invalid && formUsuario.get('tipoDocumento').touched) ||
+                    (formUsuario.get('tipoDocumento').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Tipo de documento de identificación
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipoDocumento" required>
+                    <mat-option *ngFor="let value of listaTipoDocumento" [value]="value.codigo">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('tipoDocumento').invalid && formUsuario.get('tipoDocumento').touched) ||
+                    (formUsuario.get('tipoDocumento').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="numeroIdentificacion"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('numeroIdentificacion').invalid &&
+                      formUsuario.get('numeroIdentificacion').touched) ||
+                    (formUsuario.get('numeroIdentificacion').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Número de identificación
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    type="text"
+                    maxlength="20"
+                    #numeroIdentificacion
+                    formControlName="numeroIdentificacion"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - numeroIdentificacion.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('numeroIdentificacion').invalid &&
+                      formUsuario.get('numeroIdentificacion').touched) ||
+                    (formUsuario.get('numeroIdentificacion').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="correo"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('correo').invalid && formUsuario.get('correo').touched) ||
+                    (formUsuario.get('correo').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Correo electrónico
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input matInput type="text" maxlength="100" #correo formControlName="correo" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 100 - correo.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('correo').invalid && formUsuario.get('correo').touched) ||
+                    (formUsuario.get('correo').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="telefonoFijo"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('telefonoFijo').invalid && formUsuario.get('telefonoFijo').touched) ||
+                    (formUsuario.get('telefonoFijo').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Teléfono fijo
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input matInput type="text" maxlength="7" #telefonoFijo formControlName="telefonoFijo" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 7 - telefonoFijo.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('telefonoFijo').invalid && formUsuario.get('telefonoFijo').touched) ||
+                    (formUsuario.get('telefonoFijo').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="telefonoCelular"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('telefonoCelular').invalid && formUsuario.get('telefonoCelular').touched) ||
+                    (formUsuario.get('telefonoCelular').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Teléfono celular
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    type="text"
+                    maxlength="10"
+                    #telefonoCelular
+                    formControlName="telefonoCelular"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 10 - telefonoCelular.value.length }}
+                </span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('telefonoCelular').invalid && formUsuario.get('telefonoCelular').touched) ||
+                    (formUsuario.get('telefonoCelular').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="departamento"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('departamento').invalid && formUsuario.get('departamento').touched) ||
+                    (formUsuario.get('departamento').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Departamento
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select
+                    formControlName="departamento"
+                    required
+                    (ngModelChange)="getMunicipiosByDepartamento($event)"
+                  >
+                    <mat-option *ngFor="let value of listaDepartamento" [value]="value">
+                      {{ firstLetterUpperCase(value.descripcion) }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('departamento').invalid && formUsuario.get('departamento').touched) ||
+                    (formUsuario.get('departamento').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="municipio"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('municipio').invalid && formUsuario.get('municipio').touched) ||
+                    (formUsuario.get('municipio').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Municipio
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="select-width">
+                  <section *ngIf="formUsuario.get('municipio').value === null">
+                    <mat-select formControlName="municipio" required>
+                      <mat-option *ngFor="let value of listaMunicipio" [value]="value">
+                        {{ firstLetterUpperCase(value.descripcion) }}
+                      </mat-option>
+                    </mat-select>
+                  </section>
+                  <section *ngIf="formUsuario.get('municipio').value !== null">
+                    <mat-select formControlName="municipio" required>
+                      <mat-option [value]="formUsuario.get('municipio').value">
+                        {{ firstLetterUpperCase(formUsuario.get('municipio').value.descripcion) }}
+                      </mat-option>
+                    </mat-select>
+                  </section>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('municipio').invalid && formUsuario.get('municipio').touched) ||
+                    (formUsuario.get('municipio').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="fechaCreacion"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('fechaCreacion').invalid && formUsuario.get('fechaCreacion').touched) ||
+                    (formUsuario.get('fechaCreacion').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Fecha de creación
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    [matDatepicker]="fechaCreacion"
+                    formControlName="fechaCreacion"
+                    placeholder="DD/MM/AAAA"
+                    (click)="fechaCreacion.open()"
+                    required
+                    readonly
+                  />
+                  <mat-datepicker #fechaCreacion></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="fechaCreacion.open()" class="btn-calendario">
+                  <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                </button>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('fechaCreacion').invalid && formUsuario.get('fechaCreacion').touched) ||
+                      (formUsuario.get('fechaCreacion').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="fechaExpiracion"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('fechaExpiracion').invalid && formUsuario.get('fechaExpiracion').touched) ||
+                    (formUsuario.get('fechaExpiracion').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Fecha de expiración
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input
+                    matInput
+                    [matDatepicker]="fechaExpiracion"
+                    formControlName="fechaExpiracion"
+                    placeholder="DD/MM/AAAA"
+                    (click)="fechaExpiracion.open()"
+                    required
+                    readonly
+                  />
+                  <mat-datepicker #fechaExpiracion></mat-datepicker>
+                </mat-form-field>
+                <button
+                  mat-button
+                  color="primary"
+                  type="button"
+                  (click)="fechaExpiracion.open()"
+                  class="btn-calendario"
+                >
+                  <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                </button>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('fechaExpiracion').invalid && formUsuario.get('fechaExpiracion').touched) ||
+                      (formUsuario.get('fechaExpiracion').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="urlSoporte"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('urlSoporte').invalid && formUsuario.get('urlSoporte').touched) ||
+                    (formUsuario.get('urlSoporte').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  URL con soporte
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field>
+                  <input matInput type="text" maxlength="400" #urlSoporte formControlName="urlSoporte" required />
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('urlSoporte').invalid && formUsuario.get('urlSoporte').touched) ||
+                    (formUsuario.get('urlSoporte').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched) ||
+                    (formUsuario.get('observaciones').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Observaciones
+                </label>
+              </div>
+              <div class="col d-flex">
+                <quill-editor
+                  class="quill-editor-style card position-relative"
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  [class.invalid]="
+                    (formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched) ||
+                    (formUsuario.get('observaciones').invalid && esRegistroNuevo === false)
+                  "
+                  (onContentChanged)="maxLength($event, 500)"
+                  formControlName="observaciones"
+                  #observaciones
+                  required
+                >
+                </quill-editor>
+                <span
+                  class="contador miles"
+                  *ngIf="formUsuario.get('observaciones').value !== null"
+                  style="margin-top: 3.5em"
+                >
+                  {{ 500 - textoLimpio(observaciones.quillEditor, 2000) }}
+                </span>
+                <span
+                  class="contador miles"
+                  *ngIf="formUsuario.get('observaciones').value === null"
+                  style="margin-top: 3.5em"
+                >
+                  500
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('observaciones').invalid && formUsuario.get('observaciones').touched) ||
+                      (formUsuario.get('observaciones').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card" align="left" *ngIf="formUsuario.get('procedencia').value !== null">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text"> Procedencia </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="ml-2em">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="dependencia"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched) ||
+                    (formUsuario.get('dependencia').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Dependencia
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="dependencia" required>
+                    <mat-option *ngFor="let value of listaDependencia" [value]="value.codigo">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched) ||
+                    (formUsuario.get('dependencia').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tieneGrupo"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (formUsuario.get('tieneGrupo').invalid && formUsuario.get('tieneGrupo').touched) ||
+                      (formUsuario.get('tieneGrupo').invalid && esRegistroNuevo === false)
+                  }"
+                >
+                  ¿Pertenece a un grupo?
+                </label>
+              </div>
+              <div>
+                <mat-radio-group class="radioInput" formControlName="tieneGrupo" required>
+                  <mat-radio-button [value]="true"> Sí </mat-radio-button>
+                  <mat-radio-button [value]="false"> No </mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('tieneGrupo').invalid && formUsuario.get('tieneGrupo').touched) ||
+                    (formUsuario.get('tieneGrupo').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="formUsuario.get('tieneGrupo').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="grupo"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched) ||
+                    (formUsuario.get('grupo').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Grupo
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="grupo" required>
+                    <mat-option *ngFor="let value of listaGrupo" [value]="value.codigo">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched) ||
+                    (formUsuario.get('grupo').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="rol"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('rol').invalid && formUsuario.get('rol').touched) ||
+                    (formUsuario.get('rol').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Rol
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="rol" required>
+                    <mat-option *ngFor="let value of listaRoles" [value]="value.perfilId">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('rol').invalid && formUsuario.get('rol').touched) ||
+                    (formUsuario.get('rol').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="formUsuario.get('rol').value !== null">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tieneContratos"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (formUsuario.get('tieneContratos').invalid && formUsuario.get('tieneContratos').touched) ||
+                      (formUsuario.get('tieneContratos').invalid && esRegistroNuevo === false)
+                  }"
+                >
+                  ¿Tiene asignado contratos?
+                </label>
+              </div>
+              <div>
+                <mat-radio-group class="radioInput" formControlName="tieneContratos" required>
+                  <mat-radio-button [value]="true"> Sí </mat-radio-button>
+                  <mat-radio-button [value]="false"> No </mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('tieneContratos').invalid && formUsuario.get('tieneContratos').touched) ||
+                    (formUsuario.get('tieneContratos').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="formUsuario.get('tieneContratos').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tipoAsignacionCodigo"
+                  [class.color-secondaryColor]="
+                    (formUsuario.get('tipoAsignacionCodigo').invalid &&
+                      formUsuario.get('tipoAsignacionCodigo').touched) ||
+                    (formUsuario.get('tipoAsignacionCodigo').invalid && esRegistroNuevo === false)
+                  "
+                >
+                  Rol asignado al contrato
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select
+                    formControlName="tipoAsignacionCodigo"
+                    required
+                    (ngModelChange)="getlistaContratos($event)"
+                  >
+                    <mat-option *ngFor="let value of listaAsignaciones" [value]="value.codigo">
+                      {{ value.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (formUsuario.get('tipoAsignacionCodigo').invalid &&
+                      formUsuario.get('tipoAsignacionCodigo').touched) ||
+                    (formUsuario.get('tipoAsignacionCodigo').invalid && esRegistroNuevo === false)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <section *ngIf="formUsuario.get('tieneContratos').value === true">
+          <h3 class="colorMainColor">
+            <b> {{ getRolSeleccionado(formUsuario.get('rol').value) }} </b>
+          </h3>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="contratos"
+                    [class.color-secondaryColor]="
+                      (formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched) ||
+                      (formUsuario.get('contratos').invalid && esRegistroNuevo === false)
+                    "
+                  >
+                    Asignar contratos
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select
+                      multiple
+                      formControlName="contratos"
+                      required
+                      (ngModelChange)="getlistaAsignaciones($event)"
+                    >
+                      <mat-option *ngFor="let value of listaContratos" [value]="value.contratoId">
+                        {{ value.numeroContrato }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched) ||
+                      (formUsuario.get('contratos').invalid && esRegistroNuevo === false)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card" align="left" *ngIf="esRegistroNuevo === false && perfil !== undefined">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text"> Auditoria </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="ml-2em">
+        <p>
+          <b>Estado: </b> <i> {{ perfil.eliminado === false ? 'Activo' : 'Inactivo' }} </i>
+        </p>
+        <p>
+          <b>Ultimo Ingreso: </b>
+          <i> {{ perfil.fechaUltimoIngreso !== undefined ? (perfil.fechaUltimoIngreso | date: 'dd/MM/yyyy') : '' }} </i>
+        </p>
+        <p>
+          <b>Ultimo cambio de Contraseña: </b>
+          <i>
+            {{ perfil.fechaCambioPassword !== undefined ? (perfil.fechaCambioPassword | date: 'dd/MM/yyyy') : '' }}
+          </i>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="text-center mt-1em">
+      <button
+        mat-button
+        color="warn"
+        class="btn-guardar"
+        type="submit"
+        [disabled]="
+          formUsuario.dirty === false ||
+          (formUsuario.get('procedencia').value == 2 &&
+            formUsuario.get('nombreOrganizacion').invalid &&
+            formUsuario.get('nitOrganizacion').invalid)
+        "
+      >
+        <img [src]="esRegistroNuevo === true ? 'assets/img/icon/crear-usuario.svg' : 'assets/img/icon/guardar.svg'" />
+      </button>
+    </div>
+  </form>
 </section>

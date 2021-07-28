@@ -25,8 +25,8 @@
                   <div align="left">
                     <mat-card class="border">
                       <mat-card-content>
-                        <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
-                        <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+                        <p><b>Nombre del contratista</b>: {{ contrato?.contratacion?.contratista?.nombre }}</p>
+                        <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato?.contratacion?.contratista?.numeroIdentificacion }}</p>
                         <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
                         <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
                         <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
@@ -79,14 +79,14 @@
                             Perfil {{ j + 1 }}
                           </mat-panel-title>
                         </mat-expansion-panel-header>
-          
+
                         <app-hojas-vida-contratista-artc  [observacionesCompleted]="true"
                                                           [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]"></app-hojas-vida-contratista-artc>
-      
+
                       </mat-expansion-panel>
                     </mat-accordion>
                   </mat-expansion-panel>
-                 
+
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
@@ -106,7 +106,7 @@
                    <app-flujo-inversion-recursos-artc [observacionesCompleted]="true"
                                                       [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"></app-flujo-inversion-recursos-artc>
                   </mat-expansion-panel>
-                  
+
             </mat-expansion-panel>
         </mat-accordion>
     </section>

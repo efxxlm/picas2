@@ -403,6 +403,8 @@ namespace asivamosffie.services
                             .Where(u => u.UsuarioId == pUsuario.UsuarioId)
                             .Update(u => new Usuario
                             {
+                                NitOrganizacion = pUsuario.NitOrganizacion,
+                                NombreOrganizacion = pUsuario.NombreOrganizacion,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuario.UsuarioCreacion,
                                 FechaCreacion = pUsuario.FechaCreacion,

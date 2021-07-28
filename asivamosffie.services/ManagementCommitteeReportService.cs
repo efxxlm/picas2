@@ -286,7 +286,7 @@ namespace asivamosffie.services
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
-                 
+
                     foreach (var SesionComiteTema in item.SesionComiteTema)
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
@@ -302,33 +302,35 @@ namespace asivamosffie.services
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
                                 .FirstOrDefault().Nombre;
 
-                        SesionComiteTema.TemaCompromiso.ToList().ForEach(tc =>
-                       {
-                           SesionParticipante participante = new SesionParticipante
-                           {
-                               Usuario = new Usuario()
-                           };
+                        foreach (var tc in SesionComiteTema.TemaCompromiso) 
+                        {
+                            SesionParticipante participante = new SesionParticipante
+                            {
+                                Usuario = new Usuario()
+                            };
 
-                           VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable).FirstOrDefault();
+                            VSesionParticipante vSesionParticipante = 
+                                                                    listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable)
+                                                                                      .FirstOrDefault();
 
-                           if (vSesionParticipante != null)
-                           {
-                               participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
-                               participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
-                               participante.UsuarioId = vSesionParticipante.UsuarioId;
-                               participante.Eliminado = vSesionParticipante.Eliminado;
+                            if (vSesionParticipante != null)
+                            {
+                                participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
+                                participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
+                                participante.UsuarioId = vSesionParticipante.UsuarioId;
+                                participante.Eliminado = vSesionParticipante.Eliminado;
 
-                               participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
-                               participante.Usuario.PrimerNombre = vSesionParticipante.Nombres;
-                               participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
-                               participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
-                               participante.esAprobado = ListParticipanteVotos
-                                                                          .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
-                                                                            && s.SesionParticipanteId == participante.SesionParticipanteId
-                                                                            ).Select(r => r.EsAprobado).LastOrDefault();
-                               tc.ResponsableNavigation = participante;
-                           }
-                       });
+                                participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
+                                participante.Usuario.PrimerNombre = vSesionParticipante.Nombres;
+                                participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
+                                participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
+                                participante.esAprobado = ListParticipanteVotos
+                                                                               .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
+                                                                                   && s.SesionParticipanteId == participante.SesionParticipanteId).Select(r => r.EsAprobado)
+                                                                               .LastOrDefault();
+                                tc.ResponsableNavigation = participante;
+                            }
+                        } 
                     }
 
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
@@ -338,7 +340,7 @@ namespace asivamosffie.services
 
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
                             SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true && s.EsFiduciario == false).ToList();
-                        
+
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
                             SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
@@ -670,7 +672,7 @@ namespace asivamosffie.services
 
                 //ValidarVotacion
                 if ((bool)ValidarTodosVotacion(comiteTecnico))
-                {       
+                {
                     //Valida que todos votaron
                     _context.Set<SesionComentario>()
                             .Where(s => s.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId)
@@ -693,7 +695,7 @@ namespace asivamosffie.services
 
                     await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                     
+
                     //Cambiar estado Comite Con acta aprobada y Solicitudes 
                     //if (comiteTecnico.EstadoActaCodigo == ConstantCodigoActas.Aprobada)
                     {
@@ -711,9 +713,9 @@ namespace asivamosffie.services
                             {
                                 _registerSessionTechnicalCommitteeService.CambiarEstadoSolicitudes(item.SolicitudId, item.TipoSolicitudCodigo, item.EstadoCodigo);
                             }
-                        } 
-                    } 
-                } 
+                        }
+                    }
+                }
                 //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
                 if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
                 {
@@ -753,7 +755,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-  
+
                 return new Respuesta
                 {
 
@@ -793,7 +795,7 @@ namespace asivamosffie.services
         {
             int CantidadParticipantes = pComiteTecnico.SesionParticipante.Count();
             int CantidadDeVotos = _context.SesionComentario.Count(c => c.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId && c.ValidacionVoto != true);
-             
+
             return CantidadParticipantes == CantidadDeVotos;
         }
 

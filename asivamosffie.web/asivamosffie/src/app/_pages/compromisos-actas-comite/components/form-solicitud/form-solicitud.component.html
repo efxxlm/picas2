@@ -192,7 +192,20 @@
           <section>
             <h3><b>Compromiso {{ j+1 }} </b></h3>
             <p><b>Tarea</b>: <span class="color-blue">{{ sesionCompromiso.tarea }}</span> </p>
-            <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.primerNombre : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.primerApellido : '' }} </span> </p>
+            <p><b>Responsable</b>:
+              <span class="color-blue">
+                {{
+                  sesionCompromiso.responsableSesionParticipante && sesionCompromiso.responsableSesionParticipante.usuario
+                    ? sesionCompromiso.responsableSesionParticipante.usuario.primerNombre
+                    : ''
+                }}
+                {{
+                  sesionCompromiso.responsableSesionParticipante && sesionCompromiso.responsableSesionParticipante.usuario
+                    ? sesionCompromiso.responsableSesionParticipante.usuario.primerApellido
+                    : ''
+                }}
+              </span>
+            </p>
             <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
           </section>
         </div>
