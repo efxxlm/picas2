@@ -49,6 +49,92 @@
                     </div>
                 </div>
 
+                <div class="row animatedDown" *ngIf="formUsuario.get('procedencia').value == 2">
+                  <div class="col-md-7">
+                    <div class="row">
+                          <div class="pr-1">
+                              <label    class="label-left"
+                                        style="margin-top: .9em;"
+                                        for="NombreOrganizacion"
+                                        [class.color-secondaryColor]="( formUsuario.get('NombreOrganizacion').invalid && formUsuario.get('NombreOrganizacion').touched) || ( formUsuario.get('NombreOrganizacion').invalid && esRegistroNuevo === false )">
+                                        NombreOrganizacion
+                              </label>
+                          </div>
+                          <div class="col d-flex">
+                              <mat-form-field>
+                                  <input  matInput
+                                          type="text"
+                                          maxlength="1000"
+                                          #NombreOrganizacion
+                                          formControlName="NombreOrganizacion"
+                                          style="width: 100%;"
+                                          required>
+                              </mat-form-field>
+                              <span   class="contador miles"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Campo alfanumérico"
+                                      matTooltipClass="info-tooltip">
+                                      {{ 1000 - NombreOrganizacion.value.length }}
+                              </span>
+                          </div>
+                          <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="( formUsuario.get('NombreOrganizacion').invalid && formUsuario.get('NombreOrganizacion').touched ) || ( formUsuario.get('NombreOrganizacion').invalid && esRegistroNuevo === false )"
+                              />
+                          </span>
+                    </div>
+                  </div>
+              </div>
+
+                <div class="row animatedDown" *ngIf="formUsuario.get('procedencia').value == 2">
+                    <div class="col-md-7">
+                      <div class="row">
+                            <div class="pr-1">
+                                <label    class="label-left"
+                                          style="margin-top: .9em;"
+                                          for="NitOrganizacion"
+                                          [class.color-secondaryColor]="( formUsuario.get('NitOrganizacion').invalid && formUsuario.get('NitOrganizacion').touched) || ( formUsuario.get('NitOrganizacion').invalid && esRegistroNuevo === false )">
+                                          NitOrganizacion
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field>
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="20"
+                                            #NitOrganizacion
+                                            formControlName="NitOrganizacion"
+                                            style="width: 100%;"
+                                            required>
+                                </mat-form-field>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo alfanumérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 20 - NitOrganizacion.value.length }}
+                                </span>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="( formUsuario.get('NitOrganizacion').invalid && formUsuario.get('NitOrganizacion').touched ) || ( formUsuario.get('NitOrganizacion').invalid && esRegistroNuevo === false )"
+                                />
+                            </span>
+                      </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-md-7">
                       <div class="row">
@@ -934,7 +1020,14 @@
         </mat-card>
     
         <div class="text-center mt-1em">
-            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formUsuario.dirty === false">
+            <button mat-button color="warn" class="btn-guardar" type="submit"
+              [disabled]="
+                formUsuario.dirty === false ||
+                formUsuario.get('procedencia').value == 2 &&
+                formUsuario.get('NombreOrganizacion').invalid &&
+                formUsuario.get('NitOrganizacion').invalid
+                "
+              >
                 <img [src]="esRegistroNuevo === true ? 'assets/img/icon/crear-usuario.svg' : 'assets/img/icon/guardar.svg'">
             </button>
         </div>
