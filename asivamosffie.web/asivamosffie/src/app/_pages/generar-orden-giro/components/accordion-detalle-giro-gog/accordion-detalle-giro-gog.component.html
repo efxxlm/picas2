@@ -45,7 +45,7 @@
         <mat-accordion *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( checkSemaforoDescuentos( solicitudPagoFase.esPreconstruccion ) ) : ''">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? solicitudPagoFase.estadoSemaforo : ''">
                         Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -54,14 +54,14 @@
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esVerDetalle]="esVerDetalle"
-                                            (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsDescuentos = true : tieneObsDescuentosConstruccion = true">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforo = $event; checkSemaforoProyecto()">
                 </app-desc-dir-tecnica-gog>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( checkSemaforoTercero( solicitudPagoFase.esPreconstruccion ) ) : ''">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? solicitudPagoFase.estadoSemaforoCausacion : ''">
                         Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -70,7 +70,7 @@
                                             [esVerDetalle]="esVerDetalle"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                            (tieneObservacion)="solicitudPagoFase.esPreconstruccion === true ? tieneObsTercero = true : tieneObsTerceroConstruccion = true">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event; checkSemaforoProyecto()">
                 </app-tercero-causacion-gog>
             </mat-expansion-panel>
         </mat-accordion>

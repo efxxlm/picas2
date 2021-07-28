@@ -16,7 +16,7 @@ export class DescDirTecnicaGogComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() solicitudPagoFase: any;
     @Input() esPreconstruccion: boolean;
-    @Output() tieneObservacion = new EventEmitter<boolean>();
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoFaseCriterio: any[];
     solicitudPagoFaseFactura: any;
     solicitudPagoFaseFacturaDescuento: any;
@@ -89,6 +89,43 @@ export class DescDirTecnicaGogComponent implements OnInit {
                 }
             )
         } );
+
+        // Check semaforo descuentos de direccion tecnica
+        const ordenGiro = this.solicitudPago.ordenGiro
+
+        if ( ordenGiro !== undefined ) {
+            const ordenGiroDetalle = ordenGiro.ordenGiroDetalle[ 0 ]
+
+            if ( ordenGiroDetalle !== undefined ) {
+                const ordenGiroDetalleDescuentoTecnica: any[] = ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica
+
+                if ( ordenGiroDetalleDescuentoTecnica !== undefined && ordenGiroDetalleDescuentoTecnica.length > 0 ) {
+                    const detalleDescuentoFilter = ordenGiroDetalleDescuentoTecnica.filter( detalle => detalle.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId )
+
+                    if ( detalleDescuentoFilter.length > 0 ) {
+                        const totalRegistrosCompletos = detalleDescuentoFilter.filter( detalle => detalle.registroCompleto === true ).length
+                        const totalRegistrosEnProceso = detalleDescuentoFilter.filter( detalle => detalle.registroCompleto === false ).length
+
+                        if ( totalRegistrosCompletos > 0 && totalRegistrosCompletos === detalleDescuentoFilter.length ) {
+                            this.estadoSemaforo.emit( 'completo' )
+                        }
+
+                        if ( totalRegistrosCompletos > 0 && totalRegistrosCompletos < detalleDescuentoFilter.length ) {
+                            this.estadoSemaforo.emit( 'en-proceso' )
+                        }
+
+                        if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso === detalleDescuentoFilter.length ) {
+                            this.estadoSemaforo.emit( 'en-proceso' )
+                        }
+
+                        if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso < detalleDescuentoFilter.length ) {
+                            this.estadoSemaforo.emit( 'en-proceso' )
+                        }
+                    }
+                }
+            }
+        }
+
 
         this.dataSource = new MatTableDataSource( [ this.listData ] );
     }

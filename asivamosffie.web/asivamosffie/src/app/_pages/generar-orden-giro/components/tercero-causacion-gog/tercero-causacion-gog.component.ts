@@ -22,7 +22,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esPreconstruccion: boolean;
     @Input() solicitudPagoFase: any;
-    @Output() tieneObservacion = new EventEmitter<boolean>();
+    @Output() estadoSemaforo = new EventEmitter<string>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     addressForm: FormGroup;
@@ -399,6 +399,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         }
                                     }
     
+                                    /*
                                     if ( obsVerificar !== undefined ) {
                                         estadoSemaforo = 'en-proceso';
                                         this.tieneObservacion.emit( true );
@@ -411,6 +412,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         estadoSemaforo = 'en-proceso';
                                         this.tieneObservacion.emit( true );
                                     }
+                                    */
     
                                     this.criterios.push( this.fb.group(
                                         {
@@ -546,6 +548,25 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 ) )
                             }
                         }
+
+                    const totalRegistrosCompletos = this.criterios.controls.filter( control => control.get( 'estadoSemaforo' ).value === 'completo' ).length
+                    const totalRegistrosEnProceso = this.criterios.controls.filter( control => control.get( 'estadoSemaforo' ).value === 'en-proceso' ).length
+
+                    if ( totalRegistrosCompletos > 0 && totalRegistrosCompletos === this.criterios.length ) {
+                        this.estadoSemaforo.emit( 'completo' )
+                    }
+
+                    if ( totalRegistrosCompletos > 0 && totalRegistrosCompletos < this.criterios.length ) {
+                        this.estadoSemaforo.emit( 'en-proceso' )
+                    }
+
+                    if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso < this.criterios.length ) {
+                        this.estadoSemaforo.emit( 'en-proceso' )
+                    }
+
+                    if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso === this.criterios.length ) {
+                        this.estadoSemaforo.emit( 'en-proceso' )
+                    }
                 } 
             );
     }

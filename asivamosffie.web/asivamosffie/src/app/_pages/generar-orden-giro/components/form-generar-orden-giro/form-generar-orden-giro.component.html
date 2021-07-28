@@ -77,7 +77,7 @@
             <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [proyecto]="proyecto"
-                                            (estadoSemaforo)="checkSemaforoDetalle( $event )">
+                                            (estadoSemaforo)="proyecto.semaforoDetalle = $event">
             </app-accordion-detalle-giro-gog>
         </mat-expansion-panel>
 

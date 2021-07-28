@@ -74,6 +74,12 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                             }
 
                             const listFase = solicitudPagoFase.filter( fase => fase.contratacionProyectoId === proyecto.contratacionProyectoId )
+                            if ( listFase.length > 0 ) {
+                                listFase.forEach( fase => {
+                                    fase.estadoSemaforo = 'sin-diligenciar'
+                                    fase.estadoSemaforoCausacion = 'sin-diligenciar'
+                                })
+                            }
                             PROYECTO.fases = listFase
 
                             if ( PROYECTO.fases.length > 0 ) {

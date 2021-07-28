@@ -91,6 +91,29 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
         }
     }
 
+    checkSemaforoProyecto() {
+        if ( this.proyecto.fases.length > 0 ) {
+            const registrosCompletosFase = this.proyecto.fases.filter( fase => fase.estadoSemaforo === 'completo' && fase.estadoSemaforoCausacion === 'completo' ).length
+            const registrosEnProcesoFase = this.proyecto.fases.filter( fase => fase.estadoSemaforo === 'en-proceso' && fase.estadoSemaforoCausacion === 'en-proceso' ).length
+
+            if ( registrosCompletosFase > 0 && registrosCompletosFase === this.proyecto.fases.length ) {
+                this.estadoSemaforo.emit( 'completo' )
+            }
+
+            if ( registrosCompletosFase > 0 && registrosCompletosFase < this.proyecto.fases.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' )
+            }
+
+            if ( registrosEnProcesoFase > 0 && registrosEnProcesoFase === this.proyecto.fases.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' )
+            }
+
+            if ( registrosEnProcesoFase > 0 && registrosEnProcesoFase < this.proyecto.fases.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' )
+            }
+        }
+    }
+
     checkSemaforoDescuentos( esPreconstruccion: boolean ) {
         let semaforo = 'sin-diligenciar';
 
