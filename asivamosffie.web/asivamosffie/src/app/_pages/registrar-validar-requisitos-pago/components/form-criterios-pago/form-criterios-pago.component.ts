@@ -84,9 +84,9 @@ export class FormCriteriosPagoComponent implements OnInit {
         if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
         this.montoMaximoPendiente = montoMaximoPendiente.valorPendientePorPagar;
 
-        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipó' )
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
-            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipó' )
+            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
         }
 
         if ( this.contrato.solicitudPago.length > 0 ) {
@@ -636,7 +636,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
             */
 
-            const criterioAnticipo = this.criteriosArray.find( value => value.nombre === 'Anticipó' && criterio.tipoCriterioCodigo === value.codigo )
+            const criterioAnticipo = this.criteriosArray.find( value => value.nombre === 'Anticipo' && criterio.tipoCriterioCodigo === value.codigo )
             
             if ( criterioAnticipo !== undefined ) {
                 esAnticipio = true
