@@ -195,7 +195,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-descripcion-factura [contrato]="contrato"></app-form-descripcion-factura>
+            <app-form-descripcion-factura [contrato]="contrato" *ngIf="registroCompletoAcordeones.registroCompletoFormaDePago === true"></app-form-descripcion-factura>
           </mat-expansion-panel>
 
           <mat-expansion-panel class="expansion-style">

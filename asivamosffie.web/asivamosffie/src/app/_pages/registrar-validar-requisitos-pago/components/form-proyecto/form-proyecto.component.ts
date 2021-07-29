@@ -69,12 +69,12 @@ export class FormProyectoComponent implements OnInit {
         const fases = []
 
         if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-            this.solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase
+            this.solicitudPagoFase = solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.filter( fase => fase.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value )
         }
 
         if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
-            if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
-                solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( solicitudPagoFase => {
+            if ( solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined && this.solicitudPagoFase.length > 0 ) {
+                this.solicitudPagoFase.forEach( solicitudPagoFase => {
                     if ( solicitudPagoFase.esPreconstruccion === true ) {
                         const fase = LISTA_FASES.find( fase => fase.codigo === this.fasesContrato.preConstruccion )
 

@@ -656,11 +656,23 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         if ( this.faseCodigo === this.fasesContrato.preConstruccion ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                    if ( solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId ) {
-                        solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        solicitudPagoFase.esAnticipio = esAnticipio
-                    }
+                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+
+                if ( solicitudPagoFase !== undefined ) {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].solicitudPagoFaseCriterio = solicitudPagoFaseCriterio
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].esAnticipio = esAnticipio
+                } else {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.push(
+                        {
+                            solicitudPagoFaseId: 0,
+                            esPreconstruccion: this.esPreconstruccion,
+                            contratacionProyectoId: this.contratacionProyectoId,
+                            solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                            solicitudPagoFaseCriterio,
+                            esAnticipio
+                        }
+                    )
                 }
             } else {
                 this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase = [
@@ -678,11 +690,23 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         if ( this.faseCodigo === this.fasesContrato.construccion ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                    if ( solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId ) {
-                        solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        solicitudPagoFase.esAnticipio = esAnticipio
-                    }
+                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+
+                if ( solicitudPagoFase !== undefined ) {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].solicitudPagoFaseCriterio = solicitudPagoFaseCriterio
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].esAnticipio = esAnticipio
+                } else {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.push(
+                        {
+                            solicitudPagoFaseId: 0,
+                            esPreconstruccion: this.esPreconstruccion,
+                            contratacionProyectoId: this.contratacionProyectoId,
+                            solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId,
+                            solicitudPagoFaseCriterio,
+                            esAnticipio
+                        }
+                    )
                 }
             } else {
                 this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase = [
