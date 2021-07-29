@@ -19,7 +19,6 @@ namespace asivamosffie.model.Models
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public int Duracion { get; set; }
-        public int? ProgramacionCapituloSemanal { get; set; }
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
