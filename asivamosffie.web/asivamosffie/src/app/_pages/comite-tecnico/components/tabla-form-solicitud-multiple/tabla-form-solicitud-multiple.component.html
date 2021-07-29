@@ -145,7 +145,7 @@
               element.proyecto.proyectoId,
               element.proyecto.estadoProyectoObraCodigo,
               0,
-              element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false,
+              element.proyecto.estadoProyectoObraCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false,
               element.proyectoGrilla.institucionEducativa,
               element.proyectoGrilla.sede,
               element.proyectoGrilla.departamento
@@ -156,7 +156,13 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoObraCodigo == null
+            element.proyecto.estadoProyectoObraCodigo == null ||
+            (
+              element.proyecto.estadoProyectoObraCodigo != 3 &&
+              element.proyecto.estadoProyectoObraCodigo != 5 &&
+              element.proyecto.estadoProyectoObraCodigo != 7 &&
+              estaEditando
+            )
           "
         >
           Observaciones
@@ -170,8 +176,8 @@
               element.contratacionId,
               element.contratacionObservacion,
               element.proyecto.proyectoId,
-              element.proyecto.estadoProyectoInterventoriaCodigo,
               0,
+              element.proyecto.estadoProyectoInterventoriaCodigo,
               element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico ? true : false,
               element.proyectoGrilla.institucionEducativa,
               element.proyectoGrilla.sede,
@@ -183,7 +189,11 @@
           color="accent"
           class="btn-table"
           [disabled]="
-            element.proyecto.estadoProyectoInterventoriaCodigo == null
+            element.proyecto.estadoProyectoInterventoriaCodigo == null ||
+            (element.proyecto.estadoProyectoInterventoriaCodigo != 3 &&
+            element.proyecto.estadoProyectoInterventoriaCodigo != 5 &&
+            element.proyecto.estadoProyectoInterventoriaCodigo != 7 &&
+            estaEditando)
           "
         >
           Observaciones

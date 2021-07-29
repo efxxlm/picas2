@@ -218,7 +218,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(observaciones => {
-      //this.cargarRegistro();
+      if(observaciones != null &&  observaciones != "" && observaciones != 'undefined'){
+        this.cargarRegistro();
+      }
     })
   }
 
