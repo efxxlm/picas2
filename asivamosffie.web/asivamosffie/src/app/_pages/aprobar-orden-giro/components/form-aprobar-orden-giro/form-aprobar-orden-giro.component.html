@@ -33,31 +33,64 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : semaforoInformacionGeneral">
+                <mat-panel-title class="expansion-style--title">
                     Información general
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <app-informacion-general    [solicitudPago]="solicitudPago"
                                         [esRegistroNuevo]="esRegistroNuevo"
-                                        [esVerDetalle]="esVerDetalle"
-                                        [esExpensas]="esExpensas"
-                                        (estadoSemaforo)="semaforoInformacionGeneral = $event">
+                                        [esExpensas]="esExpensas">
             </app-informacion-general>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : semaforoDetalleGiro">
-                    Detalle del giro
+                <mat-panel-title class="expansion-style--title">
+                    Estrategia de pagos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago"></app-form-estrateg-pagos-gog>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Detalle del giro - {{ proyecto.llaveMen }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <app-detalle-giro   [esRegistroNuevo]="esRegistroNuevo"
                                 [esVerDetalle]="esVerDetalle"
                                 [solicitudPago]="solicitudPago"
-                                (estadoSemaforo)="checkSemaforoDetalle( $event )">
+                                [proyecto]="proyecto">
             </app-detalle-giro>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Observaciones
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <app-observaciones  [esRegistroNuevo]="esRegistroNuevo"
+                                [solicitudPago]="solicitudPago">
+            </app-observaciones>
+        </mat-expansion-panel>
+    
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Soporte de orden de giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <app-soporte-orden-giro [esRegistroNuevo]="esRegistroNuevo"
+                                    [solicitudPago]="solicitudPago"
+                                    *ngIf="solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroSoporte.length > 0">
+            </app-soporte-orden-giro>
         </mat-expansion-panel>
     </mat-accordion>
 

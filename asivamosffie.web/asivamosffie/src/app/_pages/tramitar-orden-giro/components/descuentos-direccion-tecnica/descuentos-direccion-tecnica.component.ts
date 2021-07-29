@@ -22,15 +22,15 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Input() esPreconstruccion: boolean;
+    @Input() solicitudPagoFase: any;
     @Output() estadoSemaforo = new EventEmitter<string>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaTipoDescuento: Dominio[] = [];
     totalEnProceso = 0;
     totalCompleto = 0;
-    solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any[];
-    solicitudPagoFaseFactura: any;
+    solicitudPagoFaseFacturaDescuento: any;
     fasePreConstruccionFormaPagoCodigo: any;
     ordenGiroDetalle: any;
     ordenGiroId = 0;
@@ -115,9 +115,8 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
 
     getDireccionTecnica() {
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
         this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
-        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
             this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
@@ -133,7 +132,7 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                 this.listaCriterios = getCriterioByFormaPagoCodigo;
                 // Get data de la tabla descuentos
                 this.solicitudPagoFaseCriterio.forEach( criterio => this.listData.valorNetoGiro += criterio.valorFacturado );
-                this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
+                this.solicitudPagoFaseFacturaDescuento.forEach( descuento => {
                     this.listData.valorNetoGiro -= descuento.valorDescuento;
                     this.listData.valorTotalDescuentos += descuento.valorDescuento;
 
@@ -160,9 +159,9 @@ export class DescuentosDireccionTecnicaComponent implements OnInit {
                     const ordenGiroDetalleDescuentoTecnica: any[] = this.ordenGiroDetalle.ordenGiroDetalleDescuentoTecnica;
         
                     if ( ordenGiroDetalleDescuentoTecnica.length > 0 ) {
-                        for ( const descuento of this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento ) {
+                        for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
                             const formArrayCriterios = [];
-                            const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId && descuentoTecnica.esPreconstruccion === this.esPreconstruccion );
+                            const detalleDescuentoTecnica = ordenGiroDetalleDescuentoTecnica.filter( descuentoTecnica => descuentoTecnica.solicitudPagoFaseFacturaDescuentoId === descuento.solicitudPagoFaseFacturaDescuentoId && descuentoTecnica.esPreconstruccion === this.esPreconstruccion && descuentoTecnica.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
         
                             if ( detalleDescuentoTecnica.length > 0 ) {
                                 // Get forArray de los criterios

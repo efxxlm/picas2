@@ -1,3 +1,4 @@
+import { FormEstrategPagosGogComponent } from './components/form-estrateg-pagos-gog/form-estrateg-pagos-gog.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -21,7 +22,7 @@ import { FormOrigenComponent } from './components/form-origen/form-origen.compon
 
 
 @NgModule({
-  declarations: [VerificarOrdenGiroComponent, TablaVerificarOrdenGiroComponent, FormVerificarOrdenGiroComponent, InformacionGeneralComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TerceroCausacionComponent, ObservacionesComponent, SoporteOrdenGiroComponent, DialogEnviarAprobacionComponent, FormOrigenComponent],
+  declarations: [ FormEstrategPagosGogComponent, VerificarOrdenGiroComponent, TablaVerificarOrdenGiroComponent, FormVerificarOrdenGiroComponent, InformacionGeneralComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TerceroCausacionComponent, ObservacionesComponent, SoporteOrdenGiroComponent, DialogEnviarAprobacionComponent, FormOrigenComponent],
   imports: [
     CommonModule,
     FormsModule,

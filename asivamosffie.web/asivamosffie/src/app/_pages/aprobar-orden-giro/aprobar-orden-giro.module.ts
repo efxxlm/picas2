@@ -1,3 +1,4 @@
+import { FormEstrategPagosGogComponent } from './components/form-estrateg-pagos-gog/form-estrateg-pagos-gog.component';
 import { TerceroCausacionComponent } from './components/tercero-causacion/tercero-causacion.component';
 import { TablaDatosSolicitudComponent } from './components/tabla-datos-solicitud/tabla-datos-solicitud.component';
 import { TablaAportantesComponent } from './components/tabla-aportantes/tabla-aportantes.component';
@@ -21,7 +22,7 @@ import { FormOrigenComponent } from './components/form-origen/form-origen.compon
 
 
 @NgModule({
-  declarations: [TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent, FormOrigenComponent],
+  declarations: [ FormEstrategPagosGogComponent, TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent, FormOrigenComponent],
   imports: [
     CommonModule,
     FormsModule,

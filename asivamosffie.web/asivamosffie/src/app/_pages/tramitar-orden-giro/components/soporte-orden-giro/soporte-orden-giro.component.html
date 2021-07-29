@@ -1,10 +1,11 @@
-<section *ngIf="esVerDetalle !== undefined">
+<section>
     <mat-card class="shipping-card border">
         <mat-card-content align="left">
             <p><b> URL con soporte: </b> <i> {{ solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroSoporte[ 0 ].urlSoporte }} </i></p>
         </mat-card-content>
     </mat-card>
 
+    <!--
     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
         <mat-card class="shipping-card border" align="left">
             <mat-card-header class="header-card">
@@ -123,4 +124,5 @@
             </table>
         </section>
     </ng-template>
+    -->
 </section>

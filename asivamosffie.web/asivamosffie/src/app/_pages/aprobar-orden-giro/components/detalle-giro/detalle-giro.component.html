@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="esVerDetalle !== undefined">
+<mat-accordion>
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
@@ -89,6 +89,7 @@
 
     </mat-expansion-panel>
 
+    <!--
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoEstrategiaPago">
@@ -102,60 +103,28 @@
             </mat-card-content>
         </mat-card>
 
-        <!--
-            Observacion al acordeon 'Estrategia de pagos'
-        -->
-
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-            <mat-card class="shipping-card border" align="left" *ngIf="observacionVerificar !== undefined">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text card-title-detalle">
-                        Verificación de la coordinación financiera
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p style="margin-left: 2em;"><b> {{ observacionVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                    <p style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
-                    <p style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
-                    <section [innerHTML]="observacionVerificar.observacion" style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === true"></section>
-                </mat-card-content>
-            </mat-card>
-
             <mat-card class="shipping-card border" align="left">
                 <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text card-title-detalle">
-                        Aprobación de la dirección financiera
-                    </mat-card-title>
+                  <mat-card-title class="header-card--text card-title-detalle">
+                    Verificación de la coordinación financiera
+                  </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <p style="margin-left: 2em;"><b> {{ formObservacion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                    <p style="margin-left: 2em;" *ngIf="formObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Desde la dirección financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
-                    <p style="margin-left: 2em;" *ngIf="formObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Desde la dirección financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
+                    <p style="margin-left: 2em;" *ngIf="formObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
+                    <p style="margin-left: 2em;" *ngIf="formObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
                     <section [innerHTML]="formObservacion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formObservacion.get( 'tieneObservaciones' ).value === true"></section>
                 </mat-card-content>
             </mat-card>
         </ng-container>
         <ng-template #noEsVerDetalle>
-            <mat-card class="shipping-card border" align="left" *ngIf="observacionVerificar !== undefined">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text card-title-detalle">
-                        Verificación de la coordinación financiera
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p style="margin-left: 2em;"><b> {{ observacionVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                    <p style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
-                    <p style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
-                    <section [innerHTML]="observacionVerificar.observacion" style="margin-left: 2em;" *ngIf="observacionVerificar.tieneObservacion === true"></section>
-                </mat-card-content>
-            </mat-card>
-
             <form [formGroup]="formObservacion" novalidate (ngSubmit)="guardar()">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-12">
                         <div class="row justify-content-center align-items-center" style="width: 100%;">
                             <div class="pr-1">
-                                <label class="label-left" for="tieneObservaciones">¿Desde la dirección financiera tiene observaciones a la Estrategia de pagos?</label>
+                                <label class="label-left" for="tieneObservaciones">¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</label>
                             </div>
                             <div>
                                 <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
@@ -202,7 +171,7 @@
                       </span>
                 </div>
                 <div class="text-center mt-1em">
-                    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.get('tieneObservaciones').value === null">
+                    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.dirty === false">
                         <img src="assets/img/icon/guardar.svg">
                     </button>
                 </div>
@@ -240,35 +209,37 @@
             </section>
         </ng-template>
     </mat-expansion-panel>
+    -->
 
-    <div *ngFor="let solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase; index as i">
+    <div *ngFor="let solicitudPagoFase of proyecto.fases; index as i">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion">
+                <mat-panel-title class="expansion-style--title">
                     Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-
+    
             <app-descuentos-direccion-tecnica   [esVerDetalle]="esVerDetalle"
                                                 [esRegistroNuevo]="esRegistroNuevo"
                                                 [solicitudPago]="solicitudPago"
-                                                [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                                (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoDireccionTecnica = $event : listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
+                                                [solicitudPagoFase]="solicitudPagoFase"
+                                                [esPreconstruccion]="solicitudPagoFase.esPreconstruccion">
             </app-descuentos-direccion-tecnica>
         </mat-expansion-panel>
     
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion : listaSemaforos.semaforoTerceroCausacionConstruccion">
+                <mat-panel-title class="expansion-style--title">
                     Tercero de causación - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
     
+
             <app-tercero-causacion  [esVerDetalle]="esVerDetalle"
                                     [esRegistroNuevo]="esRegistroNuevo"
                                     [solicitudPago]="solicitudPago"
-                                    [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                    (estadoSemaforo)="solicitudPagoFase.esPreconstruccion === true ? listaSemaforos.semaforoTerceroCausacion = $event : listaSemaforos.semaforoTerceroCausacionConstruccion = $event; estadoSemaforo.emit( this.listaSemaforos )">
+                                    [solicitudPagoFase]="solicitudPagoFase"
+                                    [esPreconstruccion]="solicitudPagoFase.esPreconstruccion">
             </app-tercero-causacion>
         </mat-expansion-panel>
     </div>
@@ -285,33 +256,5 @@
         </div>
 
         <app-form-origen [solicitudPago]="solicitudPago"></app-form-origen>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoObservaciones">
-                Observaciones
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <app-observaciones  [esVerDetalle]="esVerDetalle"
-                            [esRegistroNuevo]="esRegistroNuevo"
-                            [solicitudPago]="solicitudPago"
-                            (estadoSemaforo)="listaSemaforos.semaforoObservaciones = $event">
-        </app-observaciones>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : listaSemaforos.semaforoSoporte">
-                Soporte de orden de giro
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <app-soporte-orden-giro [esVerDetalle]="esVerDetalle"
-                                [esRegistroNuevo]="esRegistroNuevo"
-                                [solicitudPago]="solicitudPago"
-                                (estadoSemaforo)="listaSemaforos.semaforoSoporte = $event">
-        </app-soporte-orden-giro>
     </mat-expansion-panel>
 </mat-accordion>

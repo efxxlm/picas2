@@ -43,7 +43,7 @@
         <mat-accordion *ngIf="descuentos.length > 0">
             <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ?descuento.get( 'estadoSemaforo' ).value: ''">
+                    <mat-panel-title class="expansion-style--title">
                         Descuento {{ i + 1 }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -99,6 +99,8 @@
                                 </mat-card>
                             </div>
                         </section>
+
+                        <!--
                         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
                             <mat-card class="shipping-card border" align="left">
                                 <mat-card-header class="header-card">
@@ -207,6 +209,7 @@
                                 </table>
                             </section>
                         </ng-template>
+                        -->
                 </section>
             </mat-expansion-panel> 
         </mat-accordion>

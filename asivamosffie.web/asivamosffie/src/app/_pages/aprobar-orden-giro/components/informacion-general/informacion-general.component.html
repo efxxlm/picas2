@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="esVerDetalle !== undefined">
+<mat-accordion>
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
@@ -72,7 +72,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : semaforoTerceroGiro">
+            <mat-panel-title class="expansion-style--title">
                 Tercero de giro
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -103,6 +103,7 @@
             Observacion al acordeon 'Tercero de giro'
         -->
 
+        <!--
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
             <mat-card class="shipping-card border" align="left" *ngIf="observacionVerificar !== undefined">
                 <mat-card-header class="header-card">
@@ -236,6 +237,7 @@
                 </table>
             </section>
         </ng-template>
+        -->
         
     </mat-expansion-panel>
 </mat-accordion>

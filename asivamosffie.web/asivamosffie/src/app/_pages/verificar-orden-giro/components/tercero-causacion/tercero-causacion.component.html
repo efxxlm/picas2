@@ -3,7 +3,6 @@
         <mat-card-content align="left">
             <p><b>Número de identificación del contratista:</b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </i> </p>
             <p><b>Nombre de contratista:</b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i> </p>
-            <p><b>Número de factura:</b> <i>{{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].numero }}</i> </p>
         </mat-card-content>
     </mat-card>
     
@@ -15,7 +14,7 @@
         <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
             <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? criterio.get( 'estadoSemaforo' ).value : ''">
+                    <mat-panel-title class="expansion-style--title">
                         {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -69,6 +68,7 @@
                         </mat-card-content>
                     </mat-card>
 
+                    <!--
                     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
                         <mat-card class="shipping-card border" align="left">
                             <mat-card-header class="header-card">
@@ -176,6 +176,7 @@
                                 </table>
                             </section>
                     </ng-template>
+                    -->
             </mat-expansion-panel> 
         </mat-accordion>
     </form>

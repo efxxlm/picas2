@@ -19,6 +19,7 @@ export class DetalleGiroComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
+    @Input() proyecto: any;
     @Output() estadoSemaforo = new EventEmitter<any>();
     solicitudPagoRegistrarSolicitudPago: any;
     listaMenu: ListaMenu = ListaMenuId;
@@ -185,25 +186,14 @@ export class DetalleGiroComponent implements OnInit {
     }
 
     checkTieneDescuentos( esPreconstruccion: boolean ) {
-        const solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
+        const solicitudPagoFase = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
         
         if ( solicitudPagoFase !== undefined ) {
-            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === true ) {
+            if ( solicitudPagoFase.tieneDescuento === true ) {
                 return true;
             }
 
-            if ( solicitudPagoFase.solicitudPagoFaseFactura[ 0 ].tieneDescuento === false ) {
-                if ( esPreconstruccion === true ) {
-                    if ( this.listaSemaforos.semaforoDireccionTecnica !== undefined ) {
-                        delete this.listaSemaforos.semaforoDireccionTecnica
-                    }
-                }
-                if ( esPreconstruccion === false ) {
-                    if ( this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion !== undefined ) {
-                        delete this.listaSemaforos.semaforoDescuentosDireccionTecnicaConstruccion
-                    }
-                }
-
+            if ( solicitudPagoFase.tieneDescuento === false ) {
                 return false;
             }
         }

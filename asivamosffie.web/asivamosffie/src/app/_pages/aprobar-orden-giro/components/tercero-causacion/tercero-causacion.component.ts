@@ -22,6 +22,7 @@ export class TerceroCausacionComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() esRegistroNuevo: boolean;
     @Input() esPreconstruccion: boolean;
+    @Input() solicitudPagoFase: any;
     @Output() estadoSemaforo = new EventEmitter<string>();
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -31,9 +32,8 @@ export class TerceroCausacionComponent implements OnInit {
     listaCriterios: Dominio[] = [];
     listaFuenteTipoFinanciacion: Dominio[] = [];
     cantidadAportantes: number;
-    solicitudPagoFase: any;
     solicitudPagoFaseCriterio: any;
-    solicitudPagoFaseFactura: any;
+    solicitudPagoFaseFacturaDescuento: any;
     fasePreConstruccionFormaPagoCodigo: any;
     ordenGiroDetalle: any;
     ordenGiroDetalleTerceroCausacion: any[];
@@ -141,9 +141,8 @@ export class TerceroCausacionComponent implements OnInit {
             }
         }
         // Get Tablas
-        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion );
         this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
-        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFase.solicitudPagoFaseFacturaDescuento;
 
         if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
             this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
@@ -152,8 +151,8 @@ export class TerceroCausacionComponent implements OnInit {
         }
         // Get data valor neto giro
         this.solicitudPagoFaseCriterio.forEach( criterio => this.valorNetoGiro += criterio.valorFacturado );
-        if ( this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.length > 0 ) {
-            this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
+        if ( this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
+            this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
         /*
             get listaCriterios para lista desplegable
@@ -210,7 +209,7 @@ export class TerceroCausacionComponent implements OnInit {
                             const listDescuento = [ ...this.tipoDescuentoArray ];
 
                             if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion );
+                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
                                 const listaDescuentos = [];
                                 const listaAportantes = [];
                                 const conceptosDePago = [];
