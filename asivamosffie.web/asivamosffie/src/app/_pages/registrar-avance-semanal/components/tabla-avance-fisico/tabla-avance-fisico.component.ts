@@ -134,6 +134,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                 for ( const flujo of flujoInversion ) {
                     cantidadTotalDiasActividades += flujo.programacion.duracion;
                 };
+                let i = 0;
                 for ( const flujo of flujoInversion ) {
                     flujo.seguimientoSemanalAvanceFisicoProgramacionId = 0;
                     flujo.programacion.avanceFisicoCapitulo = null;
@@ -179,13 +180,14 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                             {
                                 programacionId: flujo.programacion.programacionId,
                                 capitulo: flujo.programacion.actividad,
-                                programacionCapitulo: this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
+                                programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo,
                                 avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
                             }
                         );
                     }
 
                     duracionProgramacion += duracionItem;
+                    i++;
                 }
                 if ( avancePorCapitulo.length > 0 ) {
                     this.avanceFisico = [
@@ -341,6 +343,18 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
         ];
 
         pSeguimientoSemanal.seguimientoSemanalAvanceFisico = seguimientoSemanalAvanceFisico;
+
+
+        // pSeguimientoSemanal.seguimientoSemanalAvanceFisico.forEach(element => {
+        //     element.programacionSemanal
+        // });
+
+        
+        for (let index = 0; index < this.avanceFisico[0].avancePorCapitulo.length; index++) {
+            const element = this.avanceFisico[0].avancePorCapitulo[index];
+            pSeguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[index].programacionCapitulo = element.programacionCapitulo
+        }
+
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
             .subscribe(
                 async response => {
