@@ -1948,6 +1948,7 @@ namespace asivamosffie.services
                     itemOld.UsuarioModificacion = strUsuario;
                     itemOld.FechaModificacion = DateTime.Now;
                     itemOld.AvanceFisicoCapitulo = item.AvanceFisicoCapitulo;
+                    itemOld.ProgramacionCapitulo = item.ProgramacionCapitulo;
                 }
             }
         }
