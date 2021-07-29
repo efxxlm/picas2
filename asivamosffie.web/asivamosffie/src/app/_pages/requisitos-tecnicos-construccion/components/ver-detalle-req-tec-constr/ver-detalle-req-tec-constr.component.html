@@ -27,9 +27,9 @@
                   <div align="left">
                     <mat-card class="border">
                       <mat-card-content>
-                        <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
+                        <p><b>Nombre del contratista</b>: {{ contrato.contratacion?.contratista?.nombre }}</p>
                         <p><b>Número de identificación (NIT/RUT)</b>:
-                          {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+                          {{ contrato.contratacion?.contratista?.numeroIdentificacion }}</p>
                         <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
                         <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
                         <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
@@ -86,7 +86,7 @@
                             Perfil {{ j + 1 }}
                           </mat-panel-title>
                         </mat-expansion-panel-header>
-            
+
                         <app-detalle-hojas-vida-contratista
                                                             [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]"
                         >
@@ -95,9 +95,9 @@
                     </mat-accordion>
 
 
-                    
+
                   </mat-expansion-panel>
-                 
+
                   <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
@@ -116,11 +116,11 @@
                         Flujo de inversión de recursos
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-tabla-flujo-recursos 
+                    <app-detalle-tabla-flujo-recursos
                         [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
                   </app-detalle-tabla-flujo-recursos>
                   </mat-expansion-panel>
-                  
+
             </mat-expansion-panel>
         </mat-accordion>
     </section>

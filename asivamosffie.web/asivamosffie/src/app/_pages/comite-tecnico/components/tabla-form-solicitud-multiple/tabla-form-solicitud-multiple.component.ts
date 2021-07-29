@@ -187,7 +187,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
       const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
-    //this.cargarRegistro();
+    this.cargarRegistro();
   }
 
   Observaciones(
@@ -204,7 +204,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   ) {
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
-
+    console.log(verDetalle);
     const dialogRef = this.dialog.open(ObservacionComponent, {
       width: '60em',
       data: {
@@ -224,7 +224,9 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(observaciones => {
-      this.cargarRegistro();
+      if(observaciones != null &&  observaciones != "" && observaciones != 'undefined'){
+        this.cargarRegistro();
+      }
     });
   }
 

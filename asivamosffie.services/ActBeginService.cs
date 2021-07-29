@@ -1719,6 +1719,7 @@ namespace asivamosffie.services
                     contratacion = _context.Contratacion
                                                        .Where(c => c.ContratacionId == contrato.ContratacionId)
                                                        .Include(pc => pc.PlazoContratacion)
+                                                       .Include(pc => pc.DisponibilidadPresupuestal)
                                                        .FirstOrDefault();
 
                     ContratacionId = contrato.ContratacionId;
@@ -1841,13 +1842,22 @@ namespace asivamosffie.services
 
                 string rutaActaSuscrita = string.Empty;
                 string strValor = string.Empty;
+                decimal? valorActualContrato = 0;
                 if (contrato != null)
                 {
-                    strValor = contrato.Valor.ToString();
-                    if (strValor.Length > 3)
-                        strValor = strValor.Remove(strValor.Length - 3);
                     rutaActaSuscrita = contrato.RutaActaSuscrita;
 
+                }
+
+                if (contratacion != null)
+                {
+                    if (contratacion.DisponibilidadPresupuestal.Count()>0)
+                    {
+                        strValor = contratacion.DisponibilidadPresupuestal.FirstOrDefault().ValorSolicitud.ToString();
+                    }
+                    VDrpXfaseContratacionId valor = _context.VDrpXfaseContratacionId.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                    if (valor != null)
+                        valorActualContrato = valor.ValorDrp != null ? valor.ValorDrp : 0;
                 }
 
                 actaInicio = new VistaGenerarActaInicioContrato
@@ -1865,8 +1875,8 @@ namespace asivamosffie.services
                     FechaAprobacionRequisitosSupervisor = Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") ?? ConstanMessages.SinDefinir,
                     FechaAprobacionRequisitosSupervisorDate = contrato.FechaAprobacionRequisitosConstruccionSupervisor,
                     Objeto = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().Objeto,
-                    ValorInicialContrato = strValor,
-                    ValorActualContrato = ValorActualContratoTmp.ToString(),
+                    ValorInicialContrato = formatValor(strValor),
+                    ValorActualContrato = formatValor(valorActualContrato.ToString()),
                     ValorFase1Preconstruccion = ValorFase1PreconstruccionTmp.ToString(),
                     Valorfase2ConstruccionObra = Valorfase2ConstruccionObraTmp.ToString(),
                     PlazoInicialContratoSupervisor = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.ToString("dd/MM/yyyy"),
@@ -1877,7 +1887,7 @@ namespace asivamosffie.services
                     PlazoActualContratoMeses = contrato?.Contratacion?.PlazoContratacion?.PlazoMeses ?? 0,
                     PlazoActualContratoDias = contrato?.Contratacion?.PlazoContratacion?.PlazoDias ?? 0,
                     NombreEntidadContratistaObra = contratista.Nombre,
-                    NombreEntidadContratistaSupervisorInterventoria = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
+                    NombreEntidadContratistaSupervisorInterventoria = Supervisor?.PrimerNombre + " " + Supervisor?.PrimerApellido,
                     FechaActaInicio = strFechaActaInicio,
                     FechaActaInicioFase1DateTime = FechaActaInicioFase1DateTime,
                     FechaActaInicioFase2DateTime = FechaActaInicioFase2DateTime,
@@ -1888,10 +1898,10 @@ namespace asivamosffie.services
                     DepartamentoYMunicipioLlaveMEN = strDepartamentoYMunicipioLlaveMEN,
                     InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
                     CantidadProyectosAsociados = intCantidadProyectosAsociados,
-                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
+                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista?.RepresentanteLegalNumeroIdentificacion,
                     RutaActaSuscrita = rutaActaSuscrita,
                     NumeroIdentificacionSupervisor = Supervisor?.NumeroIdentificacion,
-                    NumeroIdentificacionEntidadContratistaObra = contrato?.Contratacion?.Contratista?.RepresentanteLegal,
+                    NumeroIdentificacionEntidadContratistaObra = contratista?.RepresentanteLegalNumeroIdentificacion,
                     Contrato = contrato
                 };
             }
@@ -1921,7 +1931,7 @@ namespace asivamosffie.services
 
             actaInicioObra.Valorfase2ConstruccionObra = formatValor(actaInicioInterventoria.Valorfase2ConstruccionObra);
 
-            actaInicioObra.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
+            //actaInicioObra.ValorActualContrato = formatValor(actaInicioInterventoria.ValorFase1Preconstruccion);
 
             actaInicioObra.PlazoActualContratoMeses = actaInicioObra.PlazoActualContratoMeses;
 
