@@ -1842,7 +1842,7 @@ namespace asivamosffie.services
 
                 string rutaActaSuscrita = string.Empty;
                 string strValor = string.Empty;
-                decimal valorActualContrato = 0;
+                decimal? valorActualContrato = 0;
                 if (contrato != null)
                 {
                     rutaActaSuscrita = contrato.RutaActaSuscrita;
@@ -1851,16 +1851,13 @@ namespace asivamosffie.services
 
                 if (contratacion != null)
                 {
-                    bool ind_valor_inicial = false;
-                    foreach (var ddp in contratacion.DisponibilidadPresupuestal)
+                    if (contratacion.DisponibilidadPresupuestal.Count()>0)
                     {
-                        if (!ind_valor_inicial)
-                        {
-                            strValor = ddp.ValorSolicitud.ToString();
-                            ind_valor_inicial = true;
-                        }
-                        valorActualContrato += ddp.ValorSolicitud;
+                        strValor = contratacion.DisponibilidadPresupuestal.FirstOrDefault().ValorSolicitud.ToString();
                     }
+                    VDrpXfaseContratacionId valor = _context.VDrpXfaseContratacionId.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                    if (valor != null)
+                        valorActualContrato = valor.ValorDrp != null ? valor.ValorDrp : 0;
                 }
 
                 actaInicio = new VistaGenerarActaInicioContrato
