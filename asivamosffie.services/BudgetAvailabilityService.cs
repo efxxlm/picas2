@@ -716,7 +716,7 @@ namespace asivamosffie.services
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
                 string template = TemplateRecoveryPassword.Contenido;
 
-                template = template.Replace("_LinkF_", urlDestino);
+                //template = template.Replace("_LinkF_", urlDestino);
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
 
                 List<string> usuarios = new List<string>();
@@ -726,7 +726,9 @@ namespace asivamosffie.services
                    usuarios.Add(u?.Usuario?.Email);
                });
 
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreoMultipleDestinatario(usuarios, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
+                //bool blEnvioCorreo = Helpers.Helpers.EnviarCorreoMultipleDestinatario(usuarios, "DDP Generado", template, pSentender, pPassword, pMailServer, pMailPort);
+                bool blEnvioCorreo = _commonService.EnviarCorreo(usuarios, template, "DDP Generado");
+
                 if (blEnvioCorreo)
                 {
                     return new Respuesta
@@ -746,8 +748,9 @@ namespace asivamosffie.services
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
-                        Code = ConstantMessagesGenerateBudget.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
+                        Code = ConstantMessagesGenerateBudget.OperacionExitosa,
+                        Data = DisponibilidadCancelar,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
                     };
                 }
             }
