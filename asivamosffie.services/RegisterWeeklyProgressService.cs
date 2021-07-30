@@ -284,8 +284,7 @@ namespace asivamosffie.services
 
             //Agregar Programacion por seguimiento semanal
             seguimientoSemanal.ListProgramacion = GetListProgramacionBySeguimientoSemanal(seguimientoSemanal);
-
-
+             
             //enviar periodo reporte financiero
             if (seguimientoSemanal.NumeroSemana % 5 == 0)
             {
@@ -362,6 +361,7 @@ namespace asivamosffie.services
                                          .Select(s => s.Programacion)
                                          .ToList());
             });
+
             if (ListProgramacion.Count() > 0)
             {
                 seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
@@ -395,19 +395,16 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
                 });
             });
-
-
+             
             seguimientoSemanal.InfoProyecto = GetInfoProyectoBySeguimientoContratacionProyectoId(seguimientoSemanal.ContratacionProyectoId);
             seguimientoSemanal.ContratacionProyecto = null;
-
-
+             
             Parallel.ForEach(seguimientoSemanal.SeguimientoDiario.ToList(), item =>
              {
                  item.SeguimientoDiarioObservaciones = null;
                  item.ContratacionProyecto = null;
              });
-
-
+             
             Parallel.ForEach(seguimientoSemanal.FlujoInversion.ToList(), item =>
               {
                   item.Programacion.FlujoInversion = null;
