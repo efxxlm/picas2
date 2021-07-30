@@ -15,7 +15,15 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<ContratoAsignado> ContratosAsignados { get; set; }
+
+       
+        [NotMapped]
+        public string GetNombreCompleto
+        {
+            get => PrimerNombre + " " + SegundoNombre + " " + " " + PrimerApellido + " " + SegundoApellido; 
+        }
+
     }
 
-  
+
 }

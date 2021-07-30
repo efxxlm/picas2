@@ -1988,13 +1988,21 @@ namespace asivamosffie.services
                 //Gestion Ambiental
                 foreach (var SeguimientoSemanalGestionObraAmbiental in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
                 {
-                    SeguimientoSemanalGestionObraAmbiental.UsuarioCreacion = pUsuarioCreacion;
-                    SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
-                    SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
-                    SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
+                    try
+                    {
+                        SeguimientoSemanalGestionObraAmbiental.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
+                        SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
 
-                    _context.SeguimientoSemanalGestionObraAmbiental.Add(SeguimientoSemanalGestionObraAmbiental);
+                        _context.SeguimientoSemanalGestionObraAmbiental.Add(SeguimientoSemanalGestionObraAmbiental);
 
+                    }
+                    catch (Exception e)
+                    {
+
+                        throw;
+                    }
                     //Manejo Materiales e Insumos
                     if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
                     {
@@ -2019,28 +2027,15 @@ namespace asivamosffie.services
                     //Manejo Residuos Construccion Demolicion
                     if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null)
                     {
-                        ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicion =
-                            new ManejoResiduosConstruccionDemolicion
-                            {
-                                EstaCuantificadoRcd = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd,
-                                RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RequiereObservacion,
-                                Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Observacion,
-                                SeReutilizadorResiduos = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.SeReutilizadorResiduos,
-                                CantidadToneladas = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.CantidadToneladas,
-                                UsuarioCreacion = pUsuarioCreacion,
-                                Eliminado = false,
-                                FechaCreacion = DateTime.Now,
-                                RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion)
-                            };
-
-
-                        _context.ManejoResiduosConstruccionDemolicion.Add(manejoResiduosConstruccionDemolicion);
-                        _context.SaveChanges();
+                        SeguimientoSemanalGestionObraAmbiental.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
+                        SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+                             
+                        _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
+       
                         foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
-                        {
-
-
-                            ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId = manejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+                        { 
                             ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                             ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                             ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -2975,23 +2970,19 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidad)
         {
-            if (seguimientoSemanalGestionObraCalidad == null)
+            if (seguimientoSemanalGestionObraCalidad == null || !seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue)
                 return false;
 
-            return seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue;
+            if (seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
+                return false;
+             
+            foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
+            { 
+                if (!ValidarRegistroCompletoGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorio))
+                    return false;
+            }
 
-
-            //if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
-            //    || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
-            //    return false;
-
-            //foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
-            //{
-            //    if (!GestionObraCalidadEnsayoLaboratorio.RegistroCompleto.HasValue || !(bool)GestionObraCalidadEnsayoLaboratorio.RegistroCompleto)
-            //        return false;
-            //}
-
-            //   return true;
+           return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
