@@ -16,11 +16,13 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly IContractualControversy _contractualControversy;
 
-        public RegisterProjectETCService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterProjectETCService(devAsiVamosFFIEContext context, ICommonService commonService, IContractualControversy contractualControversy)
         {
             _commonService = commonService;
             _context = context;
+            _contractualControversy = contractualControversy;
         }
 
         public async Task<List<InformeFinal>> GetListInformeFinal()
@@ -28,12 +30,32 @@ namespace asivamosffie.services
             List<InformeFinal> list = await _context.InformeFinal
                             .Where(r => r.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.Con_Aprobacion_final)
                             .Include(r => r.Proyecto)
+                                .ThenInclude(r => r.ContratacionProyecto)
+                                    .ThenInclude(r => r.Contratacion)
+                                        .ThenInclude(r => r.Contrato)
+                            .Include(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             foreach (var item in list)
             {
+                bool cumpleCondicionesTai = false;
+                if (item.Proyecto.ContratacionProyecto.FirstOrDefault() != null)
+                {
+                    Contratacion contratacion = item.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion;
+                    if (contratacion != null)
+                    {
+                        if (contratacion.Contrato != null)
+                            cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contratacion.Contrato.FirstOrDefault().ContratoId);
+                    }
+
+                }
+                if (cumpleCondicionesTai)
+                {
+                    list.Remove(item);
+                    break;
+                }
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
