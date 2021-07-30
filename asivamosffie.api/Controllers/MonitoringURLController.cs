@@ -1,4 +1,5 @@
 ﻿using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,13 +36,13 @@ namespace asivamosffie.api.Controllers
         }
         [HttpPost]
         [Route("EditarURLMonitoreo")]
-        public async Task<IActionResult> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo)
+        public async Task<IActionResult> EditarURLMonitoreo([FromBody] Proyecto pProyecto)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _monitoringURLService.EditarURLMonitoreo(pProyectoId, URLMonitoreo, UsuarioModificacion);
+                pProyecto.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _monitoringURLService.EditarURLMonitoreo(pProyecto);
                 return Ok(respuesta);
             }
             catch (Exception ex)
