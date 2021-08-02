@@ -27,22 +27,46 @@
             <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato | currency: '':'symbol-narrow':'.0-0' }}</p>
             <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion | currency: '':'symbol-narrow':'.0-0' }}</p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra | currency: '':'symbol-narrow':'.0-0' }}</p>
-            <div *ngIf="this.valorProponente=='1'">
-                <p><strong>Número de identificación del representante legal del contratista de obra:
-                    </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
-                <p><strong>Nombre del representante legal del contratista de obra:
-                    </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
-                <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
-                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+            <div *ngIf="this.valorProponente == '1'">
+              <p>
+                <strong>Número de identificación del representante legal del contratista de obra: </strong
+                > {{ this.numeroIdentificacionEntidadContratistaObra }}
+              </p>
+              <p>
+                <strong>Nombre del representante legal del contratista de obra: </strong
+                >{{ this.nombreRepresentanteLegalInterventoria }}
+              </p>
+              <p><strong>Número de identificación de la entidad contratista de obra: </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria }}</p>
+              <p><strong>Nombre entidad contratista de obra: </strong>{{ this.nombreEntidadContratistaObra }}</p>
+              <p>
+                <strong>Número de identificación del representante legal del contratista de interventoría: </strong
+                > {{ this.contrato?.interventor?.numeroIdentificacion }}
+              </p>
+              <p>
+                <strong>Nombre del representante legal del contratista de interventoría: </strong
+                >{{ this.contrato?.interventor?.getNombreCompleto }}
+              </p>
+              <p><strong>Número de identificación de la entidad contratista de interventoría: </strong>
+                {{ this.contrato?.interventor?.nitOrganizacion }}</p>
+              <p><strong>Nombre entidad contratista de interventoría: </strong>
+                {{ this.contrato?.interventor?.nombreOrganizacion }}</p>
             </div>
             <div *ngIf="this.valorProponente=='2'">
-                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                    </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
+                <p><strong>Número de identificación del representante legal del contratista de interventoría:
+                    </strong>{{ this.numeroIdentificacionEntidadContratistaObra }}</p>
                 <p><strong>Nombre del representante legal del contratista de interventoría:
-                    </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
-                <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
+                    </strong>{{ this.nombreRepresentanteLegalInterventoria }}</p>
+                <p><strong>Número de identificación del contratista de interventoría: </strong>
+                  {{ this.numeroIdentificacionRepresentanteContratistaInterventoria }}</p>
                 <p><strong>Nombre de la entidad contratista de interventoría:
                     </strong>{{this.nombreEntidadContratistaObra}}</p>
+                <p>
+                  <strong>Número de identificación Supervisor: </strong>
+                  {{ this.contrato?.supervisor?.numeroIdentificacion }}
+                </p>
+                <p>
+                  <strong>Nombre Supervisor: </strong>{{ this.contrato?.supervisor?.getNombreCompleto }}
+                </p>
             </div>
             <p><strong>Plazo inicial del contrato: meses {{this.plazoActualContratoMeses}} días {{this.plazoActualContratoDias}} </strong>
         </mat-card-content>
@@ -81,8 +105,8 @@
 </section>
 
 <section class="container text-center mb-2em" *ngIf="mostrarCarga">
-    <button mat-raised-button 
-                                color="accent" 
+    <button mat-raised-button
+                                color="accent"
                                 (click)="descargarActaSuscrita(this.rutaActaSuscrita)">
     Descargar acta suscrita
     </button>
