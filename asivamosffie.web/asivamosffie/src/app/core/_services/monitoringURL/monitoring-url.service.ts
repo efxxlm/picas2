@@ -17,8 +17,8 @@ export class MonitoringURLService {
   GetListContratoProyectos(){
     return this.http.get<any[]>(`${environment.apiUrl}/MonitoringURL/GetListContratoProyectos`);
   }
-  EditarURLMonitoreo(pProyectoId:number, URLMonitoreo:string){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/MonitoringURL/EditarURLMonitoreo?URLMonitoreo=${URLMonitoreo}&pProyectoId=${pProyectoId}&User=zz`,"");
+  EditarURLMonitoreo(pProyecto:any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/MonitoringURL/EditarURLMonitoreo`, pProyecto);
   }
   VisitaURLMonitoreo(URLMonitoreo:string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/MonitoringURL/VisitaURLMonitoreo?URLMonitoreo=${URLMonitoreo}`,"");

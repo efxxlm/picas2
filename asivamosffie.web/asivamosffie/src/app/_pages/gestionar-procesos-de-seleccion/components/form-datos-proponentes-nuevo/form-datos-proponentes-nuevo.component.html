@@ -287,7 +287,9 @@
           <div
             class="row"
             *ngIf="
-              proponente.get('tipoProponenteCodigo').value == 1 || proponente.get('tipoProponenteCodigo').value == 2
+              proponente.get('tipoProponenteCodigo').value == 1 ||
+              proponente.get('tipoProponenteCodigo').value == 2 ||
+              proponente.get('tipoProponenteCodigo').value == 4
             "
           >
             <div class="pr-1">
@@ -301,6 +303,7 @@
               >
                 <span *ngIf="proponente.get('tipoProponenteCodigo').value == 1"> Nombre del proponente </span>
                 <span *ngIf="proponente.get('tipoProponenteCodigo').value == 2"> Nombre </span>
+                <span *ngIf="proponente.get('tipoProponenteCodigo').value == 4"> Nombre del representante legal </span>
               </label>
             </div>
             <div class="col d-flex">

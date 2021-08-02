@@ -10,48 +10,47 @@ using System.Linq;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
-    public class MonitoringURLService: IMonitoringURL
+    public class MonitoringURLService : IMonitoringURL
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
-        
+
         public MonitoringURLService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
-            
+
         }
 
         public async Task<List<VistaContratoProyectos>> GetListContratoProyectos()
         {
-
-            //número de contrato, nombre del contratista y número de proyectos asociados.
-
             List<VistaContratoProyectos> lstVistaContratoProyectos = new List<VistaContratoProyectos>();
             VistaContratoProyectos vistaContratoProyectos = new VistaContratoProyectos();
-
-            //cambio de Estado Acta(pre construcción) a EstadoActaFase2(construcción)
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => (r.EstadoActaFase2==ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada || r.EstadoActaFase2 == "20")).Distinct().ToListAsync();
+            List<Contrato> ListContratos =
+                await _context.Contrato
+                                      .Where(r => (r.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
+                                          || r.EstadoActaFase2 == "20"))
+                                      .Distinct()
+                                      .ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
                 try
                 {
                     Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
-                    Contratista contratista =null;
+                    Contratista contratista = null;
                     string strNombreContratista = string.Empty;
 
                     if (contratacion != null)
                     {
                         contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
-                        if(contratista!=null)
-                        {
-                            strNombreContratista = contratista.Nombre;
-                        }
-                    }                        
+                        if (contratista != null)
+                            strNombreContratista = contratista.Nombre; 
+                    }
 
                     //TipoContrato = contrato.TipoContratoCodig
 
@@ -61,11 +60,11 @@ namespace asivamosffie.services
 
                     if (contratacion != null)
                     {
-                        contratacionProyecto =  _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId && (bool)r.TieneMonitoreoWeb).FirstOrDefault();
+                        contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId && (bool)r.TieneMonitoreoWeb).FirstOrDefault();
 
 
                     }
-                   
+
 
                     if (contratacionProyecto != null)
                     {
@@ -99,10 +98,10 @@ namespace asivamosffie.services
 
                             lstVistaContratoProyectos.Add(vistaContratoProyectos);
                         }
-                        
+
                     }
 
-                    
+
                 }
 
 
@@ -120,12 +119,12 @@ namespace asivamosffie.services
                     };
                     lstVistaContratoProyectos.Add(vistaContratoProyectos);
                 }
-                
+
             }
             return lstVistaContratoProyectos;
         }
 
-            public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/ int pProyectoId)
+        public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/ int pProyectoId)
         {
             //Listar Los proyecto segun caso de uso solo trae los ue estado
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
@@ -136,12 +135,12 @@ namespace asivamosffie.services
                 ListProyectos = await _context.Proyecto.Where(
                          r => !(bool)r.Eliminado &&
                          r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
-                         &&(bool)r.RegistroCompleto 
-                         && r.ProyectoId== pProyectoId
+                         && (bool)r.RegistroCompleto
+                         && r.ProyectoId == pProyectoId
                          //Se quitan los proyectos que ya esten vinculados a una contratacion
                          )
                                  .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Contratacion)
-                                 .Include(r => r.Sede) .Include(r => r.InstitucionEducativa)
+                                 .Include(r => r.Sede).Include(r => r.InstitucionEducativa)
                                  .Include(r => r.LocalizacionIdMunicipioNavigation).Distinct().ToListAsync();
 
                 //List<Localicacion> Municipios = new List<Localicacion>();
@@ -202,8 +201,8 @@ namespace asivamosffie.services
                 //    Region  
                 List<Contratacion> ListContratacion = await _context.Contratacion.Where(r => !(bool)r.Eliminado).ToListAsync();
 
-                string strProyectoUrlMonitoreo= string.Empty;
-                
+                string strProyectoUrlMonitoreo = string.Empty;
+
 
                 foreach (var proyecto in ListProyectos)
                 {
@@ -211,7 +210,7 @@ namespace asivamosffie.services
                     {
                         Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
 
-                        if(proyecto.UrlMonitoreo!=null)
+                        if (proyecto.UrlMonitoreo != null)
                             strProyectoUrlMonitoreo = proyecto.UrlMonitoreo;
 
                         try
@@ -242,29 +241,29 @@ namespace asivamosffie.services
                             //List<Contrato> lstContratos = _context.Contrato.Where(r => r.ContratoId == pContratoId).ToList();
 
 
-                                foreach (var item in proyecto.ContratacionProyecto)
-                                {
-                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
+                            foreach (var item in proyecto.ContratacionProyecto)
+                            {
+                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
                                 //item.Contratacion = ListContratacion.Where(r => r.ContratacionId == contrato.ContratacionId ).FirstOrDefault();
 
                                 //item.Contratacion= item.Contratacion.wh(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
 
                                 if (item.Contratacion != null)
-                                    {
+                                {
 
-                                        if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
+                                    if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
+                                    {
+                                        if (item.Contratacion.TipoSolicitudCodigo == "1")
                                         {
-                                            if (item.Contratacion.TipoSolicitudCodigo == "1")
-                                            {
-                                                proyectoGrilla.TieneObra = true;
-                                            }
-                                            if (item.Contratacion.TipoSolicitudCodigo == "2")
-                                            {
-                                                proyectoGrilla.TieneInterventoria = true;
-                                            }
+                                            proyectoGrilla.TieneObra = true;
+                                        }
+                                        if (item.Contratacion.TipoSolicitudCodigo == "2")
+                                        {
+                                            proyectoGrilla.TieneInterventoria = true;
                                         }
                                     }
                                 }
+                            }
                             ListProyectoGrilla.Add(proyectoGrilla);
                         }
                         catch (Exception ex)
@@ -280,7 +279,7 @@ namespace asivamosffie.services
             }
             //ListProyectoGrilla = ListProyectoGrilla.Where(r => r.ContratoId != 0).ToList();
 
-            foreach(ProyectoGrilla element in ListProyectoGrilla)
+            foreach (ProyectoGrilla element in ListProyectoGrilla)
             {
                 element.ContratoId = await getContratoIdByProyectoId(element.ProyectoId);
             }
@@ -317,209 +316,42 @@ namespace asivamosffie.services
 
         }
 
-        //public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza()
-        //{
-        //    List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
-        //    //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
-
-
-        //    //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo          
-
-        //    List<Contrato> ListContratos = new List<Contrato>();
-        //    //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-
-        //    //return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
-
-        //    //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).ToListAsync();
-
-        //    //item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
-
-        //    ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct()
-
-        //    .ToListAsync();
-
-        //    //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
-
-        //    // .Select( new
-        //    //  {
-        //    //      FechaFirmaContrato =r.FechaFirmaContrato.ToString()
-        //    //  })
-        //    // .ToListAsync();
-
-        //    foreach (var contrato in ListContratos)
-        //    {
-        //        try
-        //        {
-        //            ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-        //            Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
-
-        //            Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
-
-        //            //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
-
-        //            //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-        //            Int32 plazoDias, plazoMeses;
-        //            //25meses / 04 días
-
-        //            if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
-
-        //                plazoDias = Convert.ToInt32(contrato.PlazoFase1PreDias);
-
-        //            else
-        //                plazoDias = Convert.ToInt32(contrato.PlazoFase2ConstruccionDias);
-
-        //            if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
-
-        //                plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
-
-        //            else
-        //                plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
-
-        //            string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
-
-        //            //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-        //            Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
-
-
-        //            //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-        //            VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
-        //            {
-        //                IdContrato = contrato.ContratoId,
-        //                TipoContrato = TipoContratoCodigoContrato.Nombre,
-        //                NumeroContrato = contrato.NumeroContrato,
-        //                ObjetoContrato = contrato.Objeto,
-        //                NombreContratista = contratista.Nombre,
-
-        //                //Nit  
-        //                NumeroIdentificacion = contratista.NumeroIdentificacion.ToString(),
-
-
-
-        //                ValorContrato = contrato.Valor.ToString(),
-
-        //                PlazoContrato = PlazoContratoFormat,
-
-        //                //EstadoRegistro 
-
-        //                //public bool? RegistroCompleto { get; set; } 
-
-
-
-        //                DescripcionModificacion = "resumen", // resumen   TEMPORAL REV
-
-        //                //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
-        //                TipoModificacion = "Tipo modificacion"
-
-        //                //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
-        //                //EstadoRegistro { get; set; }
-
-        //                //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
-        //                //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-
-        //                //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
-        //                //EstadoRegistro = "COMPLETO"
-        //            };
-
-        //            //if (!(bool)proyecto.RegistroCompleto)
-        //            //{
-        //            //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
-        //            //}
-        //            ListContratoGrilla.Add(proyectoGrilla);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
-        //            {
-        //                IdContrato = 0,
-        //                TipoContrato = e.ToString(),
-        //                NumeroContrato = e.InnerException.ToString(),
-        //                ObjetoContrato = "ERROR",
-        //                NombreContratista = "ERROR",
-
-        //                //Nit  
-        //                NumeroIdentificacion = "ERROR",
-        //                ValorContrato = "ERROR",
-
-        //                PlazoContrato = "ERROR",
-
-        //                //EstadoRegistro 
-
-        //                //public bool? RegistroCompleto { get; set; } 
-
-        //                //TipoSolicitud = contratoPoliza.EstadoPolizaCodigo
-
-        //                DescripcionModificacion = "ERROR",
-
-        //                TipoModificacion = "ERROR"
-
-        //            };
-        //            ListContratoGrilla.Add(proyectoGrilla);
-        //        }
-        //    }
-        //    return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
-
-        //}
-
-        public async Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string pURLMonitoreo, string pUsuarioModificacion)
+        public async Task<Respuesta> EditarURLMonitoreo(Proyecto pProyecto)
         {
-            Respuesta respuesta = new Respuesta();
-
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_crear_url, (int)EnumeratorTipoDominio.Acciones);
 
-            string strCrearEditar = "";
-            Proyecto proyecto = null;
-                       
-
-            proyecto = _context.Proyecto.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
             try
             {
+                _context.Set<Proyecto>()
+                        .Where(p => p.ProyectoId == pProyecto.ProyectoId)
+                        .Update(p => new Proyecto
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pProyecto.UsuarioModificacion,
+                            UrlMonitoreo = pProyecto.UrlMonitoreo,
+                        });
 
-                //if (string.IsNullOrEmpty(DP.DisponibilidadPresupuestalId.ToString()) || DP.DisponibilidadPresupuestalId == 0)
-                //if (string.IsNullOrEmpty(proyecto.ProyectoId.ToString()) || proyecto.ProyectoId == 0)
-                //{
-                    //Concecutivo
-                    //var LastRegister = _context.DisponibilidadPresupuestal.OrderByDescending(x => x.DisponibilidadPresupuestalId).First().DisponibilidadPresupuestalId;
+                await SendMailCargarEnlace(pProyecto.ProyectoId);
 
-                    //Auditoria
-                    strCrearEditar = "EDITAR URL MONITOREO";
-                    proyecto.FechaModificacion = DateTime.Now;
-                proyecto.UsuarioModificacion = pUsuarioModificacion;
-
-                proyecto.UrlMonitoreo = pURLMonitoreo;
-
-                //proyecto.UrlMonitoreo = pURLMonitoreo;
-                //DP.Eliminado = false;
-
-                //DP.NumeroDdp = ""; TODO: traer consecutivo del modulo de proyectos, DDP_PI_autoconsecutivo
-                //DP.EstadoSolicitudCodigo = "4"; // Sin registr/*a*/r
-
-                _context.Proyecto.Update(proyecto);
-
-                await SendMailCargarEnlace(pProyectoId);
-
-                return respuesta = new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Data = proyecto,
-                        Code = ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa, idAccion, proyecto.UsuarioModificacion, strCrearEditar)
-                    };
-
-                //}
-              
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = _context.Proyecto.Find(pProyecto.ProyectoId),
+                    Code = ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa, idAccion, pProyecto.UsuarioModificacion, "EDITAR MONITOREO")
+                };
             }
             catch (Exception ex)
             {
-                return respuesta = new Respuesta
+                return new Respuesta
                 {
                     IsSuccessful = false,
                     IsException = true,
                     IsValidation = false,
-                    Data = null,
                     Code = ConstantMessagesCargarEnlaceMonitoreo.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, proyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, pProyecto.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
@@ -531,8 +363,9 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Visita_url, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = "";
-            try { 
-                strCrearEditar = "VISITA URL MONITOREO "+uRLMonitoreo;
+            try
+            {
+                strCrearEditar = "VISITA URL MONITOREO " + uRLMonitoreo;
                 return respuesta = new Respuesta
                 {
                     IsSuccessful = true,
