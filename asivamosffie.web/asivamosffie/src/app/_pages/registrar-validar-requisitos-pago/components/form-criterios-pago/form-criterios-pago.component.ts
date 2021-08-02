@@ -28,6 +28,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() faseCodigo: string;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
+    @Output() emitAnticipo = new EventEmitter<boolean>();
     criteriosSeleccionadosArray: Dominio[] = [];
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoRegistrarSolicitudPagoId = 0;
@@ -87,6 +88,31 @@ export class FormCriteriosPagoComponent implements OnInit {
         criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
             LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
+        }
+
+        if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
+            this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0]
+
+            if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase !== undefined ) {
+                if ( this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.length > 0 ) {
+                    const fase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === this.esPreconstruccion && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+
+                    if ( fase !== undefined ) {
+                        if ( LISTA_CRITERIOS_FORMA_PAGO.length > 0 && this.esVerDetalle === false ) {
+                            if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
+                                // tipoCriterioCodigo
+                                if ( criterioAnticipo !== null ) {
+                                    const anticipoFind = fase.solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterioAnticipo.codigo )
+
+                                    if ( anticipoFind !== undefined ) {
+                                        this.emitAnticipo.emit( true )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if ( this.contrato.solicitudPago.length > 0 ) {

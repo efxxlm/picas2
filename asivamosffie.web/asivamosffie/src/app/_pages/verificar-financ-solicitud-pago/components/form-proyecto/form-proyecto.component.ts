@@ -189,7 +189,8 @@ export class FormProyectoComponent implements OnInit {
                             registroCompletoCriterio,
                             registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
-                            llaveMen: this.proyecto.get( 'llaveMen' ).value
+                            llaveMen: this.proyecto.get( 'llaveMen' ).value,
+                            tieneAnticipo: false
                         }
                     )
                 )
@@ -248,7 +249,8 @@ export class FormProyectoComponent implements OnInit {
                             registroCompletoCriterio,
                             registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
-                            llaveMen: this.proyecto.get( 'llaveMen' ).value
+                            llaveMen: this.proyecto.get( 'llaveMen' ).value,
+                            tieneAnticipo: false
                         }
                     )
                 )

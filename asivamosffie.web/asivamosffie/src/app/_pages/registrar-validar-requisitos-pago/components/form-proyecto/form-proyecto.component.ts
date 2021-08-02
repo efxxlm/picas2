@@ -2,6 +2,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { TiposDeFase } from 'src/app/_interfaces/solicitud-pago.interface';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 
 @Component({
   selector: 'app-form-proyecto',
@@ -36,7 +37,8 @@ export class FormProyectoComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     { }
 
     ngOnInit(): void {
@@ -146,11 +148,11 @@ export class FormProyectoComponent implements OnInit {
 
                     if ( faseFind !== undefined ) {
                         // Set Value semaforo criterios de pago
-                        if ( faseFind.registroCompleto === false ) {
+                        if ( faseFind.registroCompletoCriterio === false ) {
                             registroCompletoCriterio = 'en-proceso'
                         }
 
-                        if ( faseFind.registroCompleto === true ) {
+                        if ( faseFind.registroCompletoCriterio === true ) {
                             registroCompletoCriterio = 'completo'
                         }
 
@@ -189,7 +191,9 @@ export class FormProyectoComponent implements OnInit {
                             registroCompletoCriterio,
                             registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
-                            llaveMen: this.proyecto.get( 'llaveMen' ).value
+                            llaveMen: this.proyecto.get( 'llaveMen' ).value,
+                            tieneAnticipo: false,
+                            esPreconstruccion
                         }
                     )
                 )
@@ -205,11 +209,11 @@ export class FormProyectoComponent implements OnInit {
 
                     if ( faseFind !== undefined ) {
                         // Set Value semaforo criterios de pago
-                        if ( faseFind.registroCompleto === false ) {
+                        if ( faseFind.registroCompletoCriterio === false ) {
                             registroCompletoCriterio = 'en-proceso'
                         }
 
-                        if ( faseFind.registroCompleto === true ) {
+                        if ( faseFind.registroCompletoCriterio === true ) {
                             registroCompletoCriterio = 'completo'
                         }
 
@@ -248,11 +252,29 @@ export class FormProyectoComponent implements OnInit {
                             registroCompletoCriterio,
                             registroCompletoDescuentos,
                             contratacionProyectoId: this.proyecto.get( 'contratacionProyectoId' ).value,
-                            llaveMen: this.proyecto.get( 'llaveMen' ).value
+                            llaveMen: this.proyecto.get( 'llaveMen' ).value,
+                            tieneAnticipo: false,
+                            esPreconstruccion
                         }
                     )
                 )
             }
+        }
+    }
+
+    async guardarDescuentoAnticipo( tieneAnticipo: boolean, fase: FormGroup ) {
+        if ( tieneAnticipo === true ) {
+            const solicitudPago = this.contrato.solicitudPagoOnly
+
+            if ( solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+              for (const solicitudPagoFase of solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+                if ( solicitudPagoFase.esPreconstruccion === fase.get( 'esPreconstruccion' ).value && solicitudPagoFase.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value ) {
+                  solicitudPagoFase.tieneDescuento = !tieneAnticipo
+                }
+              }
+            }
+          
+            await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
         }
     }
 
