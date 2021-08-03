@@ -10,6 +10,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<Plantilla> GetPlantillaById(int pPlantillaId);
+
+        Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla);
+
         string  EnumeradorTrasladoBalanceFinanciero();
          
         Task<string> EnumeradorActualizarPoliza();

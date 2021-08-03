@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers;
 
 namespace asivamosffie.services
 {
@@ -35,6 +36,25 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+
+        public async Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla)
+        {
+            Plantilla plantilla =
+                                  await _context.Plantilla
+                                                          .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Html_To_PDF).ToString())
+                                                          .Include(r => r.Encabezado).Include(r => r.PieDePagina)
+                                                          .FirstOrDefaultAsync();
+
+            plantilla.Contenido = plantilla.Contenido.Replace("[HTML]", pPlantilla.Contenido);
+            return PDF.Convertir(plantilla , pPlantilla.EsHorizontal);
+        }
+        
+
+        public async Task<Plantilla> GetPlantillaById(int pPlantillaId)
+        { 
+            return await _context.Plantilla.FindAsync(pPlantillaId); 
+        }
+
         //Solicitudes de comite tecnico
         public async Task<dynamic> GetRequestSP(string pNameSP)
         {

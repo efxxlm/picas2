@@ -20,29 +20,20 @@ namespace asivamosffie.api.Controllers
     {
         public readonly ICommonService common;
         private readonly IOptions<AppSettings> _settings;
-      
+
         public CommonController(ICommonService prmCommon, IOptions<AppSettings> settings)
         {
             common = prmCommon;
             _settings = settings;
         }
-     
-        [Route("BestDeveloper")]
-        [HttpGet]
-        public async Task<string> BestDeveloper([FromQuery] int codigo ,string Key = "zkbyqd cqhjydup sqijqñutq")
-        { 
-            if (Key.Length == 0) return  String.Empty;
 
-            char chr = Key[0].ToString().ToLower()[0];
 
-            var code = IsBasicLetter(chr) ? (char)('z' - (('z' - chr + codigo) % 26)) : chr;
-            return code +await BestDeveloper(codigo ,Key[1..]);
-        }
-        private static bool IsBasicLetter(char c)
+        [HttpPost]
+        [Route("GetHtmlToPdf")]
+        public async Task<FileResult> GetHtmlToPdf([FromBody] Plantilla pPlantilla)
         {
-            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+            return File(await common.GetHtmlToPdf(pPlantilla), "application/pdf");
         }
-
 
         [Route("GetFiferenciaMesesDias")]
         [HttpGet]
@@ -68,6 +59,13 @@ namespace asivamosffie.api.Controllers
         public Task<DateTime> CalculardiasLaborales([FromQuery] int pDias, DateTime pFechaCalcular)
         {
             return common.CalculardiasLaborales(pDias, pFechaCalcular);
+        }
+
+        [HttpGet]
+        [Route("GetPlantillaById")]
+        public Task<Plantilla> GetPlantillaById([FromQuery] int pPlantillaId)
+        {
+            return common.GetPlantillaById(pPlantillaId);
         }
 
         [HttpGet]
@@ -221,5 +219,24 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }
+
+
+        [Route("BestDeveloper")]
+        [HttpGet]
+        public async Task<string> BestDeveloper([FromQuery] int codigo, string Key = "zkbyqd cqhjydup sqijqñutq")
+        {
+            if (Key.Length == 0) return String.Empty;
+
+            char chr = Key[0].ToString().ToLower()[0];
+
+            var code = IsBasicLetter(chr) ? (char)('z' - (('z' - chr + codigo) % 26)) : chr;
+            return code + await BestDeveloper(codigo, Key[1..]);
+        }
+        private static bool IsBasicLetter(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        }
+
+
     }
 }

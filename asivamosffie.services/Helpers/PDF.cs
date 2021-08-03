@@ -37,7 +37,7 @@ namespace asivamosffie.services.Helpers
 
 
 
-        public static byte[] Convertir(Plantilla pPlantilla, bool pEsHorizontal = false)
+        public static byte[] Convertir(Plantilla pPlantilla, bool? pEsHorizontal = false)
         {
             string contenido = pPlantilla.Contenido ?? " ";
             string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
