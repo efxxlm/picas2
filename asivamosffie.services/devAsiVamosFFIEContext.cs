@@ -252,6 +252,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
         public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
+        public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
@@ -317,8 +318,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -13917,8 +13916,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Nombre del equipo o dispositivo desde donde se esta conectando el usuario por ultima vez.");
 
-                entity.Property(e => e.NombreOrganizacion).HasMaxLength(255);
-
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(255)
                     .IsUnicode(false)
@@ -14416,6 +14413,41 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DescuentosXOrdenGiroAportante");
+            });
+
+            modelBuilder.Entity<VDisponibilidadPresupuestal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DisponibilidadPresupuestal");
+
+                entity.Property(e => e.EstadoSolicitudCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroDdp)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudEspecialCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VDominio>(entity =>
@@ -15398,6 +15430,8 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RegistrarAvanceSemanalNew");
 
+                entity.Property(e => e.ContratoId).HasColumnName("contratoId");
+
                 entity.Property(e => e.EstadoObra).HasMaxLength(250);
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -15745,11 +15779,11 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_SaldosFuenteXAportanteId");
 
-                entity.Property(e => e.ComprometidoEnDdp).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ComprometidoEnDdp).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.RendimientosIncorporados).HasColumnType("numeric(18, 0)");
 
-                entity.Property(e => e.SaldoActual).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.SaldoActual).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VSeguimientoSemanalRegistrar>(entity =>

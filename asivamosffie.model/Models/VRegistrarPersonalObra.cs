@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFirmaActaInicio { get; set; }
         public string LlaveMen { get; set; }
         public string NumeroContrato { get; set; }
+        public int ContratoId { get; set; }
         public string TipoIntervencion { get; set; }
         public string Sede { get; set; }
         public string Municipio { get; set; }

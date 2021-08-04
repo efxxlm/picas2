@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public string Sede { get; set; }
         public int? SeguimientoSemanalId { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public int ContratoId { get; set; }
         public string FechaUltimoReporte { get; set; }
         public string EstadoObra { get; set; }
         public bool? ActaCargada { get; set; }
