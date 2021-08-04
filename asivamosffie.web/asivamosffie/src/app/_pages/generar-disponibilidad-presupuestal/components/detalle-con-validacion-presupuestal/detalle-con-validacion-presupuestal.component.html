@@ -223,7 +223,7 @@
                             {{proyecto.municipio}}
                         </p>
                         <p>
-                            <strong>Valor total del proyecto para el componente de {{ detailavailabilityBudget?.tipoSolicitudContratacion === '1' ? 'Obra' : detailavailabilityBudget?.tipoSolicitudContratacion === '2' ? 'Interventoria' : '' }}:</strong>
+                            <strong>Valor total del proyecto:</strong>
                             {{ getTotalProyecto( proyecto.aportantes ) | currency:'':'symbol':'3.0' }}
                         </p>
 

@@ -637,11 +637,7 @@ namespace asivamosffie.services
                   {
                       cofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(cpa.CofinanciacionAportante.NombreAportanteId).Nombre;
                   }
-                  //validación multi
-                  if (!listaAportantes.Any(r => r.CofinanciacionAportanteId == cofinanciacionAportante?.CofinanciacionAportanteId))
-                  {
-                      listaAportantes.Add(cofinanciacionAportante);
-                  }
+                  listaAportantes.Add(cofinanciacionAportante);
               });
            });
 

@@ -49,9 +49,6 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   fechaCreacion: Date;
   objeto: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
-  nombreRepresentanteLegalInterventoria: any;
-  numeroIdentificacionEntidadContratistaObra: any;
-  contrato : any;
   valorProponente: any;
   rutaActaSuscrita: any;
   constructor(private activatedRoute: ActivatedRoute, private services: ActaInicioConstruccionService, private commonSvc: CommonService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
@@ -112,11 +109,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
-      this.nombreRepresentanteLegalInterventoria = data?.nombreRepresentanteLegalInterventoria;
-      this.numeroIdentificacionEntidadContratistaObra = data?.numeroIdentificacionEntidadContratistaObra;
       //ruta del acta suscrita
       this.rutaActaSuscrita = data.rutaActaSuscrita;
-      this.contrato = data.contrato;
       //console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );
       if (data.contrato && (data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7))
         this.mostrarCarga = true;

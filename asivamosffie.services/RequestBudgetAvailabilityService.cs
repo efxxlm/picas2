@@ -649,8 +649,7 @@ namespace asivamosffie.services
                         EsNovedad = false,
                         NovedadContractual = ListDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == ListDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                         EstadoRegistro = blnEstado,
-                        SesionComiteSolicitud = sesionComiteSolicitud,
-                        TipoSolicitudContratacion = ListDP?.Contratacion?.TipoSolicitudCodigo
+                        SesionComiteSolicitud = sesionComiteSolicitud
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);

@@ -58,8 +58,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   public plazoActualContratoDias;
   public plazoEjecucionPreConstruccionMeses;
   public plazoEjecucionPreConstruccionDias;
-  nombreRepresentanteLegalInterventoria : any;
-  numeroIdentificacionEntidadContratistaObra: any;
   public contrato;
 
   fechaSesionString: string;
@@ -79,7 +77,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   conObervacionesActa: boolean;
   objeto: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
-  numeroIdentificacionSupervisor: any;
   valorProponente: any;
 
   realizoPeticion: boolean = false;
@@ -160,8 +157,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
-      this.nombreRepresentanteLegalInterventoria = data?.nombreRepresentanteLegalInterventoria;
-      this.numeroIdentificacionEntidadContratistaObra = data?.numeroIdentificacionEntidadContratistaObra;
       this.contrato = data.contrato;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
 
@@ -170,7 +165,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
 
       // calcula el plazo restante
       if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
-
+        
         this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, data.plazoFase1PreMeses, data.plazoFase1PreDias )
           .subscribe(
             response => {
@@ -350,11 +345,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       console.log(this.addressForm.value)
       //compara los meses
       if (
-          this.addressForm.value.fechaActaInicioFDosConstruccion == null ||
-          this.addressForm.value.fechaPrevistaTerminacion == null ||
+          this.addressForm.value.fechaActaInicioFDosConstruccion == null || 
+          this.addressForm.value.fechaPrevistaTerminacion == null || 
           this.addressForm.value.mesPlazoEjFase2 == null ||
           this.addressForm.value.diasPlazoEjFase2 == null
-          )
+          ) 
           {
             this.openDialog2('', '<b>Falta registrar información</b>');
             this.esRojo = true;

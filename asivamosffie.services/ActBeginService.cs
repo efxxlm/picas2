@@ -1611,9 +1611,6 @@ namespace asivamosffie.services
                 Contrato contrato = _context.Contrato
                                                     .Where(r => r.ContratoId == pContratoId)
                                                     .Include(r => r.ContratoConstruccion).ThenInclude(r => r.ConstruccionObservacion)
-                                                    .Include(ctr => ctr.Interventor)
-                                                    .Include(ctr => ctr.Apoyo)
-                                                    .Include(ctr => ctr.Supervisor)
                                                     .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.PlazoContratacion)
                                                     .Include(ctr => ctr.Contratacion).ThenInclude(pc => pc.DisponibilidadPresupuestal)
                                                     .FirstOrDefault();
@@ -1633,7 +1630,6 @@ namespace asivamosffie.services
 
                 ContratoPoliza contratoPoliza = null;
                 Usuario Supervisor = null;
-                Usuario interventor = null;
 
                 if (contrato != null)
                 {
@@ -1648,14 +1644,9 @@ namespace asivamosffie.services
 
                     FechaActaInicioFase1DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase1);
                     FechaActaInicioFase2DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
-                    FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
+                    FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaTerminacionFase2);
 
-                    if(contrato.FechaActaInicioFase2 != null && (contrato.PlazoFase2ConstruccionDias != null || contrato.PlazoFase2ConstruccionDias != null))
-                    {
-                        FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime.AddMonths((int)(contrato?.PlazoFase2ConstruccionMeses != null ? contrato?.PlazoFase2ConstruccionMeses : 0)).AddDays((int)(contrato?.PlazoFase2ConstruccionDias != null ? contrato?.PlazoFase2ConstruccionDias : 0));
-                    }
-
-                    strFechaPrevistaTerminacion = FechaPrevistaTerminacionDateTime != null ? Convert.ToDateTime(FechaPrevistaTerminacionDateTime).ToString("dd/MM/yyyy") : contrato?.FechaTerminacionFase2.ToString();
+                    strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     ConstruccionObservacion construccionObservacion = contrato.ContratoConstruccion?
                                                                                     .FirstOrDefault()?.ConstruccionObservacion?
@@ -1668,11 +1659,9 @@ namespace asivamosffie.services
 
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.InterventorId);
-                    //if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
-                        //contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.SupervisorId);
-
-                    Supervisor = _context.Usuario.Find(contrato.SupervisorId);
-                    contrato.Supervisor = Supervisor;
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                        contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.SupervisorId);
+                    Supervisor = contrato.UsuarioInterventoria;
 
                 }
                 string strTipoContratacion = ConstanMessages.SinDefinir;
@@ -1705,6 +1694,7 @@ namespace asivamosffie.services
                     contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
 
                     contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+
 
                     if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     {
@@ -1825,10 +1815,9 @@ namespace asivamosffie.services
                     DepartamentoYMunicipioLlaveMEN = strDepartamentoYMunicipioLlaveMEN,
                     InstitucionEducativaLlaveMEN = strInstitucionEducativaLlaveMEN,
                     CantidadProyectosAsociados = intCantidadProyectosAsociados,
-                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista?.NumeroIdentificacion,
+                    NumeroIdentificacionRepresentanteContratistaInterventoria = contratista?.RepresentanteLegalNumeroIdentificacion,
                     RutaActaSuscrita = rutaActaSuscrita,
                     NumeroIdentificacionSupervisor = Supervisor?.NumeroIdentificacion,
-                    NombreRepresentanteLegalInterventoria = contratista?.RepresentanteLegal,
                     NumeroIdentificacionEntidadContratistaObra = contratista?.RepresentanteLegalNumeroIdentificacion,
                     Contrato = contrato
                 };

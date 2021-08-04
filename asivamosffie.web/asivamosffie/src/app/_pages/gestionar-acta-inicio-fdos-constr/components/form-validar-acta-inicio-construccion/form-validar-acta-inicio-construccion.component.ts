@@ -63,8 +63,6 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   objeto: any;
   valorProponente: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
-  nombreRepresentanteLegalInterventoria: any;
-  numeroIdentificacionEntidadContratistaObra: any;
   estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
   ngOnInit(): void {
@@ -136,8 +134,6 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
       this.contrato = data.contrato;
-      this.nombreRepresentanteLegalInterventoria = data.nombreRepresentanteLegalInterventoria;
-      this.numeroIdentificacionEntidadContratistaObra = data.numeroIdentificacionEntidadContratistaObra;
       this.contratoConstruccionId = data.contrato.contratoConstruccion[0].contratoConstruccionId;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
     });

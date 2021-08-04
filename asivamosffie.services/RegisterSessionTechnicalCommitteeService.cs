@@ -7895,9 +7895,7 @@ namespace asivamosffie.services
                             }
                         }
                     }
-                    Proyecto pry = _context.Proyecto.Find(novedadContractual.ProyectoId);
-                    Contrato ctr = _context.Contrato.Find(novedadContractual.ContratoId);
-                    Historiales = Historiales.Replace("[NOVEDAD_APLICA_A]", (novedadContractual.EsAplicadaAcontrato != true ? ("Proyecto " + (pry != null ? pry.LlaveMen : "")) : ("Contrato " + (ctr != null ? ctr.NumeroContrato : ""))) );
+
                     foreach (Dominio placeholderDominio in placeholders)
                     {
                         switch (placeholderDominio.Codigo)
