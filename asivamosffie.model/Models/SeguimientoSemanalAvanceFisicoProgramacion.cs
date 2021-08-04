@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public int? ProgramacionCapitulo { get; set; }
+        public decimal? ProgramacionCapitulo { get; set; }
 
         public virtual Programacion Programacion { get; set; }
         public virtual SeguimientoSemanalAvanceFisico SeguimientoSemanalAvanceFisico { get; set; }
