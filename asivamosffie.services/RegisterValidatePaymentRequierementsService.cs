@@ -1561,12 +1561,7 @@ namespace asivamosffie.services
             {
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
-            }
-            //contrato.ValorFacturadoContrato =
-            //    _context.VValorFacturadoContrato
-            //    .Where(v => v.ContratoId == pContratoId)
-            //    .ToList();
-
+            } 
             List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
 
             try
@@ -1577,22 +1572,13 @@ namespace asivamosffie.services
                     vContratoPagosRealizados = _context.VContratoPagosRealizados
                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                       .ToList();
-                }
-
+                } 
             }
-            catch (Exception)
-            {
-
-            }
-
-
-            contrato.VContratoPagosRealizados = vContratoPagosRealizados;
-
-
-
-            contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
-
-
+            catch (Exception e)
+            { 
+            } 
+            contrato.VContratoPagosRealizados = vContratoPagosRealizados; 
+            contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId); 
             return contrato;
 
         }
