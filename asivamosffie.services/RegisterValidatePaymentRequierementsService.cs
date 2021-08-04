@@ -110,8 +110,9 @@ namespace asivamosffie.services
                 List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
                 List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
 
-                return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
+                List<VValorUsoXcontratoId> vValorUsoXcontratoId = _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
 
+                return vValorUsoXcontratoId;
             }
             catch (Exception ex)
             {
@@ -745,21 +746,17 @@ namespace asivamosffie.services
                     if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
                         solicitudPagoFaseOld.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
 
-                    solicitudPagoFaseOld.;
-                    solicitudPagoFaseOld.;
-                    solicitudPagoFaseOld.;
-                    solicitudPagoFaseOld.;
-
                     _context.Set<SolicitudPagoFase>()
                             .Where(r => r.SolicitudPagoFaseId == SolicitudPagoFase.SolicitudPagoFaseId)
-                            .Update(r => new SolicitudPagoFase {
+                            .Update(r => new SolicitudPagoFase
+                            {
                                 RegistroCompletoCriterio = blRegistroCompleto,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 FechaModificacion = DateTime.Now,
                                 TieneDescuento = SolicitudPagoFase.TieneDescuento,
                                 RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase)
                             });
-                           
+
                 }
                 else
                 {
@@ -873,7 +870,7 @@ namespace asivamosffie.services
                                      SolicitudPagoFaseId = SolicitudPagoFaseCriterio.SolicitudPagoFaseId,
                                      TipoCriterioCodigo = SolicitudPagoFaseCriterio.TipoCriterioCodigo,
                                      RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio)
-                                 }); 
+                                 });
                     }
                     else
                     {
