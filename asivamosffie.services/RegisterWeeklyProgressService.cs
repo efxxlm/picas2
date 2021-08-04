@@ -1940,7 +1940,8 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    SeguimientoSemanalAvanceFisicoProgramacion itemOld = _context.SeguimientoSemanalAvanceFisicoProgramacion.Find(item.SeguimientoSemanalAvanceFisicoProgramacionId);
+                    SeguimientoSemanalAvanceFisicoProgramacion itemOld = _context.SeguimientoSemanalAvanceFisicoProgramacion
+                                                                         .Find(item.SeguimientoSemanalAvanceFisicoProgramacionId);
 
                     itemOld.UsuarioModificacion = strUsuario;
                     itemOld.FechaModificacion = DateTime.Now;
