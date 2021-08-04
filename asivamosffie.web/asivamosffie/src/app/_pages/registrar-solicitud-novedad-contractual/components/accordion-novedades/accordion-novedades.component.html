@@ -2,22 +2,23 @@
 <mat-accordion>
     <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let novedad of novedadeContractual.novedadContractualDescripcion; let i = index" >
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title 
+            <mat-panel-title class="expansion-style--title
             {{ novedad.registroCompleto === undefined ? 'sin-diligenciar' : (novedad.registroCompleto === false ? 'en-proceso' : 'completo' ) }}">
                 Novedad {{ i + 1 }}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-form-registrar-novedad-contrato 
+        <app-form-registrar-novedad-contrato
                                             [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"
                                             [novedadDescripcion]="novedad"
                                             [fechaSolicitudNovedad]="fechaSolicitudNovedad"
                                             [estaEditando]="estaEditando"
                                             [fechaSolicitudNovedad]="fechaSolicitudNovedad"
+                                            [contrato]="contrato"
                                             (guardar)="guardarRegistro()"
                                             >
         </app-form-registrar-novedad-contrato>
 
     </mat-expansion-panel>
-    
+
 </mat-accordion>
