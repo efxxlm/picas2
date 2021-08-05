@@ -28,7 +28,7 @@ export interface ListaChequeo {
   informeFinalAnexo:{
     fechaRadicado?: Date,
     informeFinalAnexoId?: number,
-    numRadicadoSac?: number,
+    numRadicadoSac?: string,
     tipoAnexo?: string,
     urlSoporte?: string
   },
@@ -77,7 +77,7 @@ export interface InformeFinalAnexo{
   fechaModificacion?: Date,
   usuarioModificacion?: number,
   tipoAnexo?: string,
-  numRadicadoSac?: number,
+  numRadicadoSac?: string,
   fechaRadicado?: Date,
   urlSoporte?: string
 }
