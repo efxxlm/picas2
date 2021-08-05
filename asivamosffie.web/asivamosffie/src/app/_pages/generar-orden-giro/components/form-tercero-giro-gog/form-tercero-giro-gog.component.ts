@@ -51,6 +51,39 @@ export class FormTerceroGiroGogComponent implements OnInit {
                     .subscribe( async listaBancos => {
                         this.bancosArray = listaBancos;
 
+                        // console.log(this.solicitudPago);
+                        if (this.solicitudPago.primerOrdenGiroTerceroTransferenciaElectronica) {
+                            const ordenGiroTerceroTransferenciaElectronica = this.solicitudPago.primerOrdenGiroTerceroTransferenciaElectronica;
+
+                            this.addressForm.get( 'transferenciaElectronica' ).setValue(
+                                {
+                                    ordenGiroTerceroId: ordenGiroTerceroTransferenciaElectronica.ordenGiroTerceroId !== undefined ? ordenGiroTerceroTransferenciaElectronica.ordenGiroTerceroId : '',
+                                    ordenGiroTerceroTransferenciaElectronicaId: ordenGiroTerceroTransferenciaElectronica.ordenGiroTerceroTransferenciaElectronicaId,
+                                    titularCuenta: ordenGiroTerceroTransferenciaElectronica.titularCuenta !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularCuenta : '',
+                                    titularNumeroIdentificacion: ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion : '',
+                                    numeroCuenta: ordenGiroTerceroTransferenciaElectronica.numeroCuenta !== undefined ? ordenGiroTerceroTransferenciaElectronica.numeroCuenta : '',
+                                    bancoCodigo: ordenGiroTerceroTransferenciaElectronica.bancoCodigo !== undefined ? ordenGiroTerceroTransferenciaElectronica.bancoCodigo : null,
+                                    esCuentaAhorros: ordenGiroTerceroTransferenciaElectronica.esCuentaAhorros !== undefined ? ordenGiroTerceroTransferenciaElectronica.esCuentaAhorros : null
+                                }
+                            )
+                        }
+                        if (this.solicitudPago.primerOrdenGiroTerceroChequeGerencia) {
+                            const ordenGiroTerceroChequeGerencia = this.solicitudPago.primerOrdenGiroTerceroChequeGerencia;
+                                
+                                this.addressForm.get( 'chequeGerencia' ).setValue(
+                                    {
+                                        ordenGiroTerceroId: ordenGiroTerceroChequeGerencia.ordenGiroTerceroId !== undefined ? ordenGiroTerceroChequeGerencia.ordenGiroTerceroId : '',
+                                        ordenGiroTerceroChequeGerenciaId: ordenGiroTerceroChequeGerencia.ordenGiroTerceroChequeGerenciaId,
+                                        nombreBeneficiario: ordenGiroTerceroChequeGerencia.nombreBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.nombreBeneficiario : '',
+                                        numeroIdentificacionBeneficiario: ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario : ''
+                                    }
+                                    )
+                        }
+
+                        if (this.solicitudPago.medioPagoCodigo) {
+                            this.addressForm.get('medioPagoGiroContrato').setValue( this.solicitudPago.medioPagoCodigo );
+                        }
+
                         if ( this.solicitudPago.ordenGiro !== undefined ) {
                             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
                 
