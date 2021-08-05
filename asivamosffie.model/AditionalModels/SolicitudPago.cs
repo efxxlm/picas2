@@ -31,6 +31,14 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic TablaInformacionFuenteRecursos { get; set; }
 
+        [NotMapped]
+        public dynamic MedioPagoCodigo { get; set; }
+
+        [NotMapped]
+        public OrdenGiroTerceroChequeGerencia PrimerOrdenGiroTerceroChequeGerencia { get; set; }
+
+        [NotMapped]
+        public OrdenGiroTerceroTransferenciaElectronica PrimerOrdenGiroTerceroTransferenciaElectronica { get; set; }
     }
     
 }

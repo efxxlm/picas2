@@ -160,6 +160,12 @@ namespace asivamosffie.services
                 SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
             }
+
+            SolicitudPago.MedioPagoCodigo = 1;
+            SolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = _context.OrdenGiroTerceroChequeGerencia.Find(1);
+            SolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = _context.OrdenGiroTerceroTransferenciaElectronica.Find(2);
+
+
             if (SolicitudPago.OrdenGiroId != null)
             {
                 SolicitudPago.OrdenGiro = _context.OrdenGiro
@@ -175,6 +181,8 @@ namespace asivamosffie.services
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
                         .Include(d => d.SolicitudPago)
                     .AsNoTracking().FirstOrDefault();
+
+
 
                 foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
                 {
@@ -1130,7 +1138,8 @@ namespace asivamosffie.services
                     _context.Set<OrdenGiroDetalleTerceroCausacion>()
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
                             .Update(r => new OrdenGiroDetalleTerceroCausacion()
-                            { ContratacionProyectoId = pOrdenGiroDetalleTerceroCausacion.ContratacionProyectoId,
+                            {
+                                ContratacionProyectoId = pOrdenGiroDetalleTerceroCausacion.ContratacionProyectoId,
                                 TieneDescuento = pOrdenGiroDetalleTerceroCausacion.TieneDescuento,
                                 ValorNetoGiro = pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro,
                                 OrdenGiroDetalleId = pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleId,
@@ -1140,7 +1149,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
-                            }) ;
+                            });
                 }
 
                 if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
@@ -1412,7 +1421,7 @@ namespace asivamosffie.services
         #endregion
         #endregion
 
-    
+
 
 
 

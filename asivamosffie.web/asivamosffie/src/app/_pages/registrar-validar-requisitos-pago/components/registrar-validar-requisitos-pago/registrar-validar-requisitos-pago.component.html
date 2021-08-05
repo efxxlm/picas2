@@ -15,7 +15,7 @@
         </button>
         Bienvenida/o, aquí podrá realizar el registro de los requisitos de pago para los contratos de obra e interventoria suscritos que se encuentran
         activos y cuentan con acta de inicio aprobada o los requisitos de pago por conceptos especiales de Expensas u Otros costos/servicios que serán
-        ejecutados en el marco de la gestión del FFIE.
+        ejecutados en el marco de la gestión del FFIE.  
     </div>
     <div class="tabs--actions">
         <button mat-raised-button color="accent" class="tabs--btn" (click)="this.registrarNuevaSolicitud()">
@@ -61,37 +61,13 @@
                         style="margin-right: 0em;"></span>
                     <br>
                     {{ element.registroCompleto?"Completo":"Incompleto" }}
-                </td>
-                <!--
-                dbenitez, lo dejo por si algo
-                <td mat-cell *matCellDef="let element" align="center">
-                    <div class="flex-span" *ngIf="element.registroCompleto === true">
-                        <span class="info-text completo mr-auto" style="margin-right: 0em;"></span>
-                        <span>
-                          {{ 'Completo' }}
-                        </span>
-                      </div>
-                      <div class="flex-span" *ngIf="element.registroCompleto === false">
-                        <span class="info-text sin-diligenciar mr-auto" style="margin-right: 0em;"></span>
-                        <span>
-                          {{ 'Incompleto' }}
-                        </span>
-                      </div>
-                </td>
-                -->
+                </td> 
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitud.expensas; else esExpensas">
-                        <!--
-                            ng-container para obra, interventoria, otros costos
-                        -->
-                        <!--
-                            - Cuando esta incompleto muestra solo ver detale/ editar y eliminar
-                            - Cuando un registro de la lista de chequeo este en "No cumple" muestra los botones devolver solicitud, ver detalle / editar, eliminar y la solicitud en registro completo
-                            - Cuando el registro esta completo y los registros de la lista de chequeo estan en cumple o no aplica se muestran los botones ver detalle / editar, eliminar y enviar a verificacion
-                        -->
+      
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
