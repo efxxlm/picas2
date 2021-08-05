@@ -13,8 +13,9 @@ export class AccordionNovedadesComponent implements OnInit {
   @Output() guardar = new EventEmitter();
   @Input() estaEditando: boolean;
   @Input() fechaSolicitudNovedad: Date;
+  @Input() contrato: any;
 
-  
+
   constructor() { }
 
   ngOnInit(): void {

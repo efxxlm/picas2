@@ -187,6 +187,13 @@
           {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
         </p>
 
+        <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+          <strong>
+            Fecha estimada de terminación del contrato:
+          </strong>
+          {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
+        </p>
+
         <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado | currency: '':'symbol':'3.0' }} </p>
 
         <section *ngIf="descripcion.tipoNovedadCodigo === '5'">

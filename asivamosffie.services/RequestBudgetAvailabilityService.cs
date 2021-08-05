@@ -7,7 +7,6 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -2300,8 +2299,8 @@ namespace asivamosffie.services
                                                                         .Include(x => x.DisponibilidadPresupuestal)
                                                                             .ThenInclude(x => x.Contratacion)
                                                                         .Include(x => x.DisponibilidadPresupuestal)
-                                                                            .ThenInclude(x => x.DisponibilidadPresupuestalProyecto)
-                                                                                .ThenInclude(x => x.Proyecto)
+                                                                        //.ThenInclude(x => x.DisponibilidadPresupuestalProyecto)
+                                                                        //    .ThenInclude(x => x.Proyecto)
                                                                         .Include(x => x.NovedadContractual)
                                                                             .ThenInclude(x => x.NovedadContractualAportante)
                                                                                 .ThenInclude(x => x.CofinanciacionAportante)
@@ -2316,6 +2315,19 @@ namespace asivamosffie.services
             //            ThenInclude(c => c.FuenteFinanciacion).
             //    Include(x => x.DisponibilidadPresupuestalObservacion).
             //    Include(x => x.Contratacion).ToListAsync();
+
+            //validación multi
+            if (detailDP != null)
+            {
+                if (detailDP.DisponibilidadPresupuestal != null)
+                {
+                    List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyectos = _context.DisponibilidadPresupuestalProyecto
+                                                                                                    .Where(r => r.ProyectoId == detailDP.NovedadContractual.ProyectoId && r.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId)
+                                                                                                    .Include(x => x.Proyecto)
+                                                                                                    .ToList();
+                    detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto = disponibilidadPresupuestalProyectos;
+                }
+            }
 
             List<CofinanicacionAportanteGrilla> aportantes = new List<CofinanicacionAportanteGrilla>();
             List<ProyectoGrilla> proyecto = new List<ProyectoGrilla>();

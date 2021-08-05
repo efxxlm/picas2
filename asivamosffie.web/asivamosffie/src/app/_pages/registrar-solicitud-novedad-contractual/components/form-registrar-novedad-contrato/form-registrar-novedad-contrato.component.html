@@ -199,7 +199,7 @@
                     (addressForm.get('fechaInicio').invalid && estaEditando)
                   "
                 >
-                  Fecha de inicio 
+                  Fecha de inicio
                   <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">de la suspensión</span>
                   <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">de la prórroga a la suspensión</span>
                   <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">de reinicio</span>
@@ -214,6 +214,7 @@
                     readonly
                     (click)="pickerPlazoInicio.open()"
                     placeholder="DD/MM/AAAA"
+                    (dateChange)="updateFechaEstimada($event)"
                     required
                   />
                   <mat-datepicker #pickerPlazoInicio></mat-datepicker>
@@ -265,7 +266,7 @@
                   (addressForm.get('fechaFinal').invalid && estaEditando)
                 "
               >
-                Fecha final 
+                Fecha final
                 <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '1'">de la suspensión</span>
                 <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '2'">de la prórroga a la suspensión</span>
                 <span *ngIf="novedadDescripcion.tipoNovedadCodigo === '6'">de reinicio</span>
@@ -275,10 +276,12 @@
               <mat-form-field class="example-full-width">
                 <input
                   matInput
+                  [min]="addressForm.get('fechaInicio').value"
                   [matDatepicker]="pickerPlazoFin"
                   formControlName="fechaFinal"
                   readonly
                   (click)="pickerPlazoFin.open()"
+                  (dateChange)="updateFechaEstimada()"
                   placeholder="DD/MM/AAAA"
                   required
                 />
@@ -305,7 +308,26 @@
           </div>
         </div>
       </div>
-
+      <div
+      class="row"
+      *ngIf="
+        novedadDescripcion.tipoNovedadCodigo == '1' ||
+        novedadDescripcion.tipoNovedadCodigo == '2'
+      "
+    >
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+            >
+              Fecha estimada de terminación del contrato:
+            </label>
+            <span> {{ fechaEstimadaFinalizacion  | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
       <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         Plazo solicitado
       </mat-card-title>

@@ -6,6 +6,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-form-registrar-novedad-accord',
@@ -15,11 +16,12 @@ import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContr
 export class FormRegistrarNovedadAccordComponent implements OnInit {
   @Input() tiposNovedadModificacionContractual;
   @Input() novedadDescripcion:NovedadContractualDescripcion;
-
+  @Input() contrato: any;
   @Output() guardar= new EventEmitter();
 
   nombreTiposolicitud: string;
-
+  fechaFinalizacionContrato: any;
+  fechaEstimadaFinalizacion : Date;
   addressForm = this.fb.group({
     novedadContractualDescripcionId: [],
     fechaSolicitudNovedad: [null, Validators.required],
@@ -118,13 +120,13 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
 
     this.commonServices.listaMotivosNovedadContractual()
             .subscribe( respuesta => {
-              this.motivosNovedadArray = respuesta; 
+              this.motivosNovedadArray = respuesta;
 
               let motivosSeleccionados = [];
               if ( this.novedadDescripcion.novedadContractualDescripcionMotivo ){
                 this.novedadDescripcion.novedadContractualDescripcionMotivo.forEach( m => {
                   let motivo = this.motivosNovedadArray.find( r => r.codigo === m.motivoNovedadCodigo )?.codigo;
-                  
+
                   if ( motivo ){
                     motivosSeleccionados.push( motivo );
                   }
@@ -135,7 +137,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
             });
 
     if ( changes.novedadDescripcion ){
-      
+
     this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
     this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
     this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
@@ -161,15 +163,15 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
           grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
           grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
           grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
-    
+
           this.clausulaField.push( grupo );
-    
+
         });
       }else{
         let grupo = this.crearClausula();
         this.clausulaField.push( grupo );
       }
-      
+
     }
 
     }
@@ -186,8 +188,11 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
       this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response=>{
         this.tipoNovedadArray=response;
       });
+      this.fechaFinalizacionContrato = (this.contrato?.fechaTerminacionFase2 ? this.contrato?.fechaTerminacionFase2 : this.contrato?.fechaTerminacion)
+      this.fechaEstimadaFinalizacion = this.fechaFinalizacionContrato;
+      this.updateFechaEstimada();
   }
- 
+
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -248,13 +253,13 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     this.contractualNoveltyService.eliminarNovedadClausula( this.clausulaField.value[i].novedadContractualClausulaId )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
-        if ( respuesta.code === '200' )    
+        if ( respuesta.code === '200' )
           this.borrarArray(this.clausulaField, i);
       });
-    
+
     console.log( this.clausulaField.value[i].novedadContractualClausulaId );
 
-    
+
   }
 
   onSubmit() {
@@ -268,7 +273,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
         novedadContractualClausulaId: control.value.novedadContractualClausulaId,
         ajusteSolicitadoAclausula: control.value.ajusteSolicitadoClausula,
         clausulaAmodificar: control.value.clausulaModificar,
-        
+
       }
       listaClausulas.push( clausula );
     });
@@ -279,12 +284,12 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
           novedadContractualDescripcionMotivoId: m.novedadContractualDescripcionMotivoId,
           novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
           motivoNovedadCodigo: m,
-          
+
         }
         listaMotivos.push( motivo );
       });
     }
-    
+
     this.novedadDescripcion.resumenJustificacion = this.addressForm.get('resumenJustificacionNovedad').value;
     this.novedadDescripcion.esDocumentacionSoporte = this.addressForm.get('documentacionSuficiente').value;
     this.novedadDescripcion.conceptoTecnico = this.addressForm.get('conceptoTecnico').value;
@@ -304,6 +309,14 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
 
     this.guardar.emit( true );
 
+  }
+
+  updateFechaEstimada(){
+    this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
+    const fechaInicio = moment( new Date( this.addressForm.get('fechaInicio').value ).setHours( 0, 0, 0, 0 ) );
+    const fechaFin = moment( new Date( this.addressForm.get('fechaFinal').value ).setHours( 0, 0, 0, 0 ) );
+    const duracionDias = fechaFin.diff( fechaInicio, 'days' );
+    this.fechaEstimadaFinalizacion =  moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();
   }
 
 
