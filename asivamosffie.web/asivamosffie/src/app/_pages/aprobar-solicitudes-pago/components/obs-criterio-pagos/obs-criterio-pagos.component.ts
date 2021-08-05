@@ -82,9 +82,9 @@ export class ObsCriterioPagosComponent implements OnInit {
         if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
         this.montoMaximoPendiente = montoMaximoPendiente.valorPendientePorPagar;
 
-        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipó' )
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
-            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipó' )
+            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
         }
 
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {

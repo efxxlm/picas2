@@ -59,7 +59,7 @@
                             </app-obs-criterio-pagos>
                         </mat-expansion-panel>
 
-                        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="fase.get( 'codigo' ).value === fasesContrato.construccion && manejoAnticipoRequiere === true && fase.get( 'tieneAnticipo' ).value === false">
+                        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="fase.get( 'codigo' ).value === fasesContrato.construccion && manejoAnticipoRequiere === true && fase.get( 'tieneAnticipo' ).value === false && contrato.solicitudPago.length > 1">
                             <mat-expansion-panel-header class="expansion-style--header">
                                 <mat-panel-title class="expansion-style--title font-size-09em">
                                     Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}

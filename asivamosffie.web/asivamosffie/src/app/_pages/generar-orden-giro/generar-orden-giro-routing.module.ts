@@ -1,3 +1,4 @@
+import { PlantillaComponent } from './components/plantilla/plantilla.component';
 import { FormExpensasOtrosCostosComponent } from './components/form-expensas-otros-costos/form-expensas-otros-costos.component';
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";

@@ -20,6 +20,7 @@ import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinancia
 import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
 import { AuthenticateGuard } from './_guards/authenticate.guard';
+import { PlantillaComponent } from './_pages/generar-orden-giro/components/plantilla/plantilla.component';
 
 const routes: Routes = [
   {
@@ -578,6 +579,10 @@ const routes: Routes = [
       },
     ]
     
+  },
+  {
+    path: 'plantillaOrdenGiro/:id',
+    component: PlantillaComponent
   },
   {
     path: 'reportes',

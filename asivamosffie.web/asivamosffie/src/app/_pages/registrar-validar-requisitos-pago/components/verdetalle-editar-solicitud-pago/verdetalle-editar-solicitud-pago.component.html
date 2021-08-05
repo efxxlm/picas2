@@ -209,7 +209,7 @@
                                                 [listaMenusId]="menusIdPath"
                                                 [registrarSolicitudPagoObs]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
                                                 (estadoSemaforo)="semaforoDetalleFactura = $event; $event === 'completo' ? registroCompletoAcordeones.registroCompletoDetalleFactura = true : ''"
-                                                *ngIf="registroCompletoAcordeones.registroCompletoSolicitudPago === true">
+                                                *ngIf="registroCompletoAcordeones.registroCompletoDescripcionFactura === true && registroCompletoAcordeones.registroCompletoSolicitudPago === true">
             </app-form-detalle-factura-proyectos>
           </mat-expansion-panel>
         </mat-accordion>

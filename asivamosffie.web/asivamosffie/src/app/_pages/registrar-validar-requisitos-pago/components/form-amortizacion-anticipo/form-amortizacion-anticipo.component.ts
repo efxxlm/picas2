@@ -5,6 +5,8 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { TiposDeFase } from 'src/app/_interfaces/solicitud-pago.interface';
+import { Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-amortizacion-anticipo',
@@ -18,11 +20,13 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     @Input() contrato: any;
     @Input() tieneObservacion: boolean;
     @Input() listaMenusId: any;
+    @Input() faseCodigo: string;
     @Input() amortizacionAnticipoCodigo: string;
     @Input() tieneObservacionOrdenGiro: boolean;
     @Input() contratacionProyectoId: number;
+    @Input() solicitudPagoCargarFormaPago: any;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
-    esPreconstruccion = false;
+    esPreconstruccion = true;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
     valorTotalDelContrato = 0;
@@ -34,6 +38,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
       valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
     });
     estaEditando = false;
+    fasesContrato = TiposDeFase;
+    valorFacturado = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -43,7 +49,12 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.addressForm.get('porcentajeAmortizacion').valueChanges.subscribe(value => {
-            if (this.valorTotalDelContrato > 0) {
+            if (this.valorFacturado > 0) {
+                if ( value > this.valorFacturado ) {
+                    this.addressForm.get('valorAmortizacion').setValue( null );
+                }
+
+                /*
                 const exampleValue = this.valorTotalDelContrato * 0.2;
                 const porcentajeCalculo = value / 100;
                 const valorAmortizacion = exampleValue * porcentajeCalculo;
@@ -54,6 +65,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 } else {
                     this.addressForm.get('valorAmortizacion').setValue(valorAmortizacion);
                 }
+                */
+            } else {
+                this.addressForm.get('valorAmortizacion').setValue( 0 );
             }
         });
     }
@@ -62,7 +76,47 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         this.getDataAmortizacion()
     }
 
-    getDataAmortizacion() {
+    async getDataAmortizacion() {
+        // Verificar la fase seleccionada en el proyecto
+        if ( this.faseCodigo === this.fasesContrato.construccion ) {
+            this.esPreconstruccion = false;
+        }
+        // Se obtiene la forma pago codigo dependiendo la fase seleccionada
+        const FORMA_PAGO_CODIGO = this.esPreconstruccion === true ? this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo : this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo
+        let LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
+        let criterioAnticipo: Dominio = null;
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
+        let faseCriterioAnticipo = undefined;
+        let listaSolicitudesPago = [];
+
+        if ( this.contrato.solicitudPago.length > 0 ) {
+            listaSolicitudesPago = this.contrato.solicitudPago.filter( value => value.solicitudPagoId !== this.solicitudPago.solicitudPagoId )
+        }
+
+        if ( listaSolicitudesPago.length > 0 ) {
+            listaSolicitudesPago.forEach( solicitud => {
+                if ( solicitud.solicitudPagoRegistrarSolicitudPago !== undefined && solicitud.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
+                    const solicitudPagoRegistrarSolicitudPago = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ]
+
+                    if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                        solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( fase => {
+                            if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
+                                const faseCriterioFind = fase.solicitudPagoFaseCriterio.find( faseCriterio => faseCriterio.tipoCriterioCodigo === criterioAnticipo.codigo )
+
+                                if ( faseCriterioFind !== undefined ) {
+                                    faseCriterioAnticipo = faseCriterioFind
+                                }
+                            }
+                        } )
+                    }
+                }
+            } )
+        }
+
+        if ( faseCriterioAnticipo !== undefined ) {
+            this.valorFacturado = faseCriterioAnticipo.valorFacturado
+        }
+
         if (this.contrato.contratacion.disponibilidadPresupuestal.length > 0) {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
         }

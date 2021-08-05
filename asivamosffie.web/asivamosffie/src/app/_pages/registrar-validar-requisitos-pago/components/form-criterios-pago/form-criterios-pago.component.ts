@@ -716,13 +716,14 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         if ( this.faseCodigo === this.fasesContrato.construccion ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
-                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
 
                 if ( solicitudPagoFase !== undefined ) {
                     this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].solicitudPagoFaseCriterio = solicitudPagoFaseCriterio
                     this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].esAnticipio = esAnticipio
                 } else {
+                    console.log( 'Test' )
                     this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.push(
                         {
                             solicitudPagoFaseId: 0,
