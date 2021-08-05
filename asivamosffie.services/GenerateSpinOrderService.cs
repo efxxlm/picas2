@@ -151,6 +151,20 @@ namespace asivamosffie.services
             return grind;
         }
 
+        private void ValidateTerceroGiro(SolicitudPago pSolicitudPago)
+        { 
+            SolicitudPago solicitudPago = _context.SolicitudPago
+                                                              .Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true)
+                                                              .Include(r => r.OrdenGiro).ThenInclude(r => r.OrdenGiroTercero).ThenInclude(r => r.OrdenGiroTerceroChequeGerencia)
+                                                              .Include(r => r.OrdenGiro).ThenInclude(r => r.OrdenGiroTercero).ThenInclude(r => r.OrdenGiroTerceroTransferenciaElectronica)
+                                                              .AsNoTracking()
+                                                              .FirstOrDefault();
+
+            pSolicitudPago.MedioPagoCodigo = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.MedioPagoGiroCodigo;
+            pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroChequeGerencia?.FirstOrDefault();
+            pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroTransferenciaElectronica?.FirstOrDefault(); 
+        }
+
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
@@ -160,11 +174,7 @@ namespace asivamosffie.services
                 SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
             }
-
-            SolicitudPago.MedioPagoCodigo = 1;
-            SolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = _context.OrdenGiroTerceroChequeGerencia.Find(1);
-            SolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = _context.OrdenGiroTerceroTransferenciaElectronica.Find(2);
-
+            ValidateTerceroGiro(SolicitudPago);
 
             if (SolicitudPago.OrdenGiroId != null)
             {

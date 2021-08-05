@@ -244,7 +244,7 @@ namespace asivamosffie.services
             int cantidadDeResgistros = _context.OrdenGiro.Where(r => !string.IsNullOrEmpty(r.NumeroSolicitud)).Count();
             string Nomeclatura = "ODG_";
 
-            if (solicitudPago.Contrato.Contratacion.TipoContratacionCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
+            if (solicitudPago.Contrato.Contratacion.TipoSolicitudCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
                 Nomeclatura += "Obr";
             else
                 Nomeclatura += "Int";

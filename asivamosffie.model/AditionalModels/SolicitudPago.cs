@@ -18,7 +18,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public decimal? SaldoPresupuestal { get; set; }
-         
+
         [NotMapped]
         public List<TablaDRP> TablaDRP { get; set; }
 
@@ -32,7 +32,7 @@ namespace asivamosffie.model.Models
         public dynamic TablaInformacionFuenteRecursos { get; set; }
 
         [NotMapped]
-        public dynamic MedioPagoCodigo { get; set; }
+        public string MedioPagoCodigo { get; set; }
 
         [NotMapped]
         public OrdenGiroTerceroChequeGerencia PrimerOrdenGiroTerceroChequeGerencia { get; set; }
@@ -40,5 +40,5 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public OrdenGiroTerceroTransferenciaElectronica PrimerOrdenGiroTerceroTransferenciaElectronica { get; set; }
     }
-    
+
 }
