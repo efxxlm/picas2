@@ -497,7 +497,7 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
 
-                DateTime? CompleteRecordDate = new DateTime();
+                DateTime? CompleteRecordDate = null;
                 if (blRegistroCompleto)
                     CompleteRecordDate = DateTime.Now;
 

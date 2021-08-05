@@ -259,7 +259,7 @@ namespace asivamosffie.services
         {
             try
             {
-                int intCantidadDependenciasOrdenGiro = 2;
+                int intCantidadDependenciasOrdenGiro = 1;
 
                 //if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
                 //    intCantidadDependenciasOrdenGiro = 3;
@@ -273,19 +273,19 @@ namespace asivamosffie.services
                     .AsNoTracking()
                     .FirstOrDefault();
 
-                foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
-                {
-                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
-                    {
-                        intCantidadDependenciasOrdenGiro++;
-                    }
+                //foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
+                //{
+                //    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
+                //    {
+                //        intCantidadDependenciasOrdenGiro++;
+                //    }
 
-                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-                    {
-                        intCantidadDependenciasOrdenGiro++;
+                //    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                //    {
+                //        intCantidadDependenciasOrdenGiro++;
 
-                    }
-                }
+                //    }
+                //}
 
 
                 int intCantidadObservaciones = _context.OrdenGiroObservacion.Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
