@@ -168,23 +168,21 @@
                 <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
               </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
                 <strong>
                   Fecha de inicio
                   <span *ngIf="descripcion.tipoNovedadCodigo == '1'">de la suspensión</span>
                   <span *ngIf="descripcion.tipoNovedadCodigo == '2'">de la Prórroga a las Suspensión</span>
-                  <span *ngIf="descripcion.tipoNovedadCodigo == '6'">del Reinicio</span>:
                   </strong
                 >
                 {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
               </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
                 <strong>
                   Fecha final
                   <span *ngIf="descripcion.tipoNovedadCodigo == '1'">de la suspensión</span>
                   <span *ngIf="descripcion.tipoNovedadCodigo == '2'">de la Prórroga a las Suspensión</span>
-                  <span *ngIf="descripcion.tipoNovedadCodigo == '6'">del Reinicio</span>:
                 </strong>
                 {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
@@ -194,7 +192,12 @@
                 </strong>
                 {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
               </p>
-
+              <p *ngIf="descripcion.tipoNovedadCodigo == '6'">
+                <strong>
+                  Fecha de reinicio
+                </strong>
+                {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
+              </p>
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'">
                 <strong>Presupuesto adicional solicitado: </strong>
                 {{ descripcion.presupuestoAdicionalSolicitado | currency: '':'symbol-narrow':'.0-0' }}

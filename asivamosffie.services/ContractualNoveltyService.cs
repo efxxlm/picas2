@@ -2817,7 +2817,6 @@ namespace asivamosffie.services
                     {
                         case ConstanTiposNovedades.Suspensión:
                         case ConstanTiposNovedades.Prórroga_a_las_Suspensión:
-                        case ConstanTiposNovedades.Reinicio:
                             if (
                                 descripcion.FechaInicioSuspension == null ||
                                 descripcion.FechaFinSuspension == null
@@ -2827,7 +2826,15 @@ namespace asivamosffie.services
                                 esCompleto = false;
                             }
                             break;
-
+                        case ConstanTiposNovedades.Reinicio:
+                            if (
+                                descripcion.FechaInicioSuspension == null
+                            )
+                            {
+                                descripcion.RegistroCompleto = false;
+                                esCompleto = false;
+                            }
+                            break;
                         case ConstanTiposNovedades.Adición:
                             if (
                                    descripcion.PresupuestoAdicionalSolicitado == null
