@@ -274,7 +274,7 @@ export class FormProyectoComponent implements OnInit {
               }
             }
           
-            await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
+            // await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
         }
     }
 
