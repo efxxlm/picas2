@@ -152,7 +152,7 @@ namespace asivamosffie.services
         }
 
         private void ValidateTerceroGiro(SolicitudPago pSolicitudPago)
-        { 
+        {
             SolicitudPago solicitudPago = _context.SolicitudPago
                                                               .Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true)
                                                               .Include(r => r.OrdenGiro).ThenInclude(r => r.OrdenGiroTercero).ThenInclude(r => r.OrdenGiroTerceroChequeGerencia)
@@ -162,7 +162,7 @@ namespace asivamosffie.services
 
             pSolicitudPago.MedioPagoCodigo = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.MedioPagoGiroCodigo;
             pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroChequeGerencia?.FirstOrDefault();
-            pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroTransferenciaElectronica?.FirstOrDefault(); 
+            pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroTransferenciaElectronica?.FirstOrDefault();
         }
 
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
@@ -511,7 +511,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor
                         });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }
@@ -680,11 +680,17 @@ namespace asivamosffie.services
                 ) return false;
 
 
+            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Count() == 0)
+                return false;
+
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
                     return false;
             }
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleObservacion.Count() == 0)
+                return false;
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleObservacion)
             {
@@ -692,17 +698,26 @@ namespace asivamosffie.services
                     return false;
             }
 
+            if (pOrdenGiroDetalle.OrdenGiroSoporte.Count() == 0)
+                return false;
+
             foreach (var item in pOrdenGiroDetalle.OrdenGiroSoporte)
             {
                 if (string.IsNullOrEmpty(item.UrlSoporte))
                     return false;
             }
 
+            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count() == 0)
+                return false;
+
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(item))
                     return false;
             }
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.Count() == 0)
+                return false;
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago)
             {
