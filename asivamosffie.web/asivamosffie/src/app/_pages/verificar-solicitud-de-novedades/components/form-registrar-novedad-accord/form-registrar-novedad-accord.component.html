@@ -149,7 +149,7 @@
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
                 <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
-                  (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
+                  (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" (dateChange)="updateFechaEstimada($event)" required>
                 <mat-datepicker #pickerPlazoInicio></mat-datepicker>
               </mat-form-field>
               <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
@@ -186,8 +186,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal" readonly
-                  (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" required>
+                <input matInput [min]="addressForm.get('fechaInicio').value" [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal" readonly
+                  (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" (dateChange)="updateFechaEstimada()" required>
                 <mat-datepicker #pickerPlazoFin></mat-datepicker>
               </mat-form-field>
               <button mat-button color="primary" type="button" (click)="pickerPlazoFin.open()" class="btn-calendario">
@@ -211,11 +211,29 @@
           </div>
         </div>
       </div>
+      <div class="row"
+      *ngIf="
+        novedadDescripcion.tipoNovedadCodigo == '1' ||
+        novedadDescripcion.tipoNovedadCodigo == '2'
+      ">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+            >
+              Fecha estimada de terminación del contrato:
+            </label>
+            <span> {{ fechaEstimadaFinalizacion  | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
       <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         Plazo solicitado
       </mat-card-title>
-      
+
       <!-- <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         <div class="col-md-8">
           <div class="row">

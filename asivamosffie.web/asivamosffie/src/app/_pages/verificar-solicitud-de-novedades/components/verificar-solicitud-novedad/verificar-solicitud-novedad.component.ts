@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-verificar-solicitud-novedad',
@@ -16,6 +17,8 @@ export class VerificarSolicitudNovedadComponent implements OnInit {
   estaEditando = false;
   novedad: NovedadContractual;
   detalleId: number;
+  fechaFinalizacionContrato : any;
+  fechaEstimadaFinalizacion : Date;
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -94,6 +97,16 @@ export class VerificarSolicitudNovedadComponent implements OnInit {
 
             this.addressForm.get('observaciones').setValue(this.novedad.observacionApoyo ? this.novedad.observacionApoyo.observaciones : null);
             this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesApoyo);
+
+            this.fechaFinalizacionContrato = (this.novedad?.contrato?.fechaTerminacionFase2 ? this.novedad?.contrato?.fechaTerminacionFase2 : this.novedad?.contrato?.fechaTerminacion);
+            this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
+            respuesta.novedadContractualDescripcion.forEach( d => {
+              const fechaInicio = moment( new Date( d?.fechaInicioSuspension ).setHours( 0, 0, 0, 0 ) );
+              const fechaFin = moment( new Date( d?.fechaFinSuspension ).setHours( 0, 0, 0, 0 ) );
+              const duracionDias = fechaFin.diff( fechaInicio, 'days' );
+              d.fechaEstimadaFinalizacion = moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();
+            });
+
         });
 
     });

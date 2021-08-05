@@ -374,7 +374,19 @@ namespace asivamosffie.services
             {
                 foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
                 {
-                    List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
+                    List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyecto = new List<DisponibilidadPresupuestalProyecto>();
+                    if (DisponibilidadPresupuestal?.EsNovedad == true)
+                    {
+                        NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).Include(r => r.NovedadContractual).FirstOrDefault();
+                        if (novedadContractualRegistroPresupuestal?.NovedadContractual != null)
+                        {
+                            disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.ProyectoId == novedadContractualRegistroPresupuestal.NovedadContractual.ProyectoId).ToList();
+                        }
+                    }
+                    else
+                    {
+                         disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
+                    }
                     string strEstadoRegistro = "";
                     string strTipoSolicitud = "";
                     if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
