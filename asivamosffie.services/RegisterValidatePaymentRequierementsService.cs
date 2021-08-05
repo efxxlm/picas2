@@ -838,10 +838,10 @@ namespace asivamosffie.services
             {
                 try
                 {
-                     CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
+                    CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
 
                     foreach (var SolicitudPagoFaseCriterioConceptoPago in SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago)
-                    { 
+                    {
                         if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
                         {
                             _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
@@ -881,18 +881,14 @@ namespace asivamosffie.services
                             SolicitudPagoFaseCriterio.Eliminado = false;
                             SolicitudPagoFaseCriterio.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
                             _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);
-                     
+
                         }
                     }
-
-
-
                 }
                 catch (Exception e)
                 {
                     throw;
                 }
-
             }
         }
 
@@ -994,7 +990,6 @@ namespace asivamosffie.services
         //        }
         //    }
         //}
-
 
         #endregion
 
@@ -1218,6 +1213,7 @@ namespace asivamosffie.services
         #endregion 
 
         #region Tipo Otros Costos Servicios
+
         public async Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -2039,8 +2035,8 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
         {
             return (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
-                );
+                 || solicitudPagoFaseCriterio.ValorFacturado == 0
+                   );
         }
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
@@ -2081,8 +2077,8 @@ namespace asivamosffie.services
 
                 if (TieneAmortizacion == true)
                 {
-                    if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
-                        return false;
+                    //if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
+                    //    return false;
 
                     foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
                     {
