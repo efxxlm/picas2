@@ -163,6 +163,10 @@ namespace asivamosffie.services
             pSolicitudPago.MedioPagoCodigo = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.MedioPagoGiroCodigo;
             pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroChequeGerencia?.FirstOrDefault();
             pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroTransferenciaElectronica?.FirstOrDefault();
+            if (pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia != null)
+                pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId = 0;
+            if (pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica != null)
+                pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId = 0;
         }
 
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
