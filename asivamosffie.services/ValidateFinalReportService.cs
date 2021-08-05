@@ -236,11 +236,6 @@ namespace asivamosffie.services
                 InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
                 InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && (r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
 
-                if (tieneOBservaciones == null)
-                {
-                    return false;
-                }
-
                 if (existe_no_diligenciado != null)
                 {
                     return false;
