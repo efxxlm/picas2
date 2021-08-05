@@ -3,14 +3,14 @@
         <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
-                    Descripción de la factura
+                    Datos de la factura
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p style="margin-bottom: 2em;" *ngIf="addressForm.get( 'esFactura' ).value === true"><strong>Tipo de documento:</strong> Factura </p>
-                <p style="margin-bottom: 2em;" *ngIf="addressForm.get( 'esFactura' ).value === false"><strong>Tipo de documento:</strong> Cuenta de cobro </p>
-                <p style="margin-top: 2em;"><strong style="font-size: 16px;">Número de documento:</strong> {{ addressForm.get( 'numeroDocumento' ).value }} </p>
-                <p style="margin-top: 2em;"><strong style="font-size: 16px;">Fecha de documento:</strong> {{ addressForm.get( 'fechaDocumento' ).value | date: 'dd/MM/yyyy' }} </p>
+                <p *ngIf="addressForm.get( 'esFactura' ).value === true"><strong>Tipo de documento:</strong> Factura </p>
+                <p *ngIf="addressForm.get( 'esFactura' ).value === false"><strong>Tipo de documento:</strong> Cuenta de cobro </p>
+                <p><strong>Número de documento:</strong> {{ addressForm.get( 'numeroDocumento' ).value }} </p>
+                <p><strong>Fecha de documento:</strong> {{ addressForm.get( 'fechaDocumento' ).value | date: 'dd/MM/yyyy' }} </p>
             </mat-card-content>
         </mat-card>
     </form>
@@ -19,7 +19,7 @@
     <form [formGroup]="addressForm" (ngSubmit)="guardar()">
         <mat-card class="shipping-card" style="margin-top: 3em">
             <mat-card-header class="header-card header-card--margin">
-              <mat-card-title class="header-card--text"> Descripción de la factura </mat-card-title>
+              <mat-card-title class="header-card--text"> Datos de la factura </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left">
               <div class="row">

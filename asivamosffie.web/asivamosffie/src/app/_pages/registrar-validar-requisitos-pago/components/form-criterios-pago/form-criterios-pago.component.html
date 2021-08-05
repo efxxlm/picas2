@@ -13,12 +13,12 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
-                    <p style="margin-bottom: 2em;"><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
-                    <div style="margin-top: 2em;" *ngFor="let concepto of getConceptos( j ).controls">
-                        <p style="font-size: 16px;"><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
+                    <p><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
+                    <div *ngFor="let concepto of getConceptos( j ).controls">
+                        <p><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
                         <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                     </div>
-                    <p style="margin-top: 2em;"><strong style="font-size: 16px;">Valor total de los conceptos:</strong> ${{ criterio.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    <p><strong>Valor total de los conceptos:</strong> ${{ criterio.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                 </mat-card-content>
             </mat-card>
         </div>
