@@ -57,6 +57,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
 
                             this.addressForm.get( 'transferenciaElectronica' ).setValue(
                                 {
+                                    ordenGiroTerceroId: 0,
                                     ordenGiroTerceroTransferenciaElectronicaId: ordenGiroTerceroTransferenciaElectronica.ordenGiroTerceroTransferenciaElectronicaId,
                                     titularCuenta: ordenGiroTerceroTransferenciaElectronica.titularCuenta !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularCuenta : '',
                                     titularNumeroIdentificacion: ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion : '',
@@ -71,11 +72,12 @@ export class FormTerceroGiroGogComponent implements OnInit {
                                 
                                 this.addressForm.get( 'chequeGerencia' ).setValue(
                                     {
+                                        ordenGiroTerceroId: 0,
                                         ordenGiroTerceroChequeGerenciaId: ordenGiroTerceroChequeGerencia.ordenGiroTerceroChequeGerenciaId,
                                         nombreBeneficiario: ordenGiroTerceroChequeGerencia.nombreBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.nombreBeneficiario : '',
                                         numeroIdentificacionBeneficiario: ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario : ''
                                     }
-                                )
+                                    )
                         }
 
                         if (this.solicitudPago.medioPagoCodigo) {
