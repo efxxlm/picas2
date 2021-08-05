@@ -838,10 +838,28 @@ namespace asivamosffie.services
             {
                 try
                 {
-                    //CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
+                     CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
 
                     foreach (var SolicitudPagoFaseCriterioConceptoPago in SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago)
-                    {
+                    { 
+                        if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
+                        {
+                            _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
+                                    .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
+                                    .Update(s => new SolicitudPagoFaseCriterioConceptoPago
+                                    {
+                                        ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
+                                        ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
+                                    });
+                        }
+                        else
+                        {
+                            SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
+                            SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
+                            SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
+                            _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
+                        }
+
                         if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
                         {
                             _context.Set<SolicitudPagoFaseCriterio>()
@@ -863,25 +881,7 @@ namespace asivamosffie.services
                             SolicitudPagoFaseCriterio.Eliminado = false;
                             SolicitudPagoFaseCriterio.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
                             _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);
-                            _context.SaveChanges();
-                        }
-
-                        if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
-                        {
-                            _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
-                                    .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
-                                    .Update(s => new SolicitudPagoFaseCriterioConceptoPago
-                                    {
-                                        ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
-                                        ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
-                                    });
-                        }
-                        else
-                        {
-                            SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
-                            SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
-                            SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
-                            _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
+                     
                         }
                     }
 
