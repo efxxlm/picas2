@@ -51,18 +51,6 @@ export class TablaProcesoFirmasComponent implements OnInit {
   getGrilla() {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        resp.forEach(element => {
-          if((element.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaFiduciaria)
-          || (element.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enFirmaContratista)
-          || (element.estadoCodigo === this.estadoCodigos.firmadoNovedad && element.estadoDelRegistro == 'Incompleto')){
-              element.registroCompletoNew = false;
-          }else if(element.contratacion.estadoSolicitudCodigo === this.estadoCodigos.firmado
-            || (element.estadoCodigo === this.estadoCodigos.firmadoNovedad && element.estadoDelRegistro == 'Completo')){
-              element.registroCompletoNew = true;
-          }else{
-              element.registroCompletoNew = false;
-          }
-        });
         let firmado = 0;
         let firmaContratista = 0;
         for ( const contrataciones of resp ) {
@@ -81,7 +69,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
           this.estadoAcordeon.emit( 'completo' );
           return;
         }
-
+        
         if ( firmaContratista === this.dataTable.length ) {
           this.estadoAcordeon.emit( 'sin-diligenciar' );
         } else if ( firmado === this.dataTable.length ) {
@@ -150,12 +138,12 @@ export class TablaProcesoFirmasComponent implements OnInit {
       this.dataSource = new MatTableDataSource();
       registro.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
       registro.estadoCodigo = this.estadoCodigos.registrado;
-
+  
       const pContrato = new FormData();
-
+  
       pContrato.append( 'contratacionId', `${ registro.contratacion.contrato[0].contratacionId }` );
       pContrato.append( 'contratoId', `${ registro.contratacion.contrato[0].contratoId }` );
-
+  
       this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
         .subscribe(
           response => {

@@ -49,7 +49,7 @@ export interface InformeFinalInterventoria{
                 fechaModificacion?: Date,
                 usuarioModificacion?: number,
                 tipoAnexo?: string,
-                numRadicadoSac?: string,
+                numRadicadoSac?: number,
                 fechaRadicado?: Date,
                 urlSoporte?: string
               },
@@ -65,7 +65,7 @@ export interface InformeFinalAnexo{
         fechaModificacion?: Date,
         usuarioModificacion?: number,
         tipoAnexo?: string,
-        numRadicadoSac?: string,
+        numRadicadoSac?: number,
         fechaRadicado?: Date,
         urlSoporte?: string
 }

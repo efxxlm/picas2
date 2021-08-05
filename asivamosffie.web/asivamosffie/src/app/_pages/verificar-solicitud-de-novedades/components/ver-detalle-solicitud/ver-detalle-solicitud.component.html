@@ -179,21 +179,23 @@
                 <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
               </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
                 <strong>
                   Fecha de inicio
                   <span *ngIf="descripcion.tipoNovedadCodigo == '1'">de la suspensión</span>
                   <span *ngIf="descripcion.tipoNovedadCodigo == '2'">de la Prórroga a las Suspensión</span>
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '6'">del Reinicio</span>:
                   </strong
                 >
                 {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
               </p>
 
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2' || descripcion.tipoNovedadCodigo == '6'">
                 <strong>
                   Fecha final
                   <span *ngIf="descripcion.tipoNovedadCodigo == '1'">de la suspensión</span>
                   <span *ngIf="descripcion.tipoNovedadCodigo == '2'">de la Prórroga a las Suspensión</span>
+                  <span *ngIf="descripcion.tipoNovedadCodigo == '6'">del Reinicio</span>:
                 </strong>
                 {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
@@ -222,8 +224,12 @@
                 Plazo solicitado
               </mat-card-title>
               <p *ngIf="descripcion.tipoNovedadCodigo === '6'">
-                <strong>Fecha de reinicio: </strong>
+                <strong>Fecha de inicio del reinicio: </strong>
                 {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo === '6'">
+                <strong>Fecha de finalización del reinicio: </strong>
+                {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
               <p>
                 <strong>¿Cuenta con la documentación soporte suficiente?: </strong>

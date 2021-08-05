@@ -7,13 +7,13 @@
     <span *ngIf="((data.informe.informeFinalAnexoId == null || data.informe.informeFinalAnexoId == 0) && (data.informe.tieneAnexo == null || !data.informe.tieneAnexo)) || data.verDetalle">
       Tipo de documento
     </span>
-    <span *ngIf="((data.informe.estadoInformeFinal !== '4' && data.informe.estadoInformeFinal !== '8'
-                && data.informe.informeFinalAnexoId != null && data.informe.informeFinalAnexoId > 0)
+    <span *ngIf="((data.informe.estadoInformeFinal !== '4' && data.informe.estadoInformeFinal !== '8' 
+                && data.informe.informeFinalAnexoId != null && data.informe.informeFinalAnexoId > 0)  
                 || data.informe.tieneAnexo
                 || ((data.informe.estadoInformeFinal ==='4' || data.informe.estadoInformeFinal ==='8')
-                && data.informe.tieneObservacionSupervisor
-                && (data.informe.aprobacionCodigo === '2' || data.informe.aprobacionCodigo === 2)
-                && ((data.informe.calificacionCodigo === '1' || data.informe.calificacionCodigo === 1)
+                && data.informe.tieneObservacionSupervisor 
+                && (data.informe.aprobacionCodigo === '2' || data.informe.aprobacionCodigo === 2) 
+                && ((data.informe.calificacionCodigo === '1' || data.informe.calificacionCodigo === 1) 
                 || (data.informe.calificacionCodigo === '3' || data.informe.calificacionCodigo === 3)))
                 )&& !data.verDetalle
                 ">
@@ -141,6 +141,7 @@
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="20"
+                  (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
@@ -149,7 +150,7 @@
               <span
                 class="contador"
                 [matTooltipPosition]="'above'"
-                matTooltip="Campo alfanumérico"
+                matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip"
               >
                 {{ 20 - numRadicadoSac.value.length }}
