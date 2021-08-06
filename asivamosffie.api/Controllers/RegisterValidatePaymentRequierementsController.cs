@@ -140,9 +140,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetFormaPagoCodigoByFase")]
-        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion)
+        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion , int pContratoId)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion));
+            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion , pContratoId));
         }
 
 
