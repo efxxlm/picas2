@@ -85,7 +85,7 @@
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           [routerLink]="[ 'registrarRevisionJuridica', element.novedadContractualId ]"
-          *ngIf="element.estadoCodigo === '11' || element.estadoCodigo === '17' || element.estadoCodigo === '27' || element.estadoCodigo === '28' || (element.estadoCodigo === '10' && element.registroCompletoTramiteNovedades != null)">
+          *ngIf="element.estadoCodigo === '11' || element.estadoCodigo === '17' || element.estadoCodigo === '27' || element.estadoCodigo === '28' || (element.estadoCodigo === '10' && element.registroCompletoTramiteNovedades != null) || element.estadoCodigo === '20'">
           Ver detalle/Editar
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
@@ -110,7 +110,7 @@
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
         [routerLink]="[ 'verDetalle', element.novedadContractualId ]"
-        *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' && element.estadoCodigo !== '17'  && element.estadoCodigo !== '27' && element.estadoCodigo !== '28'">
+        *ngIf="element.estadoCodigo !== '10' && element.estadoCodigo !== '11' && element.estadoCodigo !== '17'  && element.estadoCodigo !== '27' && element.estadoCodigo !== '28' && element.estadoCodigo !== '20'">
         Ver detalle
       </a>
 
