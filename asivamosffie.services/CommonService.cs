@@ -45,14 +45,19 @@ namespace asivamosffie.services
                                                           .Include(r => r.Encabezado).Include(r => r.PieDePagina)
                                                           .FirstOrDefaultAsync();
 
+            plantilla.MargenAbajo = pPlantilla.MargenAbajo;
+            plantilla.MargenArriba = pPlantilla.MargenArriba;
+            plantilla.MargenDerecha = pPlantilla.MargenDerecha;
+            plantilla.MargenIzquierda = pPlantilla.MargenIzquierda;
+
             plantilla.Contenido = plantilla.Contenido.Replace("[HTML]", pPlantilla.Contenido);
-            return PDF.Convertir(plantilla , pPlantilla.EsHorizontal);
+            return PDF.Convertir(plantilla, pPlantilla.EsHorizontal);
         }
-        
+
 
         public async Task<Plantilla> GetPlantillaById(int pPlantillaId)
-        { 
-            return await _context.Plantilla.FindAsync(pPlantillaId); 
+        {
+            return await _context.Plantilla.FindAsync(pPlantillaId);
         }
 
         //Solicitudes de comite tecnico
