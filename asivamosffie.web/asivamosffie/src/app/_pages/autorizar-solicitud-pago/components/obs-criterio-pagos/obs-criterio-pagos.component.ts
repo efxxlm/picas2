@@ -37,7 +37,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     fasesContrato = TiposDeFase;
     solicitudPagoObservacionId = 0;
     btnBoolean = false;
-    montoMaximoPendiente = 0;
+    montoMaximoPendiente: any = undefined;
     esPreconstruccion = true;
     manejoAnticipoRequiere = false;
     addressForm = this.fb.group({
@@ -78,9 +78,9 @@ export class ObsCriterioPagosComponent implements OnInit {
         let seDiligencioAnticipo: boolean;
         let listaSolicitudesPago = [];
         let criterioAnticipo: Dominio = null;
-        const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximo( this.solicitudPago.solicitudPagoId, this.esPreconstruccion === true ? 'True' : 'False' ).toPromise();
+        const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ).toPromise();
         if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
-        this.montoMaximoPendiente = montoMaximoPendiente.valorPendientePorPagar;
+        this.montoMaximoPendiente = montoMaximoPendiente;
 
         criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
