@@ -34,7 +34,7 @@ export class RegistrarRequisitosPagoService {
   }
 
   getFormaPagoCodigoByFase( pEsPreconstruccion: string, pContratoId: number) {
-    return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }?pContratoId=${ pContratoId }` );
+    return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }&pContratoId=${ pContratoId }` );
   }
 
   getMontoMaximo( solicitudPagoId: number, esPreConstruccion: string ) {
