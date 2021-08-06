@@ -32,7 +32,14 @@ namespace asivamosffie.api.Controllers
         [Route("GetHtmlToPdf")]
         public async Task<FileResult> GetHtmlToPdf([FromBody] Plantilla pPlantilla)
         {
-            return File(await common.GetHtmlToPdf(pPlantilla), "application/pdf");
+            try
+            {
+                return File(await common.GetHtmlToPdf(pPlantilla), "application/pdf");
+            }
+            catch (Exception e)
+            {
+                return File(e.InnerException.ToString(), "application/pdf");
+            }
         }
 
         [Route("GetFiferenciaMesesDias")]
