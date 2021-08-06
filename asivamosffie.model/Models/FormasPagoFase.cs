@@ -8,5 +8,6 @@ namespace asivamosffie.model.Models
         public int FormasPagoFaseId { get; set; }
         public string FormaPagoCodigo { get; set; }
         public bool EsPreconstruccion { get; set; }
+        public bool? EsInterventoria { get; set; }
     }
 }

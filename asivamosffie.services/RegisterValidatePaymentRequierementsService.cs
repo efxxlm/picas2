@@ -33,20 +33,17 @@ namespace asivamosffie.services
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
         public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion, int pContratoId)
-        {
+        { 
+            bool EsInterventoria = _context.Contrato.Include(r => r.Contratacion)
+                                                    .Count(r => r.ContratoId == pContratoId 
+                                                        && r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria
+                                                          ) > 0;
 
-            string strTipoContrato = _context.Contrato
-                                                .Where(r => r.ContratoId == pContratoId)
-                                                .Include(r => r.Contratacion).FirstOrDefault().Contratacion.TipoSolicitudCodigo;
-
-            bool EsInterventoria = false;
-            if (strTipoContrato == ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria)
-                EsInterventoria = true;
 
             List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion ).Select(r => r.FormaPagoCodigo).ToList();
+            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion && r.EsInterventoria == EsInterventoria).Select(r => r.FormaPagoCodigo).ToList();
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
-             
+
             foreach (var l in strCriterios)
             {
                 ListDynamics.Add(new
