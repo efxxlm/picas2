@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion , pContratoId);
+        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion ,int pContratoId);
 
         Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion);
 
