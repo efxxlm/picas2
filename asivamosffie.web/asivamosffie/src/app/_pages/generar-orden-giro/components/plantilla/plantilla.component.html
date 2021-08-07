@@ -462,7 +462,7 @@
               Información de Origen
             </td>
             <td style="border: solid 1px #000;">Número de factura</td>
-            <td style="border: solid 1px #000;">Criterio de Peago</td>
+            <td style="border: solid 1px #000;">Criterio de Pago</td>
             <td style="border: solid 1px #000;">Concepto de pago</td>
             <td style="border: solid 1px #000;">
               Sumatoria de descuentos y valor neto de giro
@@ -480,8 +480,7 @@
             </td>
           </tr>
           <tr>
-            <div>
-              <td style="border: solid 1px #000; height: 21px;"></td>
+              <td style="border: solid 1px #000; height: 21px;"> </td>
               <td style="border: solid 1px #000;" *ngIf="aportantes.length > 0">
                 <div *ngFor="let aportante of aportantes.controls"> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </div>
               </td>
@@ -515,12 +514,21 @@
               <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">  </td>
-            </div>
+              <td style="border: solid 1px #000;">
+                {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? terceroGiroForm.get( 'transferenciaElectronica' ).get( 'esCuentaAhorros' ).value === true ? 'Ahorros' : 'Corriente' : '' }}
+              </td>
+              <td style="border: solid 1px #000;">
+                {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? firstLetterUpperCase( getBanco( terceroGiroForm.get( 'transferenciaElectronica' ).get( 'bancoCodigo' ).value ) ) : '' }}
+              </td>
+              <td style="border: solid 1px #000;">
+                {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? terceroGiroForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value : '' }}
+              </td>
+              <td style="border: solid 1px #000;">
+                {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? terceroGiroForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value : terceroGiroForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value }}
+              </td>
+              <td style="border: solid 1px #000;">
+                {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? terceroGiroForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value : terceroGiroForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value }}
+              </td>
           </tr>
           <!--
           <tr>
