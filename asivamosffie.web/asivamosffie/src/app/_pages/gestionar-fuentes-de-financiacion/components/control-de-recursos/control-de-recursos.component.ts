@@ -39,7 +39,7 @@ export class ControlDeRecursosComponent implements OnInit {
   countResources: any = [];
   rpArray: RegistroPresupuestal[] = [];
   estaEditando = false;
-  
+
   constructor(
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -56,7 +56,7 @@ export class ControlDeRecursosComponent implements OnInit {
       nombreCuenta: [null, Validators.required],
       numeroCuenta: [null, Validators.required],
       rp: [null],
-      valorRp: [null],      
+      valorRp: [null],
       vigencia: [null],
       vigenciaValor: [null],
       fechaConsignacion: [null, Validators.required],
@@ -89,7 +89,7 @@ export class ControlDeRecursosComponent implements OnInit {
         this.listaDepartamentos = respuesta[3];
         this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
         if(this.fuente != null){
-          this.fuente.controlRecurso.forEach(element => {           
+          this.fuente.controlRecurso.forEach(element => {
             if(this.isETOrThirdParty()){
               this.calculateSumAccountByRp(element);
             }else{
@@ -132,10 +132,14 @@ export class ControlDeRecursosComponent implements OnInit {
 
         if(this.isETOrThirdParty()){
           this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
-            this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),
-              fuenteFinanciacionId:null,
-              valorAporte: element.valorDocumento,
-              vigenciaAporteId:element.cofinanciacionDocumentoId});
+            if(element.vigenciaAporte != null && element.vigenciaAporte != undefined){
+              this.listaVigencias.push({
+                tipoVigenciaCodigo:element?.vigenciaAporte.toString(),
+                fuenteFinanciacionId:null,
+                valorAporte: element?.valorDocumento,
+                vigenciaAporteId:element?.cofinanciacionDocumentoId
+              });
+            }
           });
         }else{
           this.listaVigencias = this.fuente.vigenciaAporte;
@@ -158,7 +162,7 @@ export class ControlDeRecursosComponent implements OnInit {
       vigency = this.countResources.find(x => x.numeroRp === element.registroPresupuestal.numeroRp);
       if (vigency)
         vigency.value = (vigency? vigency.value: 0) + Number(element.valorConsignacion);
-    } 
+    }
     if(!vigency && element.registroPresupuestal){
       this.countResources.push({ value: element.valorConsignacion, numeroRp: element.registroPresupuestal.numeroRp, controlRecursoId: element.controlRecursoId });
     }
@@ -170,7 +174,7 @@ export class ControlDeRecursosComponent implements OnInit {
       vigency = this.countResources.find(x => x.vigenciaAporteId === element.vigenciaAporteId);
       if(vigency)
         vigency.value = (vigency? vigency.value : 0) + Number(element.valorConsignacion);
-    } 
+    }
     if(!vigency){
       this.countResources.push({ value: element.valorConsignacion, vigenciaAporteId: element.vigenciaAporteId, controlRecursoId: element.controlRecursoId });
     }
@@ -286,7 +290,7 @@ export class ControlDeRecursosComponent implements OnInit {
   validar(){
     let total = this.valorAporteEnCuenta + this.addressForm.get("valorConsignacion").value;
     let fuenteModificando : ControlRecurso;
-   
+
     if(!this.isETOrThirdParty()){
       this.validateVigency(fuenteModificando)
       return;
