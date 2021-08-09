@@ -51,7 +51,7 @@ namespace asivamosffie.services
                     .Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
                     .Include(r => r.ComiteTecnico)
                     .FirstOrDefaultAsync();
-                    sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                    //sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                     sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                     sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 

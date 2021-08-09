@@ -42,7 +42,11 @@ const routes: Routes = [
   {
     path: 'conDisponibilidadcancelada/:id',
     component: ConDisponibilidadCanceladaComponent
-  }
+  },
+  {
+    path: 'rechazada/:id/:esNovedad/:novedadId',
+    component: ConValidacionPresupuestalComponent
+  },
 ];
 
 @NgModule({
