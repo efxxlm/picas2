@@ -16,7 +16,7 @@
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="nuevoAportante" required>
                             <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false" (change)="updateOldAportante()">No</mat-radio-button>
+                            <mat-radio-button [value]="false">No</mat-radio-button>
                         </mat-radio-group>
                         <span class="required-form-group" style="margin-left: 1px;">*</span>
                     </div>
@@ -285,7 +285,7 @@
                       (selectionChange)="changeAportante(j)"
                     >
                       <mat-option
-                        *ngFor="let aportante of listaAportantes"
+                        *ngFor="let aportante of filterAportante(listaAportantes,j)"
                         [value]="aportante.cofinanciacionAportanteId"
                       >
                         {{ aportante.nombreAportanteString }}

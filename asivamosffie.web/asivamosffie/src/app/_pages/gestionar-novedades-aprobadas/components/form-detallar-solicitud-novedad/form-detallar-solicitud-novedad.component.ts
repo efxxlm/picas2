@@ -18,7 +18,7 @@ import { ComponenteAportanteNovedad, ComponenteFuenteNovedad, ComponenteUsoNoved
 })
 export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
-  
+
   @Input() novedad: NovedadContractual;
   @Output() guardar = new EventEmitter();
   tipoNovedadAdicion = '3';
@@ -173,7 +173,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           this.listaTotalNuevas += response[7].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
           this.listaTotalNuevas += response[8].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
           this.listaTotalNuevas += response[9].filter(x => x.registroCompleto == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
-          
+
           setTimeout(() => {
 
             if (this.componentesSelect.length > 0) {
@@ -290,18 +290,18 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
                     let i = 0;
                     this.aportantes.controls.forEach(aportante => {
                       if(!this.listaAportantes.some(e => e.cofinanciacionAportanteId === aportante.get('cofinanciacionAportanteId').value)){
-                        aportante.get('nuevoAportante').setValue(true); 
+                        aportante.get('nuevoAportante').setValue(true);
                           let cofinanciacionAportante = this.novedad.novedadContractualAportante[i].cofinanciacionAportante;
                           if(cofinanciacionAportante != null){
-                            aportante.get('tipoAportante').setValue(cofinanciacionAportante.tipoAportanteId); 
+                            aportante.get('tipoAportante').setValue(cofinanciacionAportante.tipoAportanteId);
                             this.getAportanteById(cofinanciacionAportante.tipoAportanteId,i);
-                            aportante.get('depaetamento').setValue(cofinanciacionAportante.departamentoId); 
-                            aportante.get('municipio').setValue(cofinanciacionAportante.municipioId); 
-                            aportante.get('nombreAportante').setValue(this.novedad.novedadContractualAportante[i].nombreAportante); 
+                            aportante.get('depaetamento').setValue(cofinanciacionAportante.departamentoId);
+                            aportante.get('municipio').setValue(cofinanciacionAportante.municipioId);
+                            aportante.get('nombreAportante').setValue(this.novedad.novedadContractualAportante[i].nombreAportante);
                             aportante.get('cofinanciacionAportanteId').setValue(this.novedad.novedadContractualAportante[i].cofinanciacionAportanteId)
                           }
                       }else{
-                        aportante.get('nuevoAportante').setValue(false); 
+                        aportante.get('nuevoAportante').setValue(false);
                       }
                       i++;
                     });
@@ -432,7 +432,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       }
     );
   }
-  
+
 
   createUso(): FormGroup {
     return this.fb.group({
@@ -464,7 +464,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
     listaComponentes.push(grupoComponente);
     this.aportantes.push(grupoAportante);
-    this.updateOldAportante();
+    //this.updateOldAportante();
   }
 
   addComponent(i: number) {
@@ -758,10 +758,10 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
             this.listaNombreAportantes[i] = [];
             respuestaok.filter(x => !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId || e.nombreAportanteString == x.nombre)).forEach(element => {
               if (!this.listaNombreAportantes[i].includes(element.nombre)) {
-                this.listaNombreAportantes[i].push(element.nombre);                
+                this.listaNombreAportantes[i].push(element.nombre);
               }
             });
-            this.getVigencia(this.novedad.novedadContractualAportante[i].nombreAportante, i);            
+            this.getVigencia(this.novedad.novedadContractualAportante[i].nombreAportante, i);
           }
         }
       },
@@ -783,7 +783,7 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
       respuesta => {
         let respuestaok = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId) && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
         this.listaTotalNuevas = respuesta.filter(x => x.registroCompleto == true && x.tieneFuentes == true && !this.listaAportantes.some(e => e.cofinanciacionAportanteId === x.cofinanciacionAportanteId)  && !this.aportantes.controls.some(aportante => aportante.get('cofinanciacionAportanteId').value === x.cofinanciacionAportanteId));
-        
+
         this.listaVigencias[i] = [];
         this.listaAportante[i] = [];
         this.listadoDepto[i] = [];
@@ -877,5 +877,14 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
           }
         }
     }
+  }
+
+  filterAportante(listaAportantes,position): any[] {
+    for( var j=0; j<this.aportantes.controls.length; j++){
+      if(position != j){
+        listaAportantes = listaAportantes.filter(r => r.cofinanciacionAportanteId !== this.aportantes.controls[j].get('cofinanciacionAportanteId').value);
+      }
+    }
+    return listaAportantes;
   }
 }
