@@ -7794,6 +7794,18 @@ namespace asivamosffie.services
                     bool existeProrroga = false;
                     bool existeModificacion = false;
                     bool existeOtro = false;
+                    string novedad_aplica_a = string.Empty;
+
+                    if (novedadContractual.EsAplicadaAcontrato == true)
+                    {
+                        novedad_aplica_a = "Contrato";
+                    }
+                    else
+                    {
+                        novedad_aplica_a = "Proyecto";
+                    }
+
+                    Historiales = Historiales.Replace("[NOVEDAD_APLICA_A]",novedad_aplica_a);
 
                     List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).Include(r => r.NovedadContractualClausula).ToList();
                     foreach (var item in novedadContractualDescripcion)
