@@ -345,14 +345,14 @@ namespace asivamosffie.services
                     ListDyAportante.Add(new
                     {
                         Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId)),
-                        ListDyDescuento 
+                        ListDyDescuento
                     });
                 }
 
-                ListTablaDescuento.Add(new 
+                ListTablaDescuento.Add(new
                 {
                     ConceptoPago.ConceptoPago,
-                    ListDyAportante 
+                    ListDyAportante
                 });
             }
 
@@ -823,6 +823,11 @@ namespace asivamosffie.services
 
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                       .Include(r => r.ContratacionProyecto)
+                                                           .ThenInclude(r => r.Contratacion)
+                                                                .ThenInclude(r => r.Contrato)
+                                                                     .ThenInclude(r => r.SolicitudPago)
+                                                                         .ThenInclude(r => r.OrdenGiro)
                                                        .Include(r => r.InstitucionEducativa)
                                                        .Include(r => r.BalanceFinanciero)
                                                           .ThenInclude(r => r.BalanceFinancieroTraslado)
@@ -857,12 +862,12 @@ namespace asivamosffie.services
                         numeroContratoInterventoria = contrato.NumeroContrato ?? string.Empty;
                 }
             }
-             
-            bool TieneOrdenGiro = false;
+
+            bool TieneOrdenGiro = proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().SolicitudPago.Any(r => r.OrdenGiro.OrdenGiroId > 0);
 
             ProyectoAjustado.Add(new
             {
-                TieneOrdenGiro  = TieneOrdenGiro,
+                TieneOrdenGiro = TieneOrdenGiro,
                 llaveMen = proyecto.LlaveMen,
                 tipoIntervencion = proyecto.tipoIntervencionString,
                 institucionEducativa = proyecto.InstitucionEducativa.Nombre,
