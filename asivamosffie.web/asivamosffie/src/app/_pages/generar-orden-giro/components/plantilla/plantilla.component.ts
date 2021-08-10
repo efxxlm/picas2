@@ -22,6 +22,8 @@ export class PlantillaComponent implements OnInit {
     bancosArray: Dominio[] = [];
     listaMedioPago: Dominio[] = [];
     listaBancos: Dominio[] = [];
+    criterioPreconstruccion: any[];
+    criterioConstruccion: any[];
     terceroGiroForm = this.fb.group({
         medioPagoGiroContrato: [null, Validators.required],
         transferenciaElectronica: this.fb.group( {
@@ -40,7 +42,9 @@ export class PlantillaComponent implements OnInit {
             numeroIdentificacionBeneficiario: [ '' ]
         } )
     })
-    listaDetalleGiro: { contratacionProyectoId: number, llaveMen: string, fases: any[], semaforoDetalle: string }[] = [];
+    fasePreConstruccionFormaPagoCodigo: any;
+    conceptosDePago: any[] = [];
+    listaDetalleGiro: { contratacionProyectoId: number, llaveMen: string, semaforoDetalle: string, listaTerceroCausacion: any[] }[] = [];
     formOrigen = this.fb.group(
         {
             aportantes: this.fb.array( [] )
@@ -80,24 +84,50 @@ export class PlantillaComponent implements OnInit {
         // Peticion asincrona de los proyectos por contratoId
         const getProyectosByIdContrato: any[] = await this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId ).toPromise();
         const LISTA_PROYECTOS: any[] = getProyectosByIdContrato[1];
-        const solicitudPagoFase: any[] = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase;
+        const terceroCausacion = this.solicitudPago.ordenGiro.ordenGiroDetalle[ 0 ].ordenGiroDetalleTerceroCausacion;
 
-        LISTA_PROYECTOS.forEach( proyecto => {
+        if ( this.solicitudPago.contratoSon.solicitudPago.length > 1 ) {
+            this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.contratoSon.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+        } else {
+            this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.solicitudPagoCargarFormaPago[0];
+        }
+
+        this.criterioPreconstruccion = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo ).toPromise()
+        this.criterioConstruccion = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo ).toPromise()
+
+        for ( const proyecto of LISTA_PROYECTOS ) {
             // Objeto Proyecto que se agregara al array listaDetalleGiro
             const PROYECTO = {
                 semaforoDetalle: 'sin-diligenciar',
                 contratacionProyectoId: proyecto.contratacionProyectoId,
                 llaveMen: proyecto.llaveMen,
-                fases: []
+                listaTerceroCausacion: []
             }
 
-            const listFase = solicitudPagoFase.filter( fase => fase.contratacionProyectoId === proyecto.contratacionProyectoId )
-            PROYECTO.fases = listFase
+            const listaTerceroCausacion = terceroCausacion.filter( tercero => tercero.contratacionProyectoId === proyecto.contratacionProyectoId )
 
-            if ( PROYECTO.fases.length > 0 ) {
-                this.listaDetalleGiro.push( PROYECTO )
+            if ( listaTerceroCausacion.length > 0 ) {
+
+                for ( const tercero of listaTerceroCausacion ) {
+                    const listaConceptos = []
+                    const conceptos = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tercero.tipoPagoCodigo )
+                    this.conceptosDePago.push( ...conceptos)
+                    for ( const ordenGiroDetalleTerceroCausacionAportante of tercero.ordenGiroDetalleTerceroCausacionAportante ) {
+                        const conceptoFind = listaConceptos.find( concepto => concepto === ordenGiroDetalleTerceroCausacionAportante.conceptoPagoCodigo )
+
+                        if ( conceptoFind === undefined ) listaConceptos.push( ordenGiroDetalleTerceroCausacionAportante.conceptoPagoCodigo );
+                    }
+
+                    tercero.conceptos = listaConceptos
+                }
+
+                PROYECTO.listaTerceroCausacion = listaTerceroCausacion
             }
-        } )
+
+            this.listaDetalleGiro.push( PROYECTO )
+        }
+
+        console.log( this.listaDetalleGiro )
     }
 
     getDataTerceroGiro() {
@@ -242,6 +272,24 @@ export class PlantillaComponent implements OnInit {
             if ( banco !== undefined ) {
                 return banco.nombre;
             }
+        }
+    }
+
+    getCriterio( codigo: string ) {
+        if ( this.criterioPreconstruccion.length > 0 || this.criterioConstruccion.length > 0 ) {
+            const criterio = this.criterioPreconstruccion.find( criterio => criterio.codigo === codigo ) || this.criterioConstruccion.find( criterio => criterio.codigo === codigo )
+
+            if ( criterio !== undefined ) {
+                return criterio.nombre
+            }
+        }
+    }
+
+    getConceptos( codigo: string ) {
+        if ( this.conceptosDePago.length > 0 ) {
+            const concepto = this.conceptosDePago.find( concepto => concepto.codigo === codigo )
+
+            if ( concepto !== undefined ) return concepto.nombre;
         }
     }
 
