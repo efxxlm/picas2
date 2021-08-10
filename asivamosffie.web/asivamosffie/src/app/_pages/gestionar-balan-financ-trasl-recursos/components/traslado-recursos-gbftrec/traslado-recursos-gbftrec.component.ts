@@ -39,6 +39,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  noPermitirGuardarOtraVez: boolean;
   constructor(private fb: FormBuilder, public dialog: MatDialog,private financialBalanceService: FinancialBalanceService,
     ) { }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -72,6 +73,9 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
   }
   
   formtieneOrdenGiro() {
+    if (!this.tieneOrdenGiro && this.addressForm.get( 'requiereTransladoRecursos' ).value === false) {
+      this.noPermitirGuardarOtraVez = true
+    }
     if (!this.tieneOrdenGiro) {
       this.addressForm.get( 'requiereTransladoRecursos' ).setValue(false);
     }

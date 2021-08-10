@@ -87,7 +87,8 @@
           [disabled]="
             addressForm.get('requiereTransladoRecursos').value === true && 
             addressForm.get('justificacionTrasladoAportanteFuente').invalid ||
-            !addressForm.get('requiereTransladoRecursos').value === false
+            !addressForm.get('requiereTransladoRecursos').value === false || 
+            noPermitirGuardarOtraVez
           "
           >
             <img src="assets/img/icon/guardar.svg" alt="Regresar">
