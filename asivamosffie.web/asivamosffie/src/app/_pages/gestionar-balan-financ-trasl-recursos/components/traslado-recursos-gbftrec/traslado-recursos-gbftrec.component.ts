@@ -14,6 +14,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
   @Input() esVerDetalle: boolean;
+  @Input() tieneOrdenGiro: boolean;
   balanceFinanciero: any;
   balanceFinancieroId = 0;
   balanceFinancieroTraslado = [];
@@ -67,7 +68,15 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.formtieneOrdenGiro();
   }
+  
+  formtieneOrdenGiro() {
+    if (!this.tieneOrdenGiro) {
+      this.addressForm.get( 'requiereTransladoRecursos' ).setValue(false);
+    }
+  }
+  
 
   buildForm() {
     this.financialBalanceService.getBalanceFinanciero(

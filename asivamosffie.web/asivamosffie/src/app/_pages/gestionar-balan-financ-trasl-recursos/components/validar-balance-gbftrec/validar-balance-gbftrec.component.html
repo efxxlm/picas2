@@ -39,7 +39,7 @@
             Traslados de recursos
         </button>
     </div>
-    <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && proyectoId" [id]="proyectoId"></app-recursos-comprom-pagados-gbftrec>
+    <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro"></app-recursos-comprom-pagados-gbftrec>
     <app-ejecucion-financiera-gbftrec *ngIf="opcion2 && proyectoId" [id]="proyectoId"></app-ejecucion-financiera-gbftrec>
-    <app-traslado-recursos-gbftrec *ngIf="opcion3 && proyectoId" [id]="proyectoId" [esVerDetalle] = "esVerDetalle"></app-traslado-recursos-gbftrec>
+    <app-traslado-recursos-gbftrec *ngIf="opcion3 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro" [esVerDetalle] = "esVerDetalle"></app-traslado-recursos-gbftrec>
 </section>

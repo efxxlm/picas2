@@ -1,10 +1,14 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="!esVerDetalle">
     <div align="center">
-        <label class="label-left" for="requiereTransladoRecursos">¿Se requiere registrar un traslado de
-            recursos entre los aportantes y fuentes que financian este proyecto, antes de aprobar el
-            balance financiero?</label>
+        <label class="label-left" for="requiereTransladoRecursos" *ngIf="tieneOrdenGiro">
+          ¿Se requiere registrar un traslado de recursos entre los aportantes y fuentes que financian este proyecto,
+          antes de aprobar el balance financiero?
+        </label>
+        <p *ngIf="!tieneOrdenGiro">
+          No se permiten traslados, no tiene ordenes de giro tramitadas
+        </p>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="tieneOrdenGiro">
         <div class="col-md-12" style="padding-left: 0;">
             <div class="row">
                 <div class="col d-flex justify-content-center">
@@ -17,9 +21,10 @@
                         <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
                             [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
                             matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('requiereTransladoRecursos').invalid && addressForm.get('requiereTransladoRecursos').touched) ||
-                          (addressForm.get('requiereTransladoRecursos').invalid && estaEditando)
-                        " />
+                              (addressForm.get('requiereTransladoRecursos').invalid && addressForm.get('requiereTransladoRecursos').touched) ||
+                              (addressForm.get('requiereTransladoRecursos').invalid && estaEditando)
+                            "
+                        />
                     </span>
                 </div>
             </div>
@@ -78,7 +83,13 @@
         </span>
     </div>
     <div class="text-center mb-2em mt-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+        <button mat-button color="warn" class="btn-guardar" type="submit"
+          [disabled]="
+            addressForm.get('requiereTransladoRecursos').value === true && 
+            addressForm.get('justificacionTrasladoAportanteFuente').invalid ||
+            !addressForm.get('requiereTransladoRecursos').value === false
+          "
+          >
             <img src="assets/img/icon/guardar.svg" alt="Regresar">
         </button>
     </div>
@@ -97,9 +108,8 @@
       </p>
       <p>
         <strong>
-            ¿Se requiere registrar un traslado de
-            recursos entre los aportantes y fuentes que financian este proyecto, antes de aprobar el
-            balance financiero?:
+            ¿Se requiere registrar un traslado de recursos entre los aportantes y fuentes que financian este proyecto,
+            antes de aprobar el balance financiero?:
         </strong>
         
         <i *ngIf="addressForm.get('requiereTransladoRecursos').value == true"> Si </i>

@@ -1,3 +1,7 @@
+<p *ngIf="!tieneOrdenGiro">
+    No tiene ordenes de giro tramitadas
+</p>
+  
 <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngIf="contratoObra !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
