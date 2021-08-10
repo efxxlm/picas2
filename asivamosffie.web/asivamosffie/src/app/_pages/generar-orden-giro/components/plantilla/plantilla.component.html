@@ -457,7 +457,7 @@
             </td>
           </tr>
           <tr>
-            <td style="border: solid 1px #000;"> </td>
+            <td style="border: solid 1px #000;"> {{ solicitudPago.ordenGiro?.consecutivoOrigen }} </td>
             <td style="border: solid 1px #000;" colspan="7">
               Información de Origen
             </td>
@@ -479,8 +479,8 @@
               Información tercero de causación
             </td>
           </tr>
-          <tr *ngFor="let detalle of listaDetalleGiro">
-              <td style="border: solid 1px #000; height: 21px;"> {{ solicitudPago.ordenGiro?.consecutivoOrigen }} </td>
+          <tr>
+              <td style="border: solid 1px #000; height: 21px;"> </td>
               <td style="border: solid 1px #000;" *ngIf="aportantes.length > 0">
                 <div *ngFor="let aportante of aportantes.controls"> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </div>
               </td>
@@ -507,27 +507,13 @@
               <td style="border: solid 1px #000;"> {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }} </td>
               <td style="border: solid 1px #000;"> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </td>
               <td style="border: solid 1px #000;"> {{ solicitudPago.solicitudPagoFactura[ 0 ].numero }} </td>
-              <td style="border: solid 1px #000;">
-                <div *ngFor="let tercero of detalle.listaTerceroCausacion">
-                  {{ getCriterio( tercero.conceptoPagoCriterio ) }}
-                </div>
-              </td>
-              <td style="border: solid 1px #000;">
-                <div *ngFor="let tercero of detalle.listaTerceroCausacion">
-                  <div *ngFor="let concepto of tercero.conceptos">
-                    {{ getConceptos( concepto ) }}
-                  </div>
-                </div>
-              </td>
               <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">  </td>
-              <td style="border: solid 1px #000;">
-                <div *ngFor="let tercero of detalle.listaTerceroCausacion">
-                  {{ tercero.valorNetoGiro | currency: '':'symbol-narrow':'0.0-0' }}
-                </div>
-              </td>
+              <td style="border: solid 1px #000;">  </td>
+              <td style="border: solid 1px #000;">  </td>
+              <td style="border: solid 1px #000;">  </td>
               <td style="border: solid 1px #000;">
                 {{ this.terceroGiroForm.get( 'medioPagoGiroContrato' ).value === listaMediosPagoCodigo.transferenciaElectronica ? terceroGiroForm.get( 'transferenciaElectronica' ).get( 'esCuentaAhorros' ).value === true ? 'Ahorros' : 'Corriente' : '' }}
               </td>
