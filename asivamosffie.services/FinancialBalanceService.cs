@@ -857,8 +857,12 @@ namespace asivamosffie.services
                         numeroContratoInterventoria = contrato.NumeroContrato ?? string.Empty;
                 }
             }
+             
+            bool TieneOrdenGiro = false;
+
             ProyectoAjustado.Add(new
             {
+                TieneOrdenGiro  = TieneOrdenGiro,
                 llaveMen = proyecto.LlaveMen,
                 tipoIntervencion = proyecto.tipoIntervencionString,
                 institucionEducativa = proyecto.InstitucionEducativa.Nombre,

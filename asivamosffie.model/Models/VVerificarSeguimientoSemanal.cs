@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public string TipoIntervencion { get; set; }
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
+        public int? EstadoSeguimientoSemanalCodigo { get; set; }
         public string EstadoObra { get; set; }
         public string EstadoSeguimientoSemanal { get; set; }
         public string EstadoMuestras { get; set; }
