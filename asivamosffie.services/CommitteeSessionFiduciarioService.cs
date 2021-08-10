@@ -2926,7 +2926,7 @@ namespace asivamosffie.services
 
             #region Actuaciones Controversia contractual
 
-            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+            if (TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
             {
                 ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(SolicitudId);
 
@@ -2934,15 +2934,15 @@ namespace asivamosffie.services
                 {
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
                     {
-                        //controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Aprobada_por_Comite_fiduciario;
                     }
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
                     {
-                        //controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Rechazada_por_Comite_fiduciario;
                     }
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
                     {
-                        //controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Devuelta_por_Comite_Fiduciario;
                     }
 
                 }

@@ -224,13 +224,15 @@ namespace asivamosffie.services
             foreach (var contrato in contratos)
             {
                 int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
+                int novedadTai = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
+
                 bool tieneActa = false;
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
                         (existeNovedad > 0 ? listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0 :
                         listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0) &&
-                        !_contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId)
+                        !(_contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId,true))
                     )
                 {
                     if(contrato?.Contratacion?.Contratista != null)

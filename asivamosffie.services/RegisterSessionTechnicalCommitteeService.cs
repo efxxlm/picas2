@@ -2698,15 +2698,15 @@ namespace asivamosffie.services
                 {
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
                     {
-                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteTecnico;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Aprobada_por_Comite_tecnico;
                     }
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
                     {
-                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteTecnico;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Rechazada_por_Comite_tecnico;
                     }
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
                     {
-                        controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteTecnico;
+                        controversiaActuacion.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Devuelta_por_Comite_tecnico;
                     }
 
                 }

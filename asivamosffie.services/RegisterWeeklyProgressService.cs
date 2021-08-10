@@ -149,7 +149,7 @@ namespace asivamosffie.services
             List<VRegistrarAvanceSemanalNew> vRegistrarAvanceSemanal = await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
             vRegistrarAvanceSemanal.ForEach(r =>{
                 //Nueva restricción control de cambios
-                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId);
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId,false);
             });
             return vRegistrarAvanceSemanal;
         }

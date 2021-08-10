@@ -1111,23 +1111,9 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                //cambio solicitado por andres, si esta marcado como es Requiere comite se deja en el nuevo estado 3
-                if (actuacionSeguimientoOld.EsRequiereComite != null && pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
-                {
-                    if ((bool)actuacionSeguimientoOld.EsRequiereComite)
-                    {
-                        actuacionSeguimientoOld.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico;
-                    }
-                    else
-                    {
-                        actuacionSeguimientoOld.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Finalizada;
-                    }
-                }
-                else
-                {
-                    actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
-                }
-                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
+                actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
+
+                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada))
                 {
                     int consecutivo = _context.ControversiaActuacion
                                     .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
@@ -1138,7 +1124,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico)
+                if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
                 {
                     await SendMailParticipation(pActuacionSeguimientoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
@@ -2775,11 +2761,6 @@ namespace asivamosffie.services
                     string strEstadoActuacion = string.Empty;
                     string strEstadoActuacionCodigo = string.Empty;
 
-                    if (!string.IsNullOrEmpty(controversia.EstadoCodigo) && controversia.EstadoCodigo != ConstantCodigoEstadoControversiaActuacion.Finalizada && controversia.EstadoCodigo != ConstantCodigoEstadoControversiaActuacion.En_proceso_de_registro)
-                    {
-                        controversia.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico;
-                    }
-
                     var EstadoActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
 
                     if (EstadoActuacion != null)
@@ -4022,19 +4003,19 @@ namespace asivamosffie.services
             DateTime RangoFechaCon2DiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
             DateTime RangoFechaCon1DiasHabiles = await _commonService.CalculardiasLaborales(1, DateTime.Now);
             List<ControversiaActuacion> controversiaActuacion3dias = _context.ControversiaActuacion
-                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon3DiasHabiles)
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada) && r.FechaVencimiento == RangoFechaCon3DiasHabiles)
                 .Include(r => r.ControversiaContractual)
                     .ThenInclude(r => r.Contrato)
                 .ToList();
 
             List<ControversiaActuacion> controversiaActuacion2dias = _context.ControversiaActuacion
-                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon2DiasHabiles)
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada) && r.FechaVencimiento == RangoFechaCon2DiasHabiles)
                 .Include(r => r.ControversiaContractual)
                     .ThenInclude(r => r.Contrato)
                 .ToList();
 
             List<ControversiaActuacion> controversiaActuacion1dias = _context.ControversiaActuacion
-                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon1DiasHabiles)
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada) && r.FechaVencimiento == RangoFechaCon1DiasHabiles)
                 .Include(r => r.ControversiaContractual)
                     .ThenInclude(r => r.Contrato)
                 .ToList();
@@ -4120,7 +4101,7 @@ namespace asivamosffie.services
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Participacion_Insumo_Realizar_Actuación_4_2_1));
             ControversiaActuacion controversia = _context.ControversiaActuacion
-                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico)
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
                             && r.ControversiaActuacionId == pControversiaActuacionId
                             && (r.EsRequiereContratista == true || r.EsRequiereInterventor == true || r.EsRequiereSupervisor == true || r.EsRequiereFiduciaria == true))
                 .Include(r => r.ControversiaContractual)
@@ -4929,7 +4910,7 @@ namespace asivamosffie.services
             }
         }
 
-        public bool ValidarCumpleTaiContratista(int pContratoId)
+        public bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad)
         {
             //Nueva restricción control de cambios
             bool cumpleCondicionesTai = false;
@@ -4976,7 +4957,33 @@ namespace asivamosffie.services
                     }
                 }
             }
+            //
+            if (cumpleCondicionesTai && esNovedad)
+            {
+                List<NovedadContractual> listaNovedades = _context.NovedadContractual
+                                                            .Where(x => x.Eliminado != true)
+                                                            .Include(x => x.NovedadContractualDescripcion)
+                                                            .ToList();
+                foreach (var r in listaNovedades)
+                {
+                    int totalDescripcion = _context.NovedadContractualDescripcion
+                        .Where(r => r.NovedadContractualId == r.NovedadContractualId
+                                    && (r.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga
+                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Adición
+                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión
+                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión)).Count();
 
+                    if (totalDescripcion > 0)
+                    {
+                        cumpleCondicionesTai = true;
+                        break;
+                    }
+                    else
+                    {
+                        cumpleCondicionesTai = false;
+                    }
+                }
+            }
             return cumpleCondicionesTai;
         }
 

@@ -47,7 +47,7 @@ namespace asivamosffie.services
                     if (contratacion != null)
                     {
                         if (contratacion.Contrato != null)
-                            cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contratacion.Contrato.FirstOrDefault().ContratoId);
+                            cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contratacion.Contrato.FirstOrDefault().ContratoId,false);
                     }
 
                 }

@@ -26,7 +26,7 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     'estadoActuacion',
     'gestion',
   ];
-  dataTable: any[] = [];  
+  dataTable: any[] = [];
   constructor(public dialog: MatDialog, private services: ContractualControversyService, private router: Router) {
    }
 
@@ -43,8 +43,8 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  enviarComiteTecnicoTramAct(id,requiereComite){
-    if(requiereComite==true){
+  enviarComiteTecnicoTramAct(id,esFinalizada){
+    if(esFinalizada !== true){
       this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
         if(data.isSuccessful==true){
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
