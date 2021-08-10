@@ -69,7 +69,6 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.formtieneOrdenGiro();
   }
   
   formtieneOrdenGiro() {
@@ -105,6 +104,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
         this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }
+      this.formtieneOrdenGiro();
     });
   }
 
