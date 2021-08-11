@@ -178,7 +178,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
       if((this.novedad.novedadContractualId == null || this.novedad.novedadContractualId.toString() == 'undefined') && this.contrato.novedadContractual.length > 0){
         esCreacion = true;
-        this.novedad = this.contrato.novedadContractual[0];
+        //this.novedad = this.contrato.novedadContractual[0];
       }
       if (
         this.novedad.novedadContractualDescripcion !== undefined &&
