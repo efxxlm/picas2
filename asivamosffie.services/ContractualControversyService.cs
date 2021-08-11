@@ -1113,6 +1113,32 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
                 actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
 
+                ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(actuacionSeguimientoOld.ControversiaContractualId);         
+                
+                //liberar proyectos asociaciados al contrato - c24
+                if (controversiaContractual != null)
+                {
+                    Contrato contrato = _context.Contrato.Find(controversiaContractual.ContratoId);
+
+                    if (contrato != null)
+                    {
+                        if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada && this.ValidarCumpleTaiContratista(contrato.ContratoId, false))
+                        {
+                            if (actuacionSeguimientoOld?.ControversiaContractualId > 0)
+                            {
+                                List<ContratacionProyecto> contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contrato.ContratacionId).Include(r => r.Proyecto).Include(r => r.Contratacion).ToList();
+                                contratacionProyecto.ForEach(r => {
+                                    if (r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                                        r.Proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista;
+
+                                    if (r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                                        r.Proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista;
+                                });
+                            }
+                        }
+                    }
+                }
+                
                 if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada))
                 {
                     int consecutivo = _context.ControversiaActuacion
@@ -4915,9 +4941,9 @@ namespace asivamosffie.services
             //Nueva restricción control de cambios
             bool cumpleCondicionesTai = false;
 
-            ControversiaContractual controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == pContratoId && r.Eliminado != true).FirstOrDefault();
+            List<ControversiaContractual> controversiaContractualList = _context.ControversiaContractual.Where(r => r.ContratoId == pContratoId && r.Eliminado != true).ToList();
 
-            if (controversiaContractual != null)
+            foreach(var controversiaContractual in controversiaContractualList)
             {
                 SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
                             .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
@@ -4946,6 +4972,7 @@ namespace asivamosffie.services
                                     if (DateTime.Now > controversiaActuacion.FechaActuacion)
                                     {
                                         cumpleCondicionesTai = true;
+                                        break;
                                     }
                                     else
                                     {

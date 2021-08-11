@@ -554,10 +554,13 @@ namespace asivamosffie.services
                                                      r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
                                                      r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
                                                      r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
+                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista ||
 
                                                      r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible ||
                                                      r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
-                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario
+                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
+                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista 
+
                                                      )
                                                 && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion)
                                                 && r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen))
