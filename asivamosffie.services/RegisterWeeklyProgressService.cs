@@ -2981,6 +2981,9 @@ namespace asivamosffie.services
             if (seguimientoSemanalGestionObraCalidad == null || !seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue)
                 return false;
 
+            if (seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false) 
+                return true;
+
             if (seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
                 return false;
              
