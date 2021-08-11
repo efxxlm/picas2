@@ -176,14 +176,25 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                     }
 
                     if ( this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ) > 0 ) {
-                        avancePorCapitulo.push(
-                            {
-                                programacionId: flujo.programacion.programacionId,
-                                capitulo: flujo.programacion.actividad,
-                                programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo,
-                                avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
-                            }
-                        );
+                        if (this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0]) {
+                            avancePorCapitulo.push(
+                                {
+                                    programacionId: flujo.programacion.programacionId,
+                                    capitulo: flujo.programacion.actividad,
+                                    programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo,
+                                    avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
+                                }
+                            );
+                        }
+                        else {
+                            avancePorCapitulo.push(
+                                {
+                                    programacionId: flujo.programacion.programacionId,
+                                    capitulo: flujo.programacion.actividad,
+                                    avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
+                                }
+                            );
+                        }
                     }
 
                     duracionProgramacion += duracionItem;
