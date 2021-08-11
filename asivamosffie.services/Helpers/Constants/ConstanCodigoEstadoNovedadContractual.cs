@@ -32,5 +32,6 @@
 		public const string Registrado = "26";
 		public const string Aprobada_para_envio_comite = "27";
 		public const string DevueltaProcesoContractual = "28";
+		public const string RechazadaPorValidacionPresupuestal = "29";
 	}
 }

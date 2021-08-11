@@ -2266,6 +2266,10 @@ namespace asivamosffie.services
                     NovedadContractualRegistroPresupuestal novedad = _context.NovedadContractualRegistroPresupuestal.Find(pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId);
                     if (novedad != null)
                     {
+                        NovedadContractual novedadContractual = _context.NovedadContractual.Find(novedad.NovedadContractualId);
+                        if (novedadContractual != null)
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.RechazadaPorValidacionPresupuestal;
+
                         int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Rechazada_por_validacion_presupuestal;
                         novedad.FechaModificacion = DateTime.Now;
                         novedad.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
