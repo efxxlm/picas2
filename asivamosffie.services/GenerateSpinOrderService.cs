@@ -518,8 +518,7 @@ namespace asivamosffie.services
             catch (Exception e)
             {
                 return false;
-            }
-
+            } 
             return blRegistroCompleto;
         }
 
@@ -675,13 +674,30 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
         {
-            if (
-                   pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion == null
-                || pOrdenGiroDetalle?.OrdenGiroSoporte == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica == null
-                || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago == null
+            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Count() == 0)
+                return false;
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.FirstOrDefault().ConceptoPagoCriterio != ConstanCodigoCriterioPago.Anticipo)
+            {
+                if (
+                       pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() == 0
+                    || pOrdenGiroDetalle?.OrdenGiroDetalleObservacion.Count() == 0
+                    || pOrdenGiroDetalle?.OrdenGiroSoporte.Count() == 0
+                    || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() == 0
+                    ) return false;
+
+            }
+            else
+            {
+
+
+
+            }
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.TieneDescuento == true
+                && pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count(r => r.Eliminado != true) == 0
                 ) return false;
+
 
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Count() == 0)
@@ -711,8 +727,7 @@ namespace asivamosffie.services
                     return false;
             }
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count() == 0)
-                return false;
+
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
             {
@@ -735,248 +750,7 @@ namespace asivamosffie.services
         #endregion
         #region C R U D
 
-        #region Delete
-        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
-                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportanteId)
-                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
-                          {
-                              Eliminado = true,
-                              FechaModificacion = DateTime.Now,
-                              UsuarioModificacion = pAuthor
-                          });
-
-                return
-                 new Respuesta
-                 {
-                     IsSuccessful = true,
-                     IsException = false,
-                     IsValidation = false,
-                     Code = GeneralCodes.EliminacionExitosa,
-                     Message =
-                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
-                                                                                     GeneralCodes.EliminacionExitosa,
-                                                                                     idAccion,
-                                                                                     pAuthor,
-                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
-                                                                                 )
-                 };
-            }
-            catch (Exception ex)
-            {
-                return
-                     new Respuesta
-                     {
-                         IsSuccessful = false,
-                         IsException = true,
-                         IsValidation = false,
-                         Code = GeneralCodes.Error,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
-                     };
-            }
-        }
-
-        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
-                        .Where(o => o.OrdenGiroDetalleTerceroCausacionAportanteId == pOrdenGiroDetalleTerceroCausacionAportanteId)
-                        .Update(o => new OrdenGiroDetalleTerceroCausacionAportante
-                        {
-                            Eliminado = true,
-                            UsuarioModificacion = pAuthor,
-                            FechaModificacion = DateTime.Now
-                        });
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.EliminacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                            (int)enumeratorMenu.Generar_Orden_de_giro,
-                            GeneralCodes.EliminacionExitosa,
-                            idAccion,
-                            pAuthor,
-                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                         (int)enumeratorMenu.Generar_Orden_de_giro,
-                         GeneralCodes.Error,
-                         idAccion,
-                         pAuthor,
-                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
-                };
-            }
-        }
-
-        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                foreach (var id in pOrdenGiroDetalleTerceroCausacionDescuentoId)
-                {
-                    _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
-                     .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == id)
-                     .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
-                     {
-                         Eliminado = true,
-                         UsuarioModificacion = pAuthor,
-                         FechaModificacion = DateTime.Now
-                     });
-                }
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.EliminacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                            (int)enumeratorMenu.Generar_Orden_de_giro,
-                            GeneralCodes.EliminacionExitosa,
-                            idAccion,
-                            pAuthor,
-                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.Error,
-                    Message =
-                      await _commonService.GetMensajesValidacionesByModuloAndCodigo
-                      (
-                         (int)enumeratorMenu.Generar_Orden_de_giro,
-                         GeneralCodes.Error,
-                         idAccion,
-                         pAuthor,
-                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO
-                       )
-                };
-            }
-        }
-
-        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                _context.Set<OrdenGiroDetalleDescuentoTecnica>()
-                        .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnicaId)
-                        .Update(o => new OrdenGiroDetalleDescuentoTecnica
-                        {
-                            Eliminado = true,
-                            UsuarioModificacion = pAuthor,
-                            FechaModificacion = DateTime.Now
-                        });
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.EliminacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                            (int)enumeratorMenu.Generar_Orden_de_giro,
-                            GeneralCodes.EliminacionExitosa,
-                            idAccion,
-                            pAuthor,
-                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                         (int)enumeratorMenu.Generar_Orden_de_giro,
-                         GeneralCodes.Error,
-                         idAccion,
-                         pAuthor,
-                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
-                };
-            }
-
-        }
-
-        public async Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                //_context.Set<OrdedeGiro>()
-                //        .Where(o => o.OrdenGiroId == OrdenGiroId)
-                //        .Update(o => new OrdenGiro
-                //        {
-                //            Eliminado = true,
-                //            UsuarioModificacion = pAuthor,
-                //            FechaModificacion = DateTime.Now
-                //        });
-
-                _context.Set<SolicitudPago>()
-                     .Where(o => o.OrdenGiroId == OrdenGiroId)
-                     .Update(o => new SolicitudPago
-                     {
-                         OrdenGiroId = null,
-                         UsuarioModificacion = pAuthor,
-                         FechaModificacion = DateTime.Now
-                     });
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.EliminacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                            (int)enumeratorMenu.Generar_Orden_de_giro,
-                            GeneralCodes.OperacionExitosa,
-                            idAccion,
-                            pAuthor,
-                            ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
-                };
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
-        }
-
-        #endregion
+     
 
         #region Create
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
@@ -1447,6 +1221,250 @@ namespace asivamosffie.services
                         });
             }
         }
+        #endregion
+
+
+        #region Delete
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaAportante(int pOrdenGiroDetalleDescuentoTecnicaAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportanteId)
+                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
+                          {
+                              Eliminado = true,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pAuthor
+                          });
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = GeneralCodes.EliminacionExitosa,
+                     Message =
+                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
+                                                                                     GeneralCodes.EliminacionExitosa,
+                                                                                     idAccion,
+                                                                                     pAuthor,
+                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
+                                                                                 )
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
+                     };
+            }
+        }
+
+        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionAportanteId == pOrdenGiroDetalleTerceroCausacionAportanteId)
+                        .Update(o => new OrdenGiroDetalleTerceroCausacionAportante
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+        }
+
+        public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionDescuento(List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                foreach (var id in pOrdenGiroDetalleTerceroCausacionDescuentoId)
+                {
+                    _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
+                     .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == id)
+                     .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
+                     {
+                         Eliminado = true,
+                         UsuarioModificacion = pAuthor,
+                         FechaModificacion = DateTime.Now
+                     });
+                }
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message =
+                      await _commonService.GetMensajesValidacionesByModuloAndCodigo
+                      (
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO
+                       )
+                };
+            }
+        }
+
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiroDetalleDescuentoTecnica>()
+                        .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnicaId)
+                        .Update(o => new OrdenGiroDetalleDescuentoTecnica
+                        {
+                            Eliminado = true,
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.EliminacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.ELIMINAR_ORDEN_GIRO_DESCUENTO_TECNICA)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                         (int)enumeratorMenu.Generar_Orden_de_giro,
+                         GeneralCodes.Error,
+                         idAccion,
+                         pAuthor,
+                         ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+
+        }
+
+        public async Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                //_context.Set<OrdedeGiro>()
+                //        .Where(o => o.OrdenGiroId == OrdenGiroId)
+                //        .Update(o => new OrdenGiro
+                //        {
+                //            Eliminado = true,
+                //            UsuarioModificacion = pAuthor,
+                //            FechaModificacion = DateTime.Now
+                //        });
+
+                _context.Set<SolicitudPago>()
+                     .Where(o => o.OrdenGiroId == OrdenGiroId)
+                     .Update(o => new SolicitudPago
+                     {
+                         OrdenGiroId = null,
+                         UsuarioModificacion = pAuthor,
+                         FechaModificacion = DateTime.Now
+                     });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                            (int)enumeratorMenu.Generar_Orden_de_giro,
+                            GeneralCodes.OperacionExitosa,
+                            idAccion,
+                            pAuthor,
+                            ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
         #endregion
         #endregion
 
