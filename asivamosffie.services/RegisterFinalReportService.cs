@@ -201,7 +201,7 @@ namespace asivamosffie.services
                         }
                         return false;
                     }
-                    else if ((bool)informeFinal.TieneObservacionesSupervisor && existe_no_cumple <= 0)
+                    else if (informeFinal.TieneObservacionesSupervisor == true && existe_no_cumple <= 0)
                     {
                         //Vuelve a empezar el flujo
                         informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo;
@@ -366,7 +366,7 @@ namespace asivamosffie.services
                         EstadoInformeFinal = informeFinal.EstadoInforme,
                         posicion = item.InformeFinalListaChequeo.Orden,
                         estadoInforme = informeFinal.EstadoInforme,
-                        registroCompleto = (bool)informeFinal.RegistroCompleto,
+                        registroCompleto = (bool)informeFinal?.RegistroCompleto,
                         semaforo = semaforo,
                         aprobacionCodigo = item.AprobacionCodigo,
                         tieneModificacionInterventor = item.TieneModificacionInterventor,
