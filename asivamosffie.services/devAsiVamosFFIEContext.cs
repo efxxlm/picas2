@@ -280,6 +280,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
+        public virtual DbSet<VRegistrarAvanceSemanalCompletos> VRegistrarAvanceSemanalCompletos { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanalNew> VRegistrarAvanceSemanalNew { get; set; }
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRegistrarLiquidacionContrato> VRegistrarLiquidacionContrato { get; set; }
@@ -317,8 +318,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
+ 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8603,9 +8603,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(16)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(29, 19)");
+                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(33, 19)");
 
-                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(30, 19)");
+                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(34, 19)");
 
                 entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(19, 0)");
 
@@ -9702,6 +9702,15 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VRegistrarAvanceSemanalCompletos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RegistrarAvanceSemanalCompletos");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VRegistrarAvanceSemanalNew>(entity =>

@@ -1621,6 +1621,11 @@ namespace asivamosffie.services
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
 
+            //decimal SaldoTesoral = _context.Contrato
+            //    .Where(r => r.ContratacionId == pContratacionId)
+            //    .IncludeFilter(r => r.SolicitudPago.Where(r => r.Eliminado != true)).Sum(r => r.SolicitudPago.Sum(r => r.ValorFacturado)) ?? 0;
+             
+
             foreach (var Drp in ListDrp)
             {
                 var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
