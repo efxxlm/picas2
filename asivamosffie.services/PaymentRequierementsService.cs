@@ -576,8 +576,7 @@ namespace asivamosffie.services
         public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
         {
             _context.Set<SolicitudPagoObservacion>()
-                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
-                              && s.TieneObservacion == false)
+                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                     .Update(s => new SolicitudPagoObservacion()
                     {
                         Archivada = true,
