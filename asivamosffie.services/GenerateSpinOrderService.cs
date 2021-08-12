@@ -40,6 +40,22 @@ namespace asivamosffie.services
         /// <returns></returns>
         /// 
 
+
+        public async Task<dynamic> GetInfoPlantilla(int pOrdenGiroId)
+        {  
+            return  _context.VDescuentosXordenGiro
+                                                .Where(r => r.OrdenGiroId == pOrdenGiroId)
+                                                .Select(v => new  
+                                                                 {  
+                                                                     v.ValorDescuento , 
+                                                                     v.TipoDescuentoCodigo , 
+                                                                     v.Nombre 
+                                                                 }) ; 
+        }
+
+
+
+
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
         {
             return _context.VValorUsoXcontratoAportante
@@ -518,7 +534,7 @@ namespace asivamosffie.services
             catch (Exception e)
             {
                 return false;
-            } 
+            }
             return blRegistroCompleto;
         }
 
@@ -750,7 +766,7 @@ namespace asivamosffie.services
         #endregion
         #region C R U D
 
-     
+
 
         #region Create
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
@@ -1464,6 +1480,8 @@ namespace asivamosffie.services
             }
 
         }
+
+
 
         #endregion
         #endregion

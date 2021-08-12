@@ -22,6 +22,20 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetInfoPlantilla")]
+        [HttpGet]
+        public async Task<SolicitudPago> GetInfoPlantilla([FromQuery] int pOrdenGiroId)
+        {
+            try
+            {
+                return await _generateSpinOrderService.GetInfoPlantilla(pOrdenGiroId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("DeleteOrdenGiroDetalleTerceroCausacionDescuento")]
         public async Task<IActionResult> DeleteOrdenGiroDetalleTerceroCausacionDescuento([FromBody] List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId)
