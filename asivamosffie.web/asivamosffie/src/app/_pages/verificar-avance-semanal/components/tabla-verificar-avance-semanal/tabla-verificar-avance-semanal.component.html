@@ -62,7 +62,7 @@
             <button mat-raised-button
                     color="accent" 
                     class="btn-table"
-                    *ngIf="element.registroCompletoVerificar === true && element.estadoSeguimientoSemanalCodigo === 1"
+                    *ngIf="element.estadoSeguimientoSemanalCodigo === 1"
                     [routerLink]="[ 'verificarSeguimientoSemanal', element.seguimientoSemanalId ]">
                     {{ element.fechaModificacionVerificar === undefined ? 'Verificar avance' : 'Ver detalle/Editar' }}
             </button> 
