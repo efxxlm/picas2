@@ -2321,11 +2321,24 @@ namespace asivamosffie.services
             {
                 if (detailDP.DisponibilidadPresupuestal != null)
                 {
-                    List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyectos = _context.DisponibilidadPresupuestalProyecto
-                                                                                                    .Where(r => r.ProyectoId == detailDP.NovedadContractual.ProyectoId && r.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId)
-                                                                                                    .Include(x => x.Proyecto)
-                                                                                                    .ToList();
-                    detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto = disponibilidadPresupuestalProyectos;
+                    //novedad aplica a proyecto
+                    if (detailDP.NovedadContractual.EsAplicadaAcontrato != true)
+                    {
+                        List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyectos = _context.DisponibilidadPresupuestalProyecto
+                                                                                .Where(r => r.ProyectoId == detailDP.NovedadContractual.ProyectoId && r.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId)
+                                                                                .Include(x => x.Proyecto)
+                                                                                .ToList();
+                        detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto = disponibilidadPresupuestalProyectos;
+                    }
+                    //novedad aplica a contrato
+                    else
+                    {
+                        List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyectos = _context.DisponibilidadPresupuestalProyecto
+                                                                                .Where(r => r.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId)
+                                                                                .Include(x => x.Proyecto)
+                                                                                .ToList();
+                        detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto = disponibilidadPresupuestalProyectos;
+                    }
                 }
             }
 

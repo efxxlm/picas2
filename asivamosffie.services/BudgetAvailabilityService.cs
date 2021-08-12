@@ -439,7 +439,7 @@ namespace asivamosffie.services
                                 if (ListGestionFuenteFinanciacion
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                                    .Count() == aportantes.Count())
+                                    .Count() == aportantes.Count() && aportantes.Count() > 0)
                                     blnEstado = true;
                             }
                             else
@@ -447,7 +447,7 @@ namespace asivamosffie.services
                                 if (ListGestionFuenteFinanciacion
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId &&
                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                                    .Count() == aportantes.Count())
+                                    .Count() == aportantes.Count() && aportantes.Count() > 0)
                                     blnEstado = true;
                             }
                         }
