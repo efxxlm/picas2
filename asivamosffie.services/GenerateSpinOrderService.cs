@@ -714,7 +714,7 @@ namespace asivamosffie.services
             }
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.FirstOrDefault()?.TieneDescuento == true
-                && pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count(r => r.Eliminado != true) == 0
+                && pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Any(r => r.OrdenGiroDetalleTerceroCausacionDescuento.Count(r=> r.Eliminado != true) == 0)
                 ) return false;
 
 
