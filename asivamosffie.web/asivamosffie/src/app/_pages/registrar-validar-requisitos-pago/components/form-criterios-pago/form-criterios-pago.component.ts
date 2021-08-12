@@ -80,13 +80,13 @@ export class FormCriteriosPagoComponent implements OnInit {
         let LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
         let seDiligencioAnticipo: boolean;
         let listaSolicitudesPago = [];
-        let criterioAnticipo: Dominio = null;
+        let criterioAnticipo = null;
         const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ).toPromise();
         if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
 
         this.montoMaximoPendiente = montoMaximoPendiente
 
-        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipo' )
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO //.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
             LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
         }
