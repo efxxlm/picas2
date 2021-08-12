@@ -183,7 +183,8 @@ namespace asivamosffie.services
             List<NovedadContractual> listaNovedadesActivasTemp = _context.NovedadContractual
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
-                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico ||
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado
                                                                                     ) &&
                                                                                x.Eliminado != true)
                                                                         .ToList();
@@ -209,11 +210,11 @@ namespace asivamosffie.services
                 if (totalDescripcion > 0)
                     vaComite = true;
 
-                if (vaComite && item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico)
+                if (vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
                 {
                     listaNovedadesActivas.Add(item);
                 }
-                else if (!vaComite && item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente)
+                else if (!vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
                 {
                     listaNovedadesActivas.Add(item);
                 }
