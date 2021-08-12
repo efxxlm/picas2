@@ -26,6 +26,10 @@ export class OrdenPagoService {
         return this.http.get( `${ this.urlApi }/GetSolicitudPagoBySolicitudPagoId?SolicitudPagoId=${ SolicitudPagoId }` );
     }
 
+    getInfoPlantilla( pOrdenGiroId: number ) {
+        return this.http.get( `${ this.urlApi }/GetInfoPlantilla?pOrdenGiroId=${ pOrdenGiroId }` );
+    }
+
     createEditOrdenGiro( pOrdenGiro: any ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditOrdenGiro`, pOrdenGiro );
     }

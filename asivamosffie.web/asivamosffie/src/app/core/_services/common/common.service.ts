@@ -547,6 +547,10 @@ export class CommonService {
     const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
     return retorno;
   }
+
+  GetHtmlToPdf(pdf: any){
+    return this.http.post(`${environment.apiUrl}/common/GetHtmlToPdf`, pdf, { responseType: "blob" });
+  }
 }
 
 export interface Dominio{

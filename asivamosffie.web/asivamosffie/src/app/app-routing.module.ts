@@ -577,6 +577,11 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/menu/menu.module').then(m => m.MenuModule)
       },
+      {
+        path: 'informeSemanal',
+        canLoad: [ ActualUserGuard ],
+        loadChildren: () => import('./_pages/informe-semanal/informe-semanal.module').then(m => m.InformeSemanalModule)
+      },
     ]
     
   },
