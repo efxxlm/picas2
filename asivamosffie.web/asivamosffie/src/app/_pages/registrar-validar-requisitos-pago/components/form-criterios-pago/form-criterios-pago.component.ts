@@ -102,7 +102,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         if ( LISTA_CRITERIOS_FORMA_PAGO.length > 0 && this.esVerDetalle === false ) {
                             if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
                                 // tipoCriterioCodigo
-                                if ( criterioAnticipo !== null ) {
+                                if ( criterioAnticipo ) {
                                     const anticipoFind = fase.solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterioAnticipo.codigo )
 
                                     if ( anticipoFind !== undefined ) {
@@ -437,6 +437,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     );
                 }
                 this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
+                console.log(criteriosSeleccionados)
             }
             if ( this.addressForm.get( 'criterios' ).dirty === false ) {
                 if ( this.solicitudPagoFase !== undefined && this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {

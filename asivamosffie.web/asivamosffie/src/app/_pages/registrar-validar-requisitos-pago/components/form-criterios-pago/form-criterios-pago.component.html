@@ -1,10 +1,10 @@
 <div class="d-flex justify-content-center" *ngIf="montoMaximoPendiente !== undefined">
   <div>
-    <p> <b> Monto máximo por pagar en esta factura: </b> {{ montoMaximoPendiente.montoMaximo | currency: '':'symbol-naroow':'0.0-0' }} </p>
+    <p> <b> Monto pendiente por facturar: </b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </p>
   </div>
-  <div>
-    <p> <b> Monto pendiente por pagar en la fase: </b> {{ montoMaximoPendiente.valorPendientePorPagar | currency: '':'symbol-naroow':'0.0-0' }} </p>
-  </div>
+  <!-- <div>
+    <p> <b> Monto pendiente por facturar en la fase: </b> {{ montoMaximoPendiente.valorPendientePorPagar | currency: '':'symbol-naroow':'0.0-0' }} </p>
+  </div> -->
 </div>
 
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
@@ -44,7 +44,9 @@
               'color-secondaryColor':
                 (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
                 (addressForm.get('criterioPago').invalid && estaEditando)
-            }">Criterio de pago</label>
+            }">
+            Criterios de pago
+          </label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="select-width">

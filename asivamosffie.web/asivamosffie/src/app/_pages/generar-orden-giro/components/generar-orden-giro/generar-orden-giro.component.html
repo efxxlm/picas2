@@ -122,10 +122,11 @@
                             Ver detalle
                     </button>
 
-                    <!--
+                    
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
+                            [routerLink]="[ 'ordenGiro', element.solicitudPagoId ]"
                             *ngIf=" element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enviadaParaOrdenGiro
                                     && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.enProcesoGeneracion
                                     && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorVerificacion
@@ -133,7 +134,7 @@
                                     && element.estadoCodigo !== estadoSolicitudPagoOrdenGiro.ordenGiroDevueltaPorTramiteFiduciario">
                             Descargar orden de giro
                     </button>
-                    -->
+                   
 
                 </td>
             </ng-container>

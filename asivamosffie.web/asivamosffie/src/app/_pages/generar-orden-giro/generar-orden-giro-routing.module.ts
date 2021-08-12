@@ -62,6 +62,10 @@ const routes: Routes = [
   {
     path: 'detalleOrdenOtrosCostos/:id',
     component: FormExpensasOtrosCostosComponent
+  },
+  {
+    path: 'ordenGiro/:id',
+    component: PlantillaComponent
   }
 ];
 @NgModule({
