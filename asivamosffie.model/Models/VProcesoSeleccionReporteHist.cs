@@ -38,6 +38,5 @@ namespace asivamosffie.model.Models
         public int? CantidadProponentesInvitados { get; set; }
         public string UrlSoporteProponentesSeleccionados { get; set; }
         public int? SolicitudId { get; set; }
-        public bool? RegistroCompletoProponentes { get; set; }
     }
 }

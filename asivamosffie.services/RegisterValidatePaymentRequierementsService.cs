@@ -33,9 +33,9 @@ namespace asivamosffie.services
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
         public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion, int pContratoId)
-        { 
+        {
             bool EsInterventoria = _context.Contrato.Include(r => r.Contratacion)
-                                                    .Count(r => r.ContratoId == pContratoId 
+                                                    .Count(r => r.ContratoId == pContratoId
                                                         && r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria
                                                           ) > 0;
 
@@ -574,6 +574,8 @@ namespace asivamosffie.services
 
                 CreateEditListaChequeoRespuesta(pSolicitudPago.SolicitudPagoListaChequeo, pSolicitudPago.UsuarioCreacion);
 
+                ArchivarObservaciones(pSolicitudPago.SolicitudPagoId, pSolicitudPago.UsuarioCreacion);
+
                 return
                      new Respuesta
                      {
@@ -597,6 +599,18 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private void ArchivarObservaciones(int pSolicitudPagoId, string pAuthor)
+        {
+            _context.Set<SolicitudPagoObservacion>()
+                    .Where(r => r.SolicitudPagoId == pSolicitudPagoId)
+                    .Update(r => new SolicitudPagoObservacion
+                    {
+                        UsuarioModificacion = pAuthor,
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now
+                    });
         }
 
         private void CreateEditNewPaymentWayToPay(ICollection<SolicitudPagoCargarFormaPago> pListSolicitudPagoCargarFormaPago, string usuarioCreacion)
@@ -1575,7 +1589,7 @@ namespace asivamosffie.services
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
-                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t=> t.Proyecto)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.Proyecto)
                     .Include(c => c.Contratacion).ThenInclude(c => c.DisponibilidadPresupuestal)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
@@ -1615,63 +1629,85 @@ namespace asivamosffie.services
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
-                                       .Select(d => d.OrderBy(p => p.NumeroDrp).FirstOrDefault())
-                                       .ToList();
+                              .Select(d =>
+                                          d.OrderBy(p => p.NumeroDrp)
+                                           .FirstOrDefault())
+                              .ToList();
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
+            List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
+                    _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
+                                                                      .ToList();
 
-            //decimal SaldoTesoral = _context.Contrato
-            //    .Where(r => r.ContratacionId == pContratacionId)
-            //    .IncludeFilter(r => r.SolicitudPago.Where(r => r.Eliminado != true)).Sum(r => r.SolicitudPago.Sum(r => r.ValorFacturado)) ?? 0;
-             
 
             foreach (var Drp in ListDrp)
             {
                 var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
-                                                .GroupBy(id => id.ProyectoId)
-                                                .Select(d => d.OrderBy(p => p.ProyectoId).FirstOrDefault())
-                                                .ToList();
+                                          .GroupBy(id => id.ProyectoId)
+                                          .Select(d =>
+                                                      d.OrderBy(p => p.ProyectoId)
+                                                       .FirstOrDefault())
+                                          .ToList();
 
                 List<dynamic> ListDyProyectos = new List<dynamic>();
                 foreach (var ProyectoId in ListProyectosId)
                 {
                     Proyecto proyecto = _context.Proyecto
-                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
-                                        .Include(ie => ie.InstitucionEducativa)
-                                        .FirstOrDefault();
+                                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
+                                                        .Include(ie => ie.InstitucionEducativa)
+                                                        .FirstOrDefault();
 
-                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp && r.ProyectoId == ProyectoId.ProyectoId)
-                                                  .GroupBy(id => id.TipoUsoCodigo)
-                                                  .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
-                                                  .ToList();
+                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                   && r.ProyectoId == ProyectoId.ProyectoId)
+                                          .GroupBy(id => id.TipoUsoCodigo)
+                                          .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
+                                          .ToList();
 
                     List<dynamic> ListDyUsos = new List<dynamic>();
                     foreach (var TipoUso in ListTipoUso)
                     {
-                        VDrpXproyectoXusos Uso = List
-                                                    .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                        && r.ProyectoId == ProyectoId.ProyectoId
-                                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                    .FirstOrDefault();
+                        VDrpXproyectoXusos Uso =
+                                                List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .FirstOrDefault();
 
                         decimal ValorUso = List
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                    && r.ProyectoId == ProyectoId.ProyectoId
-                                                    && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso);
 
-                        decimal Saldo = List
-                                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                 && r.ProyectoId == ProyectoId.ProyectoId
-                                                 && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                            .Sum(v => v.Saldo) ?? 0;
+                        decimal Saldo = ListPagos
+                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(r => r.SaldoUso) ?? 0;
+
+
+                        decimal ValorUsoResta = ValorUso;
+                        foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                               && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                        {
+
+                            if (ValorUsoResta > item.SaldoUso)
+                            {
+                                ValorUsoResta -= (decimal)item.SaldoUso;
+                                item.SaldoUso = ValorUsoResta;
+                            }
+                            else
+                            {
+                                item.SaldoUso -= ValorUsoResta;
+                            }
+
+                        }
 
                         ListDyUsos.Add(new
                         {
                             Uso.Nombre,
                             ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", Saldo)
+                            Saldo = String.Format("{0:n0}", ValorUso >= Saldo ? ValorUso - Saldo : Saldo - ValorUso)
                         });
                     }
 
