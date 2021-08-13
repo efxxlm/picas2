@@ -113,7 +113,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
-
+        DateTime? GetFechaEstimadaFinalizacion(int pContratoId);
 
     }
 }

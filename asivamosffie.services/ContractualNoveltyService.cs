@@ -225,7 +225,8 @@ namespace asivamosffie.services
             foreach (var contrato in contratos)
             {
                 int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
-
+                //contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion(contrato.ContratoId);
+                
                 bool tieneActa = false;
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
