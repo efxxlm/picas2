@@ -270,6 +270,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportante> VOrdenGiroPagosXusoAportante { get; set; }
         public virtual DbSet<VOrdenGiroXproyecto> VOrdenGiroXproyecto { get; set; }
+        public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXuso> VPagosSolicitudXcontratacionXproyectoXuso { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VProcesoSeleccionIntegrante> VProcesoSeleccionIntegrante { get; set; }
@@ -318,7 +319,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
- 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -9281,6 +9281,28 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VPagosSolicitudXcontratacionXproyectoXuso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PagosSolicitudXContratacionXProyectoXUso");
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VParametricas>(entity =>
