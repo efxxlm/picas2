@@ -107,6 +107,8 @@
         Votacion_Unanime_Fiduciaria = 56,
         Votacion_No_Unanime_Fiduciaria = 57,
         Ficha_DDP_Anexos = 96,
-        Html_To_PDF = 97
+        Html_To_PDF = 97,
+        Tabla_Solicitudes_Actuaciones = 98
+
     }
 }
