@@ -98,7 +98,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                         if ( LISTA_CRITERIOS_FORMA_PAGO.length > 0 && this.esVerDetalle === false ) {
                             if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
                                 // tipoCriterioCodigo
-                                if ( criterioAnticipo !== null ) {
+                                if ( criterioAnticipo && criterioAnticipo.codigo ) {
                                     const anticipoFind = fase.solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterioAnticipo.codigo )
 
                                     if ( anticipoFind !== undefined ) {
@@ -121,9 +121,9 @@ export class ObsCriterioPagosComponent implements OnInit {
                 if ( solicitud.solicitudPagoRegistrarSolicitudPago !== undefined && solicitud.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
                     const solicitudPagoRegistrarSolicitudPago = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ]
 
-                    if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                    if ( solicitudPagoRegistrarSolicitudPago ) {
                         solicitudPagoRegistrarSolicitudPago.solicitudPagoFase.forEach( fase => {
-                            if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
+                            if ( fase.solicitudPagoFaseCriterio.length > 0 && criterioAnticipo && criterioAnticipo.codigo ) {
                                 const faseCriterioFind = fase.solicitudPagoFaseCriterio.find( faseCriterio => faseCriterio.tipoCriterioCodigo === criterioAnticipo.codigo )
 
                                 if ( faseCriterioFind !== undefined ) {
