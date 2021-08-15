@@ -894,11 +894,8 @@ namespace asivamosffie.services
                                 {
                                     if (descripcion.GetDiasFechaSuspension != null)
                                     {
-                                        TimeSpan days = (TimeSpan)(descripcion.GetDiasFechaSuspension);
-                                        double totalSuspension = days.Days;
                                         DateTime fechaFinalizacionTmp = (DateTime) fechaFinalizacion;
-                                        fechaFinalizacionTmp.AddDays(totalSuspension);
-                                        fechaFinalizacion = fechaFinalizacionTmp;
+                                        fechaFinalizacion = fechaFinalizacionTmp.AddDays((double)descripcion?.GetDiasFechaSuspension.Value.TotalDays);
                                     }
                                 }
                             }

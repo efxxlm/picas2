@@ -74,6 +74,7 @@ export interface NovedadContractual{
         registroCompletoTramite ?: boolean,
         tipoModificacion ?: string,
         adicionBoolean ?: boolean,
+        vaComite ?: boolean,
 
 }
 

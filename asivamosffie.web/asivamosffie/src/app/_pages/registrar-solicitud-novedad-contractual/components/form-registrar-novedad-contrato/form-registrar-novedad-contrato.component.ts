@@ -186,7 +186,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       this.tipoNovedadArray = response;
     });
-    this.fechaFinalizacionContrato = (this.contrato?.fechaTerminacionFase2 ? this.contrato?.fechaTerminacionFase2 : this.contrato?.fechaTerminacion)
+    this.fechaFinalizacionContrato = (this.contrato?.fechaEstimadaFinalizacion ? this.contrato?.fechaEstimadaFinalizacion : this.contrato?.fechaTerminacionFase2 ? this.contrato?.fechaTerminacionFase2 : this.contrato?.fechaTerminacion)
     this.fechaEstimadaFinalizacion = this.fechaFinalizacionContrato;
     this.updateFechaEstimada();
   }

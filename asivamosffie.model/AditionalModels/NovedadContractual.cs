@@ -81,6 +81,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NombreAbogado { get; set; }
 
+        [NotMapped]
+        public bool? VaComite { get; set; }
+
     }
 
 }

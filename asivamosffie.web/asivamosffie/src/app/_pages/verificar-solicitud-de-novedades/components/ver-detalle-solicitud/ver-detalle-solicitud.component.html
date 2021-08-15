@@ -75,7 +75,8 @@
         <strong>Fecha de finalización de contrato:</strong>
         <span>
           {{
-            (novedad.contrato?.fechaTerminacionFase2
+            (novedad?.contrato?.fechaEstimadaFinalizacion ? novedad?.contrato?.fechaEstimadaFinalizacion :
+              novedad.contrato?.fechaTerminacionFase2
               ? novedad.contrato?.fechaTerminacionFase2
               : novedad.contrato?.fechaTerminacion
             ) | date: 'dd/MM/yyyy'
@@ -197,7 +198,7 @@
                 </strong>
                 {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+              <p *ngIf="((descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2') && !((novedad?.estadoCodigo == '26' && novedad?.vaComite) || (novedad?.estadoCodigo == '25' && !novedad?.vaComite)))">
                 <strong>
                   Fecha estimada de terminación del contrato:
                 </strong>

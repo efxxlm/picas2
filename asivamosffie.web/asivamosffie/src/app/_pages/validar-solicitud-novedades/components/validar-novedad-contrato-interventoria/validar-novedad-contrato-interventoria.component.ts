@@ -100,7 +100,7 @@ export class ValidarNovedadContratoInterventoriaComponent implements OnInit {
           .setValue(this.novedad.observacionSupervisor ? this.novedad.observacionSupervisor.observaciones : null);
         this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesSupervisor);
 
-        this.fechaFinalizacionContrato = (this.novedad?.contrato?.fechaTerminacionFase2 ? this.novedad?.contrato?.fechaTerminacionFase2 : this.novedad?.contrato?.fechaTerminacion);
+        this.fechaFinalizacionContrato = (this.novedad?.contrato?.fechaEstimadaFinalizacion ? this.novedad?.contrato?.fechaEstimadaFinalizacion : this.novedad?.contrato?.fechaTerminacionFase2 ? this.novedad?.contrato?.fechaTerminacionFase2 : this.novedad?.contrato?.fechaTerminacion);
         this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
         respuesta.novedadContractualDescripcion.forEach( d => {
           const fechaInicio = moment( new Date( d?.fechaInicioSuspension ).setHours( 0, 0, 0, 0 ) );

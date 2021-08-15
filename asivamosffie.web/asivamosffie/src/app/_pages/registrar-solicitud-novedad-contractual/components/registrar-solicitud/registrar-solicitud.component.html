@@ -147,7 +147,7 @@
       <p>
         <strong>Fecha de finalización de contrato:</strong>
         {{
-          (contrato?.fechaTerminacionFase2 ? contrato?.fechaTerminacionFase2 : contrato?.fechaTerminacion)
+          (contrato?.fechaEstimadaFinalizacion ? contrato?.fechaEstimadaFinalizacion : contrato?.fechaTerminacionFase2 ? contrato?.fechaTerminacionFase2 : contrato?.fechaTerminacion)
             | date: 'dd/MM/yyyy'
         }}
       </p>
