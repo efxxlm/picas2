@@ -1,0 +1,27 @@
+<mat-card class="shipping-card">
+  <mat-card-content>
+    <div class="input-file position-relative">
+      <span class="input-file--text text-center">
+        {{ archivo }}
+      </span>
+      <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
+        Explorar
+      </button>
+      <input
+        required
+        hidden
+        (change)="fileName($event)"
+        #fileInput
+        type="file"
+        id="file"
+        [formControl]="documentFile"
+        accept=".mpp"
+      />
+      <span class="required-form-group m-0 requerido-file">*</span>
+    </div>
+    <p>
+      Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son: mpp
+    </p>
+    <button mat-raised-button color="accent" [disabled]="documentFile.invalid" type="button">Guardar</button>
+  </mat-card-content>
+</mat-card>
