@@ -207,11 +207,11 @@ namespace asivamosffie.services
 
                                 if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
                                 {
-                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId);
+                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId, false, 0);
                                 }
                                 else
                                 {
-                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId);
+                                    fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId, false, 0);
                                 }
 
                                 foreach (var fuente in fuentesNew)
@@ -2622,7 +2622,7 @@ namespace asivamosffie.services
                             .Count();
 
                     if (ListGestionFuenteFinanciacion
-                        .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId &&
+                        .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId && x.Eliminado != true &&
                                ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
                         .Count() == aportantesEstado.Count())
                         blnEstado = true;

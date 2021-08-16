@@ -380,7 +380,14 @@ namespace asivamosffie.services
                         NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).Include(r => r.NovedadContractual).FirstOrDefault();
                         if (novedadContractualRegistroPresupuestal?.NovedadContractual != null)
                         {
-                            disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.ProyectoId == novedadContractualRegistroPresupuestal.NovedadContractual.ProyectoId).ToList();
+                            if (novedadContractualRegistroPresupuestal?.NovedadContractual.EsAplicadaAcontrato != true)
+                            {
+                                disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.ProyectoId == novedadContractualRegistroPresupuestal.NovedadContractual.ProyectoId).ToList();
+                            }
+                            else
+                            {
+                                disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
+                            }
                         }
                     }
                     else
@@ -437,7 +444,7 @@ namespace asivamosffie.services
                             if (DisponibilidadPresupuestal.EsNovedad != true)
                             {
                                 if (ListGestionFuenteFinanciacion
-                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad != true &&
                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
                                     .Count() == aportantes.Count() && aportantes.Count() > 0)
                                     blnEstado = true;
@@ -445,7 +452,7 @@ namespace asivamosffie.services
                             else
                             {
                                 if (ListGestionFuenteFinanciacion
-                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId &&
+                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId && x.Eliminado != true &&
                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
                                     .Count() == aportantes.Count() && aportantes.Count() > 0)
                                     blnEstado = true;
@@ -1279,7 +1286,7 @@ namespace asivamosffie.services
                 {
                     registroNovedadId = pRegistro.NovedadContractualRegistroPresupuestalId > 0 ? pRegistro.NovedadContractualRegistroPresupuestalId : 0;
                 }
-                List <DetailValidarDisponibilidadPresupuesal> ListdetailavailabilityBudget = await _requestBudgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(pDisponibilidad.DisponibilidadPresupuestalId, esNovedad, registroNovedadId);
+                List<DetailValidarDisponibilidadPresupuesal> ListdetailavailabilityBudget = await _requestBudgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(pDisponibilidad.DisponibilidadPresupuestalId, esNovedad, registroNovedadId);
                 DetailValidarDisponibilidadPresupuesal detailavailabilityBudget = ListdetailavailabilityBudget.FirstOrDefault();
 
                 if (detailavailabilityBudget != null)
@@ -1426,9 +1433,7 @@ namespace asivamosffie.services
                 Include(x => x.DisponibilidadPresupuestalProyecto).
                     ThenInclude(x => x.Proyecto).
                         ThenInclude(x => x.Sede)
-                .Where(x => !(bool)x.Eliminado && !(bool)x.EsNovedad
-                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
-
+                .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad).
                 ToList();
 
                 if (esNovedad && esValidar)
@@ -1591,7 +1596,7 @@ namespace asivamosffie.services
                 else
                 {
                     //empiezo con fuentes
-                    var gestionfuentesEspecial = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+                    var gestionfuentesEspecial = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad).
                         Include(x => x.FuenteFinanciacion).
                             ThenInclude(x => x.Aportante).
                             ThenInclude(x => x.CofinanciacionDocumento).
