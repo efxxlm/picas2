@@ -101,6 +101,14 @@
                 [disabled]="permisos.tienePermisoLeer === false">
                 Consultar bitácora
         </button>
+        <a mat-raised-button
+          color="accent"
+          class="btn-table"
+          *ngIf="element.estadoObra === 'Validado'"
+          [routerLink]="[ 'informeSemanal', element.contratacionProyectoId, element.seguimientoSemanalId ]"
+        >
+          Informe Semanal
+        </a>
 
       </td>
     </ng-container>

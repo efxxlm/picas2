@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormRegistrarSeguimientoSemanalComponent } from './components/form-registrar-seguimiento-semanal/form-registrar-seguimiento-semanal.component';
 import { RegistrarAvanceSemanalComponent } from './components/registrar-avance-semanal/registrar-avance-semanal.component';
+import { ReporteSemanalComponent } from './components/reporte-semanal/reporte-semanal.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
   {
     path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanalMuestras/:idAvance/verDetalleMuestras/:idEnsayo',
     component: VerDetalleMuestrasComponent
+  },
+  {
+    path: 'informeSemanal/:pContratacionProyectoId/:pSeguimientoSemanalId',
+    component: ReporteSemanalComponent
   }
 ];
 
