@@ -352,6 +352,7 @@
                   (click)="pickerPlazoInicio.open()"
                   placeholder="DD/MM/AAAA"
                   required
+                  [max]="fechaFinSuspensionVal"
                 />
                 <mat-datepicker #pickerPlazoInicio></mat-datepicker>
               </mat-form-field>

@@ -870,6 +870,8 @@ namespace asivamosffie.services
                     List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.Eliminado != true && r.ContratoId == pContratoId && (r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Firmado || r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
                                                                                             .Include(r => r.NovedadContractualDescripcion)
                                                                                             .ToList();
+                    DateTime? fechaReinicio = null;
+
                     foreach (var novedad in novedadContractuals)
                     {
                         bool vaComite = false;
@@ -890,12 +892,23 @@ namespace asivamosffie.services
                             if ((novedad.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado && vaComite) || (novedad.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Firmado && !vaComite))
                             {
                                 //
+                                if (descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
+                                {
+                                    fechaReinicio = descripcion.FechaInicioSuspension;
+                                }
+
                                 if (descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión || descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión)
                                 {
                                     if (descripcion.GetDiasFechaSuspension != null)
                                     {
+                                        TimeSpan? diasTemp = descripcion.GetDiasFechaSuspension;
+                                        if (fechaReinicio != null)
+                                        {
+                                            if(fechaReinicio > descripcion.FechaInicioSuspension)
+                                                diasTemp = (fechaReinicio - descripcion.FechaInicioSuspension);
+                                        }
                                         DateTime fechaFinalizacionTmp = (DateTime) fechaFinalizacion;
-                                        fechaFinalizacion = fechaFinalizacionTmp.AddDays((double)descripcion?.GetDiasFechaSuspension.Value.TotalDays);
+                                        fechaFinalizacion = fechaFinalizacionTmp.AddDays((double)diasTemp.Value.TotalDays);
                                     }
                                 }
                             }

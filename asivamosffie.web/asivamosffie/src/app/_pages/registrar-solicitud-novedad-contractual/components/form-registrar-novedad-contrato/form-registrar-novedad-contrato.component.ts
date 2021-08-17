@@ -18,6 +18,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   @Input() novedadDescripcion: NovedadContractualDescripcion;
   @Input() estaEditando: boolean;
   @Input() fechaSolicitudNovedad: Date;
+  @Input() fechaFinSuspensionVal: Date;
   @Input() contrato: any;
   @Output() guardar = new EventEmitter();
 
@@ -176,6 +177,10 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   }
 
   ngOnInit(): void {
+    console.log(this.fechaFinSuspensionVal);
+    if(this.fechaFinSuspensionVal != null && this.fechaFinSuspensionVal != undefined){
+      this.fechaFinSuspensionVal =  moment(this.fechaFinSuspensionVal).add(1, 'days').toDate();
+    }
     this.addressForm.valueChanges
       .subscribe(value => {
 
