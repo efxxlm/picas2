@@ -89,7 +89,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         );
     }
 
-    async getTerceroCausacion() {
+    async getTerceroCausacion() {   
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
         this.listaTipoDescuento = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
         // Get IDs
@@ -123,6 +123,15 @@ export class TerceroCausacionGogComponent implements OnInit {
         if ( this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
+        this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].ordenGiroDetalleTerceroCausacionDescuento
+        this.solicitudPago.ordenGiro.ordenGiroDetalle.forEach( ordengiro => {
+            ordengiro.ordenGiroDetalleTerceroCausacion.forEach(tercero => {
+                tercero.ordenGiroDetalleTerceroCausacionDescuento.forEach(descuento => {
+                    this.valorNetoGiro -= descuento.valorDescuento
+                });
+                
+            });
+        } );
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
