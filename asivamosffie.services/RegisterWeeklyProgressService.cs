@@ -50,18 +50,16 @@ namespace asivamosffie.services
 
         #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
-        {
-            decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
-                                          .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
-                                          .Sum(f => f.Valor));
-
-
+        { 
             int ContratoConstruccionId = _context.FlujoInversion
                                             .Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                                             .Select(r => r.ContratoConstruccionId)
                                             .FirstOrDefault();
 
-          
+            decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
+                                         .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
+                                         .Sum(f => f.Valor));
+
             List<FlujoInversion> flujoInversions = _context.FlujoInversion
                                                           .Include(r => r.Programacion)
                                                           .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId
@@ -914,7 +912,7 @@ namespace asivamosffie.services
             });
             return EsCompleto;
         }
-         
+          
         #endregion
 
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
