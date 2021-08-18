@@ -51,15 +51,17 @@ namespace asivamosffie.services
         #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
         {
+            decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
+                                          .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
+                                          .Sum(f => f.Valor));
+
+
             int ContratoConstruccionId = _context.FlujoInversion
                                             .Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                                             .Select(r => r.ContratoConstruccionId)
                                             .FirstOrDefault();
 
-            decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
-                                            .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
-                                            .Sum(f => f.Valor));
-
+          
             List<FlujoInversion> flujoInversions = _context.FlujoInversion
                                                           .Include(r => r.Programacion)
                                                           .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId
@@ -158,21 +160,6 @@ namespace asivamosffie.services
         {
             return await _context.VRegistrarAvanceSemanal.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
-
-        public List<dynamic> GetPeriodoReporteMensualFinanciero(SeguimientoSemanal pSeguimientoSemanal)
-        {
-            List<SeguimientoSemanal> seguimientoSemanals =
-                                   _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
-                                                                                                       .OrderBy(s => s.NumeroSemana)
-                                                                                                                                    .Take(4).ToList();
-
-            return new List<dynamic>
-            {
-                seguimientoSemanals.FirstOrDefault().FechaInicio,
-                seguimientoSemanals.LastOrDefault().FechaFin
-            };
-        }
-
         public List<Programacion> GetListProgramacionBySeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
             List<Programacion> ListProgramacionTipoC = _context.Programacion
@@ -224,6 +211,21 @@ namespace asivamosffie.services
             return ListProgramacion.Distinct().ToList();
         }
 
+        public List<dynamic> GetPeriodoReporteMensualFinanciero(SeguimientoSemanal pSeguimientoSemanal)
+        {
+            List<SeguimientoSemanal> seguimientoSemanals =
+                                   _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
+                                                                                                       .OrderBy(s => s.NumeroSemana)
+                                                                                                                                    .Take(4).ToList();
+
+            return new List<dynamic>
+            {
+                seguimientoSemanals.FirstOrDefault().FechaInicio,
+                seguimientoSemanals.LastOrDefault().FechaFin
+            };
+        }
+
+       
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             try
@@ -302,22 +304,11 @@ namespace asivamosffie.services
                                                                         _context.VContratosXcontratacionProyecto
                                                                         .Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
                                                                         .ToList();
+
                 ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
                                             .Where(cp => cp.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
                                             .Include(p => p.Proyecto)  
                                                 .ThenInclude(m => m.PredioPrincipal).FirstOrDefault();
-
-
-                pSeguimientoSemanal.InformacionGeneralProyecto.Add(
-                                                                    new InformacionGeneralProyecto
-                                                                    {
-                                                                        LocalizacionProyecto = contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLatitud + contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLongitud ?? string.Empty,
-                                                                        Ubicacion = _context.VUbicacionXproyecto.Where(v => v.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault() ?? new VUbicacionXproyecto(), 
-                                                                        SemanaInicio = pSeguimientoSemanal.FechaInicio,
-                                                                        SemanaFin = pSeguimientoSemanal.FechaFin,
-                                                                        SemanaNo = pSeguimientoSemanal.NumeroSemana 
-                                                                    });
-
                  
                 foreach (var item in ListVContratosXcontratacionProyecto)
                 {
@@ -347,8 +338,18 @@ namespace asivamosffie.services
                                                               Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
                                                               Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
                                                           })
-                                                       );
+                                                       ); 
                 }
+
+                pSeguimientoSemanal.InformacionGeneralProyecto.Add(
+                                                                       new InformacionGeneralProyecto
+                                                                       {
+                                                                           LocalizacionProyecto = contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLatitud + contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLongitud ?? string.Empty,
+                                                                           Ubicacion = _context.VUbicacionXproyecto.Where(v => v.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault() ?? new VUbicacionXproyecto(),
+                                                                           SemanaInicio = pSeguimientoSemanal.FechaInicio,
+                                                                           SemanaFin = pSeguimientoSemanal.FechaFin,
+                                                                           SemanaNo = pSeguimientoSemanal.NumeroSemana
+                                                                       });
             }
             catch (Exception e)
             {
@@ -357,6 +358,7 @@ namespace asivamosffie.services
             }
 
         }
+
 
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
         {
@@ -480,21 +482,20 @@ namespace asivamosffie.services
             seguimientoSemanal.ContratacionProyecto = null;
 
             Parallel.ForEach(seguimientoSemanal.SeguimientoDiario.ToList(), item =>
-             {
-                 item.SeguimientoDiarioObservaciones = null;
-                 item.ContratacionProyecto = null;
-             });
+            {
+                item.SeguimientoDiarioObservaciones = null;
+                item.ContratacionProyecto = null;
+            });
 
             Parallel.ForEach(seguimientoSemanal.FlujoInversion.ToList(), item =>
-              {
-                  item.Programacion.FlujoInversion = null;
-                  item.Programacion.ContratoConstruccion = null;
-                  item.ContratoConstruccion = null;
-              });
+            {
+                item.Programacion.FlujoInversion = null;
+                item.Programacion.ContratoConstruccion = null;
+                item.ContratoConstruccion = null;
+            });
 
             return seguimientoSemanal;
         }
-
         private dynamic GetInfoProyectoBySeguimientoContratacionProyectoId(int ContratacionProyectoId)
         {
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
@@ -913,8 +914,7 @@ namespace asivamosffie.services
             });
             return EsCompleto;
         }
-
-
+         
         #endregion
 
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
