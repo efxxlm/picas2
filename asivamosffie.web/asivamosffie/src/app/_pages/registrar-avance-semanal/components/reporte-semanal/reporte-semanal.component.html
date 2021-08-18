@@ -10944,7 +10944,7 @@
         <td class="xl266" width="149" style="width: 112pt">&nbsp;</td>
         <td class="xl266" width="36" style="width: 27pt">&nbsp;</td>
         <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl98" width="0">&nbsp;</td>
+        <td class="xl98" width="0">&nbsp;{{this.gestionSST.cantidadAccidentes}}</td>
         <td class="xl97" width="61" style="width: 46pt">&nbsp;</td>
         <td class="xl97" width="0">&nbsp;</td>
         <td class="xl97" width="7" style="width: 5pt">&nbsp;</td>
@@ -11055,12 +11055,15 @@
           Principales causas de los accidentes o incidentes laborales ocurridos durante la semana
         </td>
         <td colspan="14" class="xl268" width="714" style="width: 534pt">
+          <div *ngFor="let accidente of this.gestionSST.seguridadSaludCausaAccidente">
+            {{accidente.causaAccidenteCodigo}},
+          </div>
           (Opciones de respuesta: falta o uso inadecuado de EPP; falta o señalización inadecuada; exceso de confianza;
           actos inseguros y mal uso de las herramientas; desorden en el lugar de trabajo; caída de objetos; otros
         </td>
         <td class="xl96" width="36" style="width: 27pt">&nbsp;</td>
         <td colspan="6" class="xl257" width="308" style="width: 231pt">
-          URL para relacionar informe de la investigación y evidencia
+          
         </td>
         <td class="xl265" width="82" style="width: 62pt">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
@@ -11155,20 +11158,19 @@
           ¿Se realizaron capacitaciones relacionadas con seguridad y salud en el trabajo durante la semana?
         </td>
         <td class="xl257" width="149" style="width: 112pt">SI</td>
-        <td class="xl98" width="36" style="width: 27pt">&nbsp;</td>
-        <td colspan="6" class="xl261" width="231" style="width: 173pt">Tema de la capacitación</td>
-        <td class="xl100">&nbsp;</td>
+        <td class="xl98" width="36" style="width: 27pt">&nbsp;<div *ngIf="this.gestionSST.seRealizoCapacitacion==true">x</div></td>
+        <td colspan="6" class="xl261" width="231" style="width: 173pt" *ngIf="this.gestionSST.seRealizoCapacitacion==true">Tema de la capacitación</td>
+        <td colspan="6" class="xl100" *ngIf="this.gestionSST.seRealizoCapacitacion==true">&nbsp;<div [innerHTML]="this.gestionSST.temaCapacitacion"></div></td>
         <td class="xl99" width="54" style="width: 40pt">NO</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl261" width="127" style="width: 94pt">Observaciones</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="6" class="xl257" width="308" style="width: 231pt">URL para evidencia</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionSST.seRealizoCapacitacion==false">x</div></td>
+        <td colspan="3" class="xl261" width="127" style="width: 94pt" *ngIf="this.gestionSST.seRealizoCapacitacion==false">Observaciones</td>
+        <td colspan="6"class="xl100" *ngIf="this.gestionSST.seRealizoCapacitacion==false">&nbsp;<div [innerHTML]="this.gestionSST.observacionCapacitacion"></div></td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
+        <td class="xl265">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
@@ -11253,18 +11255,220 @@
         <td height="58" class="xl89" style="height: 43.5pt">&nbsp;</td>
         <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
         <td colspan="10" class="xl95" width="595" style="width: 445pt">
-          ¿Se realizaron inspecciones del estado y uso adecuado de elementos de protección personal, maquinaria, equipos y
-          herramientas durante la semana?
+          ¿Se realizaron revisiones de uso de elementos de protección personal y dotación durante la semana?
         </td>
         <td class="xl257" width="149" style="width: 112pt">SI</td>
-        <td class="xl98" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl98" width="36" style="width: 27pt">&nbsp;<div *ngIf="this.gestionSST.seRealizoRevisionElementosProteccion==true">x</div></td>
         <td class="xl257" width="69" style="width: 52pt">NO</td>
-        <td class="xl99" width="0">NO</td>
-        <td class="xl100">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl257" width="203" style="width: 151pt">Observaciones</td>
-        <td colspan="5" class="xl257" width="225" style="width: 168pt">URL para evidencia</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionSST.seRealizoRevisionElementosProteccion==false">x</div></td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td colspan="3" class="xl257" width="203" style="width: 151pt" *ngIf="this.gestionSST.seRealizoRevisionElementosProteccion==false">Observaciones</td>
+        <td colspan="5" class="xl100" width="225" style="width: 168pt" *ngIf="this.gestionSST.seRealizoRevisionElementosProteccion==false"><div [innerHTML]="this.gestionSST.observacionRevisionElementosProteccion"></div></td>
+        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
+        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
+        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl265" width="82" style="width: 62pt">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+      </tr>
+      <tr class="xl89" height="18" style="height: 13.8pt" >
+        <td height="18" class="xl89" style="height: 13.8pt">&nbsp;</td>
+        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="173" style="width: 130pt">&nbsp;</td>
+        <td class="xl152" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl152" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="22" style="width: 17pt">&nbsp;</td>
+        <td class="xl152" width="47" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="73" style="width: 55pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="149" style="width: 112pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="69" style="width: 52pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="61" style="width: 46pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="7" style="width: 5pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="55" style="width: 41pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="62" style="width: 47pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
+        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
+        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl265" width="82" style="width: 62pt">&nbsp;</td>
+        <td class="xl257" width="0">&nbsp;</td>
+        <td class="xl257" width="0">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+      </tr>
+      <tr class="xl89" height="37" style="mso-height-source: userset; height: 27.75pt" *ngIf="this.gestionSST.seRealizoRevisionElementosProteccion==true">
+        <td height="37" class="xl89" style="height: 27.75pt">&nbsp;</td>
+        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+        <td colspan="10" class="xl95" width="595" style="width: 445pt">Resultado de las inspecciones</td>
+        <td class="xl257" width="149" style="width: 112pt">Cumple</td>
+        <td class="xl98" width="36" style="width: 27pt">&nbsp;<div *ngIf="this.gestionSST.cumpleRevisionElementosProyeccion==false">x</div></td>
+        <td class="xl257" width="69" style="width: 52pt">No cumple</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionSST.cumpleRevisionElementosProyeccion==false">x</div></td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="55" style="width: 41pt">&nbsp;</td>
+        <td colspan="13" class="xl261" width="669" style="border-right: 1pt solid black; width: 501pt">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+      </tr>
+      <tr class="xl89" height="19" style="height: 14.4pt">
+        <td height="19" class="xl89" style="height: 14.4pt">&nbsp;</td>
+        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="173" style="width: 130pt">&nbsp;</td>
+        <td class="xl152" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl152" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="22" style="width: 17pt">&nbsp;</td>
+        <td class="xl152" width="47" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="73" style="width: 55pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="149" style="width: 112pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="69" style="width: 52pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="61" style="width: 46pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="7" style="width: 5pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="55" style="width: 41pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="62" style="width: 47pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
+        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
+        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl265" width="82" style="width: 62pt">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+      </tr>
+      <tr class="xl89" height="58" style="mso-height-source: userset; height: 43.5pt">
+        <td height="58" class="xl89" style="height: 43.5pt">&nbsp;</td>
+        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+        <td colspan="10" class="xl95" width="595" style="width: 445pt">
+          ¿Se realizaron revisiones de señalización de seguridad y salud en el trabajo y kit de emergencias durante la semana?
+        </td>
+        <td class="xl257" width="149" style="width: 112pt">SI</td>
+        <td class="xl98" width="36" style="width: 27pt">&nbsp;<div *ngIf="this.gestionSST.seRealizoRevisionSenalizacion==true">x</div></td>
+        <td class="xl257" width="69" style="width: 52pt">NO</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionSST.seRealizoRevisionSenalizacion==false">x</div></td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td colspan="3" class="xl257" width="203" style="width: 151pt" *ngIf="this.gestionSST.seRealizoRevisionSenalizacion==false">Observaciones</td>
+        <td colspan="5" class="xl100" width="225" style="width: 168pt" *ngIf="this.gestionSST.seRealizoRevisionSenalizacion==false"><div [innerHTML]="this.gestionSST.observacionRevisionSenalizacion"></div></td>
         <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
         <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
@@ -11357,20 +11561,79 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="37" style="mso-height-source: userset; height: 27.75pt">
+      <tr class="xl89" height="37" style="mso-height-source: userset; height: 27.75pt" *ngIf="this.gestionSST.seRealizoRevisionSenalizacion==true">
         <td height="37" class="xl89" style="height: 27.75pt">&nbsp;</td>
         <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
         <td colspan="10" class="xl95" width="595" style="width: 445pt">Resultado de las inspecciones</td>
         <td class="xl257" width="149" style="width: 112pt">Cumple</td>
-        <td class="xl98" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl98" width="36" style="width: 27pt">&nbsp;<div *ngIf="this.gestionSST.cumpleRevisionSenalizacion==true">x</div></td>
         <td class="xl257" width="69" style="width: 52pt">No cumple</td>
-        <td class="xl99" width="0">NO</td>
-        <td class="xl100">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionSST.cumpleRevisionSenalizacion==false">x</div></td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
         <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
         <td class="xl152" width="55" style="width: 41pt">&nbsp;</td>
         <td colspan="13" class="xl261" width="669" style="border-right: 1pt solid black; width: 501pt">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+        <td class="xl89">&nbsp;</td>
+      </tr>
+      <tr class="xl89" height="19" style="height: 37pt">
+        <td height="19" class="xl89" style="height: 37pt">&nbsp;</td>
+        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="173" colspan="6" style="width: 130pt">&nbsp;<div style="font-size: 10px;">URL soporte de la gestión en seguridad y salud en el trabajo</div></td>
+        <td class="xl100" width="35"  colspan="6" style="width: 26pt">&nbsp;{{this.gestionSST.urlSoporteGestion}}</td>
+        <td class="xl152" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="22" style="width: 17pt">&nbsp;</td>
+        <td class="xl152" width="47" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="73" style="width: 55pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl152" width="149" style="width: 112pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="69" style="width: 52pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="61" style="width: 46pt">&nbsp;</td>
+        <td class="xl152" width="0">&nbsp;</td>
+        <td class="xl152" width="7" style="width: 5pt">&nbsp;</td>
+        <td class="xl152" width="94" style="width: 70pt">&nbsp;</td>
+        <td class="xl152" width="55" style="width: 41pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="62" style="width: 47pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
+        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
+        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
+        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
+        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
+        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
+        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl265" width="82" style="width: 62pt">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
