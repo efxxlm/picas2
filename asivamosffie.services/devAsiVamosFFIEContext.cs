@@ -244,6 +244,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
         public virtual DbSet<VContratistaReporteHist> VContratistaReporteHist { get; set; }
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
+        public virtual DbSet<VContratosXcontratacionProyecto> VContratosXcontratacionProyecto { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDescuentoTecnicaXordenGiro> VDescuentoTecnicaXordenGiro { get; set; }
@@ -255,6 +256,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
+        public virtual DbSet<VDrpXfaseXcontratacionIdXnovedad> VDrpXfaseXcontratacionIdXnovedad { get; set; }
         public virtual DbSet<VDrpXproyectoXusos> VDrpXproyectoXusos { get; set; }
         public virtual DbSet<VEjecucionFinancieraXcontrato> VEjecucionFinancieraXcontrato { get; set; }
         public virtual DbSet<VEjecucionFinancieraXproyecto> VEjecucionFinancieraXproyecto { get; set; }
@@ -305,6 +307,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VTablaOdgFacturado> VTablaOdgFacturado { get; set; }
         public virtual DbSet<VTablaOdgOtroDescuento> VTablaOdgOtroDescuento { get; set; }
         public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
+        public virtual DbSet<VUbicacionXproyecto> VUbicacionXproyecto { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
@@ -8612,6 +8615,18 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorSolicitud).HasColumnType("decimal(18, 0)");
             });
 
+            modelBuilder.Entity<VContratosXcontratacionProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratosXContratacionProyecto");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>
             {
                 entity.HasNoKey();
@@ -8770,6 +8785,15 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DrpXFaseContratacionId");
+
+                entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VDrpXfaseXcontratacionIdXnovedad>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpXFaseXContratacionIdXNovedad");
 
                 entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
             });
@@ -10371,6 +10395,40 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TotalComprometido).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VUbicacionXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_UbicacionXProyecto");
+
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DepartamentoId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MunicipioId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Region)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RegionId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VUsuarioPerfil>(entity =>

@@ -125,9 +125,11 @@ namespace asivamosffie.services
 
         public async Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
         {
-            InformeFinalInterventoria InformeFinalAnexo = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
-                                                        .Include(r => r.InformeFinalAnexo).FirstOrDefaultAsync();
-            return InformeFinalAnexo;
+            return await _context.InformeFinalInterventoria
+                                                          .Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
+                                                          .Include(r => r.InformeFinalAnexo)
+                                                          .FirstOrDefaultAsync();
+
         }
 
         public async Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)

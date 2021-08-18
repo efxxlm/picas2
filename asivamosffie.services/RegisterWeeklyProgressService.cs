@@ -147,9 +147,10 @@ namespace asivamosffie.services
         {
 
             List<VRegistrarAvanceSemanalNew> vRegistrarAvanceSemanal = await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
-            vRegistrarAvanceSemanal.ForEach(r =>{
+            vRegistrarAvanceSemanal.ForEach(r =>
+            {
                 //Nueva restricción control de cambios
-                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId,false);
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId, false);
             });
             return vRegistrarAvanceSemanal;
         }
@@ -279,6 +280,8 @@ namespace asivamosffie.services
 
                 await GetModInfoSeguimientoSemanal(seguimientoSemanal);
 
+                GetInformacionGeneral(seguimientoSemanal);
+
                 return seguimientoSemanal;
             }
             catch (Exception ex)
@@ -287,13 +290,81 @@ namespace asivamosffie.services
             }
         }
 
+        private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)
+        {
+            try
+            {
+
+                pSeguimientoSemanal.InformacionGeneral = new List<dynamic>();
+                pSeguimientoSemanal.InformacionGeneralProyecto = new List<InformacionGeneralProyecto>();
+
+                List<VContratosXcontratacionProyecto> ListVContratosXcontratacionProyecto =
+                                                                        _context.VContratosXcontratacionProyecto
+                                                                        .Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
+                                                                        .ToList();
+                ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                                            .Where(cp => cp.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
+                                            .Include(p => p.Proyecto)  
+                                                .ThenInclude(m => m.PredioPrincipal).FirstOrDefault();
+
+
+                pSeguimientoSemanal.InformacionGeneralProyecto.Add(
+                                                                    new InformacionGeneralProyecto
+                                                                    {
+                                                                        LocalizacionProyecto = contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLatitud + contratacionProyecto.Proyecto.PredioPrincipal.UbicacionLongitud ?? string.Empty,
+                                                                        Ubicacion = _context.VUbicacionXproyecto.Where(v => v.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault() ?? new VUbicacionXproyecto(), 
+                                                                        SemanaInicio = pSeguimientoSemanal.FechaInicio,
+                                                                        SemanaFin = pSeguimientoSemanal.FechaFin,
+                                                                        SemanaNo = pSeguimientoSemanal.NumeroSemana 
+                                                                    });
+
+                 
+                foreach (var item in ListVContratosXcontratacionProyecto)
+                {
+                    pSeguimientoSemanal.InformacionGeneral.Add(_context.Contratacion
+                                                          .Where(r => r.ContratacionId == item.ContratacionId)
+                                                          .Include(r => r.Contrato)
+                                                             .ThenInclude(r => r.ContratoPoliza)
+                                                          .Include(r => r.Contrato)
+                                                             .ThenInclude(r => r.Interventor)
+                                                          .Include(r => r.Contratista)
+                                                          .Select(r => new
+                                                          {
+                                                              ContratoTipoCodigo = r.TipoSolicitudCodigo,
+                                                              ContratoTipo = r.TipoSolicitudCodigo.Equals(ConstanCodigoTipoContrato.Obra) ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria,
+                                                              ContratoNumero = r.Contrato.FirstOrDefault().NumeroContrato,
+                                                              ContratoFechaInicio = r.Contrato.FirstOrDefault().ContratoPoliza.Where(r => r.FechaAprobacion.HasValue).FirstOrDefault().FechaAprobacion,
+
+                                                              Fase1Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase1,
+                                                              Fase1Fin = r.Contrato.FirstOrDefault().FechaTerminacion,
+                                                              Fase1Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase1ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase1PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacion - r.Contrato.FirstOrDefault().FechaActaInicioFase1,
+
+                                                              Fase2Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase2,
+                                                              Fase2Fin = r.Contrato.FirstOrDefault().FechaTerminacionFase2,
+                                                              Fase2Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
+                                                          })
+                                                       );
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+        }
+
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
         {
             List<Dominio> EstadoDeObraSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
 
             //Agregar Programacion por seguimiento semanal
             seguimientoSemanal.ListProgramacion = GetListProgramacionBySeguimientoSemanal(seguimientoSemanal);
-             
+
             //enviar periodo reporte financiero
             if (seguimientoSemanal.NumeroSemana % 5 == 0)
             {
@@ -404,16 +475,16 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
                 });
             });
-             
+
             seguimientoSemanal.InfoProyecto = GetInfoProyectoBySeguimientoContratacionProyectoId(seguimientoSemanal.ContratacionProyectoId);
             seguimientoSemanal.ContratacionProyecto = null;
-             
+
             Parallel.ForEach(seguimientoSemanal.SeguimientoDiario.ToList(), item =>
              {
                  item.SeguimientoDiarioObservaciones = null;
                  item.ContratacionProyecto = null;
              });
-             
+
             Parallel.ForEach(seguimientoSemanal.FlujoInversion.ToList(), item =>
               {
                   item.Programacion.FlujoInversion = null;
@@ -2039,11 +2110,11 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
                         SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
                         SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
-                             
+
                         _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
-       
+
                         foreach (var ManejoResiduosConstruccionDemolicionGestor in SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
-                        { 
+                        {
                             ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                             ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                             ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -2981,19 +3052,19 @@ namespace asivamosffie.services
             if (seguimientoSemanalGestionObraCalidad == null || !seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue)
                 return false;
 
-            if (seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false) 
+            if (seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false)
                 return true;
 
             if (seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
                 return false;
-             
+
             foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
-            { 
+            {
                 if (!ValidarRegistroCompletoGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorio))
                     return false;
             }
 
-           return true;
+            return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)

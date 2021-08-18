@@ -210,10 +210,9 @@ namespace asivamosffie.services
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
                         .Include(d => d.SolicitudPago)
-                    .AsNoTracking().FirstOrDefault();
-
-
-
+                    .AsNoTracking()
+                    .FirstOrDefault();
+                 
                 foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
                 {
                     if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
