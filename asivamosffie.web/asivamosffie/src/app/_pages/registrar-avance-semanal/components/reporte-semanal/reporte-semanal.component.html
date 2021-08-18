@@ -6432,7 +6432,7 @@
       <tr class="xl82" height="47" style="mso-height-source: userset; height: 35.4pt">
         <td height="47" class="xl82" style="height: 35.4pt"></td>
         <td colspan="11" class="xl342" style="border-right: 0.5pt solid black">
-          CONTRATO DE OBRA<span style="mso-spacerun: yes"> </span>No
+          CONTRATO DE OBRA<span style="mso-spacerun: yes"> </span>No. {{dataReporteSemanal?.infoProyecto.numeroContrato}}
         </td>
         <td colspan="7" class="xl339" style="border-right: 0.5pt solid black; border-left: none">FECHA INICIO</td>
         <td colspan="11" class="xl339" style="border-right: 0.5pt solid black; border-left: none">
@@ -9309,12 +9309,12 @@
         </td>
         <td class="xl257" width="69" style="width: 52pt">SI</td>
         <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl262" width="61" style="border-top: none; width: 46pt">&nbsp;</td>
+        <td class="xl262" width="61" style="border-top: none; width: 46pt">&nbsp;<div *ngIf="dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0].seEjecutoGestionAmbiental==true">x</div></td>
         <td class="xl257" width="0">&nbsp;</td>
         <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
         <td class="xl257" width="94" style="width: 70pt">&nbsp;</td>
         <td class="xl257" width="55" style="width: 41pt">NO</td>
-        <td class="xl262" width="54" style="border-top: none; width: 40pt">&nbsp;</td>
+        <td class="xl262" width="54" style="border-top: none; width: 40pt">&nbsp;<div *ngIf="dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0].seEjecutoGestionAmbiental==false">x</div></td>
         <td class="xl95" width="62" style="width: 47pt">&nbsp;</td>
         <td colspan="7" class="xl281" width="327" style="width: 244pt">Si la respuesta es NO, justifique</td>
         <td class="xl263" width="44" style="border-top: none; width: 33pt">&nbsp;</td>
@@ -9346,13 +9346,13 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="42" style="mso-height-source: userset; height: 31.5pt">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 31.5pt" *ngIf="dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0].seEjecutoGestionAmbiental==true">
         <td height="42" class="xl89" style="height: 31.5pt">&nbsp;</td>
         <td colspan="13" class="xl94" width="862" style="width: 645pt">¿Cuantas actividades ejecutó?</td>
         <td class="xl97" width="69" style="width: 52pt">&nbsp;</td>
         <td class="xl97" width="0">&nbsp;</td>
         <td class="xl97" width="61" style="width: 46pt">&nbsp;</td>
-        <td class="xl97" width="0">&nbsp;</td>
+        <td class="xl97" width="0">&nbsp;{{ this.cantidadActividades}}</td>
         <td class="xl97" width="7" style="width: 5pt">&nbsp;</td>
         <td class="xl97" width="94" style="width: 70pt">&nbsp;</td>
         <td class="xl97" width="55" style="width: 41pt">&nbsp;</td>
@@ -9473,7 +9473,7 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="42" style="mso-height-source: userset; height: 31.5pt">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 31.5pt" *ngIf="this.gestionObraAmbiental?.tieneManejoMaterialesInsumo==true">
         <td height="42" class="xl89" style="height: 31.5pt">&nbsp;</td>
         <td colspan="7" class="xl280" width="428" style="width: 320pt">Manejo de materiales e insumos</td>
         <td class="xl95" width="0">&nbsp;</td>
@@ -9527,184 +9527,69 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="20" style="mso-height-source: userset; height: 15pt">
-        <td height="20" class="xl89" style="height: 15pt">&nbsp;</td>
-        <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
-        <td class="xl152" width="173" style="width: 130pt">Proveedor</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
-        <td class="xl97" width="0">&nbsp;</td>
-        <td colspan="4" class="xl261" width="398" style="width: 298pt">Requiere permisos ambientales y/o mineros:</td>
-        <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
-        <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl261" width="171" style="width: 128pt">Relacionar permiso:</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl258" width="39" style="width: 29pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl258" width="80" style="width: 60pt">&nbsp;</td>
-        <td class="xl258" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl258" width="50" style="width: 38pt">&nbsp;</td>
-        <td class="xl258" width="44" style="width: 33pt">&nbsp;</td>
-        <td class="xl258" width="46" style="width: 35pt">&nbsp;</td>
-        <td class="xl258" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-      </tr>
-      <tr class="xl89" height="38" style="mso-height-source: userset; height: 28.5pt">
-        <td height="38" class="xl89" style="height: 28.5pt">&nbsp;</td>
-        <td class="xl102">&nbsp;</td>
-        <td class="xl152" width="173" style="width: 130pt">Proveedor</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
-        <td class="xl103" width="0" style="border-top: none">&nbsp;</td>
-        <td colspan="4" class="xl261" width="398" style="width: 298pt">Requiere permisos ambientales y/o mineros:</td>
-        <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl104" width="69" style="border-top: none; width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
-        <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl105" style="border-top: none">&nbsp;</td>
-        <td colspan="3" class="xl261" width="171" style="width: 128pt">Relacionar permiso:</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
-        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
-        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
-        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
-        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
-        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
-        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-      </tr>
-      <tr class="xl89" height="26" style="mso-height-source: userset; height: 19.5pt">
-        <td height="26" class="xl89" style="height: 19.5pt">&nbsp;</td>
-        <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
-        <td class="xl152" width="173" style="width: 130pt">Proveedor</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
-        <td class="xl95" width="0">&nbsp;</td>
-        <td colspan="4" class="xl261" width="398" style="width: 298pt">Requiere permisos ambientales y/o mineros:</td>
-        <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl104" width="69" style="border-top: none; width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
-        <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl105" style="border-top: none">&nbsp;</td>
-        <td colspan="3" class="xl261" width="171" style="width: 128pt">Relacionar permiso:</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl99" width="39" style="width: 29pt">&nbsp;</td>
-        <td class="xl257" width="36" style="width: 27pt">&nbsp;</td>
-        <td class="xl99" width="80" style="width: 60pt">&nbsp;</td>
-        <td class="xl257" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
-        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
-        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
-        <td class="xl257" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-      </tr>
-      <tr class="xl89" height="29" style="mso-height-source: userset; height: 21.75pt">
+      <ng-container  *ngIf="this.gestionObraAmbiental?.tieneManejoMaterialesInsumo==true">
+        <tr class="xl89" height="20" style="mso-height-source: userset; height: 15pt" *ngFor="let prov of this.gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosProveedor">
+          <td height="20" class="xl89" style="height: 15pt">&nbsp;</td>
+          <td class="xl259" width="82" style="width: 61pt">&nbsp;</td>
+          <td class="xl152" width="173" style="width: 130pt">Proveedor</td>
+          <td class="xl96" width="35" style="width: 26pt" colspan="4">&nbsp;{{prov.proveedor}}</td>
+          <td class="xl97" width="0">&nbsp;</td>
+          <td colspan="5" class="xl261" width="398" style="width: 298pt">Requiere permisos ambientales y/o mineros:</td>
+          <td class="xl257" width="36" style="width: 27pt">SI</td>
+          <td class="xl100" width="69" style="width: 46pt">&nbsp; <div *ngIf="prov.requierePermisosAmbientalesMineros==true">x</div></td>
+          <td class="xl99" width="61" style="width: 46pt">NO</td>
+          <td class="xl257" width="0" >&nbsp;</td>
+          <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
+          <td class="xl100" width="0" >&nbsp;<div *ngIf="prov.requierePermisosAmbientalesMineros==false">x</div></td>
+          <td colspan="3" class="xl261" width="171" style="width: 128pt">Relacionar permiso:</td>
+          <td class="xl98" width="54" style="width: 40pt" colspan="2">&nbsp; {{prov.urlRegistroFotografico}}</td>
+          <td class="xl258" width="39" style="width: 29pt">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl258" width="80" style="width: 60pt">&nbsp;</td>
+          <td class="xl258" width="34" style="width: 25pt">&nbsp;</td>
+          <td class="xl258" width="50" style="width: 38pt">&nbsp;</td>
+          <td class="xl258" width="44" style="width: 33pt">&nbsp;</td>
+          <td class="xl258" width="46" style="width: 35pt">&nbsp;</td>
+          <td class="xl258" width="54" style="width: 40pt">&nbsp;</td>
+          <td class="xl260" width="82" style="width: 62pt" colspan="2">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+        </tr>
+      </ng-container>
+      <tr class="xl89" height="29" style="mso-height-source: userset; height: 21.75pt" *ngIf="this.gestionObraAmbiental?.tieneManejoMaterialesInsumo==true">
         <td height="29" class="xl89" style="height: 21.75pt">&nbsp;</td>
         <td colspan="12" class="xl530" width="826" style="width: 618pt">
           Los materiales de construcción se encontraron protegidos y demarcados correctamente:
         </td>
         <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl104" width="69" style="border-top: none; width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
+        <td class="xl104" width="69" style="border-top: none; width: 52pt"><div *ngIf="this.gestionObraAmbiental.manejoMaterialesInsumo.estanProtegidosDemarcadosMateriales==true">x</div></td>
         <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl105">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl105" style="border-top: none">&nbsp;</td>
-        <td colspan="3" class="xl257" width="171" style="width: 128pt">Observaciones</td>
+        <td class="xl257" width="61" style="width: 46pt">&nbsp;</td>
+        <td class="xl257" width="61" style="width: 46pt">&nbsp;</td>
+        <td class="xl100" width="7" style="width: 5pt">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoMaterialesInsumo.estanProtegidosDemarcadosMateriales==false">x</div></td>
+        <td colspan="3" class="xl261" width="171" style="width: 128pt">Observaciones</td>
         <td colspan="5" class="xl261" width="243" style="width: 181pt">URL para registro fotográfico</td>
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
@@ -9757,10 +9642,10 @@
         <td class="xl95" width="61" style="width: 46pt">&nbsp;</td>
         <td class="xl95" width="0">&nbsp;</td>
         <td class="xl95" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl95" width="94" style="width: 70pt">&nbsp;</td>
-        <td class="xl95" width="55" style="width: 41pt">&nbsp;</td>
+        <td class="xl95" width="94" style="width: 70pt">&nbsp; <div [innerHTML]="this.gestionObraAmbiental.manejoMaterialesInsumo.observacion"></div></td>
+        <td class="xl101" width="55" style="width: 41pt">&nbsp; </td>
         <td class="xl95" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl95" width="62" style="width: 47pt">&nbsp;</td>
+        <td class="xl95" width="62" style="width: 47pt">&nbsp;{{this.gestionObraAmbiental.manejoMaterialesInsumo.url}}</td>
         <td class="xl101">&nbsp;</td>
         <td class="xl95" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
@@ -9797,7 +9682,7 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
+      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion==true">
         <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
         <td colspan="10" class="xl94" width="595" style="width: 445pt">
           Manejo de residuos de construcción y demolición
@@ -9850,7 +9735,7 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
+      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion==true">
         <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
         <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
         <td colspan="11" class="xl257" width="744" style="width: 557pt">
@@ -9858,13 +9743,12 @@
           protegidos correctamente:
         </td>
         <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
+        <td class="xl98" width="69" style="width: 52pt">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.estaCuantificadoRcd==true">x</div></td>
         <td class="xl99" width="61" style="width: 46pt">NO</td>
         <td class="xl257" width="0">&nbsp;</td>
         <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl257" width="171" style="width: 128pt">Observaciones</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.estaCuantificadoRcd==false">x</div></td>
+        <td colspan="3" class="xl257" width="171" style="width: 128pt">Observaciones <div [innerHTML]="this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacion"></div></td>
         <td colspan="5" class="xl261" width="243" style="width: 181pt">URL para registro fotográfico</td>
         <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
@@ -9897,135 +9781,74 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
-        <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
-        <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
-        <td class="xl152" width="173" style="width: 130pt">Gestor de RCD</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
-        <td class="xl97" width="0">&nbsp;</td>
-        <td colspan="4" class="xl261" width="398" style="width: 298pt">
-          El gestor presenta permisos ambientales o soporte válido:
-        </td>
-        <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
-        <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl261" width="171" style="width: 128pt">URL para relacionar permiso o soporte:</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
-        <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
-        <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
-        <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
-        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
-        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
-        <td class="xl152" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-      </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
-        <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
-        <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
-        <td class="xl152" width="173" style="width: 130pt">Gestor de RCD</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
-        <td class="xl97" width="0">&nbsp;</td>
-        <td colspan="4" class="xl261" width="398" style="width: 298pt">
-          El gestor presenta permisos ambientales o soporte válido:
-        </td>
-        <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
-        <td class="xl99" width="61" style="width: 46pt">NO</td>
-        <td class="xl257" width="0">&nbsp;</td>
-        <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl261" width="171" style="width: 128pt">URL para relacionar permiso o soporte:</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl99" width="39" style="width: 29pt">&nbsp;</td>
-        <td class="xl257" width="36" style="width: 27pt">&nbsp;</td>
-        <td class="xl99" width="80" style="width: 60pt">&nbsp;</td>
-        <td class="xl257" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
-        <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
-        <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
-        <td class="xl257" width="54" style="width: 40pt">&nbsp;</td>
-        <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-      </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
+      <ng-container *ngIf="this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion==true">
+        <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngFor="let rcd of this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionGestor">
+          <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
+          <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
+          <td class="xl152" width="173" style="width: 130pt">Gestor de RCD</td>
+          <td class="xl96" width="35" style="width: 26pt" colspan="5">&nbsp;{{rcd.nombreGestorResiduos}}</td>
+          <td class="xl97" width="0">&nbsp;</td>
+          <td colspan="4" class="xl261" width="398" style="width: 298pt">
+            El gestor presenta permisos ambientales o soporte válido:
+          </td>
+          <td class="xl257" width="36" style="width: 27pt">SI</td>
+          <td class="xl98" width="69" style="width: 52pt">&nbsp;<div *ngIf="rcd.tienePermisoAmbiental==true">x</div> </td>
+          <td class="xl99" width="61" style="width: 46pt">NO</td>
+          <td class="xl257" width="0">&nbsp;</td>
+          <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
+          <td class="xl100">&nbsp;<div *ngIf="rcd.tienePermisoAmbiental==false">x</div></td>
+          <td colspan="3" class="xl261" width="171" style="width: 128pt">URL para relacionar permiso o soporte:</td>
+          <td class="xl98" width="54" style="width: 40pt">&nbsp;{{rcd.url}}</td>
+          <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
+          <td class="xl99" width="39" style="width: 29pt">&nbsp;</td>
+          <td class="xl257" width="36" style="width: 27pt">&nbsp;</td>
+          <td class="xl99" width="80" style="width: 60pt">&nbsp;</td>
+          <td class="xl257" width="34" style="width: 25pt">&nbsp;</td>
+          <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
+          <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
+          <td class="xl152" width="46" style="width: 35pt">&nbsp;</td>
+          <td class="xl257" width="54" style="width: 40pt">&nbsp;</td>
+          <td class="xl260" width="82" style="width: 62pt">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+          <td class="xl89">&nbsp;</td>
+        </tr>
+      </ng-container>
+      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion==true">
         <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
         <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
         <td colspan="11" class="xl257" width="744" style="width: 557pt">
           Se reutilizaron temporal o permanente los RCD para el porcentaje de aprovechamiento obligatorio:
         </td>
         <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
+        <td class="xl98" width="69" style="width: 52pt">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.seReutilizadorResiduos==true">x</div></td>
         <td class="xl99" width="61" style="width: 46pt">NO</td>
         <td class="xl257" width="0">&nbsp;</td>
         <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.seReutilizadorResiduos==false">x</div></td>
         <td colspan="3" class="xl257" width="171" style="width: 128pt">Cantidad (ton):</td>
-        <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
+        <td class="xl98" width="54" style="width: 40pt">&nbsp;{{this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.cantidadToneladas}}</td>
         <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl152" width="39" style="width: 29pt">&nbsp;</td>
         <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
@@ -10061,9 +9884,9 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
+      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales==true">
         <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
-        <td colspan="10" class="xl94" width="595" style="width: 445pt">Manejo de residuos peligros y especiales</td>
+        <td colspan="10" class="xl94" width="595" style="width: 445pt">Manejo de residuos peligrosos y especiales</td>
         <td class="xl95" width="82" style="width: 61pt">&nbsp;</td>
         <td class="xl95" width="149" style="width: 112pt">&nbsp;</td>
         <td class="xl95" width="36" style="width: 27pt">&nbsp;</td>
@@ -10112,21 +9935,20 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt">
+      <tr class="xl89" height="36" style="mso-height-source: userset; height: 27pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales==true">
         <td height="36" class="xl89" style="height: 27pt">&nbsp;</td>
         <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
         <td colspan="11" class="xl257" width="744" style="width: 557pt">
           Los residuos peligrosos y especiales se clasificaron y acopiaron en lugares seguros
         </td>
         <td class="xl257" width="36" style="width: 27pt">SI</td>
-        <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
+        <td class="xl98" width="69" style="width: 52pt">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.estanClasificados==true">x</div></td>
         <td class="xl99" width="61" style="width: 46pt">NO</td>
         <td class="xl257" width="0">&nbsp;</td>
         <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl100">&nbsp;</td>
-        <td colspan="3" class="xl257" width="171" style="width: 128pt">Observaciones</td>
-        <td colspan="5" class="xl261" width="243" style="width: 181pt">URL para registro fotográfico</td>
+        <td class="xl100">&nbsp;<div *ngIf="this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.estanClasificados==false">x</div></td>
+        <td colspan="3" class="xl257" width="171" style="width: 128pt">Observaciones <div [innerHTML]="this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacion"></div></td>
+        <td colspan="5" class="xl261" width="243" style="width: 181pt">URL para registro fotográfico {{this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.urlRegistroFotografico}}</td>
         <td class="xl152" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl152" width="50" style="width: 38pt">&nbsp;</td>
         <td class="xl152" width="44" style="width: 33pt">&nbsp;</td>
@@ -10158,24 +9980,19 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt">
+      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt" *ngIf="this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales==true">
         <td height="33" class="xl89" style="height: 24.75pt">&nbsp;</td>
         <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
         <td class="xl152" width="173" style="width: 130pt">Gestor autorizado</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
-        <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
-        <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
-        <td class="xl97" width="47" style="width: 35pt">&nbsp;</td>
+        <td class="xl96" width="35" style="width: 26pt" colspan="5">&nbsp;</td>
         <td class="xl97" width="0">&nbsp;</td>
         <td colspan="4" class="xl261" width="398" style="width: 298pt">Presenta permisos o soporte válido:</td>
         <td class="xl257" width="36" style="width: 27pt">SI</td>
         <td class="xl98" width="69" style="width: 52pt">&nbsp;</td>
-        <td class="xl257" width="0">SI</td>
         <td class="xl99" width="61" style="width: 46pt">NO</td>
         <td class="xl257" width="0">&nbsp;</td>
         <td class="xl257" width="7" style="width: 5pt">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
+        <td class="xl100">&nbsp;</td>
         <td colspan="3" class="xl261" width="171" style="width: 128pt">URL para relacionar permiso o soporte:</td>
         <td class="xl98" width="54" style="width: 40pt">&nbsp;</td>
         <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
@@ -10213,7 +10030,7 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt">
+      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt" *ngIf="this.gestionObraAmbiental.tieneManejoOtro==true">
         <td height="33" class="xl89" style="height: 24.75pt">&nbsp;</td>
         <td colspan="10" class="xl94" width="595" style="width: 445pt">Otra</td>
         <td class="xl261" width="82" style="width: 61pt">&nbsp;</td>
@@ -10264,11 +10081,11 @@
         <td class="xl89">&nbsp;</td>
         <td class="xl89">&nbsp;</td>
       </tr>
-      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt">
+      <tr class="xl89" height="33" style="mso-height-source: userset; height: 24.75pt" *ngIf="this.gestionObraAmbiental.tieneManejoOtro==true">
         <td height="33" class="xl89" style="height: 24.75pt">&nbsp;</td>
         <td class="xl94" width="82" style="width: 61pt">&nbsp;</td>
         <td class="xl257" width="173" style="width: 130pt">Fecha de la actividad</td>
-        <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
+        <td class="xl96" width="35" style="width: 26pt">&nbsp;{{this.gestionObraAmbiental.manejoOtro.fechaActividad | date: 'dd/MM/yyyy' }}</td>
         <td class="xl96" width="35" style="width: 26pt">&nbsp;</td>
         <td class="xl97" width="34" style="width: 25pt">&nbsp;</td>
         <td class="xl97" width="22" style="width: 17pt">&nbsp;</td>
@@ -10276,7 +10093,7 @@
         <td class="xl95" width="0">&nbsp;</td>
         <td class="xl261" width="73" style="width: 55pt">&nbsp;</td>
         <td class="xl257" width="94" style="width: 70pt">Actividad realizada</td>
-        <td class="xl96" width="82" style="width: 61pt">&nbsp;</td>
+        <td class="xl96" width="82" style="width: 61pt">&nbsp;<div [innerHTML]="this.gestionObraAmbiental.manejoOtro.actividad"></div></td>
         <td class="xl96" width="149" style="width: 112pt">&nbsp;</td>
         <td class="xl97" width="36" style="width: 27pt">&nbsp;</td>
         <td class="xl97" width="69" style="width: 52pt">&nbsp;</td>
@@ -10284,7 +10101,7 @@
         <td class="xl99" width="61" style="width: 46pt">&nbsp;</td>
         <td class="xl257" width="0">&nbsp;</td>
         <td colspan="6" class="xl261" width="326" style="width: 243pt">URL para relacionar evidencia o soporte:</td>
-        <td class="xl98" width="34" style="width: 25pt">&nbsp;</td>
+        <td class="xl98" width="34" style="width: 25pt">&nbsp;{{this.gestionObraAmbiental.manejoOtro.urlSoporteGestion}}</td>
         <td class="xl98" width="39" style="width: 29pt">&nbsp;</td>
         <td class="xl152" width="36" style="width: 27pt">&nbsp;</td>
         <td class="xl152" width="80" style="width: 60pt">&nbsp;</td>
