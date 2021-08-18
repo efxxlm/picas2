@@ -184,7 +184,8 @@ namespace asivamosffie.services
                                                                         .Where(x => (
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente ||
                                                                                         x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico ||
-                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado ||
+                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.RechazadaPorValidacionPresupuestal
                                                                                     ) &&
                                                                                x.Eliminado != true)
                                                                         .ToList();
@@ -210,11 +211,11 @@ namespace asivamosffie.services
                 if (totalDescripcion > 0)
                     vaComite = true;
 
-                if (vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
+                if (vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.RechazadaPorValidacionPresupuestal))
                 {
                     listaNovedadesActivas.Add(item);
                 }
-                else if (!vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
+                else if (!vaComite && (item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado || item.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.RechazadaPorValidacionPresupuestal))
                 {
                     listaNovedadesActivas.Add(item);
                 }
