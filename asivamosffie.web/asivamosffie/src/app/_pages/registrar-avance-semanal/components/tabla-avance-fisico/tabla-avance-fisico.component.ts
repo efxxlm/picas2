@@ -9,6 +9,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import * as moment from 'moment';
 import { GuardadoParcialAvanceSemanalService } from 'src/app/core/_services/guardadoParcialAvanceSemanal/guardado-parcial-avance-semanal.service';
 import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -175,7 +176,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                         } );
                     }
 
-                    if ( this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ) > 0 ) {
+                    if ( this.verifyInteger( ( duracionItem / (cantidadTotalDiasActividades == 0 ? 1 : cantidadTotalDiasActividades) ) * 100, false ) > 0 ) {
                         if (this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0]) {
                             avancePorCapitulo.push(
                                 {
@@ -205,7 +206,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                         {
                             semanaNumero: this.seguimientoSemanal.numeroSemana,
                             periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
-                            programacionSemana: this.verifyInteger( ( duracionProgramacion / cantidadTotalDiasActividades ) * 100,
+                            programacionSemana: this.verifyInteger( ( duracionProgramacion / (cantidadTotalDiasActividades == 0 ? 1 : cantidadTotalDiasActividades) ) * 100,
                                                                     false ),
                             avancePorCapitulo,
                             avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?

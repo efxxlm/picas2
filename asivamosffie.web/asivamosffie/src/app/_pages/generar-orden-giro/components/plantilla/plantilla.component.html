@@ -214,17 +214,17 @@
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
         </tr>
           <tr *ngFor="let data of infoPlantilla">
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : 0 + data[1].valorDescuento + data[0].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[0].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[1].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : '' | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : 0 + data[1] ? data[1].valorDescuento : 0 + data[0] ? data[0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[0] ? data[0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[1] ? data[1].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
             <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ solicitudPago.ordenGiro.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}</td>
           </tr>
         <tr>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : 0 + infoPlantilla[0][1].valorDescuento + infoPlantilla[0][0].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][0].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][1].valorDescuento | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : '' | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : 0 + infoPlantilla[0][1] ? infoPlantilla[0][1].valorDescuento : 0 + infoPlantilla[0][0] ? infoPlantilla[0][0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][0] ? infoPlantilla[0][0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][1] ? infoPlantilla[0][1].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ solicitudPago.ordenGiro.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}</td>
         </tr>
         <!-- <tr>
