@@ -69,7 +69,7 @@
 
         <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? proyecto.semaforoDetalle : ''">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalleDelGiro( proyecto) : ''">
                     Detalle del giro - {{ proyecto.llaveMen }}
                 </mat-panel-title>
             </mat-expansion-panel-header>

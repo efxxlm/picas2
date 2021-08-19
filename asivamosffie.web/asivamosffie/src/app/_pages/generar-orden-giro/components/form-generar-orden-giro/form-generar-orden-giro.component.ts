@@ -205,4 +205,29 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
         */
     }
 
+    checkTieneDescuentos( esPreconstruccion: boolean, proyecto ) {
+        const solicitudPagoFase = proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
+        
+        if ( solicitudPagoFase !== undefined ) {
+            if ( solicitudPagoFase.tieneDescuento === true ) {
+                return true;
+            }
+            if ( solicitudPagoFase.tieneDescuento === false ) {
+                return false;
+            }
+        }
+    }
+
+    semaforoDetalleDelGiro(proyecto) {
+        const arraySemaforoelement = []
+        proyecto.fases.forEach(element => {
+            arraySemaforoelement.push(element.estadoSemaforoCausacion)
+            if (this.checkTieneDescuentos( element.esPreconstruccion, proyecto )) {
+                arraySemaforoelement.push(element.estadoSemaforo)
+            }
+        });
+        if (arraySemaforoelement.every(n => n === 'completo')) return 'completo'
+        if (arraySemaforoelement.some(n => n === 'sin-diligenciar')) return 'sin-diligenciar'
+        else return 'sin-diligenciar'
+    }
 }
