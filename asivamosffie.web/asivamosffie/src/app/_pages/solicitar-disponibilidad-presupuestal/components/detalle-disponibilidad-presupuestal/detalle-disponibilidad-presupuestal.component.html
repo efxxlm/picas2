@@ -57,7 +57,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
                                 <p class="mb1-em" style="font-size: 1.2em;"><b>Aportante {{ i+1 }} </b></p>
-    
+
                                 <p style="margin-top: .5em;">
                                     <b>Tipo de aportante:</b>
                                     {{aportante.tipoAportanteNombre}}
@@ -70,7 +70,7 @@
                                     <b>Valor del aportante:</b>
                                     <span *ngIf="opcionContratarCodigo=='Interventoria'">{{ aportante.valorInterventoria | currency }}</span>
                                     <span *ngIf="opcionContratarCodigo!='Interventoria'">{{ aportante.valorObra | currency }}</span>
-    
+
                                 </p>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
             <div [innerHtml]="this.objeto"></div>
         </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card mainGris" *ngIf="observaciones?.length>0"> 
+    <mat-card class="shipping-card mainGris" *ngIf="observaciones?.length>0 && (estadoSolicitudCodigo === '6' || estadoSolicitudCodigo === '2' || estadoSolicitudCodigo === '3')">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
                 Observaciones

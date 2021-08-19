@@ -32,6 +32,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   ddpvalor: any;
   ddpdetalle: any;
   tipoSolicitud: any;
+  estadoSolicitudCodigo: string;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: BudgetAvailabilityService,
     private projectService: ProjectService) { }
@@ -43,7 +44,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       this.cargarServicio1(param.idDisponibilidadPresupuestal);
     });
   }
-  
+
   cargarServicio1(id){
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(id).subscribe(data0=>{
       this.tipoSolicitudColdigo = data0.tipoSolicitudCodigo;
@@ -52,6 +53,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       // this.plazoMeses = data0.plazoMeses;
       this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
       this.observaciones=data0.disponibilidadPresupuestalObservacion;
+      this.estadoSolicitudCodigo = data0.estadoSolicitudCodigo;
       this.opcionContratarCodigo=data0.opcionContratarCodigo;
       //this.fechaComite = data0.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'];
       data0.disponibilidadPresupuestalProyecto.forEach(element => {
@@ -60,27 +62,27 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       if(this.tipoSolicitudColdigo=='3')//modificacionContractual
       {
         this.novedadContractualComponent(data0.contratacionId);
-      }  
+      }
       if (this.tipoSolicitud == 2) {
         this.novedadContractualComponent(data0.contratacionId);
       }
     });
   }
-  
+
   novedadContractualComponent(id) {
-    this.budgetAvailabilityService.getNovedadContractual(id).subscribe( 
+    this.budgetAvailabilityService.getNovedadContractual(id).subscribe(
       res => {
         console.log(res);
         this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
         this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
-        this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;          
+        this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
       },
       err => {
         console.log( err );
       }
       )
     }
-  
+
   cargarServicio2(id){
     this.projectService.getProjectById(id).subscribe(data1=>{
       this.proyectos.push({
@@ -91,12 +93,12 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
         municipio: data1.municipio,
         aportantesList: data1.proyectoAportante
       })
-     
+
       console.log(this.aportantesList);
     });
   }
 
   cargarServicio3(id){
-    
+
   }
 }

@@ -441,7 +441,7 @@ namespace asivamosffie.services
                     }
 
 
-                    var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).ToList();
+                    var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId).ToList();
                     string observacionString = !observaciones.Any() ? string.Empty : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
                     var aportant = aportantes.Distinct();
                     var tiporubro = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
@@ -527,7 +527,7 @@ namespace asivamosffie.services
                         //Aportantes
                         Aportantes = aportant.ToList(),
                         NumeroRadicado = ListDP.NumeroRadicadoSolicitud,
-                        ObservacioensCancelacion = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).ToList(),
+                        ObservacioensCancelacion = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId).ToList(),
                         EsNovedad = false,
                         NovedadContractual = ListDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == ListDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                         EstadoRegistro = blnEstado,
@@ -2470,7 +2470,7 @@ namespace asivamosffie.services
                 }
 
 
-                var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId).ToList();
+                var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId).ToList();
                 string observacionString = !observaciones.Any() ? "" : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
                 var aportant = aportantes;
                 var tiporubro = detailDP.DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
@@ -2548,7 +2548,7 @@ namespace asivamosffie.services
                     //Aportantes
                     Aportantes = aportant.ToList(),
                     NumeroRadicado = detailDP.DisponibilidadPresupuestal.NumeroRadicadoSolicitud,
-                    ObservacioensCancelacion = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId).ToList(),
+                    ObservacioensCancelacion = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId).ToList(),
                     EsNovedad = true,
                     NovedadContractualRegistroPresupuestalId = detailDP.NovedadContractualRegistroPresupuestalId,
                     NovedadContractual = detailDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == detailDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,

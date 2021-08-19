@@ -1433,38 +1433,48 @@ namespace asivamosffie.services
                 Include(x => x.DisponibilidadPresupuestalProyecto).
                     ThenInclude(x => x.Proyecto).
                         ThenInclude(x => x.Sede)
-                .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad).
+                .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad != true).
                 ToList();
 
-                if (esNovedad && esValidar)
+                if (esNovedad)
                 {
-                    List<GestionFuenteFinanciacion> gestionfuentesTemp = _context.GestionFuenteFinanciacion
-                    .Where(x => !(bool)x.Eliminado
-                        && x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId).
-                    Include(x => x.FuenteFinanciacion).
-                        ThenInclude(x => x.Aportante).
-                        ThenInclude(x => x.CofinanciacionDocumento).
-                    Include(x => x.DisponibilidadPresupuestalProyecto).
-                        ThenInclude(x => x.Proyecto).
-                            ThenInclude(x => x.Sede).
-                    ToList();
-
-                    for (int i = 0; i < gestionfuentesTemp.Count(); i++)
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Find(pRegistro.NovedadContractualRegistroPresupuestalId);
+                    if (novedadContractualRegistroPresupuestal != null)
                     {
-                        int index = gestionfuentes.FindIndex(gf => gf.FuenteFinanciacionId == gestionfuentesTemp[i].FuenteFinanciacionId);
-                        if (index >= 0)
+                        if (novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar || !esValidar)
                         {
-                            gestionfuentes[index].ValorSolicitado += gestionfuentesTemp[i].ValorSolicitado;
-                            gestionfuentes[index].SaldoActual += gestionfuentesTemp[i].SaldoActual;
-                            gestionfuentes[index].NuevoSaldo += gestionfuentesTemp[i].NuevoSaldo;
-                            gestionfuentes[index].SaldoActualGenerado += gestionfuentesTemp[i].SaldoActualGenerado;
-                            gestionfuentes[index].ValorSolicitadoGenerado += gestionfuentesTemp[i].ValorSolicitadoGenerado;
-                            gestionfuentes[index].NuevoSaldoGenerado += gestionfuentesTemp[i].NuevoSaldoGenerado;
-                            gestionfuentesTemp.RemoveAt(i);
-                            i--;
+                            List<GestionFuenteFinanciacion> gestionfuentesTmp = _context.GestionFuenteFinanciacion
+                                            .Where(x => !(bool)x.Eliminado
+                                                && x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId).
+                                            Include(x => x.FuenteFinanciacion).
+                                                ThenInclude(x => x.Aportante).
+                                                ThenInclude(x => x.CofinanciacionDocumento).
+                                            Include(x => x.DisponibilidadPresupuestalProyecto).
+                                                ThenInclude(x => x.Proyecto).
+                                                    ThenInclude(x => x.Sede).
+                                            ToList();
+                            foreach (var gestion in gestionfuentesTmp)
+                            {
+                                int positionGestion = gestionfuentes.FindIndex(r => r.FuenteFinanciacionId == gestion.FuenteFinanciacionId);
+
+                                if (positionGestion > -1)
+                                {
+                                    gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActual + gestion.SaldoActual;
+                                    gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitado + gestion.ValorSolicitado;
+                                    gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldo + gestion.NuevoSaldo;
+                                    gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + gestion.SaldoActualGenerado;
+                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + gestion.ValorSolicitadoGenerado;
+                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + gestion.NuevoSaldoGenerado;
+                                }
+                                else
+                                {
+                                    gestionfuentes.Add(gestion);
+                                }
+                            }
                         }
+
                     }
-                    gestionfuentes.AddRange(gestionfuentesTemp);
+
                 }
 
                 //empiezo con fuentes
@@ -1472,25 +1482,6 @@ namespace asivamosffie.services
                 decimal total = 0;
                 foreach (var gestion in gestionfuentes)
                 {
-                    /*GestionFuenteFinanciacion gestionAlGuardar = new GestionFuenteFinanciacion();
-                    if (esNovedad)
-                    {
-                        gestionAlGuardar = _context.GestionFuenteFinanciacion
-                                    .Where(x => x.NovedadContractualRegistroPresupuestalId == pRegistro.NovedadContractualRegistroPresupuestalId &&
-                                        x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
-                                        && x.Eliminado != true)
-                                    .FirstOrDefault();
-                    }
-                    else
-                    {
-                        gestionAlGuardar = _context.GestionFuenteFinanciacion
-                                    .Where(x => x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId &&
-                                        x.FuenteFinanciacionId == gestion.FuenteFinanciacionId
-                                        && x.Eliminado != true)
-                                    .FirstOrDefault();
-                    }*/
-
-
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
                     var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
