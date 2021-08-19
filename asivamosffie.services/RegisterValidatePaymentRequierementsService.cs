@@ -1387,34 +1387,42 @@ namespace asivamosffie.services
                     .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                     .Sum(c => c.SaldoPresupuestal));
 
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
 
-                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
+                if (ValorPendientePorPagar == 0)
+                    ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+                else
+                    ValorTotalPorFase = ValorPendientePorPagar;
 
-                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                decimal MontoMaximo = 0;
+                if (ValorTotalPorFase < 0)
+                    ValorTotalPorFase *= -1;
+
+                //string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
+
+                //List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
+                //decimal MontoMaximo = 0;
                 //TODO:VALIDAR 
-                foreach (var PorcentajePago in FormasPago)
-                {
-                    if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorPendientePorPagar;
-                    else
-                    {
-                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                        MontoMaximo /= 100;
-                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
+                //foreach (var PorcentajePago in FormasPago)
+                //{
+                //    if (Convert.ToUInt32(PorcentajePago) == 100)
+                //        MontoMaximo = ValorPendientePorPagar;
+                //    else
+                //    {
+                //        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
+                //        MontoMaximo /= 100;
+                //        if (ValorPendientePorPagar != ValorTotalPorFase)
+                //            MontoMaximo = ValorPendientePorPagar - MontoMaximo;
 
-                        if (MontoMaximo < 0)
-                            MontoMaximo = ValorTotalPorFase;
+                //        if (MontoMaximo < 0)
+                //            MontoMaximo = ValorTotalPorFase;
 
-                        if (MontoMaximo < ValorPendientePorPagar)
-                            break;
-                    }
-                }
+                //        if (MontoMaximo < ValorPendientePorPagar)
+                //            break;
+                //    }
+                //}
 
                 return new
                 {
-                    MontoMaximo,
+                    MontoMaximo = ValorPendientePorPagar,
                     ValorPendientePorPagar
                 };
             }
@@ -1610,7 +1618,10 @@ namespace asivamosffie.services
                 if (_context.VContratoPagosRealizados
                   .Any(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago))
                 {
-                    vContratoPagosRealizados = _context.VContratoPagosRealizados
+
+                    vContratoPagosRealizados = GetValidarContratoPagosRealizados(pContratoId, pSolicitudPago);
+
+                    vContratoPagosRealizados = vContratoPagosRealizados
                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                       .ToList();
                 }
@@ -1622,6 +1633,34 @@ namespace asivamosffie.services
             contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
             return contrato;
 
+        }
+
+        private List<VContratoPagosRealizados> GetValidarContratoPagosRealizados(int pContratoId, int pSolicitudPago)
+        {
+            List<VContratoPagosRealizados> vContratoPagosRealizados = _context.VContratoPagosRealizados
+                        .Where(v => v.ContratoId == pContratoId).ToList();
+
+
+            decimal ValorAnterior = 0;
+            decimal Drp = 0;
+            int Count = 1;
+            foreach (var item in vContratoPagosRealizados)
+            {
+                if (Count == 1)
+                {
+                    ValorAnterior = item.SaldoPorPagar ?? 0;
+                    Drp = item.ValorSolicitud ?? 1;
+                }
+                else
+                {
+                    item.ValorSolicitud = ValorAnterior;
+                    item.SaldoPorPagar = item.ValorSolicitud - item.ValorFacturado;
+                    item.PorcentajeFacturado = 100 - ((item.SaldoPorPagar / Drp) * 100);
+                    item.PorcentajePorPagar = (item.SaldoPorPagar / Drp) * 100;
+                }
+                Count++;
+            }
+            return vContratoPagosRealizados;
         }
 
         public dynamic GetDrpContrato(int pContratacionId)
