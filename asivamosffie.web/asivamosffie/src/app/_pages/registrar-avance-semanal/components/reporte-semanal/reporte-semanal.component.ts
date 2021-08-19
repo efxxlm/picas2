@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 
 @Component({
   selector: 'app-reporte-semanal',
   templateUrl: './reporte-semanal.component.html',
-  styleUrls: ['./reporte-semanal.component.scss']
+  styleUrls: ['./reporte-semanal.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ReporteSemanalComponent implements OnInit {
 
@@ -18,6 +21,7 @@ export class ReporteSemanalComponent implements OnInit {
   gestionObraAmbiental: any;
   gestionAmbiental: boolean;
   gestionSST: any;
+  gestionSocial: any;
   gestionAmbientalId = 0; // ID gestion ambiental.
   manejoMaterialInsumoId = 0; // ID manejo de materiales  e insumos.
   residuosConstruccionId = 0; // ID residuos de construccion.
@@ -37,7 +41,7 @@ export class ReporteSemanalComponent implements OnInit {
       this.seguimientoSemanalId = params.pSeguimientoSemanalId;
       console.log(this.contratacionProyectoId);
       console.log(this.seguimientoSemanalId);
-      this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(this.contratacionProyectoId, this.seguimientoSemanalId)
+      //this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(this.contratacionProyectoId, this.seguimientoSemanalId)
 
     });
   }
@@ -123,22 +127,24 @@ export class ReporteSemanalComponent implements OnInit {
               }
           }
           this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+          this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
       }
     })
   }
 
   downloadPDF() {
-    // html2canvas( document.getElementById( 'example-pdf' ) ).then(canvas => {
-    //   const contentDataURL = canvas.toDataURL('image/jpeg', 1.0)
+    /*
+   html2canvas( document.getElementById( 'example-pdf' ) ).then(canvas => {
+       const contentDataURL = canvas.toDataURL('image/jpeg', 1.0)
 
-    //   let pdf = new jsPDF('l', 'cm', 'a4', false); //Generates PDF in landscape mode
+      let pdf = new jsPDF('l', 'cm', 'a4', false); //Generates PDF in landscape mode
     //   // let pdf = new jsPDF('p', 'cm', 'a4'); //Generates PDF in portrait mode
-    //   pdf.addImage(contentDataURL, 'PNG', 0, 0, 29.8, 21.5, 'undefined', 'FAST')
-    //   pdf.save('Filename.pdf');
-    // });
+      pdf.addImage(contentDataURL, 'PNG', 0, 0, 29.8, 21.5, 'undefined', 'FAST')
+      pdf.save('Filename.pdf');
+    });
+    */
     console.log(document.getElementById('example-pdf').innerHTML);
     const pdfHTML = document.getElementById('example-pdf').innerHTML;
-
     const pdf = {
       EsHorizontal: true,
       MargenArriba: 2,
@@ -163,6 +169,7 @@ export class ReporteSemanalComponent implements OnInit {
         console.log(e);
       }
     );
+    
   }
 
 }
