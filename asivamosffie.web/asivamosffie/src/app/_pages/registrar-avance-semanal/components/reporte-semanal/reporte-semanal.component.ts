@@ -41,8 +41,7 @@ export class ReporteSemanalComponent implements OnInit {
       this.seguimientoSemanalId = params.pSeguimientoSemanalId;
       console.log(this.contratacionProyectoId);
       console.log(this.seguimientoSemanalId);
-      //this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(this.contratacionProyectoId, this.seguimientoSemanalId)
-
+      this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(this.contratacionProyectoId, this.seguimientoSemanalId)
     });
   }
 
@@ -153,10 +152,23 @@ export class ReporteSemanalComponent implements OnInit {
       MargenIzquierda: 2,
       Contenido: pdfHTML
     };
+    /*
+    public int PlantillaId { get; set; }
+public string Nombre { get; set; }
+public string Codigo { get; set; }
+public string Contenido { get; set; }
+public double? MargenArriba { get; set; }
+public double? MargenAbajo { get; set; }
+public double? MargenDerecha { get; set; }
+public double? MargenIzquierda { get; set; }
+public int? EncabezadoId { get; set; }
+public int? PieDePaginaId { get; set; }
+public int? TipoPlantillaId { get; set; }
+*/
 
     this.commonSvc.GetHtmlToPdf(pdf).subscribe(
       response => {
-        const documento = `OrdernGiro.pdf`;
+        const documento = `Seguimiento Semanal.pdf`;
         const text = documento,
           blob = new Blob([response], { type: 'application/pdf' }),
           anchor = document.createElement('a');
