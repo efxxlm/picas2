@@ -765,7 +765,7 @@ namespace asivamosffie.services
 
                         bool blRegistroCompleto = false;
                         if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                            solicitudPagoFaseOld.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+                            blRegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
 
                         _context.Set<SolicitudPagoFase>()
                                 .Where(r => r.SolicitudPagoFaseId == SolicitudPagoFase.SolicitudPagoFaseId)
@@ -1374,7 +1374,7 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pProyectoId )
         {
 
             try
@@ -1383,11 +1383,10 @@ namespace asivamosffie.services
 
                 decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
-                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal));
-
-
+                decimal ValorPendientePorPagar = (decimal)_context.VValorFacturadoContratoXproyecto
+                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.ProyectoId == pProyectoId && v.EsPreconstruccion == EsPreConstruccion )
+                    .Sum(c => c.SaldoPresupuestal);
+                 
                 if (ValorPendientePorPagar == 0)
                     ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
                 else
@@ -2121,9 +2120,10 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
         {
-            return (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                 || solicitudPagoFaseCriterio.ValorFacturado == 0
-                   );
+            if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                 || solicitudPagoFaseCriterio.ValorFacturado == 0) return false;
+
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
