@@ -265,6 +265,19 @@ namespace asivamosffie.services
                         }
                     }
 
+                    if (contrato.Contratacion != null)
+                    {
+                        int existeMulti = _context.ContratacionProyecto.Where(r => r.ContratacionId == contrato.Contratacion.ContratacionId && r.Eliminado != true).Count();
+                        if (existeMulti > 1)
+                        {
+                            contrato.EsMultiProyecto = true;
+                        }
+                        else
+                        {
+                            contrato.EsMultiProyecto = false;
+                        }
+                    }
+
                     contrato.TieneActa = tieneActa;
 
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?

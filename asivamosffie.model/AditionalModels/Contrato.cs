@@ -91,6 +91,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime? FechaEstimadaFinalizacion { get; set; }
+
+        [NotMapped]
+        public bool? EsMultiProyecto { get; set; }
     }
 
 

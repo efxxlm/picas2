@@ -3728,16 +3728,20 @@ namespace asivamosffie.services
                         foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                         {
                             RegistrosFuentesUso += TipoPlantillaRegistrosFuentes;
-
                             string nombreTrAportante = string.Empty;
                             string valorTrAportante = string.Empty;
 
                             if (!ind_ya_entro)
                             {
                                 int total = 0;
+                                decimal valorAportanteTmp = 0;
                                 foreach (var cpa in ContratacionProyectoAportante.ComponenteAportante)
                                 {
                                     total += cpa.ComponenteUso.Count();
+                                    foreach (var cu in cpa.ComponenteUso)
+                                    {
+                                        valorAportanteTmp += cu.ValorUso;
+                                    }
                                 }
                                 string rowspan = total.ToString();
                                 /*
@@ -3775,14 +3779,14 @@ namespace asivamosffie.services
                                 */
                                 string valor_aportante_row = row_template;
                                 valor_aportante_row = valor_aportante_row.Replace("[ROWSPAN]", rowspan);
-
                                 string ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorObra);
                                 if (pContratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                                 {
                                     ValorAportante = "$" + String.Format("{0:n0}", ContratacionProyectoAportante.CofinanciacionAportante.ProyectoAportante.FirstOrDefault().ValorInterventoria);
                                 }
 
-                                valorTrAportante = valor_aportante_row.Replace("[ROW]", ValorAportante);
+                                valorTrAportante = valor_aportante_row.Replace("[ROW]", "$" + String.Format("{0:n0}", valorAportanteTmp));
+
 
                                 ind_ya_entro = true;
                             }
@@ -3791,6 +3795,7 @@ namespace asivamosffie.services
                                 nombreTrAportante = string.Empty;
                                 valorTrAportante = string.Empty;
                             }
+                            
                             foreach (Dominio placeholderDominio in placeholders)
                             {
                                 switch (placeholderDominio.Codigo)
