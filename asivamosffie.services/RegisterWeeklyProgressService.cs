@@ -50,7 +50,7 @@ namespace asivamosffie.services
 
         #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
-        { 
+        {
             int ContratoConstruccionId = _context.FlujoInversion
                                             .Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                                             .Select(r => r.ContratoConstruccionId)
@@ -154,10 +154,12 @@ namespace asivamosffie.services
             });
             return vRegistrarAvanceSemanal;
         }
+
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
+
         public List<Programacion> GetListProgramacionBySeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
             List<Programacion> ListProgramacionTipoC = _context.Programacion
@@ -223,7 +225,6 @@ namespace asivamosffie.services
             };
         }
 
-       
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             try
@@ -240,6 +241,7 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
                                 .ThenInclude(r => r.Programacion)
+                                .    ThenInclude(r => r.FlujoInversion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -281,13 +283,41 @@ namespace asivamosffie.services
                 await GetModInfoSeguimientoSemanal(seguimientoSemanal);
 
                 GetInformacionGeneral(seguimientoSemanal);
-
+                GetAvanceFisico(seguimientoSemanal);
                 return seguimientoSemanal;
             }
             catch (Exception ex)
             {
                 return new SeguimientoSemanal();
             }
+        }
+
+        private void GetAvanceFisico(SeguimientoSemanal seguimientoSemanal)
+        {
+            List<dynamic> TablaInversionPorCapitulos = new List<dynamic>();
+            int Count = 1;
+            foreach (var item in seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion)
+            {
+
+                decimal dcFlujoInversion = seguimientoSemanal.FlujoInversion.Where(r => r.ProgramacionId == item.Programacion.ProgramacionId).FirstOrDefault().Valor ?? 0;
+
+
+                TablaInversionPorCapitulos.Add(
+                                                new
+                                                {
+                                                    Num = Count,
+                                                    Capitulo = item.Programacion.Actividad,
+                                                    Programacion = dcFlujoInversion,
+                                                    Ejectutado = item.AvanceFisicoCapitulo,
+                                                    Desviacion = ((item.AvanceFisicoCapitulo / dcFlujoInversion * -100)) / 100
+                                                }
+                                                );
+
+
+                Count++;
+            }
+
+            seguimientoSemanal.AvanceFisico = TablaInversionPorCapitulos;
         }
 
         private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)
@@ -305,9 +335,9 @@ namespace asivamosffie.services
 
                 ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
                                             .Where(cp => cp.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
-                                            .Include(p => p.Proyecto)  
+                                            .Include(p => p.Proyecto)
                                                 .ThenInclude(m => m.PredioPrincipal).FirstOrDefault();
-                 
+
                 foreach (var item in ListVContratosXcontratacionProyecto)
                 {
                     pSeguimientoSemanal.InformacionGeneral.Add(_context.Contratacion
@@ -336,7 +366,7 @@ namespace asivamosffie.services
                                                               Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
                                                               Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
                                                           })
-                                                       ); 
+                                                       );
                 }
 
                 pSeguimientoSemanal.InformacionGeneralProyecto.Add(
@@ -356,7 +386,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
         {
@@ -444,7 +473,7 @@ namespace asivamosffie.services
 
             if (ListProgramacion.Count() > 0)
             {
-                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
+                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion) > 0  ? ListProgramacion.Sum(r => r.Duracion) : 0;
             }
 
             seguimientoSemanal.AvanceAcumulado = ListProgramacion
@@ -494,6 +523,7 @@ namespace asivamosffie.services
 
             return seguimientoSemanal;
         }
+
         private dynamic GetInfoProyectoBySeguimientoContratacionProyectoId(int ContratacionProyectoId)
         {
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
@@ -912,7 +942,7 @@ namespace asivamosffie.services
             });
             return EsCompleto;
         }
-          
+
         #endregion
 
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
