@@ -33,10 +33,10 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     private contractualNoveltyService: ContractualNoveltyService,
     private activatedRoute: ActivatedRoute,
     private router: Router
-    ) 
-    
-  { 
-    
+    )
+
+  {
+
   }
   numeroContratoSeleccionado: any;
   proyectos=[];
@@ -51,12 +51,12 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
       this.detalleId = parametros.id;
       this.contractualNoveltyService.getNovedadContractualById( parametros.id )
         .subscribe( novedad => {
-          
+
           if (novedad.novedadContractualId !== 0) {
 
             this.novedad = novedad;
             this.numeroContrato.setValue(novedad.contrato.numeroContrato);
-            this.numeroContratoSeleccionado = novedad.contrato; 
+            this.numeroContratoSeleccionado = novedad.contrato;
             this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
             this.proyecto = novedad['proyectosSeleccionado'];
             this.contrato = novedad.contrato;
@@ -82,7 +82,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
             this.numeroContrato.markAllAsTouched();
             this.novedadAplicada.markAllAsTouched();
           }
-          
+
         });
 
     });
@@ -97,7 +97,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
-    
+
   }
 
   guardar() {
@@ -115,6 +115,13 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
 
   public seleccionAutocomplete(numeroContrato)
   {
+    if(numeroContrato.esMultiProyecto == true){
+      this.novedadesArray = this.novedadesArray.filter(r => r.name == "Proyecto");
+    }else{
+      if(!this.novedadesArray.find(r =>r.name == "Contrato")){
+        this.novedadesArray.push({ name: 'Contrato', value: true });
+      }
+    }
     this.numeroContratoSeleccionado=numeroContrato;
   }
 

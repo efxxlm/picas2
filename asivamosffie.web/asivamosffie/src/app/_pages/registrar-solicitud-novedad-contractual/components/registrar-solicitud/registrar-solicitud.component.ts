@@ -106,7 +106,6 @@ export class RegistrarSolicitudComponent implements OnInit {
   }
 
   public seleccionAutocomplete(numeroContrato) {
-    console.log("entra: ", numeroContrato)
     if(numeroContrato.esMultiProyecto == true){
       this.novedadesArray = this.novedadesArray.filter(r => r.name == "Proyecto");
     }else{
@@ -114,7 +113,6 @@ export class RegistrarSolicitudComponent implements OnInit {
         this.novedadesArray.push({ name: 'Contrato', value: true });
       }
     }
-    console.log(this.novedadesArray, numeroContrato.esMultiProyecto);
     this.numeroContratoSeleccionado = numeroContrato;
     this.contrato = null;
     this.proyecto = null;
