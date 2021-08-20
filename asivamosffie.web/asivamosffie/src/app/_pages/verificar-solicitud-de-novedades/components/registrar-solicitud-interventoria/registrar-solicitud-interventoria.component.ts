@@ -123,6 +123,9 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
       }
     }
     this.numeroContratoSeleccionado=numeroContrato;
+    this.contrato = null;
+    this.proyecto = null;
+    this.novedadAplicada.setValue(null);
   }
 
   public changeNovedadAplicada()
